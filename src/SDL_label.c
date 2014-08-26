@@ -5,12 +5,4 @@
  * @author jdolan
  */
 
-#include "SDL_mvc.h"
-
-int MVC_Init(void) {
-	return 0;
-}
-
-void MVC_Quit(void) {
-
-}
+#include "SDL_label.h"
