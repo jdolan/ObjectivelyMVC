@@ -2,20 +2,28 @@ lib_LTLIBRARIES = \
 	libSDL_mvc.la
 
 include_HEADERS = \
-	SDL_button.h \
-	SDL_label.h \
-	SDL_mvc.h \
-	SDL_view.h \
-	SDL_viewcontroller.h
+	MVC_button.h \
+	MVC_color.h \
+	MVC_image.h \
+	MVC_label.h \
+	MVC_main.h \
+	MVC_object.h \
+	MVC_view.h \
+	MVC_viewcontroller.h \
+	SDL_mvc.h
 
 libSDL_mvc_la_SOURCES = \
-	SDL_button.c \
-	SDL_label.c \
-	SDL_mvc.c \
-	SDL_view.c \
-	SDL_viewcontroller.c
+	MVC_button.c \
+	MVC_color.c \
+	MVC_image.c \
+	MVC_label.c \
+	MVC_main.c \
+	MVC_object.c \
+	MVC_view.c \
+	MVC_viewcontroller.c
 	
 libSDL_mvc_la_CFLAGS = \
+	@GLIB_CFLAGS@ \
 	@OPENGL_CFLAGS@ \
 	@SDL2_CFLAGS@
 

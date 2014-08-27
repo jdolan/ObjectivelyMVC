@@ -3,7 +3,7 @@ AC_PREREQ(2.68)
 AC_INIT([SDL2_mvc], [0.1.0], [jay@jaydolan.com])
 
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([src/SDL_mvc.c])
+AC_CONFIG_SRCDIR([src/SDL_mvc.h])
 AC_CONFIG_HEADERS([config.h])
 
 AC_CANONICAL_SYSTEM
@@ -13,6 +13,11 @@ AC_PROG_LIBTOOL
 
 AM_INIT_AUTOMAKE([silent-rules foreign])
 AM_SILENT_RULES
+
+dnl --------------
+dnl Check for GLib
+dnl --------------
+PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.0.0])
 
 dnl ------------------------
 dnl Check for SDL2, SDL2_ttf

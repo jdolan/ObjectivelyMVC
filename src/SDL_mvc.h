@@ -5,22 +5,16 @@
  * @author jdolan
  */
 
-#ifndef _SDL_mvc_h
-#define _SDL_mvc_h
+#ifndef _MVC_mvc_h
+#define _MVC_mvc_h
 
-#include "SDL_button.h"
-#include "SDL_label.h"
-#include "SDL_view.h"
-#include "SDL_viewcontroller.h"
-
-/*
- * @brief
- */
-extern DECLSPEC int SDLCALL MVC_Init(void);
-
-/*
- * @brief
- */
-extern DECLSPEC void SDLCALL MVC_Quit(void);
+#include "MVC_button.h"
+#include "MVC_color.h"
+#include "MVC_image.h"
+#include "MVC_label.h"
+#include "MVC_main.h"
+#include "MVC_stdinc.h"
+#include "MVC_view.h"
+#include "MVC_viewcontroller.h"
 
 #endif

@@ -5,10 +5,10 @@
  * @author jdolan
  */
 
-#ifndef _SDL_viewcontroller_h
-#define _SDL_viewcontroller_h
+#ifndef _MVC_viewcontroller_h
+#define _MVC_viewcontroller_h
 
-#include "SDL_view.h"
+#include "MVC_view.h"
 
 typedef struct _MVC_ViewController MVC_ViewController;
 
@@ -21,7 +21,7 @@ typedef void (*ViewControllerDestroy)(MVC_ViewController *self);
  * @brief
  */
 struct _MVC_ViewController {
-	char *name;
+	int tag;
 
 	ViewControllerInit init;
 	ViewControllerActivate activate;
@@ -35,7 +35,7 @@ struct _MVC_ViewController {
 /*
  * @brief
  */
-extern DECLSPEC MVC_ViewController * SDLCALL MVC_CreateViewController(const char *name);
+extern DECLSPEC MVC_ViewController * SDLCALL MVC_CreateViewController(void);
 
 /*
  * @brief
