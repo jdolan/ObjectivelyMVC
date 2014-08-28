@@ -5,8 +5,8 @@
  * @author jdolan
  */
 
-#ifndef _MVC_class_h
-#define _MVC_class_h
+#ifndef _MVC_object_h
+#define _MVC_object_h
 
 #include "MVC_stdinc.h"
 
@@ -18,6 +18,15 @@
 		void (*dealloc)(Class *self);
 
 #define End };
+
+#define Overrides(Class) \
+	typedef struct _##Class##_Overrides Class##_Overrides; \
+	static Class##_Overrides Class##_overrides; \
+	struct _##Class##_Overrides {
+
+#define Override(Class, method, implementation) \
+	Class##_overrides.method = self->super.method; \
+	self->super.method = implementation;
 
 #define Constructor(Class, ...) \
 	extern Class * Class##_init(Class *self, ## __VA_ARGS__);

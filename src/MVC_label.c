@@ -7,6 +7,10 @@
 
 #include "MVC_label.h"
 
+Overrides(MVC_View)
+	void (*draw)(MVC_View *self);
+End
+
 /*
  * @brief ViewDraw implementation.
  */
@@ -14,8 +18,7 @@ static void MVC_Label_draw(MVC_View *view) {
 
 	MVC_Label *self = (MVC_Label *) view;
 
-	// TODO: Draw it
-
+	MVC_View_overrides.draw(view);
 }
 
 /*
@@ -27,24 +30,6 @@ static void MVC_Label_render(MVC_Label *self) {
 	if (surface) {
 
 	}
-}
-
-/*
- * @brief LabelSetText implementation.
- */
-static void MVC_Label_setText(MVC_Label *self, const char *text) {
-
-	if (self->text) {
-		g_free(self->text);
-	}
-
-	if (text) {
-		self->text = g_strdup(text);
-	} else {
-		self->text = NULL;
-	}
-
-	self->view.display.needsDisplay = 1;
 }
 
 static void MVC_Label_getSize(MVC_Label *self, int *width, int *height) {
@@ -60,12 +45,12 @@ MVC_Label *MVC_Label_init(MVC_Label *self, TTF_Font *font, SDL_Color color, cons
 
 	if (MVC_View_init(&self->super)) {
 
-		self->super.draw = MVC_Label_draw;
+		Override(MVC_View, draw, MVC_Label_draw);
 
 		self->render = MVC_Label_render;
 		self->getSize = MVC_Label_getSize;
 
-		self->font = font ? font : MVC_DefaultFont();
+		self->font = font; //? font : MVC_DefaultFont();
 		self->color = color;
 		self->text = g_strdup(text);
 
