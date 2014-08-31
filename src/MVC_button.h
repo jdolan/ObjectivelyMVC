@@ -10,6 +10,4 @@
 
 #include "MVC_view.h"
 
-extern DECLSPEC MVC_View SDLCALL *MVC_CreateButton(const char *text);
-
 #endif

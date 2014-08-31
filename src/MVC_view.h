@@ -8,17 +8,12 @@
 #ifndef _MVC_view_h
 #define _MVC_view_h
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_opengl.h>
-
 #include "MVC_stdinc.h"
-#include "MVC_color.h"
-#include "MVC_object.h"
 
 /*
  * @brief
  */
-Interface(MVC_View, MVC_Object)
+Interface(MVC_View, Object)
 
 	struct {
 		MVC_View *superview;
@@ -26,10 +21,11 @@ Interface(MVC_View, MVC_Object)
 	} hierarchy;
 
 	struct {
-		SDL_Rect frame, bounds;
+		SDL_Window *window;
+		SDL_GLContext *context;
 
+		SDL_Rect frame, bounds;
 		SDL_bool hidden;
-		SDL_bool needsDisplay;
 
 		SDL_Color backgroundColor;
 	} display;
@@ -49,6 +45,6 @@ End
 /*
  * @brief
  */
-Constructor(MVC_View);
+Constructor(MVC_View, SDL_Window *window, SDL_GLContext *context);
 
 #endif

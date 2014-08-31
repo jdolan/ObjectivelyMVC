@@ -9,15 +9,28 @@ AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_SYSTEM
 
 AC_PROG_CC
+AC_PROG_CC_STDC
 AC_PROG_LIBTOOL
 
 AM_INIT_AUTOMAKE([silent-rules foreign])
-AM_SILENT_RULES
+AM_SILENT_RULES([yes])
+
+dnl --------------------
+dnl Check for FontConfig
+dnl --------------------
+
+PKG_CHECK_MODULES([FONTCONFIG], [fontconfig >= 2.10.0])
 
 dnl --------------
 dnl Check for GLib
 dnl --------------
 PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.0.0])
+
+dnl ---------------------
+dnl Check for Objectively
+dnl ---------------------
+
+PKG_CHECK_MODULES([OBJECTIVELY], [objectively >= 0.1.0])
 
 dnl ------------------------
 dnl Check for SDL2, SDL2_ttf

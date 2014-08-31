@@ -8,9 +8,6 @@
 #ifndef _MVC_image_h
 #define _MVC_image_h
 
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_opengl.h>
-
 #include "MVC_view.h"
 
 Interface(MVC_Image, MVC_View)
@@ -25,6 +22,6 @@ Interface(MVC_Image, MVC_View)
 
 End
 
-Constructor(MVC_Image, SDL_Texture *texture);
+Constructor(MVC_Image, SDL_Window *window, SDL_GLContext *context, SDL_Texture *texture);
 
 #endif

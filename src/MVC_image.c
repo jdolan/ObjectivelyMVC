@@ -7,9 +7,10 @@
 
 #include "MVC_image.h"
 
-MVC_Image *MVC_Image_init(MVC_Image *self, SDL_Texture *texture) {
+MVC_Image *MVC_Image_init(MVC_Image *self, SDL_Window *window, SDL_GLContext *context,
+		SDL_Texture *texture) {
 
-	if (MVC_View_init(&self->super)) {
+	if (MVC_View_init(&self->super, window, context)) {
 
 		self->texture = texture;
 		self->alpha = 1.0;

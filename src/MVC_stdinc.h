@@ -9,7 +9,8 @@
 #define _MVC_stdinc_h
 
 #include <glib-2.0/glib.h>
-#include <SDL2/SDL_stdinc.h>
-#include <SDL2/SDL_assert.h>
+#include <objectively.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 
 #endif

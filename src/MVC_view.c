@@ -7,13 +7,15 @@
 
 #include "MVC_view.h"
 
-static void MVC_View_dealloc(MVC_View *self) {
+static void MVC_View_dealloc(Object *object) {
+
+	MVC_View *self = (MVC_View *) object;
 
 	self->removeFromSuperview(self);
 
 	g_list_free_full(self->hierarchy.subviews, (GDestroyNotify) MVC_View_dealloc);
 
-	self->super.dealloc(&self->super);
+	Super(Object, Object, dealloc);
 }
 /*
  * @brief Default implementation of addSubview.
@@ -61,10 +63,10 @@ static void MVC_View_draw(MVC_View *self) {
 /*
  * @brief Constructor.
  */
-MVC_View *MVC_View_init(MVC_View *self) {
+MVC_View *MVC_View_init(MVC_View *self, SDL_Window *window, SDL_GLContext *context) {
 
-	if (MVC_Object_init(&self->super)) {
-		self->dealloc = MVC_View_dealloc;
+	if (Object_init(&self->super)) {
+		self->super.dealloc = MVC_View_dealloc;
 
 		self->addSubview = MVC_View_addSubview;
 		self->removeSubview = MVC_View_removeSubview;
@@ -74,9 +76,8 @@ MVC_View *MVC_View_init(MVC_View *self) {
 
 		memset(&self->display.backgroundColor, 255, sizeof(SDL_Color));
 
-		self->display.needsDisplay = 1;
-	} else {
-		g_clear_pointer(&self, g_free);
+		self->display.window = window ? window : SDL_GL_GetCurrentWindow();
+		self->display.context = context ? context : SDL_GL_GetCurrentContext();
 	}
 
 	return self;
