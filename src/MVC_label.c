@@ -11,7 +11,7 @@ static void MVC_Label_dealloc(Object *object) {
 
 	MVC_Label *self = (MVC_Label *) self;
 
-	Super(MVC_View, Object, dealloc);
+	Super(Object, MVC_View, object, dealloc);
 }
 
 /*
@@ -21,7 +21,13 @@ static void MVC_Label_draw(MVC_View *view) {
 
 	MVC_Label *self = (MVC_Label *) view;
 
-	__MVC_View.draw(view);
+	if (self->texture == NULL) {
+		self->render(self);
+	}
+
+	Super(MVC_View, MVC_View, view, draw);
+
+	SDL_RenderCopy(view->renderer, self->texture, NULL, &view->frame);
 }
 
 /*
@@ -29,16 +35,24 @@ static void MVC_Label_draw(MVC_View *view) {
  */
 static void MVC_Label_render(MVC_Label *self) {
 
+	if (self->texture) {
+		SDL_DestroyTexture(self->texture);
+		self->texture = NULL;
+	}
+
 	SDL_Surface *surface = TTF_RenderUTF8_Blended(self->font, self->text, self->color);
 	if (surface) {
 
-		glBindTexture(GL_TEXTURE_2D, self->texture);
+		self->texture = SDL_CreateTextureFromSurface(self->super.renderer, surface);
+		if (self->texture) {
+			SDL_LogVerbose(0, "%s: Created texture for \"%s\"", __func__, self->text);
+		} else {
+			SDL_LogError(0, "%s: Failed to create texture for \"%s\"", __func__, self->text);
+		}
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, surface->format->BytesPerPixel, surface->w, surface->h, 0,
-				GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+		SDL_FreeSurface(surface);
+	} else {
+		SDL_LogError(0, "%s: Failed to render \"%s\"", __func__, self->text);
 	}
 }
 
@@ -51,12 +65,12 @@ static void MVC_Label_getSize(MVC_Label *self, int *width, int *height) {
 	}
 }
 
-MVC_Label *MVC_Label_init(MVC_Label *self, SDL_Window *window, SDL_GLContext *context,
-		TTF_Font *font, SDL_Color color, const char *text) {
+Implementation(MVC_Label, SDL_Rect *frame, TTF_Font *font, SDL_Color color, const char *text)
 
-	if (MVC_View_init(&self->super, window, context)) {
+	if (MVC_View_init(&self->super, frame)) {
 
 		Override(Object, dealloc, MVC_Label_dealloc);
+
 		Override(MVC_View, draw, MVC_Label_draw);
 
 		self->render = MVC_Label_render;
@@ -65,11 +79,8 @@ MVC_Label *MVC_Label_init(MVC_Label *self, SDL_Window *window, SDL_GLContext *co
 		self->font = font ? font : MVC_DefaultFont();
 		self->color = color;
 		self->text = g_strdup(text);
-
-		glGenTextures(1, &self->texture);
-	} else {
-		g_clear_pointer(&self, g_free);
 	}
 
 	return self;
-}
+
+End

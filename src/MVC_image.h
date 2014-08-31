@@ -22,6 +22,6 @@ Interface(MVC_Image, MVC_View)
 
 End
 
-Constructor(MVC_Image, SDL_Window *window, SDL_GLContext *context, SDL_Texture *texture);
+Constructor(MVC_Image, SDL_Rect *frame, SDL_Texture *texture);
 
 #endif

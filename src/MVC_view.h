@@ -9,26 +9,23 @@
 #define _MVC_view_h
 
 #include "MVC_stdinc.h"
+#include "MVC_color.h"
 
 /*
  * @brief
  */
 Interface(MVC_View, Object)
 
-	struct {
-		MVC_View *superview;
-		GList *subviews;
-	} hierarchy;
+	MVC_View *superview;
+	GList *subviews;
 
-	struct {
-		SDL_Window *window;
-		SDL_GLContext *context;
+	SDL_Window *window;
+	SDL_Renderer *renderer;
 
-		SDL_Rect frame, bounds;
-		SDL_bool hidden;
+	SDL_Rect frame, bounds;
+	SDL_bool hidden;
 
-		SDL_Color backgroundColor;
-	} display;
+	SDL_Color backgroundColor;
 
 	void (*addSubview)(MVC_View *self, MVC_View *subview);
 	void (*removeSubview)(MVC_View *self, MVC_View *subview);
@@ -45,6 +42,6 @@ End
 /*
  * @brief
  */
-Constructor(MVC_View, SDL_Window *window, SDL_GLContext *context);
+Constructor(MVC_View, SDL_Rect *frame);
 
 #endif

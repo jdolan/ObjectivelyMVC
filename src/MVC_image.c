@@ -7,10 +7,9 @@
 
 #include "MVC_image.h"
 
-MVC_Image *MVC_Image_init(MVC_Image *self, SDL_Window *window, SDL_GLContext *context,
-		SDL_Texture *texture) {
+Implementation(MVC_Image, SDL_Rect *frame, SDL_Texture *texture)
 
-	if (MVC_View_init(&self->super, window, context)) {
+	if (MVC_View_init(&self->super, frame)) {
 
 		self->texture = texture;
 		self->alpha = 1.0;
@@ -18,9 +17,8 @@ MVC_Image *MVC_Image_init(MVC_Image *self, SDL_Window *window, SDL_GLContext *co
 		self->blend.src = GL_SRC_ALPHA;
 		self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
 
-	} else {
-		g_clear_pointer(&self, g_free);
 	}
 
 	return self;
-}
+
+End

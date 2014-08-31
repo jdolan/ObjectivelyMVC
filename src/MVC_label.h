@@ -15,16 +15,15 @@ Interface(MVC_Label, MVC_View)
 
 	TTF_Font *font;
 	SDL_Color color;
-	char *text;
+	const char *text;
 
-	GLuint texture;
+	SDL_Texture *texture;
 
 	void (*render)(MVC_Label *self);
 	void (*getSize)(MVC_Label *self, int *width, int *height);
 
 End
 
-Constructor(MVC_Label, SDL_Window *window, SDL_GLContext *context, TTF_Font *font, SDL_Color color,
-		const char *text);
+Constructor(MVC_Label, SDL_Rect *frame, TTF_Font *font, SDL_Color color, const char *text);
 
 #endif
