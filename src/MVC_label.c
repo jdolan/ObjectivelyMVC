@@ -7,27 +7,23 @@
 
 #include "MVC_label.h"
 
-static void MVC_Label_dealloc(Object *object) {
+static void MVC_Label_dealloc(MVC_Label *self) {
 
-	MVC_Label *self = (MVC_Label *) self;
-
-	Super(Object, MVC_View, object, dealloc);
+	Super(Object, self, dealloc);
 }
 
 /*
  * @brief ViewDraw implementation.
  */
-static void MVC_Label_draw(MVC_View *view) {
-
-	MVC_Label *self = (MVC_Label *) view;
+static void MVC_Label_draw(MVC_Label *self) {
 
 	if (self->texture == NULL) {
 		self->render(self);
 	}
 
-	Super(MVC_View, MVC_View, view, draw);
+	Super(MVC_View, self, draw);
 
-	SDL_RenderCopy(view->renderer, self->texture, NULL, &view->frame);
+	SDL_RenderCopy(self->super.renderer, self->texture, NULL, &self->super.frame);
 }
 
 /*
@@ -69,9 +65,9 @@ Implementation(MVC_Label, SDL_Rect *frame, TTF_Font *font, SDL_Color color, cons
 
 	if (MVC_View_init(&self->super, frame)) {
 
-		Override(Object, dealloc, MVC_Label_dealloc);
+		Override(Object, self, dealloc, MVC_Label_dealloc);
 
-		Override(MVC_View, draw, MVC_Label_draw);
+		Override(MVC_View, self, draw, MVC_Label_draw);
 
 		self->render = MVC_Label_render;
 		self->getSize = MVC_Label_getSize;

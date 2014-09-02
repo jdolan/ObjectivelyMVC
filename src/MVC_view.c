@@ -7,19 +7,15 @@
 
 #include "MVC_view.h"
 
-static void MVC_View_dealloc(Object *object) {
-
-	MVC_View *self = (MVC_View *) object;
+static void MVC_View_dealloc(MVC_View *self) {
 
 	self->removeFromSuperview(self);
 
 	g_list_free_full(self->subviews, (GDestroyNotify) MVC_View_dealloc);
 
-	Super(Object, Object, object, dealloc);
+	Super(Object, self, dealloc);
 }
-/*
- * @brief Default implementation of addSubview.
- */
+
 static void MVC_View_addSubview(MVC_View *self, MVC_View *subview) {
 
 	if (subview) {
@@ -30,9 +26,6 @@ static void MVC_View_addSubview(MVC_View *self, MVC_View *subview) {
 	}
 }
 
-/*
- * @brief Default implementation of removeSubview.
- */
 static void MVC_View_removeSubview(MVC_View *self, MVC_View *subview) {
 
 	if (subview) {
@@ -43,9 +36,6 @@ static void MVC_View_removeSubview(MVC_View *self, MVC_View *subview) {
 	}
 }
 
-/*
- * @brief Default implementation of removeFromSuperview.
- */
 static void MVC_View_removeFromSuperview(MVC_View *self) {
 
 	if (self->superview) {
@@ -53,9 +43,6 @@ static void MVC_View_removeFromSuperview(MVC_View *self) {
 	}
 }
 
-/*
- * @brief Default implementation of draw.
- */
 static void MVC_View_draw(MVC_View *self) {
 
 	if (self->backgroundColor.a) {
@@ -70,9 +57,6 @@ static void MVC_View_draw(MVC_View *self) {
 	}
 }
 
-/*
- * @brief Constructor.
- */
 Implementation(MVC_View, SDL_Rect *frame)
 
 	Initialize(MVC_View, NULL);
@@ -91,13 +75,13 @@ Implementation(MVC_View, SDL_Rect *frame)
 		if (frame) {
 			self->frame = *frame;
 		} else {
-			SDL_LogWarn(0, "%s: NULL frame", __func__);
+			SDL_LogDebug(0, "%s: NULL frame", __func__);
 			SDL_GetWindowSize(self->window, &self->frame.w, &self->frame.h);
 		}
 
 		self->backgroundColor = MVC_Colors.Clear;
 
-		Override(Object, dealloc, MVC_View_dealloc);
+		Override(Object, self ,dealloc, MVC_View_dealloc);
 
 		self->addSubview = MVC_View_addSubview;
 		self->removeSubview = MVC_View_removeSubview;
