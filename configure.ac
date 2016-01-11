@@ -3,7 +3,7 @@ AC_PREREQ(2.68)
 AC_INIT([SDL2_mvc], [0.1.0], [jay@jaydolan.com])
 
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([src/SDL_mvc.h])
+AC_CONFIG_SRCDIR([Sources/SDL_mvc.h])
 AC_CONFIG_HEADERS([config.h])
 
 AC_CANONICAL_SYSTEM
@@ -13,7 +13,7 @@ AC_PROG_CC_STDC
 AC_PROG_LIBTOOL
 
 AM_INIT_AUTOMAKE([silent-rules foreign])
-AM_SILENT_RULES([yes])
+AM_SILENT_RULES
 
 dnl --------------------
 dnl Check for FontConfig
@@ -21,16 +21,11 @@ dnl --------------------
 
 PKG_CHECK_MODULES([FONTCONFIG], [fontconfig >= 2.10.0])
 
-dnl --------------
-dnl Check for GLib
-dnl --------------
-PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.0.0])
-
 dnl ---------------------
 dnl Check for Objectively
 dnl ---------------------
 
-PKG_CHECK_MODULES([OBJECTIVELY], [objectively >= 0.1.0])
+PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 0.1.0])
 
 dnl ------------------------
 dnl Check for SDL2, SDL2_ttf
@@ -82,9 +77,11 @@ AC_MSG_CHECKING(whether to build unit tests)
 
 if test "x${with_tests}" = xyes; then
 	BUILD_TESTS=yes
+	AC_MSG_RESULT($BUILD_TESTS)
 	PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+else
+	AC_MSG_RESULT($BUILD_TESTS)
 fi
-AC_MSG_RESULT($BUILD_TESTS)
 
 AM_CONDITIONAL(BUILD_TESTS, test "x$BUILD_TESTS" = xyes)
 
@@ -94,7 +91,7 @@ dnl ---------------
 
 AC_CONFIG_FILES([
 	Makefile
-	src/Makefile
+	Sources/Makefile
 ])
 
 AC_OUTPUT

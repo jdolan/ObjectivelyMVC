@@ -17,7 +17,7 @@ int MVC_Init(void) {
 	if (err == 0) {
 		err = TTF_Init();
 		if (err == 0) {
-			err = (FcInit() != true);
+			err = (FcInit() != 1);
 		}
 	}
 	return err;

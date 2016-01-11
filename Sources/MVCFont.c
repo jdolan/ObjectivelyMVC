@@ -9,7 +9,7 @@
 
 #include "MVC_font.h"
 
-TTF_Font *MVC_OpenFont(const char *family, int ptsize, int style) {
+TTF_Font *OpenFont(const char *family, int ptsize, int style) {
 
 	FcConfig *config = FcConfigGetCurrent();
 	if (config) {
@@ -62,6 +62,6 @@ TTF_Font *MVC_OpenFont(const char *family, int ptsize, int style) {
 	return NULL;
 }
 
-TTF_Font *MVC_DefaultFont(void) {
-	return MVC_OpenFont("Sans", 12, 0);
+TTF_Font *DefaultFont(void) {
+	return OpenFont("Sans", 12, 0);
 }
