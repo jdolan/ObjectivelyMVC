@@ -1,5 +1,5 @@
 lib_LTLIBRARIES = \
-	libSDL_mvc.la
+	libObjectivelyMVC.la
 
 include_HEADERS = \
 	Color.h \
@@ -8,8 +8,7 @@ include_HEADERS = \
 	Main.h \
 	TextField.h \
 	View.h \
-	Viewcontroller.h \
-	SDL_mvc.h
+	Viewcontroller.h
 
 libSDL_la_SOURCES = \
 	Color.c \
@@ -19,17 +18,17 @@ libSDL_la_SOURCES = \
 	TextField.c \
 	View.c \
 	ViewController.c
-	
-libSDL_la_CFLAGS = \
+
+libObjectivelyla_CFLAGS = \
 	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
 	@OPENGL_CFLAGS@ \
 	@SDL2_CFLAGS@
 
-libSDL_la_LDFLAGS = \
+libObjectivelyla_LDFLAGS = \
 	-shared
 
-libSDL_la_LIBADD = \
+libObjectivelyla_LIBADD = \
 	@FONTCONFIG_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
 	@OPENGL_LIBS@ \

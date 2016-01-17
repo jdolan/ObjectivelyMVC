@@ -1,13 +1,13 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
  */
 
-#include "MVC_view.h"
+#include <Objectively/MVC/View.h>
 
-#define __class __MVC_View
+#define _Class _View
 
 #pragma mark - ObjectInterface
 
@@ -16,7 +16,7 @@
  */
 static void dealloc(Object *self) {
 
-	MVC_View *this = (MVC_View *) self;
+	View *this = (View *) self;
 
 	$(this, removeFromSuperview);
 
@@ -32,9 +32,9 @@ static void dealloc(Object *self) {
 /**
  * @see ViewInterface::init(View *, SDL_Rect *)
  */
-static MVC_View *initWithFrame(MVC_View *self, SDL_Rect *frame) {
+static View *initWithFrame(View *self, SDL_Rect *frame) {
 
-	self = (MVC_View *) super(Object, self, init);
+	self = (View *) super(Object, self, init);
 	if (self) {
 		self->subviews = $(alloc(Array), init);
 
@@ -54,7 +54,7 @@ static MVC_View *initWithFrame(MVC_View *self, SDL_Rect *frame) {
 			SDL_GetWindowSize(self->window, &self->frame.w, &self->frame.h);
 		}
 
-		self->backgroundColor = MVC_Colors.Clear;
+		self->backgroundColor = Colors.Clear;
 	}
 
 	return self;
@@ -65,7 +65,7 @@ static MVC_View *initWithFrame(MVC_View *self, SDL_Rect *frame) {
 /**
  * @see ViewInterface::addSubview(View *, View *)
  */
-static void addSubview(MVC_View *self, MVC_View *subview) {
+static void addSubview(View *self, View *subview) {
 
 	if (subview) {
 		if ($(self->subviews, indexOfObject) == -1) {
@@ -78,7 +78,7 @@ static void addSubview(MVC_View *self, MVC_View *subview) {
 /**
  * @see ViewInterface::removeSubview(View *, View *)
  */
-static void removeSubview(MVC_View *self, MVC_View *subview) {
+static void removeSubview(View *self, View *subview) {
 
 	if (subview) {
 		if ($(self->subviews, indexOfObject, subview) != -1) {
@@ -91,7 +91,7 @@ static void removeSubview(MVC_View *self, MVC_View *subview) {
 /**
  * @see ViewInterface::removeFromSuperview(View *)
  */
-static void removeFromSuperview(MVC_View *self) {
+static void removeFromSuperview(View *self) {
 
 	if (self->superview) {
 		$(self->superview, removeSubview, self);
@@ -101,7 +101,7 @@ static void removeFromSuperview(MVC_View *self) {
 /**
  * @see ViewInterface::draw(View *)
  */
-static void draw(MVC_View *self) {
+static void draw(View *self) {
 
 	if (self->backgroundColor.a) {
 
@@ -110,7 +110,7 @@ static void draw(MVC_View *self) {
 
 		SDL_RenderFillRect(self->renderer, &self->frame);
 
-		SDL_Color w = MVC_Colors.White;
+		SDL_Color w = Colors.White;
 		SDL_SetRenderDrawColor(self->renderer, w.r, w.g, w.b, w.a);
 	}
 }
@@ -118,21 +118,21 @@ static void draw(MVC_View *self) {
 /**
  * @see ViewInterface::activate(View *)
  */
-static void activate(MVC_View *self) {
+static void activate(View *self) {
 	// TODO
 }
 
 /**
  * @see ViewInterface::deactivate(View *)
  */
-static void deactivate(MVC_View *self) {
+static void deactivate(View *self) {
 	// TODO
 }
 
 /**
  * @see ViewInterface::respondToEvent(View *, SDL_Event *, SDL_bool *)
  */
-static void respondToEvent(MVC_View *self, SDL_Event *event, SDL_bool *cancel) {
+static void respondToEvent(View *self, SDL_Event *event, SDL_bool *cancel) {
 	// TODO
 }
 
@@ -147,7 +147,7 @@ static void initialize(Class *clazz) {
 
 	object->dealloc = dealloc;
 
-	MVC_ViewInterface *view = (MVC_ViewInterface *) clazz->interface;
+	ViewInterface *view = (ViewInterface *) clazz->interface;
 
 	view->initWithFrame = initWithFrame;
 
@@ -162,12 +162,12 @@ static void initialize(Class *clazz) {
 	view->respondToEvent = respondToEvent;
 }
 
-Class __MVC_View = {
+Class _View = {
 	.name = "View",
-	.superclass = &__Object,
-	.instanceSize = sizeof(MVC_View),
-	.interfaceOffset = offsetof(MVC_View, interface),
-	.interfaceSize = sizeof(MVC_ViewInterface),
+	.superclass = &_Object,
+	.instanceSize = sizeof(View),
+	.interfaceOffset = offsetof(View, interface),
+	.interfaceSize = sizeof(ViewInterface),
 	.initialize = initialize,
 };
 

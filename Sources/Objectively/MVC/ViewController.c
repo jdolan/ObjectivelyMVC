@@ -1,5 +1,5 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
@@ -7,7 +7,7 @@
 
 #include <assert.h>
 
-#include "MVC_viewcontroller.h"
+#include <Objectively/MVC/ViewController.h>
 
 #define __class __ViewController
 
@@ -28,9 +28,9 @@ static void dealloc(Object *self) {
 /**
  * @see ViewControllerInterface::init(ViewController *)
  */
-static MVC_ViewController *init(MVC_ViewController *self) {
+static ViewController *init(ViewController *self) {
 
-	self = (MVC_ViewController *) super(Object, self, init);
+	self = (ViewController *) super(Object, self, init);
 	if (self) {
 
 		//..
@@ -48,7 +48,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((MVC_ViewControllerInterface *) clazz->interface)->init = init;
+	((ViewControllerInterface *) clazz->interface)->init = init;
 
 	//..
 }
@@ -56,9 +56,9 @@ static void initialize(Class *clazz) {
 Class __ViewController = {
 	.name = "ViewController",
 	.superclass = &__Object,
-	.instanceSize = sizeof(MVC_ViewController),
-	.interfaceOffset = offsetof(MVC_ViewController, interface),
-	.interfaceSize = sizeof(MVC_ViewControllerInterface),
+	.instanceSize = sizeof(ViewController),
+	.interfaceOffset = offsetof(ViewController, interface),
+	.interfaceSize = sizeof(ViewControllerInterface),
 	.initialize = initialize,
 };
 

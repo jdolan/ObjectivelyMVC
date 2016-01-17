@@ -1,12 +1,12 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
  */
 
-#ifndef _MVC_font_h_
-#define _MVC_font_h_
+#ifndef _ObjectivelyMVC_Font_h_
+#define _ObjectivelyMVC_Font_h_
 
 #include <SDL2/SDL_TTF.h>
 

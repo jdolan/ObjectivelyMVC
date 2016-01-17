@@ -6,21 +6,21 @@
  */
 
 
-#ifndef _MVC_viewcontroller_h_
-#define _MVC_viewcontroller_h_
+#ifndef _ObjectivelyMVC_ViewController_h_
+#define _ObjectivelyMVC_ViewController_h_
 
 #include <Objectively/Object.h>
 #include <SDL2/SDL_stdinc.h>
 
-#include "MVC_view.h"
+#include "view.h"
 
-typedef struct MVC_ViewController MVC_ViewController;
-typedef struct MVC_ViewControllerInterface MVC_ViewControllerInterface;
+typedef struct ViewController ViewController;
+typedef struct ViewControllerInterface ViewControllerInterface;
 
 /**
  * @brief The ViewController type.
  */
-struct MVC_ViewController {
+struct ViewController {
 
 	/**
 	 * @brief The parent.
@@ -30,7 +30,7 @@ struct MVC_ViewController {
 	/**
 	 * @brief The typed interface.
 	 */
-	MVC_ViewControllerInterface *interface;
+	ViewControllerInterface *interface;
 
 	/**
 	 * @brief The title.
@@ -40,12 +40,12 @@ struct MVC_ViewController {
 	/**
 	 * @brief The main view.
 	 */
-	MVC_View *view;
+	View *view;
 
 	/**
 	 * @brief The parent view controller.
 	 */
-	MVC_ViewController *parentViewController;
+	ViewController *parentViewController;
 
 	/**
 	 * @brief The child view controllers.
@@ -56,7 +56,7 @@ struct MVC_ViewController {
 /**
  * @brief The ViewController type.
  */
-struct MVC_ViewControllerInterface {
+struct ViewControllerInterface {
 
 	/**
 	 * @brief The parent interface.
@@ -68,7 +68,7 @@ struct MVC_ViewControllerInterface {
 	 *
 	 * @return The initialized view controller, or NULL on error.
 	 */
-	MVC_ViewController *(*init)(MVC_ViewController *self);
+	ViewController *(*init)(ViewController *self);
 
 	/**
 	 * @brief Called when this controller's view is about to be shown.
@@ -76,7 +76,7 @@ struct MVC_ViewControllerInterface {
 	 * @remark Subclasses may implement this method to prepare the
 	 * view for rendering.
 	 */
-	void (*viewWillAppear)(MVC_ViewController *self);
+	void (*viewWillAppear)(ViewController *self);
 
 	/**
 	 * @brief Called when this controller's view is about to be hidden.
@@ -84,7 +84,7 @@ struct MVC_ViewControllerInterface {
 	 * @remark Subclasses may implement this method to free resources
 	 * allocated in `viewWillAppear`.
 	 */
-	void (*viewWillDisappear)(MVC_ViewController *self);
+	void (*viewWillDisappear)(ViewController *self);
 };
 
 /**
@@ -95,16 +95,16 @@ extern Class __ViewController;
 /**
  * @brief
  */
-extern DECLSPEC MVC_ViewController * SDLCALL CreateViewController(void);
+extern DECLSPEC ViewController * SDLCALL CreateViewController(void);
 
 /**
  * @brief
  */
-extern DECLSPEC void SDLCALL DestroyViewController(MVC_ViewController *controller);
+extern DECLSPEC void SDLCALL DestroyViewController(ViewController *controller);
 
 /**
  * @brief
  */
-extern DECLSPEC void SDLCALL SwitchToViewController(MVC_ViewController *controller);
+extern DECLSPEC void SDLCALL SwitchToViewController(ViewController *controller);
 
 #endif

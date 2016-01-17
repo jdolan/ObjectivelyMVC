@@ -1,17 +1,16 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
  */
 
-#ifndef _MVC_view_h_
-#define _MVC_view_h_
+#ifndef _ObjectivelyMVC_View_h_
+#define _ObjectivelyMVC_View_h_
 
 #include <Objectively/Array.h>
-#include <SDL2/SDL_opengl.h>
 
-#include "MVC_color.h"
+#include <SDL2/SDL.h>
 
 /**
  * @file
@@ -19,13 +18,13 @@
  * @brief MVC View implementation.
  */
 
-typedef struct MVC_View MVC_View;
-typedef struct MVC_ViewInterface MVC_ViewInterface;
+typedef struct View View;
+typedef struct ViewInterface ViewInterface;
 
 /**
  * @brief The View type.
  */
-struct MVC_View {
+struct View {
 
 	/**
 	 * @brief The parent.
@@ -35,12 +34,12 @@ struct MVC_View {
 	/**
 	 * @brief The typed interface.
 	 */
-	MVC_ViewInterface *interface;
+	ViewInterface *interface;
 
 	/**
 	 * @brief The containing view.
 	 */
-	MVC_View *superview;
+	View *superview;
 
 	/**
 	 * @brief All contained views.
@@ -63,9 +62,9 @@ struct MVC_View {
 	SDL_Rect frame, bounds;
 
 	/**
-	 * @brief If `YES`, this view is not drawn.
+	 * @brief If `true`, this view is not drawn.
 	 */
-	SDL_bool hidden;
+	_Bool hidden;
 
 	/**
 	 * @brief The background color.
@@ -76,7 +75,7 @@ struct MVC_View {
 /**
  * @brief The View interface.
  */
-struct MVC_ViewInterface {
+struct ViewInterface {
 
 	/**
 	 * @brief The parent interface.
@@ -90,24 +89,24 @@ struct MVC_ViewInterface {
 	 *
 	 * @return The initialized view, or NULL on error.
 	 */
-	MVC_View *(*initWithFrame)(MVC_View *self, SDL_Rect *frame);
+	View *(*initWithFrame)(View *self, SDL_Rect *frame);
 
 	/**
 	 * @brief Adds a subview to this view, to be drawn above its siblings.
 	 *
 	 * @param subview The subview.
 	 */
-	void (*addSubview)(MVC_View *self, MVC_View *subview);
-	void (*removeSubview)(MVC_View *self, MVC_View *subview);
-	void (*removeFromSuperview)(MVC_View *self);
+	void (*addSubview)(View *self, View *subview);
+	void (*removeSubview)(View *self, View *subview);
+	void (*removeFromSuperview)(View *self);
 
-	void (*draw)(MVC_View *self);
+	void (*draw)(View *self);
 
-	void (*activate)(MVC_View *self);
-	void (*deactivate)(MVC_View *self);
-	void (*respondToEvent)(MVC_View *self, SDL_Event *event, SDL_bool *cancel);
+	void (*activate)(View *self);
+	void (*deactivate)(View *self);
+	void (*respondToEvent)(View *self, SDL_Event *event, SDL_bool *cancel);
 };
 
-extern Class __MVC_View;
+extern Class __View;
 
 #endif

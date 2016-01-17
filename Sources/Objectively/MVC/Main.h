@@ -1,12 +1,12 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
  */
 
-#ifndef _MVC_main_h_
-#define _MVC_main_h_
+#ifndef _ObjectivelyMVC_Main_h_
+#define _ObjectivelyMVC_Main_h_
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
@@ -14,11 +14,11 @@
 /**
  * @brief
  */
-extern DECLSPEC int SDLCALL MVC_Init(void);
+extern DECLSPEC int SDLCALL Init(void);
 
 /**
  * @brief
  */
-extern DECLSPEC void SDLCALL MVC_Quit(void);
+extern DECLSPEC void SDLCALL Quit(void);
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
@@ -7,7 +7,7 @@
 
 #include <fontconfig/fontconfig.h>
 
-#include "MVC_font.h"
+#include <Objectively/MVC/Font.h>
 
 TTF_Font *OpenFont(const char *family, int ptsize, int style) {
 

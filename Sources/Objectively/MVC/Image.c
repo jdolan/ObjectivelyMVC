@@ -1,5 +1,5 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
@@ -7,9 +7,9 @@
 
 #include <assert.h>
 
-#include "MVC_image.h"
+#include <Objectively/MVC/Image.h>
 
-#define __class __MVC_Image
+#define _Class _Image
 
 #pragma mark - ObjectInterface
 
@@ -18,7 +18,7 @@
  */
 static void dealloc(Object *self) {
 
-	MVC_Image *this = (MVC_Image *) self;
+	Image *this = (Image *) self;
 
 	SDL_DestroyTexture(this->texture);
 
@@ -30,11 +30,11 @@ static void dealloc(Object *self) {
 /**
  * @see ViewInterface::draw(View *)
  */
-static void draw(MVC_View *self) {
+static void draw(View *self) {
 
 	// TODO
 
-	super(MVC_View, self, draw);
+	super(View, self, draw);
 }
 
 #pragma mark - Image initializers
@@ -42,9 +42,9 @@ static void draw(MVC_View *self) {
 /**
  * @see ImageInterface::init(Image *)
  */
-static MVC_Image *initWithFrameAndTexture(MVC_Image *self, SDL_Rect *frame, SDL_Texture *texture) {
+static Image *initWithFrameAndTexture(Image *self, SDL_Rect *frame, SDL_Texture *texture) {
 
-	self = (MVC_Image *) super(MVC_View, self, initWithFrame, frame);
+	self = (Image *) super(View, self, initWithFrame, frame);
 	if (self) {
 
 		self->texture = texture;
@@ -65,17 +65,17 @@ static MVC_Image *initWithFrameAndTexture(MVC_Image *self, SDL_Rect *frame, SDL_
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((MVC_ViewInterface *) clazz->interface)->draw = draw;
-	((MVC_ImageInterface *) clazz->interface)->initWithFrameAndTexture = initWithFrameAndTexture;
+	((ViewInterface *) clazz->interface)->draw = draw;
+	((ImageInterface *) clazz->interface)->initWithFrameAndTexture = initWithFrameAndTexture;
 }
 
-Class __MVC_Image = {
+Class _Image = {
 	.name = "Image",
-	.superclass = &__MVC_View,
-	.instanceSize = sizeof(MVC_Image),
-	.interfaceOffset = offsetof(MVC_Image, interface),
-	.interfaceSize = sizeof(MVC_ImageInterface),
+	.superclass = &_View,
+	.instanceSize = sizeof(Image),
+	.interfaceOffset = offsetof(Image, interface),
+	.interfaceSize = sizeof(ImageInterface),
 	.initialize = initialize,
 };
 
-#undef __class
+#undef _Class

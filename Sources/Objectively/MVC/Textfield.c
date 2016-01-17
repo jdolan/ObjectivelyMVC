@@ -1,13 +1,13 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
  */
 
-#include "MVC_textfield.h"
+#include "textfield.h"
 
-#define __class __MVC_TextField
+#define _Class _TextField
 
 #pragma mark - ObjectInterface
 
@@ -16,7 +16,7 @@
  */
 static void dealloc(Object *self) {
 
-	MVC_TextField *this = (MVC_TextField *) self;
+	TextField *this = (TextField *) self;
 
 	SDL_DestroyTexture(this->texture);
 	this->texture = NULL;
@@ -30,7 +30,7 @@ static void dealloc(Object *self) {
 /**
  * @see ObjectInterface::init(id, id, va_list *)
  */
-static MVC_TextField *init(MVC_TextField *self) {
+static TextField *init(TextField *self) {
 
 	self = super(Object, self, init);
 	if (self) {
@@ -46,15 +46,15 @@ static MVC_TextField *init(MVC_TextField *self) {
 /**
  * @see ViewInterface::draw(View *)
  */
-static void draw(MVC_View *self) {
+static void draw(View *self) {
 
-	MVC_TextField *this = (MVC_TextField *) self;
+	TextField *this = (TextField *) self;
 
 	if (this->texture == NULL) {
 		$(this, render);
 	}
 
-	super(MVC_View, self, draw);
+	super(View, self, draw);
 
 	SDL_RenderCopy(self->renderer, this->texture, NULL, &self->frame);
 }
@@ -64,7 +64,7 @@ static void draw(MVC_View *self) {
 /**
  * @see TextFieldInterface::render(TextField *)
  */
-static void render(MVC_TextField *self) {
+static void render(TextField *self) {
 
 	if (self->texture) {
 		SDL_DestroyTexture(self->texture);
@@ -74,7 +74,7 @@ static void render(MVC_TextField *self) {
 	SDL_Surface *surface = TTF_RenderUTF8_Blended(self->font, self->text, self->color);
 	if (surface) {
 
-		self->texture = SDL_CreateTextureFromSurface(((MVC_View *) self)->renderer, surface);
+		self->texture = SDL_CreateTextureFromSurface(((View *) self)->renderer, surface);
 		if (self->texture) {
 			SDL_LogVerbose(0, "%s: Created texture for \"%s\"", __func__, self->text);
 		} else {
@@ -90,7 +90,7 @@ static void render(MVC_TextField *self) {
 /**
  * @see TextFieldInterface::getSize(TextField *, int *, int *)
  */
-static void getSize(MVC_TextField *self, int *width, int *height) {
+static void getSize(TextField *self, int *width, int *height) {
 
 	if (self->font && self->text) {
 		TTF_SizeUTF8(self->font, self->text, width, height);
@@ -109,18 +109,18 @@ static void initialize(Class *self) {
 	((ObjectInterface *) self->interface)->dealloc = dealloc;
 	((ObjectInterface *) self->interface)->init = init;
 
-	((MVC_ViewInterface *) self->interface)->draw = draw;
+	((ViewInterface *) self->interface)->draw = draw;
 
-	((MVC_TextFieldInterface *) self->interface)->getSize = getSize;
-	((MVC_TextFieldInterface *) self->interface)->render = render;
+	((TextFieldInterface *) self->interface)->getSize = getSize;
+	((TextFieldInterface *) self->interface)->render = render;
 }
 
-Class __MVC_TextField = {
+Class _TextField = {
 	.name = "TextField",
-	.superclass = &__MVC_View,
-	.instanceSize = sizeof(MVC_TextField),
-	.interfaceOffset = offsetof(MVC_TextField, interface),
-	.interfaceSize = sizeof(MVC_TextFieldInterface),
+	.superclass = &_View,
+	.instanceSize = sizeof(TextField),
+	.interfaceOffset = offsetof(TextField, interface),
+	.interfaceSize = sizeof(TextFieldInterface),
 	.initialize = initialize,
 };
 

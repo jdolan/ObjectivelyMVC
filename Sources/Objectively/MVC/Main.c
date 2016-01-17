@@ -1,5 +1,5 @@
 /*
- * Simple DirectMedia Layer - MVC
+ * Objectively - MVC
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * @author jdolan
@@ -9,9 +9,9 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
-#include "MVC_main.h"
+#include "main.h"
 
-int MVC_Init(void) {
+int Init(void) {
 
 	int err = IMG_Init(0);
 	if (err == 0) {
@@ -23,7 +23,7 @@ int MVC_Init(void) {
 	return err;
 }
 
-void MVC_Quit(void) {
+void Quit(void) {
 
 	FcFini();
 	TTF_Quit();
