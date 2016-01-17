@@ -5,9 +5,9 @@
  * @author jdolan
  */
 
-#include "textfield.h"
+#include "Label.h"
 
-#define _Class _TextField
+#define _Class _Label
 
 #pragma mark - ObjectInterface
 
@@ -16,7 +16,7 @@
  */
 static void dealloc(Object *self) {
 
-	TextField *this = (TextField *) self;
+	Label *this = (Label *) self;
 
 	SDL_DestroyTexture(this->texture);
 	this->texture = NULL;
@@ -30,7 +30,7 @@ static void dealloc(Object *self) {
 /**
  * @see ObjectInterface::init(id, id, va_list *)
  */
-static TextField *init(TextField *self) {
+static Label *init(Label *self) {
 
 	self = super(Object, self, init);
 	if (self) {
@@ -48,7 +48,7 @@ static TextField *init(TextField *self) {
  */
 static void draw(View *self) {
 
-	TextField *this = (TextField *) self;
+	Label *this = (Label *) self;
 
 	if (this->texture == NULL) {
 		$(this, render);
@@ -59,12 +59,12 @@ static void draw(View *self) {
 	SDL_RenderCopy(self->renderer, this->texture, NULL, &self->frame);
 }
 
-#pragma mark - TextFieldInterface
+#pragma mark - LabelInterface
 
 /**
- * @see TextFieldInterface::render(TextField *)
+ * @see LabelInterface::render(Label *)
  */
-static void render(TextField *self) {
+static void render(Label *self) {
 
 	if (self->texture) {
 		SDL_DestroyTexture(self->texture);
@@ -88,9 +88,9 @@ static void render(TextField *self) {
 }
 
 /**
- * @see TextFieldInterface::getSize(TextField *, int *, int *)
+ * @see LabelInterface::getSize(Label *, int *, int *)
  */
-static void getSize(TextField *self, int *width, int *height) {
+static void getSize(Label *self, int *width, int *height) {
 
 	if (self->font && self->text) {
 		TTF_SizeUTF8(self->font, self->text, width, height);
@@ -99,7 +99,7 @@ static void getSize(TextField *self, int *width, int *height) {
 	}
 }
 
-#pragma mark - TextField class methods
+#pragma mark - Label class methods
 
 /**
  * @see Class::initialize(Class *)
@@ -111,16 +111,16 @@ static void initialize(Class *self) {
 
 	((ViewInterface *) self->interface)->draw = draw;
 
-	((TextFieldInterface *) self->interface)->getSize = getSize;
-	((TextFieldInterface *) self->interface)->render = render;
+	((LabelInterface *) self->interface)->getSize = getSize;
+	((LabelInterface *) self->interface)->render = render;
 }
 
-Class _TextField = {
-	.name = "TextField",
+Class _Label = {
+	.name = "Label",
 	.superclass = &_View,
-	.instanceSize = sizeof(TextField),
-	.interfaceOffset = offsetof(TextField, interface),
-	.interfaceSize = sizeof(TextFieldInterface),
+	.instanceSize = sizeof(Label),
+	.interfaceOffset = offsetof(Label, interface),
+	.interfaceSize = sizeof(LabelInterface),
 	.initialize = initialize,
 };
 

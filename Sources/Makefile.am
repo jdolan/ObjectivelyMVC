@@ -4,9 +4,9 @@ lib_LTLIBRARIES = \
 include_HEADERS = \
 	Color.h \
 	Font.h \
-	Image.h \
+	ImageView.h \
 	Main.h \
-	TextField.h \
+	Label.h \
 	View.h \
 	Viewcontroller.h \
 	SDL_mvc.h
@@ -14,9 +14,9 @@ include_HEADERS = \
 libSDL_la_SOURCES = \
 	Color.c \
 	Font.c \
-	Image.c \
+	ImageView.c \
 	Main.c \
-	TextField.c \
+	Label.c \
 	View.c \
 	ViewController.c
 	

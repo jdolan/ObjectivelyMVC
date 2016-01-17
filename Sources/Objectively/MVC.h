@@ -9,9 +9,9 @@
 #define _ObjectivelyMVC_h_
 
 #include <Objectively/MVC/Color.h>
-#include <Objectively/MVC/Image.h>
+#include <Objectively/MVC/ImageView.h>
 #include <Objectively/MVC/Main.h>
-#include <Objectively/MVC/TextField.h>
+#include <Objectively/MVC/Label.h>
 #include <Objectively/MVC/View.h>
 #include <Objectively/MVC/ViewController.h>
 

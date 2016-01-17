@@ -1,4 +1,4 @@
-Simple DirectMedia Layer - MVC Framework
+Objectively - MVC Framework
 ---
 
 SDL_mvc is a user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by 

@@ -7,9 +7,9 @@
 
 #include <assert.h>
 
-#include <Objectively/MVC/Image.h>
+#include <Objectively/MVC/ImageView.h>
 
-#define _Class _Image
+#define _Class _ImageView
 
 #pragma mark - ObjectInterface
 
@@ -18,7 +18,7 @@
  */
 static void dealloc(Object *self) {
 
-	Image *this = (Image *) self;
+	ImageView *this = (ImageView *) self;
 
 	SDL_DestroyTexture(this->texture);
 
@@ -37,14 +37,14 @@ static void draw(View *self) {
 	super(View, self, draw);
 }
 
-#pragma mark - Image initializers
+#pragma mark - ImageView initializers
 
 /**
- * @see ImageInterface::init(Image *)
+ * @see ImageViewInterface::init(ImageView *)
  */
-static Image *initWithFrameAndTexture(Image *self, SDL_Rect *frame, SDL_Texture *texture) {
+static ImageView *initWithFrameAndTexture(ImageView *self, SDL_Rect *frame, SDL_Texture *texture) {
 
-	self = (Image *) super(View, self, initWithFrame, frame);
+	self = (ImageView *) super(View, self, initWithFrame, frame);
 	if (self) {
 
 		self->texture = texture;
@@ -66,15 +66,15 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	((ViewInterface *) clazz->interface)->draw = draw;
-	((ImageInterface *) clazz->interface)->initWithFrameAndTexture = initWithFrameAndTexture;
+	((ImageViewInterface *) clazz->interface)->initWithFrameAndTexture = initWithFrameAndTexture;
 }
 
-Class _Image = {
-	.name = "Image",
+Class _ImageView = {
+	.name = "ImageView",
 	.superclass = &_View,
-	.instanceSize = sizeof(Image),
-	.interfaceOffset = offsetof(Image, interface),
-	.interfaceSize = sizeof(ImageInterface),
+	.instanceSize = sizeof(ImageView),
+	.interfaceOffset = offsetof(ImageView, interface),
+	.interfaceSize = sizeof(ImageViewInterface),
 	.initialize = initialize,
 };
 
