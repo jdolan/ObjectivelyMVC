@@ -176,6 +176,9 @@ static void initialize(Class *clazz) {
 static void destroy(Class *clazz) {
 
 	release(_defaultFont);
+
+	FcFini();
+	TTF_Quit();
 }
 
 Class _Font = {
