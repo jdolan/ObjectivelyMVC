@@ -7,14 +7,14 @@
 
 #include <assert.h>
 
-#include <Objectively/MVC/ViewController.h>
+#include <ObjectivelyMVC/ViewController.h>
 
-#define __class __ViewController
+#define _Class _ViewController
 
 #pragma mark - ObjectInterface
 
 /**
- * @see ObjectInterface::dealloc(Object *)
+ * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
 
@@ -23,10 +23,10 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
-#pragma mark - ViewControllerInterface
+#pragma mark - ViewController
 
 /**
- * @see ViewControllerInterface::init(ViewController *)
+ * @
  */
 static ViewController *init(ViewController *self) {
 
@@ -42,24 +42,22 @@ static ViewController *init(ViewController *self) {
 #pragma mark - Class lifecycle
 
 /**
- * see Class::initialize(Class *)
+ * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewControllerInterface *) clazz->interface)->init = init;
-
-	//..
 }
 
-Class __ViewController = {
+Class _ViewController = {
 	.name = "ViewController",
-	.superclass = &__Object,
+	.superclass = &_Object,
 	.instanceSize = sizeof(ViewController),
 	.interfaceOffset = offsetof(ViewController, interface),
 	.interfaceSize = sizeof(ViewControllerInterface),
 	.initialize = initialize,
 };
 
-#undef __class
+#undef _Class

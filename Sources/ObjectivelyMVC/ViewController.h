@@ -1,18 +1,16 @@
 /*
- * ViewController.h
+ * Objectively - MVC
+ * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
- *  Created on: Nov 18, 2014
- *      Author: jdolan
+ * @author jdolan
  */
-
 
 #ifndef _ObjectivelyMVC_ViewController_h_
 #define _ObjectivelyMVC_ViewController_h_
 
 #include <Objectively/Object.h>
-#include <SDL2/SDL_stdinc.h>
 
-#include "view.h"
+#include <ObjectivelyMVC/View.h>
 
 typedef struct ViewController ViewController;
 typedef struct ViewControllerInterface ViewControllerInterface;
@@ -90,21 +88,6 @@ struct ViewControllerInterface {
 /**
  * @brief The ViewController Class.
  */
-extern Class __ViewController;
-
-/**
- * @brief
- */
-extern DECLSPEC ViewController * SDLCALL CreateViewController(void);
-
-/**
- * @brief
- */
-extern DECLSPEC void SDLCALL DestroyViewController(ViewController *controller);
-
-/**
- * @brief
- */
-extern DECLSPEC void SDLCALL SwitchToViewController(ViewController *controller);
+extern Class _ViewController;
 
 #endif

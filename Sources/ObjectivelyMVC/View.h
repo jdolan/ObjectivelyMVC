@@ -8,9 +8,14 @@
 #ifndef _ObjectivelyMVC_View_h_
 #define _ObjectivelyMVC_View_h_
 
-#include <Objectively/Array.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
 
-#include <SDL2/SDL.h>
+#include <Objectively/MutableArray.h>
+
+#include <ObjectivelyMVC/Colors.h>
 
 /**
  * @file
@@ -44,7 +49,7 @@ struct View {
 	/**
 	 * @brief All contained views.
 	 */
-	Array *subviews;
+	MutableArray *subviews;
 
 	/**
 	 * @brief The window.
@@ -107,6 +112,6 @@ struct ViewInterface {
 	void (*respondToEvent)(View *self, SDL_Event *event, SDL_bool *cancel);
 };
 
-extern Class __View;
+extern Class _View;
 
 #endif

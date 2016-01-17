@@ -1,97 +1,61 @@
-AC_PREREQ(2.68)
+AC_PREREQ(2.69)
 
-AC_INIT([SDL2_mvc], [0.1.0], [jay@jaydolan.com])
+AC_INIT([ObjectivelyMVC], [0.1.0], [jay@jaydolan.com])
 
-AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([Sources/SDL_mvc.h])
 AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_SRCDIR([Sources/ObjectivelyMVC.h])
 
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_HOST
 
 AC_PROG_CC
 AC_PROG_CC_STDC
 AC_PROG_LIBTOOL
 
-AM_INIT_AUTOMAKE([silent-rules foreign])
-AM_SILENT_RULES
+AM_INIT_AUTOMAKE([foreign])
+AM_SILENT_RULES([yes])
 
-dnl --------------------
-dnl Check for FontConfig
-dnl --------------------
+HOST_NAME=""
+HOST_CFLAGS=""
+HOST_LDFLAGS=""
+HOST_LIBS=""
 
-PKG_CHECK_MODULES([FONTCONFIG], [fontconfig >= 2.10.0])
-
-dnl ---------------------
-dnl Check for Objectively
-dnl ---------------------
-
-PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 0.1.0])
-
-dnl ------------------------
-dnl Check for SDL2, SDL2_ttf
-dnl ------------------------
-
-PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.0 SDL2_image SDL2_ttf])
-
-dnl -----------------------------------
-dnl Sort out OpenGL an flags and libraries
-dnl -----------------------------------
-
-HOST_OPENGL_CFLAGS=""
-HOST_OPENGL_LIBS=""
-
+AC_MSG_CHECKING([host type])
 case "$host" in
 	*-apple-*)
-		HOST_OPENGL_LIBS="-framework OpenGL"
+		HOST_NAME="APPLE"
+		HOST_LDFLAGS="-headerpad_max_install_names"
+		HOST_LIBS="-framework OpenGL"
 		;;
 	*-mingw*)
-		HOST_OPENGL_LIBS="-lopengl32"
+		HOST_NAME="MINGW"
+		HOST_LDFLAGS="-no-undefined"
+		HOST_LIBS="-lopengl32"	
 		;;
 	*)
-		HOST_OPENGL_LIBS="-lGL"
+		HOST_NAME="LINUX"
+		HOST_LIBS="-lGL"
 		;;
 esac
 
-AC_SUBST(HOST_OPENGL_CFLAGS)
-AC_SUBST(HOST_OPENGL_LIBS)
+AC_SUBST(HOST_NAME)
+AC_SUBST(HOST_CFLAGS)
+AC_SUBST(HOST_LDFLAGS)
+AC_SUBST(HOST_LIBS)
 
-OPENGL_CFLAGS="$OPENGL_CFLAGS $HOST_OPENGL_CFLAGS"
-AC_SUBST(OPENGL_CFLAGS)
+AM_CONDITIONAL([APPLE], [test "x$HOST_NAME" = "xAPPLE"])
+AM_CONDITIONAL([MINGW], [test "x$HOST_NAME" = "xMINGW"])
+AM_CONDITIONAL([LINUX], [test "x$HOST_NAME" = "xLINUX"])
 
-OPENGL_LIBS="$OPENGL_LIBS $HOST_OPENGL_LIBS"
-AC_SUBST(OPENGL_LIBS)
-
-dnl ---------------------------------
-dnl Check whether to build unit tests
-dnl ---------------------------------
-
-BUILD_TESTS=no
-
-AC_ARG_WITH(tests,
-	AS_HELP_STRING([--with-tests],
-		[build unit tests]
-	)
-)
-
-AC_MSG_CHECKING(whether to build unit tests)
-
-if test "x${with_tests}" = xyes; then
-	BUILD_TESTS=yes
-	AC_MSG_RESULT($BUILD_TESTS)
-	PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
-else
-	AC_MSG_RESULT($BUILD_TESTS)
-fi
-
-AM_CONDITIONAL(BUILD_TESTS, test "x$BUILD_TESTS" = xyes)
-
-dnl ---------------
-dnl Generate output
-dnl ---------------
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+PKG_CHECK_MODULES([FONTCONFIG], [fontconfig >= 2.10.0])
+PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 0.3.0])
+PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.0 SDL2_image SDL2_ttf])
 
 AC_CONFIG_FILES([
 	Makefile
 	Sources/Makefile
+	Sources/ObjectivelyMVC/Makefile
 ])
 
 AC_OUTPUT

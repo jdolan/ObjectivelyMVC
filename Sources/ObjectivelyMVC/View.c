@@ -5,7 +5,9 @@
  * @author jdolan
  */
 
-#include <Objectively/MVC/View.h>
+#include <SDL2/SDL_log.h>
+
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _View
 
@@ -36,7 +38,7 @@ static View *initWithFrame(View *self, SDL_Rect *frame) {
 
 	self = (View *) super(Object, self, init);
 	if (self) {
-		self->subviews = $(alloc(Array), init);
+		self->subviews = $$(MutableArray, array);
 
 		self->window = SDL_GL_GetCurrentWindow();
 		self->renderer = SDL_GetRenderer(self->window);
@@ -54,7 +56,7 @@ static View *initWithFrame(View *self, SDL_Rect *frame) {
 			SDL_GetWindowSize(self->window, &self->frame.w, &self->frame.h);
 		}
 
-		self->backgroundColor = Colors.Clear;
+		self->backgroundColor = Colors.clear;
 	}
 
 	return self;
@@ -68,7 +70,7 @@ static View *initWithFrame(View *self, SDL_Rect *frame) {
 static void addSubview(View *self, View *subview) {
 
 	if (subview) {
-		if ($(self->subviews, indexOfObject) == -1) {
+		if ($((Array *) self->subviews, indexOfObject, subview) == -1) {
 			$(self->subviews, addObject, subview);
 			subview->superview = self;
 		}
@@ -81,7 +83,7 @@ static void addSubview(View *self, View *subview) {
 static void removeSubview(View *self, View *subview) {
 
 	if (subview) {
-		if ($(self->subviews, indexOfObject, subview) != -1) {
+		if ($((Array *) self->subviews, indexOfObject, subview) != -1) {
 			$(self->subviews, removeObject, subview);
 			subview->superview = NULL;
 		}
@@ -104,13 +106,12 @@ static void removeFromSuperview(View *self) {
 static void draw(View *self) {
 
 	if (self->backgroundColor.a) {
-
-		SDL_Color c = self->backgroundColor;
+		const SDL_Color c = self->backgroundColor;
 		SDL_SetRenderDrawColor(self->renderer, c.r, c.g, c.b, c.a);
 
 		SDL_RenderFillRect(self->renderer, &self->frame);
 
-		SDL_Color w = Colors.White;
+		const SDL_Color w = Colors.white;
 		SDL_SetRenderDrawColor(self->renderer, w.r, w.g, w.b, w.a);
 	}
 }
@@ -171,4 +172,4 @@ Class _View = {
 	.initialize = initialize,
 };
 
-#undef __class
+#undef _Class

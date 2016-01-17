@@ -8,7 +8,7 @@
 #ifndef _ObjectivelyMVC_ImageView_h_
 #define _ObjectivelyMVC_ImageView_h_
 
-#include <Objectively/MVC/View.h>
+#include <ObjectivelyMVC/View.h>
 
 /**
  * @file

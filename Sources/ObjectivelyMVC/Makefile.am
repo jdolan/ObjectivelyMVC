@@ -2,34 +2,34 @@ lib_LTLIBRARIES = \
 	libObjectivelyMVC.la
 
 include_HEADERS = \
-	Color.h \
+	Colors.h \
 	Font.h \
 	ImageView.h \
-	Main.h \
 	Label.h \
 	View.h \
 	Viewcontroller.h
 
-libSDL_la_SOURCES = \
-	Color.c \
+libObjectivelyMVC_la_SOURCES = \
+	Colors.c \
 	Font.c \
 	ImageView.c \
-	Main.c \
 	Label.c \
 	View.c \
 	ViewController.c
 
-libObjectivelyla_CFLAGS = \
+libObjectivelyMVC_la_CFLAGS = \
+	-I .. -I ../../ \
+	@HOST_CFLAGS@ \
 	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
-	@OPENGL_CFLAGS@ \
 	@SDL2_CFLAGS@
 
-libObjectivelyla_LDFLAGS = \
+libObjectivelyMVC_la_LDFLAGS = \
+	@HOST_LDFLAGS@ \
 	-shared
 
-libObjectivelyla_LIBADD = \
+libObjectivelyMVC_la_LIBADD = \
+	@HOST_LIBS@ \
 	@FONTCONFIG_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
-	@OPENGL_LIBS@ \
 	@SDL2_LIBS@

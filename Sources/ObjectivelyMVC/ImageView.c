@@ -5,9 +5,10 @@
  * @author jdolan
  */
 
+#include <ObjectivelyMVC/ImageView.h>
+
 #include <assert.h>
 
-#include <Objectively/MVC/ImageView.h>
 
 #define _Class _ImageView
 
