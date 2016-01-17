@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "91A6C33B74D20865B0FECADDFE4FBF591F531705",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "91A6C33B74D20865B0FECADDFE4FBF591F531705" : 0,
+    "3B83F38737DDA99E7447F823DF3644831B3C6250" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "4D088737-210C-424F-9BC9-7B79B64FF38B",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "91A6C33B74D20865B0FECADDFE4FBF591F531705" : "SDL_mvc\/",
+    "3B83F38737DDA99E7447F823DF3644831B3C6250" : "Objectively\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "SDL_mvc",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "SDL_mvc.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jdolan\/Objectively.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "3B83F38737DDA99E7447F823DF3644831B3C6250"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:jdolan\/SDL_mvc.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "91A6C33B74D20865B0FECADDFE4FBF591F531705"
+    }
+  ]
+}

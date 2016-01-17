@@ -1,0 +1,434 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
+		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
+		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
+		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
+		CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
+		CED1580F1C4BFE7F00FBA2DE /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158011C4BFC9F00FBA2DE /* Font.c */; };
+		CED158101C4BFE7F00FBA2DE /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158031C4BFC9F00FBA2DE /* ImageView.c */; };
+		CED158111C4BFE7F00FBA2DE /* Main.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158051C4BFC9F00FBA2DE /* Main.c */; };
+		CED158121C4BFE7F00FBA2DE /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158071C4BFC9F00FBA2DE /* Label.c */; };
+		CED158131C4BFE7F00FBA2DE /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158091C4BFC9F00FBA2DE /* View.c */; };
+		CED158141C4BFE7F00FBA2DE /* ViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CED1580B1C4BFC9F00FBA2DE /* ViewController.c */; };
+		CED158151C4BFE8C00FBA2DE /* Color.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158001C4BFC9F00FBA2DE /* Color.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CED158161C4BFE8C00FBA2DE /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158021C4BFC9F00FBA2DE /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CED158171C4BFE8C00FBA2DE /* ImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158041C4BFC9F00FBA2DE /* ImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CED158181C4BFE8C00FBA2DE /* Main.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158061C4BFC9F00FBA2DE /* Main.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CED158191C4BFE8C00FBA2DE /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158081C4BFC9F00FBA2DE /* Label.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CED1581A1C4BFE8C00FBA2DE /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CED1580A1C4BFC9F00FBA2DE /* View.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CED1581B1C4BFE8C00FBA2DE /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CED1580C1C4BFC9F00FBA2DE /* ViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CED1581D1C4C015A00FBA2DE /* Color.c in Sources */ = {isa = PBXBuildFile; fileRef = CED1581C1C4C013900FBA2DE /* Color.c */; };
+		CED1581E1C4C078800FBA2DE /* MVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CED1580D1C4BFC9F00FBA2DE /* MVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		CED157B51C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libObjectivelyMVC.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libObjectively-Xcode.dylib"; path = "../../Library/Developer/Xcode/DerivedData/SDL_mvc-dmuvuumolsdwqvcfzfnsayacaecb/Build/Products/Debug/libObjectively-Xcode.dylib"; sourceTree = "<group>"; };
+		CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libfontconfig.1.dylib; path = /opt/local/lib/libfontconfig.1.dylib; sourceTree = "<absolute>"; };
+		CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_image-2.0.0.dylib"; path = "/opt/local/lib/libSDL2_image-2.0.0.dylib"; sourceTree = "<absolute>"; };
+		CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_ttf-2.0.0.dylib"; path = "/opt/local/lib/libSDL2_ttf-2.0.0.dylib"; sourceTree = "<absolute>"; };
+		CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2-2.0.0.dylib"; path = "/opt/local/lib/libSDL2-2.0.0.dylib"; sourceTree = "<absolute>"; };
+		CED158001C4BFC9F00FBA2DE /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
+		CED158011C4BFC9F00FBA2DE /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
+		CED158021C4BFC9F00FBA2DE /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Font.h; sourceTree = "<group>"; };
+		CED158031C4BFC9F00FBA2DE /* ImageView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageView.c; sourceTree = "<group>"; };
+		CED158041C4BFC9F00FBA2DE /* ImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageView.h; sourceTree = "<group>"; };
+		CED158051C4BFC9F00FBA2DE /* Main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Main.c; sourceTree = "<group>"; };
+		CED158061C4BFC9F00FBA2DE /* Main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Main.h; sourceTree = "<group>"; };
+		CED158071C4BFC9F00FBA2DE /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
+		CED158081C4BFC9F00FBA2DE /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
+		CED158091C4BFC9F00FBA2DE /* View.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = View.c; sourceTree = "<group>"; };
+		CED1580A1C4BFC9F00FBA2DE /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
+		CED1580B1C4BFC9F00FBA2DE /* ViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ViewController.c; sourceTree = "<group>"; };
+		CED1580C1C4BFC9F00FBA2DE /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		CED1580D1C4BFC9F00FBA2DE /* MVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVC.h; path = Sources/Objectively/MVC.h; sourceTree = SOURCE_ROOT; };
+		CED1580E1C4BFCBE00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		CED1581C1C4C013900FBA2DE /* Color.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Color.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CED157CA1C4BF3AC00FBA2DE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */,
+				CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */,
+				CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
+				CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */,
+				CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CED157921C4BEA8900FBA2DE = {
+			isa = PBXGroup;
+			children = (
+				CED157A01C4BF32A00FBA2DE /* Sources */,
+				CED157F01C4BF89A00FBA2DE /* Libraries */,
+				CED157CE1C4BF3AC00FBA2DE /* Products */,
+				CED1579D1C4BF32A00FBA2DE /* configure.ac */,
+				CED1579E1C4BF32A00FBA2DE /* Makefile.am */,
+				CED1579F1C4BF32A00FBA2DE /* README.md */,
+			);
+			sourceTree = "<group>";
+		};
+		CED157A01C4BF32A00FBA2DE /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				CED157B71C4BF32A00FBA2DE /* Objectively */,
+				CED157B51C4BF32A00FBA2DE /* Makefile.am */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		CED157B71C4BF32A00FBA2DE /* Objectively */ = {
+			isa = PBXGroup;
+			children = (
+				CED157FF1C4BFC9F00FBA2DE /* MVC */,
+				CED1580D1C4BFC9F00FBA2DE /* MVC.h */,
+			);
+			name = Objectively;
+			path = SDL_mvc;
+			sourceTree = "<group>";
+		};
+		CED157CE1C4BF3AC00FBA2DE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CED157F01C4BF89A00FBA2DE /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */,
+				CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */,
+				CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */,
+				CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */,
+				CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		CED157FF1C4BFC9F00FBA2DE /* MVC */ = {
+			isa = PBXGroup;
+			children = (
+				CED1581C1C4C013900FBA2DE /* Color.c */,
+				CED158001C4BFC9F00FBA2DE /* Color.h */,
+				CED158011C4BFC9F00FBA2DE /* Font.c */,
+				CED158021C4BFC9F00FBA2DE /* Font.h */,
+				CED158031C4BFC9F00FBA2DE /* ImageView.c */,
+				CED158041C4BFC9F00FBA2DE /* ImageView.h */,
+				CED158051C4BFC9F00FBA2DE /* Main.c */,
+				CED158061C4BFC9F00FBA2DE /* Main.h */,
+				CED158071C4BFC9F00FBA2DE /* Label.c */,
+				CED158081C4BFC9F00FBA2DE /* Label.h */,
+				CED158091C4BFC9F00FBA2DE /* View.c */,
+				CED1580A1C4BFC9F00FBA2DE /* View.h */,
+				CED1580B1C4BFC9F00FBA2DE /* ViewController.c */,
+				CED1580C1C4BFC9F00FBA2DE /* ViewController.h */,
+				CED1580E1C4BFCBE00FBA2DE /* Makefile.am */,
+			);
+			name = MVC;
+			path = Sources/Objectively/MVC;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		CED157CB1C4BF3AC00FBA2DE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED158151C4BFE8C00FBA2DE /* Color.h in Headers */,
+				CED158161C4BFE8C00FBA2DE /* Font.h in Headers */,
+				CED158171C4BFE8C00FBA2DE /* ImageView.h in Headers */,
+				CED158181C4BFE8C00FBA2DE /* Main.h in Headers */,
+				CED158191C4BFE8C00FBA2DE /* Label.h in Headers */,
+				CED1581A1C4BFE8C00FBA2DE /* View.h in Headers */,
+				CED1581B1C4BFE8C00FBA2DE /* ViewController.h in Headers */,
+				CED1581E1C4C078800FBA2DE /* MVC.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXLegacyTarget section */
+		CED157971C4BEA8900FBA2DE /* ObjectivelyMVC */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = CED1579A1C4BEA8900FBA2DE /* Build configuration list for PBXLegacyTarget "ObjectivelyMVC" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			dependencies = (
+			);
+			name = ObjectivelyMVC;
+			passBuildSettingsInEnvironment = 1;
+			productName = SDL_mvc;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXNativeTarget section */
+		CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC-Xcode */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CED157CF1C4BF3AC00FBA2DE /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Xcode" */;
+			buildPhases = (
+				CED157C91C4BF3AC00FBA2DE /* Sources */,
+				CED157CA1C4BF3AC00FBA2DE /* Frameworks */,
+				CED157CB1C4BF3AC00FBA2DE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ObjectivelyMVC-Xcode";
+			productName = "SDL_mvc-Xcode";
+			productReference = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CED157931C4BEA8900FBA2DE /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "https://github.com/jdolan";
+				TargetAttributes = {
+					CED157971C4BEA8900FBA2DE = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					CED157CC1C4BF3AC00FBA2DE = {
+						CreatedOnToolsVersion = 7.2;
+					};
+				};
+			};
+			buildConfigurationList = CED157961C4BEA8900FBA2DE /* Build configuration list for PBXProject "ObjectivelyMVC" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CED157921C4BEA8900FBA2DE;
+			productRefGroup = CED157CE1C4BF3AC00FBA2DE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CED157971C4BEA8900FBA2DE /* ObjectivelyMVC */,
+				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC-Xcode */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CED157C91C4BF3AC00FBA2DE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED1580F1C4BFE7F00FBA2DE /* Font.c in Sources */,
+				CED158101C4BFE7F00FBA2DE /* ImageView.c in Sources */,
+				CED158111C4BFE7F00FBA2DE /* Main.c in Sources */,
+				CED158121C4BFE7F00FBA2DE /* Label.c in Sources */,
+				CED158131C4BFE7F00FBA2DE /* View.c in Sources */,
+				CED158141C4BFE7F00FBA2DE /* ViewController.c in Sources */,
+				CED1581D1C4C015A00FBA2DE /* Color.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CED157981C4BEA8900FBA2DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/opt/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					/opt/local/lib,
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-I$(SRCROOT)/Sources";
+				USE_HEADERMAP = NO;
+			};
+			name = Debug;
+		};
+		CED157991C4BEA8900FBA2DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					/usr/local/include,
+					/opt/local/include,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					/opt/local/lib,
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CFLAGS = "-I$(SRCROOT)/Sources";
+				USE_HEADERMAP = NO;
+			};
+			name = Release;
+		};
+		CED1579B1C4BEA8900FBA2DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUGGING_SYMBOLS = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = ObjectivelyMVC;
+			};
+			name = Debug;
+		};
+		CED1579C1C4BEA8900FBA2DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = ObjectivelyMVC;
+			};
+			name = Release;
+		};
+		CED157D01C4BF3AC00FBA2DE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_NAME = ObjectivelyMVC;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CED157D11C4BF3AC00FBA2DE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_NAME = ObjectivelyMVC;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CED157961C4BEA8900FBA2DE /* Build configuration list for PBXProject "ObjectivelyMVC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CED157981C4BEA8900FBA2DE /* Debug */,
+				CED157991C4BEA8900FBA2DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CED1579A1C4BEA8900FBA2DE /* Build configuration list for PBXLegacyTarget "ObjectivelyMVC" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CED1579B1C4BEA8900FBA2DE /* Debug */,
+				CED1579C1C4BEA8900FBA2DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CED157CF1C4BF3AC00FBA2DE /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Xcode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CED157D01C4BF3AC00FBA2DE /* Debug */,
+				CED157D11C4BF3AC00FBA2DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CED157931C4BEA8900FBA2DE /* Project object */;
+}
