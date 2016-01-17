@@ -7,29 +7,60 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE12D4301C4C389300CD0B13 /* HelloMVC.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* HelloMVC.c */; };
+		CE12D4321C4C389300CD0B13 /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
+		CE12D4331C4C389300CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
+		CE12D4341C4C389300CD0B13 /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
+		CE12D4351C4C389300CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
+		CE12D4361C4C389300CD0B13 /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
+		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
+		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
+		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
+		CE12D43F1C4C38B500CD0B13 /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40D1C4C367100CD0B13 /* Label.c */; };
+		CE12D4401C4C38B500CD0B13 /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4231C4C367100CD0B13 /* View.c */; };
+		CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4251C4C367100CD0B13 /* ViewController.c */; };
+		CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4081C4C367100CD0B13 /* Colors.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4431C4C38C700CD0B13 /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40A1C4C367100CD0B13 /* Font.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40C1C4C367100CD0B13 /* ImageView.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4451C4C38C700CD0B13 /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40E1C4C367100CD0B13 /* Label.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4461C4C38C700CD0B13 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4241C4C367100CD0B13 /* View.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
 		CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
-		CED1580F1C4BFE7F00FBA2DE /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158011C4BFC9F00FBA2DE /* Font.c */; };
-		CED158101C4BFE7F00FBA2DE /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158031C4BFC9F00FBA2DE /* ImageView.c */; };
-		CED158111C4BFE7F00FBA2DE /* Main.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158051C4BFC9F00FBA2DE /* Main.c */; };
-		CED158121C4BFE7F00FBA2DE /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158071C4BFC9F00FBA2DE /* Label.c */; };
-		CED158131C4BFE7F00FBA2DE /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = CED158091C4BFC9F00FBA2DE /* View.c */; };
-		CED158141C4BFE7F00FBA2DE /* ViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CED1580B1C4BFC9F00FBA2DE /* ViewController.c */; };
-		CED158151C4BFE8C00FBA2DE /* Color.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158001C4BFC9F00FBA2DE /* Color.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CED158161C4BFE8C00FBA2DE /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158021C4BFC9F00FBA2DE /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CED158171C4BFE8C00FBA2DE /* ImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158041C4BFC9F00FBA2DE /* ImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CED158181C4BFE8C00FBA2DE /* Main.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158061C4BFC9F00FBA2DE /* Main.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CED158191C4BFE8C00FBA2DE /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CED158081C4BFC9F00FBA2DE /* Label.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CED1581A1C4BFE8C00FBA2DE /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CED1580A1C4BFC9F00FBA2DE /* View.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CED1581B1C4BFE8C00FBA2DE /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CED1580C1C4BFC9F00FBA2DE /* ViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CED1581D1C4C015A00FBA2DE /* Color.c in Sources */ = {isa = PBXBuildFile; fileRef = CED1581C1C4C013900FBA2DE /* Color.c */; };
-		CED1581E1C4C078800FBA2DE /* MVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CED1580D1C4BFC9F00FBA2DE /* MVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CE12D4491C4C38D400CD0B13 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = "ObjectivelyMVC-Xcode";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
+		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
+		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
+		CE12D40A1C4C367100CD0B13 /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Font.h; sourceTree = "<group>"; };
+		CE12D40B1C4C367100CD0B13 /* ImageView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageView.c; sourceTree = "<group>"; };
+		CE12D40C1C4C367100CD0B13 /* ImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageView.h; sourceTree = "<group>"; };
+		CE12D40D1C4C367100CD0B13 /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
+		CE12D40E1C4C367100CD0B13 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
+		CE12D4211C4C367100CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		CE12D4231C4C367100CD0B13 /* View.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = View.c; sourceTree = "<group>"; };
+		CE12D4241C4C367100CD0B13 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
+		CE12D4251C4C367100CD0B13 /* ViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ViewController.c; sourceTree = "<group>"; };
+		CE12D4261C4C367100CD0B13 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectivelyMVC.h; sourceTree = "<group>"; };
+		CE12D42B1C4C37E500CD0B13 /* HelloMVC.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HelloMVC.c; sourceTree = "<group>"; };
+		CE12D42D1C4C383D00CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		CE12D43B1C4C389300CD0B13 /* libObjectivelyMVC-Examples.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libObjectivelyMVC-Examples.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -40,25 +71,21 @@
 		CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_image-2.0.0.dylib"; path = "/opt/local/lib/libSDL2_image-2.0.0.dylib"; sourceTree = "<absolute>"; };
 		CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_ttf-2.0.0.dylib"; path = "/opt/local/lib/libSDL2_ttf-2.0.0.dylib"; sourceTree = "<absolute>"; };
 		CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2-2.0.0.dylib"; path = "/opt/local/lib/libSDL2-2.0.0.dylib"; sourceTree = "<absolute>"; };
-		CED158001C4BFC9F00FBA2DE /* Color.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Color.h; sourceTree = "<group>"; };
-		CED158011C4BFC9F00FBA2DE /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
-		CED158021C4BFC9F00FBA2DE /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Font.h; sourceTree = "<group>"; };
-		CED158031C4BFC9F00FBA2DE /* ImageView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageView.c; sourceTree = "<group>"; };
-		CED158041C4BFC9F00FBA2DE /* ImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageView.h; sourceTree = "<group>"; };
-		CED158051C4BFC9F00FBA2DE /* Main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Main.c; sourceTree = "<group>"; };
-		CED158061C4BFC9F00FBA2DE /* Main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Main.h; sourceTree = "<group>"; };
-		CED158071C4BFC9F00FBA2DE /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
-		CED158081C4BFC9F00FBA2DE /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
-		CED158091C4BFC9F00FBA2DE /* View.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = View.c; sourceTree = "<group>"; };
-		CED1580A1C4BFC9F00FBA2DE /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
-		CED1580B1C4BFC9F00FBA2DE /* ViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ViewController.c; sourceTree = "<group>"; };
-		CED1580C1C4BFC9F00FBA2DE /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		CED1580D1C4BFC9F00FBA2DE /* MVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MVC.h; path = Sources/Objectively/MVC.h; sourceTree = SOURCE_ROOT; };
-		CED1580E1C4BFCBE00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		CED1581C1C4C013900FBA2DE /* Color.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Color.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CE12D4311C4C389300CD0B13 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE12D4321C4C389300CD0B13 /* libfontconfig.1.dylib in Frameworks */,
+				CE12D4331C4C389300CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */,
+				CE12D4341C4C389300CD0B13 /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
+				CE12D4351C4C389300CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */,
+				CE12D4361C4C389300CD0B13 /* libObjectively-Xcode.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CED157CA1C4BF3AC00FBA2DE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -74,12 +101,58 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE12D3DE1C4C367100CD0B13 /* ObjectivelyMVC */ = {
+			isa = PBXGroup;
+			children = (
+				CE12D4071C4C367100CD0B13 /* Colors.c */,
+				CE12D4081C4C367100CD0B13 /* Colors.h */,
+				CE12D4091C4C367100CD0B13 /* Font.c */,
+				CE12D40A1C4C367100CD0B13 /* Font.h */,
+				CE12D40B1C4C367100CD0B13 /* ImageView.c */,
+				CE12D40C1C4C367100CD0B13 /* ImageView.h */,
+				CE12D40D1C4C367100CD0B13 /* Label.c */,
+				CE12D40E1C4C367100CD0B13 /* Label.h */,
+				CE12D4231C4C367100CD0B13 /* View.c */,
+				CE12D4241C4C367100CD0B13 /* View.h */,
+				CE12D4251C4C367100CD0B13 /* ViewController.c */,
+				CE12D4261C4C367100CD0B13 /* ViewController.h */,
+				CE12D4211C4C367100CD0B13 /* Makefile.am */,
+			);
+			path = ObjectivelyMVC;
+			sourceTree = "<group>";
+		};
+		CE12D4281C4C375300CD0B13 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				CE12D4291C4C377B00CD0B13 /* ObjectivelyMVC */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		CE12D4291C4C377B00CD0B13 /* ObjectivelyMVC */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ObjectivelyMVC;
+			sourceTree = "<group>";
+		};
+		CE12D42A1C4C37CD00CD0B13 /* Examples */ = {
+			isa = PBXGroup;
+			children = (
+				CE12D42B1C4C37E500CD0B13 /* HelloMVC.c */,
+				CE12D42D1C4C383D00CD0B13 /* Makefile.am */,
+			);
+			path = Examples;
+			sourceTree = "<group>";
+		};
 		CED157921C4BEA8900FBA2DE = {
 			isa = PBXGroup;
 			children = (
-				CED157A01C4BF32A00FBA2DE /* Sources */,
+				CE12D42A1C4C37CD00CD0B13 /* Examples */,
 				CED157F01C4BF89A00FBA2DE /* Libraries */,
 				CED157CE1C4BF3AC00FBA2DE /* Products */,
+				CED157A01C4BF32A00FBA2DE /* Sources */,
+				CE12D4281C4C375300CD0B13 /* Tests */,
 				CED1579D1C4BF32A00FBA2DE /* configure.ac */,
 				CED1579E1C4BF32A00FBA2DE /* Makefile.am */,
 				CED1579F1C4BF32A00FBA2DE /* README.md */,
@@ -89,26 +162,18 @@
 		CED157A01C4BF32A00FBA2DE /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				CED157B71C4BF32A00FBA2DE /* Objectively */,
+				CE12D3DE1C4C367100CD0B13 /* ObjectivelyMVC */,
+				CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */,
 				CED157B51C4BF32A00FBA2DE /* Makefile.am */,
 			);
 			path = Sources;
-			sourceTree = "<group>";
-		};
-		CED157B71C4BF32A00FBA2DE /* Objectively */ = {
-			isa = PBXGroup;
-			children = (
-				CED157FF1C4BFC9F00FBA2DE /* MVC */,
-				CED1580D1C4BFC9F00FBA2DE /* MVC.h */,
-			);
-			name = Objectively;
-			path = SDL_mvc;
 			sourceTree = "<group>";
 		};
 		CED157CE1C4BF3AC00FBA2DE /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */,
+				CE12D43B1C4C389300CD0B13 /* libObjectivelyMVC-Examples.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -125,44 +190,27 @@
 			name = Libraries;
 			sourceTree = "<group>";
 		};
-		CED157FF1C4BFC9F00FBA2DE /* MVC */ = {
-			isa = PBXGroup;
-			children = (
-				CED1581C1C4C013900FBA2DE /* Color.c */,
-				CED158001C4BFC9F00FBA2DE /* Color.h */,
-				CED158011C4BFC9F00FBA2DE /* Font.c */,
-				CED158021C4BFC9F00FBA2DE /* Font.h */,
-				CED158031C4BFC9F00FBA2DE /* ImageView.c */,
-				CED158041C4BFC9F00FBA2DE /* ImageView.h */,
-				CED158051C4BFC9F00FBA2DE /* Main.c */,
-				CED158061C4BFC9F00FBA2DE /* Main.h */,
-				CED158071C4BFC9F00FBA2DE /* Label.c */,
-				CED158081C4BFC9F00FBA2DE /* Label.h */,
-				CED158091C4BFC9F00FBA2DE /* View.c */,
-				CED1580A1C4BFC9F00FBA2DE /* View.h */,
-				CED1580B1C4BFC9F00FBA2DE /* ViewController.c */,
-				CED1580C1C4BFC9F00FBA2DE /* ViewController.h */,
-				CED1580E1C4BFCBE00FBA2DE /* Makefile.am */,
-			);
-			name = MVC;
-			path = Sources/Objectively/MVC;
-			sourceTree = SOURCE_ROOT;
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		CE12D4371C4C389300CD0B13 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CED157CB1C4BF3AC00FBA2DE /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CED158151C4BFE8C00FBA2DE /* Color.h in Headers */,
-				CED158161C4BFE8C00FBA2DE /* Font.h in Headers */,
-				CED158171C4BFE8C00FBA2DE /* ImageView.h in Headers */,
-				CED158181C4BFE8C00FBA2DE /* Main.h in Headers */,
-				CED158191C4BFE8C00FBA2DE /* Label.h in Headers */,
-				CED1581A1C4BFE8C00FBA2DE /* View.h in Headers */,
-				CED1581B1C4BFE8C00FBA2DE /* ViewController.h in Headers */,
-				CED1581E1C4C078800FBA2DE /* MVC.h in Headers */,
+				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
+				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
+				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
+				CE12D4451C4C38C700CD0B13 /* Label.h in Headers */,
+				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
+				CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */,
+				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +233,24 @@
 /* End PBXLegacyTarget section */
 
 /* Begin PBXNativeTarget section */
+		CE12D42E1C4C389300CD0B13 /* ObjectivelyMVC-Examples */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE12D4381C4C389300CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Examples" */;
+			buildPhases = (
+				CE12D42F1C4C389300CD0B13 /* Sources */,
+				CE12D4311C4C389300CD0B13 /* Frameworks */,
+				CE12D4371C4C389300CD0B13 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE12D44A1C4C38D400CD0B13 /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-Examples";
+			productName = "SDL_mvc-Xcode";
+			productReference = CE12D43B1C4C389300CD0B13 /* libObjectivelyMVC-Examples.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC-Xcode */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CED157CF1C4BF3AC00FBA2DE /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Xcode" */;
@@ -233,28 +299,78 @@
 			targets = (
 				CED157971C4BEA8900FBA2DE /* ObjectivelyMVC */,
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC-Xcode */,
+				CE12D42E1C4C389300CD0B13 /* ObjectivelyMVC-Examples */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CE12D42F1C4C389300CD0B13 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE12D4301C4C389300CD0B13 /* HelloMVC.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CED157C91C4BF3AC00FBA2DE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CED1580F1C4BFE7F00FBA2DE /* Font.c in Sources */,
-				CED158101C4BFE7F00FBA2DE /* ImageView.c in Sources */,
-				CED158111C4BFE7F00FBA2DE /* Main.c in Sources */,
-				CED158121C4BFE7F00FBA2DE /* Label.c in Sources */,
-				CED158131C4BFE7F00FBA2DE /* View.c in Sources */,
-				CED158141C4BFE7F00FBA2DE /* ViewController.c in Sources */,
-				CED1581D1C4C015A00FBA2DE /* Color.c in Sources */,
+				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
+				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
+				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
+				CE12D43F1C4C38B500CD0B13 /* Label.c in Sources */,
+				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,
+				CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		CE12D44A1C4C38D400CD0B13 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC-Xcode */;
+			targetProxy = CE12D4491C4C38D400CD0B13 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		CE12D4391C4C389300CD0B13 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CE12D43A1C4C389300CD0B13 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		CED157981C4BEA8900FBA2DE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -402,6 +518,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CE12D4381C4C389300CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Examples" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE12D4391C4C389300CD0B13 /* Debug */,
+				CE12D43A1C4C389300CD0B13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CED157961C4BEA8900FBA2DE /* Build configuration list for PBXProject "ObjectivelyMVC" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -427,6 +552,7 @@
 				CED157D11C4BF3AC00FBA2DE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

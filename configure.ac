@@ -56,6 +56,7 @@ AC_CONFIG_FILES([
 	Makefile
 	Sources/Makefile
 	Sources/ObjectivelyMVC/Makefile
+	Examples/Makefile
 ])
 
 AC_OUTPUT

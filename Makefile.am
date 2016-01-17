@@ -1,1 +1,3 @@
-SUBDIRS = Sources
+SUBDIRS = \
+	Sources \
+	Examples

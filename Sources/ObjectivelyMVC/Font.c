@@ -1,8 +1,24 @@
 /*
- * Objectively - MVC
+ * ObjectivelyMVC: MVC framework for OpenGL and SDL2 in c.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
- * @author jdolan
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software
+ * in a product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source distribution.
  */
 
 #include <assert.h>
@@ -49,16 +65,16 @@ static Font *defaultFont(void) {
 /**
  * @brief Resolves and loads the first font matching the given pattern.
  *
- * @param pattern The Fontconfig pattern.
+ * @param pat The Fontconfig pattern.
  *
  * @return The TrueType font, or `NULL` on error.
  */
-static TTF_Font *loadFont(FcPattern *pattern) {
+static TTF_Font *loadFont(FcPattern *pat) {
 	TTF_Font *font = NULL;
 
-	assert(pattern);
+	assert(pat);
 
-	FcPatternAddString(pattern, FC_FONTFORMAT, (FcChar8 *) "TrueType");
+	FcPatternAddString(pat, FC_FONTFORMAT, (FcChar8 *) "TrueType");
 
 	FcObjectSet *objects = FcObjectSetCreate();
 
@@ -66,7 +82,7 @@ static TTF_Font *loadFont(FcPattern *pattern) {
 	FcObjectSetAdd(objects, FC_SIZE);
 	FcObjectSetAdd(objects, FC_INDEX);
 
-	FcFontSet *fonts = FcFontList(NULL, pattern, objects);
+	FcFontSet *fonts = FcFontList(NULL, pat, objects);
 	FcPattern **f = fonts->fonts;
 	for (int i = 0; i < fonts->nfont; i++, f++) {
 
@@ -103,12 +119,12 @@ static Font *initWithPattern(Font *self, const char *pattern) {
 	self = (Font *) super(Object, self, init);
 	if (self) {
 
-		FcPattern *pattern = FcNameParse((FcChar8 *) pattern);
+		FcPattern *pat = FcNameParse((FcChar8 *) pattern);
 
-		self->font = loadFont(pattern);
+		self->font = loadFont(pat);
 		assert(self->font);
 
-		FcPatternDestroy(pattern);
+		FcPatternDestroy(pat);
 	}
 
 	return self;
@@ -124,27 +140,27 @@ static Font *initWithAttributes(Font *self, const char *family, int ptsize, int 
 	self = (Font *) super(Object, self, init);
 	if (self) {
 
-		FcPattern *pattern = FcPatternCreate();
+		FcPattern *pat = FcPatternCreate();
 
-		FcPatternAddString(pattern, FC_FAMILY, (FcChar8 *) family);
-		FcPatternAddDouble(pattern, FC_SIZE, (double) ptsize);
+		FcPatternAddString(pat, FC_FAMILY, (FcChar8 *) family);
+		FcPatternAddDouble(pat, FC_SIZE, (double) ptsize);
 
 		if (style & TTF_STYLE_BOLD) {
 			if (style & TTF_STYLE_ITALIC) {
-				FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Bold Italic");
+				FcPatternAddString(pat, FC_STYLE, (FcChar8 *) "Bold Italic");
 			} else {
-				FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Bold");
+				FcPatternAddString(pat, FC_STYLE, (FcChar8 *) "Bold");
 			}
 		} else if (style & TTF_STYLE_ITALIC) {
-			FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Italic");
+			FcPatternAddString(pat, FC_STYLE, (FcChar8 *) "Italic");
 		} else {
-			FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Regular");
+			FcPatternAddString(pat, FC_STYLE, (FcChar8 *) "Regular");
 		}
 
-		self->font = loadFont(pattern);
+		self->font = loadFont(pat);
 		assert(self->font);
 
-		FcPatternDestroy(pattern);
+		FcPatternDestroy(pat);
 	}
 
 	return self;
