@@ -21,10 +21,60 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <assert.h>
+#include <unistd.h>
+
+#include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
 int main(int arg, char **argv) {
 	
+	SDL_Init(SDL_INIT_VIDEO);
+	
+	SDL_Window *window = SDL_CreateWindow(__FILE__,
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		1024,
+		768,
+		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
+	);
+	assert(window);
+	
+	SDL_GLContext *context = SDL_GL_CreateContext(window);
+	assert(context);
+	
+	ViewController *rootViewController = $(alloc(ViewController), initRootViewController, window);
+	assert(rootViewController);
+	
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, 0,
+		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE
+	);
+	assert(renderer);
+	
+	Label *hello = $(alloc(Label), initWithText, "Hello World!", NULL);
+	$(rootViewController, loadViewIfNeeded);
+	$(rootViewController->view, addSubview, (View *) hello);
+	
+	while (true) {
+		SDL_Event event;
+		
+		memset(&event, 0, sizeof(event));
+		
+		if (SDL_PollEvent(&event)) {
+			
+			$(rootViewController, respondToEvent, &event);
+			
+			if (event.type == SDL_QUIT) {
+				break;
+			}
+		}
+		
+		$(rootViewController, draw, renderer);
+	}
+	
+	SDL_DestroyWindow(window);
+	
+	SDL_Quit();
 	
 	return 0;
 }

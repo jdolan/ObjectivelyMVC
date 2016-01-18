@@ -91,7 +91,7 @@ struct LabelInterface {
 	ViewInterface viewInterface;
 
 	/**
-	 * @fn void Label::getSize(const Label *self, int *width, int *height)
+	 * @fn void Label::naturalSize(const Label *self, int *width, int *height)
 	 *
 	 * @brief Resolves the rendered size of this Label.
 	 *
@@ -100,7 +100,7 @@ struct LabelInterface {
 	 *
 	 * @memberof Label
 	 */
-	void (*getSize)(const Label *self, int *width, int *height);
+	void (*naturalSize)(const Label *self, int *width, int *height);
 
 	/**
 	 * @fn Label *Label::initWithText(Label *self, const char *text)
@@ -113,17 +113,6 @@ struct LabelInterface {
 	 * @memberof Label
 	 */
 	Label *(*initWithText)(Label *self, const char *text, Font *font);
-
-	/**
-	 * @fn void Label::render(Label *self)
-	 *
-	 * @brief Renders this Label's texture so that it may be drawn.
-	 *
-	 * @param self The Label.
-	 *
-	 * @memberof Label
-	 */
-	void (*render)(Label *self);
 
 	/**
 	 * @fn void Label::setText(Label *self, const char *text)

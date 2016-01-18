@@ -27,7 +27,7 @@
 #include <fontconfig/fontconfig.h>
 #include <SDL2/SDL_TTF.h>
 
-#include <Objectively/Object.h>
+#include <Objectively/Array.h>
 
 /**
  * @file
@@ -56,11 +56,16 @@ struct Font {
 	 * @private
 	 */
 	FontInterface *interface;
-
+	
 	/**
 	 * @brief The backing TTF_Font.
 	 */
 	TTF_Font *font;
+	
+	/**
+	 * @brief The TrueType font name, according to Fontconfig.
+	 */
+	char *name;
 };
 
 /**
@@ -72,6 +77,17 @@ struct FontInterface {
 	 * @brief The parent interface.
 	 */
 	ObjectInterface objectInterface;
+	
+	/**
+	 * @static
+	 *
+	 * @fn Array *Font::allFonts(void)
+	 *
+	 * @return An Array of all available Font names.
+	 *
+	 * @memberof Font
+	 */
+	Array *(*allFonts)(void);
 
 	/**
 	 * @static
@@ -100,15 +116,17 @@ struct FontInterface {
 	Font *(*initWithAttributes)(Font *self, const char *family, int ptsize, int style);
 
 	/**
-	 * @fn Font *Font::initWithPattern(Font *self, const char *pattern)
+	 * @fn Font *Font::initWithName(Font *self, const char *name)
 	 *
-	 * @brief Initializes this Font with the given pattern string.
+	 * @brief Initializes this Font with the given Fontconfig name.
+	 *
+	 * @param name The Fontconfig name.
 	 *
 	 * @return The initialized Font, or `NULL` on error.
 	 *
 	 * @memberof Font
 	 */
-	Font *(*initWithPattern)(Font *self, const char *pattern);
+	Font *(*initWithName)(Font *self, const char *name);
 };
 
 /**

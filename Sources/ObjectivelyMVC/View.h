@@ -68,16 +68,6 @@ struct View {
 	MutableArray *subviews;
 
 	/**
-	 * @brief The window.
-	 */
-	SDL_Window *window;
-
-	/**
-	 * @brief The renderer.
-	 */
-	SDL_Renderer *renderer;
-
-	/**
 	 * @brief The frame and bounds.
 	 */
 	SDL_Rect frame, bounds;
@@ -102,6 +92,30 @@ struct ViewInterface {
 	 * @brief The parent interface.
 	 */
 	ObjectInterface parentInterface;
+	
+	/**
+	 * @fn void View::addSubview(View *self, View *subview)
+	 *
+	 * @brief Adds a subview to this view, to be drawn above its siblings.
+	 *
+	 * @param subview The subview.
+	 *
+	 * @memberof View
+	 */
+	void (*addSubview)(View *self, View *subview);
+	
+	/**
+	 * @fn void View::draw(View *self, SDL_Renderer *renderer)
+	 *
+	 * @brief Draws this View.
+	 *
+	 * @param renderer The SDL_Renderer with which to draw.
+	 *
+	 * @remarks The ViewController will call this method when drawing its View hierarchy.
+	 *
+	 * @memberof View
+	 */
+	void (*draw)(View *self, SDL_Renderer *renderer);
 
 	/**
 	 * @brief Initializes this view with the specified frame.
@@ -109,23 +123,43 @@ struct ViewInterface {
 	 * @param frame The frame.
 	 *
 	 * @return The initialized view, or NULL on error.
+	 *
+	 * @memberof View
 	 */
 	View *(*initWithFrame)(View *self, SDL_Rect *frame);
 
 	/**
-	 * @brief Adds a subview to this view, to be drawn above its siblings.
+	 * @fn void View::removeFromSuperview(View *self)
 	 *
-	 * @param subview The subview.
+	 * @brief Removes this View from its superview.
+	 *
+	 * @memberof View
 	 */
-	void (*addSubview)(View *self, View *subview);
-	void (*removeSubview)(View *self, View *subview);
 	void (*removeFromSuperview)(View *self);
 
-	void (*draw)(View *self);
-
-	void (*activate)(View *self);
-	void (*deactivate)(View *self);
-	void (*respondToEvent)(View *self, SDL_Event *event, SDL_bool *cancel);
+	/**
+	 * @fn void View::removeSubview(View *self, View *subview)
+	 *
+	 * @brief Removes the given subview from this View.
+	 *
+	 * @param subview The subview.
+	 *
+	 * @memberof View
+	 */
+	void (*removeSubview)(View *self, View *subview);
+	
+	/**
+	 * @fn _Bool View:respondToEvent(View *self, SDL_Event *event)
+	 *
+	 * @brief Responds to the given event.
+	 *
+	 * @param event The SDL_Event.
+	 *
+	 * @return True if the event was responded to, false otherwise.
+	 *
+	 * @memberof View
+	 */
+	_Bool (*respondToEvent)(View *self, SDL_Event *event);
 };
 
 extern Class _View;

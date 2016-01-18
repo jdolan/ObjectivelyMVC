@@ -46,32 +46,37 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::draw(View *)
+ * @see View::draw(View *, SDL_Renderer *)
  */
-static void draw(View *self) {
+static void draw(View *self, SDL_Renderer *renderer) {
 
-	super(View, self, draw);
+	super(View, self, draw, renderer);
 
 	Label *this = (Label *) self;
-
-	SDL_RenderCopy(self->renderer, this->texture, NULL, &self->frame);
+	
+	if (this->text) {
+		if (this->texture == NULL) {
+			SDL_Surface *surface = TTF_RenderUTF8_Blended(this->font->font, this->text, this->color);
+			if (surface) {
+				
+				this->texture = SDL_CreateTextureFromSurface(renderer, surface);
+				if (this->texture) {
+					SDL_LogVerbose(0, "%s: Created texture for \"%s\"", __func__, this->text);
+				} else {
+					SDL_LogError(0, "%s: Failed to create texture for \"%s\"", __func__, this->text);
+				}
+				
+				SDL_FreeSurface(surface);
+			} else {
+				SDL_LogError(0, "%s: Failed to render \"%s\"", __func__, this->text);
+			}
+		}
+		
+		SDL_RenderCopy(renderer, this->texture, NULL, &self->frame);
+	}
 }
 
 #pragma mark - Label
-
-/**
- * @fn void Label::getSize(const Label *self, int *width, int *height)
- *
- * @memberof Label
- */
-static void getSize(const Label *self, int *width, int *height) {
-
-	if (self->font && self->text) {
-		TTF_SizeUTF8(self->font->font, self->text, width, height);
-	} else {
-		*width = *height = 0;
-	}
-}
 
 /**
  * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
@@ -92,38 +97,10 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 		retain(self->font);
 
 		$(self, setText, text);
-		$(self, getSize, &self->view.frame.w, &self->view.frame.h);
+		$(self, naturalSize, &self->view.frame.w, &self->view.frame.h);
 	}
 
 	return self;
-}
-
-/**
- * @fn void Label::render(Label *self)
- *
- * @memberof Label
- */
-static void render(Label *self) {
-
-	if (self->texture) {
-		SDL_DestroyTexture(self->texture);
-		self->texture = NULL;
-	}
-
-	SDL_Surface *surface = TTF_RenderUTF8_Blended(self->font->font, self->text, self->color);
-	if (surface) {
-
-		self->texture = SDL_CreateTextureFromSurface(self->view.renderer, surface);
-		if (self->texture) {
-			SDL_LogVerbose(0, "%s: Created texture for \"%s\"", __func__, self->text);
-		} else {
-			SDL_LogError(0, "%s: Failed to create texture for \"%s\"", __func__, self->text);
-		}
-
-		SDL_FreeSurface(surface);
-	} else {
-		SDL_LogError(0, "%s: Failed to render \"%s\"", __func__, self->text);
-	}
 }
 
 /**
@@ -140,8 +117,25 @@ static void setText(Label *self, const char *text) {
 	} else {
 		self->text = NULL;
 	}
+	
+	if (self->texture) {
+		SDL_DestroyTexture(self->texture);
+		self->texture = NULL;
+	}
+}
 
-	$(self, render);
+/**
+ * @fn void Label::naturalSize(const Label *self, int *width, int *height)
+ *
+ * @memberof Label
+ */
+static void naturalSize(const Label *self, int *width, int *height) {
+	
+	if (self->font && self->text) {
+		TTF_SizeUTF8(self->font->font, self->text, width, height);
+	} else {
+		*width = *height = 0;
+	}
 }
 
 #pragma mark - Class lifecycle
@@ -155,9 +149,8 @@ static void initialize(Class *self) {
 
 	((ViewInterface *) self->interface)->draw = draw;
 
-	((LabelInterface *) self->interface)->getSize = getSize;
 	((LabelInterface *) self->interface)->initWithText = initWithText;
-	((LabelInterface *) self->interface)->render = render;
+	((LabelInterface *) self->interface)->naturalSize = naturalSize;
 	((LabelInterface *) self->interface)->setText = setText;
 }
 

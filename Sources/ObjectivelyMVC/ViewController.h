@@ -24,8 +24,9 @@
 #ifndef _ObjectivelyMVC_ViewController_h_
 #define _ObjectivelyMVC_ViewController_h_
 
+#include <SDL2/SDL_log.h>
+
 #include <Objectively/MutableArray.h>
-#include <Objectively/String.h>
 
 #include <ObjectivelyMVC/View.h>
 
@@ -48,11 +49,6 @@ struct ViewController {
 	ViewControllerInterface *interface;
 
 	/**
-	 * @brief The title.
-	 */
-	String *title;
-
-	/**
 	 * @brief The main view.
 	 */
 	View *view;
@@ -66,6 +62,11 @@ struct ViewController {
 	 * @brief The child view controllers.
 	 */
 	MutableArray *childViewControllers;
+	
+	/**
+	 * @brief The window.
+	 */
+	SDL_Window *window;
 };
 
 /**
@@ -77,13 +78,116 @@ struct ViewControllerInterface {
 	 * @brief The parent interface.
 	 */
 	ObjectInterface parentInterface;
-
+	
 	/**
-	 * @brief Initializes this view controller.
+	 * @fn void ViewController::draw(ViewController *self, SDL_Renderer *renderer)
 	 *
-	 * @return The initialized view controller, or NULL on error.
+	 * @brief Draws this controller's View.
+	 *
+	 * @param renderer The SDL_Renderer with which to draw.
+	 *
+	 * @remarks Call this method on a root ViewController to draw its View hierarchy.
+	 *
+	 * @memberof ViewController
+	 */
+	void (*draw)(ViewController *self, SDL_Renderer *renderer);
+	
+	/**
+	 * @fn ViewController *ViewController::init(ViewController *self)
+	 *
+	 * @brief Initializes this controller.
+	 *
+	 * @return The intialized ViewController, or `NULL` on error.
+	 *
+	 * @memberof ViewController
 	 */
 	ViewController *(*init)(ViewController *self);
+	
+	/**
+	 * @fn ViewController *ViewController::initRootViewController(ViewController *self, SDL_Window *window)
+	 *
+	 * @brief Initializes this controller as the root ViewController for the given window.
+	 *
+	 * @param window The window, or `NULL` to have a fullscreen window created.
+	 *
+	 * @return The initialized ViewController, or `NULL` on error.
+	 *
+	 * @memberof ViewController
+	 */
+	ViewController *(*initRootViewController)(ViewController *self, SDL_Window *window);
+	
+	/**
+	 * @fn void ViewController::loadView(ViewController *self)
+	 *
+	 * @brief Loads this controller's View.
+	 *
+	 * @remarks Override this method to populate this controller's view.
+	 *
+	 * @memberof ViewController
+	 */
+	void (*loadView)(ViewController *self);
+	
+	/**
+	 * @private
+	 *
+	 * @fn void ViewController::loadViewIfneeded(ViewController *self)
+	 *
+	 * @brief Loads this controller's View if it has not already been loaded.
+	 *
+	 * @memberof ViewController
+	 */
+	void (*loadViewIfNeeded)(ViewController *self);
+	
+	/**
+	 * @fn void ViewController::moveToParent(ViewController *self, ViewController *parentViewController)
+	 *
+	 * @brief Moves this ViewController to the specified parent.
+	 *
+	 * @param parent The parent ViewController, or `NULL`.
+	 *
+	 * @memberof ViewController
+	 */
+	void (*moveToParentViewController)(ViewController *self, ViewController *parentViewController);
+	
+	/**
+	 * @fn _Bool ViewController:respondToEvent(ViewController *self, SDL_Event *event)
+	 *
+	 * @brief Responds to the given event.
+	 *
+	 * @param event The SDL_Event.
+	 *
+	 * @return True if the event was responded to, false otherwise.
+	 *
+	 * @memberof ViewController
+	 */
+	_Bool (*respondToEvent)(ViewController *self, SDL_Event *event);
+	
+	/**
+	 * @fn ViewController *ViewController::rootViewController(const ViewController *self)
+	 *
+	 * @return The root ViewController of this ViewController.
+	 *
+	 * @memberof ViewController
+	 */
+	ViewController *(*rootViewController)(const ViewController *self);
+
+	/**
+	 * @fn void ViewController::viewDidAppear(ViewController *self)
+	 *
+	 * @brief Called after each time this ViewController's View appears.
+	 *
+	 * @memberof ViewController
+	 */
+	void (*viewDidAppear)(ViewController *self);
+	
+	/**
+	 * @fn void ViewController::viewDidDisappear(ViewController *self)
+	 *
+	 * @brief Called after each time this ViewController's View disappears.
+	 *
+	 * @memberof ViewController
+	 */
+	void (*viewDidDisappear)(ViewController *self);
 
 	/**
 	 * @brief Called when this controller's view is about to be shown.
@@ -99,7 +203,7 @@ struct ViewControllerInterface {
 	 * @remark Subclasses may implement this method to free resources
 	 * allocated in `viewWillAppear`.
 	 */
-	void (*viewWillDisappear)(ViewController *self);
+	void (*viewWillDisappear)(ViewController *self);	
 };
 
 /**

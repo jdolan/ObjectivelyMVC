@@ -28,7 +28,7 @@
 
 #define _Class _ImageView
 
-#pragma mark - ObjectInterface
+#pragma mark - Object
 
 /**
  * @see ObjectInterface::dealloc(Object *)
@@ -42,19 +42,19 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
-#pragma mark - ViewInterface
+#pragma mark - View
 
 /**
- * @see ViewInterface::draw(View *)
+ * @see ViewInterface::draw(View *, SDL_Renderer *)
  */
-static void draw(View *self) {
+static void draw(View *self, SDL_Renderer *renderer) {
 
 	// TODO
 
-	super(View, self, draw);
+	super(View, self, draw, renderer);
 }
 
-#pragma mark - ImageView initializers
+#pragma mark - ImageView
 
 /**
  * @see ImageViewInterface::init(ImageView *)

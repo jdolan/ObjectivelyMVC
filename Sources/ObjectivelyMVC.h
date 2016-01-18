@@ -25,6 +25,7 @@
 #define _ObjectivelyMVC_h_
 
 #include <ObjectivelyMVC/Colors.h>
+#include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/View.h>
