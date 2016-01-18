@@ -56,8 +56,6 @@ static _Bool drawChildViewControllers(const Array *array, ident obj, ident data)
 static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	
 	assert(renderer);
-
-	$(self, loadViewIfNeeded);
 	
 	$(self->view, draw, renderer);
 		
@@ -99,10 +97,10 @@ static ViewController *initRootViewController(ViewController *self, SDL_Window *
 				SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP
 			);
 		}
-		
 		assert(self->window);
 		
-		$(self, loadViewIfNeeded);
+		$(self, loadView);
+		assert(self->view);
 	}
 	
 	return self;
@@ -125,22 +123,6 @@ static void loadView(ViewController *self) {
 }
 
 /**
- * @fn void ViewController::loadViewIfNeeded(ViewController *self)
- *
- * @memberof ViewController
- */
-static void loadViewIfNeeded(ViewController *self) {
-	
-	if (self->view == NULL) {
-		$(self, loadView);
-		
-		if (self->view == NULL) {
-			SDL_LogError(0, "%s: NULL\n", __func__);
-		}
-	}
-}
-
-/**
  * @fn void ViewController::moveToParentViewController(ViewController *self, ViewController *parentViewController)
  *
  * @memberof ViewController
@@ -155,6 +137,10 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 	
 	if (self->parentViewController) {
 		$(self->parentViewController->childViewControllers, addObject, self);
+		
+		if (self->view == NULL) {
+			$(self, loadView);
+		}
 	}
 }
 
@@ -166,8 +152,6 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 static _Bool respondToEvent(ViewController *self, SDL_Event *event) {
 	
 	assert(event);
-	
-	$(self, loadViewIfNeeded);
 	
 	Array *childViewControllers = (Array *) self->childViewControllers;
 	for (size_t i = 0; i < childViewControllers->count; i++) {
@@ -250,7 +234,6 @@ static void initialize(Class *clazz) {
 	viewController->init = init;
 	viewController->initRootViewController = initRootViewController;
 	viewController->loadView = loadView;
-	viewController->loadViewIfNeeded = loadViewIfNeeded;
 	viewController->moveToParentViewController = moveToParentViewController;
 	viewController->respondToEvent = respondToEvent;
 	viewController->rootViewController = rootViewController;

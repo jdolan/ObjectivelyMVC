@@ -128,17 +128,6 @@ struct ViewControllerInterface {
 	void (*loadView)(ViewController *self);
 	
 	/**
-	 * @private
-	 *
-	 * @fn void ViewController::loadViewIfneeded(ViewController *self)
-	 *
-	 * @brief Loads this controller's View if it has not already been loaded.
-	 *
-	 * @memberof ViewController
-	 */
-	void (*loadViewIfNeeded)(ViewController *self);
-	
-	/**
 	 * @fn void ViewController::moveToParent(ViewController *self, ViewController *parentViewController)
 	 *
 	 * @brief Moves this ViewController to the specified parent.

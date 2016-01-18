@@ -23,8 +23,7 @@
 
 #include <assert.h>
 
-#include <SDL2/SDL_log.h>
-
+#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
 #define _Class _View
@@ -101,7 +100,9 @@ static View *initWithFrame(View *self, SDL_Rect *frame) {
 		if (frame) {
 			self->frame = *frame;
 		} else {
-			SDL_LogDebug(0, "%s: NULL frame", __func__);
+			String *description = $((Object *) self, description);
+			LogDebug("%s: %s with NULL frame", __func__, description->chars);
+			release(description);
 		}
 		
 		self->backgroundColor = Colors.backgroundColor;
@@ -146,14 +147,50 @@ static void removeSubview(View *self, View *subview) {
 static void render(View *self, SDL_Renderer *renderer) {
 	
 	if (self->backgroundColor.a) {
-		const SDL_Color c = self->backgroundColor;
+		SDL_Color c = self->backgroundColor;
 		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
 		
-		SDL_RenderFillRect(renderer, &self->frame);
+		SDL_Rect frame = $(self, renderFrame);
+		SDL_RenderFillRect(renderer, &frame);
 		
-		const SDL_Color w = Colors.white;
-		SDL_SetRenderDrawColor(renderer, w.r, w.g, w.b, w.a);
+		c = Colors.white;
+		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
 	}
+}
+
+/**
+ * @fn SDL_Rect View::renderFrame(const View *self)
+ *
+ * @memberof View
+ */
+static SDL_Rect renderFrame(const View *self) {
+	
+	SDL_Rect frame = { .w = self->frame.w, .h = self->frame.h };
+	
+	const View *view = self;
+	while (true) {
+		
+		frame.x += view->frame.x;
+		frame.y += view->frame.y;
+		
+		if (view->superview) {
+			view = view->superview;
+		} else {
+			break;
+		}
+	}
+	
+	const int maxWidth = view->frame.w - frame.x;
+	if (frame.w > maxWidth || frame.w == 0) {
+		frame.w = maxWidth;
+	}
+	
+	const int maxHeight = view->frame.h - frame.y;
+	if (frame.h > maxHeight || frame.h == 0) {
+		frame.h = maxHeight;
+	}
+	
+	return frame;
 }
 
 /**
@@ -187,6 +224,7 @@ static void initialize(Class *clazz) {
 	view->removeFromSuperview = removeFromSuperview;
 	view->removeSubview = removeSubview;
 	view->render = render;
+	view->renderFrame = renderFrame;
 	view->respondToEvent = respondToEvent;
 }
 

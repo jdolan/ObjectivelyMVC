@@ -21,8 +21,9 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <assert.h>
+
 #include <ObjectivelyMVC/Label.h>
-#include <ObjectivelyMVC/Log.h>
 
 #define _Class _Label
 
@@ -56,24 +57,17 @@ static void render(View *self, SDL_Renderer *renderer) {
 	Label *this = (Label *) self;
 	
 	if (this->text) {
+		
 		if (this->texture == NULL) {
 			SDL_Surface *surface = TTF_RenderUTF8_Blended(this->font->font, this->text, this->color);
-			if (surface) {
-				
-				this->texture = SDL_CreateTextureFromSurface(renderer, surface);
-				if (this->texture) {
-					LogVerbose("%s: Created texture for \"%s\"", __func__, this->text);
-				} else {
-					LogError("%s: Failed to create texture for \"%s\"", __func__, this->text);
-				}
-				
-				SDL_FreeSurface(surface);
-			} else {
-				LogError("%s: Failed to render \"%s\"", __func__, this->text);
-			}
+			this->texture = SDL_CreateTextureFromSurface(renderer, surface);
+			SDL_FreeSurface(surface);
 		}
 		
-		SDL_RenderCopy(renderer, this->texture, NULL, &self->frame);
+		assert(this->texture);
+		
+		SDL_Rect frame = $(self, renderFrame);
+		SDL_RenderCopy(renderer, this->texture, NULL, &frame);
 	}
 }
 

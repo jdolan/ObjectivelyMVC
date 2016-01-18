@@ -36,8 +36,16 @@
 /**
  * @file
  *
- * @brief MVC View implementation.
+ * @brief View implementation.
  */
+
+/**
+ * @brief The Border type.
+ */
+typedef struct {
+	int width;
+	SDL_Color color;
+} Border;
 
 typedef struct View View;
 typedef struct ViewInterface ViewInterface;
@@ -68,9 +76,9 @@ struct View {
 	MutableArray *subviews;
 
 	/**
-	 * @brief The frame and bounds.
+	 * @brief The frame, relative to the superview.
 	 */
-	SDL_Rect frame, bounds;
+	SDL_Rect frame;
 
 	/**
 	 * @brief If `true`, this view is not drawn.
@@ -81,6 +89,11 @@ struct View {
 	 * @brief The background color.
 	 */
 	SDL_Color backgroundColor;
+	
+	/**
+	 * @brief The borders, indexed from the top, clockwise.
+	 */
+	Border borders[4];
 };
 
 /**
@@ -127,7 +140,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	View *(*initWithFrame)(View *self, SDL_Rect *frame);
-
+	
 	/**
 	 * @fn void View::removeFromSuperview(View *self)
 	 *
@@ -159,6 +172,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*render)(View *self, SDL_Renderer *renderer);
+	
+	/**
+	 * @fn SDL_Frame View::renderFrame(const View *self)
+	 *
+	 * @return This View's absolute frame in the View hierarchy.
+	 *
+	 * @memberof View
+	 */
+	SDL_Rect (*renderFrame)(const View *self);
 	
 	/**
 	 * @fn _Bool View:respondToEvent(View *self, SDL_Event *event)

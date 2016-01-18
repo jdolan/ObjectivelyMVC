@@ -56,8 +56,15 @@ int main(int arg, char **argv) {
 	Font *font = $(alloc(Font), initWithName, "Lucida Sans Unicode-24");
 	assert(font);
 	
-	Label *hello = $(alloc(Label), initWithText, "Hello World!", font);
-	$(rootViewController->view, addSubview, (View *) hello);
+	Label *label = $(alloc(Label), initWithText, "Hello World!", font);
+	assert(label);
+	
+	SDL_Rect frame = { .x = 100, .y = 100 };
+	View *container = $(alloc(View), initWithFrame, &frame);
+	assert(container);
+	
+	$(container, addSubview, (View *) label);
+	$(rootViewController->view, addSubview, container);
 	
 	while (true) {
 		SDL_Event event;
@@ -82,6 +89,12 @@ int main(int arg, char **argv) {
 		usleep(1000);
 	}
 	
+	release(font);
+	release(label);
+	release(container);
+	release(rootViewController);
+	
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	
 	SDL_Quit();
