@@ -30,6 +30,17 @@
  * @brief Color constants.
  */
 typedef struct {
+	
+	/**
+	 * @brief The default background color for newly initialized elements.
+	 */
+	SDL_Color backgroundColor;
+	
+	/**
+	 * @brief The default foreground color for newly initialized elements.
+	 */
+	SDL_Color foregroundColor;
+	
 	SDL_Color white;
 	SDL_Color black;
 	SDL_Color gray;

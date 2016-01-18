@@ -22,6 +22,7 @@
  */
 
 #include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/Log.h>
 
 #define _Class _Label
 
@@ -46,11 +47,11 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::draw(View *, SDL_Renderer *)
+ * @see View::render(View *, SDL_Renderer *)
  */
-static void draw(View *self, SDL_Renderer *renderer) {
+static void render(View *self, SDL_Renderer *renderer) {
 
-	super(View, self, draw, renderer);
+	super(View, self, render, renderer);
 
 	Label *this = (Label *) self;
 	
@@ -61,14 +62,14 @@ static void draw(View *self, SDL_Renderer *renderer) {
 				
 				this->texture = SDL_CreateTextureFromSurface(renderer, surface);
 				if (this->texture) {
-					SDL_LogVerbose(0, "%s: Created texture for \"%s\"", __func__, this->text);
+					LogVerbose("%s: Created texture for \"%s\"", __func__, this->text);
 				} else {
-					SDL_LogError(0, "%s: Failed to create texture for \"%s\"", __func__, this->text);
+					LogError("%s: Failed to create texture for \"%s\"", __func__, this->text);
 				}
 				
 				SDL_FreeSurface(surface);
 			} else {
-				SDL_LogError(0, "%s: Failed to render \"%s\"", __func__, this->text);
+				LogError("%s: Failed to render \"%s\"", __func__, this->text);
 			}
 		}
 		
@@ -88,15 +89,16 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 	self = (Label *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
-		if (font) {
-			self->font = font;
-		} else {
-			self->font = $$(Font, defaultFont);
+		if (font == NULL) {
+			font = $$(Font, defaultFont);
 		}
 
-		retain(self->font);
+		self->font = retain(font);
+		
+		self->color = Colors.foregroundColor;
 
 		$(self, setText, text);
+		
 		$(self, naturalSize, &self->view.frame.w, &self->view.frame.h);
 	}
 
@@ -147,7 +149,7 @@ static void initialize(Class *self) {
 
 	((ObjectInterface *) self->interface)->dealloc = dealloc;
 
-	((ViewInterface *) self->interface)->draw = draw;
+	((ViewInterface *) self->interface)->render = render;
 
 	((LabelInterface *) self->interface)->initWithText = initWithText;
 	((LabelInterface *) self->interface)->naturalSize = naturalSize;

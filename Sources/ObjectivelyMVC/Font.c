@@ -72,8 +72,6 @@ static Array *allFonts(void) {
 		char *name = (char *) FcNameUnparse(*font);
 		String *string = $$(String, stringWithMemory, name, strlen(name));
 		
-		printf("Matched %s\n", name);
-		
 		$(fonts, addObject, string);
 		release(string);
 	}

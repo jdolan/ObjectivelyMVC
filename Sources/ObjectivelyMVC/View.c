@@ -65,21 +65,28 @@ static void addSubview(View *self, View *subview) {
 }
 
 /**
+ * @brief ArrayEnumerator for draw.
+ */
+static _Bool drawSubviews(const Array *array, ident obj, ident data) {
+	$((View *) obj, draw, (SDL_Renderer *) data); return false;
+}
+
+/**
  * @fn void View::draw(View *self, SDL_Renderer *renderer)
  *
  * @memberof View
  */
 static void draw(View *self, SDL_Renderer *renderer) {
 	
-	if (self->backgroundColor.a) {
-		const SDL_Color c = self->backgroundColor;
-		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
-		
-		SDL_RenderFillRect(renderer, &self->frame);
-		
-		const SDL_Color w = Colors.white;
-		SDL_SetRenderDrawColor(renderer, w.r, w.g, w.b, w.a);
+	assert(renderer);
+	
+	if (self->hidden) {
+		return;
 	}
+	
+	$(self, render, renderer);
+	
+	$((Array *) self->subviews, enumerateObjects, drawSubviews, renderer);
 }
 
 /**
@@ -97,7 +104,7 @@ static View *initWithFrame(View *self, SDL_Rect *frame) {
 			SDL_LogDebug(0, "%s: NULL frame", __func__);
 		}
 		
-		self->backgroundColor = Colors.clear;
+		self->backgroundColor = Colors.backgroundColor;
 	}
 	
 	return self;
@@ -132,6 +139,24 @@ static void removeSubview(View *self, View *subview) {
 }
 
 /**
+ * @fn void View::render(View *self, SDL_Renderer *renderer)
+ *
+ * @memberof View
+ */
+static void render(View *self, SDL_Renderer *renderer) {
+	
+	if (self->backgroundColor.a) {
+		const SDL_Color c = self->backgroundColor;
+		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+		
+		SDL_RenderFillRect(renderer, &self->frame);
+		
+		const SDL_Color w = Colors.white;
+		SDL_SetRenderDrawColor(renderer, w.r, w.g, w.b, w.a);
+	}
+}
+
+/**
  * @fn _Bool View::respondToEvent(View *self, SDL_Event *event)
  *
  * @memberof View
@@ -161,6 +186,7 @@ static void initialize(Class *clazz) {
 	view->initWithFrame = initWithFrame;
 	view->removeFromSuperview = removeFromSuperview;
 	view->removeSubview = removeSubview;
+	view->render = render;
 	view->respondToEvent = respondToEvent;
 }
 

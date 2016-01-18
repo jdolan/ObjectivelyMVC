@@ -14,13 +14,13 @@
 		CE12D43F1C4C38B500CD0B13 /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40D1C4C367100CD0B13 /* Label.c */; };
 		CE12D4401C4C38B500CD0B13 /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4231C4C367100CD0B13 /* View.c */; };
 		CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4251C4C367100CD0B13 /* ViewController.c */; };
-		CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4081C4C367100CD0B13 /* Colors.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE12D4431C4C38C700CD0B13 /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40A1C4C367100CD0B13 /* Font.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40C1C4C367100CD0B13 /* ImageView.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE12D4451C4C38C700CD0B13 /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40E1C4C367100CD0B13 /* Label.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE12D4461C4C38C700CD0B13 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4241C4C367100CD0B13 /* View.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4081C4C367100CD0B13 /* Colors.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4431C4C38C700CD0B13 /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40A1C4C367100CD0B13 /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40C1C4C367100CD0B13 /* ImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4451C4C38C700CD0B13 /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40E1C4C367100CD0B13 /* Label.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4461C4C38C700CD0B13 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4241C4C367100CD0B13 /* View.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D44B1C4C867300CD0B13 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE12D44C1C4C86CE00CD0B13 /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CE12D44D1C4C86CE00CD0B13 /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
@@ -34,6 +34,7 @@
 		CE12D4601C4C8F2400CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
 		CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE12D4621C4C8F4800CD0B13 /* HelloMVC.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* HelloMVC.c */; };
+		CE12D4661C4D587E00CD0B13 /* Log.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4651C4D587E00CD0B13 /* Log.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
@@ -89,6 +90,7 @@
 		CE12D42D1C4C383D00CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CE12D43B1C4C389300CD0B13 /* libObjectivelyMVC-Examples.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libObjectivelyMVC-Examples.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4551C4C8E8E00CD0B13 /* HelloMVC */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HelloMVC; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE12D4651C4D587E00CD0B13 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 				CE12D40C1C4C367100CD0B13 /* ImageView.h */,
 				CE12D40D1C4C367100CD0B13 /* Label.c */,
 				CE12D40E1C4C367100CD0B13 /* Label.h */,
+				CE12D4651C4D587E00CD0B13 /* Log.h */,
 				CE12D4231C4C367100CD0B13 /* View.c */,
 				CE12D4241C4C367100CD0B13 /* View.h */,
 				CE12D4251C4C367100CD0B13 /* ViewController.c */,
@@ -251,6 +254,7 @@
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE12D4451C4C38C700CD0B13 /* Label.h in Headers */,
+				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
 				CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,

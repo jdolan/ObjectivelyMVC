@@ -90,7 +90,7 @@ struct ViewControllerInterface {
 	 *
 	 * @memberof ViewController
 	 */
-	void (*draw)(ViewController *self, SDL_Renderer *renderer);
+	void (*drawView)(ViewController *self, SDL_Renderer *renderer);
 	
 	/**
 	 * @fn ViewController *ViewController::init(ViewController *self)

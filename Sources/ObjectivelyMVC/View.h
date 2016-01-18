@@ -149,6 +149,18 @@ struct ViewInterface {
 	void (*removeSubview)(View *self, View *subview);
 	
 	/**
+	 * @fn void View::render(View *self, SDL_Renderer *renderer)
+	 *
+	 * @brief Renders this View using the given renderer.
+	 *
+	 * @remarks Subclasses should override this method to perform actual drawing operations.
+	 * This method is called by `draw` as the View hierarchy is drawn.
+	 *
+	 * @memberof View
+	 */
+	void (*render)(View *self, SDL_Renderer *renderer);
+	
+	/**
 	 * @fn _Bool View:respondToEvent(View *self, SDL_Event *event)
 	 *
 	 * @brief Responds to the given event.

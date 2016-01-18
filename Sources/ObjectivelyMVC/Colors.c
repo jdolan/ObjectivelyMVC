@@ -25,6 +25,9 @@
 
 const Colors_t Colors = {
 	
+	.backgroundColor = { 128, 128, 128, 255 },
+	.foregroundColor = { 0, 0, 0, 255 },
+	
 	.white = { 255, 255, 255, 255 },
 	.black = { 0, 0, 0, 255 },
 	.gray =  { 128, 128, 128, 255 },

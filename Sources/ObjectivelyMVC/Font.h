@@ -25,6 +25,7 @@
 #define _ObjectivelyMVC_Font_h_
 
 #include <fontconfig/fontconfig.h>
+
 #include <SDL2/SDL_TTF.h>
 
 #include <Objectively/Array.h>

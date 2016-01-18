@@ -21,15 +21,20 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_h_
-#define _ObjectivelyMVC_h_
+#ifndef _ObjectivelyMVC_Log_h_
+#define _ObjectivelyMVC_Log_h_
 
-#include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/Font.h>
-#include <ObjectivelyMVC/ImageView.h>
-#include <ObjectivelyMVC/Label.h>
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/ViewController.h>
+#include <SDL2/SDL_log.h>
+
+#define LogCategoryMVC (SDL_LOG_CATEGORY_CUSTOM + 69)
+
+#define LogSetPriority(pri) SDL_LogSetPriority(LogCategoryMVC, pri)
+
+#define LogVerbose(fmt, ...) SDL_LogVerbose(LogCategoryMVC, fmt, ## __VA_ARGS__)
+#define LogDebug(fmt, ...) SDL_LogDebug(LogCategoryMVC, fmt, ## __VA_ARGS__)
+#define LogInfo(fmt, ...) SDL_LogInfo(LogCategoryMVC, fmt, ## __VA_ARGS__)
+#define LogWarn(fmt, ...) SDL_LogWarn(LogCategoryMVC, fmt, ## __VA_ARGS__)
+#define LogError(fmt, ...) SDL_LogError(LogCategoryMVC, fmt, ## __VA_ARGS__)
+#define LogCritical(fmt, ...) SDL_LogCritical(LogCategoryMVC, fmt, ## __VA_ARGS__)
 
 #endif

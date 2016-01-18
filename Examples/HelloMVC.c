@@ -29,6 +29,8 @@
 
 int main(int arg, char **argv) {
 	
+	LogSetPriority(SDL_LOG_PRIORITY_VERBOSE);
+	
 	SDL_Init(SDL_INIT_VIDEO);
 	
 	SDL_Window *window = SDL_CreateWindow(__FILE__,
@@ -51,8 +53,10 @@ int main(int arg, char **argv) {
 	);
 	assert(renderer);
 	
-	Label *hello = $(alloc(Label), initWithText, "Hello World!", NULL);
-	$(rootViewController, loadViewIfNeeded);
+	Font *font = $(alloc(Font), initWithName, "Lucida Sans Unicode-24");
+	assert(font);
+	
+	Label *hello = $(alloc(Label), initWithText, "Hello World!", font);
 	$(rootViewController->view, addSubview, (View *) hello);
 	
 	while (true) {
@@ -69,7 +73,13 @@ int main(int arg, char **argv) {
 			}
 		}
 		
-		$(rootViewController, draw, renderer);
+		SDL_RenderClear(renderer);
+		
+		$(rootViewController, drawView, renderer);
+		
+		SDL_RenderPresent(renderer);
+		
+		usleep(1000);
 	}
 	
 	SDL_DestroyWindow(window);

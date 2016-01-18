@@ -71,6 +71,10 @@ struct Label {
 
 	/**
 	 * @brief The text.
+	 *
+	 * @remarks Do not set this member directly.
+	 *
+	 * @see Label::setText(Label *, const char *)
 	 */
 	char *text;
 

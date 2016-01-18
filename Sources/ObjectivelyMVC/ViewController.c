@@ -44,28 +44,24 @@ static void dealloc(Object *self) {
 /**
  * @brief ArrayEnumerator for draw.
  */
-static _Bool draw_enumerator(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, draw, (SDL_Renderer *) data); return false;
+static _Bool drawChildViewControllers(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, drawView, (SDL_Renderer *) data); return false;
 }
 
 /**
- * @fn void ViewController::draw(ViewController *self, SDL_Renderer *renderer)
+ * @fn void ViewController::drawView(ViewController *self, SDL_Renderer *renderer)
  *
  * @memberof ViewController
  */
-static void draw(ViewController *self, SDL_Renderer *renderer) {
+static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	
 	assert(renderer);
 
 	$(self, loadViewIfNeeded);
 	
-	if (self->view->hidden) {
-		return;
-	}
-	
 	$(self->view, draw, renderer);
-	
-	$((Array *) self->childViewControllers, enumerateObjects, draw_enumerator, renderer);
+		
+	$((Array *) self->childViewControllers, enumerateObjects, drawChildViewControllers, renderer);
 }
 
 /**
@@ -105,6 +101,8 @@ static ViewController *initRootViewController(ViewController *self, SDL_Window *
 		}
 		
 		assert(self->window);
+		
+		$(self, loadViewIfNeeded);
 	}
 	
 	return self;
@@ -248,7 +246,7 @@ static void initialize(Class *clazz) {
 	
 	ViewControllerInterface *viewController = (ViewControllerInterface *) clazz->interface;
 
-	viewController->draw = draw;
+	viewController->drawView = drawView;
 	viewController->init = init;
 	viewController->initRootViewController = initRootViewController;
 	viewController->loadView = loadView;
