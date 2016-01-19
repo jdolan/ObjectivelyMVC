@@ -83,20 +83,38 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 	self = (Label *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
-		if (font == NULL) {
-			font = $$(Font, defaultFont);
-		}
-
-		self->font = retain(font);
-		
 		self->color = Colors.foregroundColor;
 
+		$(self, setFont, font);
 		$(self, setText, text);
 		
 		$(self, naturalSize, &self->view.frame.w, &self->view.frame.h);
 	}
 
 	return self;
+}
+
+/**
+ * @fn void Label::setFont(Label *self, Font *font)
+ *
+ * @memberof Label
+ */
+static void setFont(Label *self, Font *font) {
+	
+	if (font == NULL) {
+		font = $$(Font, defaultFont);
+	}
+	
+	if (font != self->font) {
+		
+		release(self->font);
+		self->font = retain(font);
+		
+		if (self->texture) {
+			SDL_DestroyTexture(self->texture);
+			self->texture = NULL;
+		}
+	}
 }
 
 /**
@@ -147,6 +165,7 @@ static void initialize(Class *self) {
 
 	((LabelInterface *) self->interface)->initWithText = initWithText;
 	((LabelInterface *) self->interface)->naturalSize = naturalSize;
+	((LabelInterface *) self->interface)->setFont = setFont;
 	((LabelInterface *) self->interface)->setText = setText;
 }
 

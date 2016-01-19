@@ -35,6 +35,12 @@
 		CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE12D4621C4C8F4800CD0B13 /* HelloMVC.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* HelloMVC.c */; };
 		CE12D4661C4D587E00CD0B13 /* Log.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4651C4D587E00CD0B13 /* Log.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4691C4D810F00CD0B13 /* Button.c */; };
+		CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46A1C4D810F00CD0B13 /* Button.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D46D1C4D82AF00CD0B13 /* Control.c */; };
+		CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46E1C4D82AF00CD0B13 /* Control.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4711C4DAF6100CD0B13 /* Action.c */; };
+		CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4721C4DAF6100CD0B13 /* Action.h */; };
 		CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
@@ -91,6 +97,12 @@
 		CE12D43B1C4C389300CD0B13 /* libObjectivelyMVC-Examples.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libObjectivelyMVC-Examples.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4551C4C8E8E00CD0B13 /* HelloMVC */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = HelloMVC; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4651C4D587E00CD0B13 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
+		CE12D4691C4D810F00CD0B13 /* Button.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Button.c; sourceTree = "<group>"; };
+		CE12D46A1C4D810F00CD0B13 /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
+		CE12D46D1C4D82AF00CD0B13 /* Control.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Control.c; sourceTree = "<group>"; };
+		CE12D46E1C4D82AF00CD0B13 /* Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Control.h; sourceTree = "<group>"; };
+		CE12D4711C4DAF6100CD0B13 /* Action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Action.c; sourceTree = "<group>"; };
+		CE12D4721C4DAF6100CD0B13 /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Action.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -148,8 +160,14 @@
 		CE12D3DE1C4C367100CD0B13 /* ObjectivelyMVC */ = {
 			isa = PBXGroup;
 			children = (
+				CE12D4711C4DAF6100CD0B13 /* Action.c */,
+				CE12D4721C4DAF6100CD0B13 /* Action.h */,
+				CE12D4691C4D810F00CD0B13 /* Button.c */,
+				CE12D46A1C4D810F00CD0B13 /* Button.h */,
 				CE12D4071C4C367100CD0B13 /* Colors.c */,
 				CE12D4081C4C367100CD0B13 /* Colors.h */,
+				CE12D46D1C4D82AF00CD0B13 /* Control.c */,
+				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
 				CE12D4091C4C367100CD0B13 /* Font.c */,
 				CE12D40A1C4C367100CD0B13 /* Font.h */,
 				CE12D40B1C4C367100CD0B13 /* ImageView.c */,
@@ -250,13 +268,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */,
 				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
+				CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */,
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE12D4451C4C38C700CD0B13 /* Label.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
 				CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */,
+				CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,8 +415,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
+				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
+				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE12D43F1C4C38B500CD0B13 /* Label.c in Sources */,
 				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,

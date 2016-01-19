@@ -39,14 +39,6 @@
  * @brief View implementation.
  */
 
-/**
- * @brief The Border type.
- */
-typedef struct {
-	int width;
-	SDL_Color color;
-} Border;
-
 typedef struct View View;
 typedef struct ViewInterface ViewInterface;
 
@@ -62,38 +54,45 @@ struct View {
 
 	/**
 	 * @brief The typed interface.
+	 *
+	 * @private
 	 */
 	ViewInterface *interface;
-
-	/**
-	 * @brief The containing view.
-	 */
-	View *superview;
-
-	/**
-	 * @brief All contained views.
-	 */
-	MutableArray *subviews;
-
-	/**
-	 * @brief The frame, relative to the superview.
-	 */
-	SDL_Rect frame;
-
-	/**
-	 * @brief If `true`, this view is not drawn.
-	 */
-	_Bool hidden;
-
+	
 	/**
 	 * @brief The background color.
 	 */
 	SDL_Color backgroundColor;
 	
 	/**
-	 * @brief The borders, indexed from the top, clockwise.
+	 * @brief The border color.
 	 */
-	Border borders[4];
+	SDL_Color borderColor;
+	
+	/**
+	 * @brief The border width.
+	 */
+	int borderWidth;
+	
+	/**
+	 * @brief The frame, relative to the superview.
+	 */
+	SDL_Rect frame;
+	
+	/**
+	 * @brief If `true`, this view is not drawn.
+	 */
+	_Bool hidden;
+	
+	/**
+	 * @brief All contained views.
+	 */
+	MutableArray *subviews;
+
+	/**
+	 * @brief The containing view.
+	 */
+	View *superview;
 };
 
 /**
@@ -118,6 +117,17 @@ struct ViewInterface {
 	void (*addSubview)(View *self, View *subview);
 	
 	/**
+	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
+	 *
+	 * @param point A point in window space.
+	 *
+	 * @return True if the point falls within this Views frame.
+	 *
+	 * @memberof View
+	 */
+	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
+		
+	/**
 	 * @fn void View::draw(View *self, SDL_Renderer *renderer)
 	 *
 	 * @brief Draws this View.
@@ -131,6 +141,8 @@ struct ViewInterface {
 	void (*draw)(View *self, SDL_Renderer *renderer);
 
 	/**
+	 * @fn View *View::initWithFrame(View *self, const SDL_Rect *frame)
+	 *
 	 * @brief Initializes this view with the specified frame.
 	 *
 	 * @param frame The frame.
@@ -139,7 +151,7 @@ struct ViewInterface {
 	 *
 	 * @memberof View
 	 */
-	View *(*initWithFrame)(View *self, SDL_Rect *frame);
+	View *(*initWithFrame)(View *self, const SDL_Rect *frame);
 	
 	/**
 	 * @fn void View::removeFromSuperview(View *self)
@@ -193,7 +205,7 @@ struct ViewInterface {
 	 *
 	 * @memberof View
 	 */
-	_Bool (*respondToEvent)(View *self, SDL_Event *event);
+	_Bool (*respondToEvent)(View *self, const SDL_Event *event);
 };
 
 extern Class _View;

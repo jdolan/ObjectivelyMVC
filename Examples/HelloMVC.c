@@ -27,6 +27,10 @@
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
+static void buttonAction(ident sender, const SDL_Event *event, ident data) {
+	printf("hi\n");
+}
+
 int main(int arg, char **argv) {
 	
 	LogSetPriority(SDL_LOG_PRIORITY_VERBOSE);
@@ -53,17 +57,27 @@ int main(int arg, char **argv) {
 	);
 	assert(renderer);
 	
+	const SDL_Rect frame = { .x = 100, .y = 100 };
+	
 	Font *font = $(alloc(Font), initWithName, "Lucida Sans Unicode-24");
 	assert(font);
 	
 	Label *label = $(alloc(Label), initWithText, "Hello World!", font);
 	assert(label);
+		
+	Button *button = $(alloc(Button), initWithFrame, &frame);
+	assert(button);
 	
-	SDL_Rect frame = { .x = 100, .y = 100 };
+	$(button->label, setText, "Click Me");
+	$(button->label, setFont, font);
+	
+	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
+	
 	View *container = $(alloc(View), initWithFrame, &frame);
 	assert(container);
 	
 	$(container, addSubview, (View *) label);
+	$(container, addSubview, (View *) button);
 	$(rootViewController->view, addSubview, container);
 	
 	while (true) {

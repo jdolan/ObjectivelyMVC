@@ -58,21 +58,25 @@ struct Label {
 	 * @private
 	 */
 	LabelInterface *interface;
-
-	/**
-	 * @brief The Font.
-	 */
-	Font *font;
-
+	
 	/**
 	 * @brief The text color.
 	 */
 	SDL_Color color;
 
 	/**
+	 * @brief The Font.
+	 *
+	 * @remarks Do not set this property directly.
+	 *
+	 * @see Label::setFont(Label *, Font *)
+	 */
+	Font *font;
+
+	/**
 	 * @brief The text.
 	 *
-	 * @remarks Do not set this member directly.
+	 * @remarks Do not set this property directly.
 	 *
 	 * @see Label::setText(Label *, const char *)
 	 */
@@ -80,6 +84,8 @@ struct Label {
 
 	/**
 	 * @brief The rendered texture.
+	 *
+	 * @private
 	 */
 	SDL_Texture *texture;
 };
@@ -107,7 +113,7 @@ struct LabelInterface {
 	void (*naturalSize)(const Label *self, int *width, int *height);
 
 	/**
-	 * @fn Label *Label::initWithText(Label *self, const char *text)
+	 * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
 	 *
 	 * @param text The text.
 	 * @param font The Font (optional).
@@ -119,9 +125,20 @@ struct LabelInterface {
 	Label *(*initWithText)(Label *self, const char *text, Font *font);
 
 	/**
+	 * @fn void Label::setFont(Label 8self, Font *font)
+	 *
+	 * @brief Sets this Label's font.
+	 *
+	 * @param font The Font to set.
+	 *
+	 * @memberof Label
+	 */
+	void (*setFont)(Label *self, Font *font);
+	
+	/**
 	 * @fn void Label::setText(Label *self, const char *text)
 	 *
-	 * @brief Sets this Label's text, prompting it to be re-rendered.
+	 * @brief Sets this Label's text.
 	 *
 	 * @param text The text to set.
 	 *

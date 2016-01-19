@@ -64,6 +64,18 @@ static void addSubview(View *self, View *subview) {
 }
 
 /**
+ * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
+ *
+ * @memberof View
+ */
+static _Bool containsPoint(const View *self, const SDL_Point *point) {
+	
+	const SDL_Rect frame = $(self, renderFrame);
+	
+	return (_Bool) SDL_PointInRect(point, &frame);
+}
+
+/**
  * @brief ArrayEnumerator for draw.
  */
 static _Bool drawSubviews(const Array *array, ident obj, ident data) {
@@ -89,9 +101,11 @@ static void draw(View *self, SDL_Renderer *renderer) {
 }
 
 /**
- * @see ViewInterface::init(View *, SDL_Rect *)
+ * @fn View *View::initWithFrame(View *self, const SDL_Rect *frame)
+ *
+ * @memberof View
  */
-static View *initWithFrame(View *self, SDL_Rect *frame) {
+static View *initWithFrame(View *self, const SDL_Rect *frame) {
 	
 	self = (View *) super(Object, self, init);
 	if (self) {
@@ -194,13 +208,20 @@ static SDL_Rect renderFrame(const View *self) {
 }
 
 /**
- * @fn _Bool View::respondToEvent(View *self, SDL_Event *event)
+ * @fn _Bool View::respondToEvent(View *self, const SDL_Event *event)
  *
  * @memberof View
  */
-static _Bool respondToEvent(View *self, SDL_Event *event) {
+static _Bool respondToEvent(View *self, const SDL_Event *event) {
 	
-	assert(event);
+	Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+		
+		View *view = (View *) $(subviews, objectAtIndex, i);
+		if ($(view, respondToEvent, event)) {
+			return true;
+		}
+	}
 	
 	return false;
 }
@@ -219,6 +240,7 @@ static void initialize(Class *clazz) {
 	ViewInterface *view = (ViewInterface *) clazz->interface;
 
 	view->addSubview = addSubview;
+	view->containsPoint = containsPoint;
 	view->draw = draw;
 	view->initWithFrame = initWithFrame;
 	view->removeFromSuperview = removeFromSuperview;

@@ -94,7 +94,7 @@ static Font *defaultFont(void) {
 	static Once once;
 
 	DispatchOnce(once, {
-		_defaultFont = $(alloc(Font), initWithName, "Sans-12");
+		_defaultFont = $(alloc(Font), initWithName, "Lucida Sans Unicode-12");
 	});
 
 	return _defaultFont;

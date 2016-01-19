@@ -21,18 +21,52 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_h_
-#define _ObjectivelyMVC_h_
+#include <assert.h>
 
 #include <ObjectivelyMVC/Action.h>
-#include <ObjectivelyMVC/Button.h>
-#include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/Control.h>
-#include <ObjectivelyMVC/Font.h>
-#include <ObjectivelyMVC/ImageView.h>
-#include <ObjectivelyMVC/Label.h>
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/ViewController.h>
 
-#endif
+#define _Class _Action
+
+#pragma mark - Action
+
+/**
+ * @fn Action *Action::initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident data)
+ *
+ * @memberof Action
+ */
+static Action *initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident data) {
+
+	self = (Action *) super(Object, self, init);
+	if (self) {
+
+		self->eventType = eventType;
+		
+		self->function = function;
+		assert(self->function);
+
+		self->data = data;
+	}
+
+	return self;
+}
+
+#pragma mark - Class lifecycle
+
+/**
+ * @see Class::initialize(Class *)
+ */
+static void initialize(Class *clazz) {
+
+	((ActionInterface *) clazz->interface)->initWithEventType = initWithEventType;
+}
+
+Class _Action = {
+	.name = "Action",
+	.superclass = &_Object,
+	.instanceSize = sizeof(Action),
+	.interfaceOffset = offsetof(Action, interface),
+	.interfaceSize = sizeof(ActionInterface),
+	.initialize = initialize,
+};
+
+#undef _Class

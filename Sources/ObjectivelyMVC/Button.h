@@ -21,18 +21,73 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_h_
-#define _ObjectivelyMVC_h_
+#ifndef _ObjectivelyMVC_Button_h_
+#define _ObjectivelyMVC_Button_h_
 
-#include <ObjectivelyMVC/Action.h>
-#include <ObjectivelyMVC/Button.h>
-#include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Control.h>
-#include <ObjectivelyMVC/Font.h>
-#include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Label.h>
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/ViewController.h>
+
+/**
+ * @file
+ * 
+ * @brief Buttons
+ */
+
+typedef struct Button Button;
+typedef struct ButtonInterface ButtonInterface;
+
+/**
+ * @brief The Button type.
+ */
+struct Button {
+
+	/**
+	 * @brief The parent.
+	 *
+	 * @private
+	 */
+	Control control;
+
+	/**
+	 * @brief The typed interface.
+	 *
+	 * @private
+	 */
+	ButtonInterface *interface;
+
+	/**
+	 * @brief The Label.
+	 */
+	Label *label;
+};
+
+/**
+ * @brief The Button interface.
+ */
+struct ButtonInterface {
+
+	/**
+	 * @brief The parent interface.
+	 */
+	ControlInterface controlInterface;
+
+	/**
+	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
+	 *
+	 * @brief Initializes this Button with the specified frame.
+	 *
+	 * @param frame The frame.
+	 *
+	 * @return The initialized Button, or `NULL` on error.
+	 *
+	 * @memberof Button
+	 */
+	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame);
+};
+
+/**
+ * @brief The Button Class.
+ */
+extern Class _Button;
 
 #endif

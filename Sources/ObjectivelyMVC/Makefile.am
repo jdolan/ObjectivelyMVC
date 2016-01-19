@@ -2,7 +2,10 @@ lib_LTLIBRARIES = \
 	libObjectivelyMVC.la
 
 include_HEADERS = \
+	Action.h \
+	Button.h \
 	Colors.h \
+	Control.h \
 	Font.h \
 	ImageView.h \
 	Label.h \
@@ -10,7 +13,10 @@ include_HEADERS = \
 	Viewcontroller.h
 
 libObjectivelyMVC_la_SOURCES = \
+	Action.c \
+	Button.c \
 	Colors.c \
+	Control.c \
 	Font.c \
 	ImageView.c \
 	Label.c \
