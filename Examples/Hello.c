@@ -27,10 +27,11 @@
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
-static void buttonAction(ident sender, const SDL_Event *event, ident data) {
-	printf("hi\n");
-}
+#include "HelloViewController.h"
 
+/**
+ * @brief Program entry point.
+ */
 int main(int arg, char **argv) {
 	
 	LogSetPriority(SDL_LOG_PRIORITY_VERBOSE);
@@ -44,41 +45,12 @@ int main(int arg, char **argv) {
 		768,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
 	);
-	assert(window);
 	
-	SDL_GLContext *context = SDL_GL_CreateContext(window);
-	assert(context);
-	
-	ViewController *rootViewController = $(alloc(ViewController), initRootViewController, window);
-	assert(rootViewController);
+	ViewController *rootViewController = $((ViewController *) alloc(HelloViewController), initRootViewController, window);
 	
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, 0,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE
 	);
-	assert(renderer);
-	
-	const SDL_Rect frame = { .x = 100, .y = 100 };
-	
-	Font *font = $(alloc(Font), initWithName, "Lucida Sans Unicode-24");
-	assert(font);
-	
-	Label *label = $(alloc(Label), initWithText, "Hello World!", font);
-	assert(label);
-		
-	Button *button = $(alloc(Button), initWithFrame, &frame);
-	assert(button);
-	
-	$(button->label, setText, "Click Me");
-	$(button->label, setFont, font);
-	
-	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
-	
-	View *container = $(alloc(View), initWithFrame, &frame);
-	assert(container);
-	
-	$(container, addSubview, (View *) label);
-	$(container, addSubview, (View *) button);
-	$(rootViewController->view, addSubview, container);
 	
 	while (true) {
 		SDL_Event event;
@@ -100,12 +72,9 @@ int main(int arg, char **argv) {
 		
 		SDL_RenderPresent(renderer);
 		
-		usleep(1000);
+		usleep(16000);
 	}
 	
-	release(font);
-	release(label);
-	release(container);
 	release(rootViewController);
 	
 	SDL_DestroyRenderer(renderer);

@@ -206,6 +206,20 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*respondToEvent)(View *self, const SDL_Event *event);
+	
+	/**
+	 * @fn void View::sizeThatFits(const View *self, int *w, int *h)
+	 *
+	 * @memberof View
+	 */
+	void (*sizeThatFits)(const View *self, int *w, int *h);
+	
+	/**
+	 * @fn void View::sizeToFit(View *self)
+	 *
+	 * @memberof View
+	 */
+	void (*sizeToFit)(View *self);
 };
 
 extern Class _View;

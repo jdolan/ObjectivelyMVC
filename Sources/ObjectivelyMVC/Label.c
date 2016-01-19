@@ -71,6 +71,14 @@ static void render(View *self, SDL_Renderer *renderer) {
 	}
 }
 
+/**
+ * @see View::sizeThatFits(View *, int *, int *)
+ */
+static void sizeThatFits(const View *self, int *w, int *h) {
+	
+	$((Label *) self, naturalSize, w, h);
+}
+
 #pragma mark - Label
 
 /**
@@ -87,8 +95,6 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 
 		$(self, setFont, font);
 		$(self, setText, text);
-		
-		$(self, naturalSize, &self->view.frame.w, &self->view.frame.h);
 	}
 
 	return self;
@@ -162,6 +168,7 @@ static void initialize(Class *self) {
 	((ObjectInterface *) self->interface)->dealloc = dealloc;
 
 	((ViewInterface *) self->interface)->render = render;
+	((ViewInterface *) self->interface)->sizeThatFits = sizeThatFits;
 
 	((LabelInterface *) self->interface)->initWithText = initWithText;
 	((LabelInterface *) self->interface)->naturalSize = naturalSize;

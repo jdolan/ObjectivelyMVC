@@ -194,16 +194,6 @@ static SDL_Rect renderFrame(const View *self) {
 		}
 	}
 	
-	const int maxWidth = view->frame.w - frame.x;
-	if (frame.w > maxWidth || frame.w == 0) {
-		frame.w = maxWidth;
-	}
-	
-	const int maxHeight = view->frame.h - frame.y;
-	if (frame.h > maxHeight || frame.h == 0) {
-		frame.h = maxHeight;
-	}
-	
 	return frame;
 }
 
@@ -224,6 +214,48 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 	}
 	
 	return false;
+}
+
+/**
+ * @fn void View::sizeThatFits(const View *self, int *w, int *h)
+ *
+ * @memberof View
+ */
+static void sizeThatFits(const View *self, int *w, int *h) {
+	
+	*w = self->frame.w;
+	*h = self->frame.h;
+}
+
+/**
+ * @fn void View::sizeToFit(View *self)
+ *
+ * @memberof View
+ */
+static void sizeToFit(View *self) {
+	
+	$(self, sizeThatFits, &self->frame.w, &self->frame.h);
+	
+	Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+		
+		View *subview = (View *) $(subviews, objectAtIndex, i);
+		$(subview, sizeToFit);
+		
+		int sw, sh;
+		$(subview, sizeThatFits, &sw, &sh);
+
+		sw += subview->frame.x;
+		sh += subview->frame.y;
+		
+		if (sw > self->frame.w) {
+			self->frame.w = sw;
+		}
+		
+		if (sh > self->frame.h) {
+			self->frame.h = sh;
+		}
+	}
 }
 
 #pragma mark - View class methods
@@ -248,6 +280,8 @@ static void initialize(Class *clazz) {
 	view->render = render;
 	view->renderFrame = renderFrame;
 	view->respondToEvent = respondToEvent;
+	view->sizeThatFits = sizeThatFits;
+	view->sizeToFit = sizeToFit;
 }
 
 Class _View = {

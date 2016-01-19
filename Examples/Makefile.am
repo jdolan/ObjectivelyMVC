@@ -1,6 +1,13 @@
 
 noinst_PROGRAMS = \
-	HelloMVC
+	Hello
+
+noinst_HEADERS = \
+	HelloViewController.h
+
+Hello_SOURCES = \
+	HelloViewController.c \
+	Hello.c
 
 CFLAGS += \
 	-I$(top_builddir)/Sources \
