@@ -114,12 +114,11 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		if (frame) {
 			self->frame = *frame;
 		} else {
-			String *description = $((Object *) self, description);
-			LogDebug("%s: %s with NULL frame", __func__, description->chars);
-			release(description);
+			LogDebug("%s: %s with NULL frame", __func__, ((Object *) self)->clazz->name);
 		}
 		
 		self->backgroundColor = Colors.backgroundColor;
+		self->borderColor = Colors.foregroundColor;
 	}
 	
 	return self;
@@ -161,14 +160,27 @@ static void removeSubview(View *self, View *subview) {
 static void render(View *self, SDL_Renderer *renderer) {
 	
 	if (self->backgroundColor.a) {
-		SDL_Color c = self->backgroundColor;
-		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+		SetRenderDrawColor(renderer, self->backgroundColor);
 		
-		SDL_Rect frame = $(self, renderFrame);
+		const SDL_Rect frame = $(self, renderFrame);
 		SDL_RenderFillRect(renderer, &frame);
 		
-		c = Colors.white;
-		SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b, c.a);
+		SetRenderDrawColor(renderer, Colors.white);
+	}
+	
+	if (self->borderWidth) {
+		SetRenderDrawColor(renderer, self->borderColor);
+		
+		SDL_Rect frame = $(self, renderFrame);
+		for (int i = 0; i < self->borderWidth; i++) {
+			SDL_RenderDrawRect(renderer, &frame);
+			frame.x += 1;
+			frame.y += 1;
+			frame.w -= 2;
+			frame.h -= 2;
+		}
+		
+		SetRenderDrawColor(renderer, Colors.white);
 	}
 }
 

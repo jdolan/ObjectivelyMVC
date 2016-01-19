@@ -30,6 +30,14 @@
 
 #include <Objectively/Array.h>
 
+#if defined(__APPLE__)
+#define DEFAULT_FONT_FAMILY "Helvetica Neue"
+#elif defined(__MINGW32__)
+#define DEFAULT_FONT_FAMILY "Verdana"
+#else
+#define DEFAULT_FONT_FAMILY "Open Sans"
+#endif
+
 /**
  * @file
  * 

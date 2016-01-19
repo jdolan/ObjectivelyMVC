@@ -33,10 +33,11 @@ static void loadView(ViewController *self) {
 	
 	const SDL_Rect frame = { .x = 100, .y = 100 };
 	
-	Font *font = $(alloc(Font), initWithName, "Helvetica Neue-16");
+	Font *font = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 24, TTF_STYLE_NORMAL);
 	
 	Label *label = $(alloc(Label), initWithText, "Hello World!", font);
 	$((View *) label, sizeToFit);
+	label->view.borderWidth = 3;
 	
 	Button *button = $(alloc(Button), initWithFrame, &frame);
 	

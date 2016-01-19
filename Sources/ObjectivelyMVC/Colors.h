@@ -52,4 +52,7 @@ typedef struct {
 
 extern const Colors_t Colors;
 
+#define SetRenderDrawColor(renderer, color) \
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a)
+
 #endif

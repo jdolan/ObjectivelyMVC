@@ -46,7 +46,7 @@ int main(int arg, char **argv) {
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
 	);
 	
-	ViewController *rootViewController = $((ViewController *) alloc(HelloViewController), initRootViewController, window);
+	ViewController *helloViewController = $((ViewController *) alloc(HelloViewController), initRootViewController, window);
 	
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, 0,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE
@@ -59,7 +59,7 @@ int main(int arg, char **argv) {
 		
 		if (SDL_PollEvent(&event)) {
 			
-			$(rootViewController, respondToEvent, &event);
+			$(helloViewController, respondToEvent, &event);
 			
 			if (event.type == SDL_QUIT) {
 				break;
@@ -68,14 +68,14 @@ int main(int arg, char **argv) {
 		
 		SDL_RenderClear(renderer);
 		
-		$(rootViewController, drawView, renderer);
+		$(helloViewController, drawView, renderer);
 		
 		SDL_RenderPresent(renderer);
 		
 		usleep(16000);
 	}
 	
-	release(rootViewController);
+	release(helloViewController);
 	
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);

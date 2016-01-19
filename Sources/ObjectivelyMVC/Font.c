@@ -94,7 +94,7 @@ static Font *defaultFont(void) {
 	static Once once;
 
 	DispatchOnce(once, {
-		_defaultFont = $(alloc(Font), initWithName, "Lucida Sans Unicode-12");
+		_defaultFont = $(alloc(Font), initWithName, DEFAULT_FONT_FAMILY);
 	});
 
 	return _defaultFont;
@@ -131,6 +131,7 @@ static TTF_Font *loadFont(FcPattern *pattern) {
 				int index;
 				if (FcPatternGetInteger(match, FC_INDEX, 0, &index) == FcResultMatch) {
 					font = TTF_OpenFontIndex((char *) path, (int) size, index);
+					TTF_SetFontHinting(font, TTF_HINTING_LIGHT);
 				}
 			}
 		}

@@ -37,6 +37,22 @@ typedef struct Button Button;
 typedef struct ButtonInterface ButtonInterface;
 
 /**
+ * @brief Button types.
+ */
+typedef enum {
+	
+	/**
+	 * @brief Uses default background and foreground colors, with light border.
+	 */
+	ButtonTypeDefault,
+	
+	/**
+	 * @brief User-defined appearance.
+	 */
+	ButtonTypeCustom,
+} ButtonType;
+
+/**
  * @brief The Button type.
  */
 struct Button {
@@ -59,6 +75,11 @@ struct Button {
 	 * @brief The Label.
 	 */
 	Label *label;
+	
+	/**
+	 * @brief The ButtonType.
+	 */
+	ButtonType type;
 };
 
 /**
