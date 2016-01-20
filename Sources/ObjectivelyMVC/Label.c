@@ -91,7 +91,7 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 	self = (Label *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
-		self->color = Colors.foregroundColor;
+		self->color = Colors.ForegroundColor;
 
 		$(self, setFont, font);
 		$(self, setText, text);

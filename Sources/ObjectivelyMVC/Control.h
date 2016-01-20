@@ -50,6 +50,15 @@ typedef enum {
 } ControlState;
 
 /**
+ * @brief Bevel types.
+ */
+typedef enum {
+	BevelTypeNone,
+	BevelTypeInset,
+	BevelTypeOutset
+} BevelType;
+
+/**
  * @brief The Control type.
  */
 struct Control {
@@ -79,6 +88,11 @@ struct Control {
 	 * @brief The bit mask of ControlState.
 	 */
 	int state;
+	
+	/**
+	 * @brief The BevelType.
+	 */
+	BevelType bevel;
 };
 
 /**

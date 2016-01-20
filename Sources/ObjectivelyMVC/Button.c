@@ -44,28 +44,35 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::render(View *, SDL_Renderer *)
- */
-static void render(View *self, SDL_Renderer *renderer) {
-	
-	super(View, self, render, renderer);
-}
-
-/**
  * @see View::respondToEvent(View *, const SDL_Event *)
  */
 static _Bool respondToEvent(View *self, const SDL_Event *event) {
 	
 	Button *this = (Button *) self;
 	
-	if (event->type == SDL_MOUSEBUTTONUP) {
-		Action *action = $((Control *) self, actionForEvent, event);
-		if (action) {
-			const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-			if ($(self, containsPoint, &point)) {
-				action->function(self, event, action->data);
-				return true;
+	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+		if (event->type == SDL_MOUSEBUTTONUP) {
+			this->control.state &= ~ControlStateSelected;
+			if (this->type == ButtonTypeDefault) {
+				this->control.bevel = BevelTypeOutset;
 			}
+		}
+		const SDL_Point point = { .x = event->button.x, .y = event->button.y };
+		if ($(self, containsPoint, &point)) {
+			
+			if (event->type == SDL_MOUSEBUTTONDOWN) {
+				this->control.state |= ControlStateSelected;
+				if (this->type == ButtonTypeDefault) {
+					this->control.bevel = BevelTypeInset;
+				}
+			}
+			
+			const Action *action = $((Control *) self, actionForEvent, event);
+			if (action) {
+				action->function(self, event, action->data);
+			}
+			
+			return true;
 		}
 	} else  if (event->type == SDL_MOUSEMOTION) {
 		const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
@@ -82,19 +89,31 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 #pragma mark - Button
 
 /**
- * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
+ * @fn Button *Button::initWithType(Button *self, ButtonType type)
  *
  * @memberof Button
  */
-static Button *initWithFrame(Button *self, const SDL_Rect *frame) {
+static Button *initWithType(Button *self, ButtonType type) {
 	
-	self = (Button *) super(Control, self, initWithFrame, frame);
+	self = (Button *) super(Control, self, initWithFrame, NULL);
 	if (self) {
+		
+		self->type = type;
 		
 		self->label = $(alloc(Label), initWithText, NULL, NULL);
 		assert(self->label);
 		
-		$((View *) self, addSubview, (View *) self->label);
+		View *this = (View *) self;
+		
+		$(this, addSubview, (View *) self->label);
+		
+		if (self->type == ButtonTypeDefault) {
+			self->control.bevel = BevelTypeOutset;
+			this->margin.top = this->margin.bottom = 20;
+			this->margin.left = this->margin.right = 20;
+			this->padding.top = this->padding.bottom = 10;
+			this->padding.left = this->padding.right = 10;
+		}
 	}
 	
 	return self;
@@ -109,10 +128,9 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->render = render;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
-	
-	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
+
+	((ButtonInterface *) clazz->interface)->initWithType = initWithType;
 }
 
 Class _Button = {

@@ -85,6 +85,20 @@ struct View {
 	_Bool hidden;
 	
 	/**
+	 * @brief Margin.
+	 */
+	struct {
+		int top, right, bottom, left;
+	} margin;
+	
+	/**
+	 * @brief Padding.
+	 */
+	struct {
+		int top, right, bottom, left;
+	} padding;
+	
+	/**
 	 * @brief All contained views.
 	 */
 	MutableArray *subviews;

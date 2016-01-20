@@ -31,25 +31,24 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 	
-	const SDL_Rect frame = { .x = 100, .y = 100 };
+	self->view->backgroundColor = Colors.Clear;
 	
-	Font *font = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 24, TTF_STYLE_NORMAL);
-	
-	Label *label = $(alloc(Label), initWithText, "Hello World!", font);
+	Label *label = $(alloc(Label), initWithText, "Hello World!", NULL);
 	$((View *) label, sizeToFit);
-	label->view.borderWidth = 3;
 	
-	Button *button = $(alloc(Button), initWithFrame, &frame);
+	Button *button = $(alloc(Button), initWithType, ButtonTypeDefault);
 	
-	$(button->label, setText, "Click Me");
-	$(button->label, setFont, font);
+	$(button->label, setText, "Button");
 	
 	$((View *) button, sizeToFit);
 	
+	((View *) button)->frame.x = 200;
+	((View *) button)->frame.y = 200;
+	
 	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
 	
+	const SDL_Rect frame = { .x = 100, .y = 100 };
 	View *container = $(alloc(View), initWithFrame, &frame);
-	container->backgroundColor = Colors.red;
 	
 	$(container, addSubview, (View *) label);
 	$(container, addSubview, (View *) button);
@@ -58,7 +57,6 @@ static void loadView(ViewController *self) {
 	
 	$(self->view, addSubview, container);
 	
-	release(font);
 	release(label);
 	release(container);
 }

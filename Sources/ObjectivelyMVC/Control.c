@@ -41,6 +41,93 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
+#pragma mark - View
+
+/**
+ * @see View::render(View *, SDL_Renderer *)
+ */
+static void render(View *self, SDL_Renderer *renderer) {
+	
+	super(View, self, render, renderer);
+	
+	Control *this = (Control *) self;
+	
+	const SDL_Rect frame = $(self, renderFrame);
+	
+	if (this->bevel == BevelTypeInset) {
+		
+		SetRenderDrawColor(renderer, Colors.Silver);
+		
+		SDL_Point points[3];
+		
+		points[0].x = frame.x + 2;
+		points[0].y = frame.y + frame.h - 2;
+		
+		points[1].x = frame.x + frame.w - 2;
+		points[1].y = frame.y + frame.h - 2;
+		
+		points[2].x = frame.x + frame.w - 2;
+		points[2].y = frame.y + 1;
+		
+		SDL_RenderDrawLines(renderer, points, lengthof(points));
+		
+		SetRenderDrawColor(renderer, Colors.Charcoal);
+		
+		points[0].x = frame.x + 1;
+		points[0].y = frame.y + frame.h - 3;
+		
+		points[1].x = frame.x + 1;
+		points[1].y = frame.y + 1;
+		
+		points[2].x = frame.x + frame.w - 2;
+		points[2].y = frame.y + 1;
+		
+		SDL_RenderDrawLines(renderer, points, lengthof(points));
+		
+		SetRenderDrawColor(renderer, Colors.White);
+		
+	} else if (this->bevel == BevelTypeOutset) {
+		
+		SetRenderDrawColor(renderer, Colors.Charcoal);
+		
+		SDL_Point points[3];
+		
+		points[0].x = frame.x + 2;
+		points[0].y = frame.y + frame.h - 2;
+		
+		points[1].x = frame.x + frame.w - 2;
+		points[1].y = frame.y + frame.h - 2;
+		
+		points[2].x = frame.x + frame.w - 2;
+		points[2].y = frame.y + 1;
+		
+		SDL_RenderDrawLines(renderer, points, lengthof(points));
+		
+		SetRenderDrawColor(renderer, Colors.Silver);
+		
+		points[0].x = frame.x + 1;
+		points[0].y = frame.y + frame.h - 3;
+		
+		points[1].x = frame.x + 1;
+		points[1].y = frame.y + 1;
+		
+		points[2].x = frame.x + frame.w - 2;
+		points[2].y = frame.y + 1;
+		
+		SDL_RenderDrawLines(renderer, points, lengthof(points));
+		
+		SetRenderDrawColor(renderer, Colors.White);
+	}
+	
+	if (this->state & ControlStateFocused) {
+		SetRenderDrawColor(renderer, Colors.Black);
+		
+		SDL_RenderDrawRect(renderer, &frame);
+		
+		SetRenderDrawColor(renderer, Colors.White);
+	}
+}
+
 #pragma mark - Control
 
 /**
@@ -135,19 +222,17 @@ static _Bool selected(const Control *self) {
  */
 static void initialize(Class *clazz) {
 	
-	ObjectInterface *object = (ObjectInterface *) clazz->interface;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	
-	object->dealloc = dealloc;
-
-	ControlInterface *control = (ControlInterface *) clazz->interface;
+	((ViewInterface *) clazz->interface)->render = render;
 	
-	control->actionForEvent = actionForEvent;
-	control->addActionForEventType = addActionForEventType;
-	control->enabled = enabled;
-	control->focused = focused;
-	control->highlighted = highlighted;
-	control->initWithFrame = initWithFrame;
-	control->selected = selected;
+	((ControlInterface *) clazz->interface)->actionForEvent = actionForEvent;
+	((ControlInterface *) clazz->interface)->addActionForEventType = addActionForEventType;
+	((ControlInterface *) clazz->interface)->enabled = enabled;
+	((ControlInterface *) clazz->interface)->focused = focused;
+	((ControlInterface *) clazz->interface)->highlighted = highlighted;
+	((ControlInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ControlInterface *) clazz->interface)->selected = selected;
 }
 
 Class _Control = {

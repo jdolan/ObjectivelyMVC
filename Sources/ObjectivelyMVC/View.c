@@ -113,12 +113,10 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		
 		if (frame) {
 			self->frame = *frame;
-		} else {
-			LogDebug("%s: %s with NULL frame", __func__, ((Object *) self)->clazz->name);
 		}
 		
-		self->backgroundColor = Colors.backgroundColor;
-		self->borderColor = Colors.foregroundColor;
+		self->backgroundColor = Colors.BackgroundColor;
+		self->borderColor = Colors.ForegroundColor;
 	}
 	
 	return self;
@@ -165,7 +163,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 		const SDL_Rect frame = $(self, renderFrame);
 		SDL_RenderFillRect(renderer, &frame);
 		
-		SetRenderDrawColor(renderer, Colors.white);
+		SetRenderDrawColor(renderer, Colors.White);
 	}
 	
 	if (self->borderWidth) {
@@ -180,7 +178,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 			frame.h -= 2;
 		}
 		
-		SetRenderDrawColor(renderer, Colors.white);
+		SetRenderDrawColor(renderer, Colors.White);
 	}
 }
 
@@ -201,6 +199,9 @@ static SDL_Rect renderFrame(const View *self) {
 		
 		if (view->superview) {
 			view = view->superview;
+			
+			frame.x += view->padding.left;
+			frame.y += view->padding.top;
 		} else {
 			break;
 		}
@@ -257,8 +258,11 @@ static void sizeToFit(View *self) {
 		int sw, sh;
 		$(subview, sizeThatFits, &sw, &sh);
 
-		sw += subview->frame.x;
-		sh += subview->frame.y;
+		sw += subview->frame.x + subview->margin.left + subview->margin.right;
+		sw += self->padding.left + self->padding.right;
+		
+		sh += subview->frame.y + subview->margin.top + subview->margin.bottom;
+		sh += self->padding.top + self->padding.bottom;
 		
 		if (sw > self->frame.w) {
 			self->frame.w = sw;

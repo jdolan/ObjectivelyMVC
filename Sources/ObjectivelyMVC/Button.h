@@ -93,17 +93,17 @@ struct ButtonInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
+	 * @fn Button *Button::initWithFrame(Button *self, ButtonType type)
 	 *
-	 * @brief Initializes this Button with the specified frame.
+	 * @brief Initializes this Button with the specified type.
 	 *
-	 * @param frame The frame.
+	 * @param type The ButtonType.
 	 *
 	 * @return The initialized Button, or `NULL` on error.
 	 *
 	 * @memberof Button
 	 */
-	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame);
+	Button *(*initWithType)(Button *self, ButtonType type);
 };
 
 /**
