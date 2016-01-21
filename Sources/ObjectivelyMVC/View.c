@@ -98,38 +98,25 @@ static void applyConstraints(View *self) {
 	
 	self->needsApplyConstraints = false;
 	
-	Array *constraints = (Array *) self->constraints;
+	const Array *constraints = (Array *) self->constraints;
 	
 	for (size_t i = 0; i < constraints->count; i++) {
-		
-		Constraint *constraint = $(constraints, objectAtIndex, i);
-		if (constraint->target) {
-			if ($(self, isDescendantOfView, constraint->target)) {
-				continue;
-			}
-			if (constraint->target->needsApplyConstraints) {
-				$(constraint->target, applyConstraints);
-			}
+		const Constraint *constraint = $(constraints, objectAtIndex, i);
+		if (constraint->target == NULL) {
+			$(constraint, apply);
 		}
-		
-		$(constraint, apply);
 	}
 	
 	$(self, sizeToFit);
 	
 	for (size_t i = 0; i < constraints->count; i++) {
-		
-		Constraint *constraint = $(constraints, objectAtIndex, i);
+		const Constraint *constraint = $(constraints, objectAtIndex, i);
 		if (constraint->target) {
-			if ($(self, isDescendantOfView, constraint->target) == false) {
-				continue;
-			}
 			if (constraint->target->needsApplyConstraints) {
 				$(constraint->target, applyConstraints);
 			}
+			$(constraint, apply);
 		}
-		
-		$(constraint, apply);
 	}
 }
 
