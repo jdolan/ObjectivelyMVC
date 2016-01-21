@@ -53,6 +53,8 @@ typedef struct ConstraintInterface ConstraintInterface;
 
 /**
  * @brief The Constraint type.
+ *
+ * @extends Object
  */
 struct Constraint {
 
@@ -94,7 +96,7 @@ struct Constraint {
 	/**
 	 * @brief The source Attribute.
 	 */
-	Attribute sourceAttribute;
+	Attribute attribute;
 	
 	/**
 	 * @brief The target View.
@@ -138,7 +140,7 @@ struct ConstraintInterface {
 	void (*bind)(Constraint *self, View *target, Attribute targetAttribute, int offset);
 
 	/**
-	 * @fn Constraint *Constraint::initWithSource(Constraint *self, View *source, Attribute sourceAttribute)
+	 * @fn Constraint *Constraint::initWithSource(Constraint *self, View *source, Attribute attribute)
 	 *
 	 * @brief Initializes this Constraint with the given source View and Attribute.
 	 *
@@ -148,7 +150,7 @@ struct ConstraintInterface {
 	 *
 	 * @memberof Constraint
 	 */
-	Constraint *(*initWithSource)(Constraint *self, View *source, Attribute sourceAttribute);
+	Constraint *(*initWithSource)(Constraint *self, View *source, Attribute attribute);
 	
 	/**
 	 * @fn void Constraint::limit(Constraint *self, int min, int max)

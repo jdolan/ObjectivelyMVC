@@ -42,6 +42,8 @@
 
 /**
  * @brief The View type.
+ *
+ * Extends Object
  */
 struct View {
 
@@ -56,7 +58,6 @@ struct View {
 	 * @private
 	 */
 	ViewInterface *interface;
-	
 	
 	/**
 	 * @brief The background color.
@@ -89,23 +90,9 @@ struct View {
 	_Bool hidden;
 	
 	/**
-	 * @brief Margin.
+	 * @brief If true, Constraints will be applied the next time layout is requested.
 	 */
-	struct {
-		int top, right, bottom, left;
-	} margin;
-	
-	/**
-	 * @brief If true, this View will be layed out before being draw.
-	 */
-	_Bool needsLayout;
-	
-	/**
-	 * @brief Padding.
-	 */
-	struct {
-		int top, right, bottom, left;
-	} padding;
+	_Bool needsApplyConstraints;
 	
 	/**
 	 * @brief All contained views.
@@ -145,7 +132,16 @@ struct ViewInterface {
 	void (*addSubview)(View *self, View *subview);
 	
 	/**
-	 * @fn Constraint *View::constrain(View *self, Attribute sourceAttribute, int min, int max)
+	 * @fn void View::applyConstraints(View *self)
+	 *
+	 * @brief Applies all Constraints belonging to this View.
+	 *
+	 * @memberof View
+	 */
+	void (*applyConstraints)(View *self);
+	
+	/**
+	 * @fn Constraint *View::constrain(View *self, Attribute attribute, int min, int max)
 	 *
 	 * @brief Creates or updates a Constraint, limiting the specified Attribute.
 	 *
@@ -153,14 +149,14 @@ struct ViewInterface {
 	 *
 	 * @memberof View
 	 */
-	Constraint *(*constrain)(View *self, Attribute sourceAttribute, int min, int max);
+	Constraint *(*constrain)(View *self, Attribute attribute, int min, int max);
 	
 	/**
-	 * @fn Constraint *View::constrainTo(View *self, Attribute sourceAttribute, View *target, Attribute targetAttribute, int offset)
+	 * @fn Constraint *View::constrainTo(View *self, Attribute attribute, View *target, Attribute targetAttribute, int offset)
 	 *
 	 * @brief Creates or updates a Constraint, binding this View to the given target.
 	 *
-	 * @param sourceAttribute The source Attribute.
+	 * @param attribute The source Attribute.
 	 * @param target The target View.
 	 * @param targetAttribute The target Attribute.
 	 * @param offset The offset.
@@ -169,20 +165,20 @@ struct ViewInterface {
 	 *
 	 * @memberof View
 	 */
-	Constraint *(*constrainTo)(View *self, Attribute sourceAttribute, View *target, Attribute targetAttribute, int offset);
+	Constraint *(*constrainTo)(View *self, Attribute attribute, View *target, Attribute targetAttribute, int offset);
 	
 	/**
-	 * @fn Constraint *View::constraintForAttribute(View *self, Attribute sourceAttribute)
+	 * @fn Constraint *View::constraintForAttribute(View *self, Attribute attribute)
 	 *
 	 * @brief Retrieves or creates a Constraint for the given Attribute.
 	 
-	 * @param sourceAttribute The source Attribute.
+	 * @param attribute The source Attribute.
 	 *
 	 * @return The Constraint for the given Attribute.
 	 *
 	 * @memberof View
 	 */
-	Constraint *(*constraintForAttribute)(View *self, Attribute sourceAttribute);
+	Constraint *(*constraintForAttribute)(View *self, Attribute attribute);
 	
 	/**
 	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
@@ -196,15 +192,15 @@ struct ViewInterface {
 	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
 	
 	/**
-	 * @fn View::deleteConstraint(View *self, Attribute sourceAttribute)
+	 * @fn View::deleteConstraint(View *self, Attribute attribute)
 	 *
 	 * @brief Deletes the Constraint for the specified Attribute.
 	 *
-	 * @param sourceAttribute The Attribute.
+	 * @param attribute The Attribute.
 	 *
 	 * @memberof View
 	 */
-	void (*deleteConstraint)(View *self, Attribute sourceAttribute);
+	void (*deleteConstraint)(View *self, Attribute attribute);
 	
 	/**
 	 * @fn void View::draw(View *self, SDL_Renderer *renderer)
@@ -231,6 +227,17 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	View *(*initWithFrame)(View *self, const SDL_Rect *frame);
+	
+	/**
+	 * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
+	 *
+	 * @param view The View to test against this View's hierarchy.
+	 *
+	 * @return True if this View is a descendant of, or equal to, the given View.
+	 *
+	 * @memberof View
+	 */
+	_Bool (*isDescendantOfView)(const View *self, const View *view);
 	
 	/**
 	 * @fn View::layoutSubviews(View *self)

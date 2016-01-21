@@ -93,10 +93,8 @@ static Button *initWithType(Button *self, ButtonType type) {
 			
 			View *this = (View *) self;
 
-			this->margin.top = this->margin.bottom = 20;
-			this->margin.left = this->margin.right = 20;
-			this->padding.top = this->padding.bottom = 10;
-			this->padding.left = this->padding.right = 10;
+			$(this, constrain, Width, DEFAULT_BUTTON_MIN_WIDTH, DEFAULT_BUTTON_MAX_WIDTH);
+			$(this, constrain, Height, DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT);
 		}
 	}
 	

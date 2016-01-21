@@ -38,6 +38,8 @@ typedef struct ImageViewInterface ImageViewInterface;
 
 /**
  * @brief The ImageView type.
+ *
+ * @extends View
  */
 struct ImageView {
 

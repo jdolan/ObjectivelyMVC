@@ -62,8 +62,9 @@ static void loadView(ViewController *self) {
 	$((View *) button, constrainTo, Right, container, Right, 10);
 	
 	$(container, constrain, Width, 400, INT32_MAX);
-	$(container, sizeToFit);
 	$(container, layoutSubviews);
+
+	container->frame.x = container->frame.y = 50;
 	
 	release(label);
 	release(container);

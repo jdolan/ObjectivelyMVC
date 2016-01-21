@@ -23,7 +23,7 @@
 
 #include <ObjectivelyMVC/Colors.h>
 
-const Colors_t Colors = {
+const struct _Colors Colors = {
 	
 	.BackgroundColor = { 105, 105, 105, 200 },
 	.ForegroundColor = { 255, 255, 255, 255 },

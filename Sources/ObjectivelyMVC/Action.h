@@ -44,6 +44,8 @@ typedef void (*ActionFunction)(ident sender, const SDL_Event *event, ident data)
 
 /**
  * @brief The Action type.
+ *
+ * @extends Object
  */
 struct Action {
 

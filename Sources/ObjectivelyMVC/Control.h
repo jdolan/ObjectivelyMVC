@@ -67,11 +67,15 @@ typedef enum {
 	LabelPositionCenter,
 } LabelPosition;
 
+#define DEFAULT_CONTROL_HEIGHT 48
+
 typedef struct Control Control;
 typedef struct ControlInterface ControlInterface;
 
 /**
  * @brief The Control type.
+ *
+ * @extends View
  */
 struct Control {
 

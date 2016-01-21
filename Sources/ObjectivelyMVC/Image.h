@@ -38,6 +38,8 @@ typedef struct ImageInterface ImageInterface;
 
 /**
  * @brief The Image type.
+ *
+ * @extends Object
  */
 struct Image {
 

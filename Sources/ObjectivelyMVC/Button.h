@@ -51,8 +51,13 @@ typedef enum {
 	ButtonTypeCustom,
 } ButtonType;
 
+#define DEFAULT_BUTTON_MIN_WIDTH 100
+#define DEFAULT_BUTTON_MAX_WIDTH INT32_MAX
+
 /**
  * @brief The Button type.
+ *
+ * @extends Control
  */
 struct Button {
 

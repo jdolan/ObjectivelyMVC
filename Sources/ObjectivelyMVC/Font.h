@@ -49,6 +49,8 @@ typedef struct FontInterface FontInterface;
 
 /**
  * @brief The Font type.
+ *
+ * @extends Object
  */
 struct Font {
 

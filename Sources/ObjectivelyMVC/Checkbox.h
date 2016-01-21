@@ -39,6 +39,8 @@ typedef struct CheckboxInterface CheckboxInterface;
 
 /**
  * @brief The Checkbox type.
+ *
+ * @extends Control
  */
 struct Checkbox {
 

@@ -30,18 +30,16 @@
 /**
  * @file
  *
- * @brief Labels.
+ * @brief Labels rendered with TrueType fonts.
  */
 
 typedef struct Label Label;
 typedef struct LabelInterface LabelInterface;
 
 /**
- * @brief Labels.
+ * @brief The Label type.
  *
  * @extends View
- *
- * @ingroup View
  */
 struct Label {
 

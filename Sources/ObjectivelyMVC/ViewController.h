@@ -30,11 +30,19 @@
 
 #include <ObjectivelyMVC/View.h>
 
+/**
+ * @file
+ *
+ * @brief ViewController implementation.
+ */
+
 typedef struct ViewController ViewController;
 typedef struct ViewControllerInterface ViewControllerInterface;
 
 /**
  * @brief The ViewController type.
+ *
+ * @extends Object
  */
 struct ViewController {
 

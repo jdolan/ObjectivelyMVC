@@ -42,8 +42,9 @@ static void apply(const Constraint *self) {
 	SDL_Rect *sf = &self->source->frame;
 	
 	if (self->target) {
+		
 		const SDL_Rect *tf = &self->target->frame;
-		switch (self->sourceAttribute) {
+		switch (self->attribute) {
 			case Top:
 				switch (self->targetAttribute) {
 					case Top:
@@ -123,26 +124,14 @@ static void apply(const Constraint *self) {
 				break;
 		}
 	} else {
-		assert(self->source->superview);
-		const SDL_Rect *svf = &self->source->superview->frame;
-		switch (self->sourceAttribute) {
-			case Top:
-				sf->y = Clamp(sf->y) + self->offset;
-				break;
-			case Right:
-				sf->x = Clamp(svf->w - sf->w) - self->offset;
-				break;
-			case Bottom:
-				sf->y = Clamp(svf->h - sf->h) - self->offset;
-				break;
-			case Left:
-				sf->x = Clamp(sf->x) + self->offset;
-				break;
+		switch (self->attribute) {
 			case Width:
 				sf->w = Clamp(sf->w);
 				break;
 			case Height:
 				sf->h = Clamp(sf->h);
+				break;
+			default:
 				break;
 		}
 	}
@@ -167,17 +156,17 @@ static void bind(Constraint *self, View *target, Attribute targetAttribute, int 
 }
 
 /**
- * @fn Constraint *Constraint::initWithSource(Constraint *self, View *source, Attribute sourceAttribute)
+ * @fn Constraint *Constraint::initWithSource(Constraint *self, View *source, Attribute attribute)
  *
  * @memberof Constraint
  */
-static Constraint *initWithSource(Constraint *self, View *source, Attribute sourceAttribute) {
+static Constraint *initWithSource(Constraint *self, View *source, Attribute attribute) {
 
 	self = (Constraint *) super(Object, self, init);
 	if (self) {
 
 		self->source = retain(source);
-		self->sourceAttribute = sourceAttribute;
+		self->attribute = attribute;
 		
 		self->min = INT32_MIN;
 		self->max = INT32_MAX;

@@ -52,7 +52,6 @@
 		CE12D4881C4FBAC200CD0B13 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4871C4FBAC200CD0B13 /* config.h */; };
 		CE12D48C1C4FEC0700CD0B13 /* Constraint.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D48A1C4FEC0700CD0B13 /* Constraint.c */; };
 		CE12D48D1C4FEC0700CD0B13 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D48B1C4FEC0700CD0B13 /* Constraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4911C505FB400CD0B13 /* index.md in Sources */ = {isa = PBXBuildFile; fileRef = CE12D48F1C505FB400CD0B13 /* index.md */; };
 		CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
@@ -479,18 +478,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
-				CE12D48C1C4FEC0700CD0B13 /* Constraint.c in Sources */,
+				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
+				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
-				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
+				CE12D48C1C4FEC0700CD0B13 /* Constraint.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
-				CE12D4911C505FB400CD0B13 /* index.md in Sources */,
+				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
+				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE12D43F1C4C38B500CD0B13 /* Label.c in Sources */,
 				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,
-				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
-				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,
 				CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

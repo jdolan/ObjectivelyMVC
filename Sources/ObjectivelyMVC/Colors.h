@@ -27,11 +27,14 @@
 #include <SDL2/SDL_pixels.h>
 
 /**
- * @brief Color constants, shamelessly lifted from W3C.
+ * @file
+ *
+ * @brief W3C Color constants.
  *
  * @see http://www.w3schools.com/tags/ref_color_tryit.asp
  */
-typedef struct {
+
+extern const struct _Colors {
 	
 	SDL_Color BackgroundColor;
 	SDL_Color ForegroundColor;
@@ -187,9 +190,7 @@ typedef struct {
 	SDL_Color WhiteSmoke;
 	SDL_Color Yellow;
 	SDL_Color YellowGreen;
-} Colors_t;
-
-extern const Colors_t Colors;
+} Colors;
 
 #define SetRenderDrawColor(renderer, color) \
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a)
