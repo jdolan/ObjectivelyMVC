@@ -18,91 +18,89 @@
  * 2. Altered source versions must be plainly marked as such, and must not be
  * misrepresented as being the original software.
  *
- * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Button_h_
-#define _ObjectivelyMVC_Button_h_
+#ifndef _ObjectivelyMVC_Image_h_
+#define _ObjectivelyMVC_Image_h_
 
-#include <ObjectivelyMVC/Control.h>
+#include <Objectively/Object.h>
+
+#include <SDL2/SDL_surface.h>
 
 /**
  * @file
  * 
- * @brief Buttons
+ * @brief Images.
  */
 
-typedef struct Button Button;
-typedef struct ButtonInterface ButtonInterface;
-
-/**
- * @brief Button types.
- */
-typedef enum {
-	
-	/**
-	 * @brief Uses default background and foreground colors, with light border.
-	 */
-	ButtonTypeDefault,
-	
-	/**
-	 * @brief User-defined appearance.
-	 */
-	ButtonTypeCustom,
-} ButtonType;
+typedef struct Image Image;
+typedef struct ImageInterface ImageInterface;
 
 /**
- * @brief The Button type.
+ * @brief The Image type.
  */
-struct Button {
+struct Image {
 
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
-	Control control;
+	Object object;
 
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
-	ButtonInterface *interface;
-	
+	ImageInterface *interface;
+
 	/**
-	 * @brief The ButtonType.
+	 * @brief The backing surface.
 	 */
-	ButtonType type;
+	SDL_Surface *surface;
 };
 
 /**
- * @brief The Button interface.
+ * @brief The Image interface.
  */
-struct ButtonInterface {
+struct ImageInterface {
 
 	/**
 	 * @brief The parent interface.
 	 */
-	ControlInterface controlInterface;
+	ObjectInterface objectInterface;
 
 	/**
-	 * @fn Button *Button::initWithFrame(Button *self, ButtonType type)
+	 * @fn Image *Image::initWithName(Image *self, const char *name)
 	 *
-	 * @brief Initializes this Button with the specified type.
+	 * @brief Initializes this Image, loading it from disk by the given name.
 	 *
-	 * @param type The ButtonType.
+	 * @param name The image name.
 	 *
-	 * @return The initialized Button, or `NULL` on error.
+	 * @return The initialized Image, or `NULL` on error.
 	 *
-	 * @memberof Button
+	 * @memberof Image
 	 */
-	Button *(*initWithType)(Button *self, ButtonType type);
+	Image *(*initWithName)(Image *self, const char *name);
+
+	/**
+	 * @fn Image *Image::initWithSurface(Image *self, SDL_Surface *surface)
+	 *
+	 * @brief Initializes this Image with the given surface.
+	 *
+	 * @param surface The backing surface.
+	 *
+	 * @return The initialized Image, or `NULL` on error.
+	 *
+	 * @memberof Image
+	 */
+	Image *(*initWithSurface)(Image *self, SDL_Surface *surface);
 };
 
 /**
- * @brief The Button Class.
+ * @brief The Image Class.
  */
-extern Class _Button;
+extern Class _Image;
 
 #endif

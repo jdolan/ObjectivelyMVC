@@ -26,9 +26,11 @@
 
 #include <ObjectivelyMVC/Action.h>
 #include <ObjectivelyMVC/Button.h>
+#include <ObjectivelyMVC/Checkbox.h>
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/Log.h>

@@ -1,11 +1,25 @@
 /*
- * HelloViewController.c
+ * ObjectivelyMVC: MVC framework for OpenGL and SDL2 in c.
+ * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
- *  Created on: Jan 19, 2016
- *      Author: jdolan
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software
+ * in a product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source distribution.
  */
-
-#include <assert.h>
 
 #include <ObjectivelyMVC.h>
 
@@ -31,31 +45,25 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 	
-	self->view->backgroundColor = Colors.Clear;
+	self->view->backgroundColor = Colors.Black;
+	
+	View *container = $(alloc(View), initWithFrame, NULL);
+	$(self->view, addSubview, container);
 	
 	Label *label = $(alloc(Label), initWithText, "Hello World!", NULL);
-	$((View *) label, sizeToFit);
-	
-	Button *button = $(alloc(Button), initWithType, ButtonTypeDefault);
-	
-	$(button->label, setText, "Button");
-	
-	$((View *) button, sizeToFit);
-	
-	((View *) button)->frame.x = 200;
-	((View *) button)->frame.y = 200;
-	
-	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
-	
-	const SDL_Rect frame = { .x = 100, .y = 100 };
-	View *container = $(alloc(View), initWithFrame, &frame);
-	
 	$(container, addSubview, (View *) label);
+	
+	Control *button = (Control *) $(alloc(Button), initWithType, ButtonTypeDefault);
+	$(button->label, setText, "Button");
+	$(button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
 	$(container, addSubview, (View *) button);
 	
-	$(container, sizeToFit);
+	$((View *) button, constrainTo, Bottom, container, Bottom, 10);
+	$((View *) button, constrainTo, Right, container, Right, 10);
 	
-	$(self->view, addSubview, container);
+	$(container, constrain, Width, 400, INT32_MAX);
+	$(container, sizeToFit);
+	$(container, layoutSubviews);
 	
 	release(label);
 	release(container);

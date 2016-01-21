@@ -101,18 +101,6 @@ struct LabelInterface {
 	ViewInterface viewInterface;
 
 	/**
-	 * @fn void Label::naturalSize(const Label *self, int *width, int *height)
-	 *
-	 * @brief Resolves the rendered size of this Label.
-	 *
-	 * @param width The rendered width.
-	 * @param height The rendered height.
-	 *
-	 * @memberof Label
-	 */
-	void (*naturalSize)(const Label *self, int *width, int *height);
-
-	/**
 	 * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
 	 *
 	 * @param text The text.
@@ -123,6 +111,18 @@ struct LabelInterface {
 	 * @memberof Label
 	 */
 	Label *(*initWithText)(Label *self, const char *text, Font *font);
+	
+	/**
+	 * @fn void Label::naturalSize(const Label *self, int *width, int *height)
+	 *
+	 * @brief Resolves the rendered size of this Label.
+	 *
+	 * @param width The rendered width.
+	 * @param height The rendered height.
+	 *
+	 * @memberof Label
+	 */
+	void (*naturalSize)(const Label *self, int *width, int *height);
 
 	/**
 	 * @fn void Label::setFont(Label 8self, Font *font)

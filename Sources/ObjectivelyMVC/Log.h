@@ -32,11 +32,11 @@
 
 #define LogSetPriority(pri) SDL_LogSetPriority(LogCategoryMVC, pri)
 
-#define LogVerbose(fmt, ...) SDL_LogVerbose(LogCategoryMVC, fmt, ## __VA_ARGS__)
-#define LogDebug(fmt, ...) SDL_LogDebug(LogCategoryMVC, fmt, ## __VA_ARGS__)
-#define LogInfo(fmt, ...) SDL_LogInfo(LogCategoryMVC, fmt, ## __VA_ARGS__)
-#define LogWarn(fmt, ...) SDL_LogWarn(LogCategoryMVC, fmt, ## __VA_ARGS__)
-#define LogError(fmt, ...) SDL_LogError(LogCategoryMVC, fmt, ## __VA_ARGS__)
-#define LogCritical(fmt, ...) SDL_LogCritical(LogCategoryMVC, fmt, ## __VA_ARGS__)
+#define LogVerbose(fmt, ...) SDL_LogVerbose(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+#define LogDebug(fmt, ...) SDL_LogDebug(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+#define LogInfo(fmt, ...) SDL_LogInfo(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+#define LogWarn(fmt, ...) SDL_LogWarn(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+#define LogError(fmt, ...) SDL_LogError(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+#define LogCritical(fmt, ...) SDL_LogCritical(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
 
 #endif

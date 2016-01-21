@@ -21,85 +21,74 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_ImageView_h_
-#define _ObjectivelyMVC_ImageView_h_
+#ifndef _ObjectivelyMVC_Checkbox_h_
+#define _ObjectivelyMVC_Checkbox_h_
 
-#include <ObjectivelyMVC/Image.h>
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/ImageView.h>
+#include <ObjectivelyMVC/Label.h>
 
 /**
  * @file
- *
- * @brief ImageView implementation.
+ * 
+ * @brief Checkboxes.
  */
 
-typedef struct ImageView ImageView;
-typedef struct ImageViewInterface ImageViewInterface;
+typedef struct Checkbox Checkbox;
+typedef struct CheckboxInterface CheckboxInterface;
 
 /**
- * @brief The ImageView type.
+ * @brief The Checkbox type.
  */
-struct ImageView {
+struct Checkbox {
 
 	/**
 	 * @brief The parent.
+	 *
+	 * @private
 	 */
-	View view;
-	
+	Control control;
+
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
-	ImageViewInterface *interface;
+	CheckboxInterface *interface;
 
 	/**
-	 * @brief The alpha.
+	 * @brief The check.
+	 *
+	 * @private
 	 */
-	GLfloat alpha;
-
-	/**
-	 * @brief The blend function.
-	 */
-	struct {
-		GLenum src, dst;
-	} blend;
-	
-	/**
-	 * @brief The image.
-	 */
-	Image *image;
-	
-	/**
-	 * @brief The texture.
-	 */
-	SDL_Texture *texture;
+	ImageView *check;
 };
 
 /**
- * @brief The ImageView interface.
+ * @brief The Checkbox interface.
  */
-struct ImageViewInterface {
+struct CheckboxInterface {
 
 	/**
 	 * @brief The parent interface.
 	 */
-	ViewInterface viewInterface;
-	
+	ControlInterface controltInterface;
+
 	/**
-	 * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
+	 * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame)
 	 *
-	 * @brief Initializes this ImageView with the given image.
+	 * @brief Initializes this Checkbox.
 	 *
-	 * @param image The Image.
+	 * @return The initialized Checkbox, or `NULL` on error.
 	 *
-	 * @return The initialized ImageView, or `NULL` on error.
-	 *
-	 * @memberof ImageView
+	 * @memberof Checkbox
 	 */
-	ImageView *(*initWithImage)(ImageView *self, Image *image);
+	Checkbox *(*initWithFrame)(Checkbox *self, const SDL_Rect *frame);
 };
 
-extern Class _ImageView;
+/**
+ * @brief The Checkbox Class.
+ */
+extern Class _Checkbox;
 
 #endif

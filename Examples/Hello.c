@@ -21,9 +21,6 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#include <assert.h>
-#include <unistd.h>
-
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
@@ -45,6 +42,8 @@ int main(int arg, char **argv) {
 		768,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE
 	);
+	
+	SDL_GL_SetSwapInterval(1);
 	
 	ViewController *helloViewController = $((ViewController *) alloc(HelloViewController), initRootViewController, window);
 	
@@ -71,8 +70,6 @@ int main(int arg, char **argv) {
 		$(helloViewController, drawView, renderer);
 		
 		SDL_RenderPresent(renderer);
-		
-		usleep(16000);
 	}
 	
 	release(helloViewController);

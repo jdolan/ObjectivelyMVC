@@ -25,7 +25,6 @@
 
 #include <assert.h>
 
-
 #define _Class _ImageView
 
 #pragma mark - Object
@@ -45,32 +44,51 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see ViewInterface::draw(View *, SDL_Renderer *)
+ * @see ViewInterface::render(View *, SDL_Renderer *)
  */
-static void draw(View *self, SDL_Renderer *renderer) {
-
-	// TODO
+static void render(View *self, SDL_Renderer *renderer) {
 
 	super(View, self, draw, renderer);
+	
+	ImageView *this = (ImageView *) self;
+	
+	if (this->texture == NULL) {
+		this->texture = SDL_CreateTextureFromSurface(renderer, this->image->surface);
+		
+		release(this->image);
+		this->image = NULL;
+	}
+	
+	assert(this->texture);
+	
+	SDL_Rect frame = $(self, renderFrame);
+	SDL_RenderCopy(renderer, this->texture, NULL, &frame);
 }
 
 #pragma mark - ImageView
 
 /**
- * @see ImageViewInterface::init(ImageView *)
+ * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
+ *
+ * @memberof ImageView
  */
-static ImageView *initWithFrameAndTexture(ImageView *self, SDL_Rect *frame, SDL_Texture *texture) {
-
-	self = (ImageView *) super(View, self, initWithFrame, frame);
+static ImageView *initWithImage(ImageView *self, Image *image) {
+	
+	self = (ImageView *) super(View, self, initWithFrame, NULL);
 	if (self) {
-
-		self->texture = texture;
+		
 		self->alpha = 1.0;
-
+		
 		self->blend.src = GL_SRC_ALPHA;
 		self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
+		
+		self->image = retain(image);
+		assert(self->image);
+		
+		self->view.frame.w = image->surface->w;
+		self->view.frame.h = image->surface->h;
 	}
-
+	
 	return self;
 }
 
@@ -82,8 +100,10 @@ static ImageView *initWithFrameAndTexture(ImageView *self, SDL_Rect *frame, SDL_
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((ViewInterface *) clazz->interface)->draw = draw;
-	((ImageViewInterface *) clazz->interface)->initWithFrameAndTexture = initWithFrameAndTexture;
+
+	((ViewInterface *) clazz->interface)->render = render;
+	
+	((ImageViewInterface *) clazz->interface)->initWithImage = initWithImage;
 }
 
 Class _ImageView = {

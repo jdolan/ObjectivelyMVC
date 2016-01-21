@@ -37,6 +37,7 @@ static void dealloc(Object *self) {
 	Control *this = (Control *) self;
 	
 	release(this->actions);
+	release(this->label);
 	
 	super(Object, self, dealloc);
 }
@@ -201,6 +202,11 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
 	if (self) {
 		self->actions = $$(MutableArray, array);
 		assert(self->actions);
+		
+		self->label = $(alloc(Label), initWithText, NULL, NULL);
+		assert(self->label);
+		
+		$((View *) self, addSubview, (View *) self->label);
 	}
 	
 	return self;

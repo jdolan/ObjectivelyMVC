@@ -27,20 +27,6 @@
 
 #define _Class _Button
 
-#pragma mark - Object
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-
-	Button *this = (Button *) self;
-	
-	release(this->label);
-
-	super(Object, self, dealloc);
-}
-
 #pragma mark - View
 
 /**
@@ -100,15 +86,13 @@ static Button *initWithType(Button *self, ButtonType type) {
 		
 		self->type = type;
 		
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
-		assert(self->label);
-		
-		View *this = (View *) self;
-		
-		$(this, addSubview, (View *) self->label);
-		
 		if (self->type == ButtonTypeDefault) {
+			
 			self->control.bevel = BevelTypeOutset;
+			self->control.labelPosition = LabelPositionCenter;
+			
+			View *this = (View *) self;
+
 			this->margin.top = this->margin.bottom = 20;
 			this->margin.left = this->margin.right = 20;
 			this->padding.top = this->padding.bottom = 10;
@@ -125,8 +109,6 @@ static Button *initWithType(Button *self, ButtonType type) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 

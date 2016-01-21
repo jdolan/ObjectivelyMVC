@@ -27,27 +27,13 @@
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Action.h>
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/Label.h>
 
 /**
  * @file
  * 
  * @brief Controls are Views which can respond to events.
  */
-
-typedef struct Control Control;
-typedef struct ControlInterface ControlInterface;
-
-/**
- * @brief Control states, which are bit-masked.
- */
-typedef enum {
-	ControlStateDefault = 0x0,
-	ControlStateHighlighted	= 0x1,
-	ControlStateDisabled = 0x2,
-	ControlStateSelected = 0x4,
-	ControlStateFocused	= 0x8,
-} ControlState;
 
 /**
  * @brief Bevel types.
@@ -57,6 +43,32 @@ typedef enum {
 	BevelTypeInset,
 	BevelTypeOutset
 } BevelType;
+
+/**
+ * @brief Control states, which are bit-masked.
+ */
+typedef enum {
+	ControlStateDefault = 0x0,
+	ControlStateHighlighted = 0x1,
+	ControlStateDisabled = 0x2,
+	ControlStateSelected = 0x4,
+	ControlStateFocused = 0x8,
+} ControlState;
+
+/**
+ * @brief Label positions.
+ */
+typedef enum {
+	LabelPositionNone,
+	LabelPositionTop,
+	LabelPositionRight,
+	LabelPositionBottom,
+	LabelPositionLeft,
+	LabelPositionCenter,
+} LabelPosition;
+
+typedef struct Control Control;
+typedef struct ControlInterface ControlInterface;
 
 /**
  * @brief The Control type.
@@ -76,19 +88,29 @@ struct Control {
 	 * @private
 	 */
 	ControlInterface *interface;
-	
+
 	/**
 	 * @brief The Actions bound to this Control.
 	 *
 	 * @private
 	 */
 	MutableArray *actions;
+	
+	/**
+	 * @brief The Label.
+	 */
+	Label *label;
+	
+	/**
+	 * @brief The LabelPosition.
+	 */
+	LabelPosition labelPosition;
 
 	/**
 	 * @brief The bit mask of ControlState.
 	 */
 	int state;
-	
+
 	/**
 	 * @brief The BevelType.
 	 */
@@ -104,19 +126,19 @@ struct ControlInterface {
 	 * @brief The parent interface.
 	 */
 	ViewInterface viewInterface;
-	
+
 	/**
 	 * @fn Action *Control::actionForEvent(const Control 8self, const SDL_Event *event)
 	 *
 	 * @memberof Control
 	 */
 	Action *(*actionForEvent)(const Control *self, const SDL_Event *event);
-	
+
 	/**
 	 * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident data)
 	 *
 	 * @brief Adds an Action for the given event type to this Control.
-	 
+	 *
 	 * @param eventType The event type.
 	 * @param function The ActionFunction.
 	 * @param data The data.
@@ -124,7 +146,7 @@ struct ControlInterface {
 	 * @memberof Control
 	 */
 	void (*addActionForEventType)(Control *self, SDL_EventType eventType, ActionFunction function, ident data);
-	
+
 	/**
 	 * @fn _Bool Control::enabled(const Control *self)
 	 *
@@ -133,7 +155,7 @@ struct ControlInterface {
 	 * @memberof Control
 	 */
 	_Bool (*enabled)(const Control *self);
-	
+
 	/**
 	 * @fn _Bool Control::focused(const Control *self)
 	 *
@@ -142,7 +164,7 @@ struct ControlInterface {
 	 * @memberof Control
 	 */
 	_Bool (*focused)(const Control *self);
-	
+
 	/**
 	 * @fn _Bool Control::highlighted(const Control *self)
 	 *
@@ -151,7 +173,7 @@ struct ControlInterface {
 	 * @memberof Control
 	 */
 	_Bool (*highlighted)(const Control *self);
-	
+
 	/**
 	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
 	 *
@@ -164,7 +186,7 @@ struct ControlInterface {
 	 * @memberof Control
 	 */
 	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame);
-	
+
 	/**
 	 * @fn _Bool Control::selected(const Control *self)
 	 *
