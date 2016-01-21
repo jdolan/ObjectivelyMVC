@@ -52,6 +52,7 @@
 		CE12D4881C4FBAC200CD0B13 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4871C4FBAC200CD0B13 /* config.h */; };
 		CE12D48C1C4FEC0700CD0B13 /* Constraint.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D48A1C4FEC0700CD0B13 /* Constraint.c */; };
 		CE12D48D1C4FEC0700CD0B13 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D48B1C4FEC0700CD0B13 /* Constraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4911C505FB400CD0B13 /* index.md in Sources */ = {isa = PBXBuildFile; fileRef = CE12D48F1C505FB400CD0B13 /* index.md */; };
 		CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
@@ -126,6 +127,9 @@
 		CE12D4891C4FBC1D00CD0B13 /* config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.h.in; sourceTree = "<group>"; };
 		CE12D48A1C4FEC0700CD0B13 /* Constraint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Constraint.c; sourceTree = "<group>"; };
 		CE12D48B1C4FEC0700CD0B13 /* Constraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constraint.h; sourceTree = "<group>"; };
+		CE12D48F1C505FB400CD0B13 /* index.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = index.md; sourceTree = "<group>"; };
+		CE12D4901C505FB400CD0B13 /* layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = layout.xml; sourceTree = "<group>"; };
+		CE12D4921C50605000CD0B13 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -247,10 +251,20 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
+		CE12D48E1C505FB400CD0B13 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				CE12D48F1C505FB400CD0B13 /* index.md */,
+				CE12D4901C505FB400CD0B13 /* layout.xml */,
+			);
+			path = Documentation;
+			sourceTree = "<group>";
+		};
 		CED157921C4BEA8900FBA2DE = {
 			isa = PBXGroup;
 			children = (
 				CE12D4841C4F3C5900CD0B13 /* Assets */,
+				CE12D48E1C505FB400CD0B13 /* Documentation */,
 				CE12D42A1C4C37CD00CD0B13 /* Examples */,
 				CED157F01C4BF89A00FBA2DE /* Libraries */,
 				CED157CE1C4BF3AC00FBA2DE /* Products */,
@@ -259,6 +273,7 @@
 				CE12D4871C4FBAC200CD0B13 /* config.h */,
 				CE12D4891C4FBC1D00CD0B13 /* config.h.in */,
 				CED1579D1C4BF32A00FBA2DE /* configure.ac */,
+				CE12D4921C50605000CD0B13 /* Doxyfile */,
 				CED1579E1C4BF32A00FBA2DE /* Makefile.am */,
 				CED1579F1C4BF32A00FBA2DE /* README.md */,
 			);
@@ -470,6 +485,7 @@
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
+				CE12D4911C505FB400CD0B13 /* index.md in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE12D43F1C4C38B500CD0B13 /* Label.c in Sources */,
 				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,

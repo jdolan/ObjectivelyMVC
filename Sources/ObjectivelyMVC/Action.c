@@ -30,7 +30,7 @@
 #pragma mark - Action
 
 /**
- * @fn Action *Action::initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident data)
+ * @fn Action *Action::initWithFunction(Action *self, SDL_EventType eventType, ActionFunction function, ident data)
  *
  * @memberof Action
  */

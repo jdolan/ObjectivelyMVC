@@ -90,8 +90,9 @@ static void addSubview(View *self, View *subview) {
 }
 
 /**
- * @fn Constraint *View::constrain
- *
+ * @fn Constraint *View::constrain(View *self, Attribute sourceAttribute, int min, int max)
+*
+ * @memberof View
  */
 static Constraint *constrain(View *self, Attribute sourceAttribute, int min, int max) {
 	
@@ -105,7 +106,7 @@ static Constraint *constrain(View *self, Attribute sourceAttribute, int min, int
 }
 
 /**
- * @fn Constraint *View::constraintTo(View *self, Attribute sourceAttribute, View *target, Attribute targetAttribute, int offset)
+ * @fn Constraint *View::constrainTo(View *self, Attribute sourceAttribute, View *target, Attribute targetAttribute, int offset)
  *
  * @memberof View
  */

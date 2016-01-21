@@ -41,14 +41,14 @@
 /**
  * @file
  * 
- * @brief ..
+ * @brief TrueType fonts.
  */
 
 typedef struct Font Font;
 typedef struct FontInterface FontInterface;
 
 /**
- * @brief ..
+ * @brief The Font type.
  */
 struct Font {
 

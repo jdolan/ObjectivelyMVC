@@ -88,7 +88,7 @@ struct ActionInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 * @fn Action *Action::initWithFunction(Action *self, ActionFunction function, ident data)
+	 * @fn Action *Action::initWithFunction(Action *self, SDL_EventType eventType, ActionFunction function, ident data)
 	 *
 	 * @brief Initializes this Action with the given function and data.
 	 *

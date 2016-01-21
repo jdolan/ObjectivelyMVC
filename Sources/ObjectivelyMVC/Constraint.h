@@ -154,7 +154,7 @@ struct ConstraintInterface {
 	 * @fn void Constraint::limit(Constraint *self, int min, int max)
 	 *
 	 * @param min The minimum allowed value.
-	 * @param The maximum allowed value.
+	 * @param max The maximum allowed value.
 	 *
 	 * @memberof Constraint
 	 */

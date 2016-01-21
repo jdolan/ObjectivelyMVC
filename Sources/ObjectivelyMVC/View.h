@@ -145,16 +145,18 @@ struct ViewInterface {
 	void (*addSubview)(View *self, View *subview);
 	
 	/**
-	 * @fn Constraint *View::constrainBounds(View *self, Attribute sourceAttribute, int min, int max)
+	 * @fn Constraint *View::constrain(View *self, Attribute sourceAttribute, int min, int max)
 	 *
 	 * @brief Creates or updates a Constraint, limiting the specified Attribute.
 	 *
 	 * @return The resulting Constraint.
+	 *
+	 * @memberof View
 	 */
 	Constraint *(*constrain)(View *self, Attribute sourceAttribute, int min, int max);
 	
 	/**
-	 * @fn Constraint *View::constraintTo(View *self, Attribute sourceAttribute, View *target, Attribute targetAttribute)
+	 * @fn Constraint *View::constrainTo(View *self, Attribute sourceAttribute, View *target, Attribute targetAttribute, int offset)
 	 *
 	 * @brief Creates or updates a Constraint, binding this View to the given target.
 	 *
@@ -314,7 +316,7 @@ struct ViewInterface {
 	 *
 	 * @param constraint The Constraint that was updated.
 	 *
-	 * @remark Call this method after modifying a Constraint.
+	 * @remarks Call this method after modifying a Constraint.
 	 *
 	 * @memberof View
 	 */
