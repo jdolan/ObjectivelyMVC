@@ -55,19 +55,7 @@ typedef enum {
 	ControlStateFocused = 0x8,
 } ControlState;
 
-/**
- * @brief Label positions.
- */
-typedef enum {
-	LabelPositionNone,
-	LabelPositionTop,
-	LabelPositionRight,
-	LabelPositionBottom,
-	LabelPositionLeft,
-	LabelPositionCenter,
-} LabelPosition;
-
-#define DEFAULT_CONTROL_HEIGHT 48
+#define DEFAULT_CONTROL_HEIGHT 32
 
 typedef struct Control Control;
 typedef struct ControlInterface ControlInterface;
@@ -104,11 +92,6 @@ struct Control {
 	 * @brief The Label.
 	 */
 	Label *label;
-	
-	/**
-	 * @brief The LabelPosition.
-	 */
-	LabelPosition labelPosition;
 
 	/**
 	 * @brief The bit mask of ControlState.

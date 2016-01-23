@@ -50,8 +50,6 @@
 		CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4811C4F3A1600CD0B13 /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4861C4F3D3500CD0B13 /* check.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE12D4851C4F3C5900CD0B13 /* check.png */; };
 		CE12D4881C4FBAC200CD0B13 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4871C4FBAC200CD0B13 /* config.h */; };
-		CE12D48C1C4FEC0700CD0B13 /* Constraint.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D48A1C4FEC0700CD0B13 /* Constraint.c */; };
-		CE12D48D1C4FEC0700CD0B13 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D48B1C4FEC0700CD0B13 /* Constraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
@@ -124,8 +122,6 @@
 		CE12D4851C4F3C5900CD0B13 /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
 		CE12D4871C4FBAC200CD0B13 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
 		CE12D4891C4FBC1D00CD0B13 /* config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config.h.in; sourceTree = "<group>"; };
-		CE12D48A1C4FEC0700CD0B13 /* Constraint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Constraint.c; sourceTree = "<group>"; };
-		CE12D48B1C4FEC0700CD0B13 /* Constraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constraint.h; sourceTree = "<group>"; };
 		CE12D48F1C505FB400CD0B13 /* index.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = index.md; sourceTree = "<group>"; };
 		CE12D4901C505FB400CD0B13 /* layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = layout.xml; sourceTree = "<group>"; };
 		CE12D4921C50605000CD0B13 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
@@ -194,8 +190,6 @@
 				CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */,
 				CE12D4071C4C367100CD0B13 /* Colors.c */,
 				CE12D4081C4C367100CD0B13 /* Colors.h */,
-				CE12D48A1C4FEC0700CD0B13 /* Constraint.c */,
-				CE12D48B1C4FEC0700CD0B13 /* Constraint.h */,
 				CE12D46D1C4D82AF00CD0B13 /* Control.c */,
 				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
 				CE12D4091C4C367100CD0B13 /* Font.c */,
@@ -337,7 +331,6 @@
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
 				CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */,
 				CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */,
-				CE12D48D1C4FEC0700CD0B13 /* Constraint.h in Headers */,
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 			);
@@ -482,7 +475,6 @@
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
-				CE12D48C1C4FEC0700CD0B13 /* Constraint.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,

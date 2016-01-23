@@ -30,6 +30,24 @@
 #pragma mark - View
 
 /**
+ * @see View::layoutSubviews(View *)
+ */
+static void layoutSubviews(View *self) {
+	
+	super(View, self, layoutSubviews);
+	
+	Button *this = (Button *) self;
+	
+	if (this->type == ButtonTypeDefault) {
+		
+		View *label = (View *) this->control.label;
+		
+		label->frame.x = (self->frame.w - label->frame.w) * 0.5;
+		label->frame.y = (self->frame.h - label->frame.h) * 0.5;
+	}
+}
+
+/**
  * @see View::respondToEvent(View *, const SDL_Event *)
  */
 static _Bool respondToEvent(View *self, const SDL_Event *event) {
@@ -87,14 +105,12 @@ static Button *initWithType(Button *self, ButtonType type) {
 		self->type = type;
 		
 		if (self->type == ButtonTypeDefault) {
-			
 			self->control.bevel = BevelTypeOutset;
-			self->control.labelPosition = LabelPositionCenter;
 			
 			View *this = (View *) self;
 
-			$(this, constrain, Width, DEFAULT_BUTTON_MIN_WIDTH, DEFAULT_BUTTON_MAX_WIDTH);
-			$(this, constrain, Height, DEFAULT_CONTROL_HEIGHT, DEFAULT_CONTROL_HEIGHT);
+			this->frame.w = DEFAULT_BUTTON_MIN_WIDTH;
+			this->frame.h = DEFAULT_CONTROL_HEIGHT;
 		}
 	}
 	
@@ -108,6 +124,7 @@ static Button *initWithType(Button *self, ButtonType type) {
  */
 static void initialize(Class *clazz) {
 
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
 	((ButtonInterface *) clazz->interface)->initWithType = initWithType;

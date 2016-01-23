@@ -32,13 +32,24 @@
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/Constraint.h>
 
 /**
  * @file
  *
  * @brief View implementation.
  */
+
+/**
+ * @brief Auto-resizing constants, which are bitmasked.
+ */
+typedef enum {
+	ViewAutoresizingNone = 0,
+	ViewAutoresizingWidth = 0x1,
+	ViewAutoResizingHeight = 0x2,
+} ViewAutoresizing;
+
+typedef struct View View;
+typedef struct ViewInterface ViewInterface;
 
 /**
  * @brief The View type.
@@ -60,6 +71,11 @@ struct View {
 	ViewInterface *interface;
 	
 	/**
+	 * @brief The ViewAutoresizing bitmask.
+	 */
+	int autoresizingMask;
+	
+	/**
 	 * @brief The background color.
 	 */
 	SDL_Color backgroundColor;
@@ -75,11 +91,6 @@ struct View {
 	int borderWidth;
 	
 	/**
-	 * @brief Constraints.
-	 */
-	MutableArray *constraints;
-	
-	/**
 	 * @brief The frame, relative to the superview.
 	 */
 	SDL_Rect frame;
@@ -90,9 +101,9 @@ struct View {
 	_Bool hidden;
 	
 	/**
-	 * @brief If true, Constraints will be applied the next time layout is requested.
+	 * @brief If true,
 	 */
-	_Bool needsApplyConstraints;
+	_Bool needsLayout;
 	
 	/**
 	 * @brief All contained views.
@@ -103,11 +114,6 @@ struct View {
 	 * @brief The containing View.
 	 */
 	View *superview;
-	
-	/**
-	 * @brief Constraints targeting this View.
-	 */
-	MutableArray *targetConstraints;
 };
 
 /**
@@ -132,55 +138,6 @@ struct ViewInterface {
 	void (*addSubview)(View *self, View *subview);
 	
 	/**
-	 * @fn void View::applyConstraints(View *self)
-	 *
-	 * @brief Applies all Constraints belonging to this View.
-	 *
-	 * @memberof View
-	 */
-	void (*applyConstraints)(View *self);
-	
-	/**
-	 * @fn Constraint *View::constrain(View *self, Attribute attribute, int min, int max)
-	 *
-	 * @brief Creates or updates a Constraint, limiting the specified Attribute.
-	 *
-	 * @return The resulting Constraint.
-	 *
-	 * @memberof View
-	 */
-	Constraint *(*constrain)(View *self, Attribute attribute, int min, int max);
-	
-	/**
-	 * @fn Constraint *View::constrainTo(View *self, Attribute attribute, View *target, Attribute targetAttribute, int offset)
-	 *
-	 * @brief Creates or updates a Constraint, binding this View to the given target.
-	 *
-	 * @param attribute The source Attribute.
-	 * @param target The target View.
-	 * @param targetAttribute The target Attribute.
-	 * @param offset The offset.
-	 *
-	 * @return The resulting Constraint.
-	 *
-	 * @memberof View
-	 */
-	Constraint *(*constrainTo)(View *self, Attribute attribute, View *target, Attribute targetAttribute, int offset);
-	
-	/**
-	 * @fn Constraint *View::constraintForAttribute(View *self, Attribute attribute)
-	 *
-	 * @brief Retrieves or creates a Constraint for the given Attribute.
-	 
-	 * @param attribute The source Attribute.
-	 *
-	 * @return The Constraint for the given Attribute.
-	 *
-	 * @memberof View
-	 */
-	Constraint *(*constraintForAttribute)(View *self, Attribute attribute);
-	
-	/**
 	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
 	 *
 	 * @param point A point in window space.
@@ -190,17 +147,6 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
-	
-	/**
-	 * @fn View::deleteConstraint(View *self, Attribute attribute)
-	 *
-	 * @brief Deletes the Constraint for the specified Attribute.
-	 *
-	 * @param attribute The Attribute.
-	 *
-	 * @memberof View
-	 */
-	void (*deleteConstraint)(View *self, Attribute attribute);
 	
 	/**
 	 * @fn void View::draw(View *self, SDL_Renderer *renderer)
@@ -242,7 +188,7 @@ struct ViewInterface {
 	/**
 	 * @fn View::layoutSubviews(View *self)
 	 *
-	 * @brief Updates the frames for subviews which specify a AnchorAttribute.
+	 * @brief Updates the frame of this View's hierarchy using the installed Constraints.
 	 *
 	 * @memberof View
 	 */
@@ -315,19 +261,6 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*sizeToFit)(View *self);
-	
-	/**
-	 * @fn void View::updateConstraint(View *self, const Constraint *constraint)
-	 *
-	 * @brief Invalidates the layout of Views dependent upon the given Constraint.
-	 *
-	 * @param constraint The Constraint that was updated.
-	 *
-	 * @remarks Call this method after modifying a Constraint.
-	 *
-	 * @memberof View
-	 */
-	void (*updateConstraint)(View *self, const Constraint *constraint);
 };
 
 extern Class _View;

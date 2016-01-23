@@ -30,24 +30,7 @@
 
 #pragma mark - ObjectInterface
 
-/**
- * @brief ArrayEnumerator for Constraints dealloc.
- *
- * @remarks If we are the source View, release the Constraint.
- */
-static _Bool dealloc_constraints(const Array *array, ident obj, ident data) {
-	
-	View *self = (View *) data;
-	Constraint *constraint = (Constraint *) obj;
-	
-	$(constraint, unbind);
-	
-	if (array == (const Array *) self->constraints) {
-		release(constraint);
-	}
-	
-	return false;
-}
+
 
 /**
  * @see ObjectInterface::dealloc(Object *)
@@ -56,12 +39,6 @@ static void dealloc(Object *self) {
 
 	View *this = (View *) self;
 	
-	$((Array *) this->constraints, enumerateObjects, dealloc_constraints, self);
-	$((Array *) this->targetConstraints, enumerateObjects, dealloc_constraints, self);
-	
-	release(this->constraints);
-	release(this->targetConstraints);
-
 	$(this, removeFromSuperview);
 
 	$(this->subviews, removeAllObjects);
@@ -86,91 +63,9 @@ static void addSubview(View *self, View *subview) {
 		subview->superview = self;
 
 		$(self->subviews, addObject, subview);
-	}
-}
-
-/**
- * @fn void View::applyConstraints(View *self)
- *
- * @memberof View
- */
-static void applyConstraints(View *self) {
-	
-	self->needsApplyConstraints = false;
-	
-	const Array *constraints = (Array *) self->constraints;
-	
-	for (size_t i = 0; i < constraints->count; i++) {
-		const Constraint *constraint = $(constraints, objectAtIndex, i);
-		if (constraint->target == NULL) {
-			$(constraint, apply);
-		}
-	}
-	
-	$(self, sizeToFit);
-	
-	for (size_t i = 0; i < constraints->count; i++) {
-		const Constraint *constraint = $(constraints, objectAtIndex, i);
-		if (constraint->target) {
-			if (constraint->target->needsApplyConstraints) {
-				$(constraint->target, applyConstraints);
-			}
-			$(constraint, apply);
-		}
-	}
-}
-
-/**
- * @fn Constraint *View::constrain(View *self, Attribute attribute, int min, int max)
-*
- * @memberof View
- */
-static Constraint *constrain(View *self, Attribute attribute, int min, int max) {
-	
-	Constraint *constraint = $(self, constraintForAttribute, attribute);
-	
-	$(constraint, limit, min, max);
-	
-	$(self, updateConstraint, constraint);
-	
-	return constraint;
-}
-
-/**
- * @fn Constraint *View::constrainTo(View *self, Attribute attribute, View *target, Attribute targetAttribute, int offset)
- *
- * @memberof View
- */
-static Constraint *constrainTo(View *self, Attribute attribute, View *target, Attribute targetAttribute, int offset) {
-	
-	assert(target);
-	
-	Constraint *constraint = $(self, constraintForAttribute, attribute);
-	
-	$(constraint, bind, target, targetAttribute, offset);
-	
-	$(self, updateConstraint, constraint);
-	
-	return constraint;
-}
-
-/**
- * @fn Constraint *View::constraintForAttribute(View *self, Attribute attribute)
- *
- * @memberof View
- */
-static Constraint *constraintForAttribute(View *self, Attribute attribute) {
-	
-	Array *constraints = (Array *) self->constraints;
-	for (size_t i = 0; i < constraints->count; i++) {
 		
-		Constraint *constraint = (Constraint *) $(constraints, objectAtIndex, i);
-		if (constraint->attribute == attribute) {
-			return constraint;
-		}
+		self->needsLayout = true;
 	}
-	
-	return $(alloc(Constraint), initWithSource, self, attribute);
 }
 
 /**
@@ -186,24 +81,9 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 }
 
 /**
- * @fn View::deleteConstraint(View *self, Attribute attribute)
- *
- * @memberof View
+ * @brief ArrayEnumerator for draw recursion.
  */
-static void deleteConstraint(View *self, Attribute attribute) {
-	
-	Constraint *constraint = $(self, constraintForAttribute, attribute);
-	
-	$(constraint, unbind);
-	$(self->constraints, removeObject, constraint);
-	
-	release(constraint);
-}
-
-/**
- * @brief ArrayEnumerator for draw.
- */
-static _Bool drawSubviews(const Array *array, ident obj, ident data) {
+static _Bool draw_recurse(const Array *array, ident obj, ident data) {
 	$((View *) obj, draw, (SDL_Renderer *) data); return false;
 }
 
@@ -216,13 +96,12 @@ static void draw(View *self, SDL_Renderer *renderer) {
 	
 	assert(renderer);
 	
-	if (self->hidden) {
-		return;
+	if (self->hidden == false) {
+		
+		$(self, render, renderer);
+		
+		$((Array *) self->subviews, enumerateObjects, draw_recurse, renderer);
 	}
-	
-	$(self, render, renderer);
-	
-	$((Array *) self->subviews, enumerateObjects, drawSubviews, renderer);
 }
 
 /**
@@ -239,14 +118,8 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 			self->frame = *frame;
 		}
 		
-		self->constraints = $$(MutableArray, array);
-		assert(self->constraints);
-		
 		self->subviews = $$(MutableArray, array);
 		assert(self->subviews);
-		
-		self->targetConstraints = $$(MutableArray, array);
-		assert(self->targetConstraints);
 		
 		self->backgroundColor = Colors.BackgroundColor;
 		self->borderColor = Colors.ForegroundColor;
@@ -262,20 +135,39 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
  */
 static _Bool isDescendantOfView(const View *self, const View *view) {
 	
-	while (view) {
+	while (self) {
 		if (self == view) {
 			return true;
 		}
-		view = view->superview;
+		self = self->superview;
+	}
+	printf("What the fuck\n");
+	
+	return false;
+}
+
+/**
+ * @brief ArrayEnumerator for layoutSubviews autoresizing.
+ */
+static _Bool layoutSubviews_autoresize(const Array *array, ident obj, ident data) {
+	
+	View *subview = (View *) obj;
+	
+	if (subview->autoresizingMask & ViewAutoresizingWidth) {
+		subview->frame.w = subview->superview->frame.w;
+	}
+	
+	if (subview->autoresizingMask & ViewAutoResizingHeight) {
+		subview->frame.h = subview->superview->frame.h;
 	}
 	
 	return false;
 }
 
 /**
- * @brief ArrayEnumerator for layoutSubviews.
+ * @brief ArrayEnumerator for layoutSubviews recursion.
  */
-static _Bool layoutSubviews_enumerate(const Array *array, ident obj, ident data) {
+static _Bool layoutSubviews_recurse(const Array *array, ident obj, ident data) {
 	$((View *) obj, layoutSubviews); return false;
 }
 
@@ -286,11 +178,17 @@ static _Bool layoutSubviews_enumerate(const Array *array, ident obj, ident data)
  */
 static void layoutSubviews(View *self) {
 	
-	$((Array *) self->subviews, enumerateObjects, layoutSubviews_enumerate, NULL);
-
-	$(self, sizeToFit);
-
-	$(self, applyConstraints);
+	Array *subviews = (Array *) self->subviews;
+	
+	if (self->needsLayout) {
+		self->needsLayout = false;
+		
+		$(self, sizeToFit);
+		
+		$(subviews, enumerateObjects, layoutSubviews_autoresize, NULL);
+	}
+	
+	$(subviews, enumerateObjects, layoutSubviews_recurse, NULL);
 }
 
 /**
@@ -318,6 +216,8 @@ static void removeSubview(View *self, View *subview) {
 		subview->superview = NULL;
 		
 		$(self->subviews, removeObject, subview);
+		
+		self->needsLayout = true;
 	}
 }
 
@@ -417,39 +317,21 @@ static void sizeToFit(View *self) {
 	for (size_t i = 0; i < subviews->count; i++) {
 		
 		View *subview = (View *) $(subviews, objectAtIndex, i);
-		$(subview, sizeToFit);
 		
-		int sw, sh;
-		$(subview, sizeThatFits, &sw, &sh);
+		int w, h;
+		$(subview, sizeThatFits, &w, &h);
+		
+		const int sx = subview->frame.x + w;
+		const int sy = subview->frame.y + h;
 
-		sw += subview->frame.x;
-		sh += subview->frame.y;
-		
-		if (sw > self->frame.w) {
-			self->frame.w = sw;
+		if (sx > self->frame.w) {
+			self->frame.w = sx;
 		}
 		
-		if (sh > self->frame.h) {
-			self->frame.h = sh;
+		if (sy > self->frame.h) {
+			self->frame.h = sy;
 		}
 	}
-}
-
-/**
- * @fn void View::updateConstraint(View *self, const Constraint *constraint)
- *
- * @memberof View
- */
-static void updateConstraint(View *self, const Constraint *constraint) {
-	
-	Array *targetConstraints = (Array *) self->targetConstraints;
-	for (size_t i = 0; i < targetConstraints->count; i++) {
-		
-		Constraint *targetConstraint = $(targetConstraints, objectAtIndex, i);
-		targetConstraint->source->needsApplyConstraints = true;
-	}
-	
-	self->needsApplyConstraints = true;
 }
 
 #pragma mark - View class methods
@@ -466,12 +348,7 @@ static void initialize(Class *clazz) {
 	ViewInterface *view = (ViewInterface *) clazz->interface;
 
 	view->addSubview = addSubview;
-	view->applyConstraints = applyConstraints;
-	view->constrain = constrain;
-	view->constrainTo = constrainTo;
-	view->constraintForAttribute = constraintForAttribute;
 	view->containsPoint = containsPoint;
-	view->deleteConstraint = deleteConstraint;
 	view->draw = draw;
 	view->initWithFrame = initWithFrame;
 	view->isDescendantOfView = isDescendantOfView;
@@ -483,7 +360,6 @@ static void initialize(Class *clazz) {
 	view->respondToEvent = respondToEvent;
 	view->sizeThatFits = sizeThatFits;
 	view->sizeToFit = sizeToFit;
-	view->updateConstraint = updateConstraint;
 }
 
 Class _View = {

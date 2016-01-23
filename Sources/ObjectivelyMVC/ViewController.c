@@ -56,6 +56,8 @@ static _Bool drawChildViewControllers(const Array *array, ident obj, ident data)
 static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	
 	assert(renderer);
+		
+	$(self->view, layoutSubviews);
 	
 	$(self->view, draw, renderer);
 		

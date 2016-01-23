@@ -50,7 +50,7 @@ static void loadView(ViewController *self) {
 	View *container = $(alloc(View), initWithFrame, NULL);
 	$(self->view, addSubview, container);
 	
-	Label *label = $(alloc(Label), initWithText, "Hello World!", NULL);
+	Label *label = $(alloc(Label), initWithText, "Hello World!", NULL);	
 	$(container, addSubview, (View *) label);
 	
 	Control *button = (Control *) $(alloc(Button), initWithType, ButtonTypeDefault);
@@ -58,12 +58,12 @@ static void loadView(ViewController *self) {
 	$(button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
 	$(container, addSubview, (View *) button);
 	
-	$((View *) button, constrainTo, Bottom, container, Bottom, 10);
-	$((View *) button, constrainTo, Right, container, Right, 10);
+	container->frame.w = 400;
+	container->frame.h = 200;
 	
-	$(container, constrain, Width, 400, INT32_MAX);
-	$(container, layoutSubviews);
-
+	button->view.frame.x = 300;
+	button->view.frame.y = 180;
+	
 	container->frame.x = container->frame.y = 50;
 	
 	release(label);

@@ -142,6 +142,8 @@ static void setText(Label *self, const char *text) {
 		SDL_DestroyTexture(self->texture);
 		self->texture = NULL;
 	}
+	
+	$((View *) self, sizeToFit);
 }
 
 /**

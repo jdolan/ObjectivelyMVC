@@ -59,9 +59,6 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
 		assert(self->check);
 		
 		$((View *) self, addSubview, (View *) self->check);
-		
-		Control *control = (Control *) self;
-		control->labelPosition = LabelPositionRight;
 	}
 	
 	return self;
