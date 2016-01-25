@@ -52,6 +52,7 @@ typedef enum {
 } ButtonType;
 
 #define DEFAULT_BUTTON_MIN_WIDTH 100
+#define DEFAULT_BUTTON_PADDING 10
 
 /**
  * @brief The Button type.

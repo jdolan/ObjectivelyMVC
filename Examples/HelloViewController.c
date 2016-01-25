@@ -45,29 +45,28 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 	
-	self->view->backgroundColor = Colors.Black;
+	const SDL_Rect frame = { .x = 50, .y = 50, .w = 400, .h = 300 };
+	self->view->frame = frame;
+	self->view->backgroundColor.a = 128;
 	
-	View *container = $(alloc(View), initWithFrame, NULL);
-	$(self->view, addSubview, container);
+	StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+	stackView->view.autoresizingMask = ViewAutoresizingWidth | ViewAutoresizingHeight;
+	stackView->spacing = 10;
+	stackView->view.padding.top = stackView->view.padding.bottom = 10;
+	stackView->view.padding.left = stackView->view.padding.right = 10;
 	
-	Label *label = $(alloc(Label), initWithText, "Hello World!", NULL);	
-	$(container, addSubview, (View *) label);
+	$(self->view, addSubview, (View *) stackView);
+	
+	Label *label = $(alloc(Label), initWithText, "Hello World!", NULL);
+	$((View *) stackView, addSubview, (View *) label);
 	
 	Control *button = (Control *) $(alloc(Button), initWithType, ButtonTypeDefault);
-	$(button->label, setText, "Button");
+	$(button->label, setText, "This is a bigass super long Button");
 	$(button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
-	$(container, addSubview, (View *) button);
-	
-	container->frame.w = 400;
-	container->frame.h = 200;
-	
-	button->view.frame.x = 300;
-	button->view.frame.y = 180;
-	
-	container->frame.x = container->frame.y = 50;
+	$((View *) stackView, addSubview, (View *) button);
 	
 	release(label);
-	release(container);
+	release(stackView);
 }
 
 #pragma mark - Class lifecycle

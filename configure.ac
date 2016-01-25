@@ -25,16 +25,16 @@ case "$host" in
 	*-apple-*)
 		HOST_NAME="APPLE"
 		HOST_LDFLAGS="-headerpad_max_install_names"
-		HOST_LIBS="-framework OpenGL"
+		HOST_LIBS="-framework OpenGL -framework GLUT"
 		;;
 	*-mingw*)
 		HOST_NAME="MINGW"
 		HOST_LDFLAGS="-no-undefined"
-		HOST_LIBS="-lopengl32"	
+		HOST_LIBS="-lopengl32 -lglut"
 		;;
 	*)
 		HOST_NAME="LINUX"
-		HOST_LIBS="-lGL"
+		HOST_LIBS="-lGL -lglut"
 		;;
 esac
 
@@ -46,6 +46,9 @@ AC_SUBST(HOST_LIBS)
 AM_CONDITIONAL([APPLE], [test "x$HOST_NAME" = "xAPPLE"])
 AM_CONDITIONAL([MINGW], [test "x$HOST_NAME" = "xMINGW"])
 AM_CONDITIONAL([LINUX], [test "x$HOST_NAME" = "xLINUX"])
+
+AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h])
+AC_CHECK_HEADERS([GL/glut.h GLUT/glut.h])
 
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 PKG_CHECK_MODULES([FONTCONFIG], [fontconfig >= 2.10.0])

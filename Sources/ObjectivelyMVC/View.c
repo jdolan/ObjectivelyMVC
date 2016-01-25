@@ -69,6 +69,19 @@ static void addSubview(View *self, View *subview) {
 }
 
 /**
+ * @fn void View::bounds(const View *self, SDL_Rect *bounds)
+ *
+ * @memberof View
+ */
+static void bounds(const View *self, SDL_Rect *bounds) {
+	
+	bounds->x = self->padding.left;
+	bounds->y = self->padding.top;
+	bounds->w = self->frame.w - self->padding.left - self->padding.right;
+	bounds->h = self->frame.h - self->padding.top - self->padding.bottom;
+}
+
+/**
  * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
  *
  * @memberof View
@@ -141,34 +154,32 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
 		}
 		self = self->superview;
 	}
-	printf("What the fuck\n");
 	
 	return false;
 }
 
 /**
- * @brief ArrayEnumerator for layoutSubviews autoresizing.
+ * @brief ArrayEnumerator for layoutIfNeeded recursion.
  */
-static _Bool layoutSubviews_autoresize(const Array *array, ident obj, ident data) {
-	
-	View *subview = (View *) obj;
-	
-	if (subview->autoresizingMask & ViewAutoresizingWidth) {
-		subview->frame.w = subview->superview->frame.w;
-	}
-	
-	if (subview->autoresizingMask & ViewAutoResizingHeight) {
-		subview->frame.h = subview->superview->frame.h;
-	}
-	
-	return false;
+static _Bool layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, layoutIfNeeded); return false;
 }
 
 /**
- * @brief ArrayEnumerator for layoutSubviews recursion.
+ * @fn void View::layoutIfNeeded(View *self)
+ *
+ * @memberof View
  */
-static _Bool layoutSubviews_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, layoutSubviews); return false;
+static void layoutIfNeeded(View *self) {
+	
+	if (self->needsLayout) {
+		self->needsLayout = false;
+		
+		$(self, layoutSubviews);
+	}
+	
+	const Array *subviews = (Array *) self->subviews;
+	$(subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
 }
 
 /**
@@ -178,17 +189,19 @@ static _Bool layoutSubviews_recurse(const Array *array, ident obj, ident data) {
  */
 static void layoutSubviews(View *self) {
 	
-	Array *subviews = (Array *) self->subviews;
-	
-	if (self->needsLayout) {
-		self->needsLayout = false;
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+			
+		View *subview = (View *) $(subviews, objectAtIndex, i);
 		
-		$(self, sizeToFit);
+		if (subview->autoresizingMask & ViewAutoresizingWidth) {
+			subview->frame.w = self->frame.w;
+		}
 		
-		$(subviews, enumerateObjects, layoutSubviews_autoresize, NULL);
+		if (subview->autoresizingMask & ViewAutoresizingHeight) {
+			subview->frame.h = self->frame.h;
+		}
 	}
-	
-	$(subviews, enumerateObjects, layoutSubviews_recurse, NULL);
 }
 
 /**
@@ -313,6 +326,9 @@ static void sizeToFit(View *self) {
 	
 	$(self, sizeThatFits, &self->frame.w, &self->frame.h);
 	
+	SDL_Rect bounds;
+	$(self, bounds, &bounds);
+	
 	Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
 		
@@ -321,8 +337,8 @@ static void sizeToFit(View *self) {
 		int w, h;
 		$(subview, sizeThatFits, &w, &h);
 		
-		const int sx = subview->frame.x + w;
-		const int sy = subview->frame.y + h;
+		const int sx = subview->frame.x + w + self->padding.left + self->padding.right;
+		const int sy = subview->frame.y + h + self->padding.top + subview->padding.bottom;
 
 		if (sx > self->frame.w) {
 			self->frame.w = sx;
@@ -348,10 +364,12 @@ static void initialize(Class *clazz) {
 	ViewInterface *view = (ViewInterface *) clazz->interface;
 
 	view->addSubview = addSubview;
+	view->bounds = bounds;
 	view->containsPoint = containsPoint;
 	view->draw = draw;
 	view->initWithFrame = initWithFrame;
 	view->isDescendantOfView = isDescendantOfView;
+	view->layoutIfNeeded = layoutIfNeeded;
 	view->layoutSubviews = layoutSubviews;
 	view->removeFromSuperview = removeFromSuperview;
 	view->removeSubview = removeSubview;

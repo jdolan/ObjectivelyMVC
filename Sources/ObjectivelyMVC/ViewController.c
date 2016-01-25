@@ -57,7 +57,7 @@ static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	
 	assert(renderer);
 		
-	$(self->view, layoutSubviews);
+	$(self->view, layoutIfNeeded);
 	
 	$(self->view, draw, renderer);
 		

@@ -40,6 +40,8 @@ static void layoutSubviews(View *self) {
 	
 	if (this->type == ButtonTypeDefault) {
 		
+		$(self, sizeToFit);
+		
 		View *label = (View *) this->control.label;
 		
 		label->frame.x = (self->frame.w - label->frame.w) * 0.5;
@@ -111,6 +113,9 @@ static Button *initWithType(Button *self, ButtonType type) {
 
 			this->frame.w = DEFAULT_BUTTON_MIN_WIDTH;
 			this->frame.h = DEFAULT_CONTROL_HEIGHT;
+			
+			this->padding.left = DEFAULT_BUTTON_PADDING;
+			this->padding.right = DEFAULT_BUTTON_PADDING;
 		}
 	}
 	

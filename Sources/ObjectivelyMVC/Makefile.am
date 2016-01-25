@@ -6,13 +6,13 @@ include_HEADERS = \
 	Button.h \
 	Checkbox.h \
 	Colors.h \
-	Constraint.h \
 	Control.h \
 	Font.h \
 	Image.h \
 	ImageView.h \
 	Label.h \
 	Log.h \
+	StackView.h \
 	View.h \
 	Viewcontroller.h
 
@@ -21,12 +21,12 @@ libObjectivelyMVC_la_SOURCES = \
 	Button.c \
 	Checkbox.c \
 	Colors.c \
-	Constraint.c \
 	Control.c \
 	Font.c \
 	Image.c \
 	ImageView.c \
 	Label.c \
+	StackView.c \
 	View.c \
 	ViewController.c
 

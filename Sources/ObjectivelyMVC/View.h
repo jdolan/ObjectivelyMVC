@@ -40,12 +40,19 @@
  */
 
 /**
+ * @brief Padding: like bounds, but easier.
+ */
+typedef struct {
+	int top, right, bottom, left;
+} Padding;
+
+/**
  * @brief Auto-resizing constants, which are bitmasked.
  */
 typedef enum {
 	ViewAutoresizingNone = 0,
 	ViewAutoresizingWidth = 0x1,
-	ViewAutoResizingHeight = 0x2,
+	ViewAutoresizingHeight = 0x2,
 } ViewAutoresizing;
 
 typedef struct View View;
@@ -106,6 +113,11 @@ struct View {
 	_Bool needsLayout;
 	
 	/**
+	 * @brief The padding.
+	 */
+	Padding padding;
+	
+	/**
 	 * @brief All contained views.
 	 */
 	MutableArray *subviews;
@@ -136,6 +148,17 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*addSubview)(View *self, View *subview);
+	
+	/**
+	 * @fn void View::bounds(const View *self, SDL_Rect *bounds)
+	 *
+	 * @param bounds The bounds return value.
+	 *
+	 * @return The bounds (frame minus padding) of this View.
+	 *
+	 * @memberof View
+	 */
+	void (*bounds)(const View *self, SDL_Rect *bounds);
 	
 	/**
 	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
@@ -184,6 +207,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*isDescendantOfView)(const View *self, const View *view);
+	
+	/**
+	 * @fn void View::layoutIfNeeded(View *self)
+	 *
+	 * @brief Recursively updates the layout of this View and its subviews.
+	 *
+	 * @memberof View
+	 */
+	void (*layoutIfNeeded)(View *self);
 	
 	/**
 	 * @fn View::layoutSubviews(View *self)
@@ -251,12 +283,19 @@ struct ViewInterface {
 	/**
 	 * @fn void View::sizeThatFits(const View *self, int *w, int *h)
 	 *
+	 * @param w The width return value.
+	 * @param h The height return value.
+	 *
+	 * @return The minimum size that fits this View with margin.
+	 *
 	 * @memberof View
 	 */
 	void (*sizeThatFits)(const View *self, int *w, int *h);
 	
 	/**
 	 * @fn void View::sizeToFit(View *self)
+	 *
+	 * @brief Resizes this View to contain its subviews.
 	 *
 	 * @memberof View
 	 */

@@ -21,10 +21,18 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#if defined(__APPLE__)
+#include <GLUT/GLUT.h>
+#else
+#include <GL/glut.h>
+#endif
+
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
 #include "HelloViewController.h"
+
+static void drawScene(void);
 
 /**
  * @brief Program entry point.
@@ -65,7 +73,11 @@ int main(int arg, char **argv) {
 			}
 		}
 		
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		
+		drawScene();
 		
 		$(helloViewController, drawView, renderer);
 		
@@ -82,3 +94,67 @@ int main(int arg, char **argv) {
 	return 0;
 }
 
+/**
+ * @return The simulation time, in milliseconds.
+ */
+static long getCurrentTime(void) {
+	static struct timeval start;
+	
+	if (start.tv_sec == 0) {
+		gettimeofday(&start, NULL);
+	}
+	
+	struct timeval now;
+	struct timeval delta;
+
+	gettimeofday(&now, NULL);
+	
+	delta.tv_sec = now.tv_sec - start.tv_sec;
+	delta.tv_usec = now.tv_usec - start.tv_usec;
+	
+	if (delta.tv_usec < 0) {
+		delta.tv_sec--;
+		delta.tv_usec += MSEC_PER_SEC;
+	}
+	
+	return delta.tv_sec * 1000.0 + delta.tv_usec / 1000.0;
+}
+
+/**
+ * @brief Renders a teapot, demonstrating ObjectivelyMVC integrating with a
+ * vanilla SDL2 / OpenGL application.
+ */
+static void drawScene(void) {
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	
+	glOrtho(-2.0, 2.0, -2.0, 2.0, -3.0, 3.0);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	
+	gluLookAt(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	
+	glPushMatrix();
+	
+	const long time = getCurrentTime();
+	glRotatef(time / M_PI * 0.3333, 0.0, 1.0, 0.0);
+	
+	GLfloat color[3] = { 0.0, 0.0, 0.0 };
+	color[(time / 1000) % 3] = 1.0;
+	
+	glColor3fv(color);
+	glutWireTeapot(1.0);
+	glColor3b(255, 255, 255);
+	
+	glPopMatrix();
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	
+	glOrtho(0, 1024, 768, 0, -1, 1);
+	
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
