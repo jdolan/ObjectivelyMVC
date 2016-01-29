@@ -13,6 +13,7 @@ include_HEADERS = \
 	Label.h \
 	Log.h \
 	StackView.h \
+	TextView.h \
 	View.h \
 	Viewcontroller.h
 
@@ -27,6 +28,7 @@ libObjectivelyMVC_la_SOURCES = \
 	ImageView.c \
 	Label.c \
 	StackView.c \
+	TextView.c \
 	View.c \
 	ViewController.c
 

@@ -204,6 +204,15 @@ static Font *initWithName(Font *self, const char *name) {
 	return self;
 }
 
+/**
+ * @fn Font::render(const Font *self, const char *text, SDL_Color color)
+ *
+ * @memberof Font
+ */
+static SDL_Surface *render(const Font *self, const char *text, SDL_Color color) {
+	return TTF_RenderUTF8_Blended(self->font, text, color);
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -217,6 +226,7 @@ static void initialize(Class *clazz) {
 	((FontInterface *) clazz->interface)->defaultFont = defaultFont;
 	((FontInterface *) clazz->interface)->initWithAttributes = initWithAttributes;
 	((FontInterface *) clazz->interface)->initWithName = initWithName;
+	((FontInterface *) clazz->interface)->render = render;
 
 	const FcBool res = FcInit();
 	assert(res == FcTrue);

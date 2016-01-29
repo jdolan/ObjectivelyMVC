@@ -54,6 +54,8 @@
 		CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4941C547BDD00CD0B13 /* StackView.h */; };
 		CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE12D49B1C5506F700CD0B13 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D49A1C5506F700CD0B13 /* GLUT.framework */; };
+		CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D49C1C568A7600CD0B13 /* TextView.c */; };
+		CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D49D1C568A7600CD0B13 /* TextView.h */; };
 		CED157E21C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E11C4BF3FC00FBA2DE /* libObjectively-Xcode.dylib */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
@@ -133,6 +135,8 @@
 		CE12D4941C547BDD00CD0B13 /* StackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StackView.h; sourceTree = "<group>"; };
 		CE12D4981C55013700CD0B13 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		CE12D49A1C5506F700CD0B13 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
+		CE12D49C1C568A7600CD0B13 /* TextView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TextView.c; sourceTree = "<group>"; };
+		CE12D49D1C568A7600CD0B13 /* TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextView.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -213,6 +217,8 @@
 				CE12D4651C4D587E00CD0B13 /* Log.h */,
 				CE12D4931C547BDD00CD0B13 /* StackView.c */,
 				CE12D4941C547BDD00CD0B13 /* StackView.h */,
+				CE12D49C1C568A7600CD0B13 /* TextView.c */,
+				CE12D49D1C568A7600CD0B13 /* TextView.h */,
 				CE12D4231C4C367100CD0B13 /* View.c */,
 				CE12D4241C4C367100CD0B13 /* View.h */,
 				CE12D4251C4C367100CD0B13 /* ViewController.c */,
@@ -341,6 +347,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */,
 				CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */,
 				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
 				CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */,
@@ -497,6 +504,7 @@
 				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
+				CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,

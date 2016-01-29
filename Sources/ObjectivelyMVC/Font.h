@@ -138,6 +138,20 @@ struct FontInterface {
 	 * @memberof Font
 	 */
 	Font *(*initWithName)(Font *self, const char *name);
+	
+	/**
+	 * @fn Font::render(const Font *self, const char *text, SDL_Color color)
+	 *
+	 * @brief Renders the given text in this Font.
+	 *
+	 * @param text The text.
+	 * @param color The color.
+	 *
+	 * @return The rendered surface, or `NULL` on error.
+	 *
+	 * @memberof Font
+	 */
+	SDL_Surface *(*render)(const Font *self, const char *text, SDL_Color color);
 };
 
 /**

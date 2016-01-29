@@ -45,8 +45,8 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 	
-	const SDL_Rect frame = { .x = 50, .y = 50, .w = 400, .h = 300 };
-	self->view->frame = frame;
+	self->view->frame.x = 50, self->view->frame.y = 50;
+	self->view->frame.w = 420, self->view->frame.h = 240;
 	self->view->backgroundColor.a = 128;
 	
 	StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
@@ -65,7 +65,13 @@ static void loadView(ViewController *self) {
 	$(button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
 	$((View *) stackView, addSubview, (View *) button);
 	
+	TextView *textView = $(alloc(TextView), initWithFrame, NULL);
+	textView->defaultText = "This is a textview";
+	$((View *) stackView, addSubview, (View *) textView);
+	
 	release(label);
+	release(button);
+	release(textView);
 	release(stackView);
 }
 

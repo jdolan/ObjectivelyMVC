@@ -23,25 +23,25 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/TextView.h>
 
-#define _Class _Label
+#define _Class _TextView
 
-#pragma mark - ObjectInterface
+#pragma mark - Object
 
 /**
- * @see ObjectInterface::dealloc(Object *)
+ * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
 
-	Label *this = (Label *) self;
+	TextView *this = (TextView *) self;
 	
 	release(this->font);
-	
+
 	free(this->text);
-
+	
 	SDL_DestroyTexture(this->texture);
-
+	
 	super(Object, self, dealloc);
 }
 
@@ -51,15 +51,16 @@ static void dealloc(Object *self) {
  * @see View::render(View *, SDL_Renderer *)
  */
 static void render(View *self, SDL_Renderer *renderer) {
-
-	super(View, self, render, renderer);
-
-	Label *this = (Label *) self;
 	
-	if (this->text) {
+	super(View, self, render, renderer);
+	
+	TextView *this = (TextView *) self;
+	
+	char *text = this->text ?: this->defaultText;
+	if (text) {
 		
 		if (this->texture == NULL) {
-			SDL_Surface *surface = $(this->font, render, this->text, this->color);
+			SDL_Surface *surface = $(this->font, render, text, this->color);
 			this->texture = SDL_CreateTextureFromSurface(renderer, surface);
 			SDL_FreeSurface(surface);
 		}
@@ -71,41 +72,41 @@ static void render(View *self, SDL_Renderer *renderer) {
 	}
 }
 
-/**
- * @see View::sizeThatFits(View *, int *, int *)
- */
-static void sizeThatFits(const View *self, int *w, int *h) {
-	
-	$((Label *) self, naturalSize, w, h);
-}
-
-#pragma mark - Label
+#pragma mark - TextView
 
 /**
- * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
+ * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
  *
- * @memberof Label
+ * @memberof TextView
  */
-static Label *initWithText(Label *self, const char *text, Font *font) {
+static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
 
-	self = (Label *) super(View, self, initWithFrame, NULL);
+	self = (TextView *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
 		self->color = Colors.ForegroundColor;
-
-		$(self, setFont, font);
-		$(self, setText, text);
+		
+		self->editable = true;
+		
+		$(self, setFont, NULL);
+		$(self, setText, NULL);
+		
+		self->control.bevel = BevelTypeInset;
+		
+		if (self->control.view.frame.w == 0) {
+			self->control.view.frame.w = DEFAULT_TEXTVIEW_WIDTH;
+		}
 	}
 
 	return self;
 }
 
 /**
- * @fn void Label::setFont(Label *self, Font *font)
+ * @fn void TextView::setFont(TextView *self, Font *font)
  *
- * @memberof Label
+ * @memberof TextView
  */
-static void setFont(Label *self, Font *font) {
+static void setFont(TextView *self, Font *font) {
 	
 	if (font == NULL) {
 		font = $$(Font, defaultFont);
@@ -124,14 +125,14 @@ static void setFont(Label *self, Font *font) {
 }
 
 /**
- * @fn void Label::setText(Label *self, const char *text)
+ * @fn void TextView::setText(TextView *self, const char *text)
  *
- * @memberof Label
+ * @memberof TextView
  */
-static void setText(Label *self, const char *text) {
-
+static void setText(TextView *self, const char *text) {
+	
 	free(self->text);
-
+	
 	if (text) {
 		self->text = strdup(text);
 	} else {
@@ -146,44 +147,28 @@ static void setText(Label *self, const char *text) {
 	$((View *) self, sizeToFit);
 }
 
-/**
- * @fn void Label::naturalSize(const Label *self, int *width, int *height)
- *
- * @memberof Label
- */
-static void naturalSize(const Label *self, int *width, int *height) {
-	
-	if (self->font && self->text) {
-		TTF_SizeUTF8(self->font->font, self->text, width, height);
-	} else {
-		*width = *height = 0;
-	}
-}
-
 #pragma mark - Class lifecycle
 
 /**
  * @see Class::initialize(Class *)
  */
-static void initialize(Class *self) {
+static void initialize(Class *clazz) {
 
-	((ObjectInterface *) self->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	
+	((ViewInterface *) clazz->interface)->render = render;
 
-	((ViewInterface *) self->interface)->render = render;
-	((ViewInterface *) self->interface)->sizeThatFits = sizeThatFits;
-
-	((LabelInterface *) self->interface)->initWithText = initWithText;
-	((LabelInterface *) self->interface)->naturalSize = naturalSize;
-	((LabelInterface *) self->interface)->setFont = setFont;
-	((LabelInterface *) self->interface)->setText = setText;
+	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TextViewInterface *) clazz->interface)->setFont = setFont;
+	((TextViewInterface *) clazz->interface)->setText = setText;
 }
 
-Class _Label = {
-	.name = "Label",
-	.superclass = &_View,
-	.instanceSize = sizeof(Label),
-	.interfaceOffset = offsetof(Label, interface),
-	.interfaceSize = sizeof(LabelInterface),
+Class _TextView = {
+	.name = "TextView",
+	.superclass = &_Control,
+	.instanceSize = sizeof(TextView),
+	.interfaceOffset = offsetof(TextView, interface),
+	.interfaceSize = sizeof(TextViewInterface),
 	.initialize = initialize,
 };
 

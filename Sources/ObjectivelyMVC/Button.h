@@ -41,7 +41,7 @@ typedef struct ButtonInterface ButtonInterface;
 typedef enum {
 	
 	/**
-	 * @brief Uses default background and foreground colors, with light border.
+	 * @brief Uses default background and foreground colors, with outset bevel.
 	 */
 	ButtonTypeDefault,
 	

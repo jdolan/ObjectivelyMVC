@@ -64,6 +64,8 @@ typedef struct ControlInterface ControlInterface;
  * @brief The Control type.
  *
  * @extends View
+ *
+ * @ingroup Controls
  */
 struct Control {
 

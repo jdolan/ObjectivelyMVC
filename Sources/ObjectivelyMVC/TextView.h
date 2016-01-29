@@ -21,41 +21,44 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Label_h_
-#define _ObjectivelyMVC_Label_h_
+#ifndef _ObjectivelyMVC_TextView_h_
+#define _ObjectivelyMVC_TextView_h_
 
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/Control.h>
 
 /**
  * @file
- *
- * @brief Labels rendered with TrueType fonts.
+ * 
+ * @brief TextViews provide editable text field Controls.
  */
 
-typedef struct Label Label;
-typedef struct LabelInterface LabelInterface;
+#define DEFAULT_TEXTVIEW_WIDTH 150
+
+typedef struct TextView TextView;
+typedef struct TextViewInterface TextViewInterface;
 
 /**
- * @brief The Label type.
+ * @brief The TextView type.
  *
- * @extends View
+ * @extends Control
+ *
+ * @ingroup Controls
  */
-struct Label {
+struct TextView {
 
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
-	View view;
+	Control control;
 
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
-	LabelInterface *interface;
+	TextViewInterface *interface;
 	
 	/**
 	 * @brief The text color.
@@ -63,23 +66,33 @@ struct Label {
 	SDL_Color color;
 
 	/**
+	 * @brief The default text, displayed when no user-provided text is available.
+	 */
+	char *defaultText;
+	
+	/**
+	 * @brief True if this TextView supports editing, false otherwise.
+	 */
+	_Bool editable;
+	
+	/**
 	 * @brief The Font.
 	 *
 	 * @remarks Do not set this property directly.
 	 *
-	 * @see Label::setFont(Label *, Font *)
+	 * @see TextView::setFont(TextView *, Font *)
 	 */
 	Font *font;
-
+	
 	/**
-	 * @brief The text.
+	 * @brief The user-provided text.
 	 *
 	 * @remarks Do not set this property directly.
 	 *
-	 * @see Label::setText(Label *, const char *)
+	 * @see TextView::setText(TextView *, const char *)
 	 */
 	char *text;
-
+	
 	/**
 	 * @brief The rendered texture.
 	 *
@@ -89,62 +102,54 @@ struct Label {
 };
 
 /**
- * @brief The Label interface.
+ * @brief The TextView interface.
  */
-struct LabelInterface {
+struct TextViewInterface {
 
 	/**
 	 * @brief The parent interface.
 	 */
-	ViewInterface viewInterface;
+	ControlInterface controlInterface;
 
 	/**
-	 * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
+	 * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
 	 *
-	 * @param text The text.
-	 * @param font The Font (optional).
+	 * @brief Initializes this TextView with the given frame.
 	 *
-	 * @return The initialized Label, or `NULL` on error.
+	 * @param frame The frame.
 	 *
-	 * @memberof Label
+	 * @return The initialized TextView, or `NULL` on error.
+	 *
+	 * @memberof TextView
 	 */
-	Label *(*initWithText)(Label *self, const char *text, Font *font);
-	
-	/**
-	 * @fn void Label::naturalSize(const Label *self, int *width, int *height)
-	 *
-	 * @brief Resolves the rendered size of this Label.
-	 *
-	 * @param width The rendered width.
-	 * @param height The rendered height.
-	 *
-	 * @memberof Label
-	 */
-	void (*naturalSize)(const Label *self, int *width, int *height);
+	TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn void Label::setFont(Label *self, Font *font)
+	 * @fn void TextView::setFont(TextView *self, Font *font)
 	 *
-	 * @brief Sets this Label's font.
+	 * @brief Sets this TextView's font.
 	 *
 	 * @param font The Font to set.
 	 *
-	 * @memberof Label
+	 * @memberof TextView
 	 */
-	void (*setFont)(Label *self, Font *font);
+	void (*setFont)(TextView *self, Font *font);
 	
 	/**
-	 * @fn void Label::setText(Label *self, const char *text)
+	 * @fn void TextView::setText(TextView *self, const char *text)
 	 *
-	 * @brief Sets this Label's text.
+	 * @brief Sets this TextView's text.
 	 *
 	 * @param text The text to set.
 	 *
-	 * @memberof Label
+	 * @memberof TextView
 	 */
-	void (*setText)(Label *self, const char *text);
+	void (*setText)(TextView *self, const char *text);
 };
 
-extern Class _Label;
+/**
+ * @brief The TextView Class.
+ */
+extern Class _TextView;
 
 #endif

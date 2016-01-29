@@ -207,6 +207,10 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
 		assert(self->label);
 		
 		$((View *) self, addSubview, (View *) self->label);
+		
+		if (self->view.frame.h == 0) {
+			self->view.frame.h = DEFAULT_CONTROL_HEIGHT;
+		}
 	}
 	
 	return self;
