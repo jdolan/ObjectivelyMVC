@@ -24,6 +24,8 @@
 #ifndef _ObjectivelyMVC_TextView_h_
 #define _ObjectivelyMVC_TextView_h_
 
+#include <Objectively/MutableString.h>
+
 #include <ObjectivelyMVC/Control.h>
 
 /**
@@ -60,6 +62,11 @@ struct TextView {
 	 * @private
 	 */
 	TextViewInterface *interface;
+	
+	/**
+	 * @brief The user-provided text.
+	 */
+	MutableString *attributedText;
 	
 	/**
 	 * @brief The default text, displayed when no user-provided text is available.

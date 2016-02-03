@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include <Objectively/String.h>
+
 #include <ObjectivelyMVC/TextView.h>
 
 #define _Class _TextView
@@ -38,24 +40,12 @@ static void dealloc(Object *self) {
 	
 	release(this->text);
 	
+	release(this->attributedText);
+	
 	super(Object, self, dealloc);
 }
 
 #pragma mark - View
-
-/**
- * @see View::layoutSubviews(View *)
- */
-static void layoutSubviews(View *self) {
-	
-	super(View, self, layoutSubviews);
-	
-	TextView *this = (TextView *) self;
-	
-	if (this->text->text == NULL) {
-		$(this->text, setText, this->defaultText);
-	}
-}
 
 /**
  * @see View::render(View *, SDL_Renderer *)
@@ -63,6 +53,54 @@ static void layoutSubviews(View *self) {
 static void render(View *self, SDL_Renderer *renderer) {
 	
 	super(View, self, render, renderer);
+	
+	TextView *this = (TextView *) self;
+	
+	char *text = this->attributedText->string.chars;
+	
+	if (text == NULL) {
+		if ((this->control.state & ControlStateFocused) == 0) {
+			text = this->defaultText;
+		}
+	}
+	
+	if (text == NULL) {
+		$(this->text, setText, NULL);
+	} else {
+		if (this->text->text) {
+			if (strcmp(text, this->text->text)) {
+				$(this->text, setText, text);
+			}
+		} else {
+			$(this->text, setText, text);
+		}
+	}
+}
+
+/**
+ * @see View::respondToEvent(View *, const SDL_Event *)
+ */
+static _Bool respondToEvent(View *self, const SDL_Event *event) {
+	
+	TextView *this = (TextView *) self;
+	
+	if (event->type == SDL_MOUSEBUTTONDOWN) {
+		const SDL_Point point = { .x = event->button.x, .y = event->button.y };
+		if ($(self, containsPoint, &point)) {
+			this->control.state |= ControlStateFocused;
+			SDL_StartTextInput();
+		} else {
+			this->control.state &= ~ControlStateFocused;
+			SDL_StopTextInput();
+		}
+	} else if (event->type == SDL_TEXTINPUT) {
+		if (this->control.state & ControlStateFocused) {
+			$(this->attributedText, appendCharacters, event->text.text);
+			return true;
+		}
+	}
+	
+	return super(View, self, respondToEvent, event);
 }
 
 #pragma mark - TextView
@@ -76,6 +114,8 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 
 	self = (TextView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
+		self->attributedText = $$(MutableString, string);
+		assert(self->attributedText);
 		
 		self->editable = true;
 		
@@ -107,8 +147,8 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
 	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
