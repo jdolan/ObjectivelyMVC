@@ -55,7 +55,16 @@ typedef enum {
 	ControlStateFocused = 0x8,
 } ControlState;
 
+/**
+ * @brief Control styles.
+ */
+typedef enum {
+	ControlStyleDefault,
+	ControlStyleCustom,
+} ControlStyle;
+
 #define DEFAULT_CONTROL_HEIGHT 32
+#define DEFAULT_CONTROL_PADDING 8
 
 typedef struct Control Control;
 typedef struct ControlInterface ControlInterface;
@@ -91,19 +100,19 @@ struct Control {
 	MutableArray *actions;
 	
 	/**
-	 * @brief The Label.
+	 * @brief The BevelType.
 	 */
-	Label *label;
+	BevelType bevel;
 
 	/**
 	 * @brief The bit mask of ControlState.
 	 */
 	int state;
-
+	
 	/**
-	 * @brief The BevelType.
+	 * @brief The ControlStyle.
 	 */
-	BevelType bevel;
+	ControlStyle style;
 };
 
 /**
@@ -164,17 +173,18 @@ struct ControlInterface {
 	_Bool (*highlighted)(const Control *self);
 
 	/**
-	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
+	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style)
 	 *
-	 * @brief Initializes this Control with the specified frame.
+	 * @brief Initializes this Control with the specified frame and style.
 	 *
 	 * @param frame The frame.
+	 * @param style The ControlStyle.
 	 *
 	 * @return The intialized Control, or `NULL` on error.
 	 *
 	 * @memberof Control
 	 */
-	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame);
+	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
 	 * @fn _Bool Control::selected(const Control *self)

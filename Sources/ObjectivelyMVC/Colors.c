@@ -25,7 +25,7 @@
 
 const struct _Colors Colors = {
 	
-	.BackgroundColor = { 105, 105, 105, 200 },
+	.BackgroundColor = { 128, 128, 128, 200 },
 	.ForegroundColor = { 255, 255, 255, 255 },
 	
 	.Clear = { 255, 255, 255, 0 },

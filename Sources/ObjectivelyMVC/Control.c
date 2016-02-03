@@ -37,7 +37,6 @@ static void dealloc(Object *self) {
 	Control *this = (Control *) self;
 	
 	release(this->actions);
-	release(this->label);
 	
 	super(Object, self, dealloc);
 }
@@ -192,24 +191,29 @@ static _Bool highlighted(const Control *self) {
 }
 
 /**
- * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
+ * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style)
  *
  * @memberof Control
  */
-static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
+static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style) {
 	
 	self = (Control *) super(View, self, initWithFrame, frame);
 	if (self) {
+		self->style = style;
+
 		self->actions = $$(MutableArray, array);
 		assert(self->actions);
 		
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
-		assert(self->label);
-		
-		$((View *) self, addSubview, (View *) self->label);
-		
-		if (self->view.frame.h == 0) {
-			self->view.frame.h = DEFAULT_CONTROL_HEIGHT;
+		if (self->style == ControlStyleDefault) {
+			
+			if (self->view.frame.h == 0) {
+				self->view.frame.h = DEFAULT_CONTROL_HEIGHT;
+			}
+			
+			self->view.padding.top = DEFAULT_CONTROL_PADDING;
+			self->view.padding.right = DEFAULT_CONTROL_PADDING;
+			self->view.padding.bottom = DEFAULT_CONTROL_PADDING;
+			self->view.padding.left = DEFAULT_CONTROL_PADDING;
 		}
 	}
 	

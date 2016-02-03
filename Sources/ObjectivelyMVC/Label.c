@@ -92,6 +92,7 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 	if (self) {
 
 		self->color = Colors.ForegroundColor;
+		self->view.backgroundColor = Colors.Clear;
 
 		$(self, setFont, font);
 		$(self, setText, text);

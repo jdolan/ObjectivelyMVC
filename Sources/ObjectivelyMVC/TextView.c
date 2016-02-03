@@ -33,14 +33,10 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-
+	
 	TextView *this = (TextView *) self;
 	
-	release(this->font);
-
-	free(this->text);
-	
-	SDL_DestroyTexture(this->texture);
+	release(this->text);
 	
 	super(Object, self, dealloc);
 }
@@ -48,103 +44,58 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::layoutSubviews(View *)
+ */
+static void layoutSubviews(View *self) {
+	
+	super(View, self, layoutSubviews);
+	
+	TextView *this = (TextView *) self;
+	
+	if (this->text->text == NULL) {
+		$(this->text, setText, this->defaultText);
+	}
+}
+
+/**
  * @see View::render(View *, SDL_Renderer *)
  */
 static void render(View *self, SDL_Renderer *renderer) {
 	
 	super(View, self, render, renderer);
-	
-	TextView *this = (TextView *) self;
-	
-	char *text = this->text ?: this->defaultText;
-	if (text) {
-		
-		if (this->texture == NULL) {
-			SDL_Surface *surface = $(this->font, render, text, this->color);
-			this->texture = SDL_CreateTextureFromSurface(renderer, surface);
-			SDL_FreeSurface(surface);
-		}
-		
-		assert(this->texture);
-		
-		SDL_Rect frame = $(self, renderFrame);
-		SDL_RenderCopy(renderer, this->texture, NULL, &frame);
-	}
 }
 
 #pragma mark - TextView
 
 /**
- * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
+ * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style)
  *
  * @memberof TextView
  */
-static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
+static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style) {
 
-	self = (TextView *) super(Control, self, initWithFrame, frame);
+	self = (TextView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-
-		self->color = Colors.ForegroundColor;
 		
 		self->editable = true;
 		
-		$(self, setFont, NULL);
-		$(self, setText, NULL);
+		self->text = $(alloc(Label), initWithText, NULL, NULL);
+		assert(self->text);
 		
-		self->control.bevel = BevelTypeInset;
+		$((View *) self, addSubview, (View *) self->text);
 		
-		if (self->control.view.frame.w == 0) {
-			self->control.view.frame.w = DEFAULT_TEXTVIEW_WIDTH;
+		if (self->control.style == ControlStyleDefault) {
+			self->control.bevel = BevelTypeInset;
+			
+			self->control.view.backgroundColor = Colors.DimGray;
+			
+			if (self->control.view.frame.w == 0) {
+				self->control.view.frame.w = DEFAULT_TEXTVIEW_WIDTH;
+			}
 		}
 	}
 
 	return self;
-}
-
-/**
- * @fn void TextView::setFont(TextView *self, Font *font)
- *
- * @memberof TextView
- */
-static void setFont(TextView *self, Font *font) {
-	
-	if (font == NULL) {
-		font = $$(Font, defaultFont);
-	}
-	
-	if (font != self->font) {
-		
-		release(self->font);
-		self->font = retain(font);
-		
-		if (self->texture) {
-			SDL_DestroyTexture(self->texture);
-			self->texture = NULL;
-		}
-	}
-}
-
-/**
- * @fn void TextView::setText(TextView *self, const char *text)
- *
- * @memberof TextView
- */
-static void setText(TextView *self, const char *text) {
-	
-	free(self->text);
-	
-	if (text) {
-		self->text = strdup(text);
-	} else {
-		self->text = NULL;
-	}
-	
-	if (self->texture) {
-		SDL_DestroyTexture(self->texture);
-		self->texture = NULL;
-	}
-	
-	$((View *) self, sizeToFit);
 }
 
 #pragma mark - Class lifecycle
@@ -153,14 +104,13 @@ static void setText(TextView *self, const char *text) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-
+	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->render = render;
 
 	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((TextViewInterface *) clazz->interface)->setFont = setFont;
-	((TextViewInterface *) clazz->interface)->setText = setText;
 }
 
 Class _TextView = {

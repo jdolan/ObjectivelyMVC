@@ -27,6 +27,20 @@
 
 #define _Class _Button
 
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+	
+	Button *this = (Button *) self;
+	
+	release(this->title);
+	
+	super(Object, self, dealloc);
+}
+
 #pragma mark - View
 
 /**
@@ -34,19 +48,9 @@
  */
 static void layoutSubviews(View *self) {
 	
+	$(self, sizeToFit);
+	
 	super(View, self, layoutSubviews);
-	
-	Button *this = (Button *) self;
-	
-	if (this->type == ButtonTypeDefault) {
-		
-		$(self, sizeToFit);
-		
-		View *label = (View *) this->control.label;
-		
-		label->frame.x = (self->frame.w - label->frame.w) * 0.5;
-		label->frame.y = (self->frame.h - label->frame.h) * 0.5;
-	}
 }
 
 /**
@@ -54,26 +58,26 @@ static void layoutSubviews(View *self) {
  */
 static _Bool respondToEvent(View *self, const SDL_Event *event) {
 	
-	Button *this = (Button *) self;
+	Control *this = (Control *) self;
 	
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
 		if (event->type == SDL_MOUSEBUTTONUP) {
-			this->control.state &= ~ControlStateSelected;
-			if (this->type == ButtonTypeDefault) {
-				this->control.bevel = BevelTypeOutset;
+			this->state &= ~ControlStateSelected;
+			if (this->style == ControlStyleDefault) {
+				this->bevel = BevelTypeOutset;
 			}
 		}
 		const SDL_Point point = { .x = event->button.x, .y = event->button.y };
 		if ($(self, containsPoint, &point)) {
 			
 			if (event->type == SDL_MOUSEBUTTONDOWN) {
-				this->control.state |= ControlStateSelected;
-				if (this->type == ButtonTypeDefault) {
-					this->control.bevel = BevelTypeInset;
+				this->state |= ControlStateSelected;
+				if (this->style == ControlStyleDefault) {
+					this->bevel = BevelTypeInset;
 				}
 			}
 			
-			const Action *action = $((Control *) self, actionForEvent, event);
+			const Action *action = $(this, actionForEvent, event);
 			if (action) {
 				action->function(self, event, action->data);
 			}
@@ -83,9 +87,9 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 	} else  if (event->type == SDL_MOUSEMOTION) {
 		const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
 		if ($(self, containsPoint, &point)) {
-			this->control.state |= ControlStateHighlighted;
+			this->state |= ControlStateHighlighted;
 		} else {
-			this->control.state &= ~ControlStateHighlighted;
+			this->state &= ~ControlStateHighlighted;
 		}
 	}
 	
@@ -95,27 +99,26 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 #pragma mark - Button
 
 /**
- * @fn Button *Button::initWithType(Button *self, ButtonType type)
+ * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
  *
  * @memberof Button
  */
-static Button *initWithType(Button *self, ButtonType type) {
+static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style) {
 	
-	self = (Button *) super(Control, self, initWithFrame, NULL);
+	self = (Button *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 		
-		self->type = type;
+		self->title = $(alloc(Label), initWithText, NULL, NULL);
+		assert(self->title);
 		
-		if (self->type == ButtonTypeDefault) {
+		$((View *) self, addSubview, (View *) self->title);
+		
+		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = BevelTypeOutset;
 			
-			View *this = (View *) self;
-
-			this->frame.w = DEFAULT_BUTTON_MIN_WIDTH;
-			this->frame.h = DEFAULT_CONTROL_HEIGHT;
-			
-			this->padding.left = DEFAULT_BUTTON_PADDING;
-			this->padding.right = DEFAULT_BUTTON_PADDING;
+			if (self->control.view.frame.w == 0) {
+				self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;
+			}
 		}
 	}
 	
@@ -129,10 +132,12 @@ static Button *initWithType(Button *self, ButtonType type) {
  */
 static void initialize(Class *clazz) {
 
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
-	((ButtonInterface *) clazz->interface)->initWithType = initWithType;
+	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 Class _Button = {

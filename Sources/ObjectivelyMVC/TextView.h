@@ -32,6 +32,7 @@
  * @brief TextViews provide editable text field Controls.
  */
 
+#define DEFAULT_TEXTVIEW_PADDING 10
 #define DEFAULT_TEXTVIEW_WIDTH 150
 
 typedef struct TextView TextView;
@@ -61,11 +62,6 @@ struct TextView {
 	TextViewInterface *interface;
 	
 	/**
-	 * @brief The text color.
-	 */
-	SDL_Color color;
-
-	/**
 	 * @brief The default text, displayed when no user-provided text is available.
 	 */
 	char *defaultText;
@@ -76,29 +72,9 @@ struct TextView {
 	_Bool editable;
 	
 	/**
-	 * @brief The Font.
-	 *
-	 * @remarks Do not set this property directly.
-	 *
-	 * @see TextView::setFont(TextView *, Font *)
+	 * @brief The text.
 	 */
-	Font *font;
-	
-	/**
-	 * @brief The user-provided text.
-	 *
-	 * @remarks Do not set this property directly.
-	 *
-	 * @see TextView::setText(TextView *, const char *)
-	 */
-	char *text;
-	
-	/**
-	 * @brief The rendered texture.
-	 *
-	 * @private
-	 */
-	SDL_Texture *texture;
+	Label *text;
 };
 
 /**
@@ -112,39 +88,18 @@ struct TextViewInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
+	 * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style)
 	 *
 	 * @brief Initializes this TextView with the given frame.
 	 *
 	 * @param frame The frame.
+	 * @param style The ControlStyle.
 	 *
 	 * @return The initialized TextView, or `NULL` on error.
 	 *
 	 * @memberof TextView
 	 */
-	TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame);
-
-	/**
-	 * @fn void TextView::setFont(TextView *self, Font *font)
-	 *
-	 * @brief Sets this TextView's font.
-	 *
-	 * @param font The Font to set.
-	 *
-	 * @memberof TextView
-	 */
-	void (*setFont)(TextView *self, Font *font);
-	
-	/**
-	 * @fn void TextView::setText(TextView *self, const char *text)
-	 *
-	 * @brief Sets this TextView's text.
-	 *
-	 * @param text The text to set.
-	 *
-	 * @memberof TextView
-	 */
-	void (*setText)(TextView *self, const char *text);
+	TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame, ControlStyle style);
 };
 
 /**

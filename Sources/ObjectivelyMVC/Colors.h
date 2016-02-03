@@ -31,7 +31,7 @@
  *
  * @brief W3C Color constants.
  *
- * @see http://www.w3schools.com/tags/ref_color_tryit.asp
+ * @see http://www.w3schools.com/colors/colors_names.asp
  */
 
 extern const struct _Colors {

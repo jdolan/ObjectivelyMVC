@@ -35,24 +35,7 @@
 typedef struct Button Button;
 typedef struct ButtonInterface ButtonInterface;
 
-/**
- * @brief Button types.
- */
-typedef enum {
-	
-	/**
-	 * @brief Uses default background and foreground colors, with outset bevel.
-	 */
-	ButtonTypeDefault,
-	
-	/**
-	 * @brief User-defined appearance.
-	 */
-	ButtonTypeCustom,
-} ButtonType;
-
 #define DEFAULT_BUTTON_MIN_WIDTH 100
-#define DEFAULT_BUTTON_PADDING 10
 
 /**
  * @brief The Button type.
@@ -76,9 +59,9 @@ struct Button {
 	ButtonInterface *interface;
 	
 	/**
-	 * @brief The ButtonType.
+	 * @brief The title.
 	 */
-	ButtonType type;
+	Label *title;
 };
 
 /**
@@ -92,17 +75,18 @@ struct ButtonInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn Button *Button::initWithFrame(Button *self, ButtonType type)
+	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
 	 *
-	 * @brief Initializes this Button with the specified type.
+	 * @brief Initializes this Button with the specified frame and style.
 	 *
-	 * @param type The ButtonType.
+	 * @param frame The frame.
+	 * @param style The ControlStyle.
 	 *
 	 * @return The initialized Button, or `NULL` on error.
 	 *
 	 * @memberof Button
 	 */
-	Button *(*initWithType)(Button *self, ButtonType type);
+	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame, ControlStyle style);
 };
 
 /**

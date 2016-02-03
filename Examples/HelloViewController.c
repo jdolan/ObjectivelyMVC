@@ -57,15 +57,15 @@ static void loadView(ViewController *self) {
 	
 	$(self->view, addSubview, (View *) stackView);
 	
-	Label *label = $(alloc(Label), initWithText, "Hello World!", NULL);
+	Label *label = $(alloc(Label), initWithText, "This is a label", NULL);
 	$((View *) stackView, addSubview, (View *) label);
 	
-	Control *button = (Control *) $(alloc(Button), initWithType, ButtonTypeDefault);
-	$(button->label, setText, "This is a bigass super long Button");
-	$(button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
+	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
+	$(button->title, setText, "This is a bigass super long button");
+	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
 	$((View *) stackView, addSubview, (View *) button);
 	
-	TextView *textView = $(alloc(TextView), initWithFrame, NULL);
+	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
 	textView->defaultText = "This is a textview";
 	$((View *) stackView, addSubview, (View *) textView);
 	

@@ -40,7 +40,7 @@ typedef struct CheckboxInterface CheckboxInterface;
 /**
  * @brief The Checkbox type.
  *
- * @extends Control
+ * @extends Controls
  */
 struct Checkbox {
 
@@ -77,15 +77,18 @@ struct CheckboxInterface {
 	ControlInterface controltInterface;
 
 	/**
-	 * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame)
+	 * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame, ControlStyle style)
 	 *
 	 * @brief Initializes this Checkbox.
+	 *
+	 * @param frame The frame.
+	 * @param style The ControlStyle.
 	 *
 	 * @return The initialized Checkbox, or `NULL` on error.
 	 *
 	 * @memberof Checkbox
 	 */
-	Checkbox *(*initWithFrame)(Checkbox *self, const SDL_Rect *frame);
+	Checkbox *(*initWithFrame)(Checkbox *self, const SDL_Rect *frame, ControlStyle style);
 };
 
 /**

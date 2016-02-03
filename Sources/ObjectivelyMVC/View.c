@@ -189,17 +189,20 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 	
+	SDL_Rect bounds;
+	$(self, bounds, &bounds);
+	
 	const Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
 			
 		View *subview = (View *) $(subviews, objectAtIndex, i);
 		
 		if (subview->autoresizingMask & ViewAutoresizingWidth) {
-			subview->frame.w = self->frame.w;
+			subview->frame.w = bounds.w;
 		}
 		
 		if (subview->autoresizingMask & ViewAutoresizingHeight) {
-			subview->frame.h = self->frame.h;
+			subview->frame.h = bounds.h;
 		}
 	}
 }
@@ -278,8 +281,8 @@ static SDL_Rect renderFrame(const View *self) {
 	const View *superview = self->superview;
 	while (superview) {
 		
-		frame.x += superview->frame.x;
-		frame.y += superview->frame.y;
+		frame.x += superview->frame.x + superview->padding.left;
+		frame.y += superview->frame.y + superview->padding.top;
 		
 		superview = superview->superview;
 	}
