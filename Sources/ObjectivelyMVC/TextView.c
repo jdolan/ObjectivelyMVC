@@ -58,7 +58,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 	
 	char *text = this->attributedText->string.chars;
 	
-	if (text == NULL) {
+	if (text == NULL || strlen(text) == 0) {
 		if ((this->control.state & ControlStateFocused) == 0) {
 			text = this->defaultText;
 		}
@@ -95,8 +95,107 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 		}
 	} else if (event->type == SDL_TEXTINPUT) {
 		if (this->control.state & ControlStateFocused) {
-			$(this->attributedText, appendCharacters, event->text.text);
+			if (this->position == this->attributedText->string.length) {
+				$(this->attributedText, appendCharacters, event->text.text);
+			} else {
+				$(this->attributedText, insertCharactersAtIndex, event->text.text, this->position);
+			}
+			this->position += strlen(event->text.text);
 			return true;
+		}
+	} else if (event->type == SDL_KEYDOWN) {
+		if (this->control.state & ControlStateFocused) {
+			
+			const char *chars = this->attributedText->string.chars;
+			const size_t len = this->attributedText->string.length;
+			
+			switch (event->key.keysym.sym) {
+					
+				case SDLK_ESCAPE:
+				case SDLK_KP_ENTER:
+				case SDLK_KP_TAB:
+				case SDLK_RETURN:
+				case SDLK_TAB:
+					this->control.state &= ~ControlStateFocused;
+					break;
+					
+				case SDLK_BACKSPACE:
+				case SDLK_KP_BACKSPACE:
+					if (this->position > 0) {
+						const Range range = { .location = this->position - 1, .length = 1 };
+						$(this->attributedText, deleteCharactersInRange, range);
+						this->position--;
+					}
+					break;
+					
+				case SDLK_DELETE:
+					if (this->position < len) {
+						const Range range = { .location = this->position, .length = 1 };
+						$(this->attributedText, deleteCharactersInRange, range);
+					}
+					break;
+					
+				case SDLK_LEFT:
+					if (SDL_GetModState() & KMOD_CTRL) {
+						while (this->position > 0 && chars[this->position] == ' ') {
+							this->position--;
+						}
+						while (this->position > 0 && chars[this->position] != ' ') {
+							this->position--;
+						}
+					} else if (this->position > 0) {
+						this->position--;
+					}
+					break;
+					
+				case SDLK_RIGHT:
+					if (SDL_GetModState() & KMOD_CTRL) {
+						while (this->position < len && chars[this->position] == ' ') {
+							this->position++;
+						}
+						while (this->position < len && chars[this->position] != ' ') {
+							this->position++;
+						}
+						if (this->position < len) {
+							this->position++;
+						}
+					} else if (this->position < len) {
+						this->position++;
+					}
+					break;
+					
+				case SDLK_HOME:
+					this->position = 0;
+					break;
+					
+				case SDLK_END:
+					this->position = len;
+					break;
+					
+				case SDLK_a:
+					if (SDL_GetModState() & KMOD_CTRL) {
+						this->position = 0;
+					}
+					break;
+				case SDLK_e:
+					if (SDL_GetModState() & KMOD_CTRL) {
+						this->position = len;
+					}
+					break;
+				
+				case SDLK_v:
+					if ((SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) && SDL_HasClipboardText()) {
+						const char *text = SDL_GetClipboardText();
+						if (this->position == len) {
+							$(this->attributedText, appendCharacters, text);
+						} else {
+							$(this->attributedText, insertCharactersAtIndex, text, this->position);
+						}
+						this->position += strlen(text);
+					}
+					break;
+					return true;
+			}
 		}
 	}
 	

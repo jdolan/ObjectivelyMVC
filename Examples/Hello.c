@@ -126,6 +126,7 @@ static long getCurrentTime(void) {
  */
 static void drawScene(void) {
 	
+	glDisable(GL_TEXTURE_2D);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	

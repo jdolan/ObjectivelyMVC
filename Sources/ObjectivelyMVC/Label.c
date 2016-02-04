@@ -56,7 +56,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 
 	Label *this = (Label *) self;
 	
-	if (this->text) {
+	if (this->text && strlen(this->text)) {
 		
 		if (this->texture == NULL) {
 			SDL_Surface *surface = $(this->font, render, this->text, this->color);

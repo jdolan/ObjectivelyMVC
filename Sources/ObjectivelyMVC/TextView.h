@@ -79,6 +79,11 @@ struct TextView {
 	_Bool editable;
 	
 	/**
+	 * The editing position.
+	 */
+	size_t position;
+	
+	/**
 	 * @brief The text.
 	 */
 	Label *text;
