@@ -140,7 +140,7 @@ struct ViewControllerInterface {
 	 *
 	 * @brief Moves this ViewController to the specified parent.
 	 *
-	 * @param parent The parent ViewController, or `NULL`.
+	 * @param parentViewController The parent ViewController, or `NULL`.
 	 *
 	 * @memberof ViewController
 	 */
