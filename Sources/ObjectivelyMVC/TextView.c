@@ -84,14 +84,27 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 	
 	TextView *this = (TextView *) self;
 	
+	_Bool didEdit = false, didHandleEvent = false;
+	
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		const SDL_Point point = { .x = event->button.x, .y = event->button.y };
 		if ($(self, containsPoint, &point)) {
-			this->control.state |= ControlStateFocused;
-			SDL_StartTextInput();
+			if ((this->control.state & ControlStateFocused) == 0) {
+				this->control.state |= ControlStateFocused;
+				SDL_StartTextInput();
+				if (this->delegate.didBeginEditing) {
+					this->delegate.didBeginEditing(this);
+				}
+			}
+			didHandleEvent = true;
 		} else {
-			this->control.state &= ~ControlStateFocused;
-			SDL_StopTextInput();
+			if (this->control.state & ControlStateFocused) {
+				this->control.state &= ~ControlStateFocused;
+				SDL_StopTextInput();
+				if (this->delegate.didEndEditing) {
+					this->delegate.didEndEditing(this);
+				}
+			}
 		}
 	} else if (event->type == SDL_TEXTINPUT) {
 		if (this->control.state & ControlStateFocused) {
@@ -101,10 +114,11 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 				$(this->attributedText, insertCharactersAtIndex, event->text.text, this->position);
 			}
 			this->position += strlen(event->text.text);
-			return true;
+			didEdit = didHandleEvent = true;
 		}
 	} else if (event->type == SDL_KEYDOWN) {
 		if (this->control.state & ControlStateFocused) {
+			didHandleEvent = true;
 			
 			const char *chars = this->attributedText->string.chars;
 			const size_t len = this->attributedText->string.length;
@@ -117,6 +131,10 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 				case SDLK_RETURN:
 				case SDLK_TAB:
 					this->control.state &= ~ControlStateFocused;
+					SDL_StopTextInput();
+					if (this->delegate.didEndEditing) {
+						this->delegate.didEndEditing(this);
+					}
 					break;
 					
 				case SDLK_BACKSPACE:
@@ -125,6 +143,7 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 						const Range range = { .location = this->position - 1, .length = 1 };
 						$(this->attributedText, deleteCharactersInRange, range);
 						this->position--;
+						didEdit = true;
 					}
 					break;
 					
@@ -132,6 +151,7 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 					if (this->position < len) {
 						const Range range = { .location = this->position, .length = 1 };
 						$(this->attributedText, deleteCharactersInRange, range);
+						didEdit = true;
 					}
 					break;
 					
@@ -192,14 +212,23 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 							$(this->attributedText, insertCharactersAtIndex, text, this->position);
 						}
 						this->position += strlen(text);
+						didEdit = true;
 					}
 					break;
-					return true;
+				
+				default:
+					break;
 			}
 		}
 	}
 	
-	return super(View, self, respondToEvent, event);
+	if (didEdit) {
+		if (this->delegate.didEdit) {
+			this->delegate.didEdit(this);
+		}
+	}
+	
+	return didHandleEvent ?: super(View, self, respondToEvent, event);
 }
 
 #pragma mark - TextView

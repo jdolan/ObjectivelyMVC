@@ -37,8 +37,31 @@
 #define DEFAULT_TEXTVIEW_PADDING 10
 #define DEFAULT_TEXTVIEW_WIDTH 150
 
+typedef struct TextViewDelegate TextViewDelegate;
+
 typedef struct TextView TextView;
 typedef struct TextViewInterface TextViewInterface;
+
+/**
+ * @brief The TextView delegate protocol.
+ */
+struct TextViewDelegate {
+	
+	/**
+	 * @brief Delegate callback for initiating text editing.
+	 */
+	void (*didBeginEditing)(TextView *textView);
+	
+	/**
+	 * @brief Delegate callback for text input events.
+	 */
+	void (*didEdit)(TextView *textView);
+	
+	/**
+	 * @brief Delegate callback for finalizing text editing.
+	 */
+	void (*didEndEditing)(TextView *textView);
+};
 
 /**
  * @brief The TextView type.
@@ -72,6 +95,11 @@ struct TextView {
 	 * @brief The default text, displayed when no user-provided text is available.
 	 */
 	char *defaultText;
+	
+	/**
+	 * @brief The delegate.
+	 */
+	TextViewDelegate delegate;
 	
 	/**
 	 * @brief True if this TextView supports editing, false otherwise.
