@@ -75,6 +75,22 @@ static void render(View *self, SDL_Renderer *renderer) {
 			$(this->text, setText, text);
 		}
 	}
+	
+	if (this->control.state & ControlStateFocused) {
+		text = text ?: "";
+		
+		int w, h;
+		if (this->position == this->attributedText->string.length) {
+			$(this->text->font, sizeCharacters, text, &w, &h);
+		} else {
+			char *chars = strndup(text, this->position);
+				$(this->text->font, sizeCharacters, chars, &w, &h);
+			free(chars);
+		}
+		
+		SDL_Rect frame = $((View *) this->text, renderFrame);
+		SDL_RenderDrawLine(renderer, frame.x + w, frame.y, frame.x + w, frame.y + h);
+	}
 }
 
 /**

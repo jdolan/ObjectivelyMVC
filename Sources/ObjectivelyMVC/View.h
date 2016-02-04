@@ -150,15 +150,13 @@ struct ViewInterface {
 	void (*addSubview)(View *self, View *subview);
 	
 	/**
-	 * @fn void View::bounds(const View *self, SDL_Rect *bounds)
-	 *
-	 * @param bounds The bounds return value.
+	 * @fn SDL_Rect View::bounds(const View *self)
 	 *
 	 * @return The bounds (frame minus padding) of this View.
 	 *
 	 * @memberof View
 	 */
-	void (*bounds)(const View *self, SDL_Rect *bounds);
+	SDL_Rect (*bounds)(const View *self);
 	
 	/**
 	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)

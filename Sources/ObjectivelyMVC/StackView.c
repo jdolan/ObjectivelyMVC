@@ -38,8 +38,7 @@ static void layoutSubviews(View *self) {
 
 	StackView *this = (StackView *) self;
 	
-	SDL_Rect bounds;
-	$(self, bounds, &bounds);
+	const SDL_Rect bounds = $(self, bounds);
 	
 	int availableSize, requestedSize = 0;
 	switch (this->axis) {

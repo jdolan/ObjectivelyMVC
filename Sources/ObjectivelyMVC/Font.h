@@ -140,18 +140,31 @@ struct FontInterface {
 	Font *(*initWithName)(Font *self, const char *name);
 	
 	/**
-	 * @fn Font::render(const Font *self, const char *text, SDL_Color color)
+	 * @fn void Font::renderCharacters(const Font *self, const char *text, SDL_Color color)
 	 *
-	 * @brief Renders the given text in this Font.
+	 * @brief Renders the given characters in this Font.
 	 *
-	 * @param text The text.
+	 * @param chars The null-terminated UTF-8 encoded C string to render.
 	 * @param color The color.
 	 *
 	 * @return The rendered surface, or `NULL` on error.
 	 *
 	 * @memberof Font
 	 */
-	SDL_Surface *(*render)(const Font *self, const char *text, SDL_Color color);
+	SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color);
+	
+	/**
+	 * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
+	 *
+	 * @param chars The null-terminated UTF-8 encoded C string to size.
+	 * @param w The width to return.
+	 * @param h The height to return.
+	 *
+	 * @return The size of the rendered characters in pixels.
+	 *
+	 * @memberof Font
+	 */
+	void (*sizeCharacters)(const Font *self, const char *chars, int *w, int *h);
 };
 
 /**

@@ -59,7 +59,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 	if (this->text && strlen(this->text)) {
 		
 		if (this->texture == NULL) {
-			SDL_Surface *surface = $(this->font, render, this->text, this->color);
+			SDL_Surface *surface = $(this->font, renderCharacters, this->text, this->color);
 			this->texture = SDL_CreateTextureFromSurface(renderer, surface);
 			SDL_FreeSurface(surface);
 		}

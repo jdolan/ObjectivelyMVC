@@ -69,16 +69,20 @@ static void addSubview(View *self, View *subview) {
 }
 
 /**
- * @fn void View::bounds(const View *self, SDL_Rect *bounds)
+ * @fn SDL_Rect View::bounds(const View *self)
  *
  * @memberof View
  */
-static void bounds(const View *self, SDL_Rect *bounds) {
+static SDL_Rect bounds(const View *self) {
 	
-	bounds->x = self->padding.left;
-	bounds->y = self->padding.top;
-	bounds->w = self->frame.w - self->padding.left - self->padding.right;
-	bounds->h = self->frame.h - self->padding.top - self->padding.bottom;
+	SDL_Rect bounds = {
+		.x = self->padding.left,
+		.y = self->padding.top,
+		.w = self->frame.w - self->padding.left - self->padding.right,
+		.h = self->frame.h - self->padding.top - self->padding.bottom,
+	};
+	
+	return bounds;
 }
 
 /**
@@ -189,8 +193,7 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 	
-	SDL_Rect bounds;
-	$(self, bounds, &bounds);
+	const SDL_Rect bounds = $(self, bounds);
 	
 	const Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
@@ -328,9 +331,6 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 static void sizeToFit(View *self) {
 	
 	$(self, sizeThatFits, &self->frame.w, &self->frame.h);
-	
-	SDL_Rect bounds;
-	$(self, bounds, &bounds);
 	
 	Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {

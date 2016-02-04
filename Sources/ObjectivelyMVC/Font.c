@@ -205,12 +205,21 @@ static Font *initWithName(Font *self, const char *name) {
 }
 
 /**
- * @fn Font::render(const Font *self, const char *text, SDL_Color color)
+ * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color)
  *
  * @memberof Font
  */
-static SDL_Surface *render(const Font *self, const char *text, SDL_Color color) {
-	return TTF_RenderUTF8_Blended(self->font, text, color);
+static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color) {
+	return TTF_RenderUTF8_Blended(self->font, chars, color);
+}
+
+/**
+ * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
+ *
+ * @memberof Font
+ */
+static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
+	TTF_SizeUTF8(self->font, chars, w, h);
 }
 
 #pragma mark - Class lifecycle
@@ -226,7 +235,8 @@ static void initialize(Class *clazz) {
 	((FontInterface *) clazz->interface)->defaultFont = defaultFont;
 	((FontInterface *) clazz->interface)->initWithAttributes = initWithAttributes;
 	((FontInterface *) clazz->interface)->initWithName = initWithName;
-	((FontInterface *) clazz->interface)->render = render;
+	((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
+	((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
 
 	const FcBool res = FcInit();
 	assert(res == FcTrue);
