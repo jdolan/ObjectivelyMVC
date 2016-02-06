@@ -32,7 +32,7 @@
 /**
  * @brief ActionFunction for "Click Me" Button.
  */
-static void buttonAction(ident sender, const SDL_Event *event, ident data) {
+static void action(ident sender, const SDL_Event *event, ident data) {
 	printf("Hello World!\n");
 }
 
@@ -57,21 +57,32 @@ static void loadView(ViewController *self) {
 	
 	$(self->view, addSubview, (View *) stackView);
 	
-	Label *label = $(alloc(Label), initWithText, "This is a label", NULL);
-	$((View *) stackView, addSubview, (View *) label);
-	
 	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
 	$(button->title, setText, "This is a bigass super long button");
-	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
+	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, action, NULL);
 	$((View *) stackView, addSubview, (View *) button);
 	
 	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
 	textView->defaultText = "This is a textview";
 	$((View *) stackView, addSubview, (View *) textView);
 	
-	release(label);
+	StackView *checkboxStackView = $(alloc(StackView), initWithFrame, NULL);
+	checkboxStackView->axis = StackViewAxisHorizontal;
+	
+	Label *label = $(alloc(Label), initWithText, "This is a checkbox", NULL);
+	Checkbox *checkbox = $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
+	$((Control *) checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, action, NULL);
+
+	$((View *) checkboxStackView, addSubview, (View *) label);
+	$((View *) checkboxStackView, addSubview, (View *) checkbox);
+	
+	$((View *) stackView, addSubview, (View *) checkboxStackView);
+	
 	release(button);
 	release(textView);
+	release(checkbox);
+	release(label);
+	release(checkboxStackView);
 	release(stackView);
 }
 

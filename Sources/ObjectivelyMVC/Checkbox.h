@@ -37,6 +37,9 @@
 typedef struct Checkbox Checkbox;
 typedef struct CheckboxInterface CheckboxInterface;
 
+#define DEFAULT_CHECKBOX_PADDING 4
+#define DEFAULT_CHECKBOX_SIZE 18
+
 /**
  * @brief The Checkbox type.
  *

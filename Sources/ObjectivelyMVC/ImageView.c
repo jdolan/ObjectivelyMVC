@@ -48,7 +48,7 @@ static void dealloc(Object *self) {
  */
 static void render(View *self, SDL_Renderer *renderer) {
 
-	super(View, self, draw, renderer);
+	super(View, self, render, renderer);
 	
 	ImageView *this = (ImageView *) self;
 	
@@ -87,6 +87,8 @@ static ImageView *initWithImage(ImageView *self, Image *image) {
 		
 		self->view.frame.w = image->surface->w;
 		self->view.frame.h = image->surface->h;
+		
+		self->view.backgroundColor = Colors.Clear;
 	}
 	
 	return self;

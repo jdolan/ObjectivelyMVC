@@ -30,8 +30,6 @@
 
 #pragma mark - ObjectInterface
 
-
-
 /**
  * @see ObjectInterface::dealloc(Object *)
  */

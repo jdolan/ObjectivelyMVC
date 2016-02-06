@@ -53,6 +53,7 @@ typedef enum {
 	ViewAutoresizingNone = 0,
 	ViewAutoresizingWidth = 0x1,
 	ViewAutoresizingHeight = 0x2,
+	ViewAutoResizingFill = 0x3,
 } ViewAutoresizing;
 
 typedef struct View View;

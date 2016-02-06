@@ -41,6 +41,47 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
+#pragma mark - View
+
+/**
+ * @see View::render(View *, SDL_Renderer *)
+ */
+static void render(View *self, SDL_Renderer *renderer) {
+	
+	super(View, self, render, renderer);
+	
+	Checkbox *this = (Checkbox *) self;
+	
+	if (this->control.state & ControlStateSelected) {
+		this->check->view.hidden = false;
+	} else {
+		this->check->view.hidden = true;
+	}
+}
+
+/**
+ * @see View::respondToEvent(View *, const SDL_Event *)
+ */
+static _Bool respondToEvent(View *self, const SDL_Event *event) {
+	
+	Control *this = (Control *) self;
+	
+	const SDL_Point point = { .x = event->button.x, .y = event->button.y };
+	if (event->type == SDL_MOUSEBUTTONUP) {
+		if ($(self, containsPoint, &point)) {
+			this->state ^= ControlStateSelected;
+			const Action *action = $(this, actionForEvent, event);
+			if (action) {
+				action->function(self, event, action->data);
+			}
+			
+			return true;
+		}
+	}
+	
+	return super(View, self, respondToEvent, event);
+}
+
 #pragma mark - Checkbox
 
 static Image *_check;
@@ -58,7 +99,28 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 		self->check = $(alloc(ImageView), initWithImage, _check);
 		assert(self->check);
 		
+		self->check->view.autoresizingMask = ViewAutoResizingFill;
+		
 		$((View *) self, addSubview, (View *) self->check);
+		
+		if (self->control.style == ControlStyleDefault) {
+			self->control.bevel = BevelTypeInset;
+			
+			self->control.view.backgroundColor = Colors.DimGray;
+			
+			if (self->control.view.frame.w == 0) {
+				self->control.view.frame.w = DEFAULT_CHECKBOX_SIZE;
+			}
+			
+			if (self->control.view.frame.h == DEFAULT_CONTROL_HEIGHT) {
+				self->control.view.frame.h = DEFAULT_CHECKBOX_SIZE;
+			}
+			
+			self->control.view.padding.top = DEFAULT_CHECKBOX_PADDING;
+			self->control.view.padding.right = DEFAULT_CHECKBOX_PADDING;
+			self->control.view.padding.bottom = DEFAULT_CHECKBOX_PADDING;
+			self->control.view.padding.left = DEFAULT_CHECKBOX_PADDING;
+		}
 	}
 	
 	return self;
@@ -73,6 +135,9 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	
 	((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	
 	_check = $(alloc(Image), initWithName, "check.png");
