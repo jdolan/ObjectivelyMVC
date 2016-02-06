@@ -98,149 +98,151 @@ static void render(View *self, SDL_Renderer *renderer) {
  */
 static _Bool respondToEvent(View *self, const SDL_Event *event) {
 	
-	TextView *this = (TextView *) self;
-	
 	_Bool didEdit = false, didHandleEvent = false;
-	
-	if (event->type == SDL_MOUSEBUTTONDOWN) {
-		const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-		if ($(self, containsPoint, &point)) {
-			if ((this->control.state & ControlStateFocused) == 0) {
-				this->control.state |= ControlStateFocused;
-				SDL_StartTextInput();
-				if (this->delegate.didBeginEditing) {
-					this->delegate.didBeginEditing(this);
+
+	TextView *this = (TextView *) self;
+	if (this->editable) {
+		
+		if (event->type == SDL_MOUSEBUTTONDOWN) {
+			const SDL_Point point = { .x = event->button.x, .y = event->button.y };
+			if ($(self, containsPoint, &point)) {
+				if ((this->control.state & ControlStateFocused) == 0) {
+					this->control.state |= ControlStateFocused;
+					SDL_StartTextInput();
+					if (this->delegate.didBeginEditing) {
+						this->delegate.didBeginEditing(this);
+					}
 				}
-			}
-			didHandleEvent = true;
-		} else {
-			if (this->control.state & ControlStateFocused) {
-				this->control.state &= ~ControlStateFocused;
-				SDL_StopTextInput();
-				if (this->delegate.didEndEditing) {
-					this->delegate.didEndEditing(this);
-				}
-			}
-		}
-	} else if (event->type == SDL_TEXTINPUT) {
-		if (this->control.state & ControlStateFocused) {
-			if (this->position == this->attributedText->string.length) {
-				$(this->attributedText, appendCharacters, event->text.text);
+				didHandleEvent = true;
 			} else {
-				$(this->attributedText, insertCharactersAtIndex, event->text.text, this->position);
-			}
-			this->position += strlen(event->text.text);
-			didEdit = didHandleEvent = true;
-		}
-	} else if (event->type == SDL_KEYDOWN) {
-		if (this->control.state & ControlStateFocused) {
-			didHandleEvent = true;
-			
-			const char *chars = this->attributedText->string.chars;
-			const size_t len = this->attributedText->string.length;
-			
-			switch (event->key.keysym.sym) {
-					
-				case SDLK_ESCAPE:
-				case SDLK_KP_ENTER:
-				case SDLK_KP_TAB:
-				case SDLK_RETURN:
-				case SDLK_TAB:
+				if (this->control.state & ControlStateFocused) {
 					this->control.state &= ~ControlStateFocused;
 					SDL_StopTextInput();
 					if (this->delegate.didEndEditing) {
 						this->delegate.didEndEditing(this);
 					}
-					break;
-					
-				case SDLK_BACKSPACE:
-				case SDLK_KP_BACKSPACE:
-					if (this->position > 0) {
-						const Range range = { .location = this->position - 1, .length = 1 };
-						$(this->attributedText, deleteCharactersInRange, range);
-						this->position--;
-						didEdit = true;
-					}
-					break;
-					
-				case SDLK_DELETE:
-					if (this->position < len) {
-						const Range range = { .location = this->position, .length = 1 };
-						$(this->attributedText, deleteCharactersInRange, range);
-						didEdit = true;
-					}
-					break;
-					
-				case SDLK_LEFT:
-					if (SDL_GetModState() & KMOD_CTRL) {
-						while (this->position > 0 && chars[this->position] == ' ') {
+				}
+			}
+		} else if (event->type == SDL_TEXTINPUT) {
+			if (this->control.state & ControlStateFocused) {
+				if (this->position == this->attributedText->string.length) {
+					$(this->attributedText, appendCharacters, event->text.text);
+				} else {
+					$(this->attributedText, insertCharactersAtIndex, event->text.text, this->position);
+				}
+				this->position += strlen(event->text.text);
+				didEdit = didHandleEvent = true;
+			}
+		} else if (event->type == SDL_KEYDOWN) {
+			if (this->control.state & ControlStateFocused) {
+				didHandleEvent = true;
+				
+				const char *chars = this->attributedText->string.chars;
+				const size_t len = this->attributedText->string.length;
+				
+				switch (event->key.keysym.sym) {
+						
+					case SDLK_ESCAPE:
+					case SDLK_KP_ENTER:
+					case SDLK_KP_TAB:
+					case SDLK_RETURN:
+					case SDLK_TAB:
+						this->control.state &= ~ControlStateFocused;
+						SDL_StopTextInput();
+						if (this->delegate.didEndEditing) {
+							this->delegate.didEndEditing(this);
+						}
+						break;
+						
+					case SDLK_BACKSPACE:
+					case SDLK_KP_BACKSPACE:
+						if (this->position > 0) {
+							const Range range = { .location = this->position - 1, .length = 1 };
+							$(this->attributedText, deleteCharactersInRange, range);
 							this->position--;
+							didEdit = true;
 						}
-						while (this->position > 0 && chars[this->position] != ' ') {
-							this->position--;
-						}
-					} else if (this->position > 0) {
-						this->position--;
-					}
-					break;
-					
-				case SDLK_RIGHT:
-					if (SDL_GetModState() & KMOD_CTRL) {
-						while (this->position < len && chars[this->position] == ' ') {
-							this->position++;
-						}
-						while (this->position < len && chars[this->position] != ' ') {
-							this->position++;
-						}
+						break;
+						
+					case SDLK_DELETE:
 						if (this->position < len) {
+							const Range range = { .location = this->position, .length = 1 };
+							$(this->attributedText, deleteCharactersInRange, range);
+							didEdit = true;
+						}
+						break;
+						
+					case SDLK_LEFT:
+						if (SDL_GetModState() & KMOD_CTRL) {
+							while (this->position > 0 && chars[this->position] == ' ') {
+								this->position--;
+							}
+							while (this->position > 0 && chars[this->position] != ' ') {
+								this->position--;
+							}
+						} else if (this->position > 0) {
+							this->position--;
+						}
+						break;
+						
+					case SDLK_RIGHT:
+						if (SDL_GetModState() & KMOD_CTRL) {
+							while (this->position < len && chars[this->position] == ' ') {
+								this->position++;
+							}
+							while (this->position < len && chars[this->position] != ' ') {
+								this->position++;
+							}
+							if (this->position < len) {
+								this->position++;
+							}
+						} else if (this->position < len) {
 							this->position++;
 						}
-					} else if (this->position < len) {
-						this->position++;
-					}
-					break;
-					
-				case SDLK_HOME:
-					this->position = 0;
-					break;
-					
-				case SDLK_END:
-					this->position = len;
-					break;
-					
-				case SDLK_a:
-					if (SDL_GetModState() & KMOD_CTRL) {
+						break;
+						
+					case SDLK_HOME:
 						this->position = 0;
-					}
-					break;
-				case SDLK_e:
-					if (SDL_GetModState() & KMOD_CTRL) {
+						break;
+						
+					case SDLK_END:
 						this->position = len;
-					}
-					break;
-				
-				case SDLK_v:
-					if ((SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) && SDL_HasClipboardText()) {
-						const char *text = SDL_GetClipboardText();
-						if (this->position == len) {
-							$(this->attributedText, appendCharacters, text);
-						} else {
-							$(this->attributedText, insertCharactersAtIndex, text, this->position);
+						break;
+						
+					case SDLK_a:
+						if (SDL_GetModState() & KMOD_CTRL) {
+							this->position = 0;
 						}
-						this->position += strlen(text);
-						didEdit = true;
-					}
-					break;
-				
-				default:
-					break;
+						break;
+					case SDLK_e:
+						if (SDL_GetModState() & KMOD_CTRL) {
+							this->position = len;
+						}
+						break;
+						
+					case SDLK_v:
+						if ((SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) && SDL_HasClipboardText()) {
+							const char *text = SDL_GetClipboardText();
+							if (this->position == len) {
+								$(this->attributedText, appendCharacters, text);
+							} else {
+								$(this->attributedText, insertCharactersAtIndex, text, this->position);
+							}
+							this->position += strlen(text);
+							didEdit = true;
+						}
+						break;
+						
+					default:
+						break;
+				}
 			}
 		}
-	}
-	
-	if (didEdit) {
-		if (this->delegate.didEdit) {
-			this->delegate.didEdit(this);
+		
+		if (didEdit) {
+			if (this->delegate.didEdit) {
+				this->delegate.didEdit(this);
+			}
 		}
 	}
 	
