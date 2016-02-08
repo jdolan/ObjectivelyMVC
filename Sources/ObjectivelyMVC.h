@@ -34,6 +34,8 @@
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/Log.h>
+#include <ObjectivelyMVC/Option.h>
+#include <ObjectivelyMVC/Select.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/TextView.h>
 #include <ObjectivelyMVC/View.h>

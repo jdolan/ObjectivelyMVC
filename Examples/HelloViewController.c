@@ -75,14 +75,24 @@ static void loadView(ViewController *self) {
 
 	$((View *) checkboxStackView, addSubview, (View *) label);
 	$((View *) checkboxStackView, addSubview, (View *) checkbox);
+	checkboxStackView->spacing = 10;
+	$((View *) checkboxStackView, sizeToFit);
 	
 	$((View *) stackView, addSubview, (View *) checkboxStackView);
+	
+	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
+	$(select, addOption, "This is a select", (ident) 1);
+	$(select, addOption, "This is an option", (ident) 2);
+	$(select, addOption, "This is another", (ident) 3);
+	
+	$((View *) stackView, addSubview, (View *) select);
 	
 	release(button);
 	release(textView);
 	release(checkbox);
 	release(label);
 	release(checkboxStackView);
+	release(select);
 	release(stackView);
 }
 
