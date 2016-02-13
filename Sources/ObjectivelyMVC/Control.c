@@ -44,6 +44,18 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::didReceiveEvent(const View *, const SDL_Event *)
+ */
+static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
+	
+	if (super(View, self, didReceiveEvent, event)) {
+		return true;
+	}
+	
+	return ((Control *) self)->state & ControlStateFocused;
+}
+
+/**
  * @see View::render(View *, SDL_Renderer *)
  */
 static void render(View *self, SDL_Renderer *renderer) {
@@ -128,6 +140,28 @@ static void render(View *self, SDL_Renderer *renderer) {
 	}
 }
 
+/**
+ * @see View::respondToEvent(View *, const SDL_Event *)
+ */
+static void respondToEvent(View *self, const SDL_Event *event) {
+	
+	Control *this = (Control *) self;
+	
+	const ControlState state = this->state;
+	
+	if ($(this, captureEvent, event)) {
+		
+		Action *action = $(this, actionForEvent, event);
+		if (action) {
+			action->function(self, event, action->data);
+		}
+	}
+	
+	if (this->state != state) {
+		$(this, stateDidChange);
+	}
+}
+
 #pragma mark - Control
 
 /**
@@ -161,6 +195,16 @@ static void addActionForEventType(Control *self, SDL_EventType eventType, Action
 	$(self->actions, addObject, action);
 	
 	release(action);
+}
+
+/**
+ * @fn _Bool Control::captureEvent(Control *self, const SDL_Event *event)
+ *
+ * @memberof Control
+ */
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
+	
+	return false;
 }
 
 /**
@@ -229,6 +273,15 @@ static _Bool selected(const Control *self) {
 	return (self->state & ControlStateSelected) == ControlStateSelected;
 }
 
+/**
+ * @fn void Control::stateDidChange(Control *self)
+ *
+ * @memberof Control
+ */
+static void stateDidChange(Control *self) {
+	
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -238,15 +291,19 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	
+	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	
 	((ControlInterface *) clazz->interface)->actionForEvent = actionForEvent;
 	((ControlInterface *) clazz->interface)->addActionForEventType = addActionForEventType;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 	((ControlInterface *) clazz->interface)->enabled = enabled;
 	((ControlInterface *) clazz->interface)->focused = focused;
 	((ControlInterface *) clazz->interface)->highlighted = highlighted;
 	((ControlInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ControlInterface *) clazz->interface)->selected = selected;
+	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
 }
 
 Class _Control = {

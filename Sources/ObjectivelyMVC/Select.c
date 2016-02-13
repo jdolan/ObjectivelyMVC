@@ -21,54 +21,103 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-
 #include <assert.h>
 
+#include <Objectively/Array.h>
+
+#include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/Select.h>
 
 #define _Class _Select
 
-#pragma mark - Object
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-	
-	Select *this = (Select *) self;
-	
-	release(this->options);
-	
-	super(Object, self, dealloc);
-}
-
 #pragma mark - View
 
 /**
- * @see View::respondToEvent(View *, const SDL_Event *)
+ * @see View::layoutSubviews(View *)
  */
-static _Bool respondToEvent(View *self, const SDL_Event *event) {
+static void layoutSubviews(View *self) {
 	
-	return super(View, self, respondToEvent, event);
+	Select *this = (Select *) self;
+	Array *options = $(this, options);
+
+	const View *selected = (View *) $(this, selectedOption) ?: $(options, firstObject);
+	
+	self->frame.h = DEFAULT_CONTROL_HEIGHT;
+	int pos = 0;
+
+	for (size_t i = 0; i < options->count; i++) {
+		
+		View *option = $(options, objectAtIndex, i);
+		if (option == selected) {
+			option->hidden = false;
+		} else {
+			option->hidden = this->control.state != ControlStateHighlighted;
+		}
+		
+		if (option->hidden) {
+			option->frame.y = 0;
+		} else {
+			option->frame.y = pos;
+			pos += option->frame.h;
+		}
+	}
+	
+	release(options);
+	
+	$(self, sizeToFit);
+}
+
+#pragma mark - Control
+
+/**
+ * @see Control::captureEvent(Control *, const SDL_Event *)
+ */
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
+	
+	if (event->type == SDL_MOUSEBUTTONUP) {
+		if ($((View *) self, didReceiveEvent, event)) {
+			self->state |= ControlStateHighlighted;
+			return true;
+		}
+		self->state &= ~ControlStateHighlighted;
+	}
+	
+	return super(Control, self, captureEvent, event);
+}
+
+/**
+ * @fn void Control::stateDidChange(Control *self)
+ *
+ * @memberof Control
+ */
+static void stateDidChange(Control *self) {
+	
+	((View *) self)->needsLayout = true;
+	
+	super(Control, self, stateDidChange);
 }
 
 #pragma mark - Select
 
 /**
- * @fn void Select::addOption(Select *self, const char *title, ident value)
+ * @fn void Select::addOption(Select *self, ident value, const char *text, Font *font)
  *
  * @memberof Select
  */
-static void addOption(const Select *self, const char *title, ident value) {
+static void addOption(Select *self, ident value, const char *text, Font *font) {
 	
-	assert(title);
-	assert(value);
-	
-	Option *option = $(alloc(Option), initWithTitle, title, value);
+	View *option = (View *) $(alloc(Option), initWithValue, value, text, font);
 	assert(option);
 	
-	$(self->options, addObject, option);
+	if (self->control.style == ControlStyleDefault) {
+		const int padding = DEFAULT_OPTION_HEIGHT - option->frame.h;
+		if (padding > 0) {
+			option->padding.top = option->padding.bottom = padding * 0.5;
+		}
+		option->borderWidth = 1;
+	}
 	
+	$((View *) self, addSubview, option);
 	release(option);
 }
 
@@ -82,11 +131,8 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 	self = (Select *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 		
-		self->options = $$(MutableArray, array);
-		assert(self->options);
-		
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = BevelTypeInset;
+			self->control.bevel = BevelTypeOutset;
 			
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;
@@ -98,20 +144,64 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 }
 
 /**
+ * @brief ArrayEnumerator for filtering Options from subviews.
+ */
+static _Bool options_filter(const Array *array, ident obj, ident data) {
+	return $((Object *) obj, isKindOfClass, &_Option);
+}
+
+/**
+ * @fn Array *Select::options(const Select *self)
+ *
+ * @memberof Select
+ */
+static Array *options(const Select *self) {
+	
+	const Array *subviews = (Array *) ((View *) self)->subviews;
+	
+	return $(subviews, filterObjects, options_filter, NULL);
+}
+
+/**
  * @fn void Select::removeOptionWithValue(Select *self, const ident value)
  *
  * @memberof Select
  */
-static void removeOptionWithValue(const Select *self, const ident value) {
+static void removeOptionWithValue(Select *self, const ident value) {
+	
+	Array *options = $(self, options);
+	
+	for (size_t i = 0; i < options->count; i++) {
+		View *option = $(options, objectAtIndex, i);
+		if (((Option *) option)->value == value) {
+			$(option, removeFromSuperview);
+			break;
+		}
+	}
+	
+	release(options);
+}
 
-	Array *options = (Array *) self->options;
+/**
+ * @fn Option *Select::selectedOption(const Select *self)
+ *
+ * @memberof Select
+ */
+static Option *selectedOption(const Select *self) {
+	
+	Option *selected = NULL;
+	Array *options = $(self, options);
 	
 	for (size_t i = 0; i < options->count; i++) {
 		Option *option = $(options, objectAtIndex, i);
-		if (option->value == value) {
-			return $(self->options, removeObject, option);
+		if (option->selected) {
+			selected = option;
+			break;
 		}
 	}
+	
+	release(options);
+	return selected;
 }
 
 #pragma mark - Class lifecycle
@@ -121,13 +211,16 @@ static void removeOptionWithValue(const Select *self, const ident value) {
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
 	
 	((SelectInterface *) clazz->interface)->addOption = addOption;
 	((SelectInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((SelectInterface *) clazz->interface)->options = options;
 	((SelectInterface *) clazz->interface)->removeOptionWithValue = removeOptionWithValue;
+	((SelectInterface *) clazz->interface)->selectedOption = selectedOption;
 }
 
 Class _Select = {

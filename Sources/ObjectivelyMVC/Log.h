@@ -26,8 +26,6 @@
 
 #include <SDL2/SDL_log.h>
 
-#include <Objectively/MutableString.h>
-
 #define LogCategoryMVC (SDL_LOG_CATEGORY_CUSTOM + 69)
 
 #define LogSetPriority(pri) SDL_LogSetPriority(LogCategoryMVC, pri)

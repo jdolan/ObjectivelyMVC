@@ -24,42 +24,20 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Option.h>
-#include <Objectively/String.h>
 
 #define _Class _Option
-
-#pragma mark - Object
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-	
-	Option *this = (Option *) self;
-	
-	release(this->title);
-	
-	super(Object, self, dealloc);
-}
 
 #pragma mark - Option
 
 /**
- * @fn Option *Option::initWithTitle(Option *self, const char *title, ident value)
+ * @fn Option *Option::initWithValue(Option *self, ident value, const char *text, Font *font)
  *
  * @memberof Option
  */
-static Option *initWithTitle(Option *self, const char *title, ident value) {
+static Option *initWithValue(Option *self, ident value, const char *text, Font *font) {
 	
-	self = (Option *) super(Object, self, init);
+	self = (Option *) super(Label, self, initWithText, text, font);
 	if (self) {
-		
-		assert(title);
-		assert(value);
-		
-		self->title = str(title);
-		assert(self->title);
-		
 		self->value = value;
 	}
 	
@@ -72,15 +50,13 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
-	((OptionInterface *) clazz->interface)->initWithTitle = initWithTitle;	
+		
+	((OptionInterface *) clazz->interface)->initWithValue = initWithValue;
 }
 
 Class _Option = {
 	.name = "Option",
-	.superclass = &_Object,
+	.superclass = &_Label,
 	.instanceSize = sizeof(Option),
 	.interfaceOffset = offsetof(Option, interface),
 	.interfaceSize = sizeof(OptionInterface),

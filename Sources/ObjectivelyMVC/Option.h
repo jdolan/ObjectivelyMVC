@@ -24,7 +24,9 @@
 #ifndef _ObjectivelyMVC_Option_h_
 #define _ObjectivelyMVC_Option_h_
 
-#include <Objectively/Object.h>
+#include <SDL2/SDL_render.h>
+
+#include <ObjectivelyMVC/Label.h>
 
 /**
  * @file
@@ -32,13 +34,15 @@
  * @brief Select Options.
  */
 
+#define DEFAULT_OPTION_HEIGHT 18
+
 typedef struct Option Option;
 typedef struct OptionInterface OptionInterface;
 
 /**
  * @brief The Option type.
  *
- * @extends Object
+ * @extends Label
  *
  * @ingroup Controls
  */
@@ -49,7 +53,7 @@ struct Option {
 	 *
 	 * @private
 	 */
-	Object object;
+	Label label;
 	
 	/**
 	 * @brief The typed interface.
@@ -62,11 +66,6 @@ struct Option {
 	 * @brief True if this Option is selected, false otherwise.
 	 */
 	_Bool selected;
-	
-	/**
-	 * @brief The option title.
-	 */
-	String *title;
 	
 	/**
 	 * @brief The option value.
@@ -82,21 +81,22 @@ struct OptionInterface {
 	/**
 	 * @brief The parent interface.
 	 */
-	ObjectInterface objectInterface;
+	LabelInterface labelInterface;
 	
 	/**
-	 * @fn Option *Option::initWithTitle(Option *self, const char *title, ident value)
+	 * @fn Option *Option::initWithValue(Option *self, ident value, const char *text, Font *font)
 	 *
-	 * @brief Initializes this Option with the given title and value.
+	 * @brief Initializes this Option with the given value.
 	 *
-	 * @param title The title.
 	 * @param value The value.
+	 * @param text The text.
+	 * @param font The Font.
 	 *
 	 * @return The initialized Option, or `NULL` on error.
 	 *
 	 * @memberof Option
 	 */
-	Option *(*initWithTitle)(Option *self, const char *title, ident value);
+	Option *(*initWithValue)(Option *self, ident value, const char *text, Font *font);
 };
 
 /**

@@ -151,7 +151,7 @@ static void moveToParentViewController(ViewController *self, ViewController *par
  *
  * @memberof ViewController
  */
-static _Bool respondToEvent(ViewController *self, SDL_Event *event) {
+static void respondToEvent(ViewController *self, SDL_Event *event) {
 	
 	assert(event);
 	
@@ -159,12 +159,10 @@ static _Bool respondToEvent(ViewController *self, SDL_Event *event) {
 	for (size_t i = 0; i < childViewControllers->count; i++) {
 		
 		ViewController *child = $(childViewControllers, objectAtIndex, i);
-		if ($(child, respondToEvent, event)) {
-			return true;
-		}
+		$(child, respondToEvent, event);
 	}
 	
-	return $(self->view, respondToEvent, event);
+	$(self->view, respondToEvent, event);
 }
 
 /**

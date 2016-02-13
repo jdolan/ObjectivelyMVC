@@ -50,7 +50,7 @@ static void layoutSubviews(View *self) {
 			break;
 	}
 	
-	const Array *subviews = (Array *) self->subviews;
+	Array *subviews = (Array *) self->subviews;
 	availableSize -= this->spacing * subviews->count - 1;
 	
 	for (size_t i = 0; i < subviews->count; i++) {

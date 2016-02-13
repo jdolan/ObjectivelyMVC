@@ -102,6 +102,20 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 }
 
 /**
+ * @fn void Label::naturalSize(const Label *self, int *width, int *height)
+ *
+ * @memberof Label
+ */
+static void naturalSize(const Label *self, int *width, int *height) {
+	
+	if (self->font && self->text) {
+		TTF_SizeUTF8(self->font->font, self->text, width, height);
+	} else {
+		*width = *height = 0;
+	}
+}
+
+/**
  * @fn void Label::setFont(Label *self, Font *font)
  *
  * @memberof Label
@@ -145,20 +159,6 @@ static void setText(Label *self, const char *text) {
 	}
 	
 	$((View *) self, sizeToFit);
-}
-
-/**
- * @fn void Label::naturalSize(const Label *self, int *width, int *height)
- *
- * @memberof Label
- */
-static void naturalSize(const Label *self, int *width, int *height) {
-	
-	if (self->font && self->text) {
-		TTF_SizeUTF8(self->font->font, self->text, width, height);
-	} else {
-		*width = *height = 0;
-	}
 }
 
 #pragma mark - Class lifecycle

@@ -93,30 +93,30 @@ static void render(View *self, SDL_Renderer *renderer) {
 	}
 }
 
+#pragma mark - Control
+
 /**
- * @see View::respondToEvent(View *, const SDL_Event *)
+ * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool respondToEvent(View *self, const SDL_Event *event) {
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	
-	_Bool didEdit = false, didHandleEvent = false;
+	_Bool didEdit = false, didCaptureEvent = false;
 
 	TextView *this = (TextView *) self;
 	if (this->editable) {
-		
 		if (event->type == SDL_MOUSEBUTTONDOWN) {
-			const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-			if ($(self, containsPoint, &point)) {
-				if ((this->control.state & ControlStateFocused) == 0) {
-					this->control.state |= ControlStateFocused;
+			if ($((View *) self, didReceiveEvent, event)) {
+				if ((self->state & ControlStateFocused) == 0) {
+					self->state |= ControlStateFocused;
 					SDL_StartTextInput();
 					if (this->delegate.didBeginEditing) {
 						this->delegate.didBeginEditing(this);
 					}
 				}
-				didHandleEvent = true;
+				didCaptureEvent = true;
 			} else {
-				if (this->control.state & ControlStateFocused) {
-					this->control.state &= ~ControlStateFocused;
+				if (self->state & ControlStateFocused) {
+					self->state &= ~ControlStateFocused;
 					SDL_StopTextInput();
 					if (this->delegate.didEndEditing) {
 						this->delegate.didEndEditing(this);
@@ -124,18 +124,18 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 				}
 			}
 		} else if (event->type == SDL_TEXTINPUT) {
-			if (this->control.state & ControlStateFocused) {
+			if (self->state & ControlStateFocused) {
 				if (this->position == this->attributedText->string.length) {
 					$(this->attributedText, appendCharacters, event->text.text);
 				} else {
 					$(this->attributedText, insertCharactersAtIndex, event->text.text, this->position);
 				}
 				this->position += strlen(event->text.text);
-				didEdit = didHandleEvent = true;
+				didEdit = didCaptureEvent = true;
 			}
 		} else if (event->type == SDL_KEYDOWN) {
-			if (this->control.state & ControlStateFocused) {
-				didHandleEvent = true;
+			if ($((View *) self, didReceiveEvent, event)) {
+				didCaptureEvent = true;
 				
 				const char *chars = this->attributedText->string.chars;
 				const size_t len = this->attributedText->string.length;
@@ -147,7 +147,7 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 					case SDLK_KP_TAB:
 					case SDLK_RETURN:
 					case SDLK_TAB:
-						this->control.state &= ~ControlStateFocused;
+						self->state &= ~ControlStateFocused;
 						SDL_StopTextInput();
 						if (this->delegate.didEndEditing) {
 							this->delegate.didEndEditing(this);
@@ -246,7 +246,7 @@ static _Bool respondToEvent(View *self, const SDL_Event *event) {
 		}
 	}
 	
-	return didHandleEvent ?: super(View, self, respondToEvent, event);
+	return didCaptureEvent;
 }
 
 #pragma mark - TextView
@@ -294,8 +294,9 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	
 	((ViewInterface *) clazz->interface)->render = render;
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
-
+	
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	
 	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 

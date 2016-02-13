@@ -76,11 +76,6 @@ struct Select {
 	 * @private
 	 */
 	SelectInterface *interface;
-	
-	/**
-	 * @brief The Options.
-	 */
-	MutableArray *options;	
 };
 
 /**
@@ -94,16 +89,17 @@ struct SelectInterface {
 	ControlInterface controlInterface;
 	
 	/**
-	 * @fn void Select::addOption(Select *self, const char *title, ident value)
+	 * @fn void Select::addOption(Select *self, const char *text, ident value)
 	 *
 	 * @brief Creates and adds a new Option to this Select.
 	 *
-	 * @param title The Option title.
 	 * @param value The Option value.
+	 * @param text The Option text.
+	 * @param font The Option Font.
 	 *
 	 * @memberof Select
 	 */
-	void (*addOption)(const Select *self, const char *title, ident value);
+	void (*addOption)(Select *self, ident value, const char *text, Font *font);
 	
 	/**
 	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
@@ -120,6 +116,15 @@ struct SelectInterface {
 	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame, ControlStyle style);
 	
 	/**
+	 * @fn Array *Select::options(const Select *self)
+	 *
+	 * @return The Array of Options added to this Select.
+	 *
+	 * @memberof Select
+	 */
+	Array *(*options)(const Select *self);
+	
+	/**
 	 * @fn void Select::removeOptionWithValue(Select *self, const ident value)
 	 *
 	 * @brief Removes first the Option with the given value.
@@ -128,7 +133,18 @@ struct SelectInterface {
 	 *
 	 * @memberof Select
 	 */
-	void (*removeOptionWithValue)(const Select *self, const ident value);
+	void (*removeOptionWithValue)(Select *self, const ident value);
+	
+	void (*selectOptionWithValue)(Select *self, const ident value);
+	
+	/**
+	 * @fn Option *Select::selectedOption(const Select *self)
+	 *
+	 * @return The selected Option, or `NULL`.
+	 *
+	 * @memberof Select
+	 */
+	Option *(*selectedOption)(const Select *self);
 };
 
 /**

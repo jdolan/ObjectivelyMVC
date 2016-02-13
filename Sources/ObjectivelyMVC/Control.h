@@ -126,7 +126,7 @@ struct ControlInterface {
 	ViewInterface viewInterface;
 
 	/**
-	 * @fn Action *Control::actionForEvent(const Control 8self, const SDL_Event *event)
+	 * @fn Action *Control::actionForEvent(const Control *self, const SDL_Event *event)
 	 *
 	 * @memberof Control
 	 */
@@ -145,6 +145,21 @@ struct ControlInterface {
 	 */
 	void (*addActionForEventType)(Control *self, SDL_EventType eventType, ActionFunction function, ident data);
 
+	/**
+	 * @fn _Bool Control::captureEvent(Control *self, const SDL_Event *event)
+	 *
+	 * @brief Captures a given event, potentially altering the state of this Control.
+	 *
+	 * @param event The event.
+	 *
+	 * @return True if the Event was captured, false otherwise.
+	 *
+	 * @remarks Subclasses should override this method to capture events.
+	 *
+	 * @memberof Control
+	 */
+	_Bool (*captureEvent)(Control *self, const SDL_Event *event);
+	
 	/**
 	 * @fn _Bool Control::enabled(const Control *self)
 	 *
@@ -194,6 +209,17 @@ struct ControlInterface {
 	 * @memberof Control
 	 */
 	_Bool (*selected)(const Control *self);
+	
+	/**
+	 * @fn void Control::stateDidChange(Control *self)
+	 *
+	 * @brief Called when the state of this Control changes.
+	 *
+	 * @remarks Subclasses may implement this method to handle discrete state changes.
+	 *
+	 * @memberof Control
+	 */
+	void (*stateDidChange)(Control *self);
 };
 
 /**

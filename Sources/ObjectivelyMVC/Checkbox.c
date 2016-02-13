@@ -59,27 +59,22 @@ static void render(View *self, SDL_Renderer *renderer) {
 	}
 }
 
+#pragma mark - Control
+
 /**
- * @see View::respondToEvent(View *, const SDL_Event *)
+ * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool respondToEvent(View *self, const SDL_Event *event) {
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	
-	Control *this = (Control *) self;
-	
-	const SDL_Point point = { .x = event->button.x, .y = event->button.y };
 	if (event->type == SDL_MOUSEBUTTONUP) {
-		if ($(self, containsPoint, &point)) {
-			this->state ^= ControlStateSelected;
-			const Action *action = $(this, actionForEvent, event);
-			if (action) {
-				action->function(self, event, action->data);
-			}
-			
+		
+		if ($((View *) self, didReceiveEvent, event)) {
+			self->state ^= ControlStateSelected;
 			return true;
 		}
 	}
 	
-	return super(View, self, respondToEvent, event);
+	return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - Checkbox
@@ -99,7 +94,7 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 		self->check = $(alloc(ImageView), initWithImage, _check);
 		assert(self->check);
 		
-		self->check->view.autoresizingMask = ViewAutoResizingFill;
+		self->check->view.autoresizingMask = ViewAutoresizingFill;
 		
 		$((View *) self, addSubview, (View *) self->check);
 		
@@ -136,7 +131,8 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->render = render;
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 	
 	((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	

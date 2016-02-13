@@ -96,6 +96,39 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 }
 
 /**
+ * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
+ *
+ * @memberof View
+ */
+static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
+	
+	if (event->type == SDL_MOUSEMOTION) {
+		const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
+		if ($(self, containsPoint, &point)) {
+			return true;
+		}
+	} else if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+		const SDL_Point point = { .x = event->button.x, .y = event->button.y };
+		if ($(self, containsPoint, &point)) {
+			return true;
+		}
+	} else if (event->type == SDL_MOUSEWHEEL) {
+		const SDL_Point point = { .x = event->wheel.x, .y = event->wheel.y };
+		if ($(self, containsPoint, &point)) {
+			return true;
+		}
+	} else if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
+		const SDL_Point point = { .x = event->tfinger.x, .y = event->tfinger.y };
+		if ($(self, containsPoint, &point)) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+
+/**
  * @brief ArrayEnumerator for draw recursion.
  */
 static _Bool draw_recurse(const Array *array, ident obj, ident data) {
@@ -292,22 +325,18 @@ static SDL_Rect renderFrame(const View *self) {
 }
 
 /**
- * @fn _Bool View::respondToEvent(View *self, const SDL_Event *event)
+ * @fn void View::respondToEvent(View *self, const SDL_Event *event)
  *
  * @memberof View
  */
-static _Bool respondToEvent(View *self, const SDL_Event *event) {
+static void respondToEvent(View *self, const SDL_Event *event) {
 	
 	Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
 		
-		View *view = (View *) $(subviews, objectAtIndex, i);
-		if ($(view, respondToEvent, event)) {
-			return true;
-		}
+		View *subview = (View *) $(subviews, objectAtIndex, i);
+		$(subview, respondToEvent, event);
 	}
-	
-	return false;
 }
 
 /**
@@ -358,27 +387,24 @@ static void sizeToFit(View *self) {
  */
 static void initialize(Class *clazz) {
 
-	ObjectInterface *object = (ObjectInterface *) clazz->interface;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	object->dealloc = dealloc;
-
-	ViewInterface *view = (ViewInterface *) clazz->interface;
-
-	view->addSubview = addSubview;
-	view->bounds = bounds;
-	view->containsPoint = containsPoint;
-	view->draw = draw;
-	view->initWithFrame = initWithFrame;
-	view->isDescendantOfView = isDescendantOfView;
-	view->layoutIfNeeded = layoutIfNeeded;
-	view->layoutSubviews = layoutSubviews;
-	view->removeFromSuperview = removeFromSuperview;
-	view->removeSubview = removeSubview;
-	view->render = render;
-	view->renderFrame = renderFrame;
-	view->respondToEvent = respondToEvent;
-	view->sizeThatFits = sizeThatFits;
-	view->sizeToFit = sizeToFit;
+	((ViewInterface *) clazz->interface)->addSubview = addSubview;
+	((ViewInterface *) clazz->interface)->bounds = bounds;
+	((ViewInterface *) clazz->interface)->containsPoint = containsPoint;
+	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
+	((ViewInterface *) clazz->interface)->draw = draw;
+	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
+	((ViewInterface *) clazz->interface)->layoutIfNeeded = layoutIfNeeded;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->removeFromSuperview = removeFromSuperview;
+	((ViewInterface *) clazz->interface)->removeSubview = removeSubview;
+	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->renderFrame = renderFrame;
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 }
 
 Class _View = {

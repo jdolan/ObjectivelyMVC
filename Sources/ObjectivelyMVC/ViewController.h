@@ -153,11 +153,9 @@ struct ViewControllerInterface {
 	 *
 	 * @param event The SDL_Event.
 	 *
-	 * @return True if the event was responded to, false otherwise.
-	 *
 	 * @memberof ViewController
 	 */
-	_Bool (*respondToEvent)(ViewController *self, SDL_Event *event);
+	void (*respondToEvent)(ViewController *self, SDL_Event *event);
 	
 	/**
 	 * @fn ViewController *ViewController::rootViewController(const ViewController *self)

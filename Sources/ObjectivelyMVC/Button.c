@@ -53,47 +53,41 @@ static void layoutSubviews(View *self) {
 	super(View, self, layoutSubviews);
 }
 
+#pragma mark - Control
+
 /**
- * @see View::respondToEvent(View *, const SDL_Event *)
+ * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool respondToEvent(View *self, const SDL_Event *event) {
-	
-	Control *this = (Control *) self;
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+		
 		if (event->type == SDL_MOUSEBUTTONUP) {
-			this->state &= ~ControlStateSelected;
-			if (this->style == ControlStyleDefault) {
-				this->bevel = BevelTypeOutset;
+			self->state &= ~ControlStateSelected;
+			if (self->style == ControlStyleDefault) {
+				self->bevel = BevelTypeOutset;
 			}
 		}
-		const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-		if ($(self, containsPoint, &point)) {
-			
+		
+		if ($((View *) self, didReceiveEvent, event)) {
 			if (event->type == SDL_MOUSEBUTTONDOWN) {
-				this->state |= ControlStateSelected;
-				if (this->style == ControlStyleDefault) {
-					this->bevel = BevelTypeInset;
+				self->state |= ControlStateSelected;
+				if (self->style == ControlStyleDefault) {
+					self->bevel = BevelTypeInset;
 				}
 			}
-			
-			const Action *action = $(this, actionForEvent, event);
-			if (action) {
-				action->function(self, event, action->data);
-			}
-			
 			return true;
 		}
-	} else  if (event->type == SDL_MOUSEMOTION) {
-		const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
-		if ($(self, containsPoint, &point)) {
-			this->state |= ControlStateHighlighted;
+	} else if (event->type == SDL_MOUSEMOTION) {
+		
+		if ($((View *) self, didReceiveEvent, event)) {
+			self->state |= ControlStateHighlighted;
 		} else {
-			this->state &= ~ControlStateHighlighted;
+			self->state &= ~ControlStateHighlighted;
 		}
 	}
 	
-	return super(View, self, respondToEvent, event);
+	return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - Button
@@ -135,7 +129,8 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
 	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }

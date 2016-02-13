@@ -53,7 +53,7 @@ typedef enum {
 	ViewAutoresizingNone = 0,
 	ViewAutoresizingWidth = 0x1,
 	ViewAutoresizingHeight = 0x2,
-	ViewAutoResizingFill = 0x3,
+	ViewAutoresizingFill = 0x3,
 } ViewAutoresizing;
 
 typedef struct View View;
@@ -171,6 +171,17 @@ struct ViewInterface {
 	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
 	
 	/**
+	 * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
+	 *
+	 * @param event The event.
+	 *
+	 * @return True if this View received the event, false otherwise.
+	 *
+	 * @memberof View
+	 */
+	_Bool (*didReceiveEvent)(const View *self, const SDL_Event *event);
+	
+	/**
 	 * @fn void View::draw(View *self, SDL_Renderer *renderer)
 	 *
 	 * @brief Draws this View.
@@ -267,17 +278,15 @@ struct ViewInterface {
 	SDL_Rect (*renderFrame)(const View *self);
 	
 	/**
-	 * @fn _Bool View:respondToEvent(View *self, SDL_Event *event)
+	 * @fn void View:respondToEvent(View *self, SDL_Event *event)
 	 *
 	 * @brief Responds to the given event.
 	 *
 	 * @param event The SDL_Event.
 	 *
-	 * @return True if the event was responded to, false otherwise.
-	 *
 	 * @memberof View
 	 */
-	_Bool (*respondToEvent)(View *self, const SDL_Event *event);
+	void (*respondToEvent)(View *self, const SDL_Event *event);
 	
 	/**
 	 * @fn void View::sizeThatFits(const View *self, int *w, int *h)
