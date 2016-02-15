@@ -48,6 +48,22 @@ ObjectivelyMVC provides a robust set of containers, views and form elements. Sta
 $((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_data);
 ```
 
+```c
+Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
+...
+select->delegate.didSelectOption = my_callback;
+```
+
+Examples
+===
+
+### HelloViewController
+An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu:
+![Screenshot](http://i.imgur.com/kZOuo7Q.png)
+ * [Hello.c](../blob/master/Examples/Hello.c) - The application source code
+ * [HelloViewController.h](../blob/master/Examples/HelloViewController.h) - The `HelloViewController` header.
+ * [HelloViewController.c](../blob/master/Examples/HelloViewController.c) - The `HelloViewController` source code. 
+
 Dependencies
 ---
  * [Objectively](https://github.com/jdolan/Objectively)
