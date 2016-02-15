@@ -59,7 +59,9 @@ Examples
 
 ### HelloViewController
 An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu:
+
 ![Screenshot](http://i.imgur.com/kZOuo7Q.png)
+
  * [Hello.c](Examples/Hello.c) - The application source code
  * [HelloViewController.h](Examples/HelloViewController.h) - The `HelloViewController` header.
  * [HelloViewController.c](Examples/HelloViewController.c) - The `HelloViewController` source code. 
