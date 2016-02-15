@@ -126,7 +126,6 @@ static long getCurrentTime(void) {
  */
 static void drawScene(void) {
 	
-	glDisable(GL_TEXTURE_2D);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	
@@ -146,8 +145,12 @@ static void drawScene(void) {
 	color[(time / 1000) % 3] = 1.0;
 	
 	glColor3fv(color);
+	glDisable(GL_BLEND);
+	
 	glutWireTeapot(1.0);
-	glColor3b(255, 255, 255);
+	
+	glEnable(GL_BLEND);
+	glColor3d(1.0, 1.0, 1.0);
 	
 	glPopMatrix();
 	
