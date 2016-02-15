@@ -20,7 +20,7 @@ ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively),
 
 ### Easily embeddable in any SDL2 / OpenGL application
 
-ObjectivelyMVC is purpose-built for video games. Unlike Gtk+, Qt, wxWidgets, FLTK, ..ObjectivelyMVC *does not hijack the main loop*. ObjectivelyMVC does not create a window, manage an OpenGL context, or originate events. Your game engine already does that, because it must. Like your mother, ObjectivelyMVC only asks that you give it a call once in a while. That's it.
+ObjectivelyMVC is purpose-built for video games. Unlike Gtk+, Qt, wxWidgets, FLTK, ..ObjectivelyMVC **does not hijack the main loop**. ObjectivelyMVC does not create a window, manage an OpenGL context, or originate events. Your game already does that, because it has to. Like your mother, ObjectivelyMVC only asks that you give it a call once in a while. That's it.
 
 ```c
     $(vc, respondToEvent, &event);
@@ -30,18 +30,29 @@ ObjectivelyMVC is purpose-built for video games. Unlike Gtk+, Qt, wxWidgets, FLT
 
 ### Beautiful, discoverable TrueType fonts
 
-ObjectivelyMVC uses [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) and [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) to discover and render the TrueType fonts that are available on your system, not that you need to know. It also automatically detects High-DPI (Retina, 4K) displays, and scales fonts accordingly.
+ObjectivelyMVC uses [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) and [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) to discover and render the TrueType fonts that are available on your system, not that you need to know. It also automatically detects High-DPI (Retina, 4K) displays, and scales fonts accordingly. The result is crisp, beautiful vector-based fonts that look native, because they are.
 
 ```c
-Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0);
-SDL_Surface *surface = $(verdana, renderCharacters, "Hello world!", Colors.Charcoal);
-release(verdana);
+Array *fonts = $$(Font, allFonts);
+...
+release(fonts);
+...
+Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will render at 48pt on Retina displays
 ```
+
+### Full suite of Views and Controls
+
+ObjectivelyMVC provides a robust set of containers, views and form elements. Stack and arrange components with `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, editable `TextViews` and more by simply instantiating them. Bind `Actions` to `SDL_Event` types on each element, or use the specialized _delegate_ callbacks for convenience.
+
+```c
+$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_data);
+```
+
 Dependencies
 ---
- * fontconfig
- * SDL2
- * SDL2_image
- * SDL2_ttf
  * [Objectively](https://github.com/jdolan/Objectively)
+ * [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
+ * [SDL2](https://www.libsdl.org/)
+ * [SDL2_image](https://www.libsdl.org/projects/SDL_image/)
+ * [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 
