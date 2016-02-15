@@ -27,56 +27,32 @@
 
 #define _Class _Label
 
-#pragma mark - ObjectInterface
+#pragma mark - Object
 
 /**
- * @see ObjectInterface::dealloc(Object *)
+ * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-
+	
 	Label *this = (Label *) self;
 	
-	release(this->font);
+	release(this->text);
 	
-	free(this->text);
-
-	SDL_DestroyTexture(this->texture);
-
 	super(Object, self, dealloc);
 }
 
 #pragma mark - View
 
 /**
- * @see View::render(View *, SDL_Renderer *)
- */
-static void render(View *self, SDL_Renderer *renderer) {
-
-	super(View, self, render, renderer);
-
-	Label *this = (Label *) self;
-	
-	if (this->text && strlen(this->text)) {
-		
-		if (this->texture == NULL) {
-			SDL_Surface *surface = $(this->font, renderCharacters, this->text, this->color);
-			this->texture = SDL_CreateTextureFromSurface(renderer, surface);
-			SDL_FreeSurface(surface);
-		}
-		
-		assert(this->texture);
-		
-		SDL_Rect frame = $(self, renderFrame);
-		SDL_RenderCopy(renderer, this->texture, NULL, &frame);
-	}
-}
-
-/**
  * @see View::sizeThatFits(View *, int *, int *)
  */
 static void sizeThatFits(const View *self, int *w, int *h) {
 	
-	$((Label *) self, naturalSize, w, h);
+	const Label *this = (Label *) self;
+	$((View *) this->text, sizeThatFits, w, h);
+	
+	w += self->padding.left + self->padding.right;
+	h += self->padding.top + self->padding.bottom;
 }
 
 #pragma mark - Label
@@ -87,78 +63,18 @@ static void sizeThatFits(const View *self, int *w, int *h) {
  * @memberof Label
  */
 static Label *initWithText(Label *self, const char *text, Font *font) {
-
+	
 	self = (Label *) super(View, self, initWithFrame, NULL);
 	if (self) {
-
-		self->color = Colors.ForegroundColor;
-		self->view.backgroundColor = Colors.Clear;
-
-		$(self, setFont, font);
-		$(self, setText, text);
+		
+		self->text = $(alloc(Text), initWithText, text, font);
+		assert(self->text);
+		
+		$((View *) self, addSubview, (View *) self->text);
+		$((View *) self, sizeToFit);
 	}
-
+	
 	return self;
-}
-
-/**
- * @fn void Label::naturalSize(const Label *self, int *width, int *height)
- *
- * @memberof Label
- */
-static void naturalSize(const Label *self, int *width, int *height) {
-	
-	if (self->font && self->text) {
-		TTF_SizeUTF8(self->font->font, self->text, width, height);
-	} else {
-		*width = *height = 0;
-	}
-}
-
-/**
- * @fn void Label::setFont(Label *self, Font *font)
- *
- * @memberof Label
- */
-static void setFont(Label *self, Font *font) {
-	
-	if (font == NULL) {
-		font = $$(Font, defaultFont);
-	}
-	
-	if (font != self->font) {
-		
-		release(self->font);
-		self->font = retain(font);
-		
-		if (self->texture) {
-			SDL_DestroyTexture(self->texture);
-			self->texture = NULL;
-		}
-	}
-}
-
-/**
- * @fn void Label::setText(Label *self, const char *text)
- *
- * @memberof Label
- */
-static void setText(Label *self, const char *text) {
-
-	free(self->text);
-
-	if (text) {
-		self->text = strdup(text);
-	} else {
-		self->text = NULL;
-	}
-	
-	if (self->texture) {
-		SDL_DestroyTexture(self->texture);
-		self->texture = NULL;
-	}
-	
-	$((View *) self, sizeToFit);
 }
 
 #pragma mark - Class lifecycle
@@ -166,17 +82,13 @@ static void setText(Label *self, const char *text) {
 /**
  * @see Class::initialize(Class *)
  */
-static void initialize(Class *self) {
-
-	((ObjectInterface *) self->interface)->dealloc = dealloc;
-
-	((ViewInterface *) self->interface)->render = render;
-	((ViewInterface *) self->interface)->sizeThatFits = sizeThatFits;
-
-	((LabelInterface *) self->interface)->initWithText = initWithText;
-	((LabelInterface *) self->interface)->naturalSize = naturalSize;
-	((LabelInterface *) self->interface)->setFont = setFont;
-	((LabelInterface *) self->interface)->setText = setText;
+static void initialize(Class *clazz) {
+	
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	
+	((LabelInterface *) clazz->interface)->initWithText = initWithText;
 }
 
 Class _Label = {
@@ -189,3 +101,4 @@ Class _Label = {
 };
 
 #undef _Class
+

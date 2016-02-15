@@ -114,7 +114,7 @@ struct TextView {
 	/**
 	 * @brief The text.
 	 */
-	Label *text;
+	Text *text;
 };
 
 /**

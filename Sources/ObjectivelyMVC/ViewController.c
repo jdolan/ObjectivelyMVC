@@ -34,7 +34,11 @@
  */
 static void dealloc(Object *self) {
 
-	//..
+	ViewController *this = (ViewController *) self;
+	
+	release(this->childViewControllers);
+	
+	release(this->view);
 
 	super(Object, self, dealloc);
 }
@@ -100,6 +104,8 @@ static ViewController *initRootViewController(ViewController *self, SDL_Window *
 			);
 		}
 		assert(self->window);
+		
+		ViewWindowUsesHighDPI = SDL_GetWindowFlags(self->window) & SDL_WINDOW_ALLOW_HIGHDPI;
 		
 		$(self, loadView);
 		assert(self->view);

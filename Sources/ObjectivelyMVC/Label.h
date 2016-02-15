@@ -24,13 +24,12 @@
 #ifndef _ObjectivelyMVC_Label_h_
 #define _ObjectivelyMVC_Label_h_
 
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/Text.h>
 
 /**
  * @file
  *
- * @brief Labels rendered with TrueType fonts.
+ * @brief ..
  */
 
 typedef struct Label Label;
@@ -40,16 +39,18 @@ typedef struct LabelInterface LabelInterface;
  * @brief The Label type.
  *
  * @extends View
+ *
+ * @ingroup
  */
 struct Label {
-
+	
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
 	View view;
-
+	
 	/**
 	 * @brief The typed interface.
 	 *
@@ -58,93 +59,40 @@ struct Label {
 	LabelInterface *interface;
 	
 	/**
-	 * @brief The text color.
+	 * @brief The Label Text.
 	 */
-	SDL_Color color;
-
-	/**
-	 * @brief The Font.
-	 *
-	 * @remarks Do not set this property directly.
-	 *
-	 * @see Label::setFont(Label *, Font *)
-	 */
-	Font *font;
-
-	/**
-	 * @brief The text.
-	 *
-	 * @remarks Do not set this property directly.
-	 *
-	 * @see Label::setText(Label *, const char *)
-	 */
-	char *text;
-
-	/**
-	 * @brief The rendered texture.
-	 *
-	 * @private
-	 */
-	SDL_Texture *texture;
+	Text *text;
 };
 
 /**
  * @brief The Label interface.
  */
 struct LabelInterface {
-
+	
 	/**
 	 * @brief The parent interface.
 	 */
 	ViewInterface viewInterface;
-
+	
 	/**
 	 * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
 	 *
+	 * @brief Initializes this Label with the given text and Font.
+	 *
 	 * @param text The text.
-	 * @param font The Font (optional).
+	 * @param font The Font.
 	 *
 	 * @return The initialized Label, or `NULL` on error.
 	 *
 	 * @memberof Label
 	 */
 	Label *(*initWithText)(Label *self, const char *text, Font *font);
-	
-	/**
-	 * @fn void Label::naturalSize(const Label *self, int *width, int *height)
-	 *
-	 * @brief Resolves the rendered size of this Label.
-	 *
-	 * @param width The rendered width.
-	 * @param height The rendered height.
-	 *
-	 * @memberof Label
-	 */
-	void (*naturalSize)(const Label *self, int *width, int *height);
-
-	/**
-	 * @fn void Label::setFont(Label *self, Font *font)
-	 *
-	 * @brief Sets this Label's font.
-	 *
-	 * @param font The Font to set.
-	 *
-	 * @memberof Label
-	 */
-	void (*setFont)(Label *self, Font *font);
-	
-	/**
-	 * @fn void Label::setText(Label *self, const char *text)
-	 *
-	 * @brief Sets this Label's text.
-	 *
-	 * @param text The text to set.
-	 *
-	 * @memberof Label
-	 */
-	void (*setText)(Label *self, const char *text);
 };
 
+/**
+ * @brief The Label Class.
+ */
 extern Class _Label;
 
-#endif
+#endif /* _ObjectivelyMVC_Label_h_ */
+

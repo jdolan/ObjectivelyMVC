@@ -160,6 +160,8 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	if (this->state != state) {
 		$(this, stateDidChange);
 	}
+	
+	super(View, self, respondToEvent, event);
 }
 
 #pragma mark - Control

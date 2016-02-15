@@ -27,7 +27,7 @@
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Action.h>
-#include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/Text.h>
 
 /**
  * @file
@@ -63,7 +63,7 @@ typedef enum {
 	ControlStyleCustom,
 } ControlStyle;
 
-#define DEFAULT_CONTROL_HEIGHT 32
+#define DEFAULT_CONTROL_HEIGHT 30
 #define DEFAULT_CONTROL_PADDING 8
 
 typedef struct Control Control;

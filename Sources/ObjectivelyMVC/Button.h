@@ -61,7 +61,7 @@ struct Button {
 	/**
 	 * @brief The title.
 	 */
-	Label *title;
+	Text *title;
 };
 
 /**

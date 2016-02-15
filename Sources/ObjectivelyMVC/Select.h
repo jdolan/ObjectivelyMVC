@@ -26,6 +26,7 @@
 
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Option.h>
+#include <ObjectivelyMVC/StackView.h>
 
 /**
  * @file
@@ -51,7 +52,7 @@ struct SelectDelegate {
 	 * @param select The Select.
 	 * @param option The selected Option.
 	 */
-	void (*didSelect)(Select *select, Option *option);
+	void (*didSelectOption)(Select *select, Option *option);
 };
 
 /**
@@ -76,6 +77,30 @@ struct Select {
 	 * @private
 	 */
 	SelectInterface *interface;
+	
+	/**
+	 * @brief The SelectDelegate.
+	 */
+	SelectDelegate delegate;
+	
+	/**
+	 * @brief The Select Options.
+	 *
+	 * @private
+	 */
+	MutableArray *options;
+	
+	/**
+	 * @brief The selected Option, or `NULL`.
+	 */
+	Option *selectedOption;
+	
+	/**
+	 * @brief The StackView for rendering all Options.
+	 *
+	 * @private
+	 */
+	StackView *stackView;
 };
 
 /**
@@ -89,17 +114,17 @@ struct SelectInterface {
 	ControlInterface controlInterface;
 	
 	/**
-	 * @fn void Select::addOption(Select *self, const char *text, ident value)
+	 * @fn void Select::addOption(Select *self, const char *title, Font *font, ident value)
 	 *
 	 * @brief Creates and adds a new Option to this Select.
 	 *
-	 * @param value The Option value.
-	 * @param text The Option text.
+	 * @param title The Option title.
 	 * @param font The Option Font.
+	 * @param value The Option value.
 	 *
 	 * @memberof Select
 	 */
-	void (*addOption)(Select *self, ident value, const char *text, Font *font);
+	void (*addOption)(Select *self, const char *title, Font *font, ident value);
 	
 	/**
 	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
@@ -116,26 +141,37 @@ struct SelectInterface {
 	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame, ControlStyle style);
 	
 	/**
-	 * @fn Array *Select::options(const Select *self)
+	 * @fn Option *Select::optionWithValue(const Select *self, ident value)
 	 *
-	 * @return The Array of Options added to this Select.
+	 * @param value The Option value.
+	 *
+	 * @return The first Option with the given value.
 	 *
 	 * @memberof Select
 	 */
-	Array *(*options)(const Select *self);
+	Option *(*optionWithValue)(const Select *self, ident value);
 	
 	/**
-	 * @fn void Select::removeOptionWithValue(Select *self, const ident value)
+	 * @fn void Select::removeOptionWithValue(Select *self, ident value)
 	 *
 	 * @brief Removes first the Option with the given value.
 	 *
-	 * @param value The Option value to remove.
+	 * @param value The Option value.
 	 *
 	 * @memberof Select
 	 */
-	void (*removeOptionWithValue)(Select *self, const ident value);
+	void (*removeOptionWithValue)(Select *self, ident value);
 	
-	void (*selectOptionWithValue)(Select *self, const ident value);
+	/**
+	 * @fn void Select::selectOptionWithValue(Select *self, ident value)
+	 *
+	 * @brief Selects the first Option with the given value.
+	 *
+	 * @param value The Option value.
+	 *
+	 * @memberof Select
+	 */
+	void (*selectOptionWithValue)(Select *self, ident value);
 	
 	/**
 	 * @fn Option *Select::selectedOption(const Select *self)

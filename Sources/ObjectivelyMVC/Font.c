@@ -28,6 +28,7 @@
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _Font
 
@@ -94,7 +95,7 @@ static Font *defaultFont(void) {
 	static Once once;
 
 	DispatchOnce(once, {
-		_defaultFont = $(alloc(Font), initWithName, DEFAULT_FONT_FAMILY);
+		_defaultFont = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 12, 0);
 	});
 
 	return _defaultFont;
@@ -154,7 +155,12 @@ static Font *initWithAttributes(Font *self, const char *family, int ptsize, int 
 		FcPattern *pattern = FcPatternCreate();
 		
 		FcPatternAddString(pattern, FC_FAMILY, (FcChar8 *) family);
-		FcPatternAddDouble(pattern, FC_SIZE, (double) ptsize);
+		
+		if (ViewWindowUsesHighDPI) {
+			FcPatternAddDouble(pattern, FC_SIZE, (double) ptsize * 2.0);
+		} else {
+			FcPatternAddDouble(pattern, FC_SIZE, (double) ptsize);
+		}
 		
 		if (style & TTF_STYLE_BOLD) {
 			if (style & TTF_STYLE_ITALIC) {
@@ -219,7 +225,13 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
  * @memberof Font
  */
 static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
+	
 	TTF_SizeUTF8(self->font, chars, w, h);
+	
+	if (ViewWindowUsesHighDPI) {
+		*w *= 0.5;
+		*h *= 0.5;
+	}
 }
 
 #pragma mark - Class lifecycle

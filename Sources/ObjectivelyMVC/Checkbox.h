@@ -26,7 +26,7 @@
 
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/ImageView.h>
-#include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/Text.h>
 
 /**
  * @file

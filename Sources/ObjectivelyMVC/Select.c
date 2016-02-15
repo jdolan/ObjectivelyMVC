@@ -25,10 +25,26 @@
 
 #include <Objectively/Array.h>
 
-#include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/Select.h>
 
 #define _Class _Select
+
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+	
+	Select *this = (Select *) self;
+	
+	release(this->options);
+	
+	release(this->stackView);
+	
+	super(Object, self, dealloc);
+}
 
 #pragma mark - View
 
@@ -38,33 +54,69 @@
 static void layoutSubviews(View *self) {
 	
 	Select *this = (Select *) self;
-	Array *options = $(this, options);
-
-	const View *selected = (View *) $(this, selectedOption) ?: $(options, firstObject);
 	
-	self->frame.h = DEFAULT_CONTROL_HEIGHT;
-	int pos = 0;
-
+	int requestedSize = 0;
+	
+	const Array *options = (Array *) this->options;
 	for (size_t i = 0; i < options->count; i++) {
 		
 		View *option = $(options, objectAtIndex, i);
-		if (option == selected) {
+		if ((Option *) option == this->selectedOption) {
 			option->hidden = false;
 		} else {
 			option->hidden = this->control.state != ControlStateHighlighted;
 		}
 		
-		if (option->hidden) {
-			option->frame.y = 0;
-		} else {
-			option->frame.y = pos;
-			pos += option->frame.h;
+		if (option->hidden == false) {
+			requestedSize += option->frame.h;
+			
+			if (this->control.state == ControlStateHighlighted) {
+				if ((Option *) option == this->selectedOption) {
+					option->backgroundColor = Colors.SelectedColor;
+				} else {
+					option->backgroundColor = Colors.HighlightedColor;
+				}
+			} else {
+				option->backgroundColor = Colors.BackgroundColor;
+			}
 		}
 	}
 	
-	release(options);
+	this->stackView->view.frame.h = requestedSize;
+	this->stackView->view.needsLayout = true;
 	
-	$(self, sizeToFit);
+	if (this->control.state == ControlStateHighlighted) {
+		this->stackView->view.borderWidth = 1;
+	} else {
+		this->stackView->view.borderWidth = 0;
+	}
+	
+	super(View, self, layoutSubviews);
+}
+
+/**
+ * @see View::sizeToFit(View *)
+ */
+static void sizeToFit(View *self) {
+	
+	super(View, self, sizeToFit);
+	
+	const Select *this = (Select *) self;
+	
+	const Array *options = (Array *) this->options;
+	for (size_t i = 0; i < options->count; i++) {
+		
+		View *option = (View *) $(options, objectAtIndex, i);
+		
+		int w, h;
+		$(option, sizeThatFits, &w, &h);
+		
+		w += self->padding.left + self->padding.right + 2 * DEFAULT_OPTION_PADDING;
+		
+		if (w > self->frame.w) {
+			self->frame.w = w;
+		}
+	}
 }
 
 #pragma mark - Control
@@ -74,12 +126,44 @@ static void layoutSubviews(View *self) {
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	
+	Select *this = (Select *) self;
+	
 	if (event->type == SDL_MOUSEBUTTONUP) {
-		if ($((View *) self, didReceiveEvent, event)) {
+		if (self->state == ControlStateHighlighted) {
+			self->state &= ~ControlStateHighlighted;
+
+			const Array *options = (Array *) this->options;
+			for (size_t i = 0; i < options->count; i++) {
+				
+				Option *option = $(options, objectAtIndex, i);
+				if ($((View *) option, didReceiveEvent, event)) {
+					this->selectedOption = option;
+					if (this->delegate.didSelectOption) {
+						this->delegate.didSelectOption(this, option);
+					}
+					return true;
+				}
+			}
+		} else if ($((View *) self, didReceiveEvent, event)) {
 			self->state |= ControlStateHighlighted;
 			return true;
 		}
-		self->state &= ~ControlStateHighlighted;
+	}
+	
+	else if (event->type == SDL_MOUSEMOTION) {
+		if (this->control.state == ControlStateHighlighted) {
+			
+			const Array *options = (Array *) this->options;
+			for (size_t i = 0; i < options->count; i++) {
+				
+				View *option = $(options, objectAtIndex, i);
+				if ($(option, didReceiveEvent, event)) {
+					option->backgroundColor = Colors.SelectedColor;
+				} else {
+					option->backgroundColor = Colors.HighlightedColor;
+				}
+			}
+		}
 	}
 	
 	return super(Control, self, captureEvent, event);
@@ -93,31 +177,29 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 static void stateDidChange(Control *self) {
 	
 	((View *) self)->needsLayout = true;
-	
+
 	super(Control, self, stateDidChange);
 }
 
 #pragma mark - Select
 
 /**
- * @fn void Select::addOption(Select *self, ident value, const char *text, Font *font)
+ * @fn void Select::addOption(Select *self, const char *title, Font *font, ident value)
  *
  * @memberof Select
  */
-static void addOption(Select *self, ident value, const char *text, Font *font) {
+static void addOption(Select *self, const char *title, Font *font, ident value) {
 	
-	View *option = (View *) $(alloc(Option), initWithValue, value, text, font);
+	Option *option = $(alloc(Option), initWithTitle, title, font, value);
 	assert(option);
 	
-	if (self->control.style == ControlStyleDefault) {
-		const int padding = DEFAULT_OPTION_HEIGHT - option->frame.h;
-		if (padding > 0) {
-			option->padding.top = option->padding.bottom = padding * 0.5;
-		}
-		option->borderWidth = 1;
+	$(self->options, addObject, option);
+	$((View *) self->stackView, addSubview, (View *) option);
+	
+	if (self->selectedOption == NULL) {
+		self->selectedOption = option;
 	}
 	
-	$((View *) self, addSubview, option);
 	release(option);
 }
 
@@ -131,6 +213,18 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 	self = (Select *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 		
+		self->options = $$(MutableArray, array);
+		assert(self->options);
+		
+		self->stackView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->stackView);
+		
+		$((View *) self, addSubview, (View *) self->stackView);
+		
+		self->stackView->view.alignment = ViewAlignmentMiddleLeft;
+		self->stackView->view.autoresizingMask = ViewAutoresizingWidth;
+		self->stackView->view.borderWidth = 1;
+		
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = BevelTypeOutset;
 			
@@ -138,70 +232,55 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;
 			}
 		}
+		
+		self->stackView->view.borderColor = Colors.Silver;
 	}
 	
 	return self;
 }
 
 /**
- * @brief ArrayEnumerator for filtering Options from subviews.
+ * @brief Predicate function for optionWithValue.
  */
-static _Bool options_filter(const Array *array, ident obj, ident data) {
-	return $((Object *) obj, isKindOfClass, &_Option);
+static _Bool optionWithValue_predicate(ident obj, ident data) {
+	return ((Option *) obj)->value == data;
 }
 
 /**
- * @fn Array *Select::options(const Select *self)
+ * @fn Option *Select::optionWithValue(const Select *self, ident value)
  *
  * @memberof Select
  */
-static Array *options(const Select *self) {
-	
-	const Array *subviews = (Array *) ((View *) self)->subviews;
-	
-	return $(subviews, filterObjects, options_filter, NULL);
+static Option *optionWithValue(const Select *self, const ident value) {
+	return $((Array *) self->options, findObject, optionWithValue_predicate, value);
 }
 
 /**
- * @fn void Select::removeOptionWithValue(Select *self, const ident value)
+ * @fn void Select::removeOptionWithValue(Select *self, ident value)
  *
  * @memberof Select
  */
-static void removeOptionWithValue(Select *self, const ident value) {
+static void removeOptionWithValue(Select *self, ident value) {
 	
-	Array *options = $(self, options);
-	
-	for (size_t i = 0; i < options->count; i++) {
-		View *option = $(options, objectAtIndex, i);
-		if (((Option *) option)->value == value) {
-			$(option, removeFromSuperview);
-			break;
+	View *option = (View *) $(self, optionWithValue, value);
+	if (option) {
+		
+		$(self->options, removeObject, option);
+		if ((Option *) option == self->selectedOption) {
+			self->selectedOption = $((Array *) self->options, firstObject);
 		}
+		
+		$(option, removeFromSuperview);
 	}
-	
-	release(options);
 }
 
 /**
- * @fn Option *Select::selectedOption(const Select *self)
+ * @fn void Select::selectOptionWithValue(Select *self, ident value)
  *
  * @memberof Select
  */
-static Option *selectedOption(const Select *self) {
-	
-	Option *selected = NULL;
-	Array *options = $(self, options);
-	
-	for (size_t i = 0; i < options->count; i++) {
-		Option *option = $(options, objectAtIndex, i);
-		if (option->selected) {
-			selected = option;
-			break;
-		}
-	}
-	
-	release(options);
-	return selected;
+static void selectOptionWithValue(Select *self, ident value) {
+	self->selectedOption = $(self, optionWithValue, value);
 }
 
 #pragma mark - Class lifecycle
@@ -211,16 +290,19 @@ static Option *selectedOption(const Select *self) {
  */
 static void initialize(Class *clazz) {
 	
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
 	
 	((SelectInterface *) clazz->interface)->addOption = addOption;
 	((SelectInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((SelectInterface *) clazz->interface)->options = options;
+	((SelectInterface *) clazz->interface)->optionWithValue = optionWithValue;
 	((SelectInterface *) clazz->interface)->removeOptionWithValue = removeOptionWithValue;
-	((SelectInterface *) clazz->interface)->selectedOption = selectedOption;
+	((SelectInterface *) clazz->interface)->selectOptionWithValue = selectOptionWithValue;
 }
 
 Class _Select = {

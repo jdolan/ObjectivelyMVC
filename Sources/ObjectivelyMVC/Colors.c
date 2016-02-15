@@ -27,6 +27,8 @@ const struct _Colors Colors = {
 	
 	.BackgroundColor = { 128, 128, 128, 200 },
 	.ForegroundColor = { 255, 255, 255, 255 },
+	.HighlightedColor = { 105, 105, 105, 255 },
+	.SelectedColor = { 48, 48, 48, 255 },
 	
 	.Clear = { 255, 255, 255, 0 },
 	

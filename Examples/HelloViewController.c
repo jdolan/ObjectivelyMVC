@@ -48,6 +48,7 @@ static void loadView(ViewController *self) {
 	self->view->frame.x = 50, self->view->frame.y = 50;
 	self->view->frame.w = 420, self->view->frame.h = 240;
 	self->view->backgroundColor.a = 128;
+	self->view->borderWidth = 1;
 	
 	StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
 	stackView->view.autoresizingMask = ViewAutoresizingFill;
@@ -81,9 +82,10 @@ static void loadView(ViewController *self) {
 	$((View *) stackView, addSubview, (View *) checkboxStackView);
 	
 	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
-	$(select, addOption, (ident) 1, "This is a select", NULL);
-	$(select, addOption, (ident) 2, "This is an option", NULL);
-	$(select, addOption, (ident) 3, "This is another", NULL);
+	$(select, addOption, "This is a select", NULL, (ident) 1);
+	$(select, addOption, "This is an option", NULL, (ident) 2);
+	$(select, addOption, "This is another", NULL, (ident) 3);
+	$((View *) select, sizeToFit);
 	
 	$((View *) stackView, addSubview, (View *) select);
 	

@@ -7,17 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE0AD0951C6F6568003E3CF7 /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0931C6F6568003E3CF7 /* Label.c */; };
+		CE0AD0961C6F6568003E3CF7 /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0941C6F6568003E3CF7 /* Label.h */; };
 		CE12D4301C4C389300CD0B13 /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
 		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
-		CE12D43F1C4C38B500CD0B13 /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40D1C4C367100CD0B13 /* Label.c */; };
+		CE12D43F1C4C38B500CD0B13 /* Text.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40D1C4C367100CD0B13 /* Text.c */; };
 		CE12D4401C4C38B500CD0B13 /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4231C4C367100CD0B13 /* View.c */; };
 		CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4251C4C367100CD0B13 /* ViewController.c */; };
 		CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4081C4C367100CD0B13 /* Colors.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4431C4C38C700CD0B13 /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40A1C4C367100CD0B13 /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40C1C4C367100CD0B13 /* ImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4451C4C38C700CD0B13 /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40E1C4C367100CD0B13 /* Label.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4451C4C38C700CD0B13 /* Text.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40E1C4C367100CD0B13 /* Text.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4461C4C38C700CD0B13 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4241C4C367100CD0B13 /* View.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -101,14 +103,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CE0AD0931C6F6568003E3CF7 /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
+		CE0AD0941C6F6568003E3CF7 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
 		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
 		CE12D40A1C4C367100CD0B13 /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Font.h; sourceTree = "<group>"; };
 		CE12D40B1C4C367100CD0B13 /* ImageView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageView.c; sourceTree = "<group>"; };
 		CE12D40C1C4C367100CD0B13 /* ImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageView.h; sourceTree = "<group>"; };
-		CE12D40D1C4C367100CD0B13 /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
-		CE12D40E1C4C367100CD0B13 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
+		CE12D40D1C4C367100CD0B13 /* Text.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Text.c; sourceTree = "<group>"; };
+		CE12D40E1C4C367100CD0B13 /* Text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Text.h; sourceTree = "<group>"; };
 		CE12D4211C4C367100CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CE12D4231C4C367100CD0B13 /* View.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = View.c; sourceTree = "<group>"; };
 		CE12D4241C4C367100CD0B13 /* View.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = View.h; sourceTree = "<group>"; };
@@ -226,8 +230,8 @@
 				CE12D4811C4F3A1600CD0B13 /* Image.h */,
 				CE12D40B1C4C367100CD0B13 /* ImageView.c */,
 				CE12D40C1C4C367100CD0B13 /* ImageView.h */,
-				CE12D40D1C4C367100CD0B13 /* Label.c */,
-				CE12D40E1C4C367100CD0B13 /* Label.h */,
+				CE0AD0931C6F6568003E3CF7 /* Label.c */,
+				CE0AD0941C6F6568003E3CF7 /* Label.h */,
 				CE12D4651C4D587E00CD0B13 /* Log.h */,
 				CE14A8CE1C68CE3C00B576FB /* Option.c */,
 				CE14A8CF1C68CE3C00B576FB /* Option.h */,
@@ -235,6 +239,8 @@
 				CE14A8CB1C66D89900B576FB /* Select.h */,
 				CE12D4931C547BDD00CD0B13 /* StackView.c */,
 				CE12D4941C547BDD00CD0B13 /* StackView.h */,
+				CE12D40D1C4C367100CD0B13 /* Text.c */,
+				CE12D40E1C4C367100CD0B13 /* Text.h */,
 				CE12D49C1C568A7600CD0B13 /* TextView.c */,
 				CE12D49D1C568A7600CD0B13 /* TextView.h */,
 				CE12D4231C4C367100CD0B13 /* View.c */,
@@ -372,8 +378,9 @@
 				CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */,
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
+				CE0AD0961C6F6568003E3CF7 /* Label.h in Headers */,
 				CE12D4881C4FBAC200CD0B13 /* config.h in Headers */,
-				CE12D4451C4C38C700CD0B13 /* Label.h in Headers */,
+				CE12D4451C4C38C700CD0B13 /* Text.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
 				CE14A8CD1C66D89900B576FB /* Select.h in Headers */,
@@ -509,11 +516,12 @@
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,
+				CE0AD0951C6F6568003E3CF7 /* Label.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
-				CE12D43F1C4C38B500CD0B13 /* Label.c in Sources */,
+				CE12D43F1C4C38B500CD0B13 /* Text.c in Sources */,
 				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,
 				CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */,
 			);

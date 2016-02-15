@@ -40,11 +40,34 @@
  */
 
 /**
+ * @brief True if the application window uses a High-DPI display, false otherwise.
+ *
+ * @remarks This is used internally to control Font rendering, etc.
+ */
+extern _Bool ViewWindowUsesHighDPI;
+
+/**
  * @brief Padding: like bounds, but easier.
  */
 typedef struct {
 	int top, right, bottom, left;
 } Padding;
+
+/**
+ * @brief Alignment constants, used to align a View within its superview.
+ */
+typedef enum {
+	ViewAlignmentNone,
+	ViewAlignmentTopLeft,
+	ViewAlignmentTopCenter,
+	ViewAlignmentTopRight,
+	ViewAlignmentMiddleLeft,
+	ViewAlignmentMiddleCenter,
+	ViewAlignmentMiddleRight,
+	ViewAlignmentBottomLeft,
+	ViewAlignmentBottomCenter,
+	ViewAlignmentBottomRight
+} ViewAlignment;
 
 /**
  * @brief Auto-resizing constants, which are bitmasked.
@@ -77,6 +100,11 @@ struct View {
 	 * @private
 	 */
 	ViewInterface *interface;
+	
+	/**
+	 * @brief The alignment.
+	 */
+	ViewAlignment alignment;
 	
 	/**
 	 * @brief The ViewAutoresizing bitmask.
@@ -278,7 +306,7 @@ struct ViewInterface {
 	SDL_Rect (*renderFrame)(const View *self);
 	
 	/**
-	 * @fn void View:respondToEvent(View *self, SDL_Event *event)
+	 * @fn void View:respondToEvent(View *self, const SDL_Event *event)
 	 *
 	 * @brief Responds to the given event.
 	 *

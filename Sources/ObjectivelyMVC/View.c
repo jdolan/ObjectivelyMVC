@@ -9,7 +9,7 @@
  * Permission is granted to anyone to use this software for any purpose,
  * including commercial applications, and to alter it and redistribute it
  * freely, subject to the following restrictions:
- *
+ *M
  * 1. The origin of this software must not be misrepresented; you must not
  * claim that you wrote the original software. If you use this software
  * in a product, an acknowledgment in the product documentation would be
@@ -26,6 +26,8 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
+_Bool ViewWindowUsesHighDPI = false;
+
 #define _Class _View
 
 #pragma mark - ObjectInterface
@@ -38,8 +40,6 @@ static void dealloc(Object *self) {
 	View *this = (View *) self;
 	
 	$(this, removeFromSuperview);
-
-	$(this->subviews, removeAllObjects);
 
 	release(this->subviews);
 	
@@ -102,25 +102,27 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
  */
 static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 	
-	if (event->type == SDL_MOUSEMOTION) {
-		const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
-		if ($(self, containsPoint, &point)) {
-			return true;
-		}
-	} else if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-		const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-		if ($(self, containsPoint, &point)) {
-			return true;
-		}
-	} else if (event->type == SDL_MOUSEWHEEL) {
-		const SDL_Point point = { .x = event->wheel.x, .y = event->wheel.y };
-		if ($(self, containsPoint, &point)) {
-			return true;
-		}
-	} else if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
-		const SDL_Point point = { .x = event->tfinger.x, .y = event->tfinger.y };
-		if ($(self, containsPoint, &point)) {
-			return true;
+	if (self->hidden == false) {
+		if (event->type == SDL_MOUSEMOTION) {
+			const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
+			if ($(self, containsPoint, &point)) {
+				return true;
+			}
+		} else if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+			const SDL_Point point = { .x = event->button.x, .y = event->button.y };
+			if ($(self, containsPoint, &point)) {
+				return true;
+			}
+		} else if (event->type == SDL_MOUSEWHEEL) {
+			const SDL_Point point = { .x = event->wheel.x, .y = event->wheel.y };
+			if ($(self, containsPoint, &point)) {
+				return true;
+			}
+		} else if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
+			const SDL_Point point = { .x = event->tfinger.x, .y = event->tfinger.y };
+			if ($(self, containsPoint, &point)) {
+				return true;
+			}
 		}
 	}
 	
@@ -238,6 +240,50 @@ static void layoutSubviews(View *self) {
 		if (subview->autoresizingMask & ViewAutoresizingHeight) {
 			subview->frame.h = bounds.h;
 		}
+		
+		switch (subview->alignment) {
+			case ViewAlignmentNone:
+				break;
+			
+			case ViewAlignmentTopLeft:
+				subview->frame.x = 0;
+				subview->frame.y = 0;
+				break;
+			case ViewAlignmentTopCenter:
+				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
+				subview->frame.y = 0;
+				break;
+			case ViewAlignmentTopRight:
+				subview->frame.x = bounds.w - subview->frame.w;
+				subview->frame.y = 0;
+				break;
+			
+			case ViewAlignmentMiddleLeft:
+				subview->frame.x = 0;
+				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
+				break;
+			case ViewAlignmentMiddleCenter:
+				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
+				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
+				break;
+			case ViewAlignmentMiddleRight:
+				subview->frame.x = bounds.w - subview->frame.w;
+				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
+				break;
+			
+			case ViewAlignmentBottomLeft:
+				subview->frame.x = 0;
+				subview->frame.y = bounds.h - subview->frame.h;
+				break;
+			case ViewAlignmentBottomCenter:
+				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
+				subview->frame.y = bounds.h - subview->frame.h;
+				break;
+			case ViewAlignmentBottomRight:
+				subview->frame.x = bounds.w - subview->frame.w;
+				subview->frame.y = bounds.h - subview->frame.h;
+				break;
+		}
 	}
 }
 
@@ -292,11 +338,11 @@ static void render(View *self, SDL_Renderer *renderer) {
 		
 		SDL_Rect frame = $(self, renderFrame);
 		for (int i = 0; i < self->borderWidth; i++) {
+			frame.x -= 1;
+			frame.y -= 1;
+			frame.w += 2;
+			frame.h += 2;
 			SDL_RenderDrawRect(renderer, &frame);
-			frame.x += 1;
-			frame.y += 1;
-			frame.w -= 2;
-			frame.h -= 2;
 		}
 		
 		SetRenderDrawColor(renderer, Colors.White);

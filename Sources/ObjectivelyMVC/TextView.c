@@ -84,7 +84,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 			$(this->text->font, sizeCharacters, text, &w, &h);
 		} else {
 			char *chars = strndup(text, this->position);
-				$(this->text->font, sizeCharacters, chars, &w, &h);
+			$(this->text->font, sizeCharacters, chars, &w, &h);
 			free(chars);
 		}
 		
@@ -265,7 +265,7 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		
 		self->editable = true;
 		
-		self->text = $(alloc(Label), initWithText, NULL, NULL);
+		self->text = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->text);
 		
 		$((View *) self, addSubview, (View *) self->text);

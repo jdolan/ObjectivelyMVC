@@ -38,6 +38,8 @@ extern const struct _Colors {
 	
 	SDL_Color BackgroundColor;
 	SDL_Color ForegroundColor;
+	SDL_Color HighlightedColor;
+	SDL_Color SelectedColor;
 	
 	SDL_Color Clear;
 	

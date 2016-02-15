@@ -37,6 +37,7 @@
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/Select.h>
 #include <ObjectivelyMVC/StackView.h>
+#include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>
 #include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/ViewController.h>
