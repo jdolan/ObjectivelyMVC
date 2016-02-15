@@ -51,8 +51,8 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 	const Label *this = (Label *) self;
 	$((View *) this->text, sizeThatFits, w, h);
 	
-	w += self->padding.left + self->padding.right;
-	h += self->padding.top + self->padding.bottom;
+	*w += self->padding.left + self->padding.right;
+	*h += self->padding.top + self->padding.bottom;
 }
 
 #pragma mark - Label
