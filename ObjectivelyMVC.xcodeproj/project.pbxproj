@@ -105,6 +105,7 @@
 /* Begin PBXFileReference section */
 		CE0AD0931C6F6568003E3CF7 /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
 		CE0AD0941C6F6568003E3CF7 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
+		CE0AD0971C7241DE003E3CF7 /* styles.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = styles.css; sourceTree = "<group>"; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
 		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
@@ -291,6 +292,7 @@
 			children = (
 				CE12D48F1C505FB400CD0B13 /* index.md */,
 				CE12D4901C505FB400CD0B13 /* layout.xml */,
+				CE0AD0971C7241DE003E3CF7 /* styles.css */,
 			);
 			path = Documentation;
 			sourceTree = "<group>";

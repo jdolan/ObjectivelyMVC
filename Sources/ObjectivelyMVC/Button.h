@@ -41,6 +41,8 @@ typedef struct ButtonInterface ButtonInterface;
  * @brief The Button type.
  *
  * @extends Control
+ *
+ * @ingroup Controls
  */
 struct Button {
 

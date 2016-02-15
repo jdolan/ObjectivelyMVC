@@ -29,11 +29,14 @@
 /**
  * @file
  *
+ * @brief Colors.
+ */
+
+/**
  * @brief W3C Color constants.
  *
  * @see http://www.w3schools.com/colors/colors_names.asp
  */
-
 extern const struct _Colors {
 	
 	SDL_Color BackgroundColor;

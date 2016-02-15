@@ -29,7 +29,7 @@
 /**
  * @file
  *
- * @brief ..
+ * @brief Labels.
  */
 
 typedef struct Label Label;
@@ -39,8 +39,6 @@ typedef struct LabelInterface LabelInterface;
  * @brief The Label type.
  *
  * @extends View
- *
- * @ingroup
  */
 struct Label {
 	

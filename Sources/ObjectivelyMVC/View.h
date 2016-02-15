@@ -85,7 +85,7 @@ typedef struct ViewInterface ViewInterface;
 /**
  * @brief The View type.
  *
- * Extends Object
+ * @extends Object
  */
 struct View {
 
@@ -306,7 +306,7 @@ struct ViewInterface {
 	SDL_Rect (*renderFrame)(const View *self);
 	
 	/**
-	 * @fn void View:respondToEvent(View *self, const SDL_Event *event)
+	 * @fn void View::respondToEvent(View *self, const SDL_Event *event)
 	 *
 	 * @brief Responds to the given event.
 	 *

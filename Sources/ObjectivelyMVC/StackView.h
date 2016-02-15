@@ -66,6 +66,8 @@ typedef struct StackViewInterface StackViewInterface;
 
 /**
  * @brief The StackView type.
+ *
+ * @extends View
  */
 struct StackView {
 

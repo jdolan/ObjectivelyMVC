@@ -43,7 +43,7 @@ typedef struct OptionInterface OptionInterface;
 /**
  * @brief The Option type.
  *
- * @extends Text
+ * @extends View
  *
  * @ingroup Controls
  */

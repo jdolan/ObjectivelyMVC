@@ -1,5 +1,6 @@
 ObjectivelyMVC
 ===
+
 Object Oriented MVC Framework for OpenGL and SDL2 in c
 ---
 
@@ -10,6 +11,7 @@ video games that are already using SDL2. It is written in [GNU C](http://www.gnu
 
 Features
 ---
+
 ### Object-oriented Model-View-Controller implementation in C
 
 ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight Object-oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you're' using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.
@@ -55,7 +57,7 @@ select->delegate.didSelectOption = my_callback;
 ```
 
 Examples
-===
+---
 
 ### HelloViewController
 An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu:

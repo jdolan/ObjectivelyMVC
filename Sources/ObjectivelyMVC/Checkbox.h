@@ -43,7 +43,9 @@ typedef struct CheckboxInterface CheckboxInterface;
 /**
  * @brief The Checkbox type.
  *
- * @extends Controls
+ * @extends Control
+ *
+ * @ingroup Controls
  */
 struct Checkbox {
 
