@@ -34,7 +34,8 @@ case "$host" in
 		;;
 	*)
 		HOST_NAME="LINUX"
-		HOST_LIBS="-lGL -lglut"
+		HOST_CFLAGS="-D_GNU_SOURCE"
+		HOST_LIBS="-lGL -lGLU -lglut"
 		;;
 esac
 

@@ -26,7 +26,7 @@
 
 #include <fontconfig/fontconfig.h>
 
-#include <SDL2/SDL_TTF.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <Objectively/Array.h>
 
