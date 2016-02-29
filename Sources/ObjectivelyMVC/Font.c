@@ -94,8 +94,8 @@ static Font *_defaultFont;
 static Font *defaultFont(void) {
 	static Once once;
 
-	DispatchOnce(once, {
-		_defaultFont = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 12, 0);
+	do_once(&once, {
+		_defaultFont = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 14, 0);
 	});
 
 	return _defaultFont;

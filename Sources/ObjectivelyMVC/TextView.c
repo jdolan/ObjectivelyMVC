@@ -134,7 +134,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				didEdit = didCaptureEvent = true;
 			}
 		} else if (event->type == SDL_KEYDOWN) {
-			if ($((View *) self, didReceiveEvent, event)) {
+			if (self->state & ControlStateFocused) {
 				didCaptureEvent = true;
 				
 				const char *chars = this->attributedText->string.chars;

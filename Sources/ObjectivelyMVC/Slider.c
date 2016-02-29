@@ -109,10 +109,12 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			if (self->view.frame.w) {
 				if (event->motion.xrel) {
 					const double scale = (this->max - this->min) / self->view.frame.w;
-					this->value += scale * event->motion.xrel;
+					const double delta = scale * event->motion.xrel;
+					this->value = clamp(this->value + delta, this->min, this->max);
 					self->view.needsLayout = true;
 				}
 			}
+			return true;
 		}
 	}
 	

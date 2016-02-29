@@ -30,10 +30,30 @@
 #pragma mark - Actions
 
 /**
- * @brief ActionFunction for "Click Me" Button.
+ * @brief ActionFunction for Button.
  */
-static void action(ident sender, const SDL_Event *event, ident data) {
-	printf("Hello World!\n");
+static void buttonAction(ident sender, const SDL_Event *event, ident data) {
+	printf("Button clicked\n");
+}
+
+/**
+ * @brief ActionFunction for Checkbox.
+ */
+static void checkboxAction(ident sender, const SDL_Event *event, ident data) {
+	if ($((Control *) sender, selected)) {
+		printf("Checkbox selected\n");
+	} else {
+		printf("Checkbox deselected\n");
+	}
+}
+
+/**
+ * @brief ActionFunction for Slider.
+ */
+static void sliderAction(ident sender, const SDL_Event *event, ident data) {
+	String *string = str("%.1f", ((Slider *) sender)->value);
+	$((Label *) data, setText, string->chars);
+	release(string);
 }
 
 #pragma mark - ViewController
@@ -61,17 +81,19 @@ static void loadView(ViewController *self) {
 	
 	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
 	$(button->title, setText, "This is a bigass super long button");
-	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, action, NULL);
+	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
+	
 	$((View *) stackView, addSubview, (View *) button);
 
 	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
 	textView->defaultText = "This is a textview";
+	
 	$((View *) stackView, addSubview, (View *) textView);
 
 	Control *checkbox = (Control *) $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
 	Label *checkboxLabel = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
 	Input *checkboxInput = $(alloc(Input), initWithOrientation, InputOrientationLeft, checkbox, checkboxLabel);
-	$(checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, action, NULL);
+	$(checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, NULL);
 
 	$((View *) stackView, addSubview, (View *) checkboxInput);
 
@@ -87,6 +109,7 @@ static void loadView(ViewController *self) {
 	slider->min = 0.1, slider->max = 10.0, slider->step = 0.1, slider->value = 5.0;
 	Label *sliderLabel = $(alloc(Label), initWithText, "5.0", NULL);
 	Input *sliderInput = $(alloc(Input), initWithOrientation, InputOrientationRight, (Control *) slider, sliderLabel);
+	$((Control *) slider, addActionForEventType, SDL_MOUSEMOTION, sliderAction, sliderLabel);
 	
 	$((View *) stackView, addSubview, (View *) sliderInput);
 

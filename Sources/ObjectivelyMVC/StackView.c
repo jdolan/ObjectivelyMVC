@@ -165,11 +165,11 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 			
 			switch (this->axis) {
 				case StackViewAxisVertical:
-					*w = MAX(*w, sw);
+					*w = max(*w, sw);
 					*h += sh;
 					break;
 				case StackViewAxisHorizontal:
-					*h = MAX(*h, sh);
+					*h = max(*h, sh);
 					*w += sw;
 					break;
 			}

@@ -44,18 +44,6 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::didReceiveEvent(const View *, const SDL_Event *)
- */
-static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
-	
-	if (super(View, self, didReceiveEvent, event)) {
-		return true;
-	}
-	
-	return ((Control *) self)->state & ControlStateFocused;
-}
-
-/**
  * @see View::render(View *, SDL_Renderer *)
  */
 static void render(View *self, SDL_Renderer *renderer) {
@@ -295,7 +283,6 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	
-	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->interface)->render = render;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	

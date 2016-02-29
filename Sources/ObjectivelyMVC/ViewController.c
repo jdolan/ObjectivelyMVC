@@ -105,7 +105,13 @@ static ViewController *initRootViewController(ViewController *self, SDL_Window *
 		}
 		assert(self->window);
 		
-		ViewWindowUsesHighDPI = SDL_GetWindowFlags(self->window) & SDL_WINDOW_ALLOW_HIGHDPI;
+		int w, h;
+		SDL_GetWindowSize(window, &w, &h);
+		
+		int dw, dh;
+		SDL_GL_GetDrawableSize(window, &dw, &dh);
+		
+		ViewWindowUsesHighDPI = dw > w && dh > h;
 		
 		$(self, loadView);
 		assert(self->view);
