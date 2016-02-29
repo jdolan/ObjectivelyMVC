@@ -16,6 +16,7 @@ include_HEADERS = \
 	Log.h \
 	Option.h \
 	Select.h \
+	Slider.h \
 	StackView.h \
 	TextView.h \
 	View.h \
@@ -35,6 +36,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Text.c \
 	Option.c \
 	Select.c \
+	Slider.c \
 	StackView.c \
 	TextView.c \
 	View.c \
