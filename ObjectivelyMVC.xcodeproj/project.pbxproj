@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		CE0AD0951C6F6568003E3CF7 /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0931C6F6568003E3CF7 /* Label.c */; };
 		CE0AD0961C6F6568003E3CF7 /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0941C6F6568003E3CF7 /* Label.h */; };
+		CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0981C77AF73003E3CF7 /* Slider.c */; };
+		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; };
 		CE12D4301C4C389300CD0B13 /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
@@ -66,6 +68,8 @@
 		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; };
 		CE14A8D01C68CE3C00B576FB /* Option.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CE1C68CE3C00B576FB /* Option.c */; };
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; };
+		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
+		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
@@ -106,6 +110,8 @@
 		CE0AD0931C6F6568003E3CF7 /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
 		CE0AD0941C6F6568003E3CF7 /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
 		CE0AD0971C7241DE003E3CF7 /* styles.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = styles.css; sourceTree = "<group>"; };
+		CE0AD0981C77AF73003E3CF7 /* Slider.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Slider.c; sourceTree = "<group>"; };
+		CE0AD0991C77AF73003E3CF7 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
 		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
@@ -154,6 +160,8 @@
 		CE14A8CB1C66D89900B576FB /* Select.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Select.h; sourceTree = "<group>"; };
 		CE14A8CE1C68CE3C00B576FB /* Option.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Option.c; sourceTree = "<group>"; };
 		CE14A8CF1C68CE3C00B576FB /* Option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Option.h; sourceTree = "<group>"; };
+		CE8E7FF41C7FAD9100F4C3D4 /* Input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = Input.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
+		CE8E7FF51C7FAD9100F4C3D4 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Input.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -231,6 +239,8 @@
 				CE12D4811C4F3A1600CD0B13 /* Image.h */,
 				CE12D40B1C4C367100CD0B13 /* ImageView.c */,
 				CE12D40C1C4C367100CD0B13 /* ImageView.h */,
+				CE8E7FF41C7FAD9100F4C3D4 /* Input.c */,
+				CE8E7FF51C7FAD9100F4C3D4 /* Input.h */,
 				CE0AD0931C6F6568003E3CF7 /* Label.c */,
 				CE0AD0941C6F6568003E3CF7 /* Label.h */,
 				CE12D4651C4D587E00CD0B13 /* Log.h */,
@@ -238,6 +248,8 @@
 				CE14A8CF1C68CE3C00B576FB /* Option.h */,
 				CE14A8CA1C66D89900B576FB /* Select.c */,
 				CE14A8CB1C66D89900B576FB /* Select.h */,
+				CE0AD0981C77AF73003E3CF7 /* Slider.c */,
+				CE0AD0991C77AF73003E3CF7 /* Slider.h */,
 				CE12D4931C547BDD00CD0B13 /* StackView.c */,
 				CE12D4941C547BDD00CD0B13 /* StackView.h */,
 				CE12D40D1C4C367100CD0B13 /* Text.c */,
@@ -382,6 +394,7 @@
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE0AD0961C6F6568003E3CF7 /* Label.h in Headers */,
 				CE12D4881C4FBAC200CD0B13 /* config.h in Headers */,
+				CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */,
 				CE12D4451C4C38C700CD0B13 /* Text.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
@@ -390,6 +403,7 @@
 				CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */,
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
 				CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */,
+				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
 			);
@@ -511,6 +525,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
+				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */,
@@ -521,6 +536,7 @@
 				CE0AD0951C6F6568003E3CF7 /* Label.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
+				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE12D43F1C4C38B500CD0B13 /* Text.c in Sources */,

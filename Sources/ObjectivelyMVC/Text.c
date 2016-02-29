@@ -66,7 +66,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 		
 		assert(this->texture);
 		
-		SDL_Rect frame = $(self, renderFrame);
+		const SDL_Rect frame = $(self, renderFrame);
 		SDL_RenderCopy(renderer, this->texture, NULL, &frame);
 	}
 }
@@ -91,8 +91,7 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 	self = (Text *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
-		self->color = Colors.ForegroundColor;
-		self->view.backgroundColor = Colors.Clear;
+		self->color = Colors.White;
 
 		$(self, setFont, font);
 		$(self, setText, text);

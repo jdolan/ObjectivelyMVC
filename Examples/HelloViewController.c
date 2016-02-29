@@ -47,7 +47,8 @@ static void loadView(ViewController *self) {
 	
 	self->view->frame.x = 50, self->view->frame.y = 50;
 	self->view->frame.w = 420, self->view->frame.h = 240;
-	self->view->backgroundColor.a = 128;
+	self->view->backgroundColor = Colors.DefaultColor;
+	self->view->backgroundColor.a = 192;
 	self->view->borderWidth = 1;
 	
 	StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
@@ -62,25 +63,18 @@ static void loadView(ViewController *self) {
 	$(button->title, setText, "This is a bigass super long button");
 	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, action, NULL);
 	$((View *) stackView, addSubview, (View *) button);
-	
+
 	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
 	textView->defaultText = "This is a textview";
 	$((View *) stackView, addSubview, (View *) textView);
-	
-	StackView *checkboxStackView = $(alloc(StackView), initWithFrame, NULL);
-	checkboxStackView->axis = StackViewAxisHorizontal;
-	
-	Label *label = $(alloc(Label), initWithText, "This is a checkbox", NULL);
-	Checkbox *checkbox = $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
-	$((Control *) checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, action, NULL);
 
-	$((View *) checkboxStackView, addSubview, (View *) label);
-	$((View *) checkboxStackView, addSubview, (View *) checkbox);
-	checkboxStackView->spacing = 10;
-	$((View *) checkboxStackView, sizeToFit);
-	
-	$((View *) stackView, addSubview, (View *) checkboxStackView);
-	
+	Control *checkbox = (Control *) $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
+	Label *checkboxLabel = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
+	Input *checkboxInput = $(alloc(Input), initWithOrientation, InputOrientationLeft, checkbox, checkboxLabel);
+	$(checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, action, NULL);
+
+	$((View *) stackView, addSubview, (View *) checkboxInput);
+
 	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
 	$(select, addOption, "This is a select", NULL, (ident) 1);
 	$(select, addOption, "This is an option", NULL, (ident) 2);
@@ -88,13 +82,21 @@ static void loadView(ViewController *self) {
 	$((View *) select, sizeToFit);
 	
 	$((View *) stackView, addSubview, (View *) select);
+
+	Slider *slider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+	slider->min = 0.1, slider->max = 10.0, slider->step = 0.1, slider->value = 5.0;
+	Label *sliderLabel = $(alloc(Label), initWithText, "5.0", NULL);
+	Input *sliderInput = $(alloc(Input), initWithOrientation, InputOrientationRight, (Control *) slider, sliderLabel);
 	
+	$((View *) stackView, addSubview, (View *) sliderInput);
+
 	release(button);
 	release(textView);
 	release(checkbox);
-	release(label);
-	release(checkboxStackView);
+	release(checkboxInput);
 	release(select);
+	release(slider);
+	release(sliderInput);
 	release(stackView);
 }
 

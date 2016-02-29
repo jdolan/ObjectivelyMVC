@@ -46,27 +46,27 @@
  */
 extern _Bool ViewWindowUsesHighDPI;
 
-/**
- * @brief Padding: like bounds, but easier.
- */
-typedef struct {
-	int top, right, bottom, left;
-} Padding;
+#define ViewAlignmentMaskTop    0x1
+#define ViewAlignmentMaskMiddle 0x2
+#define ViewAlignmentMaskBottom 0x4
+#define ViewAlignmentMaskLeft   0x8
+#define ViewAlignmentMaskCenter 0x10
+#define ViewAlignmentMaskRight  0x20
 
 /**
  * @brief Alignment constants, used to align a View within its superview.
  */
 typedef enum {
 	ViewAlignmentNone,
-	ViewAlignmentTopLeft,
-	ViewAlignmentTopCenter,
-	ViewAlignmentTopRight,
-	ViewAlignmentMiddleLeft,
-	ViewAlignmentMiddleCenter,
-	ViewAlignmentMiddleRight,
-	ViewAlignmentBottomLeft,
-	ViewAlignmentBottomCenter,
-	ViewAlignmentBottomRight
+	ViewAlignmentTopLeft = (ViewAlignmentMaskTop | ViewAlignmentMaskLeft),
+	ViewAlignmentTopCenter = (ViewAlignmentMaskTop | ViewAlignmentMaskCenter),
+	ViewAlignmentTopRight = (ViewAlignmentMaskTop | ViewAlignmentMaskRight),
+	ViewAlignmentMiddleLeft = (ViewAlignmentMaskMiddle | ViewAlignmentMaskLeft),
+	ViewAlignmentMiddleCenter = (ViewAlignmentMaskMiddle | ViewAlignmentMaskCenter),
+	ViewAlignmentMiddleRight = (ViewAlignmentMaskMiddle | ViewAlignmentMaskRight),
+	ViewAlignmentBottomLeft = (ViewAlignmentMaskBottom | ViewAlignmentMaskLeft),
+	ViewAlignmentBottomCenter = (ViewAlignmentMaskBottom | ViewAlignmentMaskCenter),
+	ViewAlignmentBottomRight = (ViewAlignmentMaskBottom | ViewAlignmentMaskRight)
 } ViewAlignment;
 
 /**
@@ -78,6 +78,13 @@ typedef enum {
 	ViewAutoresizingHeight = 0x2,
 	ViewAutoresizingFill = 0x3,
 } ViewAutoresizing;
+
+/**
+ * @brief Padding: like bounds, but easier.
+ */
+typedef struct {
+	int top, right, bottom, left;
+} Padding;
 
 typedef struct View View;
 typedef struct ViewInterface ViewInterface;

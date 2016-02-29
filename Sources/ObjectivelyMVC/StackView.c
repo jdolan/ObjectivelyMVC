@@ -87,19 +87,18 @@ static void layoutSubviews(View *self) {
 			break;
 	}
 	
-	const float scale = availableSize / (float) requestedSize;
+	const float scale = requestedSize ? availableSize / (float) requestedSize : 1.0;
+	
 	for (size_t i = 0; i < subviews->count; i++) {
 		
 		View *subview = $(subviews, objectAtIndex, i);
 		
 		switch (this->axis) {
 			case StackViewAxisVertical:
-				subview->frame.x = bounds.x;
 				subview->frame.y = pos;
 				break;
 			case StackViewAxisHorizontal:
 				subview->frame.x = pos;
-				subview->frame.y = bounds.y;
 				break;
 		}
 		
@@ -145,16 +144,54 @@ static void layoutSubviews(View *self) {
 	release(subviews);
 }
 
+/**
+ * @see View::sizeThatFits(const View *, int *, int *)
+ */
+static void sizeThatFits(const View *self, int *w, int *h) {
+	
+	const StackView *this = (StackView *) self;
+	
+	*w = *h = 0;
+	
+	Array *subviews = $((Array *) self->subviews, filterObjects, layoutSubviews_filter, NULL);
+	if (subviews->count) {
+		
+		for (size_t i = 0; i < subviews->count; i++) {
+			
+			const View *subview = $(subviews, objectAtIndex, i);
+			
+			int sw, sh;
+			$(subview, sizeThatFits, &sw, &sh);
+			
+			switch (this->axis) {
+				case StackViewAxisVertical:
+					*w = MAX(*w, sw);
+					*h += sh;
+					break;
+				case StackViewAxisHorizontal:
+					*h = MAX(*h, sh);
+					*w += sw;
+					break;
+			}
+		}
+		
+		switch (this->axis) {
+			case StackViewAxisVertical:
+				*h += this->spacing * subviews->count - 1;
+				break;
+			case StackViewAxisHorizontal:
+				*w += this->spacing * subviews->count - 1;
+				break;
+		}
+	}
+
+	release(subviews);
+}
+
 #pragma mark - StackView
 
 /**
  * @fn StackView *StackView::initWithFrame(StackView *self, const SDL_Rect *frame)
- *
- * @brief Initializes this StackView with the specified frame.
- *
- * @param frame The frame.
- *
- * @return The initialized StackView, or `NULL` on error.
  *
  * @memberof StackView
  */
@@ -171,6 +208,7 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
 static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	
 	((StackViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }

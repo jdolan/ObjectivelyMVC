@@ -29,6 +29,7 @@
 #include <ObjectivelyMVC/Checkbox.h>
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/Input.h>
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/ImageView.h>
@@ -36,6 +37,7 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/Select.h>
+#include <ObjectivelyMVC/Slider.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>

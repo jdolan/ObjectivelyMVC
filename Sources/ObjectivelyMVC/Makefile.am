@@ -10,6 +10,7 @@ include_HEADERS = \
 	Font.h \
 	Image.h \
 	ImageView.h \
+	Input.h \
 	Label.h \
 	Text.h \
 	Log.h \
@@ -29,6 +30,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Font.c \
 	Image.c \
 	ImageView.c \
+	Input.c \
 	Label.c \
 	Text.c \
 	Option.c \

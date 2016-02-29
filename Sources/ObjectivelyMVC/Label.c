@@ -69,13 +69,38 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 		
 		self->text = $(alloc(Text), initWithText, text, font);
 		assert(self->text);
-		
+				
 		$((View *) self, addSubview, (View *) self->text);
 		$((View *) self, sizeToFit);
 	}
 	
 	return self;
 }
+
+/**
+ * @fn void Label::setFont(Label *self, Font *font)
+ *
+ * @memberof Label
+ */
+static void setFont(Label *self, Font *font) {
+	
+	$(self->text, setFont, font);
+	
+	$((View *) self, sizeToFit);
+}
+
+/**
+ * @fn void Label::setText(Label *self, const char *text)
+ *
+ * @memberof Label
+ */
+static void setText(Label *self, const char *text) {
+	
+	$(self->text, setText, text);
+	
+	$((View *) self, sizeToFit);
+}
+
 
 #pragma mark - Class lifecycle
 
@@ -89,6 +114,8 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	
 	((LabelInterface *) clazz->interface)->initWithText = initWithText;
+	((LabelInterface *) clazz->interface)->setFont = setFont;
+	((LabelInterface *) clazz->interface)->setText = setText;
 }
 
 Class _Label = {

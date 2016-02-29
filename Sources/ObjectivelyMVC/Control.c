@@ -252,6 +252,8 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle
 		
 		if (self->style == ControlStyleDefault) {
 			
+			self->view.backgroundColor = Colors.DefaultColor;
+			
 			if (self->view.frame.h == 0) {
 				self->view.frame.h = DEFAULT_CONTROL_HEIGHT;
 			}

@@ -59,6 +59,10 @@ int main(int arg, char **argv) {
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE
 	);
 	
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	while (true) {
 		SDL_Event event;
 		
@@ -73,10 +77,8 @@ int main(int arg, char **argv) {
 			}
 		}
 		
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderClear(renderer);
-		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		drawScene();
 		
 		$(helloViewController, drawView, renderer);
@@ -138,11 +140,15 @@ static void drawScene(void) {
 	
 	glPushMatrix();
 	
-	const long time = getCurrentTime();
-	glRotatef(time / M_PI * 0.3333, 0.0, 1.0, 0.0);
+	const float angle = getCurrentTime() / M_PI * 0.333;
+	glRotatef(angle, 0.0, 1.0, 0.0);
 	
-	GLfloat color[3] = { 0.0, 0.0, 0.0 };
-	color[(time / 1000) % 3] = 1.0;
+	const float c = getCurrentTime() / 1000.0;
+	const GLfloat color[3] = {
+		(sin(c + M_PI)   + 1.0) * 0.5,
+		(sin(c + M_PI_2) + 1.0) * 0.5,
+		(sin(c - M_PI_2) + 1.0) * 0.5,
+	};
 	
 	glColor3fv(color);
 	glDisable(GL_BLEND);
@@ -150,7 +156,7 @@ static void drawScene(void) {
 	glutWireTeapot(1.0);
 	
 	glEnable(GL_BLEND);
-	glColor3d(1.0, 1.0, 1.0);
+	glColor3f(1.0, 1.0, 1.0);
 	
 	glPopMatrix();
 	

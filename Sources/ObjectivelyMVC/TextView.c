@@ -59,7 +59,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 	char *text = this->attributedText->string.chars;
 	
 	if (text == NULL || strlen(text) == 0) {
-		if ((this->control.state & ControlStateFocused) == 0) {
+		if ($((Control *) this, focused) == false) {
 			text = this->defaultText;
 		}
 	}
@@ -76,7 +76,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 		}
 	}
 	
-	if (this->control.state & ControlStateFocused) {
+	if ($((Control *) this, focused)) {
 		text = text ?: "";
 		
 		int w, h;

@@ -77,7 +77,7 @@ static void layoutSubviews(View *self) {
 					option->backgroundColor = Colors.HighlightedColor;
 				}
 			} else {
-				option->backgroundColor = Colors.BackgroundColor;
+				option->backgroundColor = Colors.DefaultColor;
 			}
 		}
 	}

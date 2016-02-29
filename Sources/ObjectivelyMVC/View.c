@@ -9,7 +9,7 @@
  * Permission is granted to anyone to use this software for any purpose,
  * including commercial applications, and to alter it and redistribute it
  * freely, subject to the following restrictions:
- *M
+ *
  * 1. The origin of this software must not be misrepresented; you must not
  * claim that you wrote the original software. If you use this software
  * in a product, an acknowledgment in the product documentation would be
@@ -171,8 +171,8 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->subviews = $$(MutableArray, array);
 		assert(self->subviews);
 		
-		self->backgroundColor = Colors.BackgroundColor;
-		self->borderColor = Colors.ForegroundColor;
+		self->backgroundColor = Colors.Clear;
+		self->borderColor = Colors.White;
 	}
 	
 	return self;
@@ -333,7 +333,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 		SetRenderDrawColor(renderer, Colors.White);
 	}
 	
-	if (self->borderWidth) {
+	if (self->borderWidth && self->borderColor.a) {
 		SetRenderDrawColor(renderer, self->borderColor);
 		
 		SDL_Rect frame = $(self, renderFrame);
@@ -405,6 +405,8 @@ static void sizeToFit(View *self) {
 	
 	$(self, sizeThatFits, &self->frame.w, &self->frame.h);
 	
+	$(self, layoutIfNeeded);
+	
 	Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
 		
@@ -414,7 +416,7 @@ static void sizeToFit(View *self) {
 		$(subview, sizeThatFits, &w, &h);
 		
 		const int sx = subview->frame.x + w + self->padding.left + self->padding.right;
-		const int sy = subview->frame.y + h + self->padding.top + subview->padding.bottom;
+		const int sy = subview->frame.y + h + self->padding.top + self->padding.bottom;
 
 		if (sx > self->frame.w) {
 			self->frame.w = sx;
