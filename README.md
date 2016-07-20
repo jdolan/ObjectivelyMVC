@@ -1,5 +1,5 @@
 [![Build Status](http://ci.quetoo.org/buildStatus/icon?job=ObjectivelyMVC-Linux-x86_64)](http://ci.quetoo.org/job/ObjectivelyMVC-Linux-x86_64/)
-[![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+[![Zlib License](https://img.shields.io/badge/license-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
 ![This software is PRE-ALPHA](https://img.shields.io/badge/development_stage-PRE_ALPHA-orange.svg)
 
 ObjectivelyMVC
@@ -9,16 +9,16 @@ Object oriented MVC framework for OpenGL, SDL2 and GNU C
 ---
 
 ObjectivelyMVC is a user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by 
-Apple's [UIKit](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIKit_Framework/). 
+Apple's [AppKit](https://developer.apple.com/reference/appkit). 
 It is geared towards building high-quality, modern looking user interfaces within [OpenGL](http://www.opengl.org/) 
 video games that are already using SDL2. It is written in [GNU C](http://www.gnu.org/software/gnu-c-manual/), and requires `gcc` or `clang`.
 
 Features
 ---
 
-### Object-oriented Model-View-Controller implementation in C
+### Object oriented Model-View-Controller implementation in C
 
-ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight Object-oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you're' using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.
+ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight object oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you're' using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.
     
 ```c
    ViewController *vc = $((ViewController *) alloc(MyViewController), initRootViewController, window);
