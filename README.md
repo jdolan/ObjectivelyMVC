@@ -1,5 +1,5 @@
 [![Build Status](http://ci.quetoo.org/buildStatus/icon?job=ObjectivelyMVC-Linux-x86_64)](http://ci.quetoo.org/job/ObjectivelyMVC-Linux-x86_64/)
-![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
+[![MIT License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 ![This software is PRE-ALPHA](https://img.shields.io/badge/development_stage-PRE_ALPHA-orange.svg)
 
 ObjectivelyMVC
