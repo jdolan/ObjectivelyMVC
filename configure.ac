@@ -59,6 +59,7 @@ PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.0 SDL2_image SDL2_ttf])
 AC_CONFIG_FILES([
 	Makefile
 	Sources/Makefile
+	Sources/ObjectivelyMVC.pc
 	Sources/ObjectivelyMVC/Makefile
 	Examples/Makefile
 ])

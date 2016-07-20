@@ -21,30 +21,46 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#pragma once
+#include <assert.h>
+
+#include <ObjectivelyMVC/ScrollView.h>
+
+#define _Class _ScrollView
+
+#pragma mark - ScrollView
 
 /**
- * @file
+ * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
  *
- * @brief ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * @memberof ScrollView
  */
+static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style) {
+	
+	self = (ScrollView *) super(Control, self, initWithFrame, frame, style);
+	if (self) {
+		self->scrollEnabled = true;
+	}
+	
+	return self;
+}
 
-#include <ObjectivelyMVC/Action.h>
-#include <ObjectivelyMVC/Button.h>
-#include <ObjectivelyMVC/Checkbox.h>
-#include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/Control.h>
-#include <ObjectivelyMVC/Input.h>
-#include <ObjectivelyMVC/Font.h>
-#include <ObjectivelyMVC/Image.h>
-#include <ObjectivelyMVC/ImageView.h>
-#include <ObjectivelyMVC/Label.h>
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/Option.h>
-#include <ObjectivelyMVC/Select.h>
-#include <ObjectivelyMVC/Slider.h>
-#include <ObjectivelyMVC/StackView.h>
-#include <ObjectivelyMVC/Text.h>
-#include <ObjectivelyMVC/TextView.h>
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/ViewController.h>
+#pragma mark - Class lifecycle
+
+/**
+ * @see Class::initialize(Class *)
+ */
+static void initialize(Class *clazz) {
+	
+	((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+}
+
+Class _ScrollView = {
+	.name = "ScrollView",
+	.superclass = &_Control,
+	.instanceSize = sizeof(ScrollView),
+	.interfaceOffset = offsetof(ScrollView, interface),
+	.interfaceSize = sizeof(ScrollViewInterface),
+	.initialize = initialize,
+};
+
+#undef _Class

@@ -1,7 +1,6 @@
-lib_LTLIBRARIES = \
-	libObjectivelyMVC.la
+pkgincludedir = $(includedir)/ObjectivelyMVC
 
-include_HEADERS = \
+pkginclude_HEADERS = \
 	Action.h \
 	Button.h \
 	Checkbox.h \
@@ -15,12 +14,19 @@ include_HEADERS = \
 	Text.h \
 	Log.h \
 	Option.h \
+	ScrollView.h \
 	Select.h \
 	Slider.h \
 	StackView.h \
+	TableCellView.h \
+	TableColumnView.h \
+	TableView.h \
 	TextView.h \
 	View.h \
 	ViewController.h
+
+lib_LTLIBRARIES = \
+	libObjectivelyMVC.la
 
 libObjectivelyMVC_la_SOURCES = \
 	Action.c \
@@ -33,11 +39,15 @@ libObjectivelyMVC_la_SOURCES = \
 	ImageView.c \
 	Input.c \
 	Label.c \
-	Text.c \
 	Option.c \
+	ScrollView.c \
 	Select.c \
 	Slider.c \
 	StackView.c \
+	TableCellView.c \
+	TableColumnView.c \
+	TableView.c \
+	Text.c \
 	TextView.c \
 	View.c \
 	ViewController.c

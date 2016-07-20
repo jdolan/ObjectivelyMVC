@@ -1,7 +1,7 @@
 ObjectivelyMVC
 ===
 
-Object Oriented MVC Framework for OpenGL and SDL2 in C
+Object oriented MVC framework for OpenGL, SDL2 and GNU C
 ---
 
 ObjectivelyMVC is a user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by 
