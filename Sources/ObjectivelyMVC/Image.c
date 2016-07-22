@@ -63,6 +63,8 @@ static Image *initWithName(Image *self, const char *name) {
 	char *path;
 	asprintf(&path, "%s/%s", dir, name);
 
+	LogDebug("%s\n", path);
+
 	self = $(self, initWithSurface, IMG_Load(path));
 	
 	free(path);

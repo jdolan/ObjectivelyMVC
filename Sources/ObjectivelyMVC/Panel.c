@@ -50,13 +50,13 @@ static Image *_resize;
 /**
  * @return True if a descendant Control received the given event, false otherwise.
  */
-static _Bool eventWasReceived(const View *view, const SDL_Event *event) {
+static _Bool controlReceivedEvent(const View *view, const SDL_Event *event) {
 
 	Array *subviews = (Array *) view->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
 
 		View *subview = $(subviews, objectAtIndex, i);
-		if (eventWasReceived(subview, event)) {
+		if (controlReceivedEvent(subview, event)) {
 			return true;
 		}
 
@@ -86,11 +86,13 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 			return;
 	}
 
-	if (eventWasReceived(self, event)) {
-		return;
-	}
-
 	Panel *this = (Panel *) self;
+
+	if (this->isDragging == false && this->isResizing == false) {
+		if (controlReceivedEvent(self, event)) {
+			return;
+		}
+	}
 
 	if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == 1) {
 		if (this->isResizable && $((View *) this->resizeHandle, didReceiveEvent, event)) {
@@ -156,12 +158,20 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
+
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
 	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
 	_resize = $(alloc(Image), initWithName, "resize.png");
+}
+
+/**
+ * @see Class::destroy(Class *)
+ */
+static void destroy(Class *clazz) {
+
+	release(_resize);
 }
 
 Class _Panel = {
@@ -171,6 +181,7 @@ Class _Panel = {
 	.interfaceOffset = offsetof(Panel, interface),
 	.interfaceSize = sizeof(PanelInterface),
 	.initialize = initialize,
+	.destroy = destroy
 };
 
 #undef _Class
