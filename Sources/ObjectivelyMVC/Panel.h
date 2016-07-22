@@ -23,93 +23,97 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/ImageView.h>
+#include <ObjectivelyMVC/View.h>
 
 /**
  * @file
  *
- * @brief Sliders.
+ * @brief Draggable containers.
  */
 
-#define DEFAULT_SLIDER_HANDLE_WIDTH 12
-#define DEFAULT_SLIDER_HANDLE_HEIGHT 18
+#define DEFAULT_PANEL_RESIZE_HANDLE_SIZE 10
 
-#define DEFAULT_SLIDER_WIDTH 100
-
-typedef struct Slider Slider;
-typedef struct SliderInterface SliderInterface;
+typedef struct Panel Panel;
+typedef struct PanelInterface PanelInterface;
 
 /**
- * @brief The Slider type.
+ * @brief The Panel type.
  *
- * @extends Control
+ * @extends View
  *
- * @ingroup Controls
+ * @ingroup
  */
-struct Slider {
+struct Panel {
 	
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
-	Control control;
+	View view;
 	
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
-	SliderInterface *interface;
-	
+	PanelInterface *interface;
+
 	/**
-	 * @brief The slider handle.
+	 * @brief If true, this Panel may be repositioned by the user.
+	 */
+	_Bool isDraggable;
+
+	/**
+	 * @brief True if the user is repositioning this Panel.
+	 */
+	_Bool isDragging;
+
+	/**
+	 * @brief If true, this Panel may be resized by the user.
+	 */
+	_Bool isResizable;
+
+	/**
+	 * @brief True if the user is resizing this Panel.
+	 */
+	_Bool isResizing;
+
+	/**
+	 * @brief The resize handle.
 	 *
 	 * @private
 	 */
-	Control *handle;
-	
-	/**
-	 * @brief The slider bounds.
-	 */
-	double min, max;
-	
-	/**
-	 * @brief The step to increment on key events.
-	 */
-	double step;
-	
-	/**
-	 * @brief The slider value.
-	 */
-	double value;
+	ImageView *resizeHandle;
 };
 
 /**
- * @brief The Slider interface.
+ * @brief The Panel interface.
  */
-struct SliderInterface {
+struct PanelInterface {
 	
 	/**
 	 * @brief The parent interface.
 	 */
-	ControlInterface controlInterface;
+	ViewInterface viewInterface;
 	
 	/**
-	 * @fn Slider *Slider::init(Slider *self)
+	 * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
 	 *
-	 * @brief Initializes this Slider.
+	 * @brief Initializes this Panel with the specified frame.
 	 *
-	 * @return The initialized Slider, or `NULL` on error.
+	 * @param frame The frame.
 	 *
-	 * @memberof Slider
+	 * @return The initialized Panel, or `NULL` on error.
+	 *
+	 * @memberof Panel
 	 */
-	Slider *(*initWithFrame)(Slider *self, const SDL_Rect *frame, ControlStyle style);
-	
-	// ..
+	Panel *(*initWithFrame)(Panel *self, const SDL_Rect *frame);
 };
 
 /**
- * @brief The Slider Class.
+ * @brief The Panel Class.
  */
-extern Class _Slider;
+extern Class _Panel;
+

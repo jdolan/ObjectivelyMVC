@@ -62,7 +62,6 @@
 		CE12D8751C5CF45E00CD0B13 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D8731C5CF43500CD0B13 /* libObjectively.dylib */; };
 		CE12D8761C5CF47600CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE12D8771C5CF48100CD0B13 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D49A1C5506F700CD0B13 /* GLUT.framework */; };
-		CE12D8781C5CF49E00CD0B13 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D8731C5CF43500CD0B13 /* libObjectively.dylib */; };
 		CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE14A8CC1C66D89900B576FB /* Select.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CA1C66D89900B576FB /* Select.c */; };
 		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -82,6 +81,10 @@
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
 		CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
+		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; };
+		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
+		CEF1D8911D4270150099A857 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
+		CEF1D8931D42A2C70099A857 /* resize.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEF1D8921D429F7A0099A857 /* resize.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,6 +111,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				CEF1D8931D42A2C70099A857 /* resize.png in CopyFiles */,
 				CE12D4861C4F3D3500CD0B13 /* check.png in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -188,6 +192,10 @@
 		CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_image-2.0.0.dylib"; path = "/opt/local/lib/libSDL2_image-2.0.0.dylib"; sourceTree = "<absolute>"; };
 		CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_ttf-2.0.0.dylib"; path = "/opt/local/lib/libSDL2_ttf-2.0.0.dylib"; sourceTree = "<absolute>"; };
 		CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2-2.0.0.dylib"; path = "/opt/local/lib/libSDL2-2.0.0.dylib"; sourceTree = "<absolute>"; };
+		CEF1D88B1D4265A70099A857 /* Panel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Panel.c; sourceTree = "<group>"; };
+		CEF1D88C1D4265A70099A857 /* Panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Panel.h; sourceTree = "<group>"; };
+		CEF1D8901D4270150099A857 /* libObjectively.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libObjectively.dylib; path = "../../Library/Developer/Xcode/DerivedData/Quetoo-eijmznjiunzbaafulkyjapfulhqz/Build/Products/Debug/libObjectively.dylib"; sourceTree = "<group>"; };
+		CEF1D8921D429F7A0099A857 /* resize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = resize.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,14 +203,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE12D8751C5CF45E00CD0B13 /* libObjectively.dylib in Frameworks */,
+				CE12D44B1C4C867300CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
 				CE12D8771C5CF48100CD0B13 /* GLUT.framework in Frameworks */,
 				CE12D8761C5CF47600CD0B13 /* OpenGL.framework in Frameworks */,
 				CE12D44C1C4C86CE00CD0B13 /* libfontconfig.1.dylib in Frameworks */,
 				CE12D44E1C4C86CE00CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */,
 				CE12D44F1C4C86CE00CD0B13 /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
 				CE12D4501C4C86CE00CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */,
-				CE12D8751C5CF45E00CD0B13 /* libObjectively.dylib in Frameworks */,
-				CE12D44B1C4C867300CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -210,14 +218,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEF1D8911D4270150099A857 /* libObjectively.dylib in Frameworks */,
+				CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
 				CE12D49B1C5506F700CD0B13 /* GLUT.framework in Frameworks */,
 				CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */,
 				CE12D45C1C4C8F2400CD0B13 /* libfontconfig.1.dylib in Frameworks */,
 				CE12D45E1C4C8F2400CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */,
 				CE12D45F1C4C8F2400CD0B13 /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
 				CE12D4601C4C8F2400CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */,
-				CE12D8781C5CF49E00CD0B13 /* libObjectively.dylib in Frameworks */,
-				CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -225,8 +233,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
 				CE12D8741C5CF43500CD0B13 /* libObjectively.dylib in Frameworks */,
+				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
 				CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */,
 				CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */,
 				CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
@@ -264,6 +272,8 @@
 				CE12D4211C4C367100CD0B13 /* Makefile.am */,
 				CE14A8CE1C68CE3C00B576FB /* Option.c */,
 				CE14A8CF1C68CE3C00B576FB /* Option.h */,
+				CEF1D88B1D4265A70099A857 /* Panel.c */,
+				CEF1D88C1D4265A70099A857 /* Panel.h */,
 				CE6603791CBBF93E00EB86CF /* ScrollView.c */,
 				CE66037A1CBBF93E00EB86CF /* ScrollView.h */,
 				CE14A8CA1C66D89900B576FB /* Select.c */,
@@ -320,6 +330,7 @@
 			isa = PBXGroup;
 			children = (
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
+				CEF1D8921D429F7A0099A857 /* resize.png */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -337,6 +348,7 @@
 		CE12D4971C55012200CD0B13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CEF1D8901D4270150099A857 /* libObjectively.dylib */,
 				CE12D49A1C5506F700CD0B13 /* GLUT.framework */,
 				CE12D4981C55013700CD0B13 /* OpenGL.framework */,
 			);
@@ -424,6 +436,7 @@
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
+				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
 				CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */,
 				CE14A8CD1C66D89900B576FB /* Select.h in Headers */,
 				CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */,
@@ -555,23 +568,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
-				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
+				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
+				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE0AD0951C6F6568003E3CF7 /* Label.c in Sources */,
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,
-				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
-				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
+				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
+				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
-				CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */,
 				CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */,
 				CE8E7FFE1C84E8DA00F4C3D4 /* TableColumnView.c in Sources */,
+				CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */,
 				CE12D43F1C4C38B500CD0B13 /* Text.c in Sources */,
 				CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */,
 				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,
@@ -604,7 +618,6 @@
 				EXECUTABLE_PREFIX = lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -617,7 +630,6 @@
 				EXECUTABLE_PREFIX = lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -681,6 +693,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-I$(SRCROOT)/Sources";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Sources";
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
@@ -716,6 +729,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-I$(SRCROOT)/Sources";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Sources";
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
@@ -730,7 +744,6 @@
 				EXECUTABLE_PREFIX = lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = ObjectivelyMVC;
-				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -744,7 +757,6 @@
 				EXECUTABLE_PREFIX = lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = ObjectivelyMVC;
-				SDKROOT = macosx;
 			};
 			name = Release;
 		};

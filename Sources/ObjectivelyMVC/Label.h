@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Label_h_
-#define _ObjectivelyMVC_Label_h_
+#pragma once
 
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Text.h>
@@ -116,6 +115,3 @@ struct LabelInterface {
  * @brief The Label Class.
  */
 extern Class _Label;
-
-#endif /* _ObjectivelyMVC_Label_h_ */
-

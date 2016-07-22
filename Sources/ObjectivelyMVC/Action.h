@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Action_h_
-#define _ObjectivelyMVC_Action_h_
+#pragma once
 
 #include <SDL2/SDL_events.h>
 
@@ -111,5 +110,3 @@ struct ActionInterface {
  * @brief The Action Class.
  */
 extern Class _Action;
-
-#endif

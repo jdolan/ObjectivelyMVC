@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Colors_h_
-#define _ObjectivelyMVC_Colors_h_
+#pragma once
 
 #include <SDL2/SDL_pixels.h>
 
@@ -200,5 +199,3 @@ extern const struct _Colors {
 
 #define SetRenderDrawColor(renderer, color) \
 	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a)
-
-#endif

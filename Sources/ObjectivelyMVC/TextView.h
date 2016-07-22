@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_TextView_h_
-#define _ObjectivelyMVC_TextView_h_
+#pragma once
 
 #include <Objectively/MutableString.h>
 
@@ -146,5 +145,3 @@ struct TextViewInterface {
  * @brief The TextView Class.
  */
 extern Class _TextView;
-
-#endif

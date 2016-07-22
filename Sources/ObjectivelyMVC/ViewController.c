@@ -62,7 +62,7 @@ static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	assert(renderer);
 		
 	$(self->view, layoutIfNeeded);
-	
+
 	$(self->view, draw, renderer);
 		
 	$((Array *) self->childViewControllers, enumerateObjects, drawChildViewControllers, renderer);
@@ -159,11 +159,11 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 }
 
 /**
- * @fn _Bool ViewController::respondToEvent(ViewController *self, SDL_Event *event)
+ * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
  *
  * @memberof ViewController
  */
-static void respondToEvent(ViewController *self, SDL_Event *event) {
+static void respondToEvent(ViewController *self, const SDL_Event *event) {
 	
 	assert(event);
 	

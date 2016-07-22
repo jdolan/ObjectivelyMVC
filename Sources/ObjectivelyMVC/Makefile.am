@@ -1,3 +1,5 @@
+AUTOMAKE_OPTIONS = nostdinc
+
 pkgincludedir = $(includedir)/ObjectivelyMVC
 
 pkginclude_HEADERS = \
@@ -14,6 +16,7 @@ pkginclude_HEADERS = \
 	Text.h \
 	Log.h \
 	Option.h \
+	Panel.h \
 	ScrollView.h \
 	Select.h \
 	Slider.h \
@@ -40,6 +43,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Input.c \
 	Label.c \
 	Option.c \
+	Panel.c \
 	ScrollView.c \
 	Select.c \
 	Slider.c \

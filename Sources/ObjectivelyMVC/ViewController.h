@@ -21,10 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_ViewController_h_
-#define _ObjectivelyMVC_ViewController_h_
-
-#include <SDL2/SDL_log.h>
+#pragma once
 
 #include <Objectively/MutableArray.h>
 
@@ -147,7 +144,7 @@ struct ViewControllerInterface {
 	void (*moveToParentViewController)(ViewController *self, ViewController *parentViewController);
 	
 	/**
-	 * @fn _Bool ViewController:respondToEvent(ViewController *self, SDL_Event *event)
+	 * @fn _Bool ViewController:respondToEvent(ViewController *self, const SDL_Event *event)
 	 *
 	 * @brief Responds to the given event.
 	 *
@@ -155,7 +152,7 @@ struct ViewControllerInterface {
 	 *
 	 * @memberof ViewController
 	 */
-	void (*respondToEvent)(ViewController *self, SDL_Event *event);
+	void (*respondToEvent)(ViewController *self, const SDL_Event *event);
 	
 	/**
 	 * @fn ViewController *ViewController::rootViewController(const ViewController *self)
@@ -205,5 +202,3 @@ struct ViewControllerInterface {
  * @brief The ViewController Class.
  */
 extern Class _ViewController;
-
-#endif

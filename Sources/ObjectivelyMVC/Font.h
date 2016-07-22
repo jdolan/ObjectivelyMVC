@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Font_h_
-#define _ObjectivelyMVC_Font_h_
+#pragma once
 
 #include <fontconfig/fontconfig.h>
 
@@ -171,5 +170,3 @@ struct FontInterface {
  * @brief The Font Class.
  */
 extern Class _Font;
-
-#endif

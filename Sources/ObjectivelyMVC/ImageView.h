@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_ImageView_h_
-#define _ObjectivelyMVC_ImageView_h_
+#pragma once
 
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/View.h>
@@ -103,5 +102,3 @@ struct ImageViewInterface {
 };
 
 extern Class _ImageView;
-
-#endif

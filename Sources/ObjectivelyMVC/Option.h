@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Option_h_
-#define _ObjectivelyMVC_Option_h_
+#pragma once
 
 #include <SDL2/SDL_render.h>
 
@@ -104,6 +103,3 @@ struct OptionInterface {
  * @brief The Option Class.
  */
 extern Class _Option;
-
-#endif /* _ObjectivelyMVC_Option_h_ */
-

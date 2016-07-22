@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Text_h_
-#define _ObjectivelyMVC_Text_h_
+#pragma once
 
 #include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/Font.h>
@@ -148,5 +147,3 @@ struct TextInterface {
 };
 
 extern Class _Text;
-
-#endif

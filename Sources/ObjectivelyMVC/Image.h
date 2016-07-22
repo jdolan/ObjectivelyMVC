@@ -20,12 +20,15 @@
  *
  */
 
-#ifndef _ObjectivelyMVC_Image_h_
-#define _ObjectivelyMVC_Image_h_
+#pragma once
 
 #include <Objectively/Object.h>
 
 #include <SDL2/SDL_surface.h>
+
+#ifndef PACKAGE_DATA_DIR
+#define PACKAGE_DATA_DIR "."
+#endif
 
 /**
  * @file
@@ -104,5 +107,3 @@ struct ImageInterface {
  * @brief The Image Class.
  */
 extern Class _Image;
-
-#endif

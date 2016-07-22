@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Control_h_
-#define _ObjectivelyMVC_Control_h_
+#pragma once
 
 #include <Objectively/MutableArray.h>
 
@@ -32,7 +31,7 @@
 /**
  * @file
  * 
- * @brief Controls are Views which can respond to events.
+ * @brief Controls are Views which capture events and dispatch Actions.
  */
 
 /**
@@ -226,5 +225,3 @@ struct ControlInterface {
  * @brief The Control Class.
  */
 extern Class _Control;
-
-#endif

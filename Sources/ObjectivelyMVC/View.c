@@ -129,7 +129,6 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 	return false;
 }
 
-
 /**
  * @brief ArrayEnumerator for draw recursion.
  */

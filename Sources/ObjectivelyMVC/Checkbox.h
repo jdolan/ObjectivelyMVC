@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Checkbox_h_
-#define _ObjectivelyMVC_Checkbox_h_
+#pragma once
 
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/ImageView.h>
@@ -100,5 +99,3 @@ struct CheckboxInterface {
  * @brief The Checkbox Class.
  */
 extern Class _Checkbox;
-
-#endif

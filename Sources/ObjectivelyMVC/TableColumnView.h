@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_TableColumnView_h_
-#define _ObjectivelyMVC_TableColumnView_h_
+#pragma once
 
 #include <ObjectivelyMVC/Control.h>
 
@@ -112,6 +111,3 @@ struct TableColumnViewInterface {
  * @brief The TableColumnView Class.
  */
 extern Class _TableColumnView;
-
-#endif /* _ObjectivelyMVC_TableColumnView_h_ */
-

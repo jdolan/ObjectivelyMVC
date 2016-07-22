@@ -54,15 +54,14 @@ static void dealloc(Object *self) {
 static Image *initWithName(Image *self, const char *name) {
 	
 	assert(name);
-	
-#if defined(PACKAGE_DATA_DIR)
+
+	char *dir = getenv("OBJECTIVELYMVC_DATA_DIR");
+	if (dir == NULL) {
+		dir = PACKAGE_DATA_DIR;
+	}
+
 	char *path;
-	asprintf(&path, "%s/%s", PACKAGE_DATA_DIR, name);
-#else
-	char *path = strdup(name);
-#endif
-	
-	LogDebug("Resolved path %s for %s\n", path, name);
+	asprintf(&path, "%s/%s", dir, name);
 
 	self = $(self, initWithSurface, IMG_Load(path));
 	

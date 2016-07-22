@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Log_h_
-#define _ObjectivelyMVC_Log_h_
+#pragma once
 
 #include <SDL2/SDL_log.h>
 
@@ -36,5 +35,3 @@
 #define LogWarn(fmt, ...) SDL_LogWarn(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
 #define LogError(fmt, ...) SDL_LogError(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
 #define LogCritical(fmt, ...) SDL_LogCritical(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
-
-#endif

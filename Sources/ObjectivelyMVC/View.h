@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_View_h_
-#define _ObjectivelyMVC_View_h_
+#pragma once
 
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_opengl.h>
@@ -193,7 +192,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	SDL_Rect (*bounds)(const View *self);
-	
+
 	/**
 	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
 	 *
@@ -232,11 +231,11 @@ struct ViewInterface {
 	/**
 	 * @fn View *View::initWithFrame(View *self, const SDL_Rect *frame)
 	 *
-	 * @brief Initializes this view with the specified frame.
+	 * @brief Initializes this View with the specified frame.
 	 *
 	 * @param frame The frame.
 	 *
-	 * @return The initialized view, or NULL on error.
+	 * @return The initialized View, or NULL on error.
 	 *
 	 * @memberof View
 	 */
@@ -252,7 +251,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*isDescendantOfView)(const View *self, const View *view);
-	
+
 	/**
 	 * @fn void View::layoutIfNeeded(View *self)
 	 *
@@ -346,5 +345,3 @@ struct ViewInterface {
 };
 
 extern Class _View;
-
-#endif

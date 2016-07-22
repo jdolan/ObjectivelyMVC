@@ -41,6 +41,7 @@
 #include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Option.h>
+#include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/Select.h>
 #include <ObjectivelyMVC/Slider.h>
 #include <ObjectivelyMVC/StackView.h>

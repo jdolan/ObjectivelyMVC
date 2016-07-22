@@ -64,12 +64,11 @@ static void sliderAction(ident sender, const SDL_Event *event, ident data) {
 static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
+
+	const SDL_Rect frame = { .x = 50, .y = 50, .w = 420, .h = 240 };
+	Panel *panel = $(alloc(Panel), initWithFrame, &frame);
 	
-	self->view->frame.x = 50, self->view->frame.y = 50;
-	self->view->frame.w = 420, self->view->frame.h = 240;
-	self->view->backgroundColor = Colors.DefaultColor;
-	self->view->backgroundColor.a = 192;
-	self->view->borderWidth = 1;
+	$(self->view, addSubview, (View *) panel);
 	
 	StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
 	stackView->view.autoresizingMask = ViewAutoresizingFill;
@@ -77,7 +76,7 @@ static void loadView(ViewController *self) {
 	stackView->view.padding.top = stackView->view.padding.bottom = 10;
 	stackView->view.padding.left = stackView->view.padding.right = 10;
 	
-	$(self->view, addSubview, (View *) stackView);
+	$((View *) panel, addSubview, (View *) stackView);
 	
 	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
 	$(button->title, setText, "This is a bigass super long button");
@@ -121,6 +120,7 @@ static void loadView(ViewController *self) {
 	release(slider);
 	release(sliderInput);
 	release(stackView);
+	release(panel);
 }
 
 #pragma mark - Class lifecycle

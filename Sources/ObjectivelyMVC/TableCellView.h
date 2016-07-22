@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_TableCellView_h_
-#define _ObjectivelyMVC_TableCellView_h_
+#pragma once
 
 #include <ObjectivelyMVC/Control.h>
 
@@ -89,6 +88,3 @@ struct TableCellViewInterface {
  * @brief The TableCellView Class.
  */
 extern Class _TableCellView;
-
-#endif /* _ObjectivelyMVC_TableCellView_h_ */
-

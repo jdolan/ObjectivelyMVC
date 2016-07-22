@@ -8,5 +8,5 @@ Description: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
 URL: https://github.com/jdolan/ObjectivelyMVC
 Version: 0.1.0
 Cflags: -I${includedir}
-Libs: -L${libdir} -lObjectively
+Libs: -L${libdir} -lObjectivelyMVC
 Libs.private:

@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Button_h_
-#define _ObjectivelyMVC_Button_h_
+#pragma once
 
 #include <ObjectivelyMVC/Control.h>
 
@@ -95,5 +94,3 @@ struct ButtonInterface {
  * @brief The Button Class.
  */
 extern Class _Button;
-
-#endif

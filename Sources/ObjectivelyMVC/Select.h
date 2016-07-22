@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Select_h_
-#define _ObjectivelyMVC_Select_h_
+#pragma once
 
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Option.h>
@@ -187,6 +186,3 @@ struct SelectInterface {
  * @brief The Select Class.
  */
 extern Class _Select;
-
-#endif /* _ObjectivelyMVC_Select_h_ */
-

@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_Input_h_
-#define _ObjectivelyMVC_Input_h_
+#pragma once
 
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Label.h>
@@ -120,6 +119,3 @@ struct InputInterface {
  * @brief The Input Class.
  */
 extern Class _Input;
-
-#endif /* _ObjectivelyMVC_Input_h_ */
-
