@@ -127,7 +127,7 @@ static long getCurrentTime(void) {
  * vanilla SDL2 / OpenGL application.
  */
 static void drawScene(void) {
-	
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	
@@ -135,7 +135,10 @@ static void drawScene(void) {
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 	gluLookAt(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	
 	glPushMatrix();
@@ -154,6 +157,8 @@ static void drawScene(void) {
 	glDisable(GL_BLEND);
 	
 	glutWireTeapot(1.0);
+
+#pragma clang diagnostic pop
 	
 	glEnable(GL_BLEND);
 	glColor3f(1.0, 1.0, 1.0);
