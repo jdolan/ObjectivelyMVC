@@ -108,14 +108,45 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		}
 	} else if (event->type == SDL_MOUSEMOTION) {
 		if (this->isResizing) {
-			self->frame.w += event->motion.xrel;
-			self->frame.h += event->motion.yrel;
+
+			int w, h;
+			$(self, sizeThatFits, &w, &h);
+
+			self->frame.w = clamp(self->frame.w + event->motion.xrel, w, INT32_MAX);
+			self->frame.h = clamp(self->frame.h + event->motion.yrel, h, INT32_MAX);
+
 			self->needsLayout = true;
 		} else if (this->isDragging) {
 			self->frame.x += event->motion.xrel;
 			self->frame.y += event->motion.yrel;
 		}
 	}
+}
+
+/**
+ * @see View::sizeThatFits(const View *, int *, int *)
+ */
+static void sizeThatFits(const View *self, int *w, int *h) {
+
+	*w = *h = 0;
+
+	Array *subviews = $(self, visibleSubviews);
+
+	for (size_t i = 0; i < subviews->count; i++) {
+
+		const View *subview = $(subviews, objectAtIndex, i);
+
+		int sw, sh;
+		$(subview, sizeThatFits, &sw, &sh);
+
+		*w = max(*w, sw);
+		*h = max(*h, sh);
+	}
+
+	*w += self->padding.left + self->padding.right;
+	*h += self->padding.top + self->padding.bottom;
+
+	release(subviews);
 }
 
 #pragma mark - Panel
@@ -143,6 +174,9 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		$((View *) self, addSubview, (View *) self->resizeHandle);
 
+		self->view.padding.top = self->view.padding.bottom = DEFAULT_PANEL_PADDING;
+		self->view.padding.left = self->view.padding.right = DEFAULT_PANEL_PADDING;
+
 		self->view.backgroundColor = Colors.DefaultColor;
 		self->view.borderWidth = 1;
 	}
@@ -160,6 +194,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 

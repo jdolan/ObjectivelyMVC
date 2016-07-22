@@ -427,6 +427,22 @@ static void sizeToFit(View *self) {
 	}
 }
 
+/**
+ * @brief ArrayEnumerator for visibleSubviews.
+ */
+static _Bool visibleSubviews_filter(const Array *array, ident obj, ident data) {
+	return ((View *) obj)->hidden == false;
+}
+
+/**
+ * @fn Array *View::visibleSubviews(const View *self)
+ *
+ * @memberof View
+ */
+static Array *visibleSubviews(const View *self) {
+	return $((Array *) self->subviews, filterObjects, visibleSubviews_filter, NULL);
+}
+
 #pragma mark - View class methods
 
 /**
@@ -452,6 +468,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
+	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 }
 
 Class _View = {

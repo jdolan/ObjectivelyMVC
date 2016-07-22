@@ -73,8 +73,6 @@ static void loadView(ViewController *self) {
 	StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
 	stackView->view.autoresizingMask = ViewAutoresizingFill;
 	stackView->spacing = 10;
-	stackView->view.padding.top = stackView->view.padding.bottom = 10;
-	stackView->view.padding.left = stackView->view.padding.right = 10;
 	
 	$((View *) panel, addSubview, (View *) stackView);
 	

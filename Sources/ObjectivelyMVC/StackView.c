@@ -30,13 +30,6 @@
 #pragma mark - View
 
 /**
- * @brief ArrayEnumerator for layoutSubviews, filtering to visible subviews.
- */
-static _Bool layoutSubviews_filter(const Array *array, ident obj, ident data) {
-	return ((View *) obj)->hidden == false;
-}
-
-/**
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
@@ -57,7 +50,7 @@ static void layoutSubviews(View *self) {
 			break;
 	}
 	
-	Array *subviews = $((Array *) self->subviews, filterObjects, layoutSubviews_filter, NULL);
+	Array *subviews = $(self, visibleSubviews);
 	availableSize -= this->spacing * subviews->count - 1;
 	
 	for (size_t i = 0; i < subviews->count; i++) {
@@ -153,7 +146,7 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 	
 	*w = *h = 0;
 	
-	Array *subviews = $((Array *) self->subviews, filterObjects, layoutSubviews_filter, NULL);
+	Array *subviews = $(self, visibleSubviews);
 	if (subviews->count) {
 		
 		for (size_t i = 0; i < subviews->count; i++) {
@@ -184,6 +177,9 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 				break;
 		}
 	}
+
+	*w += self->padding.left + self->padding.right;
+	*h += self->padding.top + self->padding.bottom;
 
 	release(subviews);
 }

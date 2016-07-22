@@ -342,6 +342,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*sizeToFit)(View *self);
+
+	/**
+	 * @fn Array *View::visibleSubviews(const View *self)
+	 *
+	 * @return An Array of this View's visible subviews.
+	 *
+	 * @memberof View
+	 */
+	Array *(*visibleSubviews)(const View *self);
 };
 
 extern Class _View;
