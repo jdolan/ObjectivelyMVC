@@ -21,8 +21,7 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#ifndef _ObjectivelyMVC_HelloViewController_h_
-#define _ObjectivelyMVC_HelloViewController_h_
+#pragma once
 
 #include <ObjectivelyMVC/ViewController.h>
 
@@ -70,5 +69,3 @@ struct HelloViewControllerInterface {
  * @brief The HelloViewController Class.
  */
 extern Class _HelloViewController;
-
-#endif

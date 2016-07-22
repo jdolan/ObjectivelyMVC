@@ -26,10 +26,6 @@
 
 #include <SDL2/SDL_surface.h>
 
-#ifndef PKGDATADIR
- #define PKGDATADIR "."
-#endif
-
 /**
  * @file
  * 

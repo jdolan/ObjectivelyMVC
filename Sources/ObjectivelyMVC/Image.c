@@ -28,6 +28,10 @@
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
 
+#ifndef PKGDATADIR
+ #define PKGDATADIR "."
+#endif
+
 #define _Class _Image
 
 #pragma mark - Object
