@@ -58,11 +58,7 @@ int main(int arg, char **argv) {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, 0,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE
 	);
-	
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
+
 	while (true) {
 		SDL_Event event;
 		
@@ -76,11 +72,15 @@ int main(int arg, char **argv) {
 				break;
 			}
 		}
+
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		SDL_RenderClear(renderer);
 
 		drawScene();
-		
+
+		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+
 		$(helloViewController, drawView, renderer);
 		
 		SDL_RenderPresent(renderer);
