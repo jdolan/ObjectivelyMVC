@@ -26,8 +26,8 @@
 
 #include <SDL2/SDL_surface.h>
 
-#ifndef PACKAGE_DATA_DIR
-#define PACKAGE_DATA_DIR "."
+#ifndef PKGDATADIR
+ #define PKGDATADIR "."
 #endif
 
 /**

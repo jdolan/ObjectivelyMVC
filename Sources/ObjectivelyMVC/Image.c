@@ -57,7 +57,7 @@ static Image *initWithName(Image *self, const char *name) {
 
 	char *dir = getenv("OBJECTIVELYMVC_DATA_DIR");
 	if (dir == NULL) {
-		dir = PACKAGE_DATA_DIR;
+		dir = PKGDATADIR;
 	}
 
 	char *path;

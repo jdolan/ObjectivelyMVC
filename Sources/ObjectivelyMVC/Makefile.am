@@ -1,5 +1,6 @@
 AUTOMAKE_OPTIONS = nostdinc
 
+pkgdatadir = $(datadir)/ObjectivelyMVC
 pkgincludedir = $(includedir)/ObjectivelyMVC
 
 pkginclude_HEADERS = \
@@ -57,8 +58,7 @@ libObjectivelyMVC_la_SOURCES = \
 	ViewController.c
 
 libObjectivelyMVC_la_CFLAGS = \
-	-I $(top_builddir) -I $(top_builddir)/Sources\
-	-DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" \
+	-I $(top_builddir) -I $(top_builddir)/Sources -DPKGDATADIR=\"$(pkgdatadir)\" \
 	@HOST_CFLAGS@ \
 	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
