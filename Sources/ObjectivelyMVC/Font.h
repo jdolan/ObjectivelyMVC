@@ -23,8 +23,6 @@
 
 #pragma once
 
-#include <fontconfig/fontconfig.h>
-
 #include <SDL2/SDL_ttf.h>
 
 #include <Objectively/Array.h>
@@ -137,6 +135,21 @@ struct FontInterface {
 	 * @memberof Font
 	 */
 	Font *(*initWithName)(Font *self, const char *name);
+
+	/**
+	 * @fn Font *Font::initWithPattern(Font *self, FcPattern *pattern)
+	 *
+	 * @brief Initializes this Font with the given Fontconfig pattern.
+	 *
+	 * @param name The Fontconfig pattern.
+	 *
+	 * @return The initialized Font, or `NULL` on error.
+	 *
+	 * @memberof Font
+	 *
+	 * @private
+	 */
+	Font *(*initWithPattern)(Font *self, ident pattern);
 	
 	/**
 	 * @fn void Font::renderCharacters(const Font *self, const char *text, SDL_Color color)

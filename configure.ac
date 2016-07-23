@@ -54,7 +54,7 @@ AC_CHECK_HEADERS([GL/glu.h OpenGL/glu.h])
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 PKG_CHECK_MODULES([FONTCONFIG], [fontconfig >= 2.10.0])
 PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 0.3.0])
-PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.0 SDL2_image SDL2_ttf])
+PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.3 SDL2_image SDL2_ttf])
 
 AC_CONFIG_FILES([
 	Makefile

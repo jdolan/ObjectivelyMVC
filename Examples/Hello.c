@@ -27,6 +27,8 @@
 #include <GL/glu.h>
 #endif
 
+#include <assert.h>
+
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
