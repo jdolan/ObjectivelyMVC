@@ -49,7 +49,7 @@ AM_CONDITIONAL([MINGW], [test "x$HOST_NAME" = "xMINGW"])
 AM_CONDITIONAL([LINUX], [test "x$HOST_NAME" = "xLINUX"])
 
 AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h])
-AC_CHECK_HEADERS([GL/glut.h GLUT/glut.h])
+AC_CHECK_HEADERS([GL/glu.h OpenGL/glu.h])
 
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 PKG_CHECK_MODULES([FONTCONFIG], [fontconfig >= 2.10.0])

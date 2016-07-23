@@ -55,13 +55,11 @@
 		CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4931C547BDD00CD0B13 /* StackView.c */; };
 		CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4941C547BDD00CD0B13 /* StackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
-		CE12D49B1C5506F700CD0B13 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D49A1C5506F700CD0B13 /* GLUT.framework */; };
 		CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D49C1C568A7600CD0B13 /* TextView.c */; };
 		CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D49D1C568A7600CD0B13 /* TextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D8741C5CF43500CD0B13 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D8731C5CF43500CD0B13 /* libObjectively.dylib */; };
 		CE12D8751C5CF45E00CD0B13 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D8731C5CF43500CD0B13 /* libObjectively.dylib */; };
 		CE12D8761C5CF47600CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
-		CE12D8771C5CF48100CD0B13 /* GLUT.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D49A1C5506F700CD0B13 /* GLUT.framework */; };
 		CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE14A8CC1C66D89900B576FB /* Select.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CA1C66D89900B576FB /* Select.c */; };
 		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -206,7 +204,6 @@
 			files = (
 				CE12D8751C5CF45E00CD0B13 /* libObjectively.dylib in Frameworks */,
 				CE12D44B1C4C867300CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
-				CE12D8771C5CF48100CD0B13 /* GLUT.framework in Frameworks */,
 				CE12D8761C5CF47600CD0B13 /* OpenGL.framework in Frameworks */,
 				CE12D44C1C4C86CE00CD0B13 /* libfontconfig.1.dylib in Frameworks */,
 				CE12D44E1C4C86CE00CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */,
@@ -221,7 +218,6 @@
 			files = (
 				CEF1D8911D4270150099A857 /* libObjectively.dylib in Frameworks */,
 				CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
-				CE12D49B1C5506F700CD0B13 /* GLUT.framework in Frameworks */,
 				CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */,
 				CE12D45C1C4C8F2400CD0B13 /* libfontconfig.1.dylib in Frameworks */,
 				CE12D45E1C4C8F2400CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */,

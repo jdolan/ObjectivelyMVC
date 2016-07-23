@@ -22,9 +22,9 @@
  */
 
 #if defined(__APPLE__)
-#include <GLUT/GLUT.h>
+#include <OpenGL/glu.h>
 #else
-#include <GL/glut.h>
+#include <GL/glu.h>
 #endif
 
 #include <Objectively.h>
@@ -37,8 +37,8 @@ static void drawScene(void);
 /**
  * @brief Program entry point.
  */
-int main(int arg, char **argv) {
-	
+int main(int argc, char **argv) {
+
 	LogSetPriority(SDL_LOG_PRIORITY_VERBOSE);
 	
 	SDL_Init(SDL_INIT_VIDEO);
@@ -136,40 +136,74 @@ static void drawScene(void) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
 	gluLookAt(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-	
+
 	glPushMatrix();
 	
 	const float angle = getCurrentTime() / M_PI * 0.333;
 	glRotatef(angle, 0.0, 1.0, 0.0);
-	
-	const float c = getCurrentTime() / 1000.0;
-	const GLfloat color[3] = {
-		(sin(c + M_PI)   + 1.0) * 0.5,
-		(sin(c + M_PI_2) + 1.0) * 0.5,
-		(sin(c - M_PI_2) + 1.0) * 0.5,
-	};
-	
-	glColor3fv(color);
-	glDisable(GL_BLEND);
-	
-	glutWireTeapot(1.0);
 
-#pragma clang diagnostic pop
-	
-	glEnable(GL_BLEND);
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_DEPTH_TEST);
+
+	glDisable(GL_BLEND);
+	glBegin(GL_QUADS);
+
+	// Top face (y = 1.0)
+	glColor3f(0.0, 1.0, 0.0);
+	glVertex3f( 1.0, 1.0, -1.0);
+	glVertex3f(-1.0, 1.0, -1.0);
+	glVertex3f(-1.0, 1.0,  1.0);
+	glVertex3f( 1.0, 1.0,  1.0);
+
+	// Bottom face (y = -1.0)
+	glColor3f(1.0, 0.5f, 0.0);
+	glVertex3f( 1.0, -1.0,  1.0);
+	glVertex3f(-1.0, -1.0,  1.0);
+	glVertex3f(-1.0, -1.0, -1.0);
+	glVertex3f( 1.0, -1.0, -1.0);
+
+	// Front face  (z = 1.0)
+	glColor3f(1.0, 0.0, 0.0);
+	glVertex3f( 1.0,  1.0, 1.0);
+	glVertex3f(-1.0,  1.0, 1.0);
+	glVertex3f(-1.0, -1.0, 1.0);
+	glVertex3f( 1.0, -1.0, 1.0);
+
+	// Back face (z = -1.0)
+	glColor3f(1.0, 1.0, 0.0);
+	glVertex3f( 1.0, -1.0, -1.0);
+	glVertex3f(-1.0, -1.0, -1.0);
+	glVertex3f(-1.0,  1.0, -1.0);
+	glVertex3f( 1.0,  1.0, -1.0);
+
+	// Left face (x = -1.0)
+	glColor3f(0.0, 0.0, 1.0);
+	glVertex3f(-1.0,  1.0,  1.0);
+	glVertex3f(-1.0,  1.0, -1.0);
+	glVertex3f(-1.0, -1.0, -1.0);
+	glVertex3f(-1.0, -1.0,  1.0);
+
+	// Right face (x = 1.0)
+	glColor3f(1.0, 0.0, 1.0);
+	glVertex3f(1.0,  1.0, -1.0);
+	glVertex3f(1.0,  1.0,  1.0);
+	glVertex3f(1.0, -1.0,  1.0);
+	glVertex3f(1.0, -1.0, -1.0);
+	glEnd();  // End of drawing color-cube
+
 	glColor3f(1.0, 1.0, 1.0);
-	
+
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+
 	glPopMatrix();
-	
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	
+
 	glOrtho(0, 1024, 768, 0, -1, 1);
-	
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
