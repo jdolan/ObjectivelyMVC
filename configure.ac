@@ -25,17 +25,17 @@ case "$host" in
 	*-apple-*)
 		HOST_NAME="APPLE"
 		HOST_LDFLAGS="-headerpad_max_install_names"
-		HOST_LIBS="-framework OpenGL -framework GLUT"
+		HOST_LIBS="-framework OpenGL"
 		;;
 	*-mingw*)
 		HOST_NAME="MINGW"
 		HOST_LDFLAGS="-no-undefined"
-		HOST_LIBS="-lopengl32 -lglut"
+		HOST_LIBS="-lopengl32"
 		;;
 	*)
 		HOST_NAME="LINUX"
 		HOST_CFLAGS="-D_GNU_SOURCE"
-		HOST_LIBS="-lGL -lGLU -lglut"
+		HOST_LIBS="-lGL -lGLU"
 		;;
 esac
 
