@@ -75,11 +75,13 @@ int main(int argc, char **argv) {
 			}
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+		SetRenderDrawColor(renderer, Colors.Black);
 		
 		SDL_RenderClear(renderer);
 
 		drawScene();
+
+		SetRenderDrawColor(renderer, Colors.White);
 
 		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 

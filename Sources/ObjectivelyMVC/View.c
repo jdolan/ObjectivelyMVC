@@ -326,15 +326,15 @@ static void removeSubview(View *self, View *subview) {
 static void render(View *self, SDL_Renderer *renderer) {
 	
 	if (self->backgroundColor.a) {
+
 		SetRenderDrawColor(renderer, self->backgroundColor);
 		
 		const SDL_Rect frame = $(self, renderFrame);
 		SDL_RenderFillRect(renderer, &frame);
-		
-		SetRenderDrawColor(renderer, Colors.White);
 	}
 	
 	if (self->borderWidth && self->borderColor.a) {
+
 		SetRenderDrawColor(renderer, self->borderColor);
 		
 		SDL_Rect frame = $(self, renderFrame);
@@ -345,9 +345,9 @@ static void render(View *self, SDL_Renderer *renderer) {
 			frame.h += 2;
 			SDL_RenderDrawRect(renderer, &frame);
 		}
-		
-		SetRenderDrawColor(renderer, Colors.White);
 	}
+
+	SetRenderDrawColor(renderer, Colors.White);
 }
 
 /**

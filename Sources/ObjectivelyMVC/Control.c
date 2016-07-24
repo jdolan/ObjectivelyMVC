@@ -83,9 +83,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 		points[2].y = frame.y + 1;
 		
 		SDL_RenderDrawLines(renderer, points, lengthof(points));
-		
-		SetRenderDrawColor(renderer, Colors.White);
-		
+
 	} else if (this->bevel == BevelTypeOutset) {
 		
 		SetRenderDrawColor(renderer, Colors.Charcoal);
@@ -115,17 +113,16 @@ static void render(View *self, SDL_Renderer *renderer) {
 		points[2].y = frame.y + 1;
 		
 		SDL_RenderDrawLines(renderer, points, lengthof(points));
-		
-		SetRenderDrawColor(renderer, Colors.White);
 	}
 	
 	if (this->state & ControlStateFocused) {
+
 		SetRenderDrawColor(renderer, Colors.Black);
 		
 		SDL_RenderDrawRect(renderer, &frame);
-		
-		SetRenderDrawColor(renderer, Colors.White);
 	}
+
+	SetRenderDrawColor(renderer, Colors.White);
 }
 
 /**
