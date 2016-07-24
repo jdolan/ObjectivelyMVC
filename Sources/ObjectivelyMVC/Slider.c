@@ -110,8 +110,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				if (event->motion.xrel) {
 					const double scale = (this->max - this->min) / self->view.frame.w;
 					const double delta = scale * event->motion.xrel;
-					this->value = clamp(this->value + delta, this->min, this->max);
-					self->view.needsLayout = true;
+					$(this, setValue, this->value + delta);
 				}
 			}
 			return true;
@@ -155,6 +154,26 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 	return self;
 }
 
+/**
+ * @fn void Slider::setValue(Slider *self, double value)
+ *
+ * @memberof Slider
+ */
+static void setValue(Slider *self, double value) {
+
+	value = clamp(value, self->min, self->max);
+
+	const double delta = fabs(self->value - value);
+	if (delta > __DBL_EPSILON__) {
+		self->value = value;
+		self->control.view.needsLayout = true;
+
+		if (self->delegate.didSetValue) {
+			self->delegate.didSetValue(self);
+		}
+	}
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -170,6 +189,7 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 	
 	((SliderInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((SliderInterface *) clazz->interface)->setValue = setValue;
 }
 
 Class _Slider = {

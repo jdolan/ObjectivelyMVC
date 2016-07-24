@@ -36,8 +36,26 @@
 
 #define DEFAULT_SLIDER_WIDTH 100
 
+typedef struct SliderDelegate SliderDelegate;
+
 typedef struct Slider Slider;
 typedef struct SliderInterface SliderInterface;
+
+/**
+ * @brief The Slider delegate protocol.
+ */
+struct SliderDelegate {
+
+	/**
+	 * @brief Delegate user data.
+	 */
+	ident data;
+
+	/**
+	 * @brief Delegate callback for Slider value modification.
+	 */
+	void (*didSetValue)(Slider *slider);
+};
 
 /**
  * @brief The Slider type.
@@ -61,6 +79,11 @@ struct Slider {
 	 * @private
 	 */
 	SliderInterface *interface;
+
+	/**
+	 * @brief The delegate.
+	 */
+	SliderDelegate delegate;
 	
 	/**
 	 * @brief The slider handle.
@@ -105,8 +128,15 @@ struct SliderInterface {
 	 * @memberof Slider
 	 */
 	Slider *(*initWithFrame)(Slider *self, const SDL_Rect *frame, ControlStyle style);
-	
-	// ..
+
+	/**
+	 * @fn void Slider::setValue(Slider *self, double value)
+	 *
+	 * @brief Sets this Slider's value, invalidating its layout and notifying the delegate.
+	 *
+	 * @memberof Slider
+	 */
+	void (*setValue)(Slider *self, double value);
 };
 
 /**
