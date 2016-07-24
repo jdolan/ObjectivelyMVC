@@ -113,7 +113,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == 1) {
 		if (this->isResizable && $((View *) this->resizeHandle, didReceiveEvent, event)) {
 			this->isResizing = true;
-		} else if (this->isDraggable) {
+		} else if (this->isDraggable && $(self, didReceiveEvent, event)) {
 			this->isDragging = true;
 		}
 	} else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == 1) {
