@@ -56,7 +56,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 	
 	TextView *this = (TextView *) self;
 	
-	char *text = this->attributedText->string.chars;
+	const char *text = this->attributedText->string.chars;
 	
 	if (text == NULL || strlen(text) == 0) {
 		if ($((Control *) this, focused) == false) {

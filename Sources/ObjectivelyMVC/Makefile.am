@@ -5,6 +5,7 @@ pkgincludedir = $(includedir)/ObjectivelyMVC
 
 pkginclude_HEADERS = \
 	Action.h \
+	Box.h \
 	Button.h \
 	Checkbox.h \
 	Colors.h \
@@ -34,6 +35,7 @@ lib_LTLIBRARIES = \
 
 libObjectivelyMVC_la_SOURCES = \
 	Action.c \
+	Box.c \
 	Button.c \
 	Checkbox.c \
 	Colors.c \

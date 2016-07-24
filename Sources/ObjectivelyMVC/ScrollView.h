@@ -52,7 +52,7 @@ struct ScrollViewDelegate {
  *
  * @extends Control
  *
- * @ingroup
+ * @ingroup Controls
  */
 struct ScrollView {
 	

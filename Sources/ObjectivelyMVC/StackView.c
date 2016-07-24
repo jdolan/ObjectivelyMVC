@@ -152,18 +152,15 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 		for (size_t i = 0; i < subviews->count; i++) {
 			
 			const View *subview = $(subviews, objectAtIndex, i);
-			
-			int sw, sh;
-			$(subview, sizeThatFits, &sw, &sh);
-			
+
 			switch (this->axis) {
 				case StackViewAxisVertical:
-					*w = max(*w, sw);
-					*h += sh;
+					*w = max(*w, subview->frame.w);
+					*h += subview->frame.h;
 					break;
 				case StackViewAxisHorizontal:
-					*h = max(*h, sh);
-					*w += sw;
+					*h = max(*h, subview->frame.h);
+					*w += subview->frame.w;
 					break;
 			}
 		}

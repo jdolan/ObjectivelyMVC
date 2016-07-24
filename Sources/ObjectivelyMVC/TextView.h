@@ -45,6 +45,11 @@ typedef struct TextViewInterface TextViewInterface;
  * @brief The TextView delegate protocol.
  */
 struct TextViewDelegate {
+
+	/**
+	 * @brief Delegate user data.
+	 */
+	ident data;
 	
 	/**
 	 * @brief Delegate callback for initiating text editing.
@@ -89,11 +94,11 @@ struct TextView {
 	 * @brief The user-provided text.
 	 */
 	MutableString *attributedText;
-	
+
 	/**
 	 * @brief The default text, displayed when no user-provided text is available.
 	 */
-	char *defaultText;
+	const char *defaultText;
 	
 	/**
 	 * @brief The delegate.

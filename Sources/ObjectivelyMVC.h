@@ -30,6 +30,7 @@
  */
 
 #include <ObjectivelyMVC/Action.h>
+#include <ObjectivelyMVC/Box.h>
 #include <ObjectivelyMVC/Button.h>
 #include <ObjectivelyMVC/Checkbox.h>
 #include <ObjectivelyMVC/Colors.h>

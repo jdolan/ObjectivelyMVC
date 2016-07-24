@@ -83,6 +83,8 @@
 		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
 		CEF1D8911D4270150099A857 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CEF1D8931D42A2C70099A857 /* resize.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEF1D8921D429F7A0099A857 /* resize.png */; };
+		CEF1D8A01D440C7B0099A857 /* Box.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D89E1D440C7B0099A857 /* Box.c */; };
+		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -195,6 +197,8 @@
 		CEF1D8901D4270150099A857 /* libObjectively.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libObjectively.dylib; path = "../../Library/Developer/Xcode/DerivedData/Quetoo-eijmznjiunzbaafulkyjapfulhqz/Build/Products/Debug/libObjectively.dylib"; sourceTree = "<group>"; };
 		CEF1D8921D429F7A0099A857 /* resize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = resize.png; sourceTree = "<group>"; };
 		CEF1D8941D42ABCA0099A857 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		CEF1D89E1D440C7B0099A857 /* Box.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Box.c; sourceTree = "<group>"; };
+		CEF1D89F1D440C7B0099A857 /* Box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -247,6 +251,8 @@
 			children = (
 				CE12D4711C4DAF6100CD0B13 /* Action.c */,
 				CE12D4721C4DAF6100CD0B13 /* Action.h */,
+				CEF1D89E1D440C7B0099A857 /* Box.c */,
+				CEF1D89F1D440C7B0099A857 /* Box.h */,
 				CE12D4691C4D810F00CD0B13 /* Button.c */,
 				CE12D46A1C4D810F00CD0B13 /* Button.h */,
 				CE12D47C1C4F35DF00CD0B13 /* Checkbox.c */,
@@ -445,6 +451,7 @@
 				CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */,
 				CE12D4451C4C38C700CD0B13 /* Text.h in Headers */,
 				CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */,
+				CEF1D8A11D440C7B0099A857 /* Box.h in Headers */,
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
 				CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */,
 			);
@@ -580,6 +587,7 @@
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
 				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
+				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
 				CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */,
 				CE8E7FFE1C84E8DA00F4C3D4 /* TableColumnView.c in Sources */,

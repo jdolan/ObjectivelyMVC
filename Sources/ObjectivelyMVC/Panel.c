@@ -136,11 +136,8 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 
 		const View *subview = $(subviews, objectAtIndex, i);
 
-		int sw, sh;
-		$(subview, sizeThatFits, &sw, &sh);
-
-		*w = max(*w, sw);
-		*h = max(*h, sh);
+		*w = max(*w, subview->frame.w);
+		*h = max(*h, subview->frame.h);
 	}
 
 	*w += self->padding.left + self->padding.right;

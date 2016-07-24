@@ -87,7 +87,7 @@ struct LabelInterface {
 	 * @memberof Label
 	 */
 	Label *(*initWithText)(Label *self, const char *text, Font *font);
-	
+
 	/**
 	 * @fn void Label::setFont(Label *self, Font *font)
 	 *
@@ -97,8 +97,8 @@ struct LabelInterface {
 	 *
 	 * @memberof Label
 	 */
-	void (*setText)(Label *self, const char *text);
-	
+	void (*setFont)(Label *self, Font *font);
+
 	/**
 	 * @fn void Label::setText(Label *self, const char *text)
 	 *
@@ -108,7 +108,7 @@ struct LabelInterface {
 	 *
 	 * @memberof Label
 	 */
-	void (*setFont)(Label *self, Font *font);
+	void (*setText)(Label *self, const char *text);
 };
 
 /**

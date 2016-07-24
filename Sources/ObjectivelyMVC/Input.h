@@ -53,7 +53,7 @@ typedef struct InputInterface InputInterface;
  *
  * @extends StackView
  *
- * @ingroup
+ * @ingroup Containers
  */
 struct Input {
 	

@@ -406,7 +406,7 @@ static void sizeToFit(View *self) {
 	
 	$(self, layoutIfNeeded);
 	
-	Array *subviews = (Array *) self->subviews;
+	Array *subviews = $(self, visibleSubviews);
 	for (size_t i = 0; i < subviews->count; i++) {
 		
 		View *subview = (View *) $(subviews, objectAtIndex, i);
@@ -425,6 +425,8 @@ static void sizeToFit(View *self) {
 			self->frame.h = sy;
 		}
 	}
+
+	release(subviews);
 }
 
 /**

@@ -23,29 +23,29 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/ImageView.h>
+#include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
  * @file
  *
- * @brief Draggable containers.
+ * @brief A container View with a positioned label.
  */
 
-#define DEFAULT_PANEL_PADDING 10
-#define DEFAULT_PANEL_RESIZE_HANDLE_SIZE 10
+#define DEFAULT_BOX_PADDING 10
+#define DEFAULT_BOX_LABEL_X 20
 
-typedef struct Panel Panel;
-typedef struct PanelInterface PanelInterface;
+typedef struct Box Box;
+typedef struct BoxInterface BoxInterface;
 
 /**
- * @brief The Panel type.
+ * @brief The Box type.
  *
  * @extends View
  *
  * @ingroup Containers
  */
-struct Panel {
+struct Box {
 	
 	/**
 	 * @brief The parent.
@@ -59,40 +59,18 @@ struct Panel {
 	 *
 	 * @private
 	 */
-	PanelInterface *interface;
+	BoxInterface *interface;
 
 	/**
-	 * @brief If true, this Panel may be repositioned by the user.
+	 * @brief The label.
 	 */
-	_Bool isDraggable;
-
-	/**
-	 * @brief True if the user is repositioning this Panel.
-	 */
-	_Bool isDragging;
-
-	/**
-	 * @brief If true, this Panel may be resized by the user.
-	 */
-	_Bool isResizable;
-
-	/**
-	 * @brief True if the user is resizing this Panel.
-	 */
-	_Bool isResizing;
-
-	/**
-	 * @brief The resize handle.
-	 *
-	 * @private
-	 */
-	ImageView *resizeHandle;
+	Label *label;
 };
 
 /**
- * @brief The Panel interface.
+ * @brief The Box interface.
  */
-struct PanelInterface {
+struct BoxInterface {
 	
 	/**
 	 * @brief The parent interface.
@@ -100,21 +78,21 @@ struct PanelInterface {
 	ViewInterface viewInterface;
 	
 	/**
-	 * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
+	 * @fn Box *Box::initWithFrame(Box *self, const SDL_Rect *frame)
 	 *
-	 * @brief Initializes this Panel with the specified frame.
+	 * @brief Initializes this Box.
 	 *
 	 * @param frame The frame.
 	 *
-	 * @return The initialized Panel, or `NULL` on error.
+	 * @return The initialized Box, or `NULL` on error.
 	 *
-	 * @memberof Panel
+	 * @memberof Box
 	 */
-	Panel *(*initWithFrame)(Panel *self, const SDL_Rect *frame);
+	Box *(*initWithFrame)(Box *self, const SDL_Rect *frame);
 };
 
 /**
- * @brief The Panel Class.
+ * @brief The Box Class.
  */
-extern Class _Panel;
+extern Class _Box;
 
