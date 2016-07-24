@@ -170,10 +170,10 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 		
 		switch (this->axis) {
 			case StackViewAxisVertical:
-				*h += this->spacing * subviews->count - 1;
+				*h += this->spacing * (subviews->count - 1);
 				break;
 			case StackViewAxisHorizontal:
-				*w += this->spacing * subviews->count - 1;
+				*w += this->spacing * (subviews->count - 1);
 				break;
 		}
 	}
