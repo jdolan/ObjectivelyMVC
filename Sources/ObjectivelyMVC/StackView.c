@@ -153,15 +153,18 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 			
 			const View *subview = $(subviews, objectAtIndex, i);
 
-			switch (this->axis) {
-				case StackViewAxisVertical:
-					*w = max(*w, subview->frame.w);
-					*h += subview->frame.h;
-					break;
-				case StackViewAxisHorizontal:
-					*h = max(*h, subview->frame.h);
-					*w += subview->frame.w;
-					break;
+			if (subview->alignment != ViewAlignmentInternal) {
+
+				switch (this->axis) {
+					case StackViewAxisVertical:
+						*w = max(*w, subview->frame.w);
+						*h += subview->frame.h;
+						break;
+					case StackViewAxisHorizontal:
+						*h = max(*h, subview->frame.h);
+						*w += subview->frame.w;
+						break;
+				}
 			}
 		}
 		

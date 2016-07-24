@@ -45,14 +45,28 @@ static void dealloc(Object *self) {
 
 #pragma mark - View
 
-static Image *_resize;
+/**
+ * @see View::layoutSubviews(View *)
+ */
+static void layoutSubviews(View *self) {
+
+	super(View, self, layoutSubviews);
+
+	const Panel *this = (Panel *) self;
+
+	View *resizeHandle = (View *) this->resizeHandle;
+
+	resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
+	resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
+}
 
 /**
  * @return True if a descendant Control received the given event, false otherwise.
  */
 static _Bool controlReceivedEvent(const View *view, const SDL_Event *event) {
 
-	Array *subviews = (Array *) view->subviews;
+	Array *subviews = $(view, visibleSubviews);
+
 	for (size_t i = 0; i < subviews->count; i++) {
 
 		View *subview = $(subviews, objectAtIndex, i);
@@ -66,6 +80,8 @@ static _Bool controlReceivedEvent(const View *view, const SDL_Event *event) {
 			}
 		}
 	}
+
+	release(subviews);
 
 	return false;
 }
@@ -123,30 +139,9 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	}
 }
 
-/**
- * @see View::sizeThatFits(const View *, int *, int *)
- */
-static void sizeThatFits(const View *self, int *w, int *h) {
-
-	*w = *h = 0;
-
-	Array *subviews = $(self, visibleSubviews);
-
-	for (size_t i = 0; i < subviews->count; i++) {
-
-		const View *subview = $(subviews, objectAtIndex, i);
-
-		*w = max(*w, subview->frame.w);
-		*h = max(*h, subview->frame.h);
-	}
-
-	*w += self->padding.left + self->padding.right;
-	*h += self->padding.top + self->padding.bottom;
-
-	release(subviews);
-}
-
 #pragma mark - Panel
+
+static Image *_resize;
 
 /**
  * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
@@ -164,7 +159,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->resizeHandle = $(alloc(ImageView), initWithImage, _resize);
 		assert(self->resizeHandle);
 
-		self->resizeHandle->view.alignment = ViewAlignmentBottomRight;
+		self->resizeHandle->view.alignment = ViewAlignmentInternal;
 
 		self->resizeHandle->view.frame.w = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 		self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
@@ -190,8 +185,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 

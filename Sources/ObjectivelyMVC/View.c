@@ -210,7 +210,7 @@ static void layoutIfNeeded(View *self) {
 	
 	if (self->needsLayout) {
 		self->needsLayout = false;
-		
+
 		$(self, layoutSubviews);
 	}
 	
@@ -224,7 +224,7 @@ static void layoutIfNeeded(View *self) {
  * @memberof View
  */
 static void layoutSubviews(View *self) {
-	
+
 	const SDL_Rect bounds = $(self, bounds);
 	
 	const Array *subviews = (Array *) self->subviews;
@@ -241,7 +241,9 @@ static void layoutSubviews(View *self) {
 		}
 		
 		switch (subview->alignment) {
+
 			case ViewAlignmentNone:
+			case ViewAlignmentInternal:
 				break;
 			
 			case ViewAlignmentTopLeft:
@@ -356,14 +358,21 @@ static void render(View *self, SDL_Renderer *renderer) {
 static SDL_Rect renderFrame(const View *self) {
 	
 	SDL_Rect frame = self->frame;
-	
-	const View *superview = self->superview;
+
+	const View *view = self;
+	const View *superview = view->superview;
 	while (superview) {
 		
-		frame.x += superview->frame.x + superview->padding.left;
-		frame.y += superview->frame.y + superview->padding.top;
+		frame.x += superview->frame.x;
+		frame.y += superview->frame.y;
+
+		if (view->alignment != ViewAlignmentInternal) {
+			frame.x += superview->padding.left;
+			frame.y += superview->padding.top;
+		}
 		
-		superview = superview->superview;
+		view = superview;
+		superview = view->superview;
 	}
 	
 	return frame;
@@ -390,9 +399,34 @@ static void respondToEvent(View *self, const SDL_Event *event) {
  * @memberof View
  */
 static void sizeThatFits(const View *self, int *w, int *h) {
-	
-	*w = self->frame.w;
-	*h = self->frame.h;
+
+	if (self->autoresizingMask & ViewAutoresizingContain) {
+		*w = *h = 0;
+
+		Array *subviews = $(self, visibleSubviews);
+
+		for (size_t i = 0; i < subviews->count; i++) {
+
+			const View *subview = $(subviews, objectAtIndex, i);
+
+			if (subview->alignment != ViewAlignmentInternal) {
+
+				int sw, sh;
+				$(subview, sizeThatFits, &sw, &sh);
+
+				*w = max(*w, subview->frame.x + sw);
+				*h = max(*h, subview->frame.y + sh);
+			}
+		}
+
+		*w += self->padding.left + self->padding.right;
+		*h += self->padding.top + self->padding.bottom;
+		
+		release(subviews);
+	} else {
+		*w = self->frame.w;
+		*h = self->frame.h;
+	}
 }
 
 /**
@@ -409,20 +443,18 @@ static void sizeToFit(View *self) {
 	Array *subviews = $(self, visibleSubviews);
 	for (size_t i = 0; i < subviews->count; i++) {
 		
-		View *subview = (View *) $(subviews, objectAtIndex, i);
-		
-		int w, h;
-		$(subview, sizeThatFits, &w, &h);
-		
-		const int sx = subview->frame.x + w + self->padding.left + self->padding.right;
-		const int sy = subview->frame.y + h + self->padding.top + self->padding.bottom;
+		const View *subview = (View *) $(subviews, objectAtIndex, i);
 
-		if (sx > self->frame.w) {
-			self->frame.w = sx;
-		}
-		
-		if (sy > self->frame.h) {
-			self->frame.h = sy;
+		if (subview->alignment != ViewAlignmentInternal) {
+
+			int sw, sh;
+			$(subview, sizeThatFits, &sw, &sh);
+
+			const int sx = subview->frame.x + sw + self->padding.left + self->padding.right;
+			const int sy = subview->frame.y + sh + self->padding.top + self->padding.bottom;
+
+			self->frame.w = max(self->frame.w, sx);
+			self->frame.h = max(self->frame.h, sy);
 		}
 	}
 

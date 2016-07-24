@@ -67,11 +67,13 @@ static void loadView(ViewController *self) {
 
 	const SDL_Rect frame = { .x = 50, .y = 50, .w = 420, .h = 240 };
 	Panel *panel = $(alloc(Panel), initWithFrame, &frame);
-	
+
+	panel->view.autoresizingMask = ViewAutoresizingContain;
+
 	$(self->view, addSubview, (View *) panel);
 	
 	StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
-	stackView->view.autoresizingMask = ViewAutoresizingFill;
+	stackView->view.autoresizingMask = ViewAutoresizingContain;
 	stackView->spacing = 10;
 	
 	$((View *) panel, addSubview, (View *) stackView);

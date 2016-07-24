@@ -45,12 +45,13 @@
  */
 extern _Bool ViewWindowUsesHighDPI;
 
-#define ViewAlignmentMaskTop    0x1
-#define ViewAlignmentMaskMiddle 0x2
-#define ViewAlignmentMaskBottom 0x4
-#define ViewAlignmentMaskLeft   0x8
-#define ViewAlignmentMaskCenter 0x10
-#define ViewAlignmentMaskRight  0x20
+#define ViewAlignmentMaskTop      0x1
+#define ViewAlignmentMaskMiddle   0x2
+#define ViewAlignmentMaskBottom   0x4
+#define ViewAlignmentMaskLeft     0x8
+#define ViewAlignmentMaskCenter   0x10
+#define ViewAlignmentMaskRight    0x20
+#define ViewAlignmentMaskInternal 0x100
 
 /**
  * @brief Alignment constants, used to align a View within its superview.
@@ -65,7 +66,8 @@ typedef enum {
 	ViewAlignmentMiddleRight = (ViewAlignmentMaskMiddle | ViewAlignmentMaskRight),
 	ViewAlignmentBottomLeft = (ViewAlignmentMaskBottom | ViewAlignmentMaskLeft),
 	ViewAlignmentBottomCenter = (ViewAlignmentMaskBottom | ViewAlignmentMaskCenter),
-	ViewAlignmentBottomRight = (ViewAlignmentMaskBottom | ViewAlignmentMaskRight)
+	ViewAlignmentBottomRight = (ViewAlignmentMaskBottom | ViewAlignmentMaskRight),
+	ViewAlignmentInternal = ViewAlignmentMaskInternal
 } ViewAlignment;
 
 /**
@@ -76,6 +78,7 @@ typedef enum {
 	ViewAutoresizingWidth = 0x1,
 	ViewAutoresizingHeight = 0x2,
 	ViewAutoresizingFill = 0x3,
+	ViewAutoresizingContain = 0x4
 } ViewAutoresizing;
 
 /**

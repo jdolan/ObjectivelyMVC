@@ -53,30 +53,6 @@ static void layoutSubviews(View *self) {
 	super(View, self, layoutSubviews);
 }
 
-/**
- * @see View::sizeThatFits(const View *, int *, int *)
- */
-static void sizeThatFits(const View *self, int *w, int *h) {
-
-	*w = *h = 0;
-
-	Array *subviews = $(self, visibleSubviews);
-
-	for (size_t i = 0; i < subviews->count; i++) {
-
-		const View *subview = $(subviews, objectAtIndex, i);
-
-		*w = max(*w, subview->frame.w);
-		*h = max(*h, subview->frame.h);
-	}
-
-	*w += self->padding.left + self->padding.right;
-	*h += self->padding.top + self->padding.bottom;
-
-	release(subviews);
-}
-
-
 #pragma mark - Box
 
 /**
@@ -118,7 +94,6 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((BoxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
