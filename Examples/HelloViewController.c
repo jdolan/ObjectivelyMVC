@@ -27,20 +27,20 @@
 
 #define _Class _HelloViewController
 
-#pragma mark - Actions
+#pragma mark - Actions and delegate callbacks
 
 /**
  * @brief ActionFunction for Button.
  */
-static void buttonAction(ident sender, const SDL_Event *event, ident data) {
+static void buttonAction(Control *control, const SDL_Event *event, ident data) {
 	printf("Button clicked\n");
 }
 
 /**
  * @brief ActionFunction for Checkbox.
  */
-static void checkboxAction(ident sender, const SDL_Event *event, ident data) {
-	if ($((Control *) sender, selected)) {
+static void checkboxAction(Control *control, const SDL_Event *event, ident data) {
+	if ($(control, selected)) {
 		printf("Checkbox selected\n");
 	} else {
 		printf("Checkbox deselected\n");

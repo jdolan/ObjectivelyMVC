@@ -138,7 +138,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 		Action *action = $(this, actionForEvent, event);
 		if (action) {
-			action->function(self, event, action->data);
+			action->function(this, event, action->data);
 		}
 	}
 	

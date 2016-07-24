@@ -36,10 +36,12 @@
 typedef struct Action Action;
 typedef struct ActionInterface ActionInterface;
 
+typedef struct Control Control;
+
 /**
  * @brief The ActionFunction callback.
  */
-typedef void (*ActionFunction)(ident sender, const SDL_Event *event, ident data);
+typedef void (*ActionFunction)(Control *control, const SDL_Event *event, ident data);
 
 /**
  * @brief The Action type.

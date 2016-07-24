@@ -65,7 +65,6 @@ typedef enum {
 #define DEFAULT_CONTROL_HEIGHT 32
 #define DEFAULT_CONTROL_PADDING 8
 
-typedef struct Control Control;
 typedef struct ControlInterface ControlInterface;
 
 /**
