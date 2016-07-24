@@ -48,9 +48,16 @@ static void dealloc(Object *self) {
  */
 static void layoutSubviews(View *self) {
 
-	Box *this = (Box *) self;
-
 	super(View, self, layoutSubviews);
+
+	View *label = (View *) ((Box *) self)->label;
+	if (label->hidden == false) {
+
+		int w, h;
+		$(label, sizeThatFits, &w, &h);
+
+		label->frame.y = -h * 0.5;
+	}
 }
 
 #pragma mark - Box
@@ -64,13 +71,18 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 	
 	self = (Box *) super(View, self, initWithFrame, frame);
 	if (self) {
-		
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
+
+		self->label = $(alloc(Label), initWithText, NULL, $$(Font, defaultFont, FontCategorySecondaryLabel));
 		assert(self->label);
 
+		self->label->view.backgroundColor = Colors.Gray;
+		self->label->view.alignment = ViewAlignmentInternal;
 		self->label->view.frame.x = DEFAULT_BOX_LABEL_X;
 
-//		$((View *) self, addSubview, (View *) self->label);
+		self->label->view.padding.right = DEFAULT_BOX_LABEL_PADDING;
+		self->label->view.padding.left = DEFAULT_BOX_LABEL_PADDING;
+
+		$((View *) self, addSubview, (View *) self->label);
 
 		self->view.borderColor = Colors.Gray;
 		self->view.borderWidth = 1;

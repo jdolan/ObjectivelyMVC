@@ -98,22 +98,38 @@ static Array *allFonts(void) {
 	return (Array *) fonts;
 }
 
-static Font *_defaultFont;
+static Font *_normal;
+static Font *_smaller;
+static Font *_bigger;
 
 /**
- * @fn Font *Font::defaultFont(void)
+ * @fn Font *Font::defaultFont(FontCategory)
  *
  * @memberof Font
  */
-static Font *defaultFont(void) {
+static Font *defaultFont(FontCategory category) {
 	static Once once;
 
 	do_once(&once, {
-		_defaultFont = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 14, 0);
-		assert(_defaultFont);
+		_normal = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 14, 0);
+		assert(_normal);
+
+		_smaller = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 12, 0);
+		assert(_smaller);
+
+		_bigger = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 16, 0);
+		assert(_bigger);
 	});
 
-	return _defaultFont;
+	switch (category) {
+		case FontCategoryDefault:
+		case FontCategoryPrimaryLabel:
+		case FontCategoryPrimaryControl:
+			return _normal;
+		case FontCategorySecondaryLabel:
+		case FontCategorySecondaryControl:
+			return _smaller;
+	}
 }
 
 static FcPattern *patternWithAttributes(const char *family, int ptsize, int style) {
@@ -226,7 +242,10 @@ static Font *initWithPattern(Font *self, ident pattern) {
 		if (self->font == NULL) {
 			FcChar8 *name = FcNameUnparse(pattern);
 			LogWarn("Failed to load font with pattern \"%s\"\n", name);
-			free(name); release(self); self = NULL;
+
+			free(name);
+			release(self);
+			self = NULL;
 		}
 	}
 
@@ -287,7 +306,9 @@ static void initialize(Class *clazz) {
  */
 static void destroy(Class *clazz) {
 
-	release(_defaultFont);
+	release(_normal);
+	release(_smaller);
+	release(_bigger);
 
 	FcFini();
 	TTF_Quit();

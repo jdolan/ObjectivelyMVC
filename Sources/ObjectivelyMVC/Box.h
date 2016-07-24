@@ -33,6 +33,7 @@
  */
 
 #define DEFAULT_BOX_PADDING 10
+#define DEFAULT_BOX_LABEL_PADDING 4
 #define DEFAULT_BOX_LABEL_X 20
 
 typedef struct Box Box;

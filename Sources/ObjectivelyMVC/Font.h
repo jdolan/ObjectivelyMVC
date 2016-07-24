@@ -41,6 +41,17 @@
  * @brief TrueType fonts.
  */
 
+/**
+ * @brief Font categories.
+ */
+typedef enum {
+	FontCategoryDefault,
+	FontCategoryPrimaryLabel,
+	FontCategorySecondaryLabel,
+	FontCategoryPrimaryControl,
+	FontCategorySecondaryControl,
+} FontCategory;
+
 typedef struct Font Font;
 typedef struct FontInterface FontInterface;
 
@@ -100,13 +111,15 @@ struct FontInterface {
 	/**
 	 * @static
 	 *
-	 * @fn Font *Font::defaultFont(void)
+	 * @fn Font *Font::defaultFont(FontCategory category)
 	 *
-	 * @return The default Font.
+	 * @param category The FontCategory.
+	 *
+	 * @return The default Font for the given category.
 	 *
 	 * @memberof Font
 	 */
-	Font *(*defaultFont)(void);
+	Font *(*defaultFont)(FontCategory category);
 
 	/**
 	 * @fn Font *Font::initWithAttributes(Font *self, const char *family, int ptsize, int style)

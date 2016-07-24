@@ -121,9 +121,7 @@ static void naturalSize(const Text *self, int *width, int *height) {
  */
 static void setFont(Text *self, Font *font) {
 	
-	if (font == NULL) {
-		font = $$(Font, defaultFont);
-	}
+	font = font ?: $$(Font, defaultFont, FontCategoryDefault);
 	
 	if (font != self->font) {
 		
