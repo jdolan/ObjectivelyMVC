@@ -48,11 +48,14 @@ static void checkboxAction(ident sender, const SDL_Event *event, ident data) {
 }
 
 /**
- * @brief ActionFunction for Slider.
+ * @brief SliderDelegate callback.
  */
-static void sliderAction(ident sender, const SDL_Event *event, ident data) {
-	String *string = str("%.1f", ((Slider *) sender)->value);
-	$((Label *) data, setText, string->chars);
+static void sliderDidSetValue(Slider *slider) {
+	String *string = str("%.1f", slider->value);
+
+	Label *label = (Label *) slider->delegate.data;
+	$(label, setText, string->chars);
+
 	release(string);
 }
 
@@ -105,11 +108,14 @@ static void loadView(ViewController *self) {
 	$((View *) stackView, addSubview, (View *) select);
 
 	Slider *slider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
-	slider->min = 0.1, slider->max = 10.0, slider->step = 0.1, slider->value = 5.0;
-	Label *sliderLabel = $(alloc(Label), initWithText, "5.0", NULL);
+	Label *sliderLabel = $(alloc(Label), initWithText, "", NULL);
+	slider->delegate.data = sliderLabel;
+	slider->delegate.didSetValue = sliderDidSetValue;
+	slider->min = 0.1, slider->max = 10.0, slider->step = 0.1;
+	$(slider, setValue, 5.0);
+
 	Input *sliderInput = $(alloc(Input), initWithOrientation, InputOrientationRight, (Control *) slider, sliderLabel);
-	$((Control *) slider, addActionForEventType, SDL_MOUSEMOTION, sliderAction, sliderLabel);
-	
+
 	$((View *) stackView, addSubview, (View *) sliderInput);
 
 	release(button);

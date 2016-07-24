@@ -101,7 +101,6 @@ static void setText(Label *self, const char *text) {
 	$((View *) self, sizeToFit);
 }
 
-
 #pragma mark - Class lifecycle
 
 /**

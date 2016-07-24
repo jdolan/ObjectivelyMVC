@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
 			}
 		}
 
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 		
 		SDL_RenderClear(renderer);
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
 		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 		$(helloViewController, drawView, renderer);
-		
+
 		SDL_RenderPresent(renderer);
 	}
 	
@@ -146,9 +146,10 @@ static void drawScene(void) {
 	glRotatef(angle, 0.0, 1.0, 0.0);
 
 	glClear(GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_DEPTH_TEST);
 
+	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
+
 	glBegin(GL_QUADS);
 
 	// Top face (y = 1.0)
@@ -192,12 +193,13 @@ static void drawScene(void) {
 	glVertex3f(1.0,  1.0,  1.0);
 	glVertex3f(1.0, -1.0,  1.0);
 	glVertex3f(1.0, -1.0, -1.0);
+
 	glEnd();  // End of drawing color-cube
 
 	glColor3f(1.0, 1.0, 1.0);
 
-	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
 
 	glPopMatrix();
 
