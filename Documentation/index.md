@@ -1,13 +1,14 @@
 ObjectivelyMVC Documentation {#index}
 ===
 
-Object Oriented MVC Framework for OpenGL and SDL2 in c
+Object oriented MVC framework for OpenGL, SDL2 and GNU C
 ---
 
 ObjectivelyMVC is a user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by 
-Apple's [UIKit](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIKit_Framework/). 
+Apple's [AppKit](https://developer.apple.com/reference/appkit). 
 It is geared towards building high-quality, modern looking user interfaces within [OpenGL](http://www.opengl.org/) 
 video games that are already using SDL2. It is written in [GNU C](http://www.gnu.org/software/gnu-c-manual/), and requires `gcc` or `clang`.
+
 
 Features
 ---
@@ -31,7 +32,7 @@ $(vc, drawView, renderer);
 
 ### Beautiful, discoverable TrueType fonts
 
-ObjectivelyMVC uses [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) and [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) to discover and render the TrueType fonts that are available on your system, not that you need to know. It also automatically detects High-DPI (Retina, 4K) displays, and scales fonts accordingly. The result is crisp, beautiful vector-based fonts that look native, because they are.
+ObjectivelyMVC uses [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) and [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) to discover and render the TrueType fonts that are available on your system. It also automatically detects High-DPI (Retina, 4K) displays, and scales fonts accordingly. The result is crisp, beautiful vector-based fonts that look native, because they are.
 
 ```c
 Array *fonts = $$(Font, allFonts);
@@ -43,7 +44,7 @@ Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will re
 
 ### Full suite of Views and Controls
 
-ObjectivelyMVC provides a robust set of containers, views and form elements. Stack and arrange components with `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, editable `TextViews` and more by simply instantiating them. Bind `Actions` to `SDL_Event` types on each element, or use the specialized _delegate_ callbacks for convenience.
+ObjectivelyMVC provides a robust set of containers, views and form elements. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Bind `Actions` to `SDL_Event` types on each element, or use the specialized _delegate_ callbacks for convenience.
 
 ```c
 $((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_data);
@@ -61,7 +62,7 @@ Examples
 ### HelloViewController
 An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu:
 
-![Screenshot](http://i.imgur.com/kZOuo7Q.png =1024x)
+![Animated screenshot](https://github.com/jdolan/ObjectivelyMVC/demo.gif)
 
 * [Hello.c](Examples/Hello.c) - The application source code
 * [HelloViewController.h](Examples/HelloViewController.h) - The `HelloViewController` header.
