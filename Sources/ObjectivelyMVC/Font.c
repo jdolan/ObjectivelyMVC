@@ -129,13 +129,18 @@ static Font *defaultFont(FontCategory category) {
 		case FontCategorySecondaryLabel:
 		case FontCategorySecondaryControl:
 			return _smaller;
+		case FontCategoryPrimaryResponder:
+		case FontCategorySecondaryResponder:
+			return _bigger;
 	}
 }
 
 /**
- * @return A Fontconfig pattern from the given attributes.
+ * @fn Font *Font::initWithAttributes(Font *self, const char *family, int ptsize, int style)
+ *
+ * @memberof Font
  */
-static FcPattern *patternWithAttributes(const char *family, int ptsize, int style) {
+static Font *initWithAttributes(Font *self, const char *family, int ptsize, int style) {
 
 	FcPattern *pattern = FcPatternCreate();
 	assert(pattern);
@@ -158,19 +163,7 @@ static FcPattern *patternWithAttributes(const char *family, int ptsize, int styl
 		FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Italic");
 	} else {
 		FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Regular");
-	}
-
-	return pattern;
-}
-
-/**
- * @fn Font *Font::initWithAttributes(Font *self, const char *family, int ptsize, int style)
- *
- * @memberof Font
- */
-static Font *initWithAttributes(Font *self, const char *family, int ptsize, int style) {
-
-	FcPattern *pattern = patternWithAttributes(family, ptsize, style);
+	};
 
 	self = $(self, initWithPattern, pattern);
 

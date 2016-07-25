@@ -50,6 +50,8 @@ typedef enum {
 	FontCategorySecondaryLabel,
 	FontCategoryPrimaryControl,
 	FontCategorySecondaryControl,
+	FontCategoryPrimaryResponder,
+	FontCategorySecondaryResponder
 } FontCategory;
 
 typedef struct Font Font;

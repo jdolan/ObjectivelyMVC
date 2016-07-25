@@ -55,15 +55,13 @@ int main(int argc, char **argv) {
 	
 	SDL_GL_SetSwapInterval(1);
 
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
+
 	WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
-	
-	ViewController *viewController = $((ViewController *) alloc(HelloViewController), init);
+
+	ViewController *viewController = (ViewController *) $((ViewController *) alloc(HelloViewController), init);
 
 	$(windowController, setViewController, viewController);
-
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, 0,
-		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE
-	);
 
 	while (true) {
 		SDL_Event event;

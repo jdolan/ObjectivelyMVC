@@ -60,11 +60,6 @@ static _Bool drawChildViewControllers(const Array *array, ident obj, ident data)
 static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	
 	assert(renderer);
-
-	if (self->view == NULL) {
-		$(self, loadView);
-	}
-
 	assert(self->view);
 
 	$(self->view, layoutIfNeeded);
@@ -134,7 +129,7 @@ static void moveToParentViewController(ViewController *self, ViewController *par
  * @memberof ViewController
  */
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
-	
+
 	assert(event);
 	
 	Array *childViewControllers = (Array *) self->childViewControllers;

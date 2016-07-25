@@ -34,14 +34,14 @@
 /**
  * @brief ActionFunction for Button.
  */
-static void buttonAction(Control *control, const SDL_Event *event, ident data) {
+static void buttonAction(Control *control, const SDL_Event *event, ident sender, ident data) {
 	printf("Button clicked\n");
 }
 
 /**
  * @brief ActionFunction for Checkbox.
  */
-static void checkboxAction(Control *control, const SDL_Event *event, ident data) {
+static void checkboxAction(Control *control, const SDL_Event *event, ident sender, ident data) {
 	if ($(control, selected)) {
 		printf("Checkbox selected\n");
 	} else {
@@ -83,7 +83,7 @@ static void loadView(ViewController *self) {
 	
 	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
 	$(button->title, setText, "This is a bigass super long button");
-	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, NULL);
+	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
 	
 	$((View *) stackView, addSubview, (View *) button);
 
@@ -95,7 +95,7 @@ static void loadView(ViewController *self) {
 	Control *checkbox = (Control *) $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
 	Label *checkboxLabel = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
 	Input *checkboxInput = $(alloc(Input), initWithOrientation, InputOrientationLeft, checkbox, checkboxLabel);
-	$(checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, NULL);
+	$(checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
 
 	$((View *) stackView, addSubview, (View *) checkboxInput);
 

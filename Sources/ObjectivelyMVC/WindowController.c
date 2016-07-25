@@ -70,15 +70,21 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
  */
 static void setViewController(WindowController *self, ViewController *viewController) {
 
-	if (viewController != self->viewController) {
+	if (self->viewController != viewController) {
 
 		if (self->viewController) {
 			$(self->viewController, viewWillDisappear);
+
 			release(self->viewController);
 		}
 
 		if (viewController) {
 			self->viewController = retain(viewController);
+
+			if (self->viewController->view == NULL) {
+				$(self->viewController, loadView);
+			}
+
 			$(self->viewController, viewWillAppear);
 		} else {
 			self->viewController = NULL;

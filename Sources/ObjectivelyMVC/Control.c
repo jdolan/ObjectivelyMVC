@@ -138,7 +138,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 		Action *action = $(this, actionForEvent, event);
 		if (action) {
-			action->function(this, event, action->data);
+			action->function(this, event, action->sender, action->data);
 		}
 	}
 	
@@ -171,13 +171,13 @@ static Action *actionForEvent(const Control *self, const SDL_Event *event) {
 }
 
 /**
- * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident data)
+ * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
  *
  * @memberof Control
  */
-static void addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident data) {
+static void addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data) {
 	
-	Action *action = $(alloc(Action), initWithEventType, eventType, function, data);
+	Action *action = $(alloc(Action), initWithEventType, eventType, function, sender, data);
 	
 	$(self->actions, addObject, action);
 	

@@ -41,7 +41,7 @@ typedef struct Control Control;
 /**
  * @brief The ActionFunction callback.
  */
-typedef void (*ActionFunction)(Control *control, const SDL_Event *event, ident data);
+typedef void (*ActionFunction)(Control *control, const SDL_Event *event, ident sender, ident data);
 
 /**
  * @brief The Action type.
@@ -65,6 +65,11 @@ struct Action {
 	 * @private
 	 */
 	ActionInterface *interface;
+
+	/**
+	 * @brief The data.
+	 */
+	ident data;
 	
 	/**
 	 * @brief The event type.
@@ -77,9 +82,9 @@ struct Action {
 	ActionFunction function;
 
 	/**
-	 * @brief The data.
+	 * @brief The sender.
 	 */
-	ident data;
+	ident sender;
 };
 
 /**
@@ -99,13 +104,14 @@ struct ActionInterface {
 	 *
 	 * @param eventType The event type.
 	 * @param function The ActionFunction.
+	 * @param sender The sender.
 	 * @param data The data.
 	 *
 	 * @return The initialized Action, or `NULL` on error.
 	 *
 	 * @memberof Action
 	 */
-	Action *(*initWithEventType)(Action *self, SDL_EventType eventType, ActionFunction function, ident data);
+	Action *(*initWithEventType)(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data);
 };
 
 /**

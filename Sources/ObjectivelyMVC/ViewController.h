@@ -157,7 +157,7 @@ struct ViewControllerInterface {
 	/**
 	 * @brief Called when this controller's view is about to be shown.
 	 *
-	 * @remark Subclasses may implement this method to prepare the
+	 * @remarks Subclasses may implement this method to prepare the
 	 * view for rendering.
 	 */
 	void (*viewWillAppear)(ViewController *self);
@@ -165,13 +165,14 @@ struct ViewControllerInterface {
 	/**
 	 * @brief Called when this controller's view is about to be hidden.
 	 *
-	 * @remark Subclasses may implement this method to free resources
+	 * @remarks Subclasses may implement this method to free resources
 	 * allocated in `viewWillAppear`.
 	 */
-	void (*viewWillDisappear)(ViewController *self);	
+	void (*viewWillDisappear)(ViewController *self);
 };
 
 /**
  * @brief The ViewController Class.
  */
 extern Class _ViewController;
+
