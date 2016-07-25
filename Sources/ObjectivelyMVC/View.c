@@ -26,8 +26,6 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
-_Bool ViewWindowUsesHighDPI = false;
-
 #define _Class _View
 
 #pragma mark - ObjectInterface
@@ -490,6 +488,19 @@ static Array *visibleSubviews(const View *self) {
 	return $((Array *) self->subviews, filterObjects, visibleSubviews_filter, NULL);
 }
 
+/**
+ * @fn SDL_Window *View::window(const View *self)
+ *
+ * @memberof View
+ */
+static SDL_Window *window(const View *self) {
+
+	SDL_Window *window = SDL_GL_GetCurrentWindow();
+	assert(window);
+
+	return window;
+}
+
 #pragma mark - View class methods
 
 /**
@@ -517,6 +528,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
+	((ViewInterface *) clazz->interface)->window = window;
 }
 
 Class _View = {

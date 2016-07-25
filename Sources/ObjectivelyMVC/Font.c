@@ -30,8 +30,8 @@
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/View.h>
 
 #define _Class _Font
 
@@ -132,6 +132,9 @@ static Font *defaultFont(FontCategory category) {
 	}
 }
 
+/**
+ * @return A Fontconfig pattern from the given attributes.
+ */
 static FcPattern *patternWithAttributes(const char *family, int ptsize, int style) {
 
 	FcPattern *pattern = FcPatternCreate();
@@ -139,7 +142,7 @@ static FcPattern *patternWithAttributes(const char *family, int ptsize, int styl
 
 	FcPatternAddString(pattern, FC_FAMILY, (FcChar8 *) family);
 
-	if (ViewWindowUsesHighDPI) {
+	if (WindowUsesHighDPI(NULL)) {
 		FcPatternAddDouble(pattern, FC_SIZE, (double) ptsize * 2.0);
 	} else {
 		FcPatternAddDouble(pattern, FC_SIZE, (double) ptsize);
@@ -271,7 +274,7 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
 	
 	TTF_SizeUTF8(self->font, chars, w, h);
 	
-	if (ViewWindowUsesHighDPI) {
+	if (WindowUsesHighDPI(NULL)) {
 		*w *= 0.5;
 		*h *= 0.5;
 	}

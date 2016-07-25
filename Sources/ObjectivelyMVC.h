@@ -50,3 +50,4 @@
 #include <ObjectivelyMVC/TextView.h>
 #include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/ViewController.h>
+#include <ObjectivelyMVC/WindowController.h>

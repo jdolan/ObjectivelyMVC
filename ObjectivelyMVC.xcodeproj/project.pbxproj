@@ -85,6 +85,8 @@
 		CEF1D8931D42A2C70099A857 /* resize.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEF1D8921D429F7A0099A857 /* resize.png */; };
 		CEF1D8A01D440C7B0099A857 /* Box.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D89E1D440C7B0099A857 /* Box.c */; };
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; };
+		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
+		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -199,6 +201,8 @@
 		CEF1D8941D42ABCA0099A857 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CEF1D89E1D440C7B0099A857 /* Box.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Box.c; sourceTree = "<group>"; };
 		CEF1D89F1D440C7B0099A857 /* Box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box.h; sourceTree = "<group>"; };
+		CEF1D8AA1D4630D20099A857 /* WindowController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WindowController.c; sourceTree = "<group>"; };
+		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,6 +303,8 @@
 				CE12D4241C4C367100CD0B13 /* View.h */,
 				CE12D4251C4C367100CD0B13 /* ViewController.c */,
 				CE12D4261C4C367100CD0B13 /* ViewController.h */,
+				CEF1D8AA1D4630D20099A857 /* WindowController.c */,
+				CEF1D8AB1D4630D20099A857 /* WindowController.h */,
 			);
 			path = ObjectivelyMVC;
 			sourceTree = "<group>";
@@ -439,6 +445,7 @@
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
+				CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */,
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
 				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
 				CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */,
@@ -572,6 +579,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */,
 				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,

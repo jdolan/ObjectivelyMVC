@@ -28,7 +28,8 @@ pkginclude_HEADERS = \
 	TableView.h \
 	TextView.h \
 	View.h \
-	ViewController.h
+	ViewController.h \
+	WindowController.h
 
 lib_LTLIBRARIES = \
 	libObjectivelyMVC.la
@@ -57,7 +58,8 @@ libObjectivelyMVC_la_SOURCES = \
 	Text.c \
 	TextView.c \
 	View.c \
-	ViewController.c
+	ViewController.c \
+	WindowController.c
 
 libObjectivelyMVC_la_CFLAGS = \
 	-I $(top_builddir) -I $(top_builddir)/Sources -DPKGDATADIR=\"$(pkgdatadir)\" \

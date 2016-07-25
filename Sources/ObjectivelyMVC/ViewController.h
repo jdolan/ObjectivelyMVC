@@ -67,11 +67,6 @@ struct ViewController {
 	 * @brief The child view controllers.
 	 */
 	MutableArray *childViewControllers;
-	
-	/**
-	 * @brief The window.
-	 */
-	SDL_Window *window;
 };
 
 /**
@@ -109,19 +104,6 @@ struct ViewControllerInterface {
 	ViewController *(*init)(ViewController *self);
 	
 	/**
-	 * @fn ViewController *ViewController::initRootViewController(ViewController *self, SDL_Window *window)
-	 *
-	 * @brief Initializes this controller as the root ViewController for the given window.
-	 *
-	 * @param window The window, or `NULL` to have a fullscreen window created.
-	 *
-	 * @return The initialized ViewController, or `NULL` on error.
-	 *
-	 * @memberof ViewController
-	 */
-	ViewController *(*initRootViewController)(ViewController *self, SDL_Window *window);
-	
-	/**
 	 * @fn void ViewController::loadView(ViewController *self)
 	 *
 	 * @brief Loads this controller's View.
@@ -144,7 +126,7 @@ struct ViewControllerInterface {
 	void (*moveToParentViewController)(ViewController *self, ViewController *parentViewController);
 	
 	/**
-	 * @fn _Bool ViewController:respondToEvent(ViewController *self, const SDL_Event *event)
+	 * @fn void ViewController:respondToEvent(ViewController *self, const SDL_Event *event)
 	 *
 	 * @brief Responds to the given event.
 	 *
@@ -153,15 +135,6 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*respondToEvent)(ViewController *self, const SDL_Event *event);
-	
-	/**
-	 * @fn ViewController *ViewController::rootViewController(const ViewController *self)
-	 *
-	 * @return The root ViewController of this ViewController.
-	 *
-	 * @memberof ViewController
-	 */
-	ViewController *(*rootViewController)(const ViewController *self);
 
 	/**
 	 * @fn void ViewController::viewDidAppear(ViewController *self)

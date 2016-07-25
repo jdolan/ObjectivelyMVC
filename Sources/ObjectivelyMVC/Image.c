@@ -115,3 +115,20 @@ Class _Image = {
 };
 
 #undef _Class
+
+_Bool WindowUsesHighDPI(SDL_Window *window) {
+
+	if (window == NULL) {
+		window = SDL_GL_GetCurrentWindow();
+	}
+
+	assert(window);
+
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+
+	int dw, dh;
+	SDL_GL_GetDrawableSize(window, &dw, &dh);
+
+	return dw > w && dh > h;
+}

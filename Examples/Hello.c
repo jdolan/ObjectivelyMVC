@@ -54,9 +54,13 @@ int main(int argc, char **argv) {
 	);
 	
 	SDL_GL_SetSwapInterval(1);
+
+	WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 	
-	ViewController *helloViewController = $((ViewController *) alloc(HelloViewController), initRootViewController, window);
-	
+	ViewController *viewController = $((ViewController *) alloc(HelloViewController), init);
+
+	$(windowController, setViewController, viewController);
+
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, 0,
 		SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE
 	);
@@ -68,7 +72,7 @@ int main(int argc, char **argv) {
 		
 		if (SDL_PollEvent(&event)) {
 			
-			$(helloViewController, respondToEvent, &event);
+			$(windowController, respondToEvent, &event);
 			
 			if (event.type == SDL_QUIT) {
 				break;
@@ -85,12 +89,13 @@ int main(int argc, char **argv) {
 
 		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-		$(helloViewController, drawView, renderer);
+		$(windowController, render, renderer);
 
 		SDL_RenderPresent(renderer);
 	}
 	
-	release(helloViewController);
+	release(viewController);
+	release(windowController);
 	
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);

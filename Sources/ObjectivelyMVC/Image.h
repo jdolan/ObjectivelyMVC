@@ -24,7 +24,7 @@
 
 #include <Objectively/Object.h>
 
-#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_video.h>
 
 /**
  * @file
@@ -103,3 +103,13 @@ struct ImageInterface {
  * @brief The Image Class.
  */
 extern Class _Image;
+
+/**
+ * @param window The window, or `NULL` for the current OpenGL window.
+ *
+ * @return True if the window uses High-DPI (Retina / 4K), false otherwise.
+ *
+ * @remarks Views should call this function to alter their rendering behavior for
+ * High-DPI displays. This is particularly relevant for Views that render textures.
+ */
+_Bool WindowUsesHighDPI(SDL_Window *window);

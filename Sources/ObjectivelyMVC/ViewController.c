@@ -60,7 +60,13 @@ static _Bool drawChildViewControllers(const Array *array, ident obj, ident data)
 static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	
 	assert(renderer);
-		
+
+	if (self->view == NULL) {
+		$(self, loadView);
+	}
+
+	assert(self->view);
+
 	$(self->view, layoutIfNeeded);
 
 	$(self->view, draw, renderer);
@@ -78,45 +84,9 @@ static ViewController *init(ViewController *self) {
 	self = (ViewController *) super(Object, self, init);
 	if (self) {
 		self->childViewControllers = $$(MutableArray, array);
+		assert(self->childViewControllers);
 	}
 
-	return self;
-}
-
-/**
- * @fn ViewController *ViewController::initRootViewController(ViewController *self, SDL_Window *window)
- *
- * @memberof ViewController
- */
-static ViewController *initRootViewController(ViewController *self, SDL_Window *window) {
-	
-	self = $(self, init);
-	if (self) {
-		if (window) {
-			self->window = window;
-		} else {
-			self->window = SDL_CreateWindow(__FILE__,
-				SDL_WINDOWPOS_UNDEFINED,
-				SDL_WINDOWPOS_UNDEFINED,
-				0,
-				0,
-				SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP
-			);
-		}
-		assert(self->window);
-		
-		int w, h;
-		SDL_GetWindowSize(window, &w, &h);
-		
-		int dw, dh;
-		SDL_GL_GetDrawableSize(window, &dw, &dh);
-		
-		ViewWindowUsesHighDPI = dw > w && dh > h;
-		
-		$(self, loadView);
-		assert(self->view);
-	}
-	
 	return self;
 }
 
@@ -126,14 +96,14 @@ static ViewController *initRootViewController(ViewController *self, SDL_Window *
  * @memberof ViewController
  */
 static void loadView(ViewController *self) {
-	
-	SDL_Window *window = $(self, rootViewController)->window;
+
+	self->view = $(alloc(View), initWithFrame, NULL);
+	assert(self->view);
+
+	SDL_Window *window = $(self->view, window);
 	assert(window);
-	
-	SDL_Rect frame = { .x = 0, .y = 0 };
-	SDL_GetWindowSize(window, &frame.w, &frame.h);
-	
-	self->view = $(alloc(View), initWithFrame, &frame);
+
+	SDL_GetWindowSize(window, &self->view->frame.w, &self->view->frame.h);
 }
 
 /**
@@ -173,26 +143,10 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
 		ViewController *child = $(childViewControllers, objectAtIndex, i);
 		$(child, respondToEvent, event);
 	}
-	
-	$(self->view, respondToEvent, event);
-}
 
-/**
- * @fn ViewController *ViewController::rootViewController(const ViewController *self)
- *
- * @memberof ViewController
- */
-static ViewController *rootViewController(const ViewController *self) {
-	
-	ViewController *viewController = (ViewController *) self;
-	while (viewController) {
-		if (viewController->window) {
-			return viewController;
-		}
-		viewController = viewController->parentViewController;
+	if (self->view) {
+		$(self->view, respondToEvent, event);
 	}
-	
-	assert(false);
 }
 
 /**
@@ -244,11 +198,9 @@ static void initialize(Class *clazz) {
 
 	viewController->drawView = drawView;
 	viewController->init = init;
-	viewController->initRootViewController = initRootViewController;
 	viewController->loadView = loadView;
 	viewController->moveToParentViewController = moveToParentViewController;
 	viewController->respondToEvent = respondToEvent;
-	viewController->rootViewController = rootViewController;
 	viewController->viewDidAppear = viewDidAppear;
 	viewController->viewDidDisappear = viewDidDisappear;
 	viewController->viewWillAppear = viewWillAppear;

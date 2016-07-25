@@ -38,13 +38,6 @@
  * @brief View implementation.
  */
 
-/**
- * @brief True if the application window uses a High-DPI display, false otherwise.
- *
- * @remarks This is used internally to control Font rendering, etc.
- */
-extern _Bool ViewWindowUsesHighDPI;
-
 #define ViewAlignmentMaskTop      0x1
 #define ViewAlignmentMaskMiddle   0x2
 #define ViewAlignmentMaskBottom   0x4
@@ -366,6 +359,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	Array *(*visibleSubviews)(const View *self);
+
+	/**
+	 * @fn SDL_Window *View::window(const View *self)
+	 *
+	 * @return The window containing this View.
+	 *
+	 * @memberof View
+	 */
+	SDL_Window *(*window)(const View *self);
 };
 
 extern Class _View;

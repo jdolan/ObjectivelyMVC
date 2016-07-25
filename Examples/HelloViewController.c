@@ -21,6 +21,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <assert.h>
+
 #include <ObjectivelyMVC.h>
 
 #include "HelloViewController.h"
@@ -51,12 +53,10 @@ static void checkboxAction(Control *control, const SDL_Event *event, ident data)
  * @brief SliderDelegate callback.
  */
 static void sliderDidSetValue(Slider *slider) {
-	String *string = str("%.1f", slider->value);
+	char chars[8];
 
-	Label *label = (Label *) slider->delegate.data;
-	$(label, setText, string->chars);
-
-	release(string);
+	snprintf(chars, sizeof(chars), "%.1f", slider->value);
+	$((Label *) slider->delegate.data, setText, chars);
 }
 
 #pragma mark - ViewController
