@@ -28,7 +28,7 @@
 /**
  * @file
  *
- * @brief ..
+ * @brief TableCellViews render a single cell in a TableView
  */
 
 typedef struct TableCellView TableCellView;

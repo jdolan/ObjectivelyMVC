@@ -62,7 +62,7 @@ Examples
 ### HelloViewController
 An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu:
 
-![Animated screenshot](https://github.com/jdolan/ObjectivelyMVC/demo.gif)
+![Animated screenshot](../demo.gif)
 
 * [Hello.c](Examples/Hello.c) - The application source code
 * [HelloViewController.h](Examples/HelloViewController.h) - The `HelloViewController` header.

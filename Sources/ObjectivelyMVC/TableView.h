@@ -29,7 +29,7 @@
 /**
  * @file
  *
- * @brief TableViews provide sortable, tabular presentations of Cell data.
+ * @brief TableViews provide sortable, tabular presentations of data.
  */
 
 typedef struct TableCellView TableCellView;
