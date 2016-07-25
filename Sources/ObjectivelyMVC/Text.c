@@ -74,6 +74,21 @@ static void render(View *self, SDL_Renderer *renderer) {
 }
 
 /**
+ * @see View::renderDeviceDidReset(View *)
+ */
+static void renderDeviceDidReset(View *self) {
+
+	super(View, self, renderDeviceDidReset);
+
+	Text *this = (Text *) self;
+
+	if (this->texture) {
+		SDL_DestroyTexture(this->texture);
+		this->texture = NULL;
+	}
+}
+
+/**
  * @see View::sizeThatFits(View *, int *, int *)
  */
 static void sizeThatFits(const View *self, int *w, int *h) {
@@ -170,6 +185,7 @@ static void initialize(Class *self) {
 	((ObjectInterface *) self->interface)->dealloc = dealloc;
 
 	((ViewInterface *) self->interface)->render = render;
+	((ViewInterface *) self->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewInterface *) self->interface)->sizeThatFits = sizeThatFits;
 
 	((TextInterface *) self->interface)->initWithText = initWithText;

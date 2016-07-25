@@ -351,6 +351,15 @@ static void render(View *self, SDL_Renderer *renderer) {
 }
 
 /**
+ * @fn void View::renderDeviceDidReset(View *self)
+ *
+ * @memberof View
+ */
+static void renderDeviceDidReset(View *self) {
+
+}
+
+/**
  * @fn SDL_Rect View::renderFrame(const View *self)
  *
  * @memberof View
@@ -390,6 +399,10 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		
 		View *subview = (View *) $(subviews, objectAtIndex, i);
 		$(subview, respondToEvent, event);
+	}
+
+	if (event->type == SDL_RENDER_DEVICE_RESET) {
+		$(self, renderDeviceDidReset);
 	}
 }
 
@@ -498,6 +511,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->removeFromSuperview = removeFromSuperview;
 	((ViewInterface *) clazz->interface)->removeSubview = removeSubview;
 	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewInterface *) clazz->interface)->renderFrame = renderFrame;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;

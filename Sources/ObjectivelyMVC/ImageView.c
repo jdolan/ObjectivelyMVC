@@ -36,6 +36,8 @@ static void dealloc(Object *self) {
 
 	ImageView *this = (ImageView *) self;
 
+	release(this->image);
+
 	SDL_DestroyTexture(this->texture);
 
 	super(Object, self, dealloc);
@@ -54,15 +56,27 @@ static void render(View *self, SDL_Renderer *renderer) {
 	
 	if (this->texture == NULL) {
 		this->texture = SDL_CreateTextureFromSurface(renderer, this->image->surface);
-		
-		release(this->image);
-		this->image = NULL;
 	}
 	
 	assert(this->texture);
 	
 	SDL_Rect frame = $(self, renderFrame);
 	SDL_RenderCopy(renderer, this->texture, NULL, &frame);
+}
+
+/**
+ * @see View::renderDeviceDidReset(View *)
+ */
+static void renderDeviceDidReset(View *self) {
+
+	super(View, self, renderDeviceDidReset);
+
+	ImageView *this = (ImageView *) self;
+
+	if (this->texture) {
+		SDL_DestroyTexture(this->texture);
+		this->texture = NULL;
+	}
 }
 
 #pragma mark - ImageView
@@ -104,6 +118,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	
 	((ImageViewInterface *) clazz->interface)->initWithImage = initWithImage;
 }

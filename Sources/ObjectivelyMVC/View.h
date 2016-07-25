@@ -304,7 +304,19 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*render)(View *self, SDL_Renderer *renderer);
-	
+
+	/**
+	 * @fn void View::renderDeviceDidReset(View *self)
+	 *
+	 * @brief This method is invoked from `respondToEvent` for `SDL_RENDER_DEVICE_RESET`.
+	 *
+	 * @remarks Subclasses should override this method to recreate any texture resources
+	 * or other OpenGL objects they own.
+	 *
+	 * @memberof View
+	 */
+	void (*renderDeviceDidReset)(View *self);
+
 	/**
 	 * @fn SDL_Frame View::renderFrame(const View *self)
 	 *
@@ -317,7 +329,7 @@ struct ViewInterface {
 	/**
 	 * @fn void View::respondToEvent(View *self, const SDL_Event *event)
 	 *
-	 * @brief Responds to the given event.
+	 * @brief Respond to an event.
 	 *
 	 * @param event The SDL_Event.
 	 *
