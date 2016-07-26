@@ -46,13 +46,6 @@ static void dealloc(Object *self) {
 #pragma mark - ViewController
 
 /**
- * @brief ArrayEnumerator for draw.
- */
-static _Bool drawChildViewControllers(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, drawView, (SDL_Renderer *) data); return false;
-}
-
-/**
  * @fn void ViewController::drawView(ViewController *self, SDL_Renderer *renderer)
  *
  * @memberof ViewController
@@ -65,8 +58,6 @@ static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	$(self->view, layoutIfNeeded);
 
 	$(self->view, draw, renderer);
-		
-	$((Array *) self->childViewControllers, enumerateObjects, drawChildViewControllers, renderer);
 }
 
 /**
@@ -102,24 +93,42 @@ static void loadView(ViewController *self) {
 }
 
 /**
+ * @fn void ViewController::loadViewIfNeeded(ViewController *self)
+ *
+ * @memberof ViewController
+ */
+static void loadViewIfNeeded(ViewController *self) {
+
+	if (self->view == NULL) {
+		$(self, loadView);
+	}
+
+	assert(self->view);
+}
+
+/**
  * @fn void ViewController::moveToParentViewController(ViewController *self, ViewController *parentViewController)
  *
  * @memberof ViewController
  */
 static void moveToParentViewController(ViewController *self, ViewController *parentViewController) {
+
+	$(self, loadViewIfNeeded);
+
+	$(self->view, removeFromSuperview);
 	
 	if (self->parentViewController) {
 		$(self->parentViewController->childViewControllers, removeObject, self);
 	}
-	
+
 	self->parentViewController = parentViewController;
-	
+
 	if (self->parentViewController) {
 		$(self->parentViewController->childViewControllers, addObject, self);
-		
-		if (self->view == NULL) {
-			$(self, loadView);
-		}
+
+		$(self, viewWillAppear);
+
+		$(self->parentViewController->view, addSubview, self->view);
 	}
 }
 
@@ -132,13 +141,6 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
 
 	assert(event);
 	
-	Array *childViewControllers = (Array *) self->childViewControllers;
-	for (size_t i = 0; i < childViewControllers->count; i++) {
-		
-		ViewController *child = $(childViewControllers, objectAtIndex, i);
-		$(child, respondToEvent, event);
-	}
-
 	if (self->view) {
 		$(self->view, respondToEvent, event);
 	}
@@ -194,6 +196,7 @@ static void initialize(Class *clazz) {
 	viewController->drawView = drawView;
 	viewController->init = init;
 	viewController->loadView = loadView;
+	viewController->loadViewIfNeeded = loadViewIfNeeded;
 	viewController->moveToParentViewController = moveToParentViewController;
 	viewController->respondToEvent = respondToEvent;
 	viewController->viewDidAppear = viewDidAppear;

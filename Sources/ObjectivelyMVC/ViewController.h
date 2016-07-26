@@ -82,11 +82,12 @@ struct ViewControllerInterface {
 	/**
 	 * @fn void ViewController::draw(ViewController *self, SDL_Renderer *renderer)
 	 *
-	 * @brief Draws this controller's View.
+	 * @brief Draws this ViewController's View hierarchy.
 	 *
 	 * @param renderer The SDL_Renderer with which to draw.
 	 *
-	 * @remarks Call this method on a root ViewController to draw its View hierarchy.
+	 * @remarks This method is called from WindowController::render to draw the
+	 * assigned ViewController's View hierarchy.
 	 *
 	 * @memberof ViewController
 	 */
@@ -95,7 +96,7 @@ struct ViewControllerInterface {
 	/**
 	 * @fn ViewController *ViewController::init(ViewController *self)
 	 *
-	 * @brief Initializes this controller.
+	 * @brief Initializes this ViewController.
 	 *
 	 * @return The intialized ViewController, or `NULL` on error.
 	 *
@@ -106,13 +107,22 @@ struct ViewControllerInterface {
 	/**
 	 * @fn void ViewController::loadView(ViewController *self)
 	 *
-	 * @brief Loads this controller's View.
+	 * @brief Loads this ViewController's View.
 	 *
-	 * @remarks Override this method to populate this controller's view.
+	 * @remarks Override this method to populate this ViewController's view.
 	 *
 	 * @memberof ViewController
 	 */
 	void (*loadView)(ViewController *self);
+
+	/**
+	 * @fn void ViewController::loadViewIfNeeded(ViewController *self)
+	 *
+	 * @brief Loads this ViewController's View if it is not already loaded.
+	 *
+	 * @memberof ViewController
+	 */
+	void (*loadViewIfNeeded)(ViewController *self);
 	
 	/**
 	 * @fn void ViewController::moveToParent(ViewController *self, ViewController *parentViewController)

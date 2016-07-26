@@ -249,6 +249,15 @@ struct ViewInterface {
 	_Bool (*isDescendantOfView)(const View *self, const View *view);
 
 	/**
+	 * @fn _Bool View::isVisible(const View *self)
+	 *
+	 * @return True if this View is visible, false if it, or an ancestor, is hidden.
+	 *
+	 * @memberof View
+	 */
+	_Bool (*isVisible)(const View *self);
+
+	/**
 	 * @fn void View::layoutIfNeeded(View *self)
 	 *
 	 * @brief Recursively updates the layout of this View and its subviews.

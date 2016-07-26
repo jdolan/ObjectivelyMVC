@@ -81,9 +81,7 @@ static void setViewController(WindowController *self, ViewController *viewContro
 		if (viewController) {
 			self->viewController = retain(viewController);
 
-			if (self->viewController->view == NULL) {
-				$(self->viewController, loadView);
-			}
+			$(self->viewController, loadViewIfNeeded);
 
 			$(self->viewController, viewWillAppear);
 		} else {

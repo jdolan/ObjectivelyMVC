@@ -203,6 +203,7 @@
 		CEF1D89F1D440C7B0099A857 /* Box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box.h; sourceTree = "<group>"; };
 		CEF1D8AA1D4630D20099A857 /* WindowController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WindowController.c; sourceTree = "<group>"; };
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
+		CEF1D8BA1D46B6A10099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,6 +300,7 @@
 				CE12D40E1C4C367100CD0B13 /* Text.h */,
 				CE12D49C1C568A7600CD0B13 /* TextView.c */,
 				CE12D49D1C568A7600CD0B13 /* TextView.h */,
+				CEF1D8BA1D46B6A10099A857 /* Types.h */,
 				CE12D4231C4C367100CD0B13 /* View.c */,
 				CE12D4241C4C367100CD0B13 /* View.h */,
 				CE12D4251C4C367100CD0B13 /* ViewController.c */,

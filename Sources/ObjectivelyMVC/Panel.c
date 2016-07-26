@@ -58,6 +58,8 @@ static void layoutSubviews(View *self) {
 
 	resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
 	resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
+
+	resizeHandle->hidden = !this->isResizable;
 }
 
 /**

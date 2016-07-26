@@ -99,8 +99,9 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
  * @memberof View
  */
 static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
-	
-	if (self->hidden == false) {
+
+	if ($(self, isVisible)) {
+
 		if (event->type == SDL_MOUSEMOTION) {
 			const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
 			if ($(self, containsPoint, &point)) {
@@ -123,7 +124,7 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 			}
 		}
 	}
-	
+
 	return false;
 }
 
@@ -190,6 +191,22 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
 	}
 	
 	return false;
+}
+
+/**
+ * @fn _Bool View::isVisible(const View *self)
+ *
+ * @memberof View
+ */
+static _Bool isVisible(const View *self) {
+
+	for (const View *view = self; view; view = view->superview) {
+		if (view->hidden) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 /**
@@ -517,6 +534,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->draw = draw;
 	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
+	((ViewInterface *) clazz->interface)->isVisible = isVisible;
 	((ViewInterface *) clazz->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->removeFromSuperview = removeFromSuperview;
