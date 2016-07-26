@@ -145,40 +145,6 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*respondToEvent)(ViewController *self, const SDL_Event *event);
-
-	/**
-	 * @fn void ViewController::viewDidAppear(ViewController *self)
-	 *
-	 * @brief Called after each time this ViewController's View appears.
-	 *
-	 * @memberof ViewController
-	 */
-	void (*viewDidAppear)(ViewController *self);
-	
-	/**
-	 * @fn void ViewController::viewDidDisappear(ViewController *self)
-	 *
-	 * @brief Called after each time this ViewController's View disappears.
-	 *
-	 * @memberof ViewController
-	 */
-	void (*viewDidDisappear)(ViewController *self);
-
-	/**
-	 * @brief Called when this controller's view is about to be shown.
-	 *
-	 * @remarks Subclasses may implement this method to prepare the
-	 * view for rendering.
-	 */
-	void (*viewWillAppear)(ViewController *self);
-
-	/**
-	 * @brief Called when this controller's view is about to be hidden.
-	 *
-	 * @remarks Subclasses may implement this method to free resources
-	 * allocated in `viewWillAppear`.
-	 */
-	void (*viewWillDisappear)(ViewController *self);
 };
 
 /**

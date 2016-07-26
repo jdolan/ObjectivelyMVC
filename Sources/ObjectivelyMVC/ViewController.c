@@ -53,6 +53,8 @@ static void dealloc(Object *self) {
 static void drawView(ViewController *self, SDL_Renderer *renderer) {
 	
 	assert(renderer);
+
+	$(self, loadViewIfNeeded);
 	assert(self->view);
 
 	$(self->view, layoutIfNeeded);
@@ -125,9 +127,6 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 
 	if (self->parentViewController) {
 		$(self->parentViewController->childViewControllers, addObject, self);
-
-		$(self, viewWillAppear);
-
 		$(self->parentViewController->view, addSubview, self->view);
 	}
 }
@@ -144,42 +143,6 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
 	if (self->view) {
 		$(self->view, respondToEvent, event);
 	}
-}
-
-/**
- * @fn void ViewController::viewDidAppear(ViewController *self)
- *
- * @memberof ViewController
- */
-static void viewDidAppear(ViewController *self) {
-	
-}
-
-/**
- * @fn void ViewController::viewDidDisappear(ViewController *self)
- *
- * @memberof ViewController
- */
-static void viewDidDisappear(ViewController *self) {
-	
-}
-
-/**
- * @fn void ViewController::viewWillAppear(ViewController *self)
- *
- * @memberof ViewController
- */
-static void viewWillAppear(ViewController *self) {
-	
-}
-
-/**
- * @fn void ViewController::viewWillDisappear(ViewController *self)
- *
- * @memberof ViewController
- */
-static void viewWillDisappear(ViewController *self) {
-	
 }
 
 #pragma mark - Class lifecycle
@@ -199,10 +162,6 @@ static void initialize(Class *clazz) {
 	viewController->loadViewIfNeeded = loadViewIfNeeded;
 	viewController->moveToParentViewController = moveToParentViewController;
 	viewController->respondToEvent = respondToEvent;
-	viewController->viewDidAppear = viewDidAppear;
-	viewController->viewDidDisappear = viewDidDisappear;
-	viewController->viewWillAppear = viewWillAppear;
-	viewController->viewWillDisappear = viewWillDisappear;
 }
 
 Class _ViewController = {
