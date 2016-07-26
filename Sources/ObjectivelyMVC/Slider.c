@@ -38,6 +38,7 @@ static void dealloc(Object *self) {
 	Slider *this = (Slider *) self;
 	
 	release(this->handle);
+	release(this->label);
 	
 	super(Object, self, dealloc);
 }
@@ -52,17 +53,15 @@ static void layoutSubviews(View *self) {
 	super(View, self, layoutSubviews);
 	
 	Slider *this = (Slider *) self;
+
 	if (this->max > this->min) {
-		
-		double fraction = (this->value - this->min) / (this->max - this->min);
-		if (fraction > 1.0) {
-			fraction = 1.0;
-		} else if (fraction < 0.0) {
-			fraction = 0.0;
-		}
-		
-		const int width = self->frame.w - self->padding.left - self->padding.right;
-		
+
+		const double fraction = clamp((this->value - this->min) / (this->max - this->min), 0.0, 1.0);
+
+		const SDL_Rect bounds = $(self, bounds);
+
+		const int width = bounds.w - DEFAULT_SLIDER_LABEL_SPACING;
+
 		View *handle = (View *) this->handle;
 		handle->frame.x = (width * fraction) - handle->frame.w * 0.5;
 	} else {
@@ -76,11 +75,13 @@ static void layoutSubviews(View *self) {
 static void render(View *self, SDL_Renderer *renderer) {
 	
 	super(View, self, render, renderer);
-	
+
 	const SDL_Rect frame = $(self, renderFrame);
+
 	const int y = frame.y + frame.h * 0.5;
-	
-	SDL_RenderDrawLine(renderer, frame.x, y, frame.x + frame.w, y);
+	const int x = frame.x + frame.w - DEFAULT_SLIDER_LABEL_SPACING;
+
+	SDL_RenderDrawLine(renderer, frame.x, y, x, y);
 }
 
 #pragma mark - Control
@@ -135,9 +136,18 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 		self->control.view.backgroundColor = Colors.Clear;
 
 		self->handle = $(alloc(Control), initWithFrame, NULL, style);
+		assert(self->handle);
+
 		self->handle->view.alignment = ViewAlignmentMiddleLeft;
 		
 		$((View *) self, addSubview, (View *) self->handle);
+
+		self->label = $(alloc(Label), initWithText, NULL, NULL);
+		assert(self->label);
+
+		self->label->view.alignment = ViewAlignmentMiddleRight;
+
+		$((View *) self, addSubview, (View *) self->label);
 		
 		if (self->control.style == ControlStyleDefault) {
 
@@ -167,6 +177,11 @@ static void setValue(Slider *self, double value) {
 	if (delta > __DBL_EPSILON__) {
 		self->value = value;
 		self->control.view.needsLayout = true;
+
+		char text[64];
+		snprintf(text, sizeof(text), "%.1f", self->value);
+
+		$(self->label, setText, text);
 
 		if (self->delegate.didSetValue) {
 			self->delegate.didSetValue(self);

@@ -53,10 +53,7 @@ static void checkboxAction(Control *control, const SDL_Event *event, ident sende
  * @brief SliderDelegate callback.
  */
 static void sliderDidSetValue(Slider *slider) {
-	char chars[8];
-
-	snprintf(chars, sizeof(chars), "%.1f", slider->value);
-	$((Label *) slider->delegate.data, setText, chars);
+	printf("Slider value: %.1f\n", slider->value);
 }
 
 #pragma mark - ViewController
@@ -82,20 +79,20 @@ static void loadView(ViewController *self) {
 	$((View *) panel, addSubview, (View *) stackView);
 	
 	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
-	$(button->title, setText, "This is a bigass super long button");
+	$(button->title, setText, "This is a Button");
 	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
 	
 	$((View *) stackView, addSubview, (View *) button);
 
 	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
-	textView->defaultText = "This is a textview";
+	textView->defaultText = "This is a TextView";
 	
 	$((View *) stackView, addSubview, (View *) textView);
 
-	Control *checkbox = (Control *) $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
+	Checkbox *checkbox = $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
 	Label *checkboxLabel = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
-	Input *checkboxInput = $(alloc(Input), initWithOrientation, InputOrientationLeft, checkbox, checkboxLabel);
-	$(checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
+	Input *checkboxInput = $(alloc(Input), initWithOrientation, InputOrientationLeft, (Control *) checkbox, checkboxLabel);
+	$((Control *) checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
 
 	$((View *) stackView, addSubview, (View *) checkboxInput);
 
@@ -108,15 +105,11 @@ static void loadView(ViewController *self) {
 	$((View *) stackView, addSubview, (View *) select);
 
 	Slider *slider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
-	Label *sliderLabel = $(alloc(Label), initWithText, "", NULL);
-	slider->delegate.data = sliderLabel;
 	slider->delegate.didSetValue = sliderDidSetValue;
 	slider->min = 0.1, slider->max = 10.0, slider->step = 0.1;
 	$(slider, setValue, 5.0);
 
-	Input *sliderInput = $(alloc(Input), initWithOrientation, InputOrientationRight, (Control *) slider, sliderLabel);
-
-	$((View *) stackView, addSubview, (View *) sliderInput);
+	$((View *) stackView, addSubview, (View *) slider);
 
 	release(button);
 	release(textView);
@@ -124,7 +117,6 @@ static void loadView(ViewController *self) {
 	release(checkboxInput);
 	release(select);
 	release(slider);
-	release(sliderInput);
 	release(stackView);
 	release(panel);
 }

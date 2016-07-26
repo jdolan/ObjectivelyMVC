@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/Label.h>
 
 /**
  * @file
@@ -33,8 +34,8 @@
 
 #define DEFAULT_SLIDER_HANDLE_WIDTH 12
 #define DEFAULT_SLIDER_HANDLE_HEIGHT 18
-
-#define DEFAULT_SLIDER_WIDTH 100
+#define DEFAULT_SLIDER_LABEL_SPACING 40
+#define DEFAULT_SLIDER_WIDTH 140
 
 typedef struct SliderDelegate SliderDelegate;
 
@@ -84,13 +85,18 @@ struct Slider {
 	 * @brief The delegate.
 	 */
 	SliderDelegate delegate;
-	
+
 	/**
 	 * @brief The slider handle.
 	 *
 	 * @private
 	 */
 	Control *handle;
+
+	/**
+	 * @brief The label displaying the current value.
+	 */
+	Label *label;
 	
 	/**
 	 * @brief The slider bounds.
