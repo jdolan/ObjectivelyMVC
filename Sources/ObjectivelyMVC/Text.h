@@ -29,7 +29,7 @@
 /**
  * @file
  *
- * @brief Texts rendered with TrueType fonts.
+ * @brief Text rendered with TrueType fonts.
  */
 
 typedef struct Text Text;

@@ -41,23 +41,6 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
-#pragma mark - View
-
-/**
- * @see View::sizeThatFits(View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
-
-	const Label *this = (Label *) self;
-
-	SDL_Size size = $((View *) this->text, sizeThatFits);
-
-	size.w += self->padding.left + self->padding.right;
-	size.h += self->padding.top + self->padding.bottom;
-
-	return size;
-}
-
 #pragma mark - Label
 
 /**
@@ -72,6 +55,8 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 
 		self->text = $(alloc(Text), initWithText, text, font);
 		assert(self->text);
+
+		self->view.autoresizingMask = ViewAutoresizingContain;
 				
 		$((View *) self, addSubview, (View *) self->text);
 		$((View *) self, sizeToFit);
@@ -112,9 +97,7 @@ static void setText(Label *self, const char *text) {
 static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
-	
+
 	((LabelInterface *) clazz->interface)->initWithText = initWithText;
 	((LabelInterface *) clazz->interface)->setFont = setFont;
 	((LabelInterface *) clazz->interface)->setText = setText;
