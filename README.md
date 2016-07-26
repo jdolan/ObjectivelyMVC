@@ -19,9 +19,9 @@ Features
 ### Object oriented Model-View-Controller implementation in C
 
 ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight object oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you *are* using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.
-    
+
 ```c
-   WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
+WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 ```
 
 ### Easily embeddable in any SDL2 / OpenGL application
@@ -29,9 +29,9 @@ ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively),
 ObjectivelyMVC is purpose-built for video games. Unlike Gtk+, Qt, wxWidgets, FLTK, ..ObjectivelyMVC **does not hijack the main loop**. ObjectivelyMVC does not create a window, manage an OpenGL context, or originate events. Your game already does that, because it has to. Like your mother, ObjectivelyMVC only asks that you give it a call once in a while. That's it.
 
 ```c
-    $(windowController, respondToEvent, &event);
-    ...
-    $(windowController, render, renderer);
+$(windowController, respondToEvent, &event);
+...
+$(windowController, render, renderer);
 ```
 
 ### Beautiful, discoverable TrueType fonts

@@ -17,7 +17,7 @@ Features
 ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight Object-oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you're' using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.
 
 ```c
-ViewController *vc = $((ViewController *) alloc(MyViewController), initRootViewController, window);
+WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 ```
 
 ### Easily embeddable in any SDL2 / OpenGL application
@@ -25,9 +25,9 @@ ViewController *vc = $((ViewController *) alloc(MyViewController), initRootViewC
 ObjectivelyMVC is purpose-built for video games. Unlike Gtk+, Qt, wxWidgets, FLTK, ..ObjectivelyMVC **does not hijack the main loop**. ObjectivelyMVC does not create a window, manage an OpenGL context, or originate events. Your game already does that, because it has to. Like your mother, ObjectivelyMVC only asks that you give it a call once in a while. That's it.
 
 ```c
-$(vc, respondToEvent, &event);
+$(windowController, respondToEvent, &event);
 ...
-$(vc, drawView, renderer);
+$(windowController, render, renderer);
 ```
 
 ### Beautiful, discoverable TrueType fonts
@@ -47,7 +47,7 @@ Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will re
 ObjectivelyMVC provides a robust set of containers, views and form elements. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Bind `Actions` to `SDL_Event` types on each element, or use the specialized _delegate_ callbacks for convenience.
 
 ```c
-$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_data);
+$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_data);
 ```
 
 ```c
@@ -62,11 +62,16 @@ Examples
 ### HelloViewController
 An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu:
 
-![Animated screenshot](../demo.gif)
+![Hello](../demo.gif)
 
 * [Hello.c](Examples/Hello.c) - The application source code
 * [HelloViewController.h](Examples/HelloViewController.h) - The `HelloViewController` header.
 * [HelloViewController.c](Examples/HelloViewController.c) - The `HelloViewController` source code. 
+
+### Quetoo
+[Quetoo](https://github.com/jdolan/quetoo) is an open source FPS based on [idTech2](https://en.wikipedia.org/wiki/Quake_II_engine). Quetoo uses ObjectivelyMVC for its in-game user interface:
+
+![Quetoo](../quetoo.jpg)
 
 Documentation
 ---
