@@ -23,14 +23,14 @@
 
 #pragma once
 
-/**
- * @file ObjectivelyMVC types.
- */
-
 #include <SDL2/SDL_events.h>
 
-typedef enum {
-	MVC_EVENT = (SDL_USEREVENT + 0xF000),
-	MVC_EVENT_RENDER_DEVICE_RESET,
-	MVC_EVENT_UPDATE_BINDINGS,
-} MVC_EventType;
+/**
+ * @remarks Push this SDL_EventType to prompt `View::renderDeviceReset`.
+ */
+extern Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
+
+/**
+ * @remarks Push this SDL_EventType to prompt `View::updateBindings`.
+ */
+extern Uint32 MVC_EVENT_UPDATE_BINDINGS;

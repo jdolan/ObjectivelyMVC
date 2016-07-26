@@ -26,6 +26,9 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
+Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
+Uint32 MVC_EVENT_UPDATE_BINDINGS;
+
 #define _Class _View
 
 #pragma mark - ObjectInterface
@@ -424,7 +427,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		$(self, updateBindings);
 	}
 
-	$((Array *) self->subviews, enumerateObjects, respondToEvent_recurse, event);
+	$((Array *) self->subviews, enumerateObjects, respondToEvent_recurse, (ident) event);
 }
 
 /**
@@ -563,6 +566,9 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->window = window;
+
+	MVC_EVENT_RENDER_DEVICE_RESET = SDL_RegisterEvents(1);
+	MVC_EVENT_UPDATE_BINDINGS = SDL_RegisterEvents(1);
 }
 
 Class _View = {

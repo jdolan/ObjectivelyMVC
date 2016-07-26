@@ -48,7 +48,6 @@
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>
-#include <ObjectivelyMVC/Types.h>
 #include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/ViewController.h>
 #include <ObjectivelyMVC/WindowController.h>
