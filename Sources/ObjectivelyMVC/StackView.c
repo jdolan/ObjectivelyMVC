@@ -33,7 +33,7 @@
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
-	
+
 	super(View, self, layoutSubviews);
 
 	StackView *this = (StackView *) self;
@@ -93,8 +93,8 @@ static void layoutSubviews(View *self) {
 				break;
 		}
 
-//		const SDL_Size before = $(subview, size);
-
+		const SDL_Size before = $(subview, size);
+		
 		switch (this->distribution) {
 			case StackViewDistributionDefault:
 				break;
@@ -122,9 +122,11 @@ static void layoutSubviews(View *self) {
 				break;
 		}
 
-//		const SDL_Size after = $(subview, size);
+		const SDL_Size after = $(subview, size);
 
-//		subview->needsLayout = (before.w != after.w || before.h != after.h);
+		if (before.w != after.w || before.h != after.h) {
+			$(subview, layoutSubviews);
+		}
 
 		switch (this->axis) {
 			case StackViewAxisVertical:
