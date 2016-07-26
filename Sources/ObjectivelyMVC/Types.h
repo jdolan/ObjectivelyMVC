@@ -24,6 +24,22 @@
 #pragma once
 
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_pixels.h>
+
+typedef struct SDL_Size SDL_Size;
+
+/**
+ * @brief The Size type.
+ */
+struct SDL_Size {
+	int w, h;
+};
+
+/**
+ * @brief Creates an SDL_Size with the given dimensions.
+ */
+#define MakeSize(w, h) \
+	({ SDL_Size _size = { (w), (h) }; _size; })
 
 /**
  * @remarks Push this SDL_EventType to prompt `View::renderDeviceReset`.

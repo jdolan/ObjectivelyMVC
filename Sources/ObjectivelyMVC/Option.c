@@ -42,27 +42,22 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::sizeThatFits(View *, int *, int *)
+ * @see View::sizeThatFits(View *)
  */
-static void sizeThatFits(const View *self, int *w, int *h) {
-	
-	super(View, self, sizeThatFits, w, h);
-	
+static SDL_Size sizeThatFits(const View *self) {
+
 	const Option *this = (Option *) self;
-	
-	int tw, th;
-	$((View *) this->title, sizeThatFits, &tw, &th);
-	
-	tw += self->padding.left + self->padding.right;
-	th += self->padding.top + self->padding.bottom;
-	
-	if (tw > *w) {
-		*w = tw;
-	}
-	
-	if (th > *h) {
-		*h = th;
-	}
+
+	SDL_Size size = super(View, self, sizeThatFits);
+	SDL_Size titleSize = $((View *) this->title, sizeThatFits);
+
+	titleSize.w += self->padding.left + self->padding.right;
+	titleSize.h += self->padding.top + self->padding.bottom;
+
+	size.w = max(size.w, titleSize.w);
+	size.h = max(size.h, titleSize.h);
+
+	return size;
 }
 
 #pragma mark - Option

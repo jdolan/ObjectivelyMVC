@@ -339,18 +339,24 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*respondToEvent)(View *self, const SDL_Event *event);
-	
+
 	/**
-	 * @fn void View::sizeThatFits(const View *self, int *w, int *h)
+	 * @fn SDL_Size View::size(const View *self)
 	 *
-	 * @param w The width return value.
-	 * @param h The height return value.
+	 * @return The size of this View's frame.
+	 *
+	 * @memberof View
+	 */
+	SDL_Size (*size)(const View *self);
+
+	/**
+	 * @fn void View::sizeThatFits(const View *self)
 	 *
 	 * @return The minimum size that fits this View with margin.
 	 *
 	 * @memberof View
 	 */
-	void (*sizeThatFits)(const View *self, int *w, int *h);
+	SDL_Size (*sizeThatFits)(const View *self);
 	
 	/**
 	 * @fn void View::sizeToFit(View *self)

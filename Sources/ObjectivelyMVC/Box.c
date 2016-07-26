@@ -53,10 +53,9 @@ static void layoutSubviews(View *self) {
 	View *label = (View *) ((Box *) self)->label;
 	if (label->hidden == false) {
 
-		int w, h;
-		$(label, sizeThatFits, &w, &h);
+		const SDL_Size size = $(label, sizeThatFits);
 
-		label->frame.y = -h * 0.5;
+		label->frame.y = -size.h * 0.5;
 	}
 }
 

@@ -44,15 +44,18 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::sizeThatFits(View *, int *, int *)
+ * @see View::sizeThatFits(View *)
  */
-static void sizeThatFits(const View *self, int *w, int *h) {
-	
+static SDL_Size sizeThatFits(const View *self) {
+
 	const Label *this = (Label *) self;
-	$((View *) this->text, sizeThatFits, w, h);
-	
-	*w += self->padding.left + self->padding.right;
-	*h += self->padding.top + self->padding.bottom;
+
+	SDL_Size size = $((View *) this->text, sizeThatFits);
+
+	size.w += self->padding.left + self->padding.right;
+	size.h += self->padding.top + self->padding.bottom;
+
+	return size;
 }
 
 #pragma mark - Label

@@ -89,11 +89,11 @@ static void renderDeviceDidReset(View *self) {
 }
 
 /**
- * @see View::sizeThatFits(View *, int *, int *)
+ * @see View::sizeThatFits(View *)
  */
-static void sizeThatFits(const View *self, int *w, int *h) {
-	
-	$((Text *) self, naturalSize, w, h);
+static SDL_Size sizeThatFits(const View *self) {
+
+	return $((Text *) self, naturalSize);
 }
 
 #pragma mark - Text
@@ -118,17 +118,19 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 }
 
 /**
- * @fn void Text::naturalSize(const Text *self, int *width, int *height)
+ * @fn SDL_Size Text::naturalSize(const Text *self)
  *
  * @memberof Text
  */
-static void naturalSize(const Text *self, int *width, int *height) {
-	
+static SDL_Size naturalSize(const Text *self) {
+
+	SDL_Size size = MakeSize(0, 0);
+
 	if (self->font && self->text) {
-		$(self->font, sizeCharacters, self->text, width, height);
-	} else {
-		*width = *height = 0;
+		$(self->font, sizeCharacters, self->text, &size.w, &size.h);
 	}
+
+	return size;
 }
 
 /**
@@ -149,6 +151,8 @@ static void setFont(Text *self, Font *font) {
 			SDL_DestroyTexture(self->texture);
 			self->texture = NULL;
 		}
+
+		$((View *) self, sizeToFit);
 	}
 }
 

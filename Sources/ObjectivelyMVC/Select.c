@@ -106,16 +106,13 @@ static void sizeToFit(View *self) {
 	const Array *options = (Array *) this->options;
 	for (size_t i = 0; i < options->count; i++) {
 		
-		View *option = (View *) $(options, objectAtIndex, i);
+		const View *option = (View *) $(options, objectAtIndex, i);
 		
-		int w, h;
-		$(option, sizeThatFits, &w, &h);
+		SDL_Size size = $(option, sizeThatFits);
 		
-		w += self->padding.left + self->padding.right + 2 * DEFAULT_OPTION_PADDING;
-		
-		if (w > self->frame.w) {
-			self->frame.w = w;
-		}
+		size.w += self->padding.left + self->padding.right + 2 * DEFAULT_OPTION_PADDING;
+
+		self->frame.w = max(self->frame.w, size.w);
 	}
 }
 

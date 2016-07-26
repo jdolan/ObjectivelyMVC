@@ -127,11 +127,10 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	} else if (event->type == SDL_MOUSEMOTION) {
 		if (this->isResizing) {
 
-			int w, h;
-			$(self, sizeThatFits, &w, &h);
+			const SDL_Size size = $(self, sizeThatFits);
 
-			self->frame.w = clamp(self->frame.w + event->motion.xrel, w, INT32_MAX);
-			self->frame.h = clamp(self->frame.h + event->motion.yrel, h, INT32_MAX);
+			self->frame.w = max(self->frame.w + event->motion.xrel, size.w);
+			self->frame.h = max(self->frame.h + event->motion.yrel, size.h);
 
 			self->needsLayout = true;
 		} else if (this->isDragging) {

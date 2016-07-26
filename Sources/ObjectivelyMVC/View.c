@@ -431,14 +431,25 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 }
 
 /**
- * @fn void View::sizeThatFits(const View *self, int *w, int *h)
+ * @fn SDL_Size View::size(const View *self)
  *
  * @memberof View
  */
-static void sizeThatFits(const View *self, int *w, int *h) {
+static SDL_Size size(const View *self) {
+	return MakeSize(self->frame.w, self->frame.h);
+}
+
+/**
+ * @fn void View::sizeThatFits(const View *self)
+ *
+ * @memberof View
+ */
+static SDL_Size sizeThatFits(const View *self) {
+
+	SDL_Size size = $(self, size);
 
 	if (self->autoresizingMask & ViewAutoresizingContain) {
-		*w = *h = 0;
+		size = MakeSize(0, 0);
 
 		Array *subviews = $(self, visibleSubviews);
 
@@ -448,22 +459,20 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 
 			if (subview->alignment != ViewAlignmentInternal) {
 
-				int sw, sh;
-				$(subview, sizeThatFits, &sw, &sh);
+				SDL_Size subviewSize = $(subview, sizeThatFits);
 
-				*w = max(*w, subview->frame.x + sw);
-				*h = max(*h, subview->frame.y + sh);
+				size.w = max(size.w, subview->frame.x + subviewSize.w);
+				size.h = max(size.h, subview->frame.y + subviewSize.h);
 			}
 		}
 
-		*w += self->padding.left + self->padding.right;
-		*h += self->padding.top + self->padding.bottom;
+		size.w += self->padding.left + self->padding.right;
+		size.h += self->padding.top + self->padding.bottom;
 		
 		release(subviews);
-	} else {
-		*w = self->frame.w;
-		*h = self->frame.h;
 	}
+
+	return size;
 }
 
 /**
@@ -472,9 +481,12 @@ static void sizeThatFits(const View *self, int *w, int *h) {
  * @memberof View
  */
 static void sizeToFit(View *self) {
-	
-	$(self, sizeThatFits, &self->frame.w, &self->frame.h);
-	
+
+	const SDL_Size size = $(self, sizeThatFits);
+
+	self->frame.w = size.w;
+	self->frame.h = size.h;
+
 	$(self, layoutIfNeeded);
 	
 	Array *subviews = $(self, visibleSubviews);
@@ -484,11 +496,10 @@ static void sizeToFit(View *self) {
 
 		if (subview->alignment != ViewAlignmentInternal) {
 
-			int sw, sh;
-			$(subview, sizeThatFits, &sw, &sh);
+			const SDL_Size size = $(subview, sizeThatFits);
 
-			const int sx = subview->frame.x + sw + self->padding.left + self->padding.right;
-			const int sy = subview->frame.y + sh + self->padding.top + self->padding.bottom;
+			const int sx = subview->frame.x + size.w + self->padding.left + self->padding.right;
+			const int sy = subview->frame.y + size.h + self->padding.top + self->padding.bottom;
 
 			self->frame.w = max(self->frame.w, sx);
 			self->frame.h = max(self->frame.h, sy);
@@ -561,6 +572,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewInterface *) clazz->interface)->renderFrame = renderFrame;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->interface)->size = size;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;

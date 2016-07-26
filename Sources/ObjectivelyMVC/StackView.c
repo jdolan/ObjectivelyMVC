@@ -56,16 +56,14 @@ static void layoutSubviews(View *self) {
 	for (size_t i = 0; i < subviews->count; i++) {
 		
 		const View *subview = $(subviews, objectAtIndex, i);
-		
-		int sw, sh;
-		$(subview, sizeThatFits, &sw, &sh);
+		const SDL_Size size = $(subview, sizeThatFits);
 		
 		switch (this->axis) {
 			case StackViewAxisVertical:
-				requestedSize += sh;
+				requestedSize += size.h;
 				break;
 			case StackViewAxisHorizontal:
-				requestedSize += sw;
+				requestedSize += size.w;
 				break;
 		}
 	}
@@ -94,7 +92,9 @@ static void layoutSubviews(View *self) {
 				subview->frame.x = pos;
 				break;
 		}
-		
+
+//		const SDL_Size before = $(subview, size);
+
 		switch (this->distribution) {
 			case StackViewDistributionDefault:
 				break;
@@ -121,7 +121,11 @@ static void layoutSubviews(View *self) {
 				}
 				break;
 		}
-		
+
+//		const SDL_Size after = $(subview, size);
+
+//		subview->needsLayout = (before.w != after.w || before.h != after.h);
+
 		switch (this->axis) {
 			case StackViewAxisVertical:
 				pos += subview->frame.h;
@@ -138,13 +142,13 @@ static void layoutSubviews(View *self) {
 }
 
 /**
- * @see View::sizeThatFits(const View *, int *, int *)
+ * @see View::sizeThatFits(const View *)
  */
-static void sizeThatFits(const View *self, int *w, int *h) {
+static SDL_Size sizeThatFits(const View *self) {
 	
 	const StackView *this = (StackView *) self;
 	
-	*w = *h = 0;
+	SDL_Size size = MakeSize(0, 0);
 	
 	Array *subviews = $(self, visibleSubviews);
 	if (subviews->count) {
@@ -157,12 +161,12 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 
 				switch (this->axis) {
 					case StackViewAxisVertical:
-						*w = max(*w, subview->frame.w);
-						*h += subview->frame.h;
+						size.w = max(size.w, subview->frame.w);
+						size.h += subview->frame.h;
 						break;
 					case StackViewAxisHorizontal:
-						*h = max(*h, subview->frame.h);
-						*w += subview->frame.w;
+						size.h = max(size.h, subview->frame.h);
+						size.w += subview->frame.w;
 						break;
 				}
 			}
@@ -170,18 +174,20 @@ static void sizeThatFits(const View *self, int *w, int *h) {
 		
 		switch (this->axis) {
 			case StackViewAxisVertical:
-				*h += this->spacing * (subviews->count - 1);
+				size.h += this->spacing * (subviews->count - 1);
 				break;
 			case StackViewAxisHorizontal:
-				*w += this->spacing * (subviews->count - 1);
+				size.w += this->spacing * (subviews->count - 1);
 				break;
 		}
 	}
 
-	*w += self->padding.left + self->padding.right;
-	*h += self->padding.top + self->padding.bottom;
+	size.w += self->padding.left + self->padding.right;
+	size.h += self->padding.top + self->padding.bottom;
 
 	release(subviews);
+
+	return size;
 }
 
 #pragma mark - StackView

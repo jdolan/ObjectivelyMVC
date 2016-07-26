@@ -112,16 +112,13 @@ struct TextInterface {
 	Text *(*initWithText)(Text *self, const char *text, Font *font);
 	
 	/**
-	 * @fn void Text::naturalSize(const Text *self, int *width, int *height)
+	 * @fn SDL_Size Text::naturalSize(const Text *self)
 	 *
 	 * @brief Resolves the rendered size of this Text.
 	 *
-	 * @param width The rendered width.
-	 * @param height The rendered height.
-	 *
 	 * @memberof Text
 	 */
-	void (*naturalSize)(const Text *self, int *width, int *height);
+	SDL_Size (*naturalSize)(const Text *self);
 
 	/**
 	 * @fn void Text::setFont(Text *self, Font *font)
