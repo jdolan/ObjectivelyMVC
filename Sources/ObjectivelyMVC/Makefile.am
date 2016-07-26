@@ -27,6 +27,7 @@ pkginclude_HEADERS = \
 	TableColumnView.h \
 	TableView.h \
 	TextView.h \
+	Types.h \
 	View.h \
 	ViewController.h \
 	WindowController.h

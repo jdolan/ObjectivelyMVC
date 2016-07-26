@@ -403,22 +403,28 @@ static SDL_Rect renderFrame(const View *self) {
 }
 
 /**
+ * @brief ArrayEnumerator for respondToEvent recursion.
+ */
+static _Bool respondToEvent_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, respondToEvent, (const SDL_Event *) data); return false;
+}
+
+/**
  * @fn void View::respondToEvent(View *self, const SDL_Event *event)
  *
  * @memberof View
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
+
+	assert(event);
 	
-	Array *subviews = (Array *) self->subviews;
-	for (size_t i = 0; i < subviews->count; i++) {
-		
-		View *subview = (View *) $(subviews, objectAtIndex, i);
-		$(subview, respondToEvent, event);
+	if (event->type == MVC_EVENT_RENDER_DEVICE_RESET) {
+		$(self, renderDeviceDidReset);
+	} else if (event->type == MVC_EVENT_UPDATE_BINDINGS) {
+		$(self, updateBindings);
 	}
 
-	if (event->type == SDL_RENDER_DEVICE_RESET) {
-		$(self, renderDeviceDidReset);
-	}
+	$((Array *) self->subviews, enumerateObjects, respondToEvent_recurse, event);
 }
 
 /**
@@ -490,6 +496,15 @@ static void sizeToFit(View *self) {
 }
 
 /**
+ * @fn void View::updateBindings(View *self)
+ *
+ * @memberof View
+ */
+static void updateBindings(View *self) {
+
+}
+
+/**
  * @brief ArrayEnumerator for visibleSubviews.
  */
 static _Bool visibleSubviews_filter(const Array *array, ident obj, ident data) {
@@ -545,6 +560,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
+	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->window = window;
 }

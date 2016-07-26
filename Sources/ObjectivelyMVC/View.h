@@ -31,6 +31,7 @@
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Colors.h>
+#include <ObjectivelyMVC/Types.h>
 
 /**
  * @file
@@ -359,6 +360,18 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*sizeToFit)(View *self);
+
+	/**
+	 * @fn void View::updateBindings(View *self)
+	 *
+	 * @brief Updates data bindings, prompting the appropriate layout changes.
+	 *
+	 * @remarks Subclasses should override this method to update any data sources
+	 * they rely on.
+	 *
+	 * @memberof View
+	 */
+	void (*updateBindings)(View *self);
 
 	/**
 	 * @fn Array *View::visibleSubviews(const View *self)
