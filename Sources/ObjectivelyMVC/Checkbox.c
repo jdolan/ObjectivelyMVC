@@ -36,6 +36,7 @@ static void dealloc(Object *self) {
 
 	Checkbox *this = (Checkbox *) self;
 
+	release(this->box);
 	release(this->check);
 
 	super(Object, self, dealloc);
@@ -67,8 +68,10 @@ static void render(View *self, SDL_Renderer *renderer) {
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	
 	if (event->type == SDL_MOUSEBUTTONUP) {
+
+		Checkbox *this = (Checkbox *) self;
 		
-		if ($((View *) self, didReceiveEvent, event)) {
+		if ($((View *) this->box, didReceiveEvent, event)) {
 			self->state ^= ControlStateSelected;
 			return true;
 		}
@@ -90,32 +93,38 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 
 	self = (Checkbox *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-		
+
+		self->control.view.autoresizingMask = ViewAutoresizingContain;
+		self->control.view.backgroundColor = Colors.Clear;
+
+		self->box = $(alloc(Control), initWithFrame, frame, style);
+		assert(self->box);
+
+		self->box->view.alignment = ViewAlignmentMiddleCenter;
+
 		self->check = $(alloc(ImageView), initWithImage, _check);
 		assert(self->check);
 		
 		self->check->view.autoresizingMask = ViewAutoresizingFill;
 		
-		$((View *) self, addSubview, (View *) self->check);
+		$((View *) self->box, addSubview, (View *) self->check);
+		$((View *) self, addSubview, (View *) self->box);
 		
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = BevelTypeInset;
+			self->box->bevel = BevelTypeInset;
+
+			self->box->view.backgroundColor = Colors.DimGray;
+
+			self->box->view.frame.w = DEFAULT_CHECKBOX_SIZE;
+			self->box->view.frame.h = DEFAULT_CHECKBOX_SIZE;
 			
-			self->control.view.backgroundColor = Colors.DimGray;
-			
-			if (self->control.view.frame.w == 0) {
-				self->control.view.frame.w = DEFAULT_CHECKBOX_SIZE;
-			}
-			
-			if (self->control.view.frame.h == DEFAULT_CONTROL_HEIGHT) {
-				self->control.view.frame.h = DEFAULT_CHECKBOX_SIZE;
-			}
-			
-			self->control.view.padding.top = DEFAULT_CHECKBOX_PADDING;
-			self->control.view.padding.right = DEFAULT_CHECKBOX_PADDING;
-			self->control.view.padding.bottom = DEFAULT_CHECKBOX_PADDING;
-			self->control.view.padding.left = DEFAULT_CHECKBOX_PADDING;
+			self->box->view.padding.top = DEFAULT_CHECKBOX_PADDING;
+			self->box->view.padding.right = DEFAULT_CHECKBOX_PADDING;
+			self->box->view.padding.bottom = DEFAULT_CHECKBOX_PADDING;
+			self->box->view.padding.left = DEFAULT_CHECKBOX_PADDING;
 		}
+
+		$((View *) self, sizeToFit);
 	}
 	
 	return self;

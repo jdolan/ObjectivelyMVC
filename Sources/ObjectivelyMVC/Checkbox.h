@@ -63,6 +63,11 @@ struct Checkbox {
 	CheckboxInterface *interface;
 
 	/**
+	 * @brief The box.
+	 */
+	Control *box;
+
+	/**
 	 * @brief The check.
 	 *
 	 * @private
