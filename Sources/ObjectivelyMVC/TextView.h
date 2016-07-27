@@ -47,11 +47,6 @@ typedef struct TextViewInterface TextViewInterface;
 struct TextViewDelegate {
 
 	/**
-	 * @brief Delegate user data.
-	 */
-	ident data;
-	
-	/**
 	 * @brief Delegate callback for initiating text editing.
 	 */
 	void (*didBeginEditing)(TextView *textView);

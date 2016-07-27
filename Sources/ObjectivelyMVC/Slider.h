@@ -35,7 +35,7 @@
 #define DEFAULT_SLIDER_HANDLE_WIDTH 12
 #define DEFAULT_SLIDER_HANDLE_HEIGHT 18
 #define DEFAULT_SLIDER_LABEL_PADDING 4
-#define DEFAULT_SLIDER_WIDTH 140
+#define DEFAULT_SLIDER_WIDTH 100
 
 typedef struct SliderDelegate SliderDelegate;
 
@@ -46,11 +46,6 @@ typedef struct SliderInterface SliderInterface;
  * @brief The Slider delegate protocol.
  */
 struct SliderDelegate {
-
-	/**
-	 * @brief Delegate user data.
-	 */
-	ident data;
 
 	/**
 	 * @brief Delegate callback for Slider value modification.
