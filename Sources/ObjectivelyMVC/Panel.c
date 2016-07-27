@@ -171,6 +171,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->view.padding.left = self->view.padding.right = DEFAULT_PANEL_PADDING;
 
 		self->view.backgroundColor = Colors.DefaultColor;
+		self->view.borderColor = Colors.DarkGray;
 		self->view.borderWidth = 1;
 	}
 	
