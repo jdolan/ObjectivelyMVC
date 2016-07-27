@@ -36,7 +36,8 @@
 static void dealloc(Object *self) {
 	
 	Slider *this = (Slider *) self;
-	
+
+	release(this->bar);
 	release(this->handle);
 	release(this->label);
 	
@@ -54,16 +55,18 @@ static void layoutSubviews(View *self) {
 	
 	Slider *this = (Slider *) self;
 
+	const View *label = (View *) this->label;
+	if (!label->hidden) {
+		this->bar->frame.w -= label->frame.w;
+	}
+
 	if (this->max > this->min) {
 
 		const double fraction = clamp((this->value - this->min) / (this->max - this->min), 0.0, 1.0);
-
-		const SDL_Rect bounds = $(self, bounds);
-
-		const int width = bounds.w - DEFAULT_SLIDER_LABEL_SPACING;
+		const SDL_Rect bounds = $(this->bar, bounds);
 
 		View *handle = (View *) this->handle;
-		handle->frame.x = (width * fraction) - handle->frame.w * 0.5;
+		handle->frame.x = (bounds.w * fraction) - handle->frame.w * 0.5;
 	} else {
 		LogWarn("max > min");
 	}
@@ -76,10 +79,12 @@ static void render(View *self, SDL_Renderer *renderer) {
 	
 	super(View, self, render, renderer);
 
-	const SDL_Rect frame = $(self, renderFrame);
+	Slider *this = (Slider *) self;
+
+	const SDL_Rect frame = $(this->bar, renderFrame);
 
 	const int y = frame.y + frame.h * 0.5;
-	const int x = frame.x + frame.w - DEFAULT_SLIDER_LABEL_SPACING;
+	const int x = frame.x + frame.w;
 
 	SDL_RenderDrawLine(renderer, frame.x, y, x, y);
 }
@@ -107,14 +112,16 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	
 	else if (event->type == SDL_MOUSEMOTION) {
 		if (self->state & ControlStateHighlighted) {
-			if (self->view.frame.w) {
+			if ($((View *) self, didReceiveEvent, event)) {
 				if (event->motion.xrel) {
-					const double scale = (this->max - this->min) / self->view.frame.w;
-					const double delta = scale * event->motion.xrel;
-					$(this, setValue, this->value + delta);
+					if (this->bar->frame.w) {
+						const double scale = (this->max - this->min) / this->bar->frame.w;
+						const double delta = scale * event->motion.xrel;
+						$(this, setValue, this->value + delta);
+						return true;
+					}
 				}
 			}
-			return true;
 		}
 	}
 	
@@ -135,19 +142,28 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 		
 		self->control.view.backgroundColor = Colors.Clear;
 
+		self->bar = $(alloc(View), initWithFrame, frame);
+		assert(self->bar);
+
+		self->bar->alignment = ViewAlignmentMiddleLeft;
+		self->bar->autoresizingMask = ViewAutoresizingFill;
+
+		$((View *) self, addSubview, self->bar);
+
 		self->handle = $(alloc(Control), initWithFrame, NULL, style);
 		assert(self->handle);
 
-		self->handle->view.alignment = ViewAlignmentMiddleLeft;
-		
-		$((View *) self, addSubview, (View *) self->handle);
+		$(self->bar, addSubview, (View *) self->handle);
 
 		self->label = $(alloc(Label), initWithText, NULL, NULL);
 		assert(self->label);
 
 		self->label->view.alignment = ViewAlignmentMiddleRight;
+		self->label->view.padding.left = DEFAULT_SLIDER_LABEL_PADDING;
 
 		$((View *) self, addSubview, (View *) self->label);
+
+		self->labelFormat = "%0.1f";
 		
 		if (self->control.style == ControlStyleDefault) {
 
@@ -179,7 +195,7 @@ static void setValue(Slider *self, double value) {
 		self->control.view.needsLayout = true;
 
 		char text[64];
-		snprintf(text, sizeof(text), "%.1f", self->value);
+		snprintf(text, sizeof(text), self->labelFormat, self->value);
 
 		$(self->label, setText, text);
 

@@ -34,7 +34,7 @@
 
 #define DEFAULT_SLIDER_HANDLE_WIDTH 12
 #define DEFAULT_SLIDER_HANDLE_HEIGHT 18
-#define DEFAULT_SLIDER_LABEL_SPACING 40
+#define DEFAULT_SLIDER_LABEL_PADDING 4
 #define DEFAULT_SLIDER_WIDTH 140
 
 typedef struct SliderDelegate SliderDelegate;
@@ -82,6 +82,11 @@ struct Slider {
 	SliderInterface *interface;
 
 	/**
+	 * @brief The slider bar.
+	 */
+	View *bar;
+
+	/**
 	 * @brief The delegate.
 	 */
 	SliderDelegate delegate;
@@ -97,6 +102,11 @@ struct Slider {
 	 * @brief The label displaying the current value.
 	 */
 	Label *label;
+
+	/**
+	 * @brief The label format, e.g. `"%0.01f"`.
+	 */
+	const char *labelFormat;
 	
 	/**
 	 * @brief The slider bounds.
