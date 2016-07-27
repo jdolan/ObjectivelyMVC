@@ -142,7 +142,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 		
 		$((View *) self, addSubview, (View *) self->handle);
 
-		self->label = $(alloc(Label), initWithText, NULL, $$(Font, defaultFont, FontCategorySecondaryLabel));
+		self->label = $(alloc(Label), initWithText, NULL, NULL);
 		assert(self->label);
 
 		self->label->view.alignment = ViewAlignmentMiddleRight;
