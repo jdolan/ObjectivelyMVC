@@ -54,6 +54,10 @@ static void dealloc(Object *self) {
 static void layoutSubviews(View *self) {
 	
 	Select *this = (Select *) self;
+
+	if (this->comparator) {
+		$(this->options, sort, this->comparator);
+	}
 	
 	int requestedSize = 0;
 	
@@ -181,13 +185,13 @@ static void stateDidChange(Control *self) {
 #pragma mark - Select
 
 /**
- * @fn void Select::addOption(Select *self, const char *title, Font *font, ident value)
+ * @fn void Select::addOption(Select *self, const char *title, ident value)
  *
  * @memberof Select
  */
-static void addOption(Select *self, const char *title, Font *font, ident value) {
+static void addOption(Select *self, const char *title, ident value) {
 	
-	Option *option = $(alloc(Option), initWithTitle, title, font, value);
+	Option *option = $(alloc(Option), initWithTitle, title, value);
 	assert(option);
 	
 	$(self->options, addObject, option);

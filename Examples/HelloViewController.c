@@ -97,9 +97,9 @@ static void loadView(ViewController *self) {
 	$((View *) stackView, addSubview, (View *) checkboxInput);
 
 	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
-	$(select, addOption, "This is a select", NULL, (ident) 1);
-	$(select, addOption, "This is an option", NULL, (ident) 2);
-	$(select, addOption, "This is another", NULL, (ident) 3);
+	$(select, addOption, "This is a select", (ident) 1);
+	$(select, addOption, "This is an option", (ident) 2);
+	$(select, addOption, "This is another", (ident) 3);
 	$((View *) select, sizeToFit);
 	
 	$((View *) stackView, addSubview, (View *) select);

@@ -84,19 +84,18 @@ struct OptionInterface {
 	ViewInterface viewInterface;
 	
 	/**
-	 * @fn Option *Option::initWithTitle(Option *self, const char *title, Font *font, ident value)
+	 * @fn Option *Option::initWithTitle(Option *self, const char *title, ident value)
 	 *
-	 * @brief Initializes this Option with the given title, Font and value.
+	 * @brief Initializes this Option with the given title and value.
 	 *
 	 * @param title The title.
-	 * @param font The Font.
 	 * @param value The value.
 	 *
 	 * @return The initialized Option, or `NULL` on error.
 	 *
 	 * @memberof Option
 	 */
-	Option *(*initWithTitle)(Option *self, const char *title, Font *font, ident value);
+	Option *(*initWithTitle)(Option *self, const char *title, ident value);
 };
 
 /**

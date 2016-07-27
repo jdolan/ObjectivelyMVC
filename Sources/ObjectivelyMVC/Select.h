@@ -76,6 +76,11 @@ struct Select {
 	 * @private
 	 */
 	SelectInterface *interface;
+
+	/**
+	 * @brief An optional Comparator to sort Options.
+	 */
+	Comparator comparator;
 	
 	/**
 	 * @brief The SelectDelegate.
@@ -88,12 +93,12 @@ struct Select {
 	 * @private
 	 */
 	MutableArray *options;
-	
+
 	/**
 	 * @brief The selected Option, or `NULL`.
 	 */
 	Option *selectedOption;
-	
+
 	/**
 	 * @brief The StackView for rendering all Options.
 	 *
@@ -113,17 +118,16 @@ struct SelectInterface {
 	ControlInterface controlInterface;
 	
 	/**
-	 * @fn void Select::addOption(Select *self, const char *title, Font *font, ident value)
+	 * @fn void Select::addOption(Select *self, const char *title, ident value)
 	 *
 	 * @brief Creates and adds a new Option to this Select.
 	 *
 	 * @param title The Option title.
-	 * @param font The Option Font.
 	 * @param value The Option value.
 	 *
 	 * @memberof Select
 	 */
-	void (*addOption)(Select *self, const char *title, Font *font, ident value);
+	void (*addOption)(Select *self, const char *title, ident value);
 	
 	/**
 	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
