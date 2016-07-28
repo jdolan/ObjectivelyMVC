@@ -73,9 +73,9 @@ static void layoutSubviews(View *self) {
 }
 
 /**
- * @see View::render(View *, SDL_Renderer *)
+ * @see View::render(View *, Renderer *)
  */
-static void render(View *self, SDL_Renderer *renderer) {
+static void render(View *self, Renderer *renderer) {
 	
 	super(View, self, render, renderer);
 
@@ -83,10 +83,12 @@ static void render(View *self, SDL_Renderer *renderer) {
 
 	const SDL_Rect frame = $(this->bar, renderFrame);
 
-	const int y = frame.y + frame.h * 0.5;
-	const int x = frame.x + frame.w;
+	const SDL_Point points[] = {
+		{ frame.x, frame.y + frame.h * 0.5 },
+		{ frame.x + frame.w, frame.y + frame.h * 0.5 }
+	};
 
-	SDL_RenderDrawLine(renderer, frame.x, y, x, y);
+	$(renderer, drawLine, points);
 }
 
 #pragma mark - Control

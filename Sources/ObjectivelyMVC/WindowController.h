@@ -60,6 +60,11 @@ struct WindowController {
 	WindowControllerInterface *interface;
 
 	/**
+	 * @brief The renderer.
+	 */
+	Renderer *renderer;
+
+	/**
 	 * @brief The ViewController.
 	 */
 	ViewController *viewController;
@@ -107,18 +112,16 @@ struct WindowControllerInterface {
 	void (*setViewController)(WindowController *self, ViewController *viewController);
 
 	/**
-	 * @fn void WindowController::render(WindowController *self, SDL_Renderer *renderer)
+	 * @fn void WindowController::render(WindowController *self)
 	 *
-	 * @brief Renders the content ViewController, transitioning to the presenting ViewController.
-	 *
-	 * @param renderer The renderer.
+	 * @brief Renders the ViewController's View.
 	 *
 	 * @remarks Your application should call this method once per frame to render the 
 	 * View hierarchy.
 	 *
 	 * @memberof WindowController
 	 */
-	void (*render)(WindowController *self, SDL_Renderer *renderer);
+	void (*render)(WindowController *self);
 
 	/**
 	 * @fn void WindowController:respondToEvent(WindowController *self, const SDL_Event *event)

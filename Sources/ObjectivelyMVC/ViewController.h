@@ -80,18 +80,18 @@ struct ViewControllerInterface {
 	ObjectInterface parentInterface;
 	
 	/**
-	 * @fn void ViewController::draw(ViewController *self, SDL_Renderer *renderer)
+	 * @fn void ViewController::draw(ViewController *self, Renderer *renderer)
 	 *
 	 * @brief Draws this ViewController's View hierarchy.
 	 *
-	 * @param renderer The SDL_Renderer with which to draw.
+	 * @param renderer The Renderer with which to draw.
 	 *
 	 * @remarks This method is called from WindowController::render to draw the
 	 * assigned ViewController's View hierarchy.
 	 *
 	 * @memberof ViewController
 	 */
-	void (*drawView)(ViewController *self, SDL_Renderer *renderer);
+	void (*drawView)(ViewController *self, Renderer *renderer);
 	
 	/**
 	 * @fn ViewController *ViewController::init(ViewController *self)

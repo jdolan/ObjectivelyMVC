@@ -84,7 +84,7 @@ struct Text {
 	 *
 	 * @private
 	 */
-	SDL_Texture *texture;
+	GLuint texture;
 };
 
 /**

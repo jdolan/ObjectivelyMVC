@@ -67,6 +67,8 @@
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6603791CBBF93E00EB86CF /* ScrollView.c */; };
 		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
+		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
 		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF81C84E36100F4C3D4 /* TableView.c */; };
@@ -177,6 +179,8 @@
 		CE5BD5921D3EDD7400C43B85 /* ObjectivelyMVC.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ObjectivelyMVC.pc.in; sourceTree = "<group>"; };
 		CE6603791CBBF93E00EB86CF /* ScrollView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollView.c; sourceTree = "<group>"; };
 		CE66037A1CBBF93E00EB86CF /* ScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollView.h; sourceTree = "<group>"; };
+		CE76279C1D4A5A5800EEEE78 /* Renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Renderer.c; sourceTree = "<group>"; };
+		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 		CE7EA4CD1D479A9000BD37A3 /* quetoo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = quetoo.jpg; sourceTree = "<group>"; };
 		CE8E7FF41C7FAD9100F4C3D4 /* Input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = Input.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
@@ -284,6 +288,8 @@
 				CE14A8CF1C68CE3C00B576FB /* Option.h */,
 				CEF1D88B1D4265A70099A857 /* Panel.c */,
 				CEF1D88C1D4265A70099A857 /* Panel.h */,
+				CE76279C1D4A5A5800EEEE78 /* Renderer.c */,
+				CE76279D1D4A5A5800EEEE78 /* Renderer.h */,
 				CE6603791CBBF93E00EB86CF /* ScrollView.c */,
 				CE66037A1CBBF93E00EB86CF /* ScrollView.h */,
 				CE14A8CA1C66D89900B576FB /* Select.c */,
@@ -449,6 +455,7 @@
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE0AD0961C6F6568003E3CF7 /* Label.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
+				CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 				CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */,
@@ -597,6 +604,7 @@
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE0AD0951C6F6568003E3CF7 /* Label.c in Sources */,
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,
+				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,

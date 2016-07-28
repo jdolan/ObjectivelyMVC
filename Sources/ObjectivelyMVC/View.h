@@ -25,12 +25,12 @@
 
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_opengl.h>
-#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Colors.h>
+#include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/Types.h>
 
 /**
@@ -213,17 +213,17 @@ struct ViewInterface {
 	_Bool (*didReceiveEvent)(const View *self, const SDL_Event *event);
 	
 	/**
-	 * @fn void View::draw(View *self, SDL_Renderer *renderer)
+	 * @fn void View::draw(View *self, Renderer *renderer)
 	 *
 	 * @brief Draws this View.
 	 *
-	 * @param renderer The SDL_Renderer with which to draw.
+	 * @param renderer The Renderer with which to draw.
 	 *
 	 * @remarks The ViewController will call this method when drawing its View hierarchy.
 	 *
 	 * @memberof View
 	 */
-	void (*draw)(View *self, SDL_Renderer *renderer);
+	void (*draw)(View *self, Renderer *renderer);
 
 	/**
 	 * @fn View *View::initWithFrame(View *self, const SDL_Rect *frame)
@@ -297,7 +297,7 @@ struct ViewInterface {
 	void (*removeSubview)(View *self, View *subview);
 	
 	/**
-	 * @fn void View::render(View *self, SDL_Renderer *renderer)
+	 * @fn void View::render(View *self, Renderer *renderer)
 	 *
 	 * @brief Renders this View using the given renderer.
 	 *
@@ -306,7 +306,7 @@ struct ViewInterface {
 	 *
 	 * @memberof View
 	 */
-	void (*render)(View *self, SDL_Renderer *renderer);
+	void (*render)(View *self, Renderer *renderer);
 
 	/**
 	 * @fn void View::renderDeviceDidReset(View *self)

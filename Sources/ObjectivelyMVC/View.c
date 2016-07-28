@@ -135,15 +135,15 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
  * @brief ArrayEnumerator for draw recursion.
  */
 static _Bool draw_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, draw, (SDL_Renderer *) data); return false;
+	$((View *) obj, draw, (Renderer *) data); return false;
 }
 
 /**
- * @fn void View::draw(View *self, SDL_Renderer *renderer)
+ * @fn void View::draw(View *self, Renderer *renderer)
  *
  * @memberof View
  */
-static void draw(View *self, SDL_Renderer *renderer) {
+static void draw(View *self, Renderer *renderer) {
 	
 	assert(renderer);
 	
@@ -337,23 +337,23 @@ static void removeSubview(View *self, View *subview) {
 }
 
 /**
- * @fn void View::render(View *self, SDL_Renderer *renderer)
+ * @fn void View::render(View *self, Renderer *renderer)
  *
  * @memberof View
  */
-static void render(View *self, SDL_Renderer *renderer) {
+static void render(View *self, Renderer *renderer) {
 	
 	if (self->backgroundColor.a) {
 
-		SetRenderDrawColor(renderer, self->backgroundColor);
+		SetColor(self->backgroundColor);
 		
 		const SDL_Rect frame = $(self, renderFrame);
-		SDL_RenderFillRect(renderer, &frame);
+		$(renderer, fillRect, &frame);
 	}
 	
 	if (self->borderWidth && self->borderColor.a) {
 
-		SetRenderDrawColor(renderer, self->borderColor);
+		SetColor(self->borderColor);
 		
 		SDL_Rect frame = $(self, renderFrame);
 		for (int i = 0; i < self->borderWidth; i++) {
@@ -361,11 +361,11 @@ static void render(View *self, SDL_Renderer *renderer) {
 			frame.y -= 1;
 			frame.w += 2;
 			frame.h += 2;
-			SDL_RenderDrawRect(renderer, &frame);
+			$(renderer, drawRect, &frame);
 		}
 	}
 
-	SetRenderDrawColor(renderer, Colors.White);
+	SetColor(Colors.White);
 }
 
 /**

@@ -44,9 +44,9 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::render(View *, SDL_Renderer *)
+ * @see View::render(View *, Renderer *)
  */
-static void render(View *self, SDL_Renderer *renderer) {
+static void render(View *self, Renderer *renderer) {
 	
 	super(View, self, render, renderer);
 	
@@ -56,7 +56,7 @@ static void render(View *self, SDL_Renderer *renderer) {
 	
 	if (this->bevel == BevelTypeInset) {
 		
-		SetRenderDrawColor(renderer, Colors.Silver);
+		SetColor(Colors.Silver);
 		
 		SDL_Point points[3];
 		
@@ -69,9 +69,9 @@ static void render(View *self, SDL_Renderer *renderer) {
 		points[2].x = frame.x + frame.w - 2;
 		points[2].y = frame.y + 1;
 		
-		SDL_RenderDrawLines(renderer, points, lengthof(points));
+		$(renderer, drawLines, points, lengthof(points));
 		
-		SetRenderDrawColor(renderer, Colors.Charcoal);
+		SetColor(Colors.Charcoal);
 		
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 3;
@@ -82,11 +82,11 @@ static void render(View *self, SDL_Renderer *renderer) {
 		points[2].x = frame.x + frame.w - 2;
 		points[2].y = frame.y + 1;
 		
-		SDL_RenderDrawLines(renderer, points, lengthof(points));
+		$(renderer, drawLines, points, lengthof(points));
 
 	} else if (this->bevel == BevelTypeOutset) {
 		
-		SetRenderDrawColor(renderer, Colors.Charcoal);
+		SetColor(Colors.Charcoal);
 		
 		SDL_Point points[3];
 		
@@ -99,9 +99,9 @@ static void render(View *self, SDL_Renderer *renderer) {
 		points[2].x = frame.x + frame.w - 2;
 		points[2].y = frame.y + 1;
 		
-		SDL_RenderDrawLines(renderer, points, lengthof(points));
+		$(renderer, drawLines, points, lengthof(points));
 		
-		SetRenderDrawColor(renderer, Colors.Silver);
+		SetColor(Colors.Silver);
 		
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 3;
@@ -112,17 +112,17 @@ static void render(View *self, SDL_Renderer *renderer) {
 		points[2].x = frame.x + frame.w - 2;
 		points[2].y = frame.y + 1;
 		
-		SDL_RenderDrawLines(renderer, points, lengthof(points));
+		$(renderer, drawLines, points, lengthof(points));
 	}
 	
 	if (this->state & ControlStateFocused) {
 
-		SetRenderDrawColor(renderer, Colors.Black);
+		SetColor(Colors.Black);
 		
-		SDL_RenderDrawRect(renderer, &frame);
+		$(renderer, drawRect, &frame);
 	}
 
-	SetRenderDrawColor(renderer, Colors.White);
+	SetColor(Colors.White);
 }
 
 /**

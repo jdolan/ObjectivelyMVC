@@ -74,7 +74,7 @@ struct ImageView {
 	/**
 	 * @brief The texture.
 	 */
-	SDL_Texture *texture;
+	GLuint texture;
 };
 
 /**

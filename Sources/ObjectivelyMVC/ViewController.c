@@ -46,11 +46,11 @@ static void dealloc(Object *self) {
 #pragma mark - ViewController
 
 /**
- * @fn void ViewController::drawView(ViewController *self, SDL_Renderer *renderer)
+ * @fn void ViewController::drawView(ViewController *self, Renderer *renderer)
  *
  * @memberof ViewController
  */
-static void drawView(ViewController *self, SDL_Renderer *renderer) {
+static void drawView(ViewController *self, Renderer *renderer) {
 	
 	assert(renderer);
 

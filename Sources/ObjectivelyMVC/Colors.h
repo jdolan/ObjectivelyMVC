@@ -197,5 +197,5 @@ extern const struct _Colors {
 	SDL_Color YellowGreen;
 } Colors;
 
-#define SetRenderDrawColor(renderer, color) \
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a)
+#define SetColor(c) \
+	glColor4ubv((const GLubyte *) &c)

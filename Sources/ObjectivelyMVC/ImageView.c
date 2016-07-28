@@ -38,7 +38,7 @@ static void dealloc(Object *self) {
 
 	release(this->image);
 
-	SDL_DestroyTexture(this->texture);
+	glDeleteTextures(1, &this->texture);
 
 	super(Object, self, dealloc);
 }
@@ -46,22 +46,22 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see ViewInterface::render(View *, SDL_Renderer *)
+ * @see ViewInterface::render(View *, Renderer *)
  */
-static void render(View *self, SDL_Renderer *renderer) {
+static void render(View *self, Renderer *renderer) {
 
 	super(View, self, render, renderer);
 	
 	ImageView *this = (ImageView *) self;
 	
-	if (this->texture == NULL) {
-		this->texture = SDL_CreateTextureFromSurface(renderer, this->image->surface);
+	if (this->texture == 0) {
+		this->texture = $(renderer, createTexture, this->image->surface);
 	}
 	
 	assert(this->texture);
 	
-	SDL_Rect frame = $(self, renderFrame);
-	SDL_RenderCopy(renderer, this->texture, NULL, &frame);
+	const SDL_Rect frame = $(self, renderFrame);
+	$(renderer, drawTexture, this->texture, &frame);
 }
 
 /**
@@ -74,8 +74,8 @@ static void renderDeviceDidReset(View *self) {
 	ImageView *this = (ImageView *) self;
 
 	if (this->texture) {
-		SDL_DestroyTexture(this->texture);
-		this->texture = NULL;
+		glDeleteTextures(1, &this->texture);
+		this->texture = 0;
 	}
 }
 

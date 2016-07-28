@@ -52,10 +52,10 @@ int main(int argc, char **argv) {
 		768,
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
 	);
-	
-	SDL_GL_SetSwapInterval(1);
 
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
+	SDL_GLContext *context = SDL_GL_CreateContext(window);
+
+	SDL_GL_SetSwapInterval(0);
 
 	WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 
@@ -65,9 +65,7 @@ int main(int argc, char **argv) {
 
 	while (true) {
 		SDL_Event event;
-		
-		memset(&event, 0, sizeof(event));
-		
+
 		if (SDL_PollEvent(&event)) {
 			
 			$(windowController, respondToEvent, &event);
@@ -77,25 +75,21 @@ int main(int argc, char **argv) {
 			}
 		}
 
-		SetRenderDrawColor(renderer, Colors.Black);
-		
-		SDL_RenderClear(renderer);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		drawScene();
 
-		SetRenderDrawColor(renderer, Colors.White);
+		SetColor(Colors.White);
 
-		SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+		$(windowController, render);
 
-		$(windowController, render, renderer);
-
-		SDL_RenderPresent(renderer);
+		SDL_GL_SwapWindow(window);
 	}
-	
+
 	release(viewController);
 	release(windowController);
-	
-	SDL_DestroyRenderer(renderer);
+
+	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
 	
 	SDL_Quit();
@@ -107,19 +101,17 @@ int main(int argc, char **argv) {
  * @return The simulation time, in milliseconds.
  */
 static long getCurrentTime(void) {
-	static struct timeval start;
+	static Date *start;
 	
-	if (start.tv_sec == 0) {
-		gettimeofday(&start, NULL);
+	if (start == NULL) {
+		start = $$(Date, date);
 	}
-	
-	struct timeval now;
-	struct timeval delta;
 
-	gettimeofday(&now, NULL);
-	
-	delta.tv_sec = now.tv_sec - start.tv_sec;
-	delta.tv_usec = now.tv_usec - start.tv_usec;
+	Date *date = $$(Date, date);
+
+	struct timeval delta;
+	delta.tv_sec = date->time.tv_sec - start->time.tv_sec;
+	delta.tv_usec = date->time.tv_usec - start->time.tv_usec;
 	
 	if (delta.tv_usec < 0) {
 		delta.tv_sec--;
@@ -147,13 +139,9 @@ static void drawScene(void) {
 
 	glPushMatrix();
 	
-	const float angle = getCurrentTime() / M_PI * 0.333;
-	glRotatef(angle, 0.0, 1.0, 0.0);
-
-	glClear(GL_DEPTH_BUFFER_BIT);
+	glRotatef(getCurrentTime() * 0.1, 0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
 
 	glBegin(GL_QUADS);
 
@@ -203,7 +191,6 @@ static void drawScene(void) {
 
 	glColor3f(1.0, 1.0, 1.0);
 
-	glEnable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
 
 	glPopMatrix();

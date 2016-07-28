@@ -43,6 +43,7 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/Panel.h>
+#include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/Select.h>
 #include <ObjectivelyMVC/Slider.h>
 #include <ObjectivelyMVC/StackView.h>

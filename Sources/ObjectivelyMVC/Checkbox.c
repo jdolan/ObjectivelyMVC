@@ -45,9 +45,9 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::render(View *, SDL_Renderer *)
+ * @see View::render(View *, Renderer *)
  */
-static void render(View *self, SDL_Renderer *renderer) {
+static void render(View *self, Renderer *renderer) {
 	
 	super(View, self, render, renderer);
 	

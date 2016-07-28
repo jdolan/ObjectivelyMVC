@@ -36,6 +36,7 @@ static void dealloc(Object *self) {
 	
 	WindowController *this = (WindowController *) self;
 
+	release(this->renderer);
 	release(this->viewController);
 	
 	super(Object, self, dealloc);
@@ -54,7 +55,10 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 	if (self) {
 		
 		self->window = window;
-		assert(window);
+		assert(self->window);
+
+		self->renderer = $(alloc(Renderer), init);
+		assert(self->renderer);
 
 		Uint32 flags = SDL_GetWindowFlags(self->window);
 		assert(flags & SDL_WINDOW_OPENGL);
@@ -83,15 +87,19 @@ static void setViewController(WindowController *self, ViewController *viewContro
 }
 
 /**
- * @fn void WindowController::render(WindowController *self, SDL_Renderer *renderer)
+ * @fn void WindowController::render(WindowController *self)
  *
  * @memberof WindowController
  */
-static void render(WindowController *self, SDL_Renderer *renderer) {
+static void render(WindowController *self) {
+
+	$(self->renderer, beginFrame);
 
 	if (self->viewController) {
-		$(self->viewController, drawView, renderer);
+		$(self->viewController, drawView, self->renderer);
 	}
+
+	$(self->renderer, endFrame);
 }
 
 /**
