@@ -19,6 +19,7 @@ pkginclude_HEADERS = \
 	Log.h \
 	Option.h \
 	Panel.h \
+	Renderer.h \
 	ScrollView.h \
 	Select.h \
 	Slider.h \
@@ -49,6 +50,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Label.c \
 	Option.c \
 	Panel.c \
+	Renderer.c \
 	ScrollView.c \
 	Select.c \
 	Slider.c \

@@ -27,7 +27,7 @@ ObjectivelyMVC is purpose-built for video games. Unlike Gtk+, Qt, wxWidgets, FLT
 ```c
 $(windowController, respondToEvent, &event);
 ...
-$(windowController, render, renderer);
+$(windowController, render);
 ```
 
 ### Beautiful, discoverable TrueType fonts
