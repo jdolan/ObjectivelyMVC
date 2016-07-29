@@ -169,7 +169,7 @@ struct ViewInterface {
 	 * @brief The parent interface.
 	 */
 	ObjectInterface parentInterface;
-	
+
 	/**
 	 * @fn void View::addSubview(View *self, View *subview)
 	 *
@@ -180,6 +180,18 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*addSubview)(View *self, View *subview);
+
+	/**
+	 * @fn void View::becomeFirstResponder(View *self)
+	 *
+	 * @brief Become the first responder in the View hierarchy.
+	 *
+	 * @remarks Becoming the first responder gives a View priority when handling
+	 * events.
+	 *
+	 * @memberof View
+	 */
+	void (*becomeFirstResponder)(View *self);
 	
 	/**
 	 * @fn SDL_Rect View::bounds(const View *self)
@@ -189,6 +201,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	SDL_Rect (*bounds)(const View *self);
+
+	/**
+	 * @fn _Bool View::canBecomeFirstResponder(const View *self)
+	 *
+	 * @return True if this View can become the first responder, false otherwise.
+	 *
+	 * @memberof View
+	 */
+	_Bool (*canBecomeFirstResponder)(const View *self);
 
 	/**
 	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
@@ -248,6 +269,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*isDescendantOfView)(const View *self, const View *view);
+
+	/**
+	 * @fn _Bool View::isFirstResponder(const View *self)
+	 *
+	 * @return True if this View is the first responder, false otherwise.
+	 *
+	 * @memberof View
+	 */
+	_Bool (*isFirstResponder)(const View *self);
 
 	/**
 	 * @fn _Bool View::isVisible(const View *self)
@@ -328,6 +358,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	SDL_Rect (*renderFrame)(const View *self);
+
+	/**
+	 * @fn void View::resignFirstResponder(View *self)
+	 *
+	 * @brief Resigns first responder priority.
+	 *
+	 * @memberof View
+	 */
+	void (*resignFirstResponder)(View *self);
 	
 	/**
 	 * @fn void View::respondToEvent(View *self, const SDL_Event *event)

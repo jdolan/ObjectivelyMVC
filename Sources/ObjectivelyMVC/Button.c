@@ -63,7 +63,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
 		
 		if (event->type == SDL_MOUSEBUTTONUP) {
-			self->state &= ~ControlStateSelected;
+			self->state &= ~ControlStateHighlighted;
 			if (self->style == ControlStyleDefault) {
 				self->bevel = BevelTypeOutset;
 			}
@@ -71,19 +71,12 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		
 		if ($((View *) self, didReceiveEvent, event)) {
 			if (event->type == SDL_MOUSEBUTTONDOWN) {
-				self->state |= ControlStateSelected;
+				self->state |= ControlStateHighlighted;
 				if (self->style == ControlStyleDefault) {
 					self->bevel = BevelTypeInset;
 				}
 			}
 			return true;
-		}
-	} else if (event->type == SDL_MOUSEMOTION) {
-		
-		if ($((View *) self, didReceiveEvent, event)) {
-			self->state |= ControlStateHighlighted;
-		} else {
-			self->state &= ~ControlStateHighlighted;
 		}
 	}
 	

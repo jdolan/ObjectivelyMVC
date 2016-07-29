@@ -29,6 +29,8 @@
 Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
 Uint32 MVC_EVENT_UPDATE_BINDINGS;
 
+static View *firstResponder;
+
 #define _Class _View
 
 #pragma mark - ObjectInterface
@@ -68,6 +70,15 @@ static void addSubview(View *self, View *subview) {
 }
 
 /**
+ * @fn void View::becomeFirstResponder(View *self)
+ *
+ * @memberof View
+ */
+static void becomeFirstResponder(View *self) {
+	firstResponder = self;
+}
+
+/**
  * @fn SDL_Rect View::bounds(const View *self)
  *
  * @memberof View
@@ -82,6 +93,30 @@ static SDL_Rect bounds(const View *self) {
 	};
 	
 	return bounds;
+}
+
+/**
+ * @fn _Bool View::canBecomeFirstResponder(const View *self)
+ *
+ * @memberof View
+ */
+static _Bool canBecomeFirstResponder(const View *self) {
+
+	if (firstResponder == NULL) {
+		return true;
+	}
+
+	const View *view = self;
+	while (view) {
+
+		if ($(view, isFirstResponder)) {
+			return true;
+		}
+
+		view = view->superview;
+	}
+
+	return false;
 }
 
 /**
@@ -105,25 +140,28 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 
 	if ($(self, isVisible)) {
 
-		if (event->type == SDL_MOUSEMOTION) {
-			const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
-			if ($(self, containsPoint, &point)) {
-				return true;
-			}
-		} else if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-			const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-			if ($(self, containsPoint, &point)) {
-				return true;
-			}
-		} else if (event->type == SDL_MOUSEWHEEL) {
-			const SDL_Point point = { .x = event->wheel.x, .y = event->wheel.y };
-			if ($(self, containsPoint, &point)) {
-				return true;
-			}
-		} else if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
-			const SDL_Point point = { .x = event->tfinger.x, .y = event->tfinger.y };
-			if ($(self, containsPoint, &point)) {
-				return true;
+		if ($(self, canBecomeFirstResponder)) {
+
+			if (event->type == SDL_MOUSEMOTION) {
+				const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
+				if ($(self, containsPoint, &point)) {
+					return true;
+				}
+			} else if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+				const SDL_Point point = { .x = event->button.x, .y = event->button.y };
+				if ($(self, containsPoint, &point)) {
+					return true;
+				}
+			} else if (event->type == SDL_MOUSEWHEEL) {
+				const SDL_Point point = { .x = event->wheel.x, .y = event->wheel.y };
+				if ($(self, containsPoint, &point)) {
+					return true;
+				}
+			} else if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
+				const SDL_Point point = { .x = event->tfinger.x, .y = event->tfinger.y };
+				if ($(self, containsPoint, &point)) {
+					return true;
+				}
 			}
 		}
 	}
@@ -194,6 +232,15 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
 	}
 	
 	return false;
+}
+
+/**
+ * @fn _Bool View::isFirstResponder(const View *self)
+ *
+ * @memberof View
+ */
+static _Bool isFirstResponder(const View *self) {
+	return firstResponder == self;
 }
 
 /**
@@ -406,6 +453,18 @@ static SDL_Rect renderFrame(const View *self) {
 }
 
 /**
+ * @fn void View::resignFirstResponder(View *self)
+ *
+ * @memberof View
+ */
+static void resignFirstResponder(View *self) {
+
+	if ($(self, isFirstResponder)) {
+		firstResponder = NULL;
+	}
+}
+
+/**
  * @brief ArrayEnumerator for respondToEvent recursion.
  */
 static _Bool respondToEvent_recurse(const Array *array, ident obj, ident data) {
@@ -587,12 +646,15 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->addSubview = addSubview;
+	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->interface)->bounds = bounds;
+	((ViewInterface *) clazz->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
 	((ViewInterface *) clazz->interface)->containsPoint = containsPoint;
 	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->interface)->draw = draw;
 	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
+	((ViewInterface *) clazz->interface)->isFirstResponder = isFirstResponder;
 	((ViewInterface *) clazz->interface)->isVisible = isVisible;
 	((ViewInterface *) clazz->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
@@ -601,6 +663,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->render = render;
 	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewInterface *) clazz->interface)->renderFrame = renderFrame;
+	((ViewInterface *) clazz->interface)->resignFirstResponder = resignFirstResponder;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->size = size;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;

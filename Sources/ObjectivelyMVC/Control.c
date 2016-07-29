@@ -190,6 +190,12 @@ static void addActionForEventType(Control *self, SDL_EventType eventType, Action
  * @memberof Control
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
+
+	if (event->type == SDL_MOUSEMOTION) {
+		if ($((View *) self, didReceiveEvent, event)) {
+			return true;
+		}
+	}
 	
 	return false;
 }
@@ -268,7 +274,12 @@ static _Bool selected(const Control *self) {
  * @memberof Control
  */
 static void stateDidChange(Control *self) {
-	
+
+	if (self->state & (ControlStateHighlighted | ControlStateFocused)) {
+		$((View *) self, becomeFirstResponder);
+	} else {
+		$((View *) self, resignFirstResponder);
+	}
 }
 
 #pragma mark - Class lifecycle
