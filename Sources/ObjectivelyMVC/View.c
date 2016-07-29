@@ -519,6 +519,34 @@ static void updateBindings(View *self) {
 }
 
 /**
+ * @fn SDL_Rect View::viewport(const View *self)
+ *
+ * @memberof View
+ */
+static SDL_Rect viewport(const View *self) {
+
+	SDL_Window *window = $(self, window);
+
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+
+	int dw, dh;
+	SDL_GL_GetDrawableSize(window, &dw, &dh);
+
+	SDL_Rect viewport = $(self, renderFrame);
+
+	const float xScale = dw / (float) w;
+	const float yScale = dh / (float) h;
+
+	viewport.x *= xScale;
+	viewport.y *= yScale;
+	viewport.w *= xScale;
+	viewport.h *= yScale;
+
+	return viewport;
+}
+
+/**
  * @brief ArrayEnumerator for visibleSubviews.
  */
 static _Bool visibleSubviews_filter(const Array *array, ident obj, ident data) {
@@ -576,6 +604,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
+	((ViewInterface *) clazz->interface)->viewport = viewport;
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->window = window;
 

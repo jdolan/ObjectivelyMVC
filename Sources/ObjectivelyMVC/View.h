@@ -380,6 +380,15 @@ struct ViewInterface {
 	void (*updateBindings)(View *self);
 
 	/**
+	 * @fn SDL_Rect View::viewport(const View *self)
+	 *
+	 * @return The OpenGL viewport for this View.
+	 *
+	 * @memberof MeshModelView
+	 */
+	SDL_Rect (*viewport)(const View *self);
+
+	/**
 	 * @fn Array *View::visibleSubviews(const View *self)
 	 *
 	 * @return An Array of this View's visible subviews.

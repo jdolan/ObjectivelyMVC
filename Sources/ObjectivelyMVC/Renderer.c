@@ -165,10 +165,11 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 	verts[7] = rect->y + rect->h;
 
 	glEnable(GL_TEXTURE_2D);
-
 	glBindTexture(GL_TEXTURE_2D, texture);
+
 	glVertexPointer(2, GL_INT, 0, verts);
 	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	glDisable(GL_TEXTURE_2D);
@@ -186,6 +187,8 @@ static void endFrame(const Renderer *self) {
 
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glDisable(GL_BLEND);
+
+	glColor3i(1, 1, 1);
 
 	const GLenum err = glGetError();
 	if (err) {
