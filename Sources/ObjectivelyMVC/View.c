@@ -543,6 +543,8 @@ static SDL_Rect viewport(const View *self) {
 	viewport.w *= xScale;
 	viewport.h *= yScale;
 
+	viewport.y = dh - viewport.y - viewport.h;
+
 	return viewport;
 }
 
