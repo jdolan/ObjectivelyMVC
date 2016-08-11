@@ -10,7 +10,7 @@ Hello_SOURCES = \
 	Hello.c
 
 CFLAGS += \
-	-I$(top_builddir)/Sources \
+	-I$(top_srcdir)/Sources \
 	@HOST_CFLAGS@ \
 	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
