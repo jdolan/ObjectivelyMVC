@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <Objectively/Object.h>
+#include <Objectively/MutableArray.h>
 
 #include <SDL2/SDL_video.h>
 #include <SDL2/SDL_opengl.h>
@@ -36,6 +36,8 @@
 
 typedef struct Renderer Renderer;
 typedef struct RendererInterface RendererInterface;
+
+typedef struct View View;
 
 /**
  * @brief The Renderer type.
@@ -59,6 +61,11 @@ struct Renderer {
 	 * @private
 	 */
 	RendererInterface *interface;
+
+	/**
+	 * @brief The Views to be drawn each frame.
+	 */
+	MutableArray *views;
 };
 
 /**
@@ -72,12 +79,23 @@ struct RendererInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @fn void Renderer::addView(Renderer *self, View *view)
+	 *
+	 * @brief Adds the View to the Renderer for the current frame.
+	 *
+	 * @param view The View.
+	 *
+	 * @memberof Renderer
+	 */
+	void (*addView)(Renderer *self, View *view);
+
+	/**
 	 * @fn void Renderer::beginFrame(const Renderer *self)
 	 *
 	 * @brief Sets up OpenGL state.
 	 *
-	 * @remarks This method is called by the WindowController, and you generally should
-	 * not be concerned with it.
+	 * @remarks This method is called by the WindowController to begin rendering.
+	 * Override this method for custom OpenGL state setup, if desired.
 	 *
 	 * @memberof Renderer
 	 */
@@ -147,8 +165,8 @@ struct RendererInterface {
 	 *
 	 * @brief Resets OpenGL state. Does *not* swap buffers.
 	 *
-	 * @remarks This method is called by the WindowController, and you generally should
-	 * not be concerned with it.
+	 * @remarks This method is called by the WindowController to end rendering.
+	 * Override this method for custom OpenGL state teardown, if desired.
 	 *
 	 * @memberof Renderer
 	 */
@@ -175,6 +193,15 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	Renderer *(*init)(Renderer *self);
+
+	/**
+	 * @fn void Renderer::render(Renderer *self)
+	 *
+	 * @brief Renders all Views added for the current frame, sorted by depth.
+	 *
+	 * @memberof Renderer
+	 */
+	void (*render)(Renderer *self);
 };
 
 /**

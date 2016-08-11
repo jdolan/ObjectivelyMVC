@@ -337,9 +337,9 @@
 		CE12D42A1C4C37CD00CD0B13 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				CE12D42B1C4C37E500CD0B13 /* Hello.c */,
 				CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */,
 				CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */,
-				CE12D42B1C4C37E500CD0B13 /* Hello.c */,
 				CE12D42D1C4C383D00CD0B13 /* Makefile.am */,
 			);
 			path = Examples;

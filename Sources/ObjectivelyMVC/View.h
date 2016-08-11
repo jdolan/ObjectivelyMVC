@@ -82,7 +82,6 @@ typedef struct {
 	int top, right, bottom, left;
 } Padding;
 
-typedef struct View View;
 typedef struct ViewInterface ViewInterface;
 
 /**
@@ -158,6 +157,13 @@ struct View {
 	 * @brief The containing View.
 	 */
 	View *superview;
+
+	/**
+	 * @brief The z-index.
+	 *
+	 * @remarks
+	 */
+	int zIndex;
 };
 
 /**
@@ -221,7 +227,16 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
-	
+
+	/**
+	 * @fn int View::depth(const View *self)
+	 *
+	 * @return The depth of this View (ancestors + `zIndex`).
+	 *
+	 * @memberof View
+	 */
+	int (*depth)(const View *self);
+
 	/**
 	 * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
 	 *
@@ -240,11 +255,25 @@ struct ViewInterface {
 	 *
 	 * @param renderer The Renderer with which to draw.
 	 *
-	 * @remarks The ViewController will call this method when drawing its View hierarchy.
+	 * @remarks The default implementation of this method adds the View to the
+	 * Renderer for the current frame, and recurses its subviews.
+	 * 
+	 * @see View::render(View *, Renderer *)
 	 *
 	 * @memberof View
 	 */
 	void (*draw)(View *self, Renderer *renderer);
+
+	/**
+	 * @fn View *View::firstResponder(void)
+	 *
+	 * @return The first responder, or `NULL`.
+	 *
+	 * @memberof View
+	 *
+	 * @static
+	 */
+	View *(*firstResponder)(void);
 
 	/**
 	 * @fn View *View::initWithFrame(View *self, const SDL_Rect *frame)

@@ -25,10 +25,34 @@
 
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Renderer.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _Renderer
 
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+	Renderer *this = (Renderer *) self;
+
+	release(this->views);
+
+	super(Object, self, dealloc);
+}
+
 #pragma mark - Renderer
+
+/**
+ * @fn void Renderer::addView(Renderer *self, View *view)
+ *
+ * @memberof Renderer
+ */
+static void addView(Renderer *self, View *view) {
+	$(self->views, addObject, view);
+}
 
 /**
  * @fn void Renderer::beginFrame(const Renderer *self)
@@ -215,7 +239,45 @@ static void fillRect(const Renderer *self, const SDL_Rect *rect) {
  */
 static Renderer *init(Renderer *self) {
 	
-	return (Renderer *) super(Object, self, init);
+	self = (Renderer *) super(Object, self, init);
+	if (self) {
+		self->views = $$(MutableArray, array);
+		assert(self->views);
+	}
+
+	return self;
+}
+
+/**
+ * @brief Comparator for sorting Views by depth (Painter's Algorithm).
+ */
+static Order render_sort(const ident a, const ident b) {
+
+	const int depthA = $((const View *) a, depth);
+	const int depthB = $((const View *) b, depth);
+
+	return (Order) depthA - depthB;
+}
+
+/**
+ * @brief ArrayEnumerator for drawing Views.
+ */
+static _Bool render_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) obj, render, (Renderer *) data); return false;
+}
+
+/**
+ * @fn void Renderer::drawViews(Renderer *self)
+ *
+ * @memberof Renderer
+ */
+static void render(Renderer *self) {
+
+	$(self->views, sort, render_sort);
+
+	$((Array *) self->views, enumerateObjects, render_enumerate, self);
+
+	$(self->views, removeAllObjects);
 }
 
 #pragma mark - Class lifecycle
@@ -225,6 +287,9 @@ static Renderer *init(Renderer *self) {
  */
 static void initialize(Class *clazz) {
 
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+
+	((RendererInterface *) clazz->interface)->addView = addView;
 	((RendererInterface *) clazz->interface)->beginFrame = beginFrame;
 	((RendererInterface *) clazz->interface)->createTexture = createTexture;
 	((RendererInterface *) clazz->interface)->drawLine = drawLine;
@@ -234,6 +299,7 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->interface)->endFrame = endFrame;
 	((RendererInterface *) clazz->interface)->fillRect = fillRect;
 	((RendererInterface *) clazz->interface)->init = init;
+	((RendererInterface *) clazz->interface)->render = render;
 }
 
 Class _Renderer = {

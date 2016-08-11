@@ -97,6 +97,7 @@ static void render(WindowController *self) {
 
 	if (self->viewController) {
 		$(self->viewController, drawView, self->renderer);
+		$(self->renderer, render);
 	}
 
 	$(self->renderer, endFrame);

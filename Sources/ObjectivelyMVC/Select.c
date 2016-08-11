@@ -166,7 +166,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			}
 		}
 	}
-	
+
 	return super(Control, self, captureEvent, event);
 }
 
@@ -178,6 +178,12 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 static void stateDidChange(Control *self) {
 	
 	((View *) self)->needsLayout = true;
+
+	if (self->state & ControlStateHighlighted) {
+		self->view.zIndex = 1;
+	} else {
+		self->view.zIndex = 0;
+	}
 
 	super(Control, self, stateDidChange);
 }

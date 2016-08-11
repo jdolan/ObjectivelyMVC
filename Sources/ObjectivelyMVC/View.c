@@ -29,7 +29,7 @@
 Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
 Uint32 MVC_EVENT_UPDATE_BINDINGS;
 
-static View *firstResponder;
+static View *_firstResponder;
 
 #define _Class _View
 
@@ -75,7 +75,7 @@ static void addSubview(View *self, View *subview) {
  * @memberof View
  */
 static void becomeFirstResponder(View *self) {
-	firstResponder = self;
+	_firstResponder = self;
 }
 
 /**
@@ -102,7 +102,7 @@ static SDL_Rect bounds(const View *self) {
  */
 static _Bool canBecomeFirstResponder(const View *self) {
 
-	if (firstResponder == NULL) {
+	if (_firstResponder == NULL) {
 		return true;
 	}
 
@@ -132,6 +132,16 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 }
 
 /**
+ * @fn int View::depth(const View *self)
+ *
+ * @memberof View
+ */
+static int depth(const View *self) {
+
+	return self->zIndex + (self->superview ? $(self->superview, depth) + 1 : 0);
+}
+
+/**
  * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
  *
  * @memberof View
@@ -149,11 +159,6 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 				}
 			} else if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
 				const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-				if ($(self, containsPoint, &point)) {
-					return true;
-				}
-			} else if (event->type == SDL_MOUSEWHEEL) {
-				const SDL_Point point = { .x = event->wheel.x, .y = event->wheel.y };
 				if ($(self, containsPoint, &point)) {
 					return true;
 				}
@@ -186,11 +191,20 @@ static void draw(View *self, Renderer *renderer) {
 	assert(renderer);
 	
 	if (self->hidden == false) {
-		
-		$(self, render, renderer);
-		
+
+		$(renderer, addView, self);
+
 		$((Array *) self->subviews, enumerateObjects, draw_recurse, renderer);
 	}
+}
+
+/**
+ * @fn View *View::firstResponder(void)
+ *
+ * @memberof View
+ */
+static View *firstResponder(void) {
+	return _firstResponder;
 }
 
 /**
@@ -240,7 +254,7 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
  * @memberof View
  */
 static _Bool isFirstResponder(const View *self) {
-	return firstResponder == self;
+	return _firstResponder == self;
 }
 
 /**
@@ -460,7 +474,7 @@ static SDL_Rect renderFrame(const View *self) {
 static void resignFirstResponder(View *self) {
 
 	if ($(self, isFirstResponder)) {
-		firstResponder = NULL;
+		_firstResponder = NULL;
 	}
 }
 
@@ -650,8 +664,10 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->bounds = bounds;
 	((ViewInterface *) clazz->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
 	((ViewInterface *) clazz->interface)->containsPoint = containsPoint;
+	((ViewInterface *) clazz->interface)->depth = depth;
 	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->interface)->draw = draw;
+	((ViewInterface *) clazz->interface)->firstResponder = firstResponder;
 	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
 	((ViewInterface *) clazz->interface)->isFirstResponder = isFirstResponder;
