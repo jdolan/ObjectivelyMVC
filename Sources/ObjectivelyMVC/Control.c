@@ -129,19 +129,23 @@ static void render(View *self, Renderer *renderer) {
  * @see View::respondToEvent(View *, const SDL_Event *)
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
-	
+	static SDL_Event _capturedEvent;
+
 	Control *this = (Control *) self;
 	
 	const ControlState state = this->state;
-	
-	if ($(this, captureEvent, event)) {
 
-		Action *action = $(this, actionForEvent, event);
-		if (action) {
-			action->function(this, event, action->sender, action->data);
+	if (memcmp(&_capturedEvent, event, sizeof(*event))) {
+		if ($(this, captureEvent, event)) {
+			_capturedEvent = *event;
+
+			Action *action = $(this, actionForEvent, event);
+			if (action) {
+				action->function(this, event, action->sender, action->data);
+			}
 		}
 	}
-	
+
 	if (this->state != state) {
 		$(this, stateDidChange);
 	}
@@ -190,13 +194,6 @@ static void addActionForEventType(Control *self, SDL_EventType eventType, Action
  * @memberof Control
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
-
-	if (event->type == SDL_MOUSEMOTION) {
-		if ($((View *) self, didReceiveEvent, event)) {
-			return true;
-		}
-	}
-	
 	return false;
 }
 
