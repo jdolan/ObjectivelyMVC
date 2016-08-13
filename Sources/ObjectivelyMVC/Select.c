@@ -180,7 +180,7 @@ static void stateDidChange(Control *self) {
 	((View *) self)->needsLayout = true;
 
 	if (self->state & ControlStateHighlighted) {
-		self->view.zIndex = 1;
+		self->view.zIndex = INT32_MAX;
 	} else {
 		self->view.zIndex = 0;
 	}
