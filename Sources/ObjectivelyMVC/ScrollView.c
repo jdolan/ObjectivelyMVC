@@ -27,21 +27,83 @@
 
 #define _Class _ScrollView
 
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+	ScrollView *this = (ScrollView *) self;
+
+	release(this->contentView);
+
+	super(Object, self, dealloc);
+}
+
+#pragma mark - View
+
+/**
+ * @see void View::respondToEvent(View *, const SDL_Event *)
+ */
+static void respondToEvent(View *self, const SDL_Event *event) {
+
+	ScrollView *this = (ScrollView *) self;
+
+	if (event->type == SDL_MOUSEWHEEL) {
+		if ($(self, didReceiveEvent, event)) {
+			SDL_Point offset = this->contentOffset;
+
+			offset.x += event->wheel.x;
+			offset.y += event->wheel.y;
+
+			$(this, scrollToOffset, &offset);
+		}
+	}
+
+	super(View, self, respondToEvent, event);
+}
+
 #pragma mark - ScrollView
 
 /**
- * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame)
  *
  * @memberof ScrollView
  */
-static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style) {
+static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
 	
-	self = (ScrollView *) super(Control, self, initWithFrame, frame, style);
+	self = (ScrollView *) super(View, self, initWithFrame, frame);
 	if (self) {
 		self->scrollEnabled = true;
 	}
 	
 	return self;
+}
+
+/**
+ * @brief Scrolls the content View to the specified offset.
+ *
+ * @memberof ScrollView
+ */
+static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
+
+	if (self->contentView) {
+		const SDL_Size contentSize = $(self->contentView, size);
+		const SDL_Rect bounds = $((View *) self, bounds);
+
+		if (contentSize.w > bounds.w) {
+			self->contentOffset.x = min(offset->x, contentSize.w - bounds.w);
+		} else {
+			self->contentOffset.x = 0;
+		}
+
+		if (contentSize.h > bounds.h) {
+			self->contentOffset.y = min(offset->y, contentSize.h - bounds.h);
+		} else {
+			self->contentOffset.y = 0;
+		}
+	}
 }
 
 #pragma mark - Class lifecycle
@@ -50,13 +112,18 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, Contro
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+
 	((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ScrollViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
 }
 
 Class _ScrollView = {
 	.name = "ScrollView",
-	.superclass = &_Control,
+	.superclass = &_View,
 	.instanceSize = sizeof(ScrollView),
 	.interfaceOffset = offsetof(ScrollView, interface),
 	.interfaceSize = sizeof(ScrollViewInterface),

@@ -23,8 +23,13 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/ScrollView.h>
-#include <ObjectivelyMVC/TableColumnView.h>
+#include <Objectively/MutableArray.h>
+
+#include <ObjectivelyMVC/StackView.h>
+#include <ObjectivelyMVC/TableCellView.h>
+#include <ObjectivelyMVC/TableColumn.h>
+#include <ObjectivelyMVC/TableHeaderView.h>
+#include <ObjectivelyMVC/TableRowView.h>
 
 /**
  * @file
@@ -32,7 +37,6 @@
  * @brief TableViews provide sortable, tabular presentations of data.
  */
 
-typedef struct TableCellView TableCellView;
 typedef struct TableViewDataSource TableViewDataSource;
 typedef struct TableViewDelegate TableViewDelegate;
 
@@ -43,23 +47,47 @@ typedef struct TableViewInterface TableViewInterface;
  * @brief The TableView data source protocol.
  */
 struct TableViewDataSource {
-	
-	size_t (*numberOfRows)(TableView *tableView);
-	
-	ident (*valueForColumnAndRow)(TableView *tableView, TableColumnView *column, int row);
+
+	/**
+	 * @return The number of rows in the table.
+	 */
+	size_t (*numberOfRows)(const TableView *tableView);
+
+	/**
+	 * @param tableView The table.
+	 * @param colum The column.
+	 * @param row The row.
+	 *
+	 * @return The value for the cell at the given column and row.
+	 */
+	ident (*valueForColumnAndRow)(const TableView *tableView, const TableColumn *column, int row);
 };
 
+/**
+ * @brief The TableView delegate protocol.
+ */
 struct TableViewDelegate {
 
-	View *(*viewForColumnAndRow)(TableView *tableView, TableColumnView *column, int row);
+	/**
+	 * @param tableView The table.
+	 * @param colum The column.
+	 * @param row The row.
+	 * @param value The cell value.
+	 *
+	 * @return The cell for the given column, row and value.
+	 */
+	TableCellView *(*cellForColumnAndRow)(const TableView *tableView, const TableColumn *column, int row, ident value);
 };
+
+#define DEFAULT_TABLE_VIEW_CELL_SPACING 2
+#define DEFAULT_TABLE_VIEW_ROW_HEIGHT 20
 
 /**
  * @brief The TableView type.
  *
- * @extends ScrollView
+ * @extends StackView
  *
- * @ingroup
+ * @ingroup Tables
  */
 struct TableView {
 	
@@ -68,7 +96,7 @@ struct TableView {
 	 *
 	 * @private
 	 */
-	ScrollView scrollView;
+	StackView stackView;
 	
 	/**
 	 * @brief The typed interface.
@@ -76,9 +104,19 @@ struct TableView {
 	 * @private
 	 */
 	TableViewInterface *interface;
-	
+
 	/**
-	 * @brief The column definitions.
+	 * @brief The
+	 */
+	SDL_Color alternateBackgroundColor;
+
+	/**
+	 * @brief Inter-cell (horizontal) spacing.
+	 */
+	int cellSpacing;
+
+	/**
+	 * @brief The TableColumn definitions.
 	 */
 	MutableArray *columns;
 	
@@ -91,6 +129,31 @@ struct TableView {
 	 * @brief The delegate.
 	 */
 	TableViewDelegate delegate;
+
+	/**
+	 * @brief The TableHeaderView.
+	 */
+	TableHeaderView *headerView;
+
+	/**
+	 * @brief The TableRowViews.
+	 */
+	MutableArray *rows;
+
+	/**
+	 * @brief The row height.
+	 */
+	int rowHeight;
+
+	/**
+	 * @brief The selected row, or `-1` when no row is selected.
+	 */
+	int selectedRow;
+
+	/**
+	 * @brief Set to `true` to enable alternate row coloring.
+	 */
+	_Bool usesAlternateBackgroundColor;
 };
 
 /**
@@ -101,18 +164,43 @@ struct TableViewInterface {
 	/**
 	 * @brief The parent interface.
 	 */
-	ScrollViewInterface scrolViewInterface;
-	
+	StackViewInterface stackViewInterface;
+
 	/**
-	 * @fn TableView *TableView::init(TableView *self)
+	 * @fn void TableView::addColumn(TableView *self, TableColumn *column)
 	 *
-	 * @brief Initializes this TableView.
+	 * @brief Adds the specified column to this table.
+	 *
+	 * @param column The column.
+	 *
+	 * @memberof TableView
+	 */
+	void (*addColumn)(TableView *self, TableColumn *column);
+
+	/**
+	 * @fn TableCellView *TableView::cellForColumnAndRow(const TableView *self, const TableColumn *column, int row)
+	 *
+	 * @param column The column.
+	 * @param row The row.
+	 *
+	 * @return The cell for the given column and row.
+	 *
+	 * @memberof TableView
+	 */
+	TableCellView *(*cellForColumnAndRow)(const TableView *self, const TableColumn *column, int row);
+
+	/**
+	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame)
+	 *
+	 * @brief Initializes this TableView with the specified frame.
+	 *
+	 * @param frame The frame.
 	 *
 	 * @return The initialized TableView, or `NULL` on error.
 	 *
 	 * @memberof TableView
 	 */
-	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame, ControlStyle style);
+	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn void TableView::reloadData(TableView *self)
@@ -128,5 +216,3 @@ struct TableViewInterface {
  * @brief The TableView Class.
  */
 extern Class _TableView;
-
-

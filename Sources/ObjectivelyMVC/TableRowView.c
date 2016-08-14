@@ -23,44 +23,29 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/TableColumnView.h>
+#include <ObjectivelyMVC/TableRowView.h>
 
-#define _Class _TableColumnView
+#define _Class _TableRowView
 
-#pragma mark - Object
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-	
-	//..
-	
-	super(Object, self, dealloc);
-}
-
-#pragma mark - TableColumnView
+#pragma mark - TableRowView
 
 /**
- * @fn TableColumnView *TableColumnView::init(TableColumnView *self)
+ * @fn TableRowView *TableRowView::initWithFrame(TableRowView *self, const SDL_Rect *frame)
  *
- * @memberof TableColumnView
+ * @memberof TableRowView
  */
-static TableColumnView *initWithIdentifier(TableColumnView *self, const char *identifier) {
+static TableRowView *initWithFrame(TableRowView *self, const SDL_Rect *frame) {
 	
-	self = (TableColumnView *) super(Control, self, initWithFrame, NULL, ControlStyleDefault);
+	self = (TableRowView *) super(StackView, self, initWithFrame, frame);
 	if (self) {
-		
-		self->identifier = identifier;
-		assert(self->identifier);
-		
-		self->control.view.frame.w = DEFAULT_TABLE_VIEW_COLUMN_WIDTH;
+		self->stackView.axis = StackViewAxisHorizontal;
+
+		self->stackView.view.autoresizingMask = ViewAutoresizingWidth;
+		self->stackView.view.backgroundColor = Colors.DefaultColor;
 	}
 	
 	return self;
 }
-
-//..
 
 #pragma mark - Class lifecycle
 
@@ -68,18 +53,16 @@ static TableColumnView *initWithIdentifier(TableColumnView *self, const char *id
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
-	((TableColumnViewInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
+
+	((TableRowViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
-Class _TableColumnView = {
-	.name = "TableColumnView",
-	.superclass = &_Control,
-	.instanceSize = sizeof(TableColumnView),
-	.interfaceOffset = offsetof(TableColumnView, interface),
-	.interfaceSize = sizeof(TableColumnViewInterface),
+Class _TableRowView = {
+	.name = "TableRowView",
+	.superclass = &_StackView,
+	.instanceSize = sizeof(TableRowView),
+	.interfaceOffset = offsetof(TableRowView, interface),
+	.interfaceSize = sizeof(TableRowViewInterface),
 	.initialize = initialize,
 };
 

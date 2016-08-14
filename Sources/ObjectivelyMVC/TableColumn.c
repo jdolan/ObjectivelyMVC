@@ -22,10 +22,12 @@
  */
 
 #include <assert.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include <ObjectivelyMVC/TableCellView.h>
+#include <ObjectivelyMVC/TableColumn.h>
 
-#define _Class _TableCellView
+#define _Class _TableColumn
 
 #pragma mark - Object
 
@@ -33,31 +35,30 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
-	TableCellView *this = (TableCellView *) self;
 
-	release(this->text);
-	
+	TableColumn *this = (TableColumn *) self;
+
+	free(this->identifier);
+
 	super(Object, self, dealloc);
 }
 
-#pragma mark - TableCellView
+#pragma mark - TableColumn
 
 /**
- * @fn TableCellView *TableCellView::initWithValue(TableCellView *self, ident value)
+ * @fn TableColumn *TableColumn::init(TableColumn *self)
  *
- * @memberof TableCellView
+ * @memberof TableColumn
  */
-static TableCellView *initWithValue(TableCellView *self, ident value) {
+static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier) {
 	
-	self = (TableCellView *) super(View, self, initWithFrame, NULL);
+	self = (TableColumn *) super(Object, self, init);
 	if (self) {
-		self->text = $(alloc(Text), initWithText, NULL, NULL);
-		assert(self->text);
+		
+		self->identifier = strdup(identifier);
+		assert(self->identifier);
 
-		$((View *) self, addSubview, (View *) self->text);
-
-		self->view.autoresizingMask = ViewAutoresizingHeight;
+		self->width = DEFAULT_TABLE_COLUMN_WIDTH;
 	}
 	
 	return self;
@@ -71,16 +72,16 @@ static TableCellView *initWithValue(TableCellView *self, ident value) {
 static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
-	((TableCellViewInterface *) clazz->interface)->initWithValue = initWithValue;
+
+	((TableColumnInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
 }
 
-Class _TableCellView = {
-	.name = "TableCellView",
-	.superclass = &_View,
-	.instanceSize = sizeof(TableCellView),
-	.interfaceOffset = offsetof(TableCellView, interface),
-	.interfaceSize = sizeof(TableCellViewInterface),
+Class _TableColumn = {
+	.name = "TableColumn",
+	.superclass = &_Object,
+	.instanceSize = sizeof(TableColumn),
+	.interfaceOffset = offsetof(TableColumn, interface),
+	.interfaceSize = sizeof(TableColumnInterface),
 	.initialize = initialize,
 };
 

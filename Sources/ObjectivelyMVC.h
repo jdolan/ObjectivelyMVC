@@ -44,9 +44,15 @@
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/Renderer.h>
+#include <ObjectivelyMVC/ScrollView.h>
 #include <ObjectivelyMVC/Select.h>
 #include <ObjectivelyMVC/Slider.h>
 #include <ObjectivelyMVC/StackView.h>
+#include <ObjectivelyMVC/TableCellView.h>
+#include <ObjectivelyMVC/TableColumn.h>
+#include <ObjectivelyMVC/TableHeaderView.h>
+#include <ObjectivelyMVC/TableRowView.h>
+#include <ObjectivelyMVC/TableView.h>
 #include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>
 #include <ObjectivelyMVC/View.h>

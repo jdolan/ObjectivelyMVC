@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/View.h>
 
 /**
  * @file
@@ -50,9 +50,9 @@ struct ScrollViewDelegate {
 /**
  * @brief The ScrollView type.
  *
- * @extends Control
+ * @extends View
  *
- * @ingroup Controls
+ * @ingroup Containers
  */
 struct ScrollView {
 	
@@ -61,19 +61,24 @@ struct ScrollView {
 	 *
 	 * @private
 	 */
-	Control control;
-	
-	/**
-	 * @brief The content View offset.
-	 */
-	SDL_Point contentOffset;
-	
+	View view;
+
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
 	ScrollViewInterface *interface;
+
+	/**
+	 * @brief The content View offset.
+	 */
+	SDL_Point contentOffset;
+
+	/**
+	 * @brief The content View.
+	 */
+	View *contentView;
 	
 	/**
 	 * @brief If true, scrolling is enabled.
@@ -89,30 +94,31 @@ struct ScrollViewInterface {
 	/**
 	 * @brief The parent interface.
 	 */
-	ControlInterface controlInterface;
+	ViewInterface viewInterface;
 	
 	/**
-	 * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame)
 	 *
-	 * @brief Initializes this ScrollView with the specified frame and style.
+	 * @brief Initializes this ScrollView with the specified frame.
 	 *
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 *
 	 * @return The initialized ScrollView, or `NULL` on error.
 	 *
 	 * @memberof ScrollView
 	 */
-	ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame, ControlStyle style);
+	ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame);
 	
 	/**
+	 * @fn void ScrollView::scrollToOffset(ScrollView *self, const SDL_Point offset);
+	 *
 	 * @brief Scrolls the content View to the specified offset.
 	 *
 	 * @param offset The offset.
 	 *
 	 * @memberof ScrollView
 	 */
-	void (*scrollToOffset)(ScrollView *self, const SDL_Point offset);
+	void (*scrollToOffset)(ScrollView *self, const SDL_Point *offset);
 };
 
 /**

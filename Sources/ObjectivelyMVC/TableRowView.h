@@ -23,69 +23,67 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Text.h>
+#include <ObjectivelyMVC/StackView.h>
 
 /**
  * @file
  *
- * @brief Cells for TableViews.
+ * @brief Rows for TableViews.
  */
 
-typedef struct TableCellView TableCellView;
-typedef struct TableCellViewInterface TableCellViewInterface;
+typedef struct TableRowView TableRowView;
+typedef struct TableRowViewInterface TableRowViewInterface;
 
 /**
- * @brief The TableCellView type.
+ * @brief The TableRowView type.
  *
- * @extends View
+ * @extends StackView
  *
  * @ingroup Tables
  */
-struct TableCellView {
+struct TableRowView {
 	
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
-	View view;
+	StackView stackView;
 	
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
-	TableCellViewInterface *interface;
-
-	/**
-	 * @brief The text.
-	 */
-	Text *text;
+	TableRowViewInterface *interface;
 };
 
 /**
- * @brief The TableCellView interface.
+ * @brief The TableRowView interface.
  */
-struct TableCellViewInterface {
+struct TableRowViewInterface {
 	
 	/**
 	 * @brief The parent interface.
 	 */
-	ViewInterface viewInterface;
+	StackViewInterface stackViewInterface;
 	
 	/**
-	 * @fn TableCellView *TableCellView::init(TableCellView *self)
+	 * @fn TableRowView *TableRowView::initWithFrame(TableRowView *self, const SDL_Rect *frame)
 	 *
-	 * @brief Initializes this TableCellView.
+	 * @brief Initializes this TableRowView with the specified frame.
 	 *
-	 * @return The initialized TableCellView, or `NULL` on error.
+	 * @param frame The frame.
 	 *
-	 * @memberof TableCellView
+	 * @return The initialized TableRowView, or `NULL` on error.
+	 *
+	 * @memberof TableRowView
 	 */
-	TableCellView *(*initWithValue)(TableCellView *self, ident value);
+	TableRowView *(*initWithFrame)(TableRowView *self, const SDL_Rect *frame);
 };
 
 /**
- * @brief The TableCellView Class.
+ * @brief The TableRowView Class.
  */
-extern Class _TableCellView;
+extern Class _TableRowView;
+

@@ -23,69 +23,66 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Text.h>
+#include <ObjectivelyMVC/TableRowView.h>
 
 /**
  * @file
  *
- * @brief Cells for TableViews.
+ * @brief Columns for TableViews.
  */
 
-typedef struct TableCellView TableCellView;
-typedef struct TableCellViewInterface TableCellViewInterface;
+#define DEFAULT_TABLE_HEADER_VIEW_HEIGHT 24
+
+typedef struct TableHeaderView TableHeaderView;
+typedef struct TableHeaderViewInterface TableHeaderViewInterface;
 
 /**
- * @brief The TableCellView type.
+ * @brief The TableHeaderView type.
  *
  * @extends View
  *
  * @ingroup Tables
  */
-struct TableCellView {
+struct TableHeaderView {
 	
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
-	View view;
+	TableRowView tableRowView;
 	
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
-	TableCellViewInterface *interface;
-
-	/**
-	 * @brief The text.
-	 */
-	Text *text;
+	TableHeaderViewInterface *interface;
 };
 
 /**
- * @brief The TableCellView interface.
+ * @brief The TableHeaderView interface.
  */
-struct TableCellViewInterface {
+struct TableHeaderViewInterface {
 	
 	/**
 	 * @brief The parent interface.
 	 */
-	ViewInterface viewInterface;
+	TableRowViewInterface tableRowViewInterface;
 	
 	/**
-	 * @fn TableCellView *TableCellView::init(TableCellView *self)
+	 * @fn TableHeaderView *TableHeaderView::initWithFrame(TableHeaderView *self, const SDL_Rect *frame)
 	 *
-	 * @brief Initializes this TableCellView.
+	 * @brief Initializes this TableHeaderView with the specified frame.
 	 *
-	 * @return The initialized TableCellView, or `NULL` on error.
+	 * @return The initialized TableHeaderView, or `NULL` on error.
 	 *
-	 * @memberof TableCellView
+	 * @memberof TableHeaderView
 	 */
-	TableCellView *(*initWithValue)(TableCellView *self, ident value);
+	TableHeaderView *(*initWithFrame)(TableHeaderView *self, const SDL_Rect *frame);
 };
 
 /**
- * @brief The TableCellView Class.
+ * @brief The TableHeaderView Class.
  */
-extern Class _TableCellView;
+extern Class _TableHeaderView;

@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Control.h>
+#include <Objectively/Object.h>
 
 /**
  * @file
@@ -31,38 +31,38 @@
  * @brief Columns for TableViews.
  */
 
-#define DEFAULT_TABLE_VIEW_COLUMN_WIDTH 120
+#define DEFAULT_TABLE_COLUMN_WIDTH 100
 
-typedef struct TableColumnView TableColumnView;
-typedef struct TableColumnViewInterface TableColumnViewInterface;
+typedef struct TableColumn TableColumn;
+typedef struct TableColumnInterface TableColumnInterface;
 
 /**
- * @brief The TableColumnView type.
+ * @brief The TableColumn type.
  *
- * @extends Control
+ * @extends Object
  *
- * @ingroup Controls
+ * @ingroup Tables
  */
-struct TableColumnView {
+struct TableColumn {
 	
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
-	Control control;
+	Object object;
 	
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
-	TableColumnViewInterface *interface;
+	TableColumnInterface *interface;
 	
 	/**
 	 * @brief The identifier.
 	 */
-	const char *identifier;
+	char *identifier;
 	
 	/**
 	 * @brief The maximum width.
@@ -73,12 +73,7 @@ struct TableColumnView {
 	 * @brief The minimum width.
 	 */
 	int minWidth;
-	
-	/**
-	 * @brief The title.
-	 */
-	char *title;
-	
+
 	/**
 	 * @brief The width.
 	 */
@@ -86,28 +81,28 @@ struct TableColumnView {
 };
 
 /**
- * @brief The TableColumnView interface.
+ * @brief The TableColumn interface.
  */
-struct TableColumnViewInterface {
+struct TableColumnInterface {
 	
 	/**
 	 * @brief The parent interface.
 	 */
-	ControlInterface controlInterface;
+	ObjectInterface objectInterface;
 	
 	/**
-	 * @fn TableColumnView *TableColumnView::initWithIdentifier(TableColumnView *self, const char *identifier)
+	 * @fn TableColumn *TableColumn::initWithIdentifier(TableColumn *self, const char *identifier)
 	 *
-	 * @brief Initializes this TableColumnView with the given identifier.
+	 * @brief Initializes this TableColumn with the given identifier.
 	 *
-	 * @return The initialized TableColumnView, or `NULL` on error.
+	 * @return The initialized TableColumn, or `NULL` on error.
 	 *
-	 * @memberof TableColumnView
+	 * @memberof TableColumn
 	 */
-	TableColumnView *(*initWithIdentifier)(TableColumnView *self, const char *identifier);
+	TableColumn *(*initWithIdentifier)(TableColumn *self, const char *identifier);
 };
 
 /**
- * @brief The TableColumnView Class.
+ * @brief The TableColumn Class.
  */
-extern Class _TableColumnView;
+extern Class _TableColumn;

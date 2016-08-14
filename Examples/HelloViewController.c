@@ -29,7 +29,7 @@
 
 #define _Class _HelloViewController
 
-#pragma mark - Actions and delegate callbacks
+#pragma mark - Actions
 
 /**
  * @brief ActionFunction for Button.
@@ -49,11 +49,53 @@ static void checkboxAction(Control *control, const SDL_Event *event, ident sende
 	}
 }
 
+#pragma mark - SliderDelegate
+
 /**
  * @brief SliderDelegate callback.
  */
 static void sliderDidSetValue(Slider *slider) {
 	printf("Slider value: %.1f\n", slider->value);
+}
+
+#pragma mark - TableViewDataSource
+
+/**
+ * @see TableViewDataSource::numberOfRows(const TableView *)
+ */
+static size_t numberOfRows(const TableView *tableView) {
+	return 3;
+}
+
+/**
+ * @see TableViewDataSource::valueForColumnAndRow(const TableView *, const TableColumn *, int)
+ */
+static ident valueForColumnAndRow(const TableView *tableView,
+								  const TableColumn *column,
+								  int row) {
+
+	const Array *columns = (Array *) tableView->columns;
+	const int col = $(columns, indexOfObject, (ident) column);
+	return (intptr_t) (columns->count * row + col);
+}
+
+#pragma mark - TableViewDelegate
+
+/**
+ * @see TableViewDelegate::cellForColumnAndRow(const TableView *, const TableColumn *, int, ident)
+ */
+static TableCellView *cellForColumnAndRow(const TableView *tableView,
+										  const TableColumn *column,
+										  int row,
+										  ident value) {
+	char chars[8];
+
+	TableCellView *cell = $(alloc(TableCellView), initWithValue, value);
+
+	snprintf(chars, sizeof(chars), "%zd", (intptr_t) value);
+	$(cell->text, setText, chars);
+
+	return cell;
 }
 
 #pragma mark - ViewController
@@ -111,12 +153,35 @@ static void loadView(ViewController *self) {
 
 	$((View *) stackView, addSubview, (View *) slider);
 
+	TableView *tableView = $(alloc(TableView), initWithFrame, NULL);
+	tableView->dataSource.numberOfRows = numberOfRows;
+	tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
+	tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
+
+	TableColumn *column1 = $(alloc(TableColumn), initWithIdentifier, "One");
+	TableColumn *column2 = $(alloc(TableColumn), initWithIdentifier, "Two");
+	TableColumn *column3 = $(alloc(TableColumn), initWithIdentifier, "Three");
+
+	$(tableView, addColumn, column1);
+	$(tableView, addColumn, column2);
+	$(tableView, addColumn, column3);
+
+	$(tableView, reloadData);
+	tableView->stackView.view.frame.w = 300;
+	tableView->stackView.view.frame.h = 200;
+
+	$((View *) stackView, addSubview, (View *) tableView);
+
 	release(button);
 	release(textView);
 	release(checkbox);
 	release(checkboxInput);
 	release(select);
 	release(slider);
+	release(column1);
+	release(column2);
+	release(column3);
+	release(tableView);
 	release(stackView);
 	release(panel);
 }

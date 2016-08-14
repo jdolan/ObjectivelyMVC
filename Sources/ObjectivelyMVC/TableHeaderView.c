@@ -23,41 +23,24 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/TableCellView.h>
+#include <ObjectivelyMVC/TableHeaderView.h>
 
-#define _Class _TableCellView
+#define _Class _TableHeaderView
 
-#pragma mark - Object
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-	
-	TableCellView *this = (TableCellView *) self;
-
-	release(this->text);
-	
-	super(Object, self, dealloc);
-}
-
-#pragma mark - TableCellView
+#pragma mark - TableHeaderView
 
 /**
- * @fn TableCellView *TableCellView::initWithValue(TableCellView *self, ident value)
+ * @fn TableHeaderView *TableHeaderView::initWithFrame(TableHeaderView *self, const SDL_Rect *frame)
  *
- * @memberof TableCellView
+ * @memberof TableHeaderView
  */
-static TableCellView *initWithValue(TableCellView *self, ident value) {
+static TableHeaderView *initWithFrame(TableHeaderView *self, const SDL_Rect *frame) {
 	
-	self = (TableCellView *) super(View, self, initWithFrame, NULL);
+	self = (TableHeaderView *) super(View, self, initWithFrame, frame);
 	if (self) {
-		self->text = $(alloc(Text), initWithText, NULL, NULL);
-		assert(self->text);
-
-		$((View *) self, addSubview, (View *) self->text);
-
-		self->view.autoresizingMask = ViewAutoresizingHeight;
+		if (((View *) self)->frame.h == 0) {
+			((View *) self)->frame.h = DEFAULT_TABLE_HEADER_VIEW_HEIGHT;
+		}
 	}
 	
 	return self;
@@ -70,17 +53,15 @@ static TableCellView *initWithValue(TableCellView *self, ident value) {
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
-	((TableCellViewInterface *) clazz->interface)->initWithValue = initWithValue;
+	((TableHeaderViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
-Class _TableCellView = {
-	.name = "TableCellView",
+Class _TableHeaderView = {
+	.name = "TableHeaderView",
 	.superclass = &_View,
-	.instanceSize = sizeof(TableCellView),
-	.interfaceOffset = offsetof(TableCellView, interface),
-	.interfaceSize = sizeof(TableCellViewInterface),
+	.instanceSize = sizeof(TableHeaderView),
+	.interfaceOffset = offsetof(TableHeaderView, interface),
+	.interfaceSize = sizeof(TableHeaderViewInterface),
 	.initialize = initialize,
 };
 

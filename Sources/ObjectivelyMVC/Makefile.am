@@ -25,7 +25,9 @@ pkginclude_HEADERS = \
 	Slider.h \
 	StackView.h \
 	TableCellView.h \
-	TableColumnView.h \
+	TableColumn.h \
+	TableHeaderView.h \
+	TableRowView.h \
 	TableView.h \
 	TextView.h \
 	Types.h \
@@ -56,7 +58,9 @@ libObjectivelyMVC_la_SOURCES = \
 	Slider.c \
 	StackView.c \
 	TableCellView.c \
-	TableColumnView.c \
+	TableColumn.c \
+	TableHeaderView.c \
+	TableRowView.c \
 	TableView.c \
 	Text.c \
 	TextView.c \
