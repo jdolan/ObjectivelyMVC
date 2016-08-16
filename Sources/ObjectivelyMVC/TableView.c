@@ -52,7 +52,6 @@ static void layoutSubviews(View *self) {
 
 	TableView *this = (TableView *) self;
 
-	const Array *columns = (Array *) this->columns;
 	const Array *rows = (Array *) this->rows;
 
 	for (size_t i = 0; i < rows->count; i++) {
@@ -67,19 +66,6 @@ static void layoutSubviews(View *self) {
 				row->stackView.view.backgroundColor = this->alternateBackgroundColor;
 			}
 		}
-
-		const Array *cells = (Array *) row->stackView.view.subviews;
-		assert(cells->count == columns->count);
-
-		for (size_t j = 0; j < columns->count; j++) {
-
-			const TableColumn *column = $(columns, objectAtIndex, j);
-
-			TableCellView *cell = $(cells, objectAtIndex, j);
-			cell->view.frame.w = column->width;
-		}
-
-		$(self, addSubview, (View *) row);
 	}
 
 	super(View, self, layoutSubviews);
@@ -97,35 +83,23 @@ static void addColumn(TableView *self, TableColumn *column) {
 	assert(column);
 
 	$(self->columns, addObject, column);
-
-	//$((View *) self->headerView, addSubview, (View *) column);
 }
 
 /**
- * @fn TableCellView *TableView::cellForColumnAndRow(const TableView *self, const TableColumn *column, int row)
- *
- * @param column The column.
- * @param row The row.
- *
- * @return The cell for the given column and row.
+ * @fn TableColumn *TableView::columnWithIdentifier(const TableView *self)
  *
  * @memberof TableView
  */
-static TableCellView *cellForColumnAndRow(const TableView *self, const TableColumn *column, int row) {
+static TableColumn *columnWithIdentifier(const TableView *self, const char *identifier) {
+
+	assert(identifier);
 
 	const Array *columns = (Array *) self->columns;
-	const int index = $(columns, indexOfObject, (ident) column);
-	if (index != -1) {
+	for (size_t i = 0; i < columns->count; i++) {
 
-		const Array *rows = (Array *) self->rows;
-		if (row < rows->count) {
-
-			const StackView *stackView = $(rows, objectAtIndex, row);
-			const Array *cells = (Array *) stackView->view.subviews;
-
-			if (index < cells->count) {
-				return (TableCellView *) $(cells, objectAtIndex, index);
-			}
+		TableColumn *column = $(columns, objectAtIndex, i);
+		if (strcmp(identifier, column->identifier) == 0) {
+			return column;
 		}
 	}
 
@@ -152,14 +126,24 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
 		$((View *) self, addSubview, (View *) self->headerView);
 
-		self->alternateBackgroundColor = Colors.AlternateTableRowColor;
+		self->alternateBackgroundColor = Colors.AlternateColor;
 		self->usesAlternateBackgroundColor = true;
 
 		self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
 		self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
+
+		self->stackView.view.borderColor = Colors.DimGray;
+		self->stackView.view.borderWidth = 1;
 	}
 	
 	return self;
+}
+
+/**
+ * @brief ArrayEnumerator to remove TableRowViews from the table.
+ */
+static _Bool reloadData_removeRows(const Array *array, ident obj, ident data) {
+	$((View *) obj, removeFromSuperview); return false;
 }
 
 /**
@@ -169,30 +153,57 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
  */
 static void reloadData(TableView *self) {
 
+	$((Array *) self->rows, enumerateObjects, reloadData_removeRows, NULL);
 	$(self->rows, removeAllObjects);
 
-	const size_t rows = self->dataSource.numberOfRows(self);
-	for (size_t i = 0; i < rows; i++) {
+	TableRowView *headerView = (TableRowView *) self->headerView;
+	$(headerView, removeAllCells);
+
+	const Array *columns = (Array *) self->columns;
+	for (size_t i = 0; i < columns->count; i++) {
+
+		const TableColumn *column = $(columns, objectAtIndex, i);
+		$(headerView, addCell, (TableCellView *) column->headerCell);
+	}
+
+	const size_t numberOfRows = self->dataSource.numberOfRows(self);
+	for (size_t i = 0; i < numberOfRows; i++) {
 
 		TableRowView *row = $(alloc(TableRowView), initWithFrame, NULL);
 		assert(row);
 
 		$(self->rows, addObject, row);
+		$((View *) self, addSubview, (View *) row);
 
-		const Array *columns = (Array *) self->columns;
 		for (size_t j = 0; j < columns->count; j++) {
 
 			const TableColumn *column = $(columns, objectAtIndex, j);
-			ident value = self->dataSource.valueForColumnAndRow(self, column, i);
 
-			TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i, value);
+			TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i);
 			assert(cell);
 
-			$((View *) row, addSubview, (View *) cell);
+			cell->value = self->dataSource.valueForColumnAndRow(self, column, i);
+
+			$(row, addCell, cell);
 		}
 	}
 
+	self->selectedRow = -1;
+
+	$((View *) self, sizeToFit);
 	((View *) self)->needsLayout = true;
+}
+
+/**
+ * @fn void TableView::removeColumn(TableView *self, TableColumn *column)
+ *
+ * @memberof TableView
+ */
+static void removeColumn(TableView *self, TableColumn *column) {
+
+	assert(column);
+
+	$(self->columns, removeObject, column);
 }
 
 #pragma mark - Class lifecycle
@@ -207,9 +218,10 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
 	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
-	((TableViewInterface *) clazz->interface)->cellForColumnAndRow = cellForColumnAndRow;
+	((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;
 	((TableViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((TableViewInterface *) clazz->interface)->reloadData = reloadData;
+	((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
 }
 
 Class _TableView = {

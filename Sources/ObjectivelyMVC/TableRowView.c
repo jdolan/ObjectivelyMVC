@@ -24,10 +24,64 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/TableRowView.h>
+#include <ObjectivelyMVC/TableView.h>
 
 #define _Class _TableRowView
 
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+	TableRowView *this = (TableRowView *) self;
+
+	release(this->cells);
+
+	super(Object, self, dealloc);
+}
+
+#pragma mark - View
+
+/**
+ * @see View::layoutSubviews(View *)
+ */
+static void layoutSubviews(View *self) {
+
+	TableRowView *this = (TableRowView *) self;
+	const Array *cells = (Array *) this->cells;
+
+	TableView *tableView = (TableView *) self->superview;
+	const Array *columns = (Array *) tableView->columns;
+
+	assert(cells->count == columns->count);
+
+	for (size_t i = 0; i < columns->count; i++) {
+		const TableColumn *column = $(columns, objectAtIndex, i);
+		
+		TableCellView *cell = $(cells, objectAtIndex, i);
+		cell->view.frame.w = column->width;
+	}
+
+	super(View, self, layoutSubviews);
+}
+
 #pragma mark - TableRowView
+
+/**
+ * @fn void TableRowView::addCell(TableRowView *self, TableCellView *cell)
+ *
+ * @memberof TableRowView
+ */
+static void addCell(TableRowView *self, TableCellView *cell) {
+
+	assert(cell);
+
+	$(self->cells, addObject, cell);
+
+	$((View *) self, addSubview, (View *) cell);
+}
 
 /**
  * @fn TableRowView *TableRowView::initWithFrame(TableRowView *self, const SDL_Rect *frame)
@@ -38,6 +92,10 @@ static TableRowView *initWithFrame(TableRowView *self, const SDL_Rect *frame) {
 	
 	self = (TableRowView *) super(StackView, self, initWithFrame, frame);
 	if (self) {
+
+		self->cells = $$(MutableArray, array);
+		assert(self->cells);
+
 		self->stackView.axis = StackViewAxisHorizontal;
 
 		self->stackView.view.autoresizingMask = ViewAutoresizingWidth;
@@ -47,6 +105,41 @@ static TableRowView *initWithFrame(TableRowView *self, const SDL_Rect *frame) {
 	return self;
 }
 
+/**
+ * @brief ArrayEnumerator to remove TableCellViews from the row.
+ */
+static _Bool removeAllCells_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) obj, removeFromSuperview); return false;
+}
+
+/**
+ * @fn void TableRowView::removeAllCells(TableRowView *self)
+ *
+ * @brief Removes all cells from this row.
+ *
+ * @memberof TableRowView
+ */
+static void removeAllCells(TableRowView *self) {
+
+	$((Array *) self->cells, enumerateObjects, removeAllCells_enumerate, NULL);
+
+	$(self->cells, removeAllObjects);
+}
+
+/**
+ * @fn void TableRowView::removeCell(TableRowView *self, TableCellView *cell)
+ *
+ * @memberof TableRowView
+ */
+static void removeCell(TableRowView *self, TableCellView *cell) {
+
+	assert(cell);
+
+	$(self->cells, removeObject, cell);
+
+	$((View *) self, removeSubview, (View *) cell);
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -54,7 +147,14 @@ static TableRowView *initWithFrame(TableRowView *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+
+	((TableRowViewInterface *) clazz->interface)->addCell = addCell;
 	((TableRowViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TableRowViewInterface *) clazz->interface)->removeAllCells = removeAllCells;
+	((TableRowViewInterface *) clazz->interface)->removeCell = removeCell;
 }
 
 Class _TableRowView = {

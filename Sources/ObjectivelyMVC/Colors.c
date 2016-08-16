@@ -31,7 +31,7 @@ const struct _Colors Colors = {
 	.SelectedColor = { 48, 48, 48, 255 },
 	.FocusedColor = { 128, 128, 128, 255 },
 
-	.AlternateTableRowColor = { 152, 152, 152, 224 },
+	.AlternateColor = { 152, 152, 152, 224 },
 	
 	.Clear = { 255, 255, 255, 0 },
 	

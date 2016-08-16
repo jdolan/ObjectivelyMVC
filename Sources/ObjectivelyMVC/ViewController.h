@@ -33,6 +33,18 @@
  * @brief ViewController implementation.
  */
 
+/**
+ * @defgroup ViewControllers View Controllers
+ *
+ * @brief View Controllers manage and coordinate a hierarchy of Views.
+ *
+ * @remarks In addition to managing a View hierarchy, ViewControllers themselves may be arranged in 
+ * a hierarchical fashion. Typically, an application will employ a single primary ViewController to
+ * manage the window via the WindowController. This primary ViewController may have child
+ * ViewControllers, and can add or remove those children from the View hierarchy at any time by calling
+ * ViewController::moveToParentViewController on the child.
+ */
+
 typedef struct ViewController ViewController;
 typedef struct ViewControllerInterface ViewControllerInterface;
 
@@ -40,6 +52,8 @@ typedef struct ViewControllerInterface ViewControllerInterface;
  * @brief The ViewController type.
  *
  * @extends Object
+ *
+ * @ingroup ViewControllers
  */
 struct ViewController {
 

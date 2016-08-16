@@ -27,6 +27,32 @@
 
 #define _Class _TableHeaderView
 
+#pragma mark - View
+
+/**
+ * @see View::render(View *, Renderer *)
+ */
+static void render(View *self, Renderer *renderer) {
+
+	super(View, self, render, renderer);
+
+	const SDL_Rect frame = $(self, renderFrame);
+
+	SetColor(self->borderColor);
+
+	SDL_Point points[2];
+
+	points[0].x = frame.x;
+	points[0].y = frame.y + frame.h;
+
+	points[1].x = frame.x + frame.w;
+	points[1].y = frame.y + frame.h;
+
+	$(renderer, drawLine, points);
+
+	SetColor(Colors.White);
+}
+
 #pragma mark - TableHeaderView
 
 /**
@@ -36,8 +62,11 @@
  */
 static TableHeaderView *initWithFrame(TableHeaderView *self, const SDL_Rect *frame) {
 	
-	self = (TableHeaderView *) super(View, self, initWithFrame, frame);
+	self = (TableHeaderView *) super(TableRowView, self, initWithFrame, frame);
 	if (self) {
+
+		((View *) self)->backgroundColor = Colors.DimGray;
+
 		if (((View *) self)->frame.h == 0) {
 			((View *) self)->frame.h = DEFAULT_TABLE_HEADER_VIEW_HEIGHT;
 		}
@@ -52,13 +81,15 @@ static TableHeaderView *initWithFrame(TableHeaderView *self, const SDL_Rect *fra
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
+	((ViewInterface *) clazz->interface)->render = render;
+
 	((TableHeaderViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 Class _TableHeaderView = {
 	.name = "TableHeaderView",
-	.superclass = &_View,
+	.superclass = &_TableRowView,
 	.instanceSize = sizeof(TableHeaderView),
 	.interfaceOffset = offsetof(TableHeaderView, interface),
 	.interfaceSize = sizeof(TableHeaderViewInterface),

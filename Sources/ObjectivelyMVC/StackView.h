@@ -32,6 +32,12 @@
  */
 
 /**
+ * @defgroup Containers Containers
+ *
+ * @brief Containers allow for grouping and positioning of related Views.
+ */
+
+/**
  * @brief Alignment constants for positioning of subviews perpendicular to a StackView's axis.
  */
 typedef enum {
@@ -67,6 +73,8 @@ typedef struct StackViewInterface StackViewInterface;
  * @brief The StackView type.
  *
  * @extends View
+ *
+ * @ingroup Containers
  */
 struct StackView {
 

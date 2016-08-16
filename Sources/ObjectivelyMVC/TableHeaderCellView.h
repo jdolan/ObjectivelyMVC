@@ -23,66 +23,67 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/TableRowView.h>
+#include <ObjectivelyMVC/TableCellView.h>
 
 /**
  * @file
  *
- * @brief Columns for TableViews.
+ * @brief Header cells for TableViews.
  */
 
-#define DEFAULT_TABLE_HEADER_VIEW_HEIGHT 22
-
-typedef struct TableHeaderView TableHeaderView;
-typedef struct TableHeaderViewInterface TableHeaderViewInterface;
+typedef struct TableHeaderCellView TableHeaderCellView;
+typedef struct TableHeaderCellViewInterface TableHeaderCellViewInterface;
 
 /**
- * @brief The TableHeaderView type.
+ * @brief The TableHeaderCellView type.
  *
- * @extends View
+ * @extends TableCellView
  *
  * @ingroup Tables
  */
-struct TableHeaderView {
+struct TableHeaderCellView {
 	
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
-	TableRowView tableRowView;
+	TableCellView tableCellView;
 	
 	/**
 	 * @brief The typed interface.
 	 *
 	 * @private
 	 */
-	TableHeaderViewInterface *interface;
+	TableHeaderCellViewInterface *interface;
 };
 
 /**
- * @brief The TableHeaderView interface.
+ * @brief The TableHeaderCellView interface.
  */
-struct TableHeaderViewInterface {
+struct TableHeaderCellViewInterface {
 	
 	/**
 	 * @brief The parent interface.
 	 */
-	TableRowViewInterface tableRowViewInterface;
+	TableCellViewInterface tableCellViewInterface;
 	
 	/**
-	 * @fn TableHeaderView *TableHeaderView::initWithFrame(TableHeaderView *self, const SDL_Rect *frame)
+	 * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *rect)
 	 *
-	 * @brief Initializes this TableHeaderView with the specified frame.
+	 * @brief Initializes this TableHeaderCellView with the specified frame.
 	 *
-	 * @return The initialized TableHeaderView, or `NULL` on error.
+	 * @param frame The frame.
 	 *
-	 * @memberof TableHeaderView
+	 * @return The initialized TableHeaderCellView, or `NULL` on error.
+	 *
+	 * @memberof TableHeaderCellView
 	 */
-	TableHeaderView *(*initWithFrame)(TableHeaderView *self, const SDL_Rect *frame);
+	TableHeaderCellView *(*initWithFrame)(TableHeaderCellView *self, const SDL_Rect *frame);
 };
 
 /**
- * @brief The TableHeaderView Class.
+ * @brief The TableHeaderCellView Class.
  */
-extern Class _TableHeaderView;
+extern Class _TableHeaderCellView;
+

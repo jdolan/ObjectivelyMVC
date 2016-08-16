@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/StackView.h>
+#include <ObjectivelyMVC/TableCellView.h>
 
 /**
  * @file
@@ -56,6 +57,11 @@ struct TableRowView {
 	 * @private
 	 */
 	TableRowViewInterface *interface;
+
+	/**
+	 * @brief The cells.
+	 */
+	MutableArray *cells;
 };
 
 /**
@@ -67,6 +73,17 @@ struct TableRowViewInterface {
 	 * @brief The parent interface.
 	 */
 	StackViewInterface stackViewInterface;
+
+	/**
+	 * @fn void TableRowView::addCell(TableRowView *self, TableCellView *cell)
+	 *
+	 * @brief Adds the specified cell to this row.
+	 *
+	 * @param cell The cell.
+	 *
+	 * @memberof TableRowView
+	 */
+	void (*addCell)(TableRowView *self, TableCellView *cell);
 	
 	/**
 	 * @fn TableRowView *TableRowView::initWithFrame(TableRowView *self, const SDL_Rect *frame)
@@ -80,6 +97,26 @@ struct TableRowViewInterface {
 	 * @memberof TableRowView
 	 */
 	TableRowView *(*initWithFrame)(TableRowView *self, const SDL_Rect *frame);
+
+	/**
+	 * @fn void TableRowView::removeAllCells(TableRowView *self)
+	 *
+	 * @brief Removes all cells from this row.
+	 *
+	 * @memberof TableRowView
+	 */
+	void (*removeAllCells)(TableRowView *self);
+
+	/**
+	 * @fn void TableRowView::removeCell(TableRowView *self, TableCellView *cell)
+	 *
+	 * @brief Removes the specified cell from this row.
+	 *
+	 * @param cell The cell.
+	 *
+	 * @memberof TableRowView
+	 */
+	void (*removeCell)(TableRowView *self, TableCellView *cell);
 };
 
 /**

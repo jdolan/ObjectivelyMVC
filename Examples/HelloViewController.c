@@ -82,17 +82,18 @@ static ident valueForColumnAndRow(const TableView *tableView,
 #pragma mark - TableViewDelegate
 
 /**
- * @see TableViewDelegate::cellForColumnAndRow(const TableView *, const TableColumn *, int, ident)
+ * @see TableViewDelegate::cellForColumnAndRow(const TableView *, const TableColumn *, int)
  */
 static TableCellView *cellForColumnAndRow(const TableView *tableView,
 										  const TableColumn *column,
-										  int row,
-										  ident value) {
+										  int row) {
+
+	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
+
+	const intptr_t value = valueForColumnAndRow(tableView, column, row);
+
 	char chars[8];
-
-	TableCellView *cell = $(alloc(TableCellView), initWithValue, value);
-
-	snprintf(chars, sizeof(chars), "%zd", (intptr_t) value);
+	snprintf(chars, sizeof(chars), "%zd", value);
 	$(cell->text, setText, chars);
 
 	return cell;
@@ -167,8 +168,8 @@ static void loadView(ViewController *self) {
 	$(tableView, addColumn, column3);
 
 	$(tableView, reloadData);
+
 	tableView->stackView.view.frame.w = 300;
-	tableView->stackView.view.frame.h = 200;
 
 	$((View *) stackView, addSubview, (View *) tableView);
 

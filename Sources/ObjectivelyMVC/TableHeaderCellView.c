@@ -22,48 +22,23 @@
  */
 
 #include <assert.h>
-#include <stdlib.h>
-#include <string.h>
 
-#include <ObjectivelyMVC/TableColumn.h>
+#include <ObjectivelyMVC/TableHeaderCellView.h>
 
-#define _Class _TableColumn
+#define _Class _TableHeaderCellView
 
-#pragma mark - Object
+#pragma mark - TableHeaderCellView
 
 /**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-
-	TableColumn *this = (TableColumn *) self;
-
-	free(this->identifier);
-
-	super(Object, self, dealloc);
-}
-
-#pragma mark - TableColumn
-
-/**
- * @fn TableColumn *TableColumn::init(TableColumn *self)
+ * @fn TableHeaderCellView *TableHeaderCellView::init(TableHeaderCellView *self)
  *
- * @memberof TableColumn
+ * @memberof TableHeaderCellView
  */
-static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier) {
+static TableHeaderCellView *initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame) {
 	
-	self = (TableColumn *) super(Object, self, init);
+	self = (TableHeaderCellView *) super(TableCellView, self, initWithFrame, frame);
 	if (self) {
 
-		self->headerCell = $(alloc(TableHeaderCellView), initWithFrame, NULL);
-		assert(self->headerCell);
-		
-		self->identifier = strdup(identifier);
-		assert(self->identifier);
-
-		$(self->headerCell->tableCellView.text, setText, self->identifier);
-
-		self->width = DEFAULT_TABLE_COLUMN_WIDTH;
 	}
 	
 	return self;
@@ -75,18 +50,16 @@ static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((TableColumnInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
+	((TableHeaderCellViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
-Class _TableColumn = {
-	.name = "TableColumn",
-	.superclass = &_Object,
-	.instanceSize = sizeof(TableColumn),
-	.interfaceOffset = offsetof(TableColumn, interface),
-	.interfaceSize = sizeof(TableColumnInterface),
+Class _TableHeaderCellView = {
+	.name = "TableHeaderCellView",
+	.superclass = &_TableCellView,
+	.instanceSize = sizeof(TableHeaderCellView),
+	.interfaceOffset = offsetof(TableHeaderCellView, interface),
+	.interfaceSize = sizeof(TableHeaderCellViewInterface),
 	.initialize = initialize,
 };
 

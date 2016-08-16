@@ -25,6 +25,8 @@
 
 #include <Objectively/Object.h>
 
+#include <ObjectivelyMVC/TableHeaderCellView.h>
+
 /**
  * @file
  *
@@ -58,6 +60,21 @@ struct TableColumn {
 	 * @private
 	 */
 	TableColumnInterface *interface;
+
+	/**
+	 * @brief The cell alignment.
+	 */
+	ViewAlignment cellAlignment;
+
+	/**
+	 * @brief The sort comparator.
+	 */
+	Comparator comparator;
+
+	/**
+	 * @brief The header cell.
+	 */
+	TableHeaderCellView *headerCell;
 	
 	/**
 	 * @brief The identifier.

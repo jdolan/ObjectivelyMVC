@@ -35,6 +35,12 @@
  */
 
 /**
+ * @defgroup Controls Controls
+ *
+ * @brief Controls capture input events and dispatch Actions.
+ */
+
+/**
  * @brief Bevel types.
  */
 typedef enum {

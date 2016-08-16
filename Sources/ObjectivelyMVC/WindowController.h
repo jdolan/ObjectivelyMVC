@@ -41,7 +41,7 @@ typedef struct WindowControllerInterface WindowControllerInterface;
  *
  * @extends Object
  *
- * @ingroup
+ * @ingroup ViewControllers
  */
 struct WindowController {
 	

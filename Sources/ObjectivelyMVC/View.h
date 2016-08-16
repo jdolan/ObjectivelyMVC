@@ -255,8 +255,8 @@ struct ViewInterface {
 	 *
 	 * @param renderer The Renderer with which to draw.
 	 *
-	 * @remarks The default implementation of this method adds the View to the
-	 * Renderer for the current frame, and recurses its subviews.
+	 * @remarks The default implementation of this method adds the View to the Renderer for the 
+	 * current frame, and recurses its subviews. Actual drawing is performed in View::render.
 	 * 
 	 * @see View::render(View *, Renderer *)
 	 *
@@ -360,8 +360,8 @@ struct ViewInterface {
 	 *
 	 * @brief Renders this View using the given renderer.
 	 *
-	 * @remarks Subclasses should override this method to perform actual drawing operations.
-	 * This method is called by `draw` as the View hierarchy is drawn.
+	 * @remarks Subclasses should override this method to perform actual drawing operations. This 
+	 * method is called by `draw` as the View hierarchy is drawn.
 	 *
 	 * @memberof View
 	 */
@@ -372,8 +372,8 @@ struct ViewInterface {
 	 *
 	 * @brief This method is invoked from `respondToEvent` for `SDL_RENDER_DEVICE_RESET`.
 	 *
-	 * @remarks Subclasses should override this method to recreate any texture resources
-	 * or other OpenGL objects they own.
+	 * @remarks Subclasses should override this method to recreate any texture resources or other
+	 * OpenGL objects they own.
 	 *
 	 * @memberof View
 	 */
@@ -440,8 +440,7 @@ struct ViewInterface {
 	 *
 	 * @brief Updates data bindings, prompting the appropriate layout changes.
 	 *
-	 * @remarks Subclasses should override this method to update any data sources
-	 * they rely on.
+	 * @remarks Subclasses should override this method to update any data sources they rely on.
 	 *
 	 * @memberof View
 	 */
@@ -452,7 +451,7 @@ struct ViewInterface {
 	 *
 	 * @return The OpenGL viewport for this View.
 	 *
-	 * @memberof MeshModelView
+	 * @memberof View
 	 */
 	SDL_Rect (*viewport)(const View *self);
 

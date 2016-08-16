@@ -72,13 +72,13 @@ struct TableViewDelegate {
 	 * @param tableView The table.
 	 * @param colum The column.
 	 * @param row The row.
-	 * @param value The cell value.
 	 *
-	 * @return The cell for the given column, row and value.
+	 * @return The cell for the given column and row.
 	 */
-	TableCellView *(*cellForColumnAndRow)(const TableView *tableView, const TableColumn *column, int row, ident value);
+	TableCellView *(*cellForColumnAndRow)(const TableView *tableView, const TableColumn *column, int row);
 };
 
+#define DEFAULT_TABLE_VIEW_PADDING 4
 #define DEFAULT_TABLE_VIEW_CELL_SPACING 2
 #define DEFAULT_TABLE_VIEW_ROW_HEIGHT 20
 
@@ -178,16 +178,15 @@ struct TableViewInterface {
 	void (*addColumn)(TableView *self, TableColumn *column);
 
 	/**
-	 * @fn TableCellView *TableView::cellForColumnAndRow(const TableView *self, const TableColumn *column, int row)
+	 * @fn TableColumn *TableView::columnWithIdentifier(const TableView *self)
 	 *
-	 * @param column The column.
-	 * @param row The row.
+	 * @param identifie The column identifier.
 	 *
-	 * @return The cell for the given column and row.
+	 * @return The TableColumn with the specified identifier, or `NULL` if not found.
 	 *
 	 * @memberof TableView
 	 */
-	TableCellView *(*cellForColumnAndRow)(const TableView *self, const TableColumn *column, int row);
+	TableColumn *(*columnWithIdentifier)(const TableView *self, const char *identifier);
 
 	/**
 	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame)
@@ -207,9 +206,24 @@ struct TableViewInterface {
 	 *
 	 * @brief Reloads this TableView's visible rows.
 	 *
+	 * @remarks This method must be called after changes to the data source,
+	 * delegate, or column definitions. Failure to call this method after such
+	 * changes leads to undefined behavior.
+	 *
 	 * @memberof TableView
 	 */
 	void (*reloadData)(TableView *self);
+
+	/**
+	 * @fn void TableView::removeColumn(TableView *self, TableColumn *column)
+	 *
+	 * @brief Removes the specified column from this table.
+	 *
+	 * @param column The column.
+	 *
+	 * @memberof TableView
+	 */
+	void (*removeColumn)(TableView *self, TableColumn *column);
 };
 
 /**

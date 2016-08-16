@@ -31,6 +31,8 @@
  * @brief Cells for TableViews.
  */
 
+#define DEFAULT_TABLE_CELL_VIEW_PADDING 2
+
 typedef struct TableCellView TableCellView;
 typedef struct TableCellViewInterface TableCellViewInterface;
 
@@ -61,6 +63,11 @@ struct TableCellView {
 	 * @brief The text.
 	 */
 	Text *text;
+
+	/**
+	 * @brief The value object this cell represents.
+	 */
+	ident value;
 };
 
 /**
@@ -74,15 +81,17 @@ struct TableCellViewInterface {
 	ViewInterface viewInterface;
 	
 	/**
-	 * @fn TableCellView *TableCellView::init(TableCellView *self)
+	 * @fn TableCellView *TableCellView::initWithFrame(TableCellView *self, const SDL_Rect *frame)
 	 *
-	 * @brief Initializes this TableCellView.
+	 * @brief Initializes this TableCellView with the specified frame.
+	 *
+	 * @param frame The frame.
 	 *
 	 * @return The initialized TableCellView, or `NULL` on error.
 	 *
 	 * @memberof TableCellView
 	 */
-	TableCellView *(*initWithValue)(TableCellView *self, ident value);
+	TableCellView *(*initWithFrame)(TableCellView *self, const SDL_Rect *frame);
 };
 
 /**

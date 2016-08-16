@@ -44,7 +44,7 @@ extern const struct _Colors {
 	SDL_Color SelectedColor;
 	SDL_Color FocusedColor;
 
-	SDL_Color AlternateTableRowColor;
+	SDL_Color AlternateColor;
 	
 	SDL_Color Clear;
 	
