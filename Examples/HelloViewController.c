@@ -108,7 +108,7 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 
-	const SDL_Rect frame = { .x = 50, .y = 50, .w = 420, .h = 240 };
+	const SDL_Rect frame = { .x = 50, .y = 50 };
 	Panel *panel = $(alloc(Panel), initWithFrame, &frame);
 
 	panel->view.autoresizingMask = ViewAutoresizingContain;
@@ -169,9 +169,10 @@ static void loadView(ViewController *self) {
 
 	$(tableView, reloadData);
 
-	tableView->stackView.view.frame.w = 300;
-
 	$((View *) stackView, addSubview, (View *) tableView);
+	$((View *) stackView, sizeToFit);
+
+	$((View *) panel, sizeToFit);
 
 	release(button);
 	release(textView);

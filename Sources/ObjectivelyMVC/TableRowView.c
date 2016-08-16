@@ -65,6 +65,8 @@ static void layoutSubviews(View *self) {
 	}
 
 	super(View, self, layoutSubviews);
+
+	$(self, sizeToFit);
 }
 
 #pragma mark - TableRowView

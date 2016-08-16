@@ -52,8 +52,9 @@ static void layoutSubviews(View *self) {
 
 	TableView *this = (TableView *) self;
 
-	const Array *rows = (Array *) this->rows;
+	this->headerView->tableRowView.stackView.spacing = this->cellSpacing;
 
+	const Array *rows = (Array *) this->rows;
 	for (size_t i = 0; i < rows->count; i++) {
 
 		TableRowView *row = (TableRowView *) $(rows, objectAtIndex, i);
@@ -61,14 +62,14 @@ static void layoutSubviews(View *self) {
 		row->stackView.spacing = this->cellSpacing;
 		row->stackView.view.frame.h = this->rowHeight;
 
-		if (this->usesAlternateBackgroundColor) {
-			if (i & 1) {
-				row->stackView.view.backgroundColor = this->alternateBackgroundColor;
-			}
+		if (this->usesAlternateBackgroundColor && (i & 1)) {
+			row->stackView.view.backgroundColor = this->alternateBackgroundColor;
 		}
 	}
 
 	super(View, self, layoutSubviews);
+
+	$(self, sizeToFit);
 }
 
 #pragma mark - TableView
@@ -131,9 +132,6 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
 		self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
 		self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
-
-		self->stackView.view.borderColor = Colors.DimGray;
-		self->stackView.view.borderWidth = 1;
 	}
 	
 	return self;
@@ -190,7 +188,6 @@ static void reloadData(TableView *self) {
 
 	self->selectedRow = -1;
 
-	$((View *) self, sizeToFit);
 	((View *) self)->needsLayout = true;
 }
 
