@@ -167,8 +167,6 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
 		self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
 		self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
-
-		self->view.backgroundColor = Colors.DefaultColor;
 	}
 	
 	return self;
