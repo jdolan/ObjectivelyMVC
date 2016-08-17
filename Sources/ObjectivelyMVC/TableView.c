@@ -37,9 +37,11 @@ static void dealloc(Object *self) {
 	TableView *this = (TableView *) self;
 
 	release(this->columns);
-	release(this->rows);
+	release(this->contentView);
 	release(this->headerView);
-	
+	release(this->rows);
+	release(this->scrollView);
+
 	super(Object, self, dealloc);
 }
 
@@ -50,20 +52,7 @@ static void dealloc(Object *self) {
  */
 static void layoutSubviews(View *self) {
 
-	const SDL_Rect bounds = $(self, bounds);
-
 	TableView *this = (TableView *) self;
-
-	View *headerView = (View *) this->headerView;
-	View *scrollView = (View *) this->scrollView;
-
-	if (headerView->hidden == false) {
-		scrollView->frame.y = headerView->frame.h;
-		scrollView->frame.h = bounds.h - headerView->frame.h;
-	} else {
-		scrollView->frame.y = 0;
-		scrollView->frame.h = bounds.h;
-	}
 
 	const Array *rows = (Array *) this->rows;
 	for (size_t i = 0; i < rows->count; i++) {
@@ -79,6 +68,29 @@ static void layoutSubviews(View *self) {
 	super(View, self, layoutSubviews);
 
 	$((View *) this->contentView, sizeToFit);
+
+	View *headerView = (View *) this->headerView;
+	View *scrollView = (View *) this->scrollView;
+
+	if (headerView->hidden == false) {
+		scrollView->frame.y = headerView->frame.h;
+		scrollView->frame.h = max(0, scrollView->frame.h - headerView->frame.h);
+	} else {
+		scrollView->frame.y = 0;
+	}
+}
+
+/**
+ * @see View::sizeThatFits(const View *)
+ */
+static SDL_Size sizeThatFits(const View *self) {
+
+	const TableView *this = (TableView *) self;
+
+	const SDL_Size headerSize = $((View *) this->headerView, size);
+	const SDL_Size contentSize = $((View *) this->contentView, size);
+
+	return MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
 }
 
 #pragma mark - TableView
@@ -139,8 +151,12 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
+		self->contentView->view.autoresizingMask = ViewAutoresizingContain;
+
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
+
+		self->scrollView->view.autoresizingMask = ViewAutoresizingFill;
 
 		$(self->scrollView, setContentView, (View *) self->contentView);
 
@@ -208,6 +224,8 @@ static void reloadData(TableView *self) {
 	}
 
 	self->selectedRow = -1;
+
+	$((View *) self, layoutSubviews);
 }
 
 /**
@@ -232,6 +250,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
 	((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;

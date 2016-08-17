@@ -166,10 +166,7 @@ static void loadView(ViewController *self) {
 	$(tableView, addColumn, column3);
 
 	$(tableView, reloadData);
-	tableView->scrollView->view.autoresizingMask = ViewAutoresizingContain;
 	$((View *) tableView, sizeToFit);
-
-//	tableView->view.frame.h = 300;
 
 	$((View *) stackView, addSubview, (View *) tableView);
 	$((View *) stackView, sizeToFit);
