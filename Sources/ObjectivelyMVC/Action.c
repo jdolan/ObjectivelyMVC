@@ -30,7 +30,7 @@
 #pragma mark - Action
 
 /**
- * @fn Action *Action::initWithFunction(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
+ * @fn Action *Action::initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
  *
  * @memberof Action
  */
@@ -38,8 +38,8 @@ static Action *initWithEventType(Action *self, SDL_EventType eventType, ActionFu
 
 	self = (Action *) super(Object, self, init);
 	if (self) {
-
 		self->eventType = eventType;
+		assert(self->eventType);
 		
 		self->function = function;
 		assert(self->function);

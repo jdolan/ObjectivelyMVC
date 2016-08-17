@@ -40,11 +40,14 @@ typedef struct Box Box;
 typedef struct BoxInterface BoxInterface;
 
 /**
- * @brief The Box type.
+ * @brief A container View with a positioned label.
  *
  * @extends View
  *
  * @ingroup Containers
+ *
+ * @remarks Boxes are container Views with a positioned label. Boxes are useful when grouping
+ * Controls, Inputs or custom Views within a larger View (e.g. Panel).
  */
 struct Box {
 	

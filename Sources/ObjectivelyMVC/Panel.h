@@ -39,11 +39,14 @@ typedef struct Panel Panel;
 typedef struct PanelInterface PanelInterface;
 
 /**
- * @brief The Panel type.
+ * @brief Draggable and resizable container Views.
  *
  * @extends View
  *
  * @ingroup Containers
+ *
+ * @remarks Panels are draggable containers, analagous to windows or dialogs in traditional 
+ * desktop environments. Panels can optionally be positioned and resized by the user.
  */
 struct Panel {
 	

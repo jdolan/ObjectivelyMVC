@@ -49,11 +49,14 @@ typedef struct Input Input;
 typedef struct InputInterface InputInterface;
 
 /**
- * @brief The Input type.
+ * @brief An Input stacks a Control and Label.
  *
  * @extends StackView
  *
  * @ingroup Containers
+ *
+ * @remarks Inputs are containers used to group a Label with a Control. They simplify the
+ * programmatic layout of forms, and give your application a standard, consistent aesthetic.
  */
 struct Input {
 	

@@ -88,6 +88,11 @@ typedef struct ViewInterface ViewInterface;
  * @brief The View type.
  *
  * @extends Object
+ *
+ * @remarks Views are the fundamental building blocks of ObjectivelyMVC user interfaces. They
+ * provide organization and coordination of layout, drawing and event handling. Views maintain
+ * hierarchical relationships among other Views, whereby each View's parent, or `superview`,
+ * dictates where it will be drawn on the screen, which events it will be eligible to receive, etc.
  */
 struct View {
 
