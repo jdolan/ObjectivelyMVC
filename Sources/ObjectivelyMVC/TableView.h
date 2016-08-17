@@ -85,7 +85,7 @@ struct TableViewDelegate {
 /**
  * @brief The TableView type.
  *
- * @extends StackView
+ * @extends View
  *
  * @ingroup Tables
  */
@@ -96,7 +96,7 @@ struct TableView {
 	 *
 	 * @private
 	 */
-	StackView stackView;
+	View view;
 	
 	/**
 	 * @brief The typed interface.
@@ -174,7 +174,7 @@ struct TableViewInterface {
 	/**
 	 * @brief The parent interface.
 	 */
-	StackViewInterface stackViewInterface;
+	ViewInterface viewInterface;
 
 	/**
 	 * @fn void TableView::addColumn(TableView *self, TableColumn *column)

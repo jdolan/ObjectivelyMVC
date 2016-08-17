@@ -50,7 +50,20 @@ static void dealloc(Object *self) {
  */
 static void layoutSubviews(View *self) {
 
+	const SDL_Rect bounds = $(self, bounds);
+
 	TableView *this = (TableView *) self;
+
+	View *headerView = (View *) this->headerView;
+	View *scrollView = (View *) this->scrollView;
+
+	if (headerView->hidden == false) {
+		scrollView->frame.y = headerView->frame.h;
+		scrollView->frame.h = bounds.h - headerView->frame.h;
+	} else {
+		scrollView->frame.y = 0;
+		scrollView->frame.h = bounds.h;
+	}
 
 	const Array *rows = (Array *) this->rows;
 	for (size_t i = 0; i < rows->count; i++) {
@@ -110,7 +123,7 @@ static TableColumn *columnWithIdentifier(const TableView *self, const char *iden
  */
 static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 	
-	self = (TableView *) super(StackView, self, initWithFrame, frame);
+	self = (TableView *) super(View, self, initWithFrame, frame);
 	if (self) {
 		self->columns = $$(MutableArray, array);
 		assert(self->columns);
@@ -131,8 +144,6 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
 		$(self->scrollView, setContentView, (View *) self->contentView);
 
-		self->scrollView->view.autoresizingMask = ViewAutoresizingContain;
-
 		$((View *) self, addSubview, (View *) self->scrollView);
 
 		self->alternateBackgroundColor = Colors.AlternateColor;
@@ -141,7 +152,7 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 		self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
 		self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
 
-		self->stackView.view.backgroundColor = Colors.DefaultColor;
+		self->view.backgroundColor = Colors.DefaultColor;
 	}
 	
 	return self;

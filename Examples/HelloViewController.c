@@ -70,12 +70,12 @@ static size_t numberOfRows(const TableView *tableView) {
 /**
  * @see TableViewDataSource::valueForColumnAndRow(const TableView *, const TableColumn *, int)
  */
-static ident valueForColumnAndRow(const TableView *tableView,
-								  const TableColumn *column,
-								  int row) {
+static ident valueForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
 
 	const Array *columns = (Array *) tableView->columns;
+
 	const int col = $(columns, indexOfObject, (ident) column);
+
 	return (ident) (intptr_t) (columns->count * row + col);
 }
 
@@ -84,15 +84,13 @@ static ident valueForColumnAndRow(const TableView *tableView,
 /**
  * @see TableViewDelegate::cellForColumnAndRow(const TableView *, const TableColumn *, int)
  */
-static TableCellView *cellForColumnAndRow(const TableView *tableView,
-										  const TableColumn *column,
-										  int row) {
+static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
+	char chars[8];
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
 
 	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
 
-	char chars[8];
 	snprintf(chars, sizeof(chars), "%zd", value);
 	$(cell->text, setText, chars);
 
@@ -168,7 +166,10 @@ static void loadView(ViewController *self) {
 	$(tableView, addColumn, column3);
 
 	$(tableView, reloadData);
+	tableView->scrollView->view.autoresizingMask = ViewAutoresizingContain;
 	$((View *) tableView, sizeToFit);
+
+//	tableView->view.frame.h = 300;
 
 	$((View *) stackView, addSubview, (View *) tableView);
 	$((View *) stackView, sizeToFit);

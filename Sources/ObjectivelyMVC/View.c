@@ -561,7 +561,7 @@ static void sizeToFit(View *self) {
 	self->frame.h = size.h;
 
 	$(self, layoutIfNeeded);
-	
+
 	Array *subviews = $(self, visibleSubviews);
 	for (size_t i = 0; i < subviews->count; i++) {
 		
