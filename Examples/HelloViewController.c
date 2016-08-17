@@ -76,7 +76,7 @@ static ident valueForColumnAndRow(const TableView *tableView,
 
 	const Array *columns = (Array *) tableView->columns;
 	const int col = $(columns, indexOfObject, (ident) column);
-	return (intptr_t) (columns->count * row + col);
+	return (ident) (intptr_t) (columns->count * row + col);
 }
 
 #pragma mark - TableViewDelegate
@@ -90,7 +90,7 @@ static TableCellView *cellForColumnAndRow(const TableView *tableView,
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
 
-	const intptr_t value = valueForColumnAndRow(tableView, column, row);
+	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
 
 	char chars[8];
 	snprintf(chars, sizeof(chars), "%zd", value);
