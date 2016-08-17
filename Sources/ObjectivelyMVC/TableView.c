@@ -52,14 +52,10 @@ static void layoutSubviews(View *self) {
 
 	TableView *this = (TableView *) self;
 
-	this->headerView->tableRowView.stackView.spacing = this->cellSpacing;
-
 	const Array *rows = (Array *) this->rows;
 	for (size_t i = 0; i < rows->count; i++) {
 
 		TableRowView *row = (TableRowView *) $(rows, objectAtIndex, i);
-
-		row->stackView.spacing = this->cellSpacing;
 		row->stackView.view.frame.h = this->rowHeight;
 
 		if (this->usesAlternateBackgroundColor && (i & 1)) {
@@ -69,7 +65,7 @@ static void layoutSubviews(View *self) {
 
 	super(View, self, layoutSubviews);
 
-	$(self, sizeToFit);
+	$((View *) this->contentView, sizeToFit);
 }
 
 #pragma mark - TableView
@@ -114,7 +110,7 @@ static TableColumn *columnWithIdentifier(const TableView *self, const char *iden
  */
 static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 	
-	self = (TableView *) super(View, self, initWithFrame, frame);
+	self = (TableView *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 		self->columns = $$(MutableArray, array);
 		assert(self->columns);
@@ -122,23 +118,37 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 		self->rows = $$(MutableArray, array);
 		assert(self->rows);
 
-		self->headerView = $(alloc(TableHeaderView), initWithFrame, NULL);
+		self->headerView = $(alloc(TableHeaderView), initWithTableView, self);
 		assert(self->headerView);
 
 		$((View *) self, addSubview, (View *) self->headerView);
+
+		self->contentView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->contentView);
+
+		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
+		assert(self->scrollView);
+
+		$(self->scrollView, setContentView, (View *) self->contentView);
+
+		self->scrollView->view.autoresizingMask = ViewAutoresizingContain;
+
+		$((View *) self, addSubview, (View *) self->scrollView);
 
 		self->alternateBackgroundColor = Colors.AlternateColor;
 		self->usesAlternateBackgroundColor = true;
 
 		self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
 		self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
+
+		self->stackView.view.backgroundColor = Colors.DefaultColor;
 	}
 	
 	return self;
 }
 
 /**
- * @brief ArrayEnumerator to remove TableRowViews from the table.
+ * @brief ArrayEnumerator to remove TableRowViews from the table's contentView.
  */
 static _Bool reloadData_removeRows(const Array *array, ident obj, ident data) {
 	$((View *) obj, removeFromSuperview); return false;
@@ -167,11 +177,11 @@ static void reloadData(TableView *self) {
 	const size_t numberOfRows = self->dataSource.numberOfRows(self);
 	for (size_t i = 0; i < numberOfRows; i++) {
 
-		TableRowView *row = $(alloc(TableRowView), initWithFrame, NULL);
+		TableRowView *row = $(alloc(TableRowView), initWithTableView, self);
 		assert(row);
 
 		$(self->rows, addObject, row);
-		$((View *) self, addSubview, (View *) row);
+		$((View *) self->contentView, addSubview, (View *) row);
 
 		for (size_t j = 0; j < columns->count; j++) {
 
@@ -187,8 +197,6 @@ static void reloadData(TableView *self) {
 	}
 
 	self->selectedRow = -1;
-
-	((View *) self)->needsLayout = true;
 }
 
 /**

@@ -108,7 +108,7 @@ struct ScrollViewInterface {
 	 * @memberof ScrollView
 	 */
 	ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame);
-	
+
 	/**
 	 * @fn void ScrollView::scrollToOffset(ScrollView *self, const SDL_Point offset);
 	 *
@@ -119,6 +119,17 @@ struct ScrollViewInterface {
 	 * @memberof ScrollView
 	 */
 	void (*scrollToOffset)(ScrollView *self, const SDL_Point *offset);
+
+	/**
+	 * @fn void ScrollView::setContentView(ScrollView *self, View *contentView)
+	 *
+	 * @brief Sets the content view of this ScrollView.
+	 *
+	 * @param contentView The content view.
+	 *
+	 * @memberof ScrollView
+	 */
+	void (*setContentView)(ScrollView *self, View *contentView);
 };
 
 /**

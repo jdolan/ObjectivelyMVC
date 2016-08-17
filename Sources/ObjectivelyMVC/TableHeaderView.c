@@ -56,13 +56,13 @@ static void render(View *self, Renderer *renderer) {
 #pragma mark - TableHeaderView
 
 /**
- * @fn TableHeaderView *TableHeaderView::initWithFrame(TableHeaderView *self, const SDL_Rect *frame)
+ * @fn TableHeaderView *TableHeaderView::initWithTableView(TableHeaderView *self, TableView *tableView)
  *
  * @memberof TableHeaderView
  */
-static TableHeaderView *initWithFrame(TableHeaderView *self, const SDL_Rect *frame) {
+static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tableView) {
 	
-	self = (TableHeaderView *) super(TableRowView, self, initWithFrame, frame);
+	self = (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
 	if (self) {
 
 		((View *) self)->backgroundColor = Colors.DimGray;
@@ -84,7 +84,7 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->render = render;
 
-	((TableHeaderViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TableHeaderViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
 }
 
 Class _TableHeaderView = {

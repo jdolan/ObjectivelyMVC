@@ -168,6 +168,7 @@ static void loadView(ViewController *self) {
 	$(tableView, addColumn, column3);
 
 	$(tableView, reloadData);
+	$((View *) tableView, sizeToFit);
 
 	$((View *) stackView, addSubview, (View *) tableView);
 	$((View *) stackView, sizeToFit);

@@ -27,20 +27,6 @@
 
 #define _Class _ScrollView
 
-#pragma mark - Object
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-
-	ScrollView *this = (ScrollView *) self;
-
-	release(this->contentView);
-
-	super(Object, self, dealloc);
-}
-
 #pragma mark - View
 
 /**
@@ -106,6 +92,24 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
 	}
 }
 
+/**
+ * @fn void ScrollView::setContentView(ScrollView *self, View *contentView)
+ *
+ * @memberof ScrollView
+ */
+static void setContentView(ScrollView *self, View *contentView) {
+
+	if (self->contentView) {
+		$((View *) self, removeSubview, self->contentView);
+	}
+
+	if (contentView) {
+		$((View *) self, addSubview, contentView);
+	}
+
+	self->contentView = contentView;
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -113,12 +117,11 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
 	((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ScrollViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
+	((ScrollViewInterface *) clazz->interface)->setContentView = setContentView;
 }
 
 Class _ScrollView = {

@@ -25,6 +25,7 @@
 
 #include <Objectively/MutableArray.h>
 
+#include <ObjectivelyMVC/ScrollView.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/TableCellView.h>
 #include <ObjectivelyMVC/TableColumn.h>
@@ -40,7 +41,6 @@
 typedef struct TableViewDataSource TableViewDataSource;
 typedef struct TableViewDelegate TableViewDelegate;
 
-typedef struct TableView TableView;
 typedef struct TableViewInterface TableViewInterface;
 
 /**
@@ -119,6 +119,11 @@ struct TableView {
 	 * @brief The TableColumn definitions.
 	 */
 	MutableArray *columns;
+
+	/**
+	 * @brief The content View.
+	 */
+	StackView *contentView;
 	
 	/**
 	 * @brief The data source.
@@ -144,6 +149,11 @@ struct TableView {
 	 * @brief The row height.
 	 */
 	int rowHeight;
+
+	/**
+	 * @brief The ScrollView.
+	 */
+	ScrollView *scrollView;
 
 	/**
 	 * @brief The selected row, or `-1` when no row is selected.

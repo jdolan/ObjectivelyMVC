@@ -71,15 +71,17 @@ struct TableHeaderViewInterface {
 	TableRowViewInterface tableRowViewInterface;
 	
 	/**
-	 * @fn TableHeaderView *TableHeaderView::initWithFrame(TableHeaderView *self, const SDL_Rect *frame)
+	 * @fn TableHeaderView *TableHeaderView::initWithTableView(TableHeaderView *self, TableView *tableView)
 	 *
-	 * @brief Initializes this TableHeaderView with the specified frame.
+	 * @brief Initializes this TableHeaderView with the give table.
+	 *
+	 * @param tableView The table.
 	 *
 	 * @return The initialized TableHeaderView, or `NULL` on error.
 	 *
 	 * @memberof TableHeaderView
 	 */
-	TableHeaderView *(*initWithFrame)(TableHeaderView *self, const SDL_Rect *frame);
+	TableHeaderView *(*initWithTableView)(TableHeaderView *self, TableView *tableView);
 };
 
 /**

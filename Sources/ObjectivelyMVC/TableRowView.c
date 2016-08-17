@@ -50,17 +50,19 @@ static void dealloc(Object *self) {
 static void layoutSubviews(View *self) {
 
 	TableRowView *this = (TableRowView *) self;
-	const Array *cells = (Array *) this->cells;
 
-	TableView *tableView = (TableView *) self->superview;
-	const Array *columns = (Array *) tableView->columns;
+	const Array *cells = (Array *) this->cells;
+	const Array *columns = (Array *) this->tableView->columns;
+
+	this->stackView.spacing = this->tableView->cellSpacing;
 
 	assert(cells->count == columns->count);
 
 	for (size_t i = 0; i < columns->count; i++) {
-		const TableColumn *column = $(columns, objectAtIndex, i);
-		
+
 		TableCellView *cell = $(cells, objectAtIndex, i);
+		const TableColumn *column = $(columns, objectAtIndex, i);
+
 		cell->view.frame.w = column->width;
 	}
 
@@ -86,17 +88,20 @@ static void addCell(TableRowView *self, TableCellView *cell) {
 }
 
 /**
- * @fn TableRowView *TableRowView::initWithFrame(TableRowView *self, const SDL_Rect *frame)
+ * @fn TableRowView *TableRowView::initWithTableView(TableRowView *self, TableView *tableView)
  *
  * @memberof TableRowView
  */
-static TableRowView *initWithFrame(TableRowView *self, const SDL_Rect *frame) {
+static TableRowView *initWithTableView(TableRowView *self, TableView *tableView) {
 	
-	self = (TableRowView *) super(StackView, self, initWithFrame, frame);
+	self = (TableRowView *) super(StackView, self, initWithFrame, NULL);
 	if (self) {
 
 		self->cells = $$(MutableArray, array);
 		assert(self->cells);
+
+		self->tableView = tableView;
+		assert(self->tableView);
 
 		self->stackView.axis = StackViewAxisHorizontal;
 
@@ -154,7 +159,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
 	((TableRowViewInterface *) clazz->interface)->addCell = addCell;
-	((TableRowViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TableRowViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
 	((TableRowViewInterface *) clazz->interface)->removeAllCells = removeAllCells;
 	((TableRowViewInterface *) clazz->interface)->removeCell = removeCell;
 }

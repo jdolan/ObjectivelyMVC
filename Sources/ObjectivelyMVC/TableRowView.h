@@ -32,6 +32,8 @@
  * @brief Rows for TableViews.
  */
 
+typedef struct TableView TableView;
+
 typedef struct TableRowView TableRowView;
 typedef struct TableRowViewInterface TableRowViewInterface;
 
@@ -62,6 +64,11 @@ struct TableRowView {
 	 * @brief The cells.
 	 */
 	MutableArray *cells;
+
+	/**
+	 * @brief The table.
+	 */
+	TableView *tableView;
 };
 
 /**
@@ -86,17 +93,17 @@ struct TableRowViewInterface {
 	void (*addCell)(TableRowView *self, TableCellView *cell);
 	
 	/**
-	 * @fn TableRowView *TableRowView::initWithFrame(TableRowView *self, const SDL_Rect *frame)
+	 * @fn TableRowView *TableRowView::initWithTableView(TableRowView *self, TableView *tableView)
 	 *
-	 * @brief Initializes this TableRowView with the specified frame.
+	 * @brief Initializes this TableRowView with the given table.
 	 *
-	 * @param frame The frame.
+	 * @param tableView The table.
 	 *
 	 * @return The initialized TableRowView, or `NULL` on error.
 	 *
 	 * @memberof TableRowView
 	 */
-	TableRowView *(*initWithFrame)(TableRowView *self, const SDL_Rect *frame);
+	TableRowView *(*initWithTableView)(TableRowView *self, TableView *tableView);
 
 	/**
 	 * @fn void TableRowView::removeAllCells(TableRowView *self)
