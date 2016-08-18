@@ -287,14 +287,10 @@ static void removeColumn(TableView *self, TableColumn *column) {
  */
 static int rowAtPoint(const TableView *self, const SDL_Point *point) {
 
-	const Array *rows = (Array *) self->rows;
-	for (size_t i = 0; i < rows->count; i++) {
-
-		const View *row = $(rows, objectAtIndex, i);
-		const SDL_Rect frame = $(row, renderFrame);
-
-		if (SDL_PointInRect(point, &frame)) {
-			return i;
+	if (self->rowHeight) {
+		const SDL_Rect contentFrame = $((View *) self->contentView, renderFrame);
+		if (SDL_PointInRect(point, &contentFrame)) {
+			return (point->y - contentFrame.y) / self->rowHeight;
 		}
 	}
 
