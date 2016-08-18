@@ -32,7 +32,7 @@
 #elif defined(__MINGW32__)
 #define DEFAULT_FONT_FAMILY "Verdana"
 #else
-#define DEFAULT_FONT_FAMILY "Open Sans"
+#define DEFAULT_FONT_FAMILY "DejaVu Sans"
 #endif
 
 /**
