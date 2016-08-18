@@ -112,7 +112,7 @@ static void selectionDidChange(TableView *tableView) {
 static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
-
+	
 	const SDL_Rect frame = { .x = 50, .y = 50 };
 	Panel *panel = $(alloc(Panel), initWithFrame, &frame);
 
