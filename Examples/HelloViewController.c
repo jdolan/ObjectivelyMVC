@@ -98,6 +98,17 @@ static TableCellView *cellForColumnAndRow(const TableView *tableView, const Tabl
 }
 
 /**
+ * @brief Comparator for table sorting.
+ */
+static Order comparator(const ident a, const ident b) {
+
+	const intptr_t p1 = (intptr_t) a;
+	const intptr_t p2 = (intptr_t) b;
+
+	return p1 - p2;
+}
+
+/**
  * @see TableViewDelegate::selectionDidChange(TableView *)
  */
 static void selectionDidChange(TableView *tableView) {
@@ -172,6 +183,10 @@ static void loadView(ViewController *self) {
 	$(tableView, addColumn, column1);
 	$(tableView, addColumn, column2);
 	$(tableView, addColumn, column3);
+
+	column1->comparator = comparator;
+	column2->comparator = comparator;
+	column3->comparator = comparator;
 
 	$(tableView, reloadData);
 	$((View *) tableView, sizeToFit);

@@ -80,7 +80,7 @@ struct TableColumn {
 	 * @brief The identifier.
 	 */
 	char *identifier;
-	
+
 	/**
 	 * @brief The maximum width.
 	 */
@@ -90,6 +90,11 @@ struct TableColumn {
 	 * @brief The minimum width.
 	 */
 	int minWidth;
+
+	/**
+	 * @brief The sort order.
+	 */
+	Order order;
 
 	/**
 	 * @brief The width.

@@ -175,6 +175,11 @@ struct TableView {
 	int selectedRow;
 
 	/**
+	 * @brief The column to sort by.
+	 */
+	TableColumn *sortColumn;
+
+	/**
 	 * @brief Set to `true` to enable alternate row coloring.
 	 */
 	_Bool usesAlternateBackgroundColor;
@@ -200,6 +205,17 @@ struct TableViewInterface {
 	 * @memberof TableView
 	 */
 	void (*addColumn)(TableView *self, TableColumn *column);
+
+	/**
+	 * @fn TableColumn *TableView::columnAtPoint(const TableView *self, const SDL_Point *point)
+	 *
+	 * @param point A point in window coordinate space.
+	 *
+	 * @return The column at the specified point.
+	 *
+	 * @memberof TableView
+	 */
+	TableColumn *(*columnAtPoint)(const TableView *self, const SDL_Point *point);
 
 	/**
 	 * @fn TableColumn *TableView::columnWithIdentifier(const TableView *self)
@@ -271,6 +287,17 @@ struct TableViewInterface {
 	 * @memberof TableView
 	 */
 	void (*selectRowAtIndex)(TableView *self, int index);
+
+	/**
+	 * @fn void TableView::setSortColumn(TableView *self, TableColumn *column)
+	 *
+	 * @brief Sets the sort column for this table.
+	 *
+	 * @param column The sort column.
+	 *
+	 * @memberof TableView
+	 */
+	void (*setSortColumn)(TableView *self, TableColumn *column);
 };
 
 /**

@@ -106,11 +106,29 @@ static SDL_Size sizeThatFits(const View *self) {
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
+	TableView *this = (TableView *) self;
+
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
 
-		if ($((View *) self, didReceiveEvent, event)) {
+		if ($((View *) this->headerView, didReceiveEvent, event)) {
 
-			TableView *this = (TableView *) self;
+			if (event->type == SDL_MOUSEBUTTONUP) {
+				const SDL_Point point = {
+					.x = event->button.x,
+					.y = event->button.y
+				};
+
+				TableColumn *column = $(this, columnAtPoint, &point);
+				if (column) {
+					$(this, setSortColumn, column);
+					$(this, reloadData);
+				}
+			}
+
+			return true;
+		}
+
+		if ($((View *) this->contentView, didReceiveEvent, event)) {
 
 			if (event->type == SDL_MOUSEBUTTONUP) {
 				const SDL_Point point = {
@@ -119,7 +137,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				};
 
 				const int row = $(this, rowAtPoint, &point);
-				$(this, selectRowAtIndex, row);
+				if (row != -1) {
+					if (row == this->selectedRow) {
+						$(this, selectRowAtIndex, -1);
+					} else {
+						$(this, selectRowAtIndex, row);
+					}
+				}
 			}
 
 			return true;
@@ -142,6 +166,30 @@ static void addColumn(TableView *self, TableColumn *column) {
 	assert(column);
 
 	$(self->columns, addObject, column);
+}
+
+/**
+ * @fn TableColumn *TableView::columnAtPoint(const TableView *self, const SDL_Point *point)
+ *
+ * @memberof TableView
+ */
+static TableColumn *columnAtPoint(const TableView *self, const SDL_Point *point) {
+
+	int x = 0;
+
+	Array *columns = (Array *) self->columns;
+	for (size_t i = 0; i < columns->count; i++) {
+
+		TableColumn *column = $(columns, objectAtIndex, i);
+
+		if (x + column->width + self->cellSpacing >= point->x) {
+			return column;
+		}
+
+		x += column->width + self->cellSpacing;
+	}
+
+	return NULL;
 }
 
 /**
@@ -218,7 +266,46 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
  * @brief ArrayEnumerator to remove TableRowViews from the table's contentView.
  */
 static _Bool reloadData_removeRows(const Array *array, ident obj, ident data) {
-	$((View *) obj, removeFromSuperview); return false;
+	$((View *) data, removeSubview, (View *) obj); return false;
+}
+
+static __thread TableView *_sortTableView;
+
+/**
+ * @brief Comparator for sorting TableViewRows.
+ *
+ * @remarks This function relies on thread-local-storage.
+ */
+static Order reloadData_sortRows(const ident a, const ident b) {
+
+	const TableColumn *column = _sortTableView->sortColumn;
+	if (column->comparator) {
+		const Array *rows = (Array *) _sortTableView->rows;
+
+		const int row1 = $(rows, indexOfObject, a);
+		const int row2 = $(rows, indexOfObject, b);
+
+		ident value1 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row1);
+		ident value2 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row2);
+
+		switch (column->order) {
+			case OrderAscending:
+				return column->comparator(value1, value2);
+			case OrderSame:
+				return OrderSame;
+			case OrderDescending:
+				return column->comparator(value2, value1);
+		}
+	}
+
+	return OrderSame;
+}
+
+/**
+ * @brief ArrayEnumerator to add TableRowViews to the table's contentView.
+ */
+static _Bool reloadData_addRows(const Array *array, ident obj, ident data) {
+	$((View *) data, addSubview, (View *) obj); return false;
 }
 
 /**
@@ -228,7 +315,7 @@ static _Bool reloadData_removeRows(const Array *array, ident obj, ident data) {
  */
 static void reloadData(TableView *self) {
 
-	$((Array *) self->rows, enumerateObjects, reloadData_removeRows, NULL);
+	$((Array *) self->rows, enumerateObjects, reloadData_removeRows, self->contentView);
 	$(self->rows, removeAllObjects);
 
 	TableRowView *headerView = (TableRowView *) self->headerView;
@@ -248,7 +335,6 @@ static void reloadData(TableView *self) {
 		assert(row);
 
 		$(self->rows, addObject, row);
-		$((View *) self->contentView, addSubview, (View *) row);
 
 		for (size_t j = 0; j < columns->count; j++) {
 
@@ -262,6 +348,16 @@ static void reloadData(TableView *self) {
 			$(row, addCell, cell);
 		}
 	}
+
+	if (self->sortColumn) {
+		_sortTableView = self;
+
+		$(self->rows, sort, reloadData_sortRows);
+
+		_sortTableView = NULL;
+	}
+
+	$((Array *) self->rows, enumerateObjects, reloadData_addRows, self->contentView);
 
 	self->selectedRow = -1;
 
@@ -277,6 +373,10 @@ static void removeColumn(TableView *self, TableColumn *column) {
 
 	assert(column);
 
+	if (self->sortColumn == column) {
+		self->sortColumn = NULL;
+	}
+	
 	$(self->columns, removeObject, column);
 }
 
@@ -313,6 +413,32 @@ static void selectRowAtIndex(TableView *self, int index) {
 	((View *) self)->needsLayout = true;
 }
 
+/**
+ * @fn void TableView::setSortColumn(TableView *self, TableColumn *column)
+ *
+ * @memberof TableView
+ */
+static void setSortColumn(TableView *self, TableColumn *column) {
+
+	if (self->sortColumn) {
+		if (self->sortColumn == column) {
+			self->sortColumn->order = -self->sortColumn->order;
+			return;
+		}
+
+		self->sortColumn->order = OrderSame;
+		self->sortColumn = NULL;
+	}
+
+	if (column) {
+
+		assert($((Array *) self->columns, containsObject, column));
+
+		self->sortColumn = column;
+		self->sortColumn->order = OrderAscending;
+	}
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -328,12 +454,14 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
 	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
+	((TableViewInterface *) clazz->interface)->columnAtPoint = columnAtPoint;
 	((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;
 	((TableViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((TableViewInterface *) clazz->interface)->reloadData = reloadData;
 	((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
 	((TableViewInterface *) clazz->interface)->rowAtPoint = rowAtPoint;
 	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
+	((TableViewInterface *) clazz->interface)->setSortColumn = setSortColumn;
 }
 
 Class _TableView = {
