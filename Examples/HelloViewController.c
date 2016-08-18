@@ -152,7 +152,7 @@ static void loadView(ViewController *self) {
 
 	$((View *) stackView, addSubview, (View *) slider);
 
-	TableView *tableView = $(alloc(TableView), initWithFrame, NULL);
+	TableView *tableView = $(alloc(TableView), initWithFrame, NULL, ControlStyleDefault);
 	tableView->dataSource.numberOfRows = numberOfRows;
 	tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
 	tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;

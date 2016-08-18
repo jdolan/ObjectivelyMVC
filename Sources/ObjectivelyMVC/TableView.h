@@ -25,6 +25,7 @@
 
 #include <Objectively/MutableArray.h>
 
+#include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/ScrollView.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/TableCellView.h>
@@ -54,6 +55,8 @@ struct TableViewDataSource {
 	size_t (*numberOfRows)(const TableView *tableView);
 
 	/**
+	 * @brief Called by the TableView for the associated value of a cell.
+	 *
 	 * @param tableView The table.
 	 * @param colum The column.
 	 * @param row The row.
@@ -69,6 +72,8 @@ struct TableViewDataSource {
 struct TableViewDelegate {
 
 	/**
+	 * @brief Called by the TableView to instantiate cells.
+	 *
 	 * @param tableView The table.
 	 * @param colum The column.
 	 * @param row The row.
@@ -76,6 +81,15 @@ struct TableViewDelegate {
 	 * @return The cell for the given column and row.
 	 */
 	TableCellView *(*cellForColumnAndRow)(const TableView *tableView, const TableColumn *column, int row);
+
+	/**
+	 * @brief Called by the TableView when the row selection changes.
+	 *
+	 * @param tableView The table.
+	 *
+	 * @remarks This function is optional.
+	 */
+	void (*selectionDidChange)(TableView *tableView);
 };
 
 #define DEFAULT_TABLE_VIEW_PADDING 4
@@ -96,7 +110,7 @@ struct TableView {
 	 *
 	 * @private
 	 */
-	View view;
+	Control control;
 	
 	/**
 	 * @brief The typed interface.
@@ -174,7 +188,7 @@ struct TableViewInterface {
 	/**
 	 * @brief The parent interface.
 	 */
-	ViewInterface viewInterface;
+	ControlInterface controlInterface;
 
 	/**
 	 * @fn void TableView::addColumn(TableView *self, TableColumn *column)
@@ -199,17 +213,18 @@ struct TableViewInterface {
 	TableColumn *(*columnWithIdentifier)(const TableView *self, const char *identifier);
 
 	/**
-	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame)
+	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
 	 *
-	 * @brief Initializes this TableView with the specified frame.
+	 * @brief Initializes this TableView with the specified frame and style.
 	 *
 	 * @param frame The frame.
+	 * @param style The ControlStyle.
 	 *
 	 * @return The initialized TableView, or `NULL` on error.
 	 *
 	 * @memberof TableView
 	 */
-	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame);
+	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
 	 * @fn void TableView::reloadData(TableView *self)
@@ -234,6 +249,28 @@ struct TableViewInterface {
 	 * @memberof TableView
 	 */
 	void (*removeColumn)(TableView *self, TableColumn *column);
+
+	/**
+	 * @fn int TableView::rowAtPoint(const TableView *self, const SDL_Point *point)
+	 *
+	 * @param point A point in the table's coordinate space.
+	 *
+	 * @return The row index at the specified point.
+	 *
+	 * @memberof TableView
+	 */
+	int (*rowAtPoint)(const TableView *self, const SDL_Point point);
+
+	/**
+	 * @fn void TableView::selectRowAtIndex(TableView *self, int index)
+	 *
+	 * @brief Selects the row at the given index.
+	 *
+	 * @param index The index of the row to select, or `-1 to clear the selection.
+	 *
+	 * @memberof TableView
+	 */
+	void (*selectRowAtIndex)(TableView *self, int index);
 };
 
 /**

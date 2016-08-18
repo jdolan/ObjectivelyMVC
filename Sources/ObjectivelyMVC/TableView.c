@@ -60,8 +60,14 @@ static void layoutSubviews(View *self) {
 		TableRowView *row = (TableRowView *) $(rows, objectAtIndex, i);
 		row->stackView.view.frame.h = this->rowHeight;
 
-		if (this->usesAlternateBackgroundColor && (i & 1)) {
-			row->stackView.view.backgroundColor = this->alternateBackgroundColor;
+		if (this->selectedRow == i) {
+			row->stackView.view.backgroundColor = Colors.SelectedColor;
+		} else {
+			if (this->usesAlternateBackgroundColor && (i & 1)) {
+				row->stackView.view.backgroundColor = this->alternateBackgroundColor;
+			} else {
+				row->stackView.view.backgroundColor = Colors.Clear;
+			}
 		}
 	}
 
@@ -78,6 +84,28 @@ static void layoutSubviews(View *self) {
 	} else {
 		scrollView->frame.y = 0;
 	}
+}
+
+/**
+ * @see View::respondToEvent(View *, const SDL_Event *)
+ */
+static void respondToEvent(View *self, const SDL_Event *event) {
+
+	if (event->type == SDL_MOUSEBUTTONUP) {
+		if ($(self, didReceiveEvent, event)) {
+			const SDL_Rect frame = $(self, renderFrame);
+			const SDL_Point point = {
+				.x = event->button.x - frame.x,
+				.y = event->button.y - frame.y
+			};
+
+			TableView *this = (TableView *) self;
+			const int row = $(this, rowAtPoint, point);
+			$(this, selectRowAtIndex, row);
+		}
+	}
+
+	super(View, self, respondToEvent, event);
 }
 
 /**
@@ -129,13 +157,13 @@ static TableColumn *columnWithIdentifier(const TableView *self, const char *iden
 }
 
 /**
- * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame)
+ * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
  *
  * @memberof TableView
  */
-static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
+static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style) {
 	
-	self = (TableView *) super(View, self, initWithFrame, frame);
+	self = (TableView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 		self->columns = $$(MutableArray, array);
 		assert(self->columns);
@@ -162,11 +190,16 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
 		$((View *) self, addSubview, (View *) self->scrollView);
 
-		self->alternateBackgroundColor = Colors.AlternateColor;
-		self->usesAlternateBackgroundColor = true;
+		if (self->control.style == ControlStyleDefault) {
 
-		self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
-		self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
+			self->alternateBackgroundColor = Colors.AlternateColor;
+			self->usesAlternateBackgroundColor = true;
+
+			self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
+			self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
+
+			memset(&self->control.view.padding, 0, sizeof(Padding));
+		}
 	}
 	
 	return self;
@@ -238,6 +271,39 @@ static void removeColumn(TableView *self, TableColumn *column) {
 	$(self->columns, removeObject, column);
 }
 
+/**
+ * @fn int TableView::rowAtPoint(const TableView *self, const SDL_Point *point)
+ *
+ * @memberof TableView
+ */
+static int rowAtPoint(const TableView *self, const SDL_Point point) {
+
+	if (self->rowHeight) {
+		if (point.y >= self->scrollView->view.frame.y) {
+			int y = point.y - self->scrollView->view.frame.y + self->scrollView->contentOffset.y;
+			return (int) floorf(y / (float) self->rowHeight);
+		}
+	}
+
+	return -1;
+}
+
+/**
+ * @fn void TableView::selectRowAtIndex(TableView *self, int index)
+ *
+ * @memberof TableView
+ */
+static void selectRowAtIndex(TableView *self, int index) {
+
+	self->selectedRow = clamp(index, -1, self->rows->array.count);
+
+	if (self->delegate.selectionDidChange) {
+		self->delegate.selectionDidChange(self);
+	}
+
+	((View *) self)->needsLayout = true;
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -248,6 +314,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
@@ -255,11 +322,13 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((TableViewInterface *) clazz->interface)->reloadData = reloadData;
 	((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
+	((TableViewInterface *) clazz->interface)->rowAtPoint = rowAtPoint;
+	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
 }
 
 Class _TableView = {
 	.name = "TableView",
-	.superclass = &_StackView,
+	.superclass = &_Control,
 	.instanceSize = sizeof(TableView),
 	.interfaceOffset = offsetof(TableView, interface),
 	.interfaceSize = sizeof(TableViewInterface),
