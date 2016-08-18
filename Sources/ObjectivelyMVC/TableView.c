@@ -87,28 +87,6 @@ static void layoutSubviews(View *self) {
 }
 
 /**
- * @see View::respondToEvent(View *, const SDL_Event *)
- */
-static void respondToEvent(View *self, const SDL_Event *event) {
-
-	if (event->type == SDL_MOUSEBUTTONUP) {
-		if ($(self, didReceiveEvent, event)) {
-			const SDL_Rect frame = $(self, renderFrame);
-			const SDL_Point point = {
-				.x = event->button.x - frame.x,
-				.y = event->button.y - frame.y
-			};
-
-			TableView *this = (TableView *) self;
-			const int row = $(this, rowAtPoint, point);
-			$(this, selectRowAtIndex, row);
-		}
-	}
-
-	super(View, self, respondToEvent, event);
-}
-
-/**
  * @see View::sizeThatFits(const View *)
  */
 static SDL_Size sizeThatFits(const View *self) {
@@ -120,6 +98,37 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	return MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
 }
+
+#pragma mark - Control
+
+/**
+ * @see Control::captureEvent(Control *, const SDL_Event *)
+ */
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
+
+	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+
+		if ($((View *) self, didReceiveEvent, event)) {
+
+			TableView *this = (TableView *) self;
+
+			if (event->type == SDL_MOUSEBUTTONUP) {
+				const SDL_Point point = {
+					.x = event->button.x,
+					.y = event->button.y
+				};
+
+				const int row = $(this, rowAtPoint, &point);
+				$(this, selectRowAtIndex, row);
+			}
+
+			return true;
+		}
+	}
+
+	return super(Control, self, captureEvent, event);
+}
+
 
 #pragma mark - TableView
 
@@ -276,12 +285,16 @@ static void removeColumn(TableView *self, TableColumn *column) {
  *
  * @memberof TableView
  */
-static int rowAtPoint(const TableView *self, const SDL_Point point) {
+static int rowAtPoint(const TableView *self, const SDL_Point *point) {
 
-	if (self->rowHeight) {
-		if (point.y >= self->scrollView->view.frame.y) {
-			int y = point.y - self->scrollView->view.frame.y + self->scrollView->contentOffset.y;
-			return (int) floorf(y / (float) self->rowHeight);
+	const Array *rows = (Array *) self->rows;
+	for (size_t i = 0; i < rows->count; i++) {
+
+		const View *row = $(rows, objectAtIndex, i);
+		const SDL_Rect frame = $(row, renderFrame);
+
+		if (SDL_PointInRect(point, &frame)) {
+			return i;
 		}
 	}
 
@@ -314,8 +327,9 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
 	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
 	((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;

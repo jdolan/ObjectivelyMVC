@@ -97,6 +97,13 @@ static TableCellView *cellForColumnAndRow(const TableView *tableView, const Tabl
 	return cell;
 }
 
+/**
+ * @see TableViewDelegate::selectionDidChange(TableView *)
+ */
+static void selectionDidChange(TableView *tableView) {
+	printf("Selected row %d\n", tableView->selectedRow);
+}
+
 #pragma mark - ViewController
 
 /**
@@ -156,6 +163,7 @@ static void loadView(ViewController *self) {
 	tableView->dataSource.numberOfRows = numberOfRows;
 	tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
 	tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
+	tableView->delegate.selectionDidChange = selectionDidChange;
 
 	TableColumn *column1 = $(alloc(TableColumn), initWithIdentifier, "One");
 	TableColumn *column2 = $(alloc(TableColumn), initWithIdentifier, "Two");

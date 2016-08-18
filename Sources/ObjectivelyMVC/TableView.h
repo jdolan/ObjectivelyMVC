@@ -253,13 +253,13 @@ struct TableViewInterface {
 	/**
 	 * @fn int TableView::rowAtPoint(const TableView *self, const SDL_Point *point)
 	 *
-	 * @param point A point in the table's coordinate space.
+	 * @param point A point in window coordinate space.
 	 *
 	 * @return The row index at the specified point.
 	 *
 	 * @memberof TableView
 	 */
-	int (*rowAtPoint)(const TableView *self, const SDL_Point point);
+	int (*rowAtPoint)(const TableView *self, const SDL_Point *point);
 
 	/**
 	 * @fn void TableView::selectRowAtIndex(TableView *self, int index)
