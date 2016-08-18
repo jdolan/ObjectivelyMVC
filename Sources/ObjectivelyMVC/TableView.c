@@ -175,18 +175,22 @@ static void addColumn(TableView *self, TableColumn *column) {
  */
 static TableColumn *columnAtPoint(const TableView *self, const SDL_Point *point) {
 
-	int x = 0;
+	const SDL_Rect frame = $((View *) self, renderFrame);
+	if (SDL_PointInRect(point, &frame)) {
 
-	Array *columns = (Array *) self->columns;
-	for (size_t i = 0; i < columns->count; i++) {
+		int x = frame.x + self->control.view.padding.left;
 
-		TableColumn *column = $(columns, objectAtIndex, i);
+		Array *columns = (Array *) self->columns;
+		for (size_t i = 0; i < columns->count; i++) {
 
-		if (x + column->width + self->cellSpacing >= point->x) {
-			return column;
+			TableColumn *column = $(columns, objectAtIndex, i);
+
+			if (x + column->width + self->cellSpacing >= point->x) {
+				return column;
+			}
+
+			x += column->width + self->cellSpacing;
 		}
-
-		x += column->width + self->cellSpacing;
 	}
 
 	return NULL;
@@ -285,8 +289,8 @@ static Order reloadData_sortRows(const ident a, const ident b) {
 		const int row1 = $(rows, indexOfObject, a);
 		const int row2 = $(rows, indexOfObject, b);
 
-		ident value1 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row1);
-		ident value2 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row2);
+		const ident value1 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row1);
+		const ident value2 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row2);
 
 		switch (column->order) {
 			case OrderAscending:
@@ -341,8 +345,6 @@ static void reloadData(TableView *self) {
 			const TableColumn *column = $(columns, objectAtIndex, j);
 
 			TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i);
-			assert(cell);
-
 			cell->value = self->dataSource.valueForColumnAndRow(self, column, i);
 
 			$(row, addCell, cell);
@@ -352,7 +354,11 @@ static void reloadData(TableView *self) {
 	if (self->sortColumn) {
 		_sortTableView = self;
 
-		$(self->rows, sort, reloadData_sortRows);
+		MutableArray *rows = $((Object *) self->rows, copy);
+		$(rows, sort, reloadData_sortRows);
+
+		release(self->rows);
+		self->rows = rows;
 
 		_sortTableView = NULL;
 	}
@@ -436,6 +442,8 @@ static void setSortColumn(TableView *self, TableColumn *column) {
 
 		self->sortColumn = column;
 		self->sortColumn->order = OrderAscending;
+
+		printf("Sorting by %s %d\n", self->sortColumn->identifier, self->sortColumn->order);
 	}
 }
 
