@@ -82,10 +82,7 @@ static void renderDeviceDidReset(View *self) {
 
 	Text *this = (Text *) self;
 
-	if (this->texture) {
-		glDeleteTextures(1, &this->texture);
-		this->texture = 0;
-	}
+	this->texture = 0;
 }
 
 /**

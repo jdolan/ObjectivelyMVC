@@ -73,10 +73,7 @@ static void renderDeviceDidReset(View *self) {
 
 	ImageView *this = (ImageView *) self;
 
-	if (this->texture) {
-		glDeleteTextures(1, &this->texture);
-		this->texture = 0;
-	}
+	this->texture = 0;
 }
 
 #pragma mark - ImageView
