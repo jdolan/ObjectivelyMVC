@@ -206,6 +206,8 @@ static void addOption(Select *self, const char *title, ident value) {
 	if (self->selectedOption == NULL) {
 		self->selectedOption = option;
 	}
+
+	self->control.view.needsLayout = true;
 	
 	release(option);
 }
@@ -266,7 +268,7 @@ static Option *optionWithValue(const Select *self, const ident value) {
  * @brief ArrayEnumerator for removeAllOptions.
  */
 static _Bool removeAllOptions_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) data, removeSubview, (View *) obj); return false;
+	$((View *) obj, removeFromSuperview); return false;
 }
 
 /**
@@ -277,9 +279,32 @@ static _Bool removeAllOptions_enumerate(const Array *array, ident obj, ident dat
  * @memberof Select
  */
 static void removeAllOptions(Select *self) {
+	
+	$((Array *) self->options, enumerateObjects, removeAllOptions_enumerate, self);
 
-	$((Array *) self->options, enumerateObjects, removeAllOptions_enumerate, self->stackView);
 	$(self->options, removeAllObjects);
+
+	self->selectedOption = NULL;
+
+	self->control.view.needsLayout = true;
+}
+
+/**
+ * @fn void Select::removeOption(Select *self, Option *option)
+ *
+ * @memberof Select
+ */
+static void removeOption(Select *self, Option *option) {
+
+	$(self->options, removeObject, option);
+
+	if ((Option *) option == self->selectedOption) {
+		self->selectedOption = $((Array *) self->options, firstObject);
+	}
+
+	$((View *) option, removeFromSuperview);
+
+	self->control.view.needsLayout = true;
 }
 
 /**
@@ -289,15 +314,9 @@ static void removeAllOptions(Select *self) {
  */
 static void removeOptionWithValue(Select *self, ident value) {
 	
-	View *option = (View *) $(self, optionWithValue, value);
+	Option *option = (Option *) $(self, optionWithValue, value);
 	if (option) {
-		
-		$(self->options, removeObject, option);
-		if ((Option *) option == self->selectedOption) {
-			self->selectedOption = $((Array *) self->options, firstObject);
-		}
-		
-		$(option, removeFromSuperview);
+		$(self, removeOption, option);
 	}
 }
 
@@ -329,6 +348,7 @@ static void initialize(Class *clazz) {
 	((SelectInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((SelectInterface *) clazz->interface)->optionWithValue = optionWithValue;
 	((SelectInterface *) clazz->interface)->removeAllOptions = removeAllOptions;
+	((SelectInterface *) clazz->interface)->removeOption = removeOption;
 	((SelectInterface *) clazz->interface)->removeOptionWithValue = removeOptionWithValue;
 	((SelectInterface *) clazz->interface)->selectOptionWithValue = selectOptionWithValue;
 }
