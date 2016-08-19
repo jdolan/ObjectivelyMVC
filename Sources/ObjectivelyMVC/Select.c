@@ -265,8 +265,8 @@ static Option *optionWithValue(const Select *self, const ident value) {
 /**
  * @brief ArrayEnumerator for removeAllOptions.
  */
-static _Bool removeAllOptions_enumerate(const Array *array, ident obj, ident value) {
-	$((View *) value, removeSubview, (View *) obj); return false;
+static _Bool removeAllOptions_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, removeSubview, (View *) obj); return false;
 }
 
 /**
@@ -278,8 +278,7 @@ static _Bool removeAllOptions_enumerate(const Array *array, ident obj, ident val
  */
 static void removeAllOptions(Select *self) {
 
-	$((Array *) self->options, enumerateObjects, removeAllOptions_enumerate, self);
-
+	$((Array *) self->options, enumerateObjects, removeAllOptions_enumerate, self->stackView);
 	$(self->options, removeAllObjects);
 }
 
