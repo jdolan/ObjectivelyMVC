@@ -263,6 +263,27 @@ static Option *optionWithValue(const Select *self, const ident value) {
 }
 
 /**
+ * @brief ArrayEnumerator for removeAllOptions.
+ */
+static _Bool removeAllOptions_enumerate(const Array *array, ident obj, ident value) {
+	$((View *) value, removeSubview, (View *) obj); return false;
+}
+
+/**
+ * @fn void Select::removeAllOptions(Select *self)
+ *
+ * @brief Removes all Options from this Select.
+ *
+ * @memberof Select
+ */
+static void removeAllOptions(Select *self) {
+
+	$((Array *) self->options, enumerateObjects, removeAllOptions_enumerate, self);
+
+	$(self->options, removeAllObjects);
+}
+
+/**
  * @fn void Select::removeOptionWithValue(Select *self, ident value)
  *
  * @memberof Select
@@ -308,6 +329,7 @@ static void initialize(Class *clazz) {
 	((SelectInterface *) clazz->interface)->addOption = addOption;
 	((SelectInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((SelectInterface *) clazz->interface)->optionWithValue = optionWithValue;
+	((SelectInterface *) clazz->interface)->removeAllOptions = removeAllOptions;
 	((SelectInterface *) clazz->interface)->removeOptionWithValue = removeOptionWithValue;
 	((SelectInterface *) clazz->interface)->selectOptionWithValue = selectOptionWithValue;
 }

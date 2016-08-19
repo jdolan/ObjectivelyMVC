@@ -153,7 +153,16 @@ struct SelectInterface {
 	 * @memberof Select
 	 */
 	Option *(*optionWithValue)(const Select *self, ident value);
-	
+
+	/**
+	 * @fn void Select::removeAllOptions(Select *self)
+	 *
+	 * @brief Removes all Options from this Select.
+	 *
+	 * @memberof Select
+	 */
+	void (*removeAllOptions)(Select *self);
+
 	/**
 	 * @fn void Select::removeOptionWithValue(Select *self, ident value)
 	 *
