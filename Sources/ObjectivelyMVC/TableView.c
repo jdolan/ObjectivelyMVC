@@ -354,7 +354,7 @@ static void reloadData(TableView *self) {
 	if (self->sortColumn) {
 		_sortTableView = self;
 
-		MutableArray *rows = $((Object *) self->rows, copy);
+		MutableArray *rows = (MutableArray *) $((Object *) self->rows, copy);
 		$(rows, sort, reloadData_sortRows);
 
 		release(self->rows);
