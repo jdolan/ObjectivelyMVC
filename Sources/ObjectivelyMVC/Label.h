@@ -29,14 +29,14 @@
 /**
  * @file
  *
- * @brief Labels.
+ * @brief The Label type.
  */
 
 typedef struct Label Label;
 typedef struct LabelInterface LabelInterface;
 
 /**
- * @brief The Label type.
+ * @brief Labels provide a configurable container for Text.
  *
  * @extends View
  */

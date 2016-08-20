@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/ImageView.h>
+#include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -34,6 +35,7 @@
 
 #define DEFAULT_PANEL_PADDING 10
 #define DEFAULT_PANEL_RESIZE_HANDLE_SIZE 10
+#define DEFAULT_PANEL_STACK_VIEW_SPACING 10
 
 typedef struct Panel Panel;
 typedef struct PanelInterface PanelInterface;
@@ -90,6 +92,11 @@ struct Panel {
 	 * @private
 	 */
 	ImageView *resizeHandle;
+
+	/**
+	 * @brief The internal container.
+	 */
+	StackView *stackView;
 };
 
 /**

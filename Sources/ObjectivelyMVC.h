@@ -41,6 +41,7 @@
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/Log.h>
+#include <ObjectivelyMVC/NavigationViewController.h>
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/Renderer.h>

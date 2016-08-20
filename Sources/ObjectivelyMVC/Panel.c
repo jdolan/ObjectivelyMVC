@@ -39,6 +39,7 @@ static void dealloc(Object *self) {
 	Panel *this = (Panel *) self;
 
 	release(this->resizeHandle);
+	release(this->stackView);
 
 	super(Object, self, dealloc);
 }
@@ -166,6 +167,14 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 
 		$((View *) self, addSubview, (View *) self->resizeHandle);
+
+		self->stackView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->stackView);
+
+		self->stackView->spacing = DEFAULT_PANEL_STACK_VIEW_SPACING;
+		self->stackView->view.autoresizingMask = ViewAutoresizingContain;
+
+		$((View *) self, addSubview, (View *) self->stackView);
 
 		self->view.padding.top = self->view.padding.bottom = DEFAULT_PANEL_PADDING;
 		self->view.padding.left = self->view.padding.right = DEFAULT_PANEL_PADDING;

@@ -114,15 +114,17 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	
 	else if (event->type == SDL_MOUSEMOTION) {
 		if (self->state & ControlStateHighlighted) {
-			if ($((View *) self, didReceiveEvent, event)) {
-				if (event->motion.xrel) {
-					if (this->bar->frame.w) {
-						const double scale = (this->max - this->min) / this->bar->frame.w;
-						const double delta = scale * event->motion.xrel;
-						$(this, setValue, this->value + delta);
-						return true;
-					}
+			if ($((View *) this->bar, didReceiveEvent, event)) {
+				const SDL_Rect frame = $((View *) this->bar, renderFrame);
+
+				const double fraction = (event->motion.x - frame.x) / (double) frame.w;
+				const double value = (this->max - this->min) * fraction;
+
+				if (fabs(this->value - value) >= this->step) {
+					$(this, setValue, value);
 				}
+
+				return true;
 			}
 		}
 	}

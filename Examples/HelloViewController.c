@@ -130,30 +130,24 @@ static void loadView(ViewController *self) {
 	panel->view.autoresizingMask = ViewAutoresizingContain;
 
 	$(self->view, addSubview, (View *) panel);
-	
-	StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
-	stackView->view.autoresizingMask = ViewAutoresizingContain;
-	stackView->spacing = 10;
-	
-	$((View *) panel, addSubview, (View *) stackView);
-	
+
 	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
 	$(button->title, setText, "This is a Button");
 	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
 	
-	$((View *) stackView, addSubview, (View *) button);
+	$((View *) panel->stackView, addSubview, (View *) button);
 
 	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
 	textView->defaultText = "This is a TextView";
 	
-	$((View *) stackView, addSubview, (View *) textView);
+	$((View *) panel->stackView, addSubview, (View *) textView);
 
 	Checkbox *checkbox = $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
 	Label *checkboxLabel = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
 	Input *checkboxInput = $(alloc(Input), initWithOrientation, InputOrientationLeft, (Control *) checkbox, checkboxLabel);
 	$((Control *) checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
 
-	$((View *) stackView, addSubview, (View *) checkboxInput);
+	$((View *) panel->stackView, addSubview, (View *) checkboxInput);
 
 	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
 	$(select, addOption, "This is a select", (ident) 1);
@@ -161,14 +155,14 @@ static void loadView(ViewController *self) {
 	$(select, addOption, "This is another", (ident) 3);
 	$((View *) select, sizeToFit);
 	
-	$((View *) stackView, addSubview, (View *) select);
+	$((View *) panel->stackView, addSubview, (View *) select);
 
 	Slider *slider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 	slider->delegate.didSetValue = sliderDidSetValue;
 	slider->min = 0.1, slider->max = 10.0, slider->step = 0.1;
 	$(slider, setValue, 5.0);
 
-	$((View *) stackView, addSubview, (View *) slider);
+	$((View *) panel->stackView, addSubview, (View *) slider);
 
 	TableView *tableView = $(alloc(TableView), initWithFrame, NULL, ControlStyleDefault);
 	tableView->dataSource.numberOfRows = numberOfRows;
@@ -191,9 +185,8 @@ static void loadView(ViewController *self) {
 	$(tableView, reloadData);
 	$((View *) tableView, sizeToFit);
 
-	$((View *) stackView, addSubview, (View *) tableView);
-	$((View *) stackView, sizeToFit);
-
+	$((View *) panel->stackView, addSubview, (View *) tableView);
+	$((View *) panel->stackView, sizeToFit);
 	$((View *) panel, sizeToFit);
 
 	release(button);
@@ -206,7 +199,6 @@ static void loadView(ViewController *self) {
 	release(column2);
 	release(column3);
 	release(tableView);
-	release(stackView);
 	release(panel);
 }
 

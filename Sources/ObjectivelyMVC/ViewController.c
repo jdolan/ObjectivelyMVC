@@ -128,6 +128,8 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 	if (self->parentViewController) {
 		$(self->parentViewController->childViewControllers, addObject, self);
 		$(self->parentViewController->view, addSubview, self->view);
+
+		$(self->view, updateBindings);
 	}
 }
 
