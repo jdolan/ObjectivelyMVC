@@ -8,6 +8,8 @@ pkginclude_HEADERS = \
 	Box.h \
 	Button.h \
 	Checkbox.h \
+	CollectionItemView.h \
+	CollectionView.h \
 	Colors.h \
 	Control.h \
 	Font.h \
@@ -45,6 +47,8 @@ libObjectivelyMVC_la_SOURCES = \
 	Box.c \
 	Button.c \
 	Checkbox.c \
+	CollectionItemView.c \
+	CollectionView.c \
 	Colors.c \
 	Control.c \
 	Font.c \

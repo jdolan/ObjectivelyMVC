@@ -33,6 +33,8 @@
 #include <ObjectivelyMVC/Box.h>
 #include <ObjectivelyMVC/Button.h>
 #include <ObjectivelyMVC/Checkbox.h>
+#include <ObjectivelyMVC/CollectionItemView.h>
+#include <ObjectivelyMVC/CollectionView.h>
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Input.h>

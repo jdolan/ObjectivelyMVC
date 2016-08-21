@@ -115,6 +115,31 @@ static void selectionDidChange(TableView *tableView) {
 	printf("Selected row %d\n", tableView->selectedRow);
 }
 
+#pragma mark - CollectionViewDataSource
+
+/**
+ * @see CollectionViewDataSource::numberOfItems(CollectionView *)
+ */
+static size_t numberOfItems(const CollectionView *collectionView) {
+	return 16;
+}
+
+/**
+ * @see CollectionViewDataSource::objectForItemAtIndex(CollectionView *, int)
+ */
+static ident objectForItemAtIndex(const CollectionView *collectionView, int index) {
+	return (ident) (intptr_t) index;
+}
+
+#pragma mark - CollectionViewDelegate
+
+/**
+ * @see CollectionView::itemForObjectAtIndex(const CollectionView *, int)
+ */
+static CollectionItemView *itemForObjectAtIndex(const CollectionView *collectionView, int index) {
+	return $(alloc(CollectionItemView), initWithFrame, NULL);
+}
+
 #pragma mark - ViewController
 
 /**
@@ -123,29 +148,32 @@ static void selectionDidChange(TableView *tableView) {
 static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
-	
+
 	const SDL_Rect frame = { .x = 50, .y = 50 };
 	Panel *panel = $(alloc(Panel), initWithFrame, &frame);
-
-	$(self->view, addSubview, (View *) panel);
 
 	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
 	$(button->title, setText, "This is a Button");
 	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
 	
 	$((View *) panel->contentView, addSubview, (View *) button);
+	release(button);
 
 	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
 	textView->defaultText = "This is a TextView";
 	
 	$((View *) panel->contentView, addSubview, (View *) textView);
+	release(textView);
 
 	Checkbox *checkbox = $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
-	Label *checkboxLabel = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
-	Input *checkboxInput = $(alloc(Input), initWithOrientation, InputOrientationLeft, (Control *) checkbox, checkboxLabel);
+	Label *label = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
+	Input *input = $(alloc(Input), initWithOrientation, InputOrientationLeft, (Control *) checkbox, label);
 	$((Control *) checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
 
-	$((View *) panel->contentView, addSubview, (View *) checkboxInput);
+	$((View *) panel->contentView, addSubview, (View *) input);
+	release(checkbox);
+	release(label);
+	release(input);
 
 	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
 	$(select, addOption, "This is a select", (ident) 1);
@@ -154,6 +182,7 @@ static void loadView(ViewController *self) {
 	$((View *) select, sizeToFit);
 	
 	$((View *) panel->contentView, addSubview, (View *) select);
+	release(select);
 
 	Slider *slider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 	slider->delegate.didSetValue = sliderDidSetValue;
@@ -161,10 +190,13 @@ static void loadView(ViewController *self) {
 	$(slider, setValue, 5.0);
 
 	$((View *) panel->contentView, addSubview, (View *) slider);
+	release(slider);
 
 	TableView *tableView = $(alloc(TableView), initWithFrame, NULL, ControlStyleDefault);
+
 	tableView->dataSource.numberOfRows = numberOfRows;
 	tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
+
 	tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
 	tableView->delegate.selectionDidChange = selectionDidChange;
 
@@ -172,31 +204,40 @@ static void loadView(ViewController *self) {
 	TableColumn *column2 = $(alloc(TableColumn), initWithIdentifier, "Two");
 	TableColumn *column3 = $(alloc(TableColumn), initWithIdentifier, "Three");
 
+	column1->comparator = comparator;
+	column2->comparator = comparator;
+	column3->comparator = comparator;
+
 	$(tableView, addColumn, column1);
 	$(tableView, addColumn, column2);
 	$(tableView, addColumn, column3);
 
-	column1->comparator = comparator;
-	column2->comparator = comparator;
-	column3->comparator = comparator;
+	release(column1);
+	release(column2);
+	release(column3);
 
 	$(tableView, reloadData);
 	$((View *) tableView, sizeToFit);
 
 	$((View *) panel->contentView, addSubview, (View *) tableView);
+	release(tableView);
+
+	CollectionView *collectionView = $(alloc(CollectionView), initWithFrame, NULL, ControlStyleDefault);
+	collectionView->control.view.frame.w = 300, collectionView->control.view.frame.h = 200;
+	collectionView->axis = CollectionViewAxisHorizontal;
+	collectionView->dataSource.numberOfItems = numberOfItems;
+	collectionView->dataSource.objectForItemAtIndex = objectForItemAtIndex;
+	collectionView->delegate.itemForObjectAtIndex = itemForObjectAtIndex;
+
+	$(collectionView, reloadData);
+	
+	$((View *) panel->contentView, addSubview, (View *) collectionView);
+	release(collectionView);
+
 	$((View *) panel->contentView, sizeToFit);
 	$((View *) panel, sizeToFit);
 
-	release(button);
-	release(textView);
-	release(checkbox);
-	release(checkboxInput);
-	release(select);
-	release(slider);
-	release(column1);
-	release(column2);
-	release(column3);
-	release(tableView);
+	$(self->view, addSubview, (View *) panel);
 	release(panel);
 }
 

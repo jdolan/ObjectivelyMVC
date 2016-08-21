@@ -40,19 +40,7 @@
  */
 
 /**
- * @brief Alignment constants for positioning of subviews perpendicular to a StackView's axis.
- */
-typedef enum {
-	StackViewAlignmentFill,
-	StackViewAlignmentLeft,
-	StackViewAlignmentTop,
-	StackViewAlignmentCenter,
-	StackViewAlignmentRight,
-	StackViewAlignmentBottom,
-} StackViewAlignment;
-
-/**
- * @brief Axis constants define a StackView's primary layout direction.
+ * @brief Axis constants for specifying a StackView's primary layout direction.
  */
 typedef enum {
 	StackViewAxisVertical,
@@ -93,11 +81,6 @@ struct StackView {
 	 * @private
 	 */
 	StackViewInterface *interface;
-
-	/**
-	 * @brief The alignment.
-	 */
-	StackViewAlignment alignment;
 	
 	/**
 	 * @brief The axis.

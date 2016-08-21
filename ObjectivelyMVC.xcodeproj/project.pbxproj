@@ -73,6 +73,10 @@
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBA1D6876AB006DF143 /* NavigationViewController.c */; };
 		CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBB1D6876AB006DF143 /* NavigationViewController.h */; };
+		CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBE1D6A08DD006DF143 /* CollectionView.c */; };
+		CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBF1D6A08DD006DF143 /* CollectionView.h */; };
+		CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EC21D6A0A17006DF143 /* CollectionItemView.c */; };
+		CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EC31D6A0A17006DF143 /* CollectionItemView.h */; };
 		CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6603791CBBF93E00EB86CF /* ScrollView.c */; };
 		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
@@ -192,6 +196,10 @@
 		CE14A8CF1C68CE3C00B576FB /* Option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Option.h; sourceTree = "<group>"; };
 		CE562EBA1D6876AB006DF143 /* NavigationViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NavigationViewController.c; sourceTree = "<group>"; };
 		CE562EBB1D6876AB006DF143 /* NavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationViewController.h; sourceTree = "<group>"; };
+		CE562EBE1D6A08DD006DF143 /* CollectionView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionView.c; sourceTree = "<group>"; };
+		CE562EBF1D6A08DD006DF143 /* CollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionView.h; sourceTree = "<group>"; };
+		CE562EC21D6A0A17006DF143 /* CollectionItemView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionItemView.c; sourceTree = "<group>"; };
+		CE562EC31D6A0A17006DF143 /* CollectionItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionItemView.h; sourceTree = "<group>"; };
 		CE5BD5921D3EDD7400C43B85 /* ObjectivelyMVC.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ObjectivelyMVC.pc.in; sourceTree = "<group>"; };
 		CE6603791CBBF93E00EB86CF /* ScrollView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollView.c; sourceTree = "<group>"; };
 		CE66037A1CBBF93E00EB86CF /* ScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollView.h; sourceTree = "<group>"; };
@@ -284,6 +292,10 @@
 				CE12D46A1C4D810F00CD0B13 /* Button.h */,
 				CE12D47C1C4F35DF00CD0B13 /* Checkbox.c */,
 				CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */,
+				CE562EC21D6A0A17006DF143 /* CollectionItemView.c */,
+				CE562EC31D6A0A17006DF143 /* CollectionItemView.h */,
+				CE562EBE1D6A08DD006DF143 /* CollectionView.c */,
+				CE562EBF1D6A08DD006DF143 /* CollectionView.h */,
 				CE12D4071C4C367100CD0B13 /* Colors.c */,
 				CE12D4081C4C367100CD0B13 /* Colors.h */,
 				CE12D46D1C4D82AF00CD0B13 /* Control.c */,
@@ -479,6 +491,7 @@
 				CE0943AD1D60FFEC00C11408 /* TableRowView.h in Headers */,
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
 				CE0943A91D60F23100C11408 /* TableColumn.h in Headers */,
+				CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE0AD0961C6F6568003E3CF7 /* Label.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
@@ -498,6 +511,7 @@
 				CE8E7FFF1C84E8DA00F4C3D4 /* TableHeaderView.h in Headers */,
 				CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */,
 				CE12D4451C4C38C700CD0B13 /* Text.h in Headers */,
+				CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */,
 				CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */,
 				CEF1D8A11D440C7B0099A857 /* Box.h in Headers */,
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
@@ -632,6 +646,7 @@
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE0943AC1D60FFEC00C11408 /* TableRowView.c in Sources */,
+				CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */,
 				CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */,
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE0AD0951C6F6568003E3CF7 /* Label.c in Sources */,
@@ -641,6 +656,7 @@
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
 				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
+				CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */,
 				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
 				CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */,

@@ -30,7 +30,19 @@
 #pragma mark - View
 
 /**
- * @see void View::respondToEvent(View *, const SDL_Event *)
+ * @see View::layoutSubviews(View *)
+ */
+static void layoutSubviews(View *self) {
+
+	super(View, self, layoutSubviews);
+
+	ScrollView *this = (ScrollView *) self;
+
+	$(this->contentView, sizeToFit);
+}
+
+/**
+ * @see View::respondToEvent(View *, const SDL_Event *)
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
@@ -117,6 +129,7 @@ static void setContentView(ScrollView *self, View *contentView) {
  */
 static void initialize(Class *clazz) {
 
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
 	((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
