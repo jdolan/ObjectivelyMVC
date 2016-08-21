@@ -55,12 +55,20 @@ static void layoutSubviews(View *self) {
 	
 	Slider *this = (Slider *) self;
 
-	const View *label = (View *) this->label;
-	if (!label->hidden) {
-		this->bar->frame.w -= label->frame.w;
-	}
-
 	if (this->max > this->min) {
+
+		if (((View *) this->label)->hidden == false) {
+			int minWidth, maxWidth;
+			char text[64];
+
+			snprintf(text, sizeof(text), this->labelFormat, this->min);
+			$(this->label->text->font, sizeCharacters, text, &minWidth, NULL);
+
+			snprintf(text, sizeof(text), this->labelFormat, this->max);
+			$(this->label->text->font, sizeCharacters, text, &maxWidth, NULL);
+
+			this->bar->frame.w -= max(minWidth, maxWidth) + this->label->view.padding.left;
+		}
 
 		const double fraction = clamp((this->value - this->min) / (this->max - this->min), 0.0, 1.0);
 		const SDL_Rect bounds = $(this->bar, bounds);
@@ -114,15 +122,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	
 	else if (event->type == SDL_MOUSEMOTION) {
 		if (self->state & ControlStateHighlighted) {
-			if ($((View *) this->bar, didReceiveEvent, event)) {
-				const SDL_Rect frame = $((View *) this->bar, renderFrame);
+			const SDL_Rect frame = $((View *) this->bar, renderFrame);
+			if (frame.w) {
 
 				const double fraction = (event->motion.x - frame.x) / (double) frame.w;
-				const double value = (this->max - this->min) * fraction;
+				const double value = this->min + (this->max - this->min) * clamp(fraction, 0.0, 1.0);
 
-				if (fabs(this->value - value) >= this->step) {
-					$(this, setValue, value);
-				}
+				$(this, setValue, value); // FIXME: Factor step into this
 
 				return true;
 			}
