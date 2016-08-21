@@ -43,7 +43,7 @@ typedef struct PanelInterface PanelInterface;
 /**
  * @brief Draggable and resizable container Views.
  *
- * @extends View
+ * @extends StackView
  *
  * @ingroup Containers
  *
@@ -65,6 +65,16 @@ struct Panel {
 	 * @private
 	 */
 	PanelInterface *interface;
+
+	/**
+	 * @brief The optional Buttons container.
+	 */
+	StackView *accessoryView;
+
+	/**
+	 * @brief The internal container.
+	 */
+	StackView *contentView;
 
 	/**
 	 * @brief If true, this Panel may be repositioned by the user.
@@ -92,11 +102,6 @@ struct Panel {
 	 * @private
 	 */
 	ImageView *resizeHandle;
-
-	/**
-	 * @brief The internal container.
-	 */
-	StackView *stackView;
 };
 
 /**

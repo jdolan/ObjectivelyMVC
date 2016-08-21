@@ -83,6 +83,8 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 
 		$((View *) self, addSubview, (View *) self->label);
 
+		self->view.autoresizingMask = ViewAutoresizingContain;
+
 		self->view.borderColor = Colors.Gray;
 		self->view.borderWidth = 1;
 

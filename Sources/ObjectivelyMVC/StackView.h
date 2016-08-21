@@ -35,6 +35,8 @@
  * @defgroup Containers Containers
  *
  * @brief Containers allow for grouping and positioning of related Views.
+ *
+ * @remarks All containers have a default `autoResizingMask` of ViewAutoResizingContain.
  */
 
 /**

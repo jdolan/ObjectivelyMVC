@@ -465,6 +465,8 @@ struct ViewInterface {
 	 *
 	 * @return An Array of this View's visible subviews.
 	 *
+	 * @remarks The returned Array excludes that specify ViewAlignmentInternal.
+	 *
 	 * @memberof View
 	 */
 	Array *(*visibleSubviews)(const View *self);

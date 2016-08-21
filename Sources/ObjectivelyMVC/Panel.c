@@ -38,8 +38,9 @@ static void dealloc(Object *self) {
 
 	Panel *this = (Panel *) self;
 
+	release(this->accessoryView);
+	release(this->contentView);
 	release(this->resizeHandle);
-	release(this->stackView);
 
 	super(Object, self, dealloc);
 }
@@ -155,8 +156,24 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 	self = (Panel *) super(View, self, initWithFrame, frame);
 	if (self) {
 
+		View *this = (View *) self;
+
 		self->isDraggable = true;
 		self->isResizable = true;
+
+		self->contentView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->contentView);
+
+		self->contentView->spacing = DEFAULT_PANEL_STACK_VIEW_SPACING;
+		$(this, addSubview, (View *) self->contentView);
+
+		self->accessoryView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->accessoryView);
+
+		self->accessoryView->axis = StackViewAxisHorizontal;
+		self->accessoryView->spacing = DEFAULT_PANEL_STACK_VIEW_SPACING;
+
+		$(this, addSubview, (View *) self->accessoryView);
 
 		self->resizeHandle = $(alloc(ImageView), initWithImage, _resize);
 		assert(self->resizeHandle);
@@ -168,20 +185,14 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		$((View *) self, addSubview, (View *) self->resizeHandle);
 
-		self->stackView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->stackView);
+		this->autoresizingMask = ViewAutoresizingContain;
+		
+		this->backgroundColor = Colors.DefaultColor;
+		this->borderColor = Colors.DarkGray;
+		this->borderWidth = 1;
 
-		self->stackView->spacing = DEFAULT_PANEL_STACK_VIEW_SPACING;
-		self->stackView->view.autoresizingMask = ViewAutoresizingContain;
-
-		$((View *) self, addSubview, (View *) self->stackView);
-
-		self->view.padding.top = self->view.padding.bottom = DEFAULT_PANEL_PADDING;
-		self->view.padding.left = self->view.padding.right = DEFAULT_PANEL_PADDING;
-
-		self->view.backgroundColor = Colors.DefaultColor;
-		self->view.borderColor = Colors.DarkGray;
-		self->view.borderWidth = 1;
+		this->padding.top = this->padding.bottom = DEFAULT_PANEL_PADDING;
+		this->padding.left = this->padding.right = DEFAULT_PANEL_PADDING;
 	}
 	
 	return self;

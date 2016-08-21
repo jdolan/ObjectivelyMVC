@@ -240,8 +240,6 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
-		self->contentView->view.autoresizingMask = ViewAutoresizingContain;
-
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
 

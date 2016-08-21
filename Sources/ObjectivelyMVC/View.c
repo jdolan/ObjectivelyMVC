@@ -529,14 +529,10 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
+			const SDL_Size subviewSize = $(subview, sizeThatFits);
 
-			if (subview->alignment != ViewAlignmentInternal) {
-
-				SDL_Size subviewSize = $(subview, sizeThatFits);
-
-				size.w = max(size.w, subview->frame.x + subviewSize.w);
-				size.h = max(size.h, subview->frame.y + subviewSize.h);
-			}
+			size.w = max(size.w, subview->frame.x + subviewSize.w);
+			size.h = max(size.h, subview->frame.y + subviewSize.h);
 		}
 
 		size.w += self->padding.left + self->padding.right;
@@ -566,17 +562,13 @@ static void sizeToFit(View *self) {
 	for (size_t i = 0; i < subviews->count; i++) {
 		
 		const View *subview = (View *) $(subviews, objectAtIndex, i);
+		const SDL_Size size = $(subview, sizeThatFits);
 
-		if (subview->alignment != ViewAlignmentInternal) {
+		const int sx = subview->frame.x + size.w + self->padding.left + self->padding.right;
+		const int sy = subview->frame.y + size.h + self->padding.top + self->padding.bottom;
 
-			const SDL_Size size = $(subview, sizeThatFits);
-
-			const int sx = subview->frame.x + size.w + self->padding.left + self->padding.right;
-			const int sy = subview->frame.y + size.h + self->padding.top + self->padding.bottom;
-
-			self->frame.w = max(self->frame.w, sx);
-			self->frame.h = max(self->frame.h, sy);
-		}
+		self->frame.w = max(self->frame.w, sx);
+		self->frame.h = max(self->frame.h, sy);
 	}
 
 	release(subviews);
@@ -622,10 +614,13 @@ static SDL_Rect viewport(const View *self) {
 }
 
 /**
- * @brief ArrayEnumerator for visibleSubviews.
+ * @brief Predicate for visibleSubviews.
  */
-static _Bool visibleSubviews_filter(const Array *array, ident obj, ident data) {
-	return ((View *) obj)->hidden == false;
+static _Bool visibleSubviews_filter(ident obj, ident data) {
+
+	const View *view = (View *) obj;
+
+	return view->hidden == false && view->alignment != ViewAlignmentInternal;
 }
 
 /**
@@ -634,7 +629,7 @@ static _Bool visibleSubviews_filter(const Array *array, ident obj, ident data) {
  * @memberof View
  */
 static Array *visibleSubviews(const View *self) {
-	return $((Array *) self->subviews, filterObjects, visibleSubviews_filter, NULL);
+	return $((Array *) self->subviews, filteredArray, visibleSubviews_filter, NULL);
 }
 
 /**
