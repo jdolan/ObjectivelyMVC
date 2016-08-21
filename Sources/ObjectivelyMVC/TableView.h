@@ -130,7 +130,7 @@ struct TableView {
 	int cellSpacing;
 
 	/**
-	 * @brief The TableColumn definitions.
+	 * @brief The column definitions.
 	 */
 	MutableArray *columns;
 
@@ -150,12 +150,12 @@ struct TableView {
 	TableViewDelegate delegate;
 
 	/**
-	 * @brief The TableHeaderView.
+	 * @brief The header.
 	 */
 	TableHeaderView *headerView;
 
 	/**
-	 * @brief The TableRowViews.
+	 * @brief The rows.
 	 */
 	MutableArray *rows;
 
@@ -165,7 +165,7 @@ struct TableView {
 	int rowHeight;
 
 	/**
-	 * @brief The ScrollView.
+	 * @brief The scroll view.
 	 */
 	ScrollView *scrollView;
 
@@ -247,9 +247,8 @@ struct TableViewInterface {
 	 *
 	 * @brief Reloads this TableView's visible rows.
 	 *
-	 * @remarks This method must be called after changes to the data source,
-	 * delegate, or column definitions. Failure to call this method after such
-	 * changes leads to undefined behavior.
+	 * @remarks This method must be called after changes to the data source, delegate, or column
+	 * definitions. Failure to call this method after such changes leads to undefined behavior.
 	 *
 	 * @memberof TableView
 	 */

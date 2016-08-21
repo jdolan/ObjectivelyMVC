@@ -317,6 +317,10 @@ static _Bool reloadData_addRows(const Array *array, ident obj, ident data) {
  */
 static void reloadData(TableView *self) {
 
+	assert(self->dataSource.numberOfRows);
+	assert(self->dataSource.valueForColumnAndRow);
+	assert(self->delegate.cellForColumnAndRow);
+
 	$((Array *) self->rows, enumerateObjects, reloadData_removeRows, self->contentView);
 	$(self->rows, removeAllObjects);
 
@@ -337,6 +341,7 @@ static void reloadData(TableView *self) {
 		assert(row);
 
 		$(self->rows, addObject, row);
+		release(row);
 
 		for (size_t j = 0; j < columns->count; j++) {
 
@@ -346,6 +351,7 @@ static void reloadData(TableView *self) {
 			cell->value = self->dataSource.valueForColumnAndRow(self, column, i);
 
 			$(row, addCell, cell);
+			release(cell);
 		}
 	}
 
