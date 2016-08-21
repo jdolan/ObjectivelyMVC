@@ -86,11 +86,24 @@ struct ImageViewInterface {
 	 * @brief The parent interface.
 	 */
 	ViewInterface viewInterface;
+
+	/**
+	 * @fn ImageView *ImageView::initWithImage(ImageView *self, const SDL_Rect *frame)
+	 *
+	 * @brief Initializes this ImageView with the specified frame.
+	 *
+	 * @param frame The frame.
+	 *
+	 * @return The initialized ImageView, or `NULL` on error.
+	 *
+	 * @memberof ImageView
+	 */
+	ImageView *(*initWithFrame)(ImageView *self, const SDL_Rect *frame);
 	
 	/**
 	 * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
 	 *
-	 * @brief Initializes this ImageView with the given image.
+	 * @brief Initializes this ImageView with the specified image.
 	 *
 	 * @param image The Image.
 	 *
@@ -99,6 +112,28 @@ struct ImageViewInterface {
 	 * @memberof ImageView
 	 */
 	ImageView *(*initWithImage)(ImageView *self, Image *image);
+
+	/**
+	 * @fn void ImageView::setImage(ImageView *self, Image *image);
+	 *
+	 * @brief Sets the Image for this ImageView.
+	 *
+	 * @param Image An Image.
+	 *
+	 * @memberof ImageView
+	 */
+	void (*setImage)(ImageView *self, Image *image);
+
+	/**
+	 * @fn void ImageView::setImageWithSurface(ImageView *self, SDL_Surface *surface)
+	 *
+	 * @brief A convenience method to set this view's Image with a surface.
+	 *
+	 * @param surface The surface.
+	 *
+	 * @memberof ImageView
+	 */
+	void (*setImageWithSurface)(ImageView *image, SDL_Surface *surface);
 };
 
 extern Class _ImageView;

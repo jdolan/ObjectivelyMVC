@@ -54,14 +54,16 @@ static void render(View *self, Renderer *renderer) {
 	
 	ImageView *this = (ImageView *) self;
 	
-	if (this->texture == 0) {
-		this->texture = $(renderer, createTexture, this->image->surface);
+	if (this->image) {
+
+		if (this->texture == 0) {
+			this->texture = $(renderer, createTexture, this->image->surface);
+			assert(this->texture);
+		}
+
+		const SDL_Rect frame = $(self, renderFrame);
+		$(renderer, drawTexture, this->texture, &frame);
 	}
-	
-	assert(this->texture);
-	
-	const SDL_Rect frame = $(self, renderFrame);
-	$(renderer, drawTexture, this->texture, &frame);
 }
 
 /**
@@ -79,30 +81,75 @@ static void renderDeviceDidReset(View *self) {
 #pragma mark - ImageView
 
 /**
+ * @fn ImageView *ImageView::initWithImage(ImageView *self, const SDL_Rect *frame)
+ *
+ * @memberof ImageView
+ */
+static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
+
+	self = (ImageView *) super(View, self, initWithFrame, frame);
+	if (self) {
+		self->alpha = 1.0;
+
+		self->blend.src = GL_SRC_ALPHA;
+		self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
+	}
+
+	return self;
+}
+
+/**
  * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
  *
  * @memberof ImageView
  */
 static ImageView *initWithImage(ImageView *self, Image *image) {
 	
-	self = (ImageView *) super(View, self, initWithFrame, NULL);
+	self = (ImageView *) $(self, initWithFrame, NULL);
 	if (self) {
-		
-		self->alpha = 1.0;
-		
-		self->blend.src = GL_SRC_ALPHA;
-		self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
-		
-		self->image = retain(image);
-		assert(self->image);
-		
-		self->view.frame.w = image->surface->w;
-		self->view.frame.h = image->surface->h;
-		
-		self->view.backgroundColor = Colors.Clear;
+
+		$(self, setImage, image);
+
+		if (self->image) {
+			self->view.frame.w = image->surface->w;
+			self->view.frame.h = image->surface->h;
+		}
 	}
 	
 	return self;
+}
+
+/**
+ * @fn void ImageView::setImage(ImageView *self, Image *image);
+ *
+ * @memberof ImageView
+ */
+static void setImage(ImageView *self, Image *image) {
+
+	release(self->image);
+
+	if (image) {
+		self->image = retain(image);
+	}
+
+	self->texture = 0;
+}
+
+/**
+ * @fn void ImageView::setImageWithSurface(ImageView *self, SDL_Surface *surface)
+ *
+ * @memberof ImageView
+ */
+static void setImageWithSurface(ImageView *self, SDL_Surface *surface) {
+
+	assert(surface);
+
+	Image *image = $(alloc(Image), initWithSurface, surface);
+	assert(image);
+
+	$(self, setImage, image);
+
+	release(image);
 }
 
 #pragma mark - Class lifecycle
@@ -116,8 +163,11 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->render = render;
 	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
-	
+
+	((ImageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ImageViewInterface *) clazz->interface)->initWithImage = initWithImage;
+	((ImageViewInterface *) clazz->interface)->setImage = setImage;
+	((ImageViewInterface *) clazz->interface)->setImageWithSurface = setImageWithSurface;
 }
 
 Class _ImageView = {
