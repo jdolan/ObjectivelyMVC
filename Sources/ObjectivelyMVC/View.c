@@ -174,6 +174,12 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 				if ($(self, containsPoint, &point)) {
 					return true;
 				}
+			} else if (event->type == SDL_MOUSEWHEEL) {
+				SDL_Point point;
+				SDL_GetMouseState(&point.x, &point.y);
+				if ($(self, containsPoint, &point)) {
+					return true;
+				}
 			} else if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
 				const SDL_Point point = { .x = event->tfinger.x, .y = event->tfinger.y };
 				if ($(self, containsPoint, &point)) {
