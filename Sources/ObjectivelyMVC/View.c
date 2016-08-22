@@ -52,9 +52,9 @@ static void dealloc(Object *self) {
 }
 
 /**
- * @see Object::description(Object *)
+ * @see Object::description(const Object *)
  */
-static String *description(Object *self) {
+static String *description(const Object *self) {
 
 	const SDL_Rect *f = &((View *) self)->frame;
 
@@ -505,7 +505,7 @@ static _Bool respondToEvent_recurse(const Array *array, ident obj, ident data) {
 static void respondToEvent(View *self, const SDL_Event *event) {
 
 	assert(event);
-	
+
 	if (event->type == MVC_EVENT_RENDER_DEVICE_RESET) {
 		$(self, renderDeviceDidReset);
 	} else if (event->type == MVC_EVENT_UPDATE_BINDINGS) {
@@ -688,6 +688,7 @@ static SDL_Window *window(const View *self) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
 
 	((ViewInterface *) clazz->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
