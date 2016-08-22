@@ -74,6 +74,7 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
 	self = (ScrollView *) super(View, self, initWithFrame, frame);
 	if (self) {
 		self->scrollEnabled = true;
+		self->view.clipsSubviews = true;
 	}
 	
 	return self;

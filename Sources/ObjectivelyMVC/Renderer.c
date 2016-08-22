@@ -64,6 +64,8 @@ static void beginFrame(const Renderer *self) {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glEnable(GL_SCISSOR_TEST);
+
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 }
@@ -209,6 +211,8 @@ static void endFrame(const Renderer *self) {
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
+	glDisable(GL_SCISSOR_TEST);
+
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glDisable(GL_BLEND);
 
@@ -260,10 +264,22 @@ static Order render_sort(const ident a, const ident b) {
 }
 
 /**
- * @brief ArrayEnumerator for drawing Views.
+ * @brief ArrayEnumerator for rendering Views.
  */
-static _Bool render_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) obj, render, (Renderer *) data); return false;
+static _Bool render_renderView(const Array *array, ident obj, ident data) {
+
+	Renderer *renderer = (Renderer *) data;
+	View *view = (View *) obj;
+
+	const SDL_Rect viewport = $(view, viewport);
+	if (viewport.w && viewport.h) {
+
+		glScissor(viewport.x, viewport.y, viewport.w, viewport.h);
+
+		$(view, render, renderer);
+	}
+
+	return false;
 }
 
 /**
@@ -275,7 +291,7 @@ static void render(Renderer *self) {
 
 	$(self->views, sort, render_sort);
 
-	$((Array *) self->views, enumerateObjects, render_enumerate, self);
+	$((Array *) self->views, enumerateObjects, render_renderView, self);
 
 	$(self->views, removeAllObjects);
 }

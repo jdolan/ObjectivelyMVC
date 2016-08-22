@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include <Objectively/String.h>
+
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
@@ -36,7 +38,7 @@ static View *_firstResponder;
 #pragma mark - ObjectInterface
 
 /**
- * @see ObjectInterface::dealloc(Object *)
+ * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
 
@@ -47,6 +49,16 @@ static void dealloc(Object *self) {
 	release(this->subviews);
 	
 	super(Object, self, dealloc);
+}
+
+/**
+ * @see Object::description(Object *)
+ */
+static String *description(Object *self) {
+
+	const SDL_Rect *f = &((View *) self)->frame;
+
+	return str("%s@%p (%d,%d) %dx%d", self->clazz->name, self, f->x, f->y, f->w, f->h);
 }
 
 #pragma mark - View
@@ -609,6 +621,29 @@ static SDL_Rect viewport(const View *self) {
 	viewport.h *= yScale;
 
 	viewport.y = dh - viewport.y - viewport.h;
+
+	const View *superview = self->superview;
+	while (superview) {
+		if (superview->clipsSubviews) {
+			const SDL_Rect superviewViewport = $(superview, viewport);
+			if (SDL_IntersectRect(&superviewViewport, &viewport, &viewport) == false) {
+
+				if (SDL_LogGetPriority(LogCategoryMVC) <= SDL_LOG_PRIORITY_VERBOSE) {
+					String *desc = $((Object *) self, description);
+					String *superdesc = $((Object *) superview, description);
+
+					LogVerbose("%s is clipped by %s\n", desc->chars, superdesc->chars);
+
+					release(desc);
+					release(superdesc);
+				}
+
+				viewport.w = viewport.h = 0;
+				break;
+			}
+		}
+		superview = superview->superview;
+	}
 
 	return viewport;
 }

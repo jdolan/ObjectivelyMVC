@@ -132,6 +132,11 @@ struct View {
 	 * @brief The border width.
 	 */
 	int borderWidth;
+
+	/**
+	 * @brief If true, subviews will be clipped to this View's frame.
+	 */
+	_Bool clipsSubviews;
 	
 	/**
 	 * @brief The frame, relative to the superview.
@@ -387,7 +392,9 @@ struct ViewInterface {
 	/**
 	 * @fn SDL_Frame View::renderFrame(const View *self)
 	 *
-	 * @return This View's absolute frame in the View hierarchy.
+	 * @return This View's absolute frame in the View hierarchy, in window coordinates.
+	 *
+	 * @remarks
 	 *
 	 * @memberof View
 	 */
@@ -455,6 +462,9 @@ struct ViewInterface {
 	 * @fn SDL_Rect View::viewport(const View *self)
 	 *
 	 * @return The OpenGL viewport for this View.
+	 *
+	 * @remarks The viewport is defined in lower-left coordinate space, for use with `glViewport`,
+	 * `glScissor`, etc.
 	 *
 	 * @memberof View
 	 */
