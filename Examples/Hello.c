@@ -34,7 +34,7 @@
 
 #include "HelloViewController.h"
 
-static void drawScene(void);
+static void drawScene(SDL_Window *window);
 
 /**
  * @brief Program entry point.
@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		drawScene();
+		drawScene(window);
 
 		SetColor(Colors.White);
 
@@ -125,7 +125,7 @@ static long getCurrentTime(void) {
  * @brief Renders a teapot, demonstrating ObjectivelyMVC integrating with a
  * vanilla SDL2 / OpenGL application.
  */
-static void drawScene(void) {
+static void drawScene(SDL_Window *window) {
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -198,7 +198,10 @@ static void drawScene(void) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	glOrtho(0, 1024, 768, 0, -1, 1);
+	int w, h;
+	SDL_GetWindowSize(window, &w, &h);
+
+	glOrtho(0, w, h, 0, -1, 1);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
