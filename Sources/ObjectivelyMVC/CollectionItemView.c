@@ -34,8 +34,11 @@
  */
 static void dealloc(Object *self) {
 	
-	//..
-	
+	CollectionItemView *this = (CollectionItemView *) self;
+
+	release(this->imageView);
+	release(this->text);
+
 	super(Object, self, dealloc);
 }
 
@@ -50,14 +53,26 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 	
 	self = (CollectionItemView *) super(View, self, initWithFrame, frame);
 	if (self) {
-		
-		self->view.backgroundColor = Colors.Red;
+		self->imageView = $(alloc(ImageView), initWithFrame, frame);
+		assert(self->imageView);
+
+		self->imageView->view.autoresizingMask = ViewAutoresizingFill;
+
+		$((View *) self, addSubview, (View *) self->imageView);
+
+		self->text = $(alloc(Text), initWithText, NULL, NULL);
+		assert(self->text);
+
+		self->text->view.alignment = ViewAlignmentMiddleCenter;
+
+		$((View *) self, addSubview, (View *) self->text);
+
+		self->view.backgroundColor = Colors.Black;
+		self->view.backgroundColor.a = 48;
 	}
 	
 	return self;
 }
-
-//..
 
 #pragma mark - Class lifecycle
 
@@ -69,8 +84,6 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	
 	((CollectionItemViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	
-	//..
 }
 
 Class _CollectionItemView = {

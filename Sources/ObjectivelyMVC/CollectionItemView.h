@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <ObjectivelyMVC/ImageView.h>
+#include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -58,9 +60,19 @@ struct CollectionItemView {
 	CollectionItemViewInterface *interface;
 
 	/**
+	 * @brief The ImageView.
+	 */
+	ImageView *imageView;
+
+	/**
 	 * @brief The object this item represents.
 	 */
 	ident object;
+
+	/**
+	 * @brief The text.
+	 */
+	Text *text;
 };
 
 /**
@@ -84,9 +96,7 @@ struct CollectionItemViewInterface {
 	 *
 	 * @memberof CollectionItemView
 	 */
-	CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);
-	
-	// ..
+	CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);	
 };
 
 /**

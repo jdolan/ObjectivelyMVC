@@ -85,14 +85,15 @@ static ident valueForColumnAndRow(const TableView *tableView, const TableColumn 
  * @see TableViewDelegate::cellForColumnAndRow(const TableView *, const TableColumn *, int)
  */
 static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
-	char chars[8];
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
 
 	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
 
-	snprintf(chars, sizeof(chars), "%zd", value);
-	$(cell->text, setText, chars);
+	char text[8];
+	snprintf(text, sizeof(text), "%zd", value);
+
+	$(cell->text, setText, text);
 
 	return cell;
 }
@@ -121,7 +122,7 @@ static void selectionDidChange(TableView *tableView) {
  * @see CollectionViewDataSource::numberOfItems(CollectionView *)
  */
 static size_t numberOfItems(const CollectionView *collectionView) {
-	return 16;
+	return 24;
 }
 
 /**
@@ -137,7 +138,15 @@ static ident objectForItemAtIndex(const CollectionView *collectionView, int inde
  * @see CollectionView::itemForObjectAtIndex(const CollectionView *, int)
  */
 static CollectionItemView *itemForObjectAtIndex(const CollectionView *collectionView, int index) {
-	return $(alloc(CollectionItemView), initWithFrame, NULL);
+
+	CollectionItemView *item = $(alloc(CollectionItemView), initWithFrame, NULL);
+
+	char text[64];
+	snprintf(text, sizeof(text), "%d", index);
+
+	$(item->text, setText, text);
+
+	return item;
 }
 
 #pragma mark - ViewController
@@ -223,11 +232,13 @@ static void loadView(ViewController *self) {
 	release(tableView);
 
 	CollectionView *collectionView = $(alloc(CollectionView), initWithFrame, NULL, ControlStyleDefault);
-	collectionView->control.view.frame.w = 300, collectionView->control.view.frame.h = 200;
 	collectionView->axis = CollectionViewAxisHorizontal;
 	collectionView->dataSource.numberOfItems = numberOfItems;
 	collectionView->dataSource.objectForItemAtIndex = objectForItemAtIndex;
 	collectionView->delegate.itemForObjectAtIndex = itemForObjectAtIndex;
+	collectionView->itemSize.w = 64;
+	collectionView->control.view.frame.h = 180;
+	collectionView->control.view.autoresizingMask = ViewAutoresizingWidth;
 
 	$(collectionView, reloadData);
 	
