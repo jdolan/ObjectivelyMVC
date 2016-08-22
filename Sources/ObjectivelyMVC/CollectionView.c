@@ -102,7 +102,6 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 		assert(self->contentView);
 
 		self->contentView->autoresizingMask = ViewAutoresizingContain;
-		self->contentView->backgroundColor = Colors.White;
 
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
@@ -120,6 +119,9 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 			self->itemSpacing.w = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
 			self->itemSpacing.h = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
+
+			self->control.view.backgroundColor = Colors.Black;
+			self->control.view.backgroundColor.a = 48;
 		}
 	}
 	
