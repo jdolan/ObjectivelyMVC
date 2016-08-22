@@ -38,43 +38,79 @@ static void layoutSubviews(View *self) {
 
 	ScrollView *this = (ScrollView *) self;
 
-	$(this->contentView, sizeToFit);
+	if (this->contentView) {
+		this->contentView->frame.x = this->contentOffset.x;
+		this->contentView->frame.y = this->contentOffset.y;
+
+		$(this->contentView, sizeToFit);
+	}
 }
 
+#pragma mark - Control
+
 /**
- * @see View::respondToEvent(View *, const SDL_Event *)
+ * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static void respondToEvent(View *self, const SDL_Event *event) {
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	ScrollView *this = (ScrollView *) self;
 
-	if (event->type == SDL_MOUSEWHEEL) {
-		if ($(self, didReceiveEvent, event)) {
+	if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == 1) {
+		if ($((View *) self, didReceiveEvent, event)) {
+			self->state |= ControlStateHighlighted;
+			return true;
+		}
+	} else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == 1) {
+		if (self->state & ControlStateHighlighted) {
+			self->state &= ~ControlStateHighlighted;
+			return true;
+		}
+	} else if (event->type == SDL_MOUSEMOTION) {
+		if (self->state & ControlStateHighlighted) {
 			SDL_Point offset = this->contentOffset;
 
-			offset.x += event->wheel.x;
-			offset.y += event->wheel.y;
+			offset.x += event->motion.xrel;
+			offset.y += event->motion.yrel;
 
 			$(this, scrollToOffset, &offset);
+			return true;
+		}
+	} else if (event->type == SDL_MOUSEWHEEL) {
+		if ($((View *) self, didReceiveEvent, event)) {
+			SDL_Point offset = this->contentOffset;
+
+			offset.x += event->wheel.x * SCROLL_VIEW_MOUSE_WHEEL_SPEED;
+			offset.y += event->wheel.y * SCROLL_VIEW_MOUSE_WHEEL_SPEED;
+
+			$(this, scrollToOffset, &offset);
+			return true;
 		}
 	}
 
-	super(View, self, respondToEvent, event);
+	return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - ScrollView
 
 /**
- * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame)
+ * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
  *
  * @memberof ScrollView
  */
-static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
+static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style) {
 	
-	self = (ScrollView *) super(View, self, initWithFrame, frame);
+	self = (ScrollView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-		self->scrollEnabled = true;
-		self->view.clipsSubviews = true;
+		self->control.view.clipsSubviews = true;
+
+		if (style == ControlStyleDefault) {
+			self->control.view.backgroundColor = Colors.Clear;
+
+			self->control.view.padding.top = 0;
+			self->control.view.padding.right = 0;
+			self->control.view.padding.bottom = 0;
+			self->control.view.padding.left = 0;
+		}
 	}
 	
 	return self;
@@ -92,16 +128,18 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
 		const SDL_Rect bounds = $((View *) self, bounds);
 
 		if (contentSize.w > bounds.w) {
-			self->contentOffset.x = min(offset->x, contentSize.w - bounds.w);
+			self->contentOffset.x = clamp(offset->x, -(contentSize.w - bounds.w), 0);
 		} else {
 			self->contentOffset.x = 0;
 		}
 
 		if (contentSize.h > bounds.h) {
-			self->contentOffset.y = min(offset->y, contentSize.h - bounds.h);
+			self->contentOffset.y = clamp(offset->y, -(contentSize.h - bounds.h), 0);
 		} else {
 			self->contentOffset.y = 0;
 		}
+
+		self->control.view.needsLayout = true;
 	}
 }
 
@@ -131,7 +169,8 @@ static void setContentView(ScrollView *self, View *contentView) {
 static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
 	((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ScrollViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
@@ -140,7 +179,7 @@ static void initialize(Class *clazz) {
 
 Class _ScrollView = {
 	.name = "ScrollView",
-	.superclass = &_View,
+	.superclass = &_Control,
 	.instanceSize = sizeof(ScrollView),
 	.interfaceOffset = offsetof(ScrollView, interface),
 	.interfaceSize = sizeof(ScrollViewInterface),

@@ -96,7 +96,7 @@ struct CollectionItemViewInterface {
 	 *
 	 * @memberof CollectionItemView
 	 */
-	CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);	
+	CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);
 };
 
 /**
