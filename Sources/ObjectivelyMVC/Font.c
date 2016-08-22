@@ -268,8 +268,12 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
 	TTF_SizeUTF8(self->font, chars, w, h);
 	
 	if (WindowUsesHighDPI(NULL)) {
-		*w *= 0.5;
-		*h *= 0.5;
+		if (w) {
+			*w *= 0.5;
+		}
+		if (h) {
+			*h *= 0.5;
+		}
 	}
 }
 
