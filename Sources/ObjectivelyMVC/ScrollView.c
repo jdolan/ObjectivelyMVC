@@ -55,18 +55,10 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	ScrollView *this = (ScrollView *) self;
 
-	if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == 1) {
+	if (event->type == SDL_MOUSEMOTION && event->motion.state) {
 		if ($((View *) self, didReceiveEvent, event)) {
 			self->state |= ControlStateHighlighted;
-			return true;
-		}
-	} else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == 1) {
-		if (self->state & ControlStateHighlighted) {
-			self->state &= ~ControlStateHighlighted;
-			return true;
-		}
-	} else if (event->type == SDL_MOUSEMOTION) {
-		if (self->state & ControlStateHighlighted) {
+
 			SDL_Point offset = this->contentOffset;
 
 			offset.x += event->motion.xrel;
@@ -77,14 +69,18 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 	} else if (event->type == SDL_MOUSEWHEEL) {
 		if ($((View *) self, didReceiveEvent, event)) {
+			self->state |= ControlStateHighlighted;
+
 			SDL_Point offset = this->contentOffset;
 
-			offset.x += event->wheel.x * SCROLL_VIEW_MOUSE_WHEEL_SPEED;
+			offset.x -= event->wheel.x * SCROLL_VIEW_MOUSE_WHEEL_SPEED;
 			offset.y += event->wheel.y * SCROLL_VIEW_MOUSE_WHEEL_SPEED;
 
 			$(this, scrollToOffset, &offset);
 			return true;
 		}
+	} else {
+		self->state &= ~ControlStateHighlighted;
 	}
 
 	return super(Control, self, captureEvent, event);
@@ -104,8 +100,6 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, Contro
 		self->control.view.clipsSubviews = true;
 
 		if (style == ControlStyleDefault) {
-			self->control.view.backgroundColor = Colors.Clear;
-
 			self->control.view.padding.top = 0;
 			self->control.view.padding.right = 0;
 			self->control.view.padding.bottom = 0;

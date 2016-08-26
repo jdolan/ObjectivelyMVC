@@ -88,7 +88,7 @@ static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
 			format = GL_RGBA;
 			break;
 		default:
-			LogError("Invalid surface format: %s\n",
+			MVC_LogError("Invalid surface format: %s\n",
 					 SDL_GetPixelFormatName(surface->format->format));
 			return -1;
 	}
@@ -211,6 +211,13 @@ static void endFrame(const Renderer *self) {
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
+	SDL_Window *window = SDL_GL_GetCurrentWindow();
+
+	int dw, dh;
+	SDL_GL_GetDrawableSize(window, &dw, &dh);
+
+	glScissor(0, 0, dw, dh);
+
 	glDisable(GL_SCISSOR_TEST);
 
 	glBlendFunc(GL_ONE, GL_ZERO);
@@ -220,7 +227,7 @@ static void endFrame(const Renderer *self) {
 
 	const GLenum err = glGetError();
 	if (err) {
-		LogError("GL error: %d\n", err);
+		MVC_LogError("GL error: %d\n", err);
 	}
 }
 
@@ -268,15 +275,16 @@ static Order render_sort(const ident a, const ident b) {
  */
 static _Bool render_renderView(const Array *array, ident obj, ident data) {
 
-	Renderer *renderer = (Renderer *) data;
 	View *view = (View *) obj;
 
-	const SDL_Rect viewport = $(view, viewport);
-	if (viewport.w && viewport.h) {
+	const SDL_Rect frame = $(view, clippingFrame);
+	if (frame.w && frame.h) {
 
-		glScissor(viewport.x, viewport.y, viewport.w, viewport.h);
+		const SDL_Rect scissor = MVC_TransformToWindow($(view, window), &frame);
 
-		$(view, render, renderer);
+		glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 1, scissor.h + 1);
+
+		$(view, render, (Renderer *) data);
 	}
 
 	return false;

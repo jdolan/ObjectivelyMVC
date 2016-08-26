@@ -23,6 +23,7 @@
 
 #include <assert.h>
 
+#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/WindowController.h>
 
 #define _Class _WindowController
@@ -98,6 +99,8 @@ static void render(WindowController *self) {
 	if (self->viewController) {
 		$(self->viewController, drawView, self->renderer);
 		$(self->renderer, render);
+	} else {
+		MVC_LogWarn("viewController is NULL\n");
 	}
 
 	$(self->renderer, endFrame);

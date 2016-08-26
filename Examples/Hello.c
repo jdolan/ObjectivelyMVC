@@ -41,7 +41,7 @@ static void drawScene(SDL_Window *window);
  */
 int main(int argc, char **argv) {
 
-	LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
+	MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
 	
 	SDL_Init(SDL_INIT_VIDEO);
 	

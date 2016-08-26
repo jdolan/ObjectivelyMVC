@@ -30,8 +30,8 @@
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/Font.h>
-#include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _Font
 
@@ -147,11 +147,7 @@ static Font *initWithAttributes(Font *self, const char *family, int ptsize, int 
 
 	FcPatternAddString(pattern, FC_FAMILY, (FcChar8 *) family);
 
-	if (WindowUsesHighDPI(NULL)) {
-		FcPatternAddDouble(pattern, FC_SIZE, (double) ptsize * 2.0);
-	} else {
-		FcPatternAddDouble(pattern, FC_SIZE, (double) ptsize);
-	}
+	FcPatternAddDouble(pattern, FC_SIZE, ptsize * MVC_WindowScale(NULL, NULL, NULL));
 
 	if (style & TTF_STYLE_BOLD) {
 		if (style & TTF_STYLE_ITALIC) {
@@ -237,7 +233,7 @@ static Font *initWithPattern(Font *self, ident pattern) {
 
 		if (self->font == NULL) {
 			FcChar8 *name = FcNameUnparse(pattern);
-			LogWarn("Failed to load font with pattern \"%s\"\n", name);
+			MVC_LogWarn("Failed to load font with pattern \"%s\"\n", name);
 
 			free(name);
 			release(self);
@@ -266,14 +262,13 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
 	
 	TTF_SizeUTF8(self->font, chars, w, h);
-	
-	if (WindowUsesHighDPI(NULL)) {
-		if (w) {
-			*w *= 0.5;
-		}
-		if (h) {
-			*h *= 0.5;
-		}
+
+	const float scale = MVC_WindowScale(NULL, NULL, NULL);
+	if (w) {
+		*w /= scale;
+	}
+	if (h) {
+		*h /= scale;
 	}
 }
 

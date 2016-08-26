@@ -27,11 +27,11 @@ const struct _Colors Colors = {
 	
 	.DefaultColor = { 128, 128, 128, 224 },
 	.HighlightedColor = { 105, 105, 105, 255 },
-	.DisabledColor = { 128, 128, 128, 255 },
+	.DisabledColor = { 96, 96, 96, 255 },
 	.SelectedColor = { 48, 48, 48, 255 },
 	.FocusedColor = { 128, 128, 128, 255 },
 
-	.AlternateColor = { 152, 152, 152, 224 },
+	.AlternateColor = { 152, 152, 152, 192 },
 	
 	.Clear = { 255, 255, 255, 0 },
 	

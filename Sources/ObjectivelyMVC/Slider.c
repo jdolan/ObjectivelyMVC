@@ -76,7 +76,7 @@ static void layoutSubviews(View *self) {
 		View *handle = (View *) this->handle;
 		handle->frame.x = (bounds.w * fraction) - handle->frame.w * 0.5;
 	} else {
-		LogWarn("max > min");
+		MVC_LogWarn("max > min");
 	}
 }
 
@@ -149,9 +149,6 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 	
 	self = (Slider *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-		
-		self->control.view.backgroundColor = Colors.Clear;
-
 		self->bar = $(alloc(View), initWithFrame, frame);
 		assert(self->bar);
 
@@ -182,6 +179,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 			}
 			
 			self->handle->bevel = BevelTypeOutset;
+			self->handle->view.backgroundColor = Colors.FocusedColor;
 			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
 			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;
 		}

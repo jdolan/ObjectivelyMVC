@@ -219,6 +219,18 @@ struct ViewInterface {
 	SDL_Rect (*bounds)(const View *self);
 
 	/**
+	 * @fn SDL_Rect View::clippingFrame(const View *self)
+	 *
+	 * @return The visible portion of this View's frame, in window coordinates.
+	 *
+	 * @remarks This is equivalent to the View's `renderFrame`, expanded for border width, and
+	 * clipped to all ancestors.
+	 *
+	 * @memberof View
+	 */
+	SDL_Rect (*clippingFrame)(const View *self);
+
+	/**
 	 * @fn _Bool View::canBecomeFirstResponder(const View *self)
 	 *
 	 * @return True if this View can become the first responder, false otherwise.
@@ -230,7 +242,7 @@ struct ViewInterface {
 	/**
 	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
 	 *
-	 * @param point A point in window space.
+	 * @param point A point in object space.
 	 *
 	 * @return True if the point falls within this Views frame.
 	 *
@@ -392,9 +404,7 @@ struct ViewInterface {
 	/**
 	 * @fn SDL_Frame View::renderFrame(const View *self)
 	 *
-	 * @return This View's absolute frame in the View hierarchy, in window coordinates.
-	 *
-	 * @remarks
+	 * @return This View's absolute frame in the View hierarchy, in object space.
 	 *
 	 * @memberof View
 	 */
@@ -463,9 +473,6 @@ struct ViewInterface {
 	 *
 	 * @return The OpenGL viewport for this View.
 	 *
-	 * @remarks The viewport is defined in lower-left coordinate space, for use with `glViewport`,
-	 * `glScissor`, etc.
-	 *
 	 * @memberof View
 	 */
 	SDL_Rect (*viewport)(const View *self);
@@ -492,3 +499,27 @@ struct ViewInterface {
 };
 
 extern Class _View;
+
+/**
+ * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
+ *
+ * @param window The window.
+ * @param rect A rectangle defined in object space.
+ *
+ * @return The transformed rectangle.
+ */
+SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
+
+/**
+ * @brief Resolves the scale factor of the specified window for High-DPI support.
+ *
+ * @param window The window, or `NULL` for the current OpenGL window.
+ * @param height An optional output parameter to retrieve the window height.
+ * @param drawableHeight AN optional output parameter to retrieve the window drawable height.
+ *
+ * @return The scale factor of the specified window.
+ *
+ * @remarks Views and other classes should invoke this method to alter their rendering behavior for
+ * High-DPI displays. This is particularly relevant for Views that render textures.
+ */
+double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);

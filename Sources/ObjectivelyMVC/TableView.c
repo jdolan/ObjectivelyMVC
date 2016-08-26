@@ -137,12 +137,10 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				};
 
 				const int row = $(this, rowAtPoint, &point);
-				if (row != -1) {
-					if (row == this->selectedRow) {
-						$(this, selectRowAtIndex, -1);
-					} else {
-						$(this, selectRowAtIndex, row);
-					}
+				if (row == this->selectedRow) {
+					$(this, selectRowAtIndex, -1);
+				} else {
+					$(this, selectRowAtIndex, row);
 				}
 			}
 
@@ -257,7 +255,12 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 			self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
 			self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
 
-			memset(&self->control.view.padding, 0, sizeof(Padding));
+			self->control.view.backgroundColor = Colors.DefaultColor;
+
+			self->control.view.padding.top = 0;
+			self->control.view.padding.right = 0;
+			self->control.view.padding.bottom = 0;
+			self->control.view.padding.left = 0;
 		}
 	}
 	
@@ -414,7 +417,7 @@ static int rowAtPoint(const TableView *self, const SDL_Point *point) {
  */
 static void selectRowAtIndex(TableView *self, int index) {
 
-	self->selectedRow = clamp(index, -1, self->rows->array.count);
+	self->selectedRow = clamp(index, -1, (int) self->rows->array.count - 1);
 
 	if (self->delegate.selectionDidChange) {
 		self->delegate.selectionDidChange(self);

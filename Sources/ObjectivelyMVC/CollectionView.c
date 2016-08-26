@@ -79,9 +79,42 @@ static void layoutSubviews(View *self) {
 				}
 				break;
 		}
+
+		$(item, setSelected, this->selectedItem == i);
 	}
 
 	super(View, self, layoutSubviews);
+}
+
+#pragma mark - Control
+
+/**
+ * @see Control::captureEvent(Control *, const SDL_Event *)
+ */
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
+
+	CollectionView *this = (CollectionView *) self;
+
+	if (event->type == SDL_MOUSEBUTTONUP) {
+
+		if ($((View *) this->contentView, didReceiveEvent, event)) {
+			const SDL_Point point = {
+				.x = event->button.x,
+				.y = event->button.y
+			};
+
+			const int item = $(this, itemAtPoint, &point);
+			if (item == this->selectedItem) {
+				$(this, selectItemAtIndex, -1);
+			} else {
+				$(this, selectItemAtIndex, item);
+			}
+
+			return true;
+		}
+	}
+
+	return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - CollectionView
@@ -122,10 +155,61 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 			self->control.view.backgroundColor = Colors.Black;
 			self->control.view.backgroundColor.a = 48;
+
+			self->control.view.padding.top = 0;
+			self->control.view.padding.right = 0;
+			self->control.view.padding.bottom = 0;
+			self->control.view.padding.left = 0;
+
+			self->contentView->padding.top = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
+			self->contentView->padding.right = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
+			self->contentView->padding.bottom = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
+			self->contentView->padding.left = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
 		}
 	}
 	
 	return self;
+}
+
+/**
+ * @fn int CollectionView::itemAtPoint(const CollectionView *self, const SDL_Point *point)
+ *
+ * @memberof CollectionView
+ */
+static int itemAtPoint(const CollectionView *self, const SDL_Point *point) {
+
+	if (self->itemSize.w && self->itemSize.h) {
+
+		const SDL_Rect frame = $(self->contentView, renderFrame);
+
+		const int itemWidth = self->itemSize.w + self->itemSpacing.w;
+		const int itemHeight = self->itemSize.h + self->itemSpacing.h;
+
+		const int rows = frame.h / itemHeight;
+		const int cols = frame.w / itemWidth;
+
+		const int x = point->x - frame.x;
+		const int y = point->y - frame.y;
+
+		const int row = y / itemHeight;
+		const int col = x / itemWidth;
+
+		int item;
+		switch (self->axis) {
+			case CollectionViewAxisVertical:
+				item = row * cols + col;
+				break;
+			case CollectionViewAxisHorizontal:
+				item = col * rows + row;
+				break;
+		}
+
+		if (item < self->items->array.count) {
+			return item;
+		}
+	}
+
+	return -1;
 }
 
 /**
@@ -166,6 +250,22 @@ static void reloadData(CollectionView *self) {
 	$((View *) self, layoutSubviews);
 }
 
+/**
+ * @fn void CollectionView::selectItemAtIndex(CollectionView *self, int index)
+ *
+ * @memberof CollectionView
+ */
+static void selectItemAtIndex(CollectionView *self, int index) {
+
+	self->selectedItem = clamp(index, -1, (int) self->items->array.count - 1);
+
+	if (self->delegate.selectionDidChange) {
+		self->delegate.selectionDidChange(self);
+	}
+
+	((View *) self)->needsLayout = true;
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -177,8 +277,12 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+
 	((CollectionViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((CollectionViewInterface *) clazz->interface)->itemAtPoint = itemAtPoint;
 	((CollectionViewInterface *) clazz->interface)->reloadData = reloadData;
+	((CollectionViewInterface *) clazz->interface)->selectItemAtIndex = selectItemAtIndex;
 }
 
 Class _CollectionView = {

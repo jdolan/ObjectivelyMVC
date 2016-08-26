@@ -55,6 +55,7 @@ static void drawView(ViewController *self, Renderer *renderer) {
 	assert(renderer);
 
 	$(self, loadViewIfNeeded);
+
 	assert(self->view);
 
 	$(self->view, layoutIfNeeded);

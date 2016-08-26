@@ -67,7 +67,7 @@ static Image *initWithName(Image *self, const char *name) {
 	char *path;
 	asprintf(&path, "%s/%s", dir, name);
 
-	LogDebug("%s\n", path);
+	MVC_LogDebug("%s\n", path);
 
 	self = $(self, initWithSurface, IMG_Load(path));
 	
@@ -115,20 +115,3 @@ Class _Image = {
 };
 
 #undef _Class
-
-_Bool WindowUsesHighDPI(SDL_Window *window) {
-
-	if (window == NULL) {
-		window = SDL_GL_GetCurrentWindow();
-	}
-
-	assert(window);
-
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-
-	int dw, dh;
-	SDL_GL_GetDrawableSize(window, &dw, &dh);
-
-	return dw > w && dh > h;
-}

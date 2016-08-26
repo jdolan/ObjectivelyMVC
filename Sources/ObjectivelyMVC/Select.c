@@ -58,9 +58,7 @@ static void layoutSubviews(View *self) {
 	if (this->comparator) {
 		$(this->options, sort, this->comparator);
 	}
-	
-	int requestedSize = 0;
-	
+
 	const Array *options = (Array *) this->options;
 	for (size_t i = 0; i < options->count; i++) {
 		
@@ -72,8 +70,7 @@ static void layoutSubviews(View *self) {
 		}
 		
 		if (option->hidden == false) {
-			requestedSize += option->frame.h;
-			
+
 			if (this->control.state == ControlStateHighlighted) {
 				if ((Option *) option == this->selectedOption) {
 					option->backgroundColor = Colors.SelectedColor;
@@ -81,12 +78,13 @@ static void layoutSubviews(View *self) {
 					option->backgroundColor = Colors.HighlightedColor;
 				}
 			} else {
-				option->backgroundColor = Colors.DefaultColor;
+				option->backgroundColor = Colors.Clear;
 			}
 		}
 	}
 	
-	this->stackView->view.frame.h = requestedSize;
+	$((View *) this->stackView, sizeToFit);
+
 	this->stackView->view.needsLayout = true;
 	
 	if (this->control.state == ControlStateHighlighted) {
@@ -106,17 +104,21 @@ static void sizeToFit(View *self) {
 	super(View, self, sizeToFit);
 	
 	const Select *this = (Select *) self;
-	
+
+	if (((Control *) self)->style == ControlStyleDefault) {
+		self->frame.w = DEFAULT_SELECT_WIDTH;
+	} else {
+		self->frame.w = 0;
+	}
+
 	const Array *options = (Array *) this->options;
 	for (size_t i = 0; i < options->count; i++) {
-		
-		const View *option = (View *) $(options, objectAtIndex, i);
-		
-		SDL_Size size = $(option, sizeThatFits);
-		
-		size.w += self->padding.left + self->padding.right + 2 * DEFAULT_OPTION_PADDING;
 
-		self->frame.w = max(self->frame.w, size.w);
+		const View *option = (View *) $(options, objectAtIndex, i);
+
+		SDL_Size size = $(option, sizeThatFits);
+
+		self->frame.w = max(self->frame.w, size.w + self->padding.left + self->padding.right);
 	}
 }
 

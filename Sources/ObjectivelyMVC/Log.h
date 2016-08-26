@@ -25,13 +25,27 @@
 
 #include <SDL2/SDL_log.h>
 
-#define LogCategoryMVC (SDL_LOG_CATEGORY_CUSTOM + 69)
+#define LOG_CATEGORY_MVC (SDL_LOG_CATEGORY_CUSTOM + 69)
 
-#define LogSetPriority(pri) SDL_LogSetPriority(LogCategoryMVC, pri)
+#define MVC_LogSetPriority(priority) SDL_LogSetPriority(LOG_CATEGORY_MVC, priority)
 
-#define LogVerbose(fmt, ...) SDL_LogVerbose(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
-#define LogDebug(fmt, ...) SDL_LogDebug(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
-#define LogInfo(fmt, ...) SDL_LogInfo(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
-#define LogWarn(fmt, ...) SDL_LogWarn(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
-#define LogError(fmt, ...) SDL_LogError(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
-#define LogCritical(fmt, ...) SDL_LogCritical(LogCategoryMVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+#define MVC_LogEnabled(priority) \
+	(SDL_LogGetPriority(LOG_CATEGORY_MVC) <= priority)
+
+#define MVC_LogVerbose(fmt, ...) \
+	SDL_LogVerbose(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+
+#define MVC_LogDebug(fmt, ...) \
+	SDL_LogDebug(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+
+#define MVC_LogInfo(fmt, ...) \
+	SDL_LogInfo(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+
+#define MVC_LogWarn(fmt, ...) \
+	SDL_LogWarn(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+
+#define MVC_LogError(fmt, ...) \
+	SDL_LogError(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)
+
+#define MVC_LogCritical(fmt, ...) \
+	SDL_LogCritical(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class.name, __func__, ## __VA_ARGS__)

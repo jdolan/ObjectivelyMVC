@@ -195,7 +195,7 @@ struct RendererInterface {
 	Renderer *(*init)(Renderer *self);
 
 	/**
-	 * @fn void Renderer::render(Renderer *self)
+	 * @fn void Renderer::render(Renderer *self, SDL_Window *window)
 	 *
 	 * @brief Renders all Views added for the current frame, sorted by depth.
 	 *

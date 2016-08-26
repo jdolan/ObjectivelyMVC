@@ -108,6 +108,50 @@ static SDL_Rect bounds(const View *self) {
 }
 
 /**
+ * @fn SDL_Rect View::clippingFrame(const View *self)
+ *
+ * @memberof View
+ */
+static SDL_Rect clippingFrame(const View *self) {
+
+	SDL_Rect frame = $(self, renderFrame);
+
+	if (self->borderWidth && self->borderColor.a) {
+		for (int i = 0; i < self->borderWidth; i++) {
+			frame.x -= 1;
+			frame.y -= 1;
+			frame.w += 2;
+			frame.h += 2;
+		}
+	}
+
+	const View *superview = self->superview;
+	while (superview) {
+		if (superview->clipsSubviews) {
+			const SDL_Rect clippingFrame = $(superview, clippingFrame);
+			if (SDL_IntersectRect(&clippingFrame, &frame, &frame) == false) {
+
+				if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
+					String *desc = $((Object *) self, description);
+					String *superdesc = $((Object *) superview, description);
+
+					MVC_LogVerbose("%s is clipped by %s\n", desc->chars, superdesc->chars);
+
+					release(desc);
+					release(superdesc);
+				}
+
+				frame.w = frame.h = 0;
+				break;
+			}
+		}
+		superview = superview->superview;
+	}
+
+	return frame;
+}
+
+/**
  * @fn _Bool View::canBecomeFirstResponder(const View *self)
  *
  * @memberof View
@@ -429,7 +473,7 @@ static void render(View *self, Renderer *renderer) {
 		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, fillRect, &frame);
 	}
-	
+		
 	if (self->borderWidth && self->borderColor.a) {
 
 		SetColor(self->borderColor);
@@ -608,50 +652,9 @@ static void updateBindings(View *self) {
  */
 static SDL_Rect viewport(const View *self) {
 
-	SDL_Window *window = $(self, window);
+	const SDL_Rect frame =  $(self, renderFrame);
 
-	int w, h;
-	SDL_GetWindowSize(window, &w, &h);
-
-	int dw, dh;
-	SDL_GL_GetDrawableSize(window, &dw, &dh);
-
-	SDL_Rect viewport = $(self, renderFrame);
-
-	const float xScale = dw / (float) w;
-	const float yScale = dh / (float) h;
-
-	viewport.x *= xScale;
-	viewport.y *= yScale;
-	viewport.w *= xScale;
-	viewport.h *= yScale;
-
-	viewport.y = dh - viewport.y - viewport.h;
-
-	const View *superview = self->superview;
-	while (superview) {
-		if (superview->clipsSubviews) {
-			const SDL_Rect superviewViewport = $(superview, viewport);
-			if (SDL_IntersectRect(&superviewViewport, &viewport, &viewport) == false) {
-
-				if (SDL_LogGetPriority(LogCategoryMVC) <= SDL_LOG_PRIORITY_VERBOSE) {
-					String *desc = $((Object *) self, description);
-					String *superdesc = $((Object *) superview, description);
-
-					LogVerbose("%s is clipped by %s\n", desc->chars, superdesc->chars);
-
-					release(desc);
-					release(superdesc);
-				}
-
-				viewport.w = viewport.h = 0;
-				break;
-			}
-		}
-		superview = superview->superview;
-	}
-
-	return viewport;
+	return MVC_TransformToWindow($(self, window), &frame);
 }
 
 /**
@@ -679,11 +682,7 @@ static Array *visibleSubviews(const View *self) {
  * @memberof View
  */
 static SDL_Window *window(const View *self) {
-
-	SDL_Window *window = SDL_GL_GetCurrentWindow();
-	assert(window);
-
-	return window;
+	return SDL_GL_GetCurrentWindow();
 }
 
 #pragma mark - View class methods
@@ -700,6 +699,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->interface)->bounds = bounds;
 	((ViewInterface *) clazz->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
+	((ViewInterface *) clazz->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->interface)->containsPoint = containsPoint;
 	((ViewInterface *) clazz->interface)->depth = depth;
 	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
@@ -740,3 +740,59 @@ Class _View = {
 };
 
 #undef _Class
+
+SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
+
+	if (window == NULL) {
+		window = SDL_GL_GetCurrentWindow();
+	}
+
+	assert(window);
+	assert(rect);
+
+	SDL_Rect transformed = *rect;
+
+	int dh;
+	const double scale = MVC_WindowScale(window, NULL, &dh);
+
+	transformed.x *= scale;
+	transformed.y *= scale;
+	transformed.w *= scale;
+	transformed.h *= scale;
+
+	transformed.y = dh - transformed.h - transformed.y;
+
+	return transformed;
+}
+
+double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight) {
+
+	if (window == NULL) {
+		window = SDL_GL_GetCurrentWindow();
+	}
+
+	assert(window);
+
+	int h;
+	SDL_GetWindowSize(window, NULL, &h);
+
+	if (height) {
+		*height = h;
+	}
+
+	if (h) {
+
+		int dh;
+		SDL_GL_GetDrawableSize(window, NULL, &dh);
+
+		if (drawableHeight) {
+			*drawableHeight = dh;
+		}
+
+		if (dh) {
+			return dh / (double) h;
+		}
+	}
+
+	return 1.0;
+}

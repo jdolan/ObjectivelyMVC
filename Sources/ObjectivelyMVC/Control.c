@@ -60,13 +60,13 @@ static void render(View *self, Renderer *renderer) {
 		
 		SDL_Point points[3];
 		
-		points[0].x = frame.x + 2;
-		points[0].y = frame.y + frame.h - 2;
+		points[0].x = frame.x + 1;
+		points[0].y = frame.y + frame.h - 1;
 		
-		points[1].x = frame.x + frame.w - 2;
-		points[1].y = frame.y + frame.h - 2;
+		points[1].x = frame.x + frame.w - 1;
+		points[1].y = frame.y + frame.h - 1;
 		
-		points[2].x = frame.x + frame.w - 2;
+		points[2].x = frame.x + frame.w - 1;
 		points[2].y = frame.y + 1;
 		
 		$(renderer, drawLines, points, lengthof(points));
@@ -74,12 +74,12 @@ static void render(View *self, Renderer *renderer) {
 		SetColor(Colors.Charcoal);
 		
 		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 3;
+		points[0].y = frame.y + frame.h - 1;
 		
 		points[1].x = frame.x + 1;
 		points[1].y = frame.y + 1;
 		
-		points[2].x = frame.x + frame.w - 2;
+		points[2].x = frame.x + frame.w - 1;
 		points[2].y = frame.y + 1;
 		
 		$(renderer, drawLines, points, lengthof(points));
@@ -90,13 +90,13 @@ static void render(View *self, Renderer *renderer) {
 		
 		SDL_Point points[3];
 		
-		points[0].x = frame.x + 2;
-		points[0].y = frame.y + frame.h - 2;
+		points[0].x = frame.x + 1;
+		points[0].y = frame.y + frame.h - 1;
 		
-		points[1].x = frame.x + frame.w - 2;
-		points[1].y = frame.y + frame.h - 2;
+		points[1].x = frame.x + frame.w - 1;
+		points[1].y = frame.y + frame.h - 1;
 		
-		points[2].x = frame.x + frame.w - 2;
+		points[2].x = frame.x + frame.w - 1;
 		points[2].y = frame.y + 1;
 		
 		$(renderer, drawLines, points, lengthof(points));
@@ -104,12 +104,12 @@ static void render(View *self, Renderer *renderer) {
 		SetColor(Colors.Silver);
 		
 		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 3;
+		points[0].y = frame.y + frame.h - 1;
 		
 		points[1].x = frame.x + 1;
 		points[1].y = frame.y + 1;
 		
-		points[2].x = frame.x + frame.w - 2;
+		points[2].x = frame.x + frame.w - 1;
 		points[2].y = frame.y + 1;
 		
 		$(renderer, drawLines, points, lengthof(points));
@@ -239,8 +239,6 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle
 		assert(self->actions);
 		
 		if (self->style == ControlStyleDefault) {
-			
-			self->view.backgroundColor = Colors.DefaultColor;
 			
 			if (self->view.frame.h == 0) {
 				self->view.frame.h = DEFAULT_CONTROL_HEIGHT;

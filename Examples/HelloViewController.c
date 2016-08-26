@@ -149,6 +149,10 @@ static CollectionItemView *itemForObjectAtIndex(const CollectionView *collection
 	return item;
 }
 
+static void _selectionDidChange(CollectionView *collectionView) {
+	printf("Selected item %d\n", collectionView->selectedItem);
+}
+
 #pragma mark - ViewController
 
 /**
@@ -236,7 +240,9 @@ static void loadView(ViewController *self) {
 	collectionView->dataSource.numberOfItems = numberOfItems;
 	collectionView->dataSource.objectForItemAtIndex = objectForItemAtIndex;
 	collectionView->delegate.itemForObjectAtIndex = itemForObjectAtIndex;
+	collectionView->delegate.selectionDidChange = _selectionDidChange;
 	collectionView->itemSize.w = 64;
+	collectionView->itemSize.w = 48;
 	collectionView->control.view.frame.h = 180;
 	collectionView->control.view.autoresizingMask = ViewAutoresizingWidth;
 

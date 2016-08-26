@@ -26,7 +26,7 @@
 #include <ObjectivelyMVC/Text.h>
 
 /**
- * @file
+ * @file The TableCellView type.
  *
  * @brief Cells for TableViews.
  */
@@ -37,7 +37,7 @@ typedef struct TableCellView TableCellView;
 typedef struct TableCellViewInterface TableCellViewInterface;
 
 /**
- * @brief The TableCellView type.
+ * @brief Cells for TableViews.
  *
  * @extends View
  *

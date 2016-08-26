@@ -69,9 +69,26 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 
 		self->view.backgroundColor = Colors.Black;
 		self->view.backgroundColor.a = 48;
+
+		self->view.borderColor = Colors.SelectedColor;
 	}
 	
 	return self;
+}
+
+/**
+ * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool selected)
+ *
+ * @memberof CollectionItemView
+ */
+static void setSelected(CollectionItemView *self, _Bool selected) {
+
+	self->isSelected = selected;
+	if (self->isSelected) {
+		self->view.borderWidth = 4;
+	} else {
+		self->view.borderWidth = 0;
+	}
 }
 
 #pragma mark - Class lifecycle
@@ -84,6 +101,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 	
 	((CollectionItemViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((CollectionItemViewInterface *) clazz->interface)->setSelected = setSelected;
 }
 
 Class _CollectionItemView = {

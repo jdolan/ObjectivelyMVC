@@ -192,6 +192,17 @@ struct CollectionViewInterface {
 	CollectionView *(*initWithFrame)(CollectionView *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
+	 * @fn int CollectionView::itemAtPoint(const CollectionView *self, const SDL_Point *point)
+	 *
+	 * @param point A point in window coordinate space.
+	 *
+	 * @return The item index at the specified point, or `-1` if none.
+	 *
+	 * @memberof CollectionView
+	 */
+	int (*itemAtPoint)(const CollectionView *self, const SDL_Point *point);
+
+	/**
 	 * @fn void CollectionView::reloadData(CollectionView *self)
 	 *
 	 * @brief Reloads this CollectionView's visible rows.
@@ -202,6 +213,17 @@ struct CollectionViewInterface {
 	 * @memberof CollectionView
 	 */
 	void (*reloadData)(CollectionView *self);
+
+	/**
+	 * @fn void CollectionView::selectItemAtIndex(CollectionView *self, int index)
+	 *
+	 * @brief Selects the item at the given index.
+	 *
+	 * @param index The index of the item to select, or `-1` to clear the selection.
+	 *
+	 * @memberof CollectionView
+	 */
+	void (*selectItemAtIndex)(CollectionView *self, int index);
 };
 
 /**

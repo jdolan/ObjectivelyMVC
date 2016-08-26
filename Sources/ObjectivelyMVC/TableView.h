@@ -270,7 +270,7 @@ struct TableViewInterface {
 	 *
 	 * @param point A point in window coordinate space.
 	 *
-	 * @return The row index at the specified point.
+	 * @return The row index at the specified point, or `-1` if none.
 	 *
 	 * @memberof TableView
 	 */
@@ -281,7 +281,7 @@ struct TableViewInterface {
 	 *
 	 * @brief Selects the row at the given index.
 	 *
-	 * @param index The index of the row to select, or `-1 to clear the selection.
+	 * @param index The index of the row to select, or `-1` to clear the selection.
 	 *
 	 * @memberof TableView
 	 */

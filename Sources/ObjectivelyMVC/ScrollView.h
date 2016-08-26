@@ -31,7 +31,7 @@
  * @brief ScrollViews allow users to pan their internal contents.
  */
 
-#define SCROLL_VIEW_MOUSE_WHEEL_SPEED 3.0
+#define SCROLL_VIEW_MOUSE_WHEEL_SPEED 4.0
 
 typedef struct ScrollViewDelegate ScrollViewDelegate;
 

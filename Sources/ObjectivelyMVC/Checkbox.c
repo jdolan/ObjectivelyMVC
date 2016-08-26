@@ -95,7 +95,6 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 	if (self) {
 
 		self->control.view.autoresizingMask = ViewAutoresizingContain;
-		self->control.view.backgroundColor = Colors.Clear;
 
 		self->box = $(alloc(Control), initWithFrame, frame, style);
 		assert(self->box);
