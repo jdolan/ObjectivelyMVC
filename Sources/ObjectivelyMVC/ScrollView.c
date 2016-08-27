@@ -55,7 +55,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	ScrollView *this = (ScrollView *) self;
 
-	if (event->type == SDL_MOUSEMOTION && event->motion.state) {
+	if (event->type == SDL_MOUSEMOTION && (event->motion.state & SDL_BUTTON_LMASK)) {
 		if ($((View *) self, didReceiveEvent, event)) {
 			self->state |= ControlStateHighlighted;
 
@@ -69,7 +69,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 	} else if (event->type == SDL_MOUSEWHEEL) {
 		if ($((View *) self, didReceiveEvent, event)) {
-			self->state |= ControlStateHighlighted;
 
 			SDL_Point offset = this->contentOffset;
 
@@ -79,8 +78,11 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			$(this, scrollToOffset, &offset);
 			return true;
 		}
-	} else {
-		self->state &= ~ControlStateHighlighted;
+	} else if ($(self, highlighted)) {
+
+		if (event->type == SDL_MOUSEBUTTONUP && (event->button.button & SDL_BUTTON_LMASK)) {
+			self->state &= ~ControlStateHighlighted;
+		}
 	}
 
 	return super(Control, self, captureEvent, event);

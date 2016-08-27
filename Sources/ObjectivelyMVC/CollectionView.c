@@ -96,21 +96,22 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	CollectionView *this = (CollectionView *) self;
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
+		if ($((Control *) this->scrollView, highlighted) == false) {
+			if ($((View *) this->contentView, didReceiveEvent, event)) {
+				const SDL_Point point = {
+					.x = event->button.x,
+					.y = event->button.y
+				};
 
-		if ($((View *) this->contentView, didReceiveEvent, event)) {
-			const SDL_Point point = {
-				.x = event->button.x,
-				.y = event->button.y
-			};
+				const int item = $(this, itemAtPoint, &point);
+				if (item == this->selectedItem) {
+					$(this, selectItemAtIndex, -1);
+				} else {
+					$(this, selectItemAtIndex, item);
+				}
 
-			const int item = $(this, itemAtPoint, &point);
-			if (item == this->selectedItem) {
-				$(this, selectItemAtIndex, -1);
-			} else {
-				$(this, selectItemAtIndex, item);
+				return true;
 			}
-
-			return true;
 		}
 	}
 
