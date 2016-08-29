@@ -238,8 +238,8 @@ static void reloadData(CollectionView *self) {
 	for (size_t i = 0; i < numberOfItems; i++) {
 
 		CollectionItemView *item = self->delegate.itemForObjectAtIndex(self, i);
-		item->object = self->dataSource.objectForItemAtIndex(self, i);
-
+		assert(item);
+		
 		$(self->items, addObject, item);
 		$(self->contentView, addSubview, (View *) item);
 

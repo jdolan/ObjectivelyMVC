@@ -71,6 +71,8 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 		self->view.backgroundColor.a = 48;
 
 		self->view.borderColor = Colors.SelectedColor;
+
+		self->view.clipsSubviews = true;
 	}
 	
 	return self;

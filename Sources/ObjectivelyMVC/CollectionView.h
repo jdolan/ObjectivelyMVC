@@ -55,7 +55,7 @@ struct CollectionViewDataSource {
 	/**
 	 * @return The number of items in the Collection.
 	 */
-	size_t (*numberOfItems)(const CollectionView *CollectionView);
+	size_t (*numberOfItems)(const CollectionView *collectionView);
 
 	/**
 	 * @brief Called by the CollectionView for the associated object of an item.
@@ -65,7 +65,7 @@ struct CollectionViewDataSource {
 	 *
 	 * @return The object for the item at the given index.
 	 */
-	ident (*objectForItemAtIndex)(const CollectionView *CollectionView, int index);
+	ident (*objectForItemAtIndex)(const CollectionView *collectionView, int index);
 };
 
 /**
@@ -81,7 +81,7 @@ struct CollectionViewDelegate {
 	 *
 	 * @return The item for the index.
 	 */
-	CollectionItemView *(*itemForObjectAtIndex)(const CollectionView *CollectionView, int index);
+	CollectionItemView *(*itemForObjectAtIndex)(const CollectionView *collectionView, int index);
 
 	/**
 	 * @brief Called by the CollectionView when the selection changes.
@@ -90,7 +90,7 @@ struct CollectionViewDelegate {
 	 *
 	 * @remarks This function is optional.
 	 */
-	void (*selectionDidChange)(CollectionView *CollectionView);
+	void (*selectionDidChange)(CollectionView *collectionView);
 };
 
 #define DEAFULT_COLLECTION_VIEW_PADDING 10

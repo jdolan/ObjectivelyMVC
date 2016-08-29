@@ -53,14 +53,15 @@ static void render(View *self, Renderer *renderer) {
 	super(View, self, render, renderer);
 	
 	ImageView *this = (ImageView *) self;
-	
-	if (this->image) {
 
-		if (this->texture == 0) {
+	if (this->texture == 0) {
+		if (this->image) {
 			this->texture = $(renderer, createTexture, this->image->surface);
 			assert(this->texture);
 		}
+	}
 
+	if (this->texture) {
 		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, drawTexture, this->texture, &frame);
 	}
@@ -142,14 +143,16 @@ static void setImage(ImageView *self, Image *image) {
  */
 static void setImageWithSurface(ImageView *self, SDL_Surface *surface) {
 
-	assert(surface);
+	$(self, setImage, NULL);
 
-	Image *image = $(alloc(Image), initWithSurface, surface);
-	assert(image);
+	if (surface) {
+		Image *image = $(alloc(Image), initWithSurface, surface);
+		assert(image);
 
-	$(self, setImage, image);
+		$(self, setImage, image);
 
-	release(image);
+		release(image);
+	}
 }
 
 #pragma mark - Class lifecycle

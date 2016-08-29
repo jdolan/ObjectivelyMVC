@@ -63,11 +63,6 @@ struct TableCellView {
 	 * @brief The text.
 	 */
 	Text *text;
-
-	/**
-	 * @brief The value object this cell represents.
-	 */
-	ident value;
 };
 
 /**

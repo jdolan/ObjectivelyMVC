@@ -321,7 +321,6 @@ static _Bool reloadData_addRows(const Array *array, ident obj, ident data) {
 static void reloadData(TableView *self) {
 
 	assert(self->dataSource.numberOfRows);
-	assert(self->dataSource.valueForColumnAndRow);
 	assert(self->delegate.cellForColumnAndRow);
 
 	$((Array *) self->rows, enumerateObjects, reloadData_removeRows, self->contentView);
@@ -347,11 +346,10 @@ static void reloadData(TableView *self) {
 		release(row);
 
 		for (size_t j = 0; j < columns->count; j++) {
-
 			const TableColumn *column = $(columns, objectAtIndex, j);
 
 			TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i);
-			cell->value = self->dataSource.valueForColumnAndRow(self, column, i);
+			assert(cell);
 
 			$(row, addCell, cell);
 			release(cell);

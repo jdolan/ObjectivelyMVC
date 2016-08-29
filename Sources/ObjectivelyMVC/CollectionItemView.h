@@ -65,11 +65,6 @@ struct CollectionItemView {
 	ImageView *imageView;
 
 	/**
-	 * @brief The object this item represents.
-	 */
-	ident object;
-
-	/**
 	 * @brief True when this item is selected, false otherwise.
 	 */
 	_Bool isSelected;
