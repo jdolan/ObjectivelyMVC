@@ -56,22 +56,25 @@ static void dealloc(Object *self) {
  * @memberof Image
  */
 static Image *initWithName(Image *self, const char *name) {
-	
-	assert(name);
 
-	char *dir = getenv("OBJECTIVELYMVC_DATA_DIR");
-	if (dir == NULL) {
-		dir = PKGDATADIR;
+	self = (Image *) super(Object, self, init);
+	if (self) {
+
+		char *dir = getenv("OBJECTIVELYMVC_DATA_DIR");
+		if (dir == NULL) {
+			dir = PKGDATADIR;
+		}
+
+		char *path;
+		asprintf(&path, "%s/%s", dir, name);
+
+		MVC_LogDebug("%s\n", path);
+
+		self->surface = IMG_Load(path);
+		assert(self->surface);
+		
+		free(path);
 	}
-
-	char *path;
-	asprintf(&path, "%s/%s", dir, name);
-
-	MVC_LogDebug("%s\n", path);
-
-	self = $(self, initWithSurface, IMG_Load(path));
-	
-	free(path);
 	
 	return self;
 }
@@ -87,6 +90,8 @@ Image *initWithSurface(Image *self, SDL_Surface *surface) {
 	if (self) {
 		self->surface = surface;
 		assert(self->surface);
+
+		self->surface->refcount++;
 	}
 
 	return self;

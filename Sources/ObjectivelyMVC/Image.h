@@ -94,6 +94,10 @@ struct ImageInterface {
 	 *
 	 * @return The initialized Image, or `NULL` on error.
 	 *
+	 * @remarks The surface's reference count is incremented, so that you can (and should) call
+	 * `SDL_FreeSurface` when you no longer need it. The Image will also free the surface on
+	 * `dealloc`.
+	 *
 	 * @memberof Image
 	 */
 	Image *(*initWithSurface)(Image *self, SDL_Surface *surface);
