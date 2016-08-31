@@ -126,31 +126,39 @@ static size_t numberOfItems(const CollectionView *collectionView) {
 }
 
 /**
- * @see CollectionViewDataSource::objectForItemAtIndex(CollectionView *, int)
+ * @see CollectionViewDataSource::objectForItemAtIndexPath(CollectionView *, const IndexPath *)
  */
-static ident objectForItemAtIndex(const CollectionView *collectionView, int index) {
-	return (ident) (intptr_t) index;
+static ident objectForItemAtIndexPath(const CollectionView *collectionView, const IndexPath *indexPath) {
+	return (ident) (intptr_t) $(indexPath, indexAtPosition, 0);
 }
 
 #pragma mark - CollectionViewDelegate
 
 /**
- * @see CollectionView::itemForObjectAtIndex(const CollectionView *, int)
+ * @see CollectionViewDelegate::itemForObjectAtIndexPath(const CollectionView *, const IndexPath *)
  */
-static CollectionItemView *itemForObjectAtIndex(const CollectionView *collectionView, int index) {
+static CollectionItemView *itemForObjectAtIndexPath(const CollectionView *collectionView, const IndexPath *indexPath) {
 
 	CollectionItemView *item = $(alloc(CollectionItemView), initWithFrame, NULL);
 
 	char text[64];
-	snprintf(text, sizeof(text), "%d", index);
+	snprintf(text, sizeof(text), "%d", $(indexPath, indexAtPosition, 0));
 
 	$(item->text, setText, text);
 
 	return item;
 }
 
-static void _selectionDidChange(CollectionView *collectionView) {
-	printf("Selected item %d\n", collectionView->selectedItem);
+/**
+ * @see CollectionViewDelegate::didModifySelection(CollectionView *, const Array *)
+ */
+static void didModifySelection(CollectionView *collectionView, const Array *selectionIndexPaths) {
+
+	String *string = $(selectionIndexPaths, componentsJoinedByCharacters, ", ");
+
+	printf("Selected item %s\n", string->chars);
+
+	release(string);
 }
 
 #pragma mark - ViewController
@@ -238,11 +246,12 @@ static void loadView(ViewController *self) {
 	CollectionView *collectionView = $(alloc(CollectionView), initWithFrame, NULL, ControlStyleDefault);
 	collectionView->axis = CollectionViewAxisHorizontal;
 	collectionView->dataSource.numberOfItems = numberOfItems;
-	collectionView->dataSource.objectForItemAtIndex = objectForItemAtIndex;
-	collectionView->delegate.itemForObjectAtIndex = itemForObjectAtIndex;
-	collectionView->delegate.selectionDidChange = _selectionDidChange;
+	collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
+	collectionView->delegate.itemForObjectAtIndexPath = itemForObjectAtIndexPath;
+	collectionView->delegate.didModifySelection = didModifySelection;
 	collectionView->itemSize.w = 64;
 	collectionView->itemSize.w = 48;
+	collectionView->control.selection = ControlSelectionMultiple;
 	collectionView->control.view.frame.h = 180;
 	collectionView->control.view.autoresizingMask = ViewAutoresizingWidth;
 

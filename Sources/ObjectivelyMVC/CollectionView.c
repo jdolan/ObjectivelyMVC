@@ -51,7 +51,7 @@ static void layoutSubviews(View *self) {
 
 	const SDL_Rect bounds = $(self, bounds);
 
-	int x = 0, y = 0;
+	int x = bounds.x, y = bounds.y;
 
 	const Array *items = (Array *) this->items;
 	for (size_t i = 0; i < items->count; i++) {
@@ -68,19 +68,17 @@ static void layoutSubviews(View *self) {
 				x += this->itemSize.w + this->itemSpacing.w;
 				if (x + this->itemSize.w > bounds.w) {
 					y += this->itemSize.h + this->itemSpacing.h;
-					x = 0;
+					x = bounds.x;
 				}
 				break;
 			case CollectionViewAxisHorizontal:
 				y += this->itemSize.h + this->itemSpacing.h;
 				if (y + this->itemSize.h > bounds.h) {
 					x += this->itemSize.w + this->itemSpacing.w;
-					y = 0;
+					y = bounds.y;
 				}
 				break;
 		}
-
-		$(item, setSelected, this->selectedItem == i);
 	}
 
 	super(View, self, layoutSubviews);
@@ -93,21 +91,47 @@ static void layoutSubviews(View *self) {
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
-	CollectionView *this = (CollectionView *) self;
-
 	if (event->type == SDL_MOUSEBUTTONUP) {
+
+		CollectionView *this = (CollectionView *) self;
+
 		if ($((Control *) this->scrollView, highlighted) == false) {
 			if ($((View *) this->contentView, didReceiveEvent, event)) {
+
 				const SDL_Point point = {
 					.x = event->button.x,
 					.y = event->button.y
 				};
 
-				const int item = $(this, itemAtPoint, &point);
-				if (item == this->selectedItem) {
-					$(this, selectItemAtIndex, -1);
-				} else {
-					$(this, selectItemAtIndex, item);
+				IndexPath *indexPath = $(this, indexPathForItemAtPoint, &point);
+
+				const CollectionItemView *item = $(this, itemAtIndexPath, indexPath);
+				if (item) {
+					if (item->isSelected) {
+						$(this, deselectItemAtIndexPath, indexPath);
+					} else {
+						_Bool deselect = true;
+						if (self->selection == ControlSelectionMultiple) {
+							if (SDL_GetModState() & (KMOD_GUI | KMOD_CTRL)) {
+								deselect = false;
+							}
+						}
+						if (deselect) {
+							$(this, deselectAll);
+						}
+
+						$(this, selectItemAtIndexPath, indexPath);
+					}
+				}
+
+				release(indexPath);
+
+				if (this->delegate.didModifySelection) {
+					Array *selectionIndexPaths = $(this, selectionIndexPaths);
+
+					this->delegate.didModifySelection(this, selectionIndexPaths);
+
+					release(selectionIndexPaths);
 				}
 
 				return true;
@@ -121,12 +145,118 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 #pragma mark - CollectionView
 
 /**
+ * @brief ArrayEnumerator for all item deselection.
+ */
+static _Bool deselectAll_enumerate(const Array *array, ident obj, ident data) {
+	$((CollectionItemView *) obj, setSelected, false); return false;
+}
+
+/**
+ * @fn void CollectionView::deselectAll(CollectionView *self)
+ *
+ * @memberof CollectionView
+ */
+static void deselectAll(CollectionView *self) {
+	$((Array *) self->items, enumerateObjects, deselectAll_enumerate, NULL);
+}
+
+/**
+ * @fn void CollectionView::deselectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath)
+ *
+ * @memberof CollectionView
+ */
+static void deselectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath) {
+
+	if (indexPath) {
+		CollectionItemView *item = $(self, itemAtIndexPath, indexPath);
+		if (item) {
+			$(item, setSelected, false);
+		}
+	}
+}
+
+/**
+ * @brief ArrayEnumerator for item deselection.
+ */
+static _Bool deselectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ident data) {
+	$((CollectionItemView *) obj, setSelected, false); return false;
+}
+
+/**
+ * @fn void CollectionView::deselectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths)
+ *
+ * @memberof CollectionView
+ */
+static void deselectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths) {
+
+	if (indexPaths) {
+		$(indexPaths, enumerateObjects, deselectItemsAtIndexPaths_enumerate, self);
+	}
+}
+
+/**
+ * @fn IndexPath *CollectionView::indexPathForItemAtPoint(const CollectionView *self, const SDL_Point *point)
+ *
+ * @memberof CollectionView
+ */
+static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_Point *point) {
+
+	if (self->itemSize.w && self->itemSize.h) {
+
+		const SDL_Rect frame = $(self->contentView, renderFrame);
+
+		const int itemWidth = self->itemSize.w + self->itemSpacing.w;
+		const int itemHeight = self->itemSize.h + self->itemSpacing.h;
+
+		const int rows = frame.h / itemHeight;
+		const int cols = frame.w / itemWidth;
+
+		const int x = point->x - frame.x;
+		const int y = point->y - frame.y;
+
+		const int row = y / itemHeight;
+		const int col = x / itemWidth;
+
+		int index;
+		switch (self->axis) {
+			case CollectionViewAxisVertical:
+				index = row * cols + col;
+				break;
+			case CollectionViewAxisHorizontal:
+				index = col * rows + row;
+				break;
+		}
+
+		if (index < self->items->array.count) {
+			return $(alloc(IndexPath), initWithIndex, index);
+		}
+	}
+
+	return NULL;
+}
+
+/**
+ * @fn IndexPath *CollectionView::indexPathForItem(const CollectionView *self, const CollectionItemView *item)
+ *
+ * @memberof CollectionView
+ */
+static IndexPath *indexPathForItem(const CollectionView *self, const CollectionItemView *item) {
+
+	const int index = $((Array *) self->items, indexOfObject, (ident) item);
+	if (index > -1) {
+		return $(alloc(IndexPath), initWithIndex, index);
+	}
+
+	return NULL;
+}
+
+/**
  * @fn CollectionView *CollectionView::initWithFrame(CollectionView *self, const SDL_Rect *frame, ControlStyle style)
  *
  * @memberof CollectionView
  */
 static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame, ControlStyle style) {
-	
+
 	self = (CollectionView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 
@@ -173,44 +303,22 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 }
 
 /**
- * @fn int CollectionView::itemAtPoint(const CollectionView *self, const SDL_Point *point)
+ * @fn CollectionItemView *CollectionView::itemAtIndexPath(const CollectionView *self, const IndexPath *indexPath)
  *
  * @memberof CollectionView
  */
-static int itemAtPoint(const CollectionView *self, const SDL_Point *point) {
+static CollectionItemView *itemAtIndexPath(const CollectionView *self, const IndexPath *indexPath) {
 
-	if (self->itemSize.w && self->itemSize.h) {
+	if (indexPath) {
+		const Array *items = (Array *) self->items;
+		const int index = $(indexPath, indexAtPosition, 0);
 
-		const SDL_Rect frame = $(self->contentView, renderFrame);
-
-		const int itemWidth = self->itemSize.w + self->itemSpacing.w;
-		const int itemHeight = self->itemSize.h + self->itemSpacing.h;
-
-		const int rows = frame.h / itemHeight;
-		const int cols = frame.w / itemWidth;
-
-		const int x = point->x - frame.x;
-		const int y = point->y - frame.y;
-
-		const int row = y / itemHeight;
-		const int col = x / itemWidth;
-
-		int item;
-		switch (self->axis) {
-			case CollectionViewAxisVertical:
-				item = row * cols + col;
-				break;
-			case CollectionViewAxisHorizontal:
-				item = col * rows + row;
-				break;
-		}
-
-		if (item < self->items->array.count) {
-			return item;
+		if (index > -1 && index < items->count) {
+			return $(items, objectAtIndex, index);
 		}
 	}
 
-	return -1;
+	return NULL;
 }
 
 /**
@@ -228,8 +336,7 @@ static _Bool reloadData_removeItems(const Array *array, ident obj, ident data) {
 static void reloadData(CollectionView *self) {
 
 	assert(self->dataSource.numberOfItems);
-	assert(self->dataSource.objectForItemAtIndex);
-	assert(self->delegate.itemForObjectAtIndex);
+	assert(self->delegate.itemForObjectAtIndexPath);
 
 	$((Array *) self->items, enumerateObjects, reloadData_removeItems, self->contentView);
 	$(self->items, removeAllObjects);
@@ -237,34 +344,94 @@ static void reloadData(CollectionView *self) {
 	const size_t numberOfItems = self->dataSource.numberOfItems(self);
 	for (size_t i = 0; i < numberOfItems; i++) {
 
-		CollectionItemView *item = self->delegate.itemForObjectAtIndex(self, i);
+		IndexPath *indexPath = $(alloc(IndexPath), initWithIndex, i);
+
+		CollectionItemView *item = self->delegate.itemForObjectAtIndexPath(self, indexPath);
 		assert(item);
 		
 		$(self->items, addObject, item);
 		$(self->contentView, addSubview, (View *) item);
 
 		release(item);
+		release(indexPath);
 	}
-
-	self->selectedItem = -1;
 
 	$((View *) self, layoutSubviews);
 }
 
 /**
- * @fn void CollectionView::selectItemAtIndex(CollectionView *self, int index)
+ * @brief ArrayEnumerator for all item selection.
+ */
+static _Bool selectAll_enumerate(const Array *array, ident obj, ident data) {
+	$((CollectionItemView *) obj, setSelected, true); return false;
+}
+
+/**
+ * @fn void CollectionView::selectAll(CollectionView *self)
  *
  * @memberof CollectionView
  */
-static void selectItemAtIndex(CollectionView *self, int index) {
+static void selectAll(CollectionView *self) {
+	$((Array *) self->items, enumerateObjects, selectAll_enumerate, NULL);
+}
 
-	self->selectedItem = clamp(index, -1, (int) self->items->array.count - 1);
+/**
+ * @fn Array *CollectionView::selectedItems(const CollectionView *self)
+ *
+ * @memberof CollectionView
+ */
+static Array *selectionIndexPaths(const CollectionView *self) {
 
-	if (self->delegate.selectionDidChange) {
-		self->delegate.selectionDidChange(self);
+	MutableArray *array = $$(MutableArray, array);
+
+	const Array *items = (Array *) self->items;
+	for (size_t i = 0; i < items->count; i++) {
+
+		const CollectionItemView *item = $(items, objectAtIndex, i);
+		if (item->isSelected) {
+
+			IndexPath *indexPath = $(self, indexPathForItem, item);
+			$(array, addObject, indexPath);
+
+			release(indexPath);
+		}
 	}
 
-	((View *) self)->needsLayout = true;
+	return (Array *) array;
+}
+
+/**
+ * @fn void CollectionView::selectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath)
+ *
+ * @memberof CollectionView
+ */
+static void selectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath) {
+
+	if (indexPath) {
+		CollectionItemView *item = $(self, itemAtIndexPath, indexPath);
+		if (item) {
+			$(item, setSelected, true);
+		}
+	}
+}
+
+/**
+ * @brief ArrayEnumerator for item selection.
+ */
+static _Bool selectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ident data) {
+	$((CollectionView *) data, selectItemAtIndexPath, (IndexPath *) obj); return false;
+}
+
+/**
+ * @fn void CollectionView::selectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths)
+ *
+ * @memberof CollectionView
+ */
+static void selectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths) {
+
+	if (indexPaths) {
+		$(indexPaths, enumerateObjects, selectItemsAtIndexPaths_enumerate, self);
+	}
 }
 
 #pragma mark - Class lifecycle
@@ -280,10 +447,18 @@ static void initialize(Class *clazz) {
 
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
+	((CollectionViewInterface *) clazz->interface)->deselectAll = deselectAll;
+	((CollectionViewInterface *) clazz->interface)->deselectItemAtIndexPath = deselectItemAtIndexPath;
+	((CollectionViewInterface *) clazz->interface)->deselectItemsAtIndexPaths = deselectItemsAtIndexPaths;
+	((CollectionViewInterface *) clazz->interface)->indexPathForItem = indexPathForItem;
+	((CollectionViewInterface *) clazz->interface)->indexPathForItemAtPoint = indexPathForItemAtPoint;
 	((CollectionViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((CollectionViewInterface *) clazz->interface)->itemAtPoint = itemAtPoint;
+	((CollectionViewInterface *) clazz->interface)->itemAtIndexPath = itemAtIndexPath;
 	((CollectionViewInterface *) clazz->interface)->reloadData = reloadData;
-	((CollectionViewInterface *) clazz->interface)->selectItemAtIndex = selectItemAtIndex;
+	((CollectionViewInterface *) clazz->interface)->selectAll = selectAll;
+	((CollectionViewInterface *) clazz->interface)->selectionIndexPaths = selectionIndexPaths;
+	((CollectionViewInterface *) clazz->interface)->selectItemAtIndexPath = selectItemAtIndexPath;
+	((CollectionViewInterface *) clazz->interface)->selectItemsAtIndexPaths = selectItemsAtIndexPaths;
 }
 
 Class _CollectionView = {

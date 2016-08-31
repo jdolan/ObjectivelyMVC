@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <Objectively/IndexPath.h>
+
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/CollectionItemView.h>
 #include <ObjectivelyMVC/ScrollView.h>
@@ -53,19 +55,19 @@ typedef struct CollectionViewInterface CollectionViewInterface;
 struct CollectionViewDataSource {
 
 	/**
-	 * @return The number of items in the Collection.
+	 * @return The number of items in the collection.
 	 */
 	size_t (*numberOfItems)(const CollectionView *collectionView);
 
 	/**
 	 * @brief Called by the CollectionView for the associated object of an item.
 	 *
-	 * @param CollectionView The collection.
-	 * @param index The item index.
+	 * @param collectionView The collection.
+	 * @param indexPath The index path.
 	 *
-	 * @return The object for the item at the given index.
+	 * @return The object for the item at the given index path.
 	 */
-	ident (*objectForItemAtIndex)(const CollectionView *collectionView, int index);
+	ident (*objectForItemAtIndexPath)(const CollectionView *collectionView, const IndexPath *indexPath);
 };
 
 /**
@@ -74,23 +76,24 @@ struct CollectionViewDataSource {
 struct CollectionViewDelegate {
 
 	/**
-	 * @brief Called by the CollectionView to instantiate items.
+	 * @brief Called by the CollectionView when items are selected or deselected.
 	 *
-	 * @param CollectionView The collection.
-	 * @param index The index.
-	 *
-	 * @return The item for the index.
-	 */
-	CollectionItemView *(*itemForObjectAtIndex)(const CollectionView *collectionView, int index);
-
-	/**
-	 * @brief Called by the CollectionView when the selection changes.
-	 *
-	 * @param CollectionView The collection.
+	 * @param collectionView The collection.
+	 * @param selectionIndexPaths The index paths of the current selection.
 	 *
 	 * @remarks This function is optional.
 	 */
-	void (*selectionDidChange)(CollectionView *collectionView);
+	void (*didModifySelection)(CollectionView *collectionView, const Array *selectionIndexPaths);
+
+	/**
+	 * @brief Called by the CollectionView to instantiate items.
+	 *
+	 * @param collectionView The collection.
+	 * @param indexPath The index path.
+	 *
+	 * @return The item for the index path.
+	 */
+	CollectionItemView *(*itemForObjectAtIndexPath)(const CollectionView *collectionView, const IndexPath *indexPath);
 };
 
 #define DEAFULT_COLLECTION_VIEW_PADDING 10
@@ -160,11 +163,6 @@ struct CollectionView {
 	 * @brief The scroll view.
 	 */
 	ScrollView *scrollView;
-
-	/**
-	 * @brief The selected item index, or `-1` when no item is selected.
-	 */
-	int selectedItem;
 };
 
 /**
@@ -176,7 +174,38 @@ struct CollectionViewInterface {
 	 * @brief The parent interface.
 	 */
 	ControlInterface controlInterface;
-	
+
+	/**
+	 * @fn void CollectionView::deselectAll(CollectionView *self)
+	 *
+	 * @brief Deselects all items in this CollectionView.
+	 *
+	 * @memberof CollectionView
+	 */
+	void (*deselectAll)(CollectionView *self);
+
+	/**
+	 * @fn void CollectionView::deselectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath)
+	 *
+	 * @brief Deselects the item at the given index path.
+	 *
+	 * @param indexPath The index path of the item to deselect.
+	 *
+	 * @memberof CollectionView
+	 */
+	void (*deselectItemAtIndexPath)(CollectionView *self, const IndexPath *indexPath);
+
+	/**
+	 * @fn void CollectionView::deselectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths)
+	 *
+	 * @brief Deselects the items at the given index paths.
+	 *
+	 * @param indexPaths The index paths of the items to deselect.
+	 *
+	 * @memberof CollectionView
+	 */
+	void (*deselectItemsAtIndexPaths)(CollectionView *self, const Array *indexPaths);
+
 	/**
 	 * @fn CollectionView *CollectionView::init(CollectionView *self, const SDL_Rect *frame, ControlStyle style)
 	 *
@@ -192,20 +221,42 @@ struct CollectionViewInterface {
 	CollectionView *(*initWithFrame)(CollectionView *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
-	 * @fn int CollectionView::itemAtPoint(const CollectionView *self, const SDL_Point *point)
+	 * @fn IndexPath *CollectionView::indexPathForItem(const CollectionView *self, const CollectionItemView *item)
 	 *
-	 * @param point A point in window coordinate space.
+	 * @param item The item.
 	 *
-	 * @return The item index at the specified point, or `-1` if none.
+	 * @return The index path of `item`, or `NULL` if not found.
 	 *
 	 * @memberof CollectionView
 	 */
-	int (*itemAtPoint)(const CollectionView *self, const SDL_Point *point);
+	IndexPath *(*indexPathForItem)(const CollectionView *self, const CollectionItemView *item);
+
+	/**
+	 * @fn IndexPath CollectionView::indexPathForItemAtPoint(const CollectionView *self, const SDL_Point *point)
+	 *
+	 * @param point A point in window coordinate space.
+	 *
+	 * @return The index path of the item at the specified point, or `NULL`.
+	 *
+	 * @memberof CollectionView
+	 */
+	IndexPath *(*indexPathForItemAtPoint)(const CollectionView *self, const SDL_Point *point);
+
+	/**
+	 * @fn CollectionItemView *CollectionView::itemAtIndexPath(const CollectionView *self, const IndexPath *indexPath)
+	 *
+	 * @param indexPath An index path.
+	 *
+	 * @return The item at the specified index path, or `NULL`.
+	 *
+	 * @memberof CollectionView
+	 */
+	CollectionItemView *(*itemAtIndexPath)(const CollectionView *self, const IndexPath *indexPath);
 
 	/**
 	 * @fn void CollectionView::reloadData(CollectionView *self)
 	 *
-	 * @brief Reloads this CollectionView's visible rows.
+	 * @brief Reloads this CollectionView's visible items.
 	 *
 	 * @remarks This method must be called after changes to the data source or delegate. Failure to 
 	 * call this method after such changes leads to undefined behavior.
@@ -215,15 +266,44 @@ struct CollectionViewInterface {
 	void (*reloadData)(CollectionView *self);
 
 	/**
-	 * @fn void CollectionView::selectItemAtIndex(CollectionView *self, int index)
+	 * @fn void CollectionView::selectAll(CollectionView *self)
 	 *
-	 * @brief Selects the item at the given index.
-	 *
-	 * @param index The index of the item to select, or `-1` to clear the selection.
+	 * @brief Selects all items in this CollectionView.
 	 *
 	 * @memberof CollectionView
 	 */
-	void (*selectItemAtIndex)(CollectionView *self, int index);
+	void (*selectAll)(CollectionView *self);
+
+	/**
+	 * @fn Array *CollectionView::selectedItems(const CollectionView *self)
+	 *
+	 * @return An Array containing the indices of all selected items.
+	 *
+	 * @memberof CollectionView
+	 */
+	Array *(*selectionIndexPaths)(const CollectionView *self);
+
+	/**
+	 * @fn void CollectionView::selectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath)
+	 *
+	 * @brief Selects the item at the given index path.
+	 *
+	 * @param indexPath The index path of the item to select.
+	 *
+	 * @memberof CollectionView
+	 */
+	void (*selectItemAtIndexPath)(CollectionView *self, const IndexPath *indexPath);
+
+	/**
+	 * @fn void CollectionView::selectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths)
+	 *
+	 * @brief Selects the items at the given index paths.
+	 *
+	 * @param indexPaths The index paths of the items to select.
+	 *
+	 * @memberof CollectionView
+	 */
+	void (*selectItemsAtIndexPaths)(CollectionView *self, const Array *indexPaths);
 };
 
 /**

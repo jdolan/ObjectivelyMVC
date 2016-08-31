@@ -235,6 +235,8 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 		self->stackView->view.alignment = ViewAlignmentMiddleLeft;
 		self->stackView->view.autoresizingMask = ViewAutoresizingWidth;
 		self->stackView->view.borderWidth = 1;
+
+		self->control.selection = ControlSelectionSingle;
 		
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = BevelTypeOutset;

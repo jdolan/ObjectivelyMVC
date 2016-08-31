@@ -237,6 +237,8 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle
 
 		self->actions = $$(MutableArray, array);
 		assert(self->actions);
+
+		self->selection = ControlSelectionNone;
 		
 		if (self->style == ControlStyleDefault) {
 			

@@ -50,6 +50,15 @@ typedef enum {
 } BevelType;
 
 /**
+ * @brief Control selection styles, for Controls that support user selection.
+ */
+typedef enum {
+	ControlSelectionNone,
+	ControlSelectionSingle,
+	ControlSelectionMultiple
+} ControlSelection;
+
+/**
  * @brief Control states, which are bit-masked.
  */
 typedef enum {
@@ -112,6 +121,11 @@ struct Control {
 	 * @brief The bit mask of ControlState.
 	 */
 	int state;
+
+	/**
+	 * @brief The ControlSelection.
+	 */
+	ControlSelection selection;
 	
 	/**
 	 * @brief The ControlStyle.
