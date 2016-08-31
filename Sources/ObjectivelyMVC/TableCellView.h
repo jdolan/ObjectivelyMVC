@@ -26,7 +26,7 @@
 #include <ObjectivelyMVC/Text.h>
 
 /**
- * @file The TableCellView type.
+ * @file
  *
  * @brief Cells for TableViews.
  */
