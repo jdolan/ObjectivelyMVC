@@ -107,20 +107,30 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 				const CollectionItemView *item = $(this, itemAtIndexPath, indexPath);
 				if (item) {
-					if (item->isSelected) {
-						$(this, deselectItemAtIndexPath, indexPath);
-					} else {
-						_Bool deselect = true;
-						if (self->selection == ControlSelectionMultiple) {
-							if (SDL_GetModState() & (KMOD_GUI | KMOD_CTRL)) {
-								deselect = false;
-							}
-						}
-						if (deselect) {
-							$(this, deselectAll);
-						}
 
-						$(this, selectItemAtIndexPath, indexPath);
+					switch (this->control.selection) {
+						case ControlSelectionNone:
+							break;
+						case ControlSelectionSingle:
+							if (item->isSelected) {
+								$(this, deselectItemAtIndexPath, indexPath);
+							} else {
+								$(this, deselectAll);
+								$(this, selectItemAtIndexPath, indexPath);
+							}
+							break;
+						case ControlSelectionMultiple:
+							if (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) {
+								if (item->isSelected) {
+									$(this, deselectItemAtIndexPath, indexPath);
+								} else {
+									$(this, selectItemAtIndexPath, indexPath);
+								}
+							} else {
+								$(this, deselectAll);
+								$(this, selectItemAtIndexPath, indexPath);
+							}
+							break;
 					}
 				}
 
@@ -130,10 +140,10 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 					Array *selectionIndexPaths = $(this, selectionIndexPaths);
 
 					this->delegate.didModifySelection(this, selectionIndexPaths);
-
+					
 					release(selectionIndexPaths);
 				}
-
+				
 				return true;
 			}
 		}
