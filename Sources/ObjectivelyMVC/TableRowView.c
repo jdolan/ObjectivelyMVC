@@ -147,6 +147,21 @@ static void removeCell(TableRowView *self, TableCellView *cell) {
 	$((View *) self, removeSubview, (View *) cell);
 }
 
+/**
+ * @fn void TableRowView::setSelected(TableRowView *self, _Bool selected)
+ *
+ * @memberof TableRowView
+ */
+static void setSelected(TableRowView *self, _Bool selected) {
+
+	self->isSelected = selected;
+	if (self->isSelected) {
+		self->stackView.view.backgroundColor = Colors.SelectedColor;
+	} else {
+		self->stackView.view.backgroundColor = self->assignedBackgroundColor;
+	}
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -162,6 +177,7 @@ static void initialize(Class *clazz) {
 	((TableRowViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
 	((TableRowViewInterface *) clazz->interface)->removeAllCells = removeAllCells;
 	((TableRowViewInterface *) clazz->interface)->removeCell = removeCell;
+	((TableRowViewInterface *) clazz->interface)->setSelected = setSelected;
 }
 
 Class _TableRowView = {

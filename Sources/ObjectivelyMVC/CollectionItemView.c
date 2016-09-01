@@ -87,7 +87,7 @@ static void setSelected(CollectionItemView *self, _Bool selected) {
 
 	self->isSelected = selected;
 	if (self->isSelected) {
-		self->view.borderWidth = 4;
+		self->view.borderWidth = 2;
 	} else {
 		self->view.borderWidth = 0;
 	}

@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <Objectively/IndexSet.h>
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Control.h>
@@ -86,10 +87,11 @@ struct TableViewDelegate {
 	 * @brief Called by the TableView when the row selection changes.
 	 *
 	 * @param tableView The table.
+	 * @param selectedRowIndexes The indexes of the selected rows.
 	 *
 	 * @remarks This function is optional.
 	 */
-	void (*selectionDidChange)(TableView *tableView);
+	void (*didSelectRowsAtIndexes)(TableView *tableView, const IndexSet *selectedRowIndexes);
 };
 
 #define DEFAULT_TABLE_VIEW_PADDING 4
@@ -170,11 +172,6 @@ struct TableView {
 	ScrollView *scrollView;
 
 	/**
-	 * @brief The selected row, or `-1` when no row is selected.
-	 */
-	int selectedRow;
-
-	/**
 	 * @brief The column to sort by.
 	 */
 	TableColumn *sortColumn;
@@ -229,6 +226,37 @@ struct TableViewInterface {
 	TableColumn *(*columnWithIdentifier)(const TableView *self, const char *identifier);
 
 	/**
+	 * @fn void TableView::deselectAll(TableView *self)
+	 *
+	 * @brief Deselects all rows in this TableView.
+	 *
+	 * @memberof TableView
+	 */
+	void (*deselectAll)(TableView *self);
+
+	/**
+	 * @fn void TableView::deselectRowAtIndex(TableView *self, int index)
+	 *
+	 * @brief Deselects the row at the given index.
+	 *
+	 * @param index The index of the row to deselect.
+	 *
+	 * @memberof TableView
+	 */
+	void (*deselectRowAtIndex)(TableView *self, int index);
+
+	/**
+	 * @fn void TableView::deselectItemsAtIndexSets(TableView *self, const IndexSet *indexSet)
+	 *
+	 * @brief Deselects the rows at the given indexes.
+	 *
+	 * @param indexSet The index set of the rows to deselect.
+	 *
+	 * @memberof TableView
+	 */
+	void (*deselectRowsAtIndexes)(TableView *self, const IndexSet *indexSet);
+
+	/**
 	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
 	 *
 	 * @brief Initializes this TableView with the specified frame and style.
@@ -277,15 +305,44 @@ struct TableViewInterface {
 	int (*rowAtPoint)(const TableView *self, const SDL_Point *point);
 
 	/**
+	 * @fn void TableView::selectAll(TableView *self)
+	 *
+	 * @brief Selects all rows in this TableView.
+	 *
+	 * @memberof TableView
+	 */
+	void (*selectAll)(TableView *self);
+
+	/**
+	 * @fn Array *TableView::selectedRowIndexes(const TableView *self)
+	 *
+	 * @return An IndexSet containing the indices of all selected rows.
+	 *
+	 * @memberof TableView
+	 */
+	IndexSet *(*selectedRowIndexes)(const TableView *self);
+
+	/**
 	 * @fn void TableView::selectRowAtIndex(TableView *self, int index)
 	 *
 	 * @brief Selects the row at the given index.
 	 *
-	 * @param index The index of the row to select, or `-1` to clear the selection.
+	 * @param index The index of the row to select.
 	 *
 	 * @memberof TableView
 	 */
 	void (*selectRowAtIndex)(TableView *self, int index);
+
+	/**
+	 * @fn void TableView::selectRowsAtIndexes(TableView *self, const IndexSet *indexes)
+	 *
+	 * @brief Selects the rows at the given indexes.
+	 *
+	 * @param indexes The indexes of the rows to select.
+	 *
+	 * @memberof TableView
+	 */
+	void (*selectRowsAtIndexes)(TableView *self, const IndexSet *indexes);
 
 	/**
 	 * @fn void TableView::setSortColumn(TableView *self, TableColumn *column)

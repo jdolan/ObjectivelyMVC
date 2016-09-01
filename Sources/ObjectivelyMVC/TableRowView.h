@@ -61,9 +61,19 @@ struct TableRowView {
 	TableRowViewInterface *interface;
 
 	/**
+	 * @brief The background color assigned by the table.
+	 */
+	SDL_Color assignedBackgroundColor;
+
+	/**
 	 * @brief The cells.
 	 */
 	MutableArray *cells;
+
+	/**
+	 * @brief True when this row is selected, false otherwise.
+	 */
+	_Bool isSelected;
 
 	/**
 	 * @brief The table.
@@ -124,6 +134,19 @@ struct TableRowViewInterface {
 	 * @memberof TableRowView
 	 */
 	void (*removeCell)(TableRowView *self, TableCellView *cell);
+
+	/**
+	 * @fn void TableRowView::setSelected(TableRowView *self, _Bool selected)
+	 *
+	 * @brief Sets the selected state of this row.
+	 *
+	 * @param selected The selected state.
+	 *
+	 * @remarks Subclasses may override this method to change the visual cue for selection.
+	 *
+	 * @memberof TableRowView
+	 */
+	void (*setSelected)(TableRowView *self, _Bool selected);
 };
 
 /**

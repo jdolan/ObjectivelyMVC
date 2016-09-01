@@ -138,9 +138,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 				if (this->delegate.didModifySelection) {
 					Array *selectionIndexPaths = $(this, selectionIndexPaths);
-
 					this->delegate.didModifySelection(this, selectionIndexPaths);
-					
 					release(selectionIndexPaths);
 				}
 				
@@ -386,7 +384,7 @@ static void selectAll(CollectionView *self) {
 }
 
 /**
- * @fn Array *CollectionView::selectedItems(const CollectionView *self)
+ * @fn Array *CollectionView::selectionIndexPaths(const CollectionView *self)
  *
  * @memberof CollectionView
  */

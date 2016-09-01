@@ -275,9 +275,9 @@ struct CollectionViewInterface {
 	void (*selectAll)(CollectionView *self);
 
 	/**
-	 * @fn Array *CollectionView::selectedItems(const CollectionView *self)
+	 * @fn Array *CollectionView::selectionIndexPaths(const CollectionView *self)
 	 *
-	 * @return An Array containing the indices of all selected items.
+	 * @return An Array containing the index paths of all selected items.
 	 *
 	 * @memberof CollectionView
 	 */

@@ -110,10 +110,15 @@ static Order comparator(const ident a, const ident b) {
 }
 
 /**
- * @see TableViewDelegate::selectionDidChange(TableView *)
+ * @see TableViewDelegate::didSelectRowsAtIndexes(TableView *, const IndexSet *)
  */
-static void selectionDidChange(TableView *tableView) {
-	printf("Selected row %d\n", tableView->selectedRow);
+static void didSelectRowsAtIndexes(TableView *tableView, const IndexSet *indexes) {
+
+	String *string = $((Object *) indexes, description);
+
+	printf("Selected rows %s\n", string->chars);
+
+	release(string);
 }
 
 #pragma mark - CollectionViewDataSource
@@ -214,12 +219,13 @@ static void loadView(ViewController *self) {
 	release(slider);
 
 	TableView *tableView = $(alloc(TableView), initWithFrame, NULL, ControlStyleDefault);
+	tableView->control.selection = ControlSelectionMultiple;
 
 	tableView->dataSource.numberOfRows = numberOfRows;
 	tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
 
 	tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
-	tableView->delegate.selectionDidChange = selectionDidChange;
+	tableView->delegate.didSelectRowsAtIndexes = didSelectRowsAtIndexes;
 
 	TableColumn *column1 = $(alloc(TableColumn), initWithIdentifier, "One");
 	TableColumn *column2 = $(alloc(TableColumn), initWithIdentifier, "Two");
@@ -245,15 +251,19 @@ static void loadView(ViewController *self) {
 
 	CollectionView *collectionView = $(alloc(CollectionView), initWithFrame, NULL, ControlStyleDefault);
 	collectionView->axis = CollectionViewAxisHorizontal;
-	collectionView->dataSource.numberOfItems = numberOfItems;
-	collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
-	collectionView->delegate.itemForObjectAtIndexPath = itemForObjectAtIndexPath;
-	collectionView->delegate.didModifySelection = didModifySelection;
-	collectionView->itemSize.w = 64;
-	collectionView->itemSize.w = 48;
+
 	collectionView->control.selection = ControlSelectionMultiple;
 	collectionView->control.view.frame.h = 180;
 	collectionView->control.view.autoresizingMask = ViewAutoresizingWidth;
+
+	collectionView->dataSource.numberOfItems = numberOfItems;
+	collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
+
+	collectionView->delegate.itemForObjectAtIndexPath = itemForObjectAtIndexPath;
+	collectionView->delegate.didModifySelection = didModifySelection;
+
+	collectionView->itemSize.w = 64;
+	collectionView->itemSize.w = 48;
 
 	$(collectionView, reloadData);
 	

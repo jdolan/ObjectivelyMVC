@@ -60,15 +60,13 @@ static void layoutSubviews(View *self) {
 		TableRowView *row = (TableRowView *) $(rows, objectAtIndex, i);
 		row->stackView.view.frame.h = this->rowHeight;
 
-		if (this->selectedRow == i) {
-			row->stackView.view.backgroundColor = Colors.SelectedColor;
+		if (this->usesAlternateBackgroundColor && (i & 1)) {
+			row->assignedBackgroundColor = this->alternateBackgroundColor;
 		} else {
-			if (this->usesAlternateBackgroundColor && (i & 1)) {
-				row->stackView.view.backgroundColor = this->alternateBackgroundColor;
-			} else {
-				row->stackView.view.backgroundColor = Colors.Clear;
-			}
+			row->assignedBackgroundColor = Colors.Clear;
 		}
+
+		row->stackView.view.backgroundColor = row->assignedBackgroundColor;
 	}
 
 	super(View, self, layoutSubviews);
@@ -136,11 +134,37 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 					.y = event->button.y
 				};
 
-				const int row = $(this, rowAtPoint, &point);
-				if (row == this->selectedRow) {
-					$(this, selectRowAtIndex, -1);
-				} else {
-					$(this, selectRowAtIndex, row);
+				const int index = $(this, rowAtPoint, &point);
+
+				const Array *rows = (Array *) this->rows;
+				if (index > -1 && index < rows->count) {
+
+					TableRowView *row = $(rows, objectAtIndex, index);
+
+					switch (this->control.selection) {
+						case ControlSelectionNone:
+							break;
+						case ControlSelectionSingle:
+							if (row->isSelected) {
+								$(this, deselectRowAtIndex, index);
+							} else {
+								$(this, deselectAll);
+								$(this, selectRowAtIndex, index);
+							}
+							break;
+						case ControlSelectionMultiple:
+							if (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) {
+								if (row->isSelected) {
+									$(this, deselectRowAtIndex, index);
+								} else {
+									$(this, selectRowAtIndex, index);
+								}
+							} else {
+								$(this, deselectAll);
+								$(this, selectRowAtIndex, index);
+							}
+							break;
+					}
 				}
 			}
 
@@ -214,6 +238,52 @@ static TableColumn *columnWithIdentifier(const TableView *self, const char *iden
 
 	return NULL;
 }
+
+/**
+ * @brief ArrayEnumerator for all Row deselection.
+ */
+static _Bool deselectAll_enumerate(const Array *array, ident obj, ident data) {
+	$((TableRowView *) obj, setSelected, false); return false;
+}
+
+/**
+ * @fn void TableView::deselectAll(TableView *self)
+ *
+ * @memberof TableView
+ */
+static void deselectAll(TableView *self) {
+	$((Array *) self->rows, enumerateObjects, deselectAll_enumerate, NULL);
+}
+
+/**
+ * @fn void TableView::deselectRowAtIndex(TableView *self, int index)
+ *
+ * @memberof TableView
+ */
+static void deselectRowAtIndex(TableView *self, int index) {
+
+	const Array *rows = (Array *) self->rows;
+	if (index > -1 && index < rows->count) {
+
+		TableRowView *row = $(rows, objectAtIndex, index);
+		$(row, setSelected, false);
+	}
+}
+
+/**
+ * @fn void TableView::deselectRowsAtIndexes(TableView *self, const IndexSet *indexes)
+ *
+ * @memberof TableView
+ */
+static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
+
+	if (indexes) {
+		for (size_t i = 0; i < indexes->count; i++) {
+			$(self, deselectRowAtIndex, indexes->indexes[i]);
+		}
+	}
+}
+
 
 /**
  * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
@@ -370,8 +440,6 @@ static void reloadData(TableView *self) {
 
 	$((Array *) self->rows, enumerateObjects, reloadData_addRows, self->contentView);
 
-	self->selectedRow = -1;
-
 	$((View *) self, layoutSubviews);
 }
 
@@ -409,19 +477,71 @@ static int rowAtPoint(const TableView *self, const SDL_Point *point) {
 }
 
 /**
+ * @brief ArrayEnumerator for all row selection.
+ */
+static _Bool selectAll_enumerate(const Array *array, ident obj, ident data) {
+	$((TableRowView *) obj, setSelected, true); return false;
+}
+
+/**
+ * @fn void TableView::selectAll(TableView *self)
+ *
+ * @memberof TableView
+ */
+static void selectAll(TableView *self) {
+	$((Array *) self->rows, enumerateObjects, selectAll_enumerate, NULL);
+}
+
+/**
+ * @fn IndexSet *TableView::selectedRowIndexes(const TableView *self)
+ *
+ * @memberof TableView
+ */
+static IndexSet *selectedRowIndexes(const TableView *self) {
+
+	int indexes[self->rows->array.count];
+	size_t count = 0;
+
+	const Array *rows = (Array *) self->rows;
+	for (size_t i = 0; i < rows->count; i++) {
+
+		const TableRowView *row = $(rows, objectAtIndex, i);
+		if (row->isSelected) {
+
+			indexes[count++] = i;
+		}
+	}
+
+	return $(alloc(IndexSet), initWithIndexes, indexes, count);
+}
+
+/**
  * @fn void TableView::selectRowAtIndex(TableView *self, int index)
  *
  * @memberof TableView
  */
 static void selectRowAtIndex(TableView *self, int index) {
 
-	self->selectedRow = clamp(index, -1, (int) self->rows->array.count - 1);
+	const Array *rows = (Array *) self->rows;
+	if (index > -1 && index < rows->count) {
 
-	if (self->delegate.selectionDidChange) {
-		self->delegate.selectionDidChange(self);
+		TableRowView *row = $(rows, objectAtIndex, index);
+		$(row, setSelected, true);
 	}
+}
 
-	((View *) self)->needsLayout = true;
+/**
+ * @fn void TableView::selectRowsAtIndexes(TableView *self, const IndexSet *indexes)
+ *
+ * @memberof TableView
+ */
+static void selectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
+
+	if (indexes) {
+		for (size_t i = 0; i < indexes->count; i++) {
+			$(self, selectRowAtIndex, indexes->indexes[i]);
+		}
+	}
 }
 
 /**
@@ -469,11 +589,17 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
 	((TableViewInterface *) clazz->interface)->columnAtPoint = columnAtPoint;
 	((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;
+	((TableViewInterface *) clazz->interface)->deselectAll = deselectAll;
+	((TableViewInterface *) clazz->interface)->deselectRowAtIndex = deselectRowAtIndex;
+	((TableViewInterface *) clazz->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
 	((TableViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((TableViewInterface *) clazz->interface)->reloadData = reloadData;
 	((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
 	((TableViewInterface *) clazz->interface)->rowAtPoint = rowAtPoint;
+	((TableViewInterface *) clazz->interface)->selectedRowIndexes = selectedRowIndexes;
+	((TableViewInterface *) clazz->interface)->selectAll = selectAll;
 	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
+	((TableViewInterface *) clazz->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
 	((TableViewInterface *) clazz->interface)->setSortColumn = setSortColumn;
 }
 
