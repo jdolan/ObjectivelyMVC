@@ -165,6 +165,14 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							}
 							break;
 					}
+
+					if (this->delegate.didSelectRowsAtIndexes) {
+						IndexSet *selectedRowIndexes = $(this, selectedRowIndexes);
+
+						this->delegate.didSelectRowsAtIndexes(this, selectedRowIndexes);
+
+						release(selectedRowIndexes);
+					}
 				}
 			}
 

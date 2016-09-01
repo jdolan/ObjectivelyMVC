@@ -132,16 +132,17 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							}
 							break;
 					}
+
+					if (this->delegate.didModifySelection) {
+						Array *selectionIndexPaths = $(this, selectionIndexPaths);
+
+						this->delegate.didModifySelection(this, selectionIndexPaths);
+
+						release(selectionIndexPaths);
+					}
 				}
 
 				release(indexPath);
-
-				if (this->delegate.didModifySelection) {
-					Array *selectionIndexPaths = $(this, selectionIndexPaths);
-					this->delegate.didModifySelection(this, selectionIndexPaths);
-					release(selectionIndexPaths);
-				}
-				
 				return true;
 			}
 		}
