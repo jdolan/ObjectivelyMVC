@@ -64,12 +64,12 @@ static void layoutSubviews(View *self) {
 		
 		View *option = $(options, objectAtIndex, i);
 		if ((Option *) option == this->selectedOption) {
-			option->hidden = false;
+			option->isHidden = false;
 		} else {
-			option->hidden = this->control.state != ControlStateHighlighted;
+			option->isHidden = this->control.state != ControlStateHighlighted;
 		}
 		
-		if (option->hidden == false) {
+		if (option->isHidden == false) {
 
 			if (this->control.state == ControlStateHighlighted) {
 				if ((Option *) option == this->selectedOption) {

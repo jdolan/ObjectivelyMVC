@@ -57,7 +57,7 @@ static void layoutSubviews(View *self) {
 
 	if (this->max > this->min) {
 
-		if (((View *) this->label)->hidden == false) {
+		if (((View *) this->label)->isHidden == false) {
 			int minWidth, maxWidth;
 			char text[64];
 

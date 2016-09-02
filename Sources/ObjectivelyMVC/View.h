@@ -27,6 +27,7 @@
 #include <SDL2/SDL_opengl.h>
 #include <SDL2/SDL_video.h>
 
+#include <Objectively/Dictionary.h>
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Colors.h>
@@ -76,11 +77,36 @@ typedef enum {
 } ViewAutoresizing;
 
 /**
- * @brief Padding: like bounds, but easier.
+ * @brief Spacing applied to the inside of a View's frame.
  */
 typedef struct {
 	int top, right, bottom, left;
 } Padding;
+
+
+typedef struct Outlet Outlet;
+
+/**
+ * @brief Outlets allow the resolution of Views from JSON files.
+ */
+struct Outlet {
+
+	/**
+	 * @brief The View identifier.
+	 */
+	const char *identifier;
+
+	/**
+	 * @brief The output storage for the resolved View.
+	 */
+	View **view;
+};
+
+/**
+ * @brief Creates an Outlet with the specified parameters.
+ */
+#define MakeOutlet(identifier, view) \
+	({ Outlet _outlet = { (identifier), (view) }; _outlet; })
 
 typedef struct ViewInterface ViewInterface;
 
@@ -146,7 +172,14 @@ struct View {
 	/**
 	 * @brief If `true`, this View is not drawn.
 	 */
-	_Bool hidden;
+	_Bool isHidden;
+
+	/**
+	 * @brief An optional identifier.
+	 *
+	 * @remarks Identifiers are commonly used to resolve outlets when loading Views via JSONView.
+	 */
+	char *identifier;
 	
 	/**
 	 * @brief If true,
@@ -298,13 +331,30 @@ struct ViewInterface {
 	View *(*firstResponder)(void);
 
 	/**
+	 * @fn View *View::initWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
+	 *
+	 * @brief Initializes this View with the specified Dictionary.
+	 *
+	 * @param dictionary A Dictionary of properties describing this View.
+	 * @param outlets An optional array of Outlets to resolve.
+	 *
+	 * @return The initialized View, or `NULL` on error.
+	 *
+	 * @remarks This is the designated initializer for JSON View loading. Subclasses should 
+	 * override this method to perform any customization based on the contents of `dictionary`.
+	 *
+	 * @memberof View
+	 */
+	View *(*initWithDictionary)(View *self, const Dictionary *dictionary, Outlet *outlets);
+
+	/**
 	 * @fn View *View::initWithFrame(View *self, const SDL_Rect *frame)
 	 *
 	 * @brief Initializes this View with the specified frame.
 	 *
 	 * @param frame The frame.
 	 *
-	 * @return The initialized View, or NULL on error.
+	 * @return The initialized View, or `NULL` on error.
 	 *
 	 * @memberof View
 	 */

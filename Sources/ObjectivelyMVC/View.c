@@ -23,10 +23,37 @@
 
 #include <assert.h>
 
+#include <Objectively/Enum.h>
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
+
+#include <ObjectivelyMVC/JSONView.h>
+
+static const EnumName ViewAlignmentNames[] = {
+	NameEnum(ViewAlignmentNone),
+	NameEnum(ViewAlignmentTopLeft),
+	NameEnum(ViewAlignmentTopCenter),
+	NameEnum(ViewAlignmentTopRight),
+	NameEnum(ViewAlignmentMiddleLeft),
+	NameEnum(ViewAlignmentMiddleCenter),
+	NameEnum(ViewAlignmentMiddleRight),
+	NameEnum(ViewAlignmentBottomLeft),
+	NameEnum(ViewAlignmentBottomCenter),
+	NameEnum(ViewAlignmentBottomRight),
+	NameEnum(ViewAlignmentInternal),
+	EnumNameLast
+};
+
+static const EnumName ViewAutoresizingNames[] = {
+	NameEnum(ViewAutoresizingNone),
+	NameEnum(ViewAutoresizingWidth),
+	NameEnum(ViewAutoresizingHeight),
+	NameEnum(ViewAutoresizingFill),
+	NameEnum(ViewAutoresizingContain),
+	EnumNameLast
+};
 
 Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
 Uint32 MVC_EVENT_UPDATE_BINDINGS;
@@ -43,7 +70,9 @@ static View *_firstResponder;
 static void dealloc(Object *self) {
 
 	View *this = (View *) self;
-	
+
+	free(this->identifier);
+
 	$(this, removeFromSuperview);
 
 	release(this->subviews);
@@ -252,7 +281,7 @@ static void draw(View *self, Renderer *renderer) {
 	
 	assert(renderer);
 	
-	if (self->hidden == false) {
+	if (self->isHidden == false) {
 
 		$(renderer, addView, self);
 
@@ -267,6 +296,55 @@ static void draw(View *self, Renderer *renderer) {
  */
 static View *firstResponder(void) {
 	return _firstResponder;
+}
+
+/**
+ * @fn View *View::initWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
+ *
+ * @memberof View
+ */
+static View *initWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets) {
+
+	self = $(self, initWithFrame, NULL);
+	if (self) {
+
+		const ident root = (ident) dictionary;
+
+		String *identifier = $$(JSONPath, objectWithPath, root, "$.identifier");
+		if (identifier) {
+			self->identifier = strdup(identifier->chars);
+			for (Outlet *outlet = outlets; outlet->identifier; outlet++) {
+				if (strcmp(outlet->identifier, self->identifier) == 0) {
+					*outlet->view = self;
+				}
+			}
+		}
+
+		self->alignment = $$(JSONPath, enumWithPath, root, "$.alignment", ViewAlignmentNames);
+		self->autoresizingMask = $$(JSONPath, enumWithPath, root, "$.autoresizingMask", ViewAutoresizingNames);
+		self->backgroundColor = $$(JSONView, colorWithPath, root, "$.backgroundColor");
+		self->borderColor = $$(JSONView, colorWithPath, root, "$.borderColor");
+		self->borderWidth = $$(JSONPath, intWithPath, root, "$.borderWidth");
+		self->frame = $$(JSONView, rectWithPath, root, "$.frame");
+		self->isHidden = $$(JSONPath, boolWithPath, root, "$.isHidden");
+		self->padding = $$(JSONView, paddingWithPath, root, "$.padding");
+		self->zIndex = $$(JSONPath, intWithPath, root, "$.zIndex");
+
+		const Array *subviews = $$(JSONPath, objectWithPath, root, "$.subviews");
+		if (subviews) {
+
+			for (size_t i = 0; i < subviews->count; i++) {
+				const Dictionary *dictionary = $(subviews, objectAtIndex, i);
+
+				View *subview = $$(JSONView, viewWithDictionary, dictionary, outlets);
+				$(self, addSubview, subview);
+
+				release(subview);
+			}
+		}
+	}
+
+	return self;
 }
 
 /**
@@ -327,7 +405,7 @@ static _Bool isFirstResponder(const View *self) {
 static _Bool isVisible(const View *self) {
 
 	for (const View *view = self; view; view = view->superview) {
-		if (view->hidden) {
+		if (view->isHidden) {
 			return false;
 		}
 	}
@@ -664,7 +742,7 @@ static _Bool visibleSubviews_filter(ident obj, ident data) {
 
 	const View *view = (View *) obj;
 
-	return view->hidden == false && view->alignment != ViewAlignmentInternal;
+	return view->isHidden == false && view->alignment != ViewAlignmentInternal;
 }
 
 /**
@@ -705,6 +783,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->interface)->draw = draw;
 	((ViewInterface *) clazz->interface)->firstResponder = firstResponder;
+	((ViewInterface *) clazz->interface)->initWithDictionary = initWithDictionary;
 	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
 	((ViewInterface *) clazz->interface)->isFirstResponder = isFirstResponder;

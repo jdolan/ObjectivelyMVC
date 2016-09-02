@@ -76,7 +76,7 @@ static void layoutSubviews(View *self) {
 	View *headerView = (View *) this->headerView;
 	View *scrollView = (View *) this->scrollView;
 
-	if (headerView->hidden == false) {
+	if (headerView->isHidden == false) {
 		scrollView->frame.y = headerView->frame.h;
 		scrollView->frame.h = max(0, scrollView->frame.h - headerView->frame.h);
 	} else {
