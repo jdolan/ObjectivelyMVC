@@ -25,6 +25,14 @@
 
 #include <ObjectivelyMVC/CollectionView.h>
 
+#include <ObjectivelyMVC/JSONView.h>
+
+static const EnumName CollectionViewAxisNames[] = {
+	NameEnum(CollectionViewAxisHorizontal),
+	NameEnum(CollectionViewAxisVertical),
+	EnumNameLast
+};
+
 #define _Class _CollectionView
 
 #pragma mark - Object
@@ -45,6 +53,33 @@ static void dealloc(Object *self) {
 
 #pragma mark - View
 
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	const Inlet inlets[] = {
+		MakeInlet("axis", InletTypeEnum, offsetof(CollectionView, axis), (ident) CollectionViewAxisNames),
+		MakeInlet("itemSize", InletTypeSize, offsetof(CollectionView, itemSize), NULL),
+		MakeInlet("itemSpacing", InletTypeSize, offsetof(CollectionView, itemSpacing), NULL),
+		MakeInlet(NULL, 0, 0, NULL)
+	};
+
+	$$(JSONView, applyInlets, self, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((CollectionView *) self, initWithFrame, NULL, ControlStyleDefault);
+}
+
+/**
+ * @see View::layoutSubviews(View *)
+ */
 static void layoutSubviews(View *self) {
 
 	CollectionView *this = (CollectionView *) self;
@@ -452,6 +487,8 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
