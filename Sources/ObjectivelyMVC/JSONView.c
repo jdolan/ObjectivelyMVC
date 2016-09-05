@@ -93,9 +93,9 @@ static __thread Outlet *_outlets;
  */
 static _Bool viewWithDictionary_recurse(const Array *array, ident obj, ident data) {
 
-	View *subview = $$(JSONView, viewWithDictionary, obj, _outlets);
+	View *subview = $$(JSONView, viewWithDictionary, cast(Dictionary, obj), _outlets);
 
-	$((View *) data, addSubview, subview);
+	$(cast(View, data), addSubview, subview);
 
 	release(subview);
 
@@ -103,38 +103,6 @@ static _Bool viewWithDictionary_recurse(const Array *array, ident obj, ident dat
 }
 
 #pragma mark - JSONView
-
-/**
- * @fn View *JSONView::viewWithContentsOfFile(const char *path, Outlet *outlets)
- *
- * @memberof JSONView
- */
-static View *viewWithContentsOfFile(const char *path, Outlet *outlets) {
-
-	Data *data = $$(Data, dataWithContentsOfFile, path);
-
-	View *view = $$(JSONView, viewWithData, data, outlets);
-
-	release(data);
-
-	return view;
-}
-
-/**
- * @fn View *JSONView::viewWithData(const Data *data, Outlet *outlets)
- *
- * @memberof JSONView
- */
-static View *viewWithData(const Data *data, Outlet *outlets) {
-
-	Dictionary *dictionary = $$(JSONSerialization, objectFromData, data, 0);
-
-	View *view = $$(JSONView, viewWithDictionary, dictionary, outlets);
-
-	release(dictionary);
-	
-	return view;
-}
 
 /**
  * @fn void JSONView::applyInlets(View *view, const Dictionary *dictionary, const Inlet *inlets)
@@ -172,14 +140,49 @@ static void applyInlets(View *view, const Dictionary *dictionary, const Inlet *i
 				case InletTypeSize:
 					*((SDL_Size *) dest) = sizeForArray(cast(Array, obj));
 					break;
-				case InletTypeViewArray:
-					$(cast(Array, obj), enumerateObjects, viewWithDictionary_recurse, inlet->data ?: view);
+				case InletTypeView:
+					*((View **) dest) = $$(JSONView, viewWithDictionary, cast(Dictionary, obj), _outlets);
+					break;
+				case InletTypeViews:
+					$(cast(Array, obj), enumerateObjects, viewWithDictionary_recurse, inlet->data);
 					break;
 			}
 		}
 
 		inlet++;
 	}
+}
+
+/**
+ * @fn View *JSONView::viewWithContentsOfFile(const char *path, Outlet *outlets)
+ *
+ * @memberof JSONView
+ */
+static View *viewWithContentsOfFile(const char *path, Outlet *outlets) {
+
+	Data *data = $$(Data, dataWithContentsOfFile, path);
+
+	View *view = $$(JSONView, viewWithData, data, outlets);
+
+	release(data);
+
+	return view;
+}
+
+/**
+ * @fn View *JSONView::viewWithData(const Data *data, Outlet *outlets)
+ *
+ * @memberof JSONView
+ */
+static View *viewWithData(const Data *data, Outlet *outlets) {
+
+	Dictionary *dictionary = $$(JSONSerialization, objectFromData, data, 0);
+
+	View *view = $$(JSONView, viewWithDictionary, dictionary, outlets);
+
+	release(dictionary);
+	
+	return view;
 }
 
 /**
@@ -191,15 +194,15 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
 	_outlets = outlets;
 
-	String *string = $$(JSONPath, objectForKeyPath, (ident) dictionary, "$.class");
-	if (string) {
-		Class *clazz = classFromString(string->chars);
+	String *className = $(dictionary, objectForKeyPath, "class");
+	if (className) {
+		Class *clazz = classForName(className->chars);
 		if (clazz) {
 			const Class *c = clazz;
 			while (c) {
 				if (c == &_View) {
-					View *view = $((View *) _alloc(clazz), init);
 
+					View *view = $((View *) _alloc(clazz), init);
 					$(view, awakeWithDictionary, dictionary);
 
 					const Array *subviews = $(dictionary, objectForKeyPath, "subviews");
@@ -214,14 +217,18 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 							}
 						}
 					}
-					
+
+					String *description = $((Object *) view, description);
+					MVC_LogDebug("Instantiated %s\n", description->chars);
+					release(description);
+
 					return view;
 				}
 				c = c->superclass;
 			}
-			MVC_LogError("Class %s does not extend View\n", string->chars);
+			MVC_LogError("Class %s does not extend View\n", className->chars);
 		} else {
-			MVC_LogError("Class %s not found. Did you _initialize it?\n", string->chars);
+			MVC_LogError("Class %s not found. Did you _initialize it?\n", className->chars);
 		}
 	} else {
 		MVC_LogError("View Class not specified\n");

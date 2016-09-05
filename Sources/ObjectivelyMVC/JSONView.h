@@ -45,7 +45,8 @@ typedef enum {
 	InletTypeInteger,
 	InletTypeRectangle,
 	InletTypeSize,
-	InletTypeViewArray
+	InletTypeView,
+	InletTypeViews
 } InletType;
 
 typedef struct Inlet Inlet;

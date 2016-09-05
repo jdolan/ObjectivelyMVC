@@ -56,10 +56,11 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	Panel *this = (Panel *) self;
 
 	const Inlet inlets[] = {
-		MakeInlet("accessoriesView", InletTypeViewArray, 0, this->accessoryView),
-		MakeInlet("contentView", InletTypeViewArray, 0, this->contentView),
+		MakeInlet("accessoriesView", InletTypeViews, 0, this->accessoryView),
+		MakeInlet("contentView", InletTypeViews, 0, this->contentView),
 		MakeInlet("isDraggable", InletTypeBool, offsetof(Panel, isDraggable), NULL),
 		MakeInlet("isResiable", InletTypeBool, offsetof(Panel, isResizable), NULL),
+		MakeInlet(NULL, 0, 0, NULL)
 	};
 
 	$$(JSONView, applyInlets, self, dictionary, inlets);
