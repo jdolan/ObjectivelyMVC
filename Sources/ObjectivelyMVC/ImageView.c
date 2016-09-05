@@ -21,9 +21,27 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <assert.h>
+
 #include <ObjectivelyMVC/ImageView.h>
 
-#include <assert.h>
+#include <ObjectivelyMVC/JSONView.h>
+
+static const EnumName BlendNames[] = {
+	NameEnum(GL_CONSTANT_ALPHA),
+	NameEnum(GL_CONSTANT_COLOR),
+	NameEnum(GL_DST_ALPHA),
+	NameEnum(GL_DST_COLOR),
+	NameEnum(GL_ONE),
+	NameEnum(GL_ONE_MINUS_DST_ALPHA),
+	NameEnum(GL_ONE_MINUS_DST_COLOR),
+	NameEnum(GL_ONE_MINUS_SRC_ALPHA),
+	NameEnum(GL_ONE_MINUS_SRC_COLOR),
+	NameEnum(GL_SRC_ALPHA),
+	NameEnum(GL_SRC_COLOR),
+	NameEnum(GL_ZERO),
+	EnumNameLast
+};
 
 #define _Class _ImageView
 
@@ -44,6 +62,31 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - View
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	const Inlet inlets[] = {
+		MakeInlet("alpha", InletTypeFloat, offsetof(ImageView, alpha), NULL),
+		MakeInlet("blend.src", InletTypeEnum, offsetof(ImageView, blend.src), (ident) BlendNames),
+		MakeInlet("blend.dst", InletTypeEnum, offsetof(ImageView, blend.dst), (ident) BlendNames),
+		MakeInlet("image", InletTypeImage, offsetof(ImageView, image), NULL),
+		MakeInlet(NULL, 0, 0, NULL)
+	};
+
+	$$(JSONView, applyInlets, self, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((ImageView *) self, initWithImage, NULL);
+}
 
 /**
  * @see ViewInterface::render(View *, Renderer *)
@@ -164,6 +207,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->render = render;
 	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
 

@@ -128,8 +128,17 @@ static void applyInlets(View *view, const Dictionary *dictionary, const Inlet *i
 				case InletTypeColor:
 					*((SDL_Color *) dest) = colorForArray(cast(Array, obj));
 					break;
+				case InletTypeDouble:
+					*((double *) dest) = cast(Number, obj)->value;
+					break;
+				case InletTypeFloat:
+					*((float *) dest) = cast(Number, obj)->value;
+					break;
 				case InletTypeEnum:
 					*((int *) dest) = valueof(inlet->data, (cast(String, obj))->chars);
+					break;
+				case InletTypeImage:
+					*((Image **) dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
 					break;
 				case InletTypeInteger:
 					*((int *) dest) = cast(Number, obj)->value;
@@ -144,7 +153,7 @@ static void applyInlets(View *view, const Dictionary *dictionary, const Inlet *i
 					*((View **) dest) = $$(JSONView, viewWithDictionary, cast(Dictionary, obj), _outlets);
 					break;
 				case InletTypeViews:
-					$(cast(Array, obj), enumerateObjects, viewWithDictionary_recurse, inlet->data);
+					$(cast(Array, obj), enumerateObjects, viewWithDictionary_recurse, *(View **) dest);
 					break;
 			}
 		}
