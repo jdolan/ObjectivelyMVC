@@ -111,6 +111,30 @@ static void addSubview(View *self, View *subview) {
 }
 
 /**
+ * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary)
+ *
+ * @memberof View
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	const Inlet inlets[] = {
+		MakeInlet("identifier", InletTypeCharacters, offsetof(View, identifier), NULL),
+		MakeInlet("alignment", InletTypeEnum, offsetof(View, alignment), (ident) ViewAlignmentNames),
+		MakeInlet("autoresizingMask", InletTypeEnum, offsetof(View, autoresizingMask), (ident) ViewAutoresizingNames),
+		MakeInlet("backgroundColor", InletTypeColor, offsetof(View, backgroundColor), NULL),
+		MakeInlet("borderColor", InletTypeColor, offsetof(View, borderColor), NULL),
+		MakeInlet("borderWidth", InletTypeInteger, offsetof(View, borderWidth), NULL),
+		MakeInlet("frame", InletTypeRectangle, offsetof(View, frame), NULL),
+		MakeInlet("isHidden", InletTypeBool, offsetof(View, isHidden), NULL),
+		MakeInlet("padding", InletTypeRectangle, offsetof(View, padding), NULL),
+		MakeInlet("zIndex", InletTypeInteger, offsetof(View, zIndex), NULL),
+		MakeInlet(NULL, 0, 0, NULL)
+	};
+
+	$$(JSONView, applyInlets, self, dictionary, inlets);
+}
+
+/**
  * @fn void View::becomeFirstResponder(View *self)
  *
  * @memberof View
@@ -299,52 +323,12 @@ static View *firstResponder(void) {
 }
 
 /**
- * @fn View *View::initWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
+ * @fn View *View::init(View *self)
  *
  * @memberof View
  */
-static View *initWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets) {
-
-	self = $(self, initWithFrame, NULL);
-	if (self) {
-
-		const ident root = (ident) dictionary;
-
-		String *identifier = $$(JSONPath, objectWithPath, root, "$.identifier");
-		if (identifier) {
-			self->identifier = strdup(identifier->chars);
-			for (Outlet *outlet = outlets; outlet->identifier; outlet++) {
-				if (strcmp(outlet->identifier, self->identifier) == 0) {
-					*outlet->view = self;
-				}
-			}
-		}
-
-		self->alignment = $$(JSONPath, enumWithPath, root, "$.alignment", ViewAlignmentNames);
-		self->autoresizingMask = $$(JSONPath, enumWithPath, root, "$.autoresizingMask", ViewAutoresizingNames);
-		self->backgroundColor = $$(JSONView, colorWithPath, root, "$.backgroundColor");
-		self->borderColor = $$(JSONView, colorWithPath, root, "$.borderColor");
-		self->borderWidth = $$(JSONPath, intWithPath, root, "$.borderWidth");
-		self->frame = $$(JSONView, rectWithPath, root, "$.frame");
-		self->isHidden = $$(JSONPath, boolWithPath, root, "$.isHidden");
-		self->padding = $$(JSONView, paddingWithPath, root, "$.padding");
-		self->zIndex = $$(JSONPath, intWithPath, root, "$.zIndex");
-
-		const Array *subviews = $$(JSONPath, objectWithPath, root, "$.subviews");
-		if (subviews) {
-
-			for (size_t i = 0; i < subviews->count; i++) {
-				const Dictionary *dictionary = $(subviews, objectAtIndex, i);
-
-				View *subview = $$(JSONView, viewWithDictionary, dictionary, outlets);
-				$(self, addSubview, subview);
-
-				release(subview);
-			}
-		}
-	}
-
-	return self;
+static View *init(View *self) {
+	return $(self, initWithFrame, NULL);
 }
 
 /**
@@ -353,17 +337,17 @@ static View *initWithDictionary(View *self, const Dictionary *dictionary, Outlet
  * @memberof View
  */
 static View *initWithFrame(View *self, const SDL_Rect *frame) {
-	
+
 	self = (View *) super(Object, self, init);
 	if (self) {
 		
 		if (frame) {
 			self->frame = *frame;
 		}
-		
+
 		self->subviews = $$(MutableArray, array);
 		assert(self->subviews);
-		
+
 		self->backgroundColor = Colors.Clear;
 		self->borderColor = Colors.White;
 	}
@@ -774,6 +758,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->description = description;
 
 	((ViewInterface *) clazz->interface)->addSubview = addSubview;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->interface)->bounds = bounds;
 	((ViewInterface *) clazz->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
@@ -783,7 +768,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->interface)->draw = draw;
 	((ViewInterface *) clazz->interface)->firstResponder = firstResponder;
-	((ViewInterface *) clazz->interface)->initWithDictionary = initWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
 	((ViewInterface *) clazz->interface)->isFirstResponder = isFirstResponder;
@@ -831,7 +816,7 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
 	SDL_Rect transformed = *rect;
 
-	int dh;
+	int dh = 0;
 	const double scale = MVC_WindowScale(window, NULL, &dh);
 
 	transformed.x *= scale;

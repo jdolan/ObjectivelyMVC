@@ -27,6 +27,8 @@
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Panel.h>
 
+#include <ObjectivelyMVC/JSONView.h>
+
 #define _Class _Panel
 
 #pragma mark - Object
@@ -46,6 +48,29 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - View
+
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	Panel *this = (Panel *) self;
+
+	const Inlet inlets[] = {
+		MakeInlet("accessoriesView", InletTypeViewArray, 0, this->accessoryView),
+		MakeInlet("contentView", InletTypeViewArray, 0, this->contentView),
+		MakeInlet("isDraggable", InletTypeBool, offsetof(Panel, isDraggable), NULL),
+		MakeInlet("isResiable", InletTypeBool, offsetof(Panel, isResizable), NULL),
+	};
+
+	$$(JSONView, applyInlets, self, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Panel *) self, initWithFrame, NULL);
+}
 
 /**
  * @see View::layoutSubviews(View *)
@@ -207,6 +232,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 

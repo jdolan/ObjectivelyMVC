@@ -45,6 +45,13 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Checkbox *) self, initWithFrame, NULL, ControlStyleDefault);
+}
+
+/**
  * @see View::render(View *, Renderer *)
  */
 static void render(View *self, Renderer *renderer) {
@@ -138,6 +145,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->render = render;
 	
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;

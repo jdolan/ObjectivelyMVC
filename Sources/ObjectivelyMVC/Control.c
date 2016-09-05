@@ -23,7 +23,24 @@
 
 #include <assert.h>
 
+#include <Objectively/Enum.h>
+
 #include <ObjectivelyMVC/Control.h>
+
+#include <ObjectivelyMVC/JSONView.h>
+
+static const EnumName ControlSelectionNames[] = {
+	NameEnum(ControlSelectionNone),
+	NameEnum(ControlSelectionSingle),
+	NameEnum(ControlSelectionMultiple),
+	EnumNameLast
+};
+
+static const EnumName ControlStyleNames[] = {
+	NameEnum(ControlStyleDefault),
+	NameEnum(ControlStyleCustom),
+	EnumNameLast
+};
 
 #define _Class _Control
 
@@ -42,6 +59,29 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - View
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	const Inlet inlets[] = {
+		MakeInlet("selection", InletTypeEnum, offsetof(Control, selection), (ident) ControlSelectionNames),
+		MakeInlet("style", InletTypeEnum, offsetof(Control, style), (ident) ControlStyleNames),
+		MakeInlet(NULL, 0, 0, NULL)
+	};
+
+	$$(JSONView, applyInlets, self, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Control *) self, initWithFrame, NULL, ControlStyleDefault);
+}
 
 /**
  * @see View::render(View *, Renderer *)
@@ -233,13 +273,11 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle
 	
 	self = (Control *) super(View, self, initWithFrame, frame);
 	if (self) {
-		self->style = style;
 
 		self->actions = $$(MutableArray, array);
 		assert(self->actions);
 
-		self->selection = ControlSelectionNone;
-		
+		self->style = style;
 		if (self->style == ControlStyleDefault) {
 			
 			if (self->view.frame.h == 0) {
@@ -287,7 +325,9 @@ static void stateDidChange(Control *self) {
 static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
+
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->render = render;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	

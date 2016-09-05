@@ -34,6 +34,82 @@
  * @brief The JSONView type
  */
 
+/**
+ * @brief Inlet type constants.
+ */
+typedef enum {
+	InletTypeBool,
+	InletTypeCharacters,
+	InletTypeColor,
+	InletTypeEnum,
+	InletTypeInteger,
+	InletTypeRectangle,
+	InletTypeSize,
+	InletTypeViewArray
+} InletType;
+
+typedef struct Inlet Inlet;
+
+/**
+ * @brief Inlets allow the resolution of View attributes via JSONView.
+ */
+struct Inlet {
+
+	/**
+	 * @brief The Inlet name, e.g. `"alignment"`.
+	 */
+	const char *name;
+
+	/**
+	 * @brief The InletType, e.g. InletTypeEnum.
+	 */
+	InletType type;
+
+	/**
+	 * @brief The offset of the View attribute, e.g. `offsetof(View, alignment)`.
+	 */
+	ptrdiff_t offset;
+
+	/**
+	 * @brief Type-specific data, e.g. an array of EnumNames.
+	 */
+	ident data;
+};
+
+/**
+ * @brief Creates an Inlet with the specified parameters.
+ */
+#define MakeInlet(name, type, offset, data) \
+	({ \
+		Inlet _inlet = { (name), (type), (offset), (data) }; _inlet; \
+	})
+
+typedef struct Outlet Outlet;
+
+/**
+ * @brief Outlets allow the resolution of Views via JSONView.
+ */
+struct Outlet {
+
+	/**
+	 * @brief The View identifier.
+	 */
+	const char *identifier;
+
+	/**
+	 * @brief The output storage for the resolved View.
+	 */
+	View **view;
+};
+
+/**
+ * @brief Creates an Outlet with the specified parameters.
+ */
+#define MakeOutlet(identifier, view) \
+	({ \
+		Outlet _outlet = { (identifier), (View **) (view) }; _outlet; \
+	})
+
 typedef struct JSONView JSONView;
 typedef struct JSONViewInterface JSONViewInterface;
 
@@ -72,50 +148,17 @@ struct JSONViewInterface {
 	/**
 	 * @static
 	 *
-	 * @fn SDL_Color JSONView::colorWithPath(const ident root, const char *path)
+	 * @fn void JSONView::applyInlets(View *view, const Dictionary *dictionary, const Inlet *inlets)
 	 *
-	 * @brief Parses an SDL_Color from the nested JSON property.
+	 * @brief Applies the specified Inlets, populated from `dictionary`, to the given View.
 	 *
-	 * @param root The root element.
-	 * @param path A JSONPath expression.
+	 * @param view A View.
+	 * @param dictionary A Dictionary describing the View.
+	 * @param inlets An optional array of Inlets to apply.
 	 *
-	 * @return The parsed SDL_Color, or `Colors.Clear` if unspecified.
-	 *
-	 * memberof JSONView
+	 * @memberof JSONView
 	 */
-	SDL_Color (*colorWithPath)(const ident root, const char *path);
-
-	/**
-	 * @static
-	 *
-	 * @fn Padding JSONView::paddingWithPath(const ident root, const char *path)
-	 *
-	 * @brief Parses a Padding from the nested JSON property.
-	 *
-	 * @param root The root element.
-	 * @param path A JSONPath expression.
-	 *
-	 * @return The parsed Padding, which will be empty if unspecified.
-	 *
-	 * memberof JSONView
-	 */
-	Padding (*paddingWithPath)(const ident root, const char *path);
-
-	/**
-	 * @static
-	 *
-	 * @fn SDL_Rect JSONView::rectWithPath(const ident root, const char *path)
-	 *
-	 * @brief Parses an SDL_Rect from the nested JSON property.
-	 *
-	 * @param root The root element.
-	 * @param path A JSONPath expression.
-	 *
-	 * @return The parsed SDL_Rect, which will be empty if unspecified.
-	 *
-	 * memberof JSONView
-	 */
-	SDL_Rect (*rectWithPath)(const ident root, const char *path);
+	void (*applyInlets)(View *view, const Dictionary *dictionary, const Inlet *inlets);
 
 	/**
 	 * @static

@@ -83,31 +83,6 @@ typedef struct {
 	int top, right, bottom, left;
 } Padding;
 
-
-typedef struct Outlet Outlet;
-
-/**
- * @brief Outlets allow the resolution of Views from JSON files.
- */
-struct Outlet {
-
-	/**
-	 * @brief The View identifier.
-	 */
-	const char *identifier;
-
-	/**
-	 * @brief The output storage for the resolved View.
-	 */
-	View **view;
-};
-
-/**
- * @brief Creates an Outlet with the specified parameters.
- */
-#define MakeOutlet(identifier, view) \
-	({ Outlet _outlet = { (identifier), (view) }; _outlet; })
-
 typedef struct ViewInterface ViewInterface;
 
 /**
@@ -231,6 +206,20 @@ struct ViewInterface {
 	void (*addSubview)(View *self, View *subview);
 
 	/**
+	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)
+	 *
+	 * @brief Wakes this View with the specified Dictionary.
+	 *
+	 * @param dictionary A Dictionary of properties describing this View.
+	 *
+	 * @remarks This method is invoked when loading via JSONView. Subclasses should
+	 * override this method to perform any customization based on the contents of `dictionary`.
+	 *
+	 * @memberof View
+	 */
+	void (*awakeWithDictionary)(View *self, const Dictionary *dictionary);
+
+	/**
 	 * @fn void View::becomeFirstResponder(View *self)
 	 *
 	 * @brief Become the first responder in the View hierarchy.
@@ -331,21 +320,18 @@ struct ViewInterface {
 	View *(*firstResponder)(void);
 
 	/**
-	 * @fn View *View::initWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
+	 * @fn View *View::init(View *self)
 	 *
-	 * @brief Initializes this View with the specified Dictionary.
-	 *
-	 * @param dictionary A Dictionary of properties describing this View.
-	 * @param outlets An optional array of Outlets to resolve.
+	 * @brief Initializes this View.
 	 *
 	 * @return The initialized View, or `NULL` on error.
 	 *
-	 * @remarks This is the designated initializer for JSON View loading. Subclasses should 
-	 * override this method to perform any customization based on the contents of `dictionary`.
+	 * @remarks JSONView::viewWithDictionary invokes this initializer when loading Views. Subclasses
+	 * wishing to support JSONView _must_ override this method to call their designated initializer.
 	 *
 	 * @memberof View
 	 */
-	View *(*initWithDictionary)(View *self, const Dictionary *dictionary, Outlet *outlets);
+	View *(*init)(View *self);
 
 	/**
 	 * @fn View *View::initWithFrame(View *self, const SDL_Rect *frame)
@@ -355,6 +341,8 @@ struct ViewInterface {
 	 * @param frame The frame.
 	 *
 	 * @return The initialized View, or `NULL` on error.
+	 *
+	 * @remarks Designated initializer.
 	 *
 	 * @memberof View
 	 */

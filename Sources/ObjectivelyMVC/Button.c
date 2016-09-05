@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include <Objectively/String.h>
+
 #include <ObjectivelyMVC/Button.h>
 
 #define _Class _Button
@@ -42,6 +44,28 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - View
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+	
+	Button *this = (Button *) self;
+
+	const String *title = $(dictionary, objectForKeyPath, "title");
+	if (title) {
+		$(this->title, setText, title->chars);
+	}
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Button *) self, initWithFrame, NULL, ControlStyleDefault);
+}
 
 /**
  * @see View::layoutSubviews(View *)
@@ -122,6 +146,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;

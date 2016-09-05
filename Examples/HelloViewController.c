@@ -276,15 +276,17 @@ static void loadView(ViewController *self) {
 	$(self->view, addSubview, (View *) panel);
 	release(panel);
 
-	View *container;
+	Button *jsonButton;
 
 	Outlet outlets[] = {
-		MakeOutlet("container", &container),
+		MakeOutlet("button", &jsonButton),
 		MakeOutlet(NULL, NULL),
 	};
 
 	View *view = $$(JSONView, viewWithContentsOfFile, "Hello.json", outlets);
 	$(self->view, addSubview, view);
+
+	assert(jsonButton);
 }
 
 #pragma mark - Class lifecycle

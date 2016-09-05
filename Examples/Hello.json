@@ -1,25 +1,15 @@
 {
-  "class": "View",
-  "identifier": "root",
-  "autoresizingMask": "ViewAutoresizingContain",
-  "backgroundColor": [ 128, 192, 255, 128 ],
-  "borderColor": [ 192, 255, 255, 192 ],
-  "borderWidth": 2,
-  "frame": [ 400, 50, 400, 300 ],
-  "padding": [ 10, 10, 10, 10 ],
-  "subviews": [
-    {
-      "class": "StackView",
-	  "identifier": "container",
-	  "axis": "StackViewAxisVertical",
-      "subviews": [
-        {
-          "class": "Label",
-		  "identifier": "label",
-		  "text": "Hello World!",
-		  "font": null
-		}
-      ]
-    }
-  ]
+	"class": "Panel",
+	"frame": [ 400, 50, 400, 300 ],
+	"contentView": [
+		{
+			"class": "Button",
+			"identifier": "button",
+			"style": "ControlStyleDefault",
+			"title": "Hello World!"
+		},
+		{
+			"class": "Checkbox"
+		},
+	]
 }	

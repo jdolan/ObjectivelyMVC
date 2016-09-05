@@ -29,88 +29,80 @@
 
 #define _Class _JSONView
 
-#pragma mark - JSONView
-
-
 /**
- * @fn SDL_Color JSONView::colorWithPath(const ident root, const char *path)
- *
- * memberof JSONView
+ * @return The SDL_Color for `array`.
  */
-static SDL_Color colorWithPath(const ident root, const char *path) {
+static SDL_Color colorForArray(const Array *array) {
 
-	SDL_Color color = Colors.Clear;
+	assert(array);
+	assert(array->count == 4);
 
-	const Array *array = $$(JSONPath, objectWithPath, root, path);
-	if (array) {
-		assert(array->count == 4);
+	const Number *r = $(array, objectAtIndex, 0);
+	const Number *g = $(array, objectAtIndex, 1);
+	const Number *b = $(array, objectAtIndex, 2);
+	const Number *a = $(array, objectAtIndex, 3);
 
-		const Number *r = $(array, objectAtIndex, 0);
-		const Number *g = $(array, objectAtIndex, 1);
-		const Number *b = $(array, objectAtIndex, 2);
-		const Number *a = $(array, objectAtIndex, 3);
+#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
 
-		#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
-
-		color.r = ScaleColor(r->value);
-		color.g = ScaleColor(g->value);
-		color.b = ScaleColor(b->value);
-		color.a = ScaleColor(a->value);
-	}
+	SDL_Color color = {
+		ScaleColor(r->value),
+		ScaleColor(g->value),
+		ScaleColor(b->value),
+		ScaleColor(a->value)
+	};
 
 	return color;
 }
 
 /**
- * @fn Padding JSONView::paddingWithPath(const ident root, const char *path)
- *
- * memberof JSONView
+ * @return The SDL_Size for `array`.
  */
-static Padding paddingWithPath(const ident root, const char *path) {
+static SDL_Size sizeForArray(const Array *array) {
 
-	Padding padding = { .top = 0, .right = 0, .bottom = 0, .left = 0 };
+	assert(array);
+	assert(array->count == 2);
 
-	const Array *array = $$(JSONPath, objectWithPath, root, path);
-	if (array) {
-		assert(array->count == 4);
+	const Number *w = $(array, objectAtIndex, 2);
+	const Number *h = $(array, objectAtIndex, 3);
 
-		const Number *top = $(array, objectAtIndex, 0);
-		const Number *right = $(array, objectAtIndex, 1);
-		const Number *bottom = $(array, objectAtIndex, 2);
-		const Number *left = $(array, objectAtIndex, 3);
-
-		padding.top = top->value;
-		padding.right = right->value;
-		padding.bottom = bottom->value;
-		padding.left = left->value;
-	}
-
-	return padding;
+	SDL_Size size = { w->value, h->value };
+	return size;
 }
 
 /**
- * @fn SDL_Rect JSONView::rectWithPath(const ident root, const char *path)
- *
- * memberof JSONView
+ * @return The SDL_Rect for `array`.
  */
-static SDL_Rect rectWithPath(const ident root, const char *path) {
+static SDL_Rect rectForArray(const Array *array) {
 
-	SDL_Rect rect = { .x = 0, .y = 0, .w = 0, .h = 0 };
+	assert(array);
+	assert(array->count == 4);
 
-	const Array *array = $$(JSONPath, objectWithPath, root, path);
-	if (array) {
-		assert(array->count == 4);
+	const Number *x = $(array, objectAtIndex, 0);
+	const Number *y = $(array, objectAtIndex, 1);
+	const Number *w = $(array, objectAtIndex, 2);
+	const Number *h = $(array, objectAtIndex, 3);
 
-		const Number *x = $(array, objectAtIndex, 0);
-		const Number *y = $(array, objectAtIndex, 1);
-		const Number *w = $(array, objectAtIndex, 2);
-		const Number *h = $(array, objectAtIndex, 3);
-
-		rect.x = x->value, rect.y = y->value, rect.w = w->value, rect.h = h->value;
-	}
-
+	SDL_Rect rect = { x->value, y->value, w->value, h->value };
 	return rect;
 }
+
+static __thread Outlet *_outlets;
+
+/**
+ * @brief ArrayEnumerator for subview recursion.
+ */
+static _Bool viewWithDictionary_recurse(const Array *array, ident obj, ident data) {
+
+	View *subview = $$(JSONView, viewWithDictionary, obj, _outlets);
+
+	$((View *) data, addSubview, subview);
+
+	release(subview);
+
+	return false;
+}
+
+#pragma mark - JSONView
 
 /**
  * @fn View *JSONView::viewWithContentsOfFile(const char *path, Outlet *outlets)
@@ -145,20 +137,85 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
 }
 
 /**
+ * @fn void JSONView::applyInlets(View *view, const Dictionary *dictionary, const Inlet *inlets)
+ *
+ * @memberof JSONView
+ */
+static void applyInlets(View *view, const Dictionary *dictionary, const Inlet *inlets) {
+
+	const Inlet *inlet = inlets;
+	while (inlet->name) {
+
+		const ident obj = $(dictionary, objectForKeyPath, inlet->name);
+		if (obj) {
+
+			ident dest = ((ident) view) + inlet->offset;
+			switch (inlet->type) {
+				case InletTypeBool:
+					*((_Bool *) dest) = cast(Boole, obj)->value;
+					break;
+				case InletTypeCharacters:
+					*((char **) dest) = strdup(cast(String, obj)->chars);
+					break;
+				case InletTypeColor:
+					*((SDL_Color *) dest) = colorForArray(cast(Array, obj));
+					break;
+				case InletTypeEnum:
+					*((int *) dest) = valueof(inlet->data, (cast(String, obj))->chars);
+					break;
+				case InletTypeInteger:
+					*((int *) dest) = cast(Number, obj)->value;
+					break;
+				case InletTypeRectangle:
+					*((SDL_Rect *) dest) = rectForArray(cast(Array, obj));
+					break;
+				case InletTypeSize:
+					*((SDL_Size *) dest) = sizeForArray(cast(Array, obj));
+					break;
+				case InletTypeViewArray:
+					$(cast(Array, obj), enumerateObjects, viewWithDictionary_recurse, inlet->data ?: view);
+					break;
+			}
+		}
+
+		inlet++;
+	}
+}
+
+/**
  * @fn View *JSONView::viewWithDictionary(const Dictionary *dictionary, Outlet *outlets)
  *
  * @memberof JSONView
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
-	String *string = $$(JSONPath, objectWithPath, (ident) dictionary, "$.class");
+	_outlets = outlets;
+
+	String *string = $$(JSONPath, objectForKeyPath, (ident) dictionary, "$.class");
 	if (string) {
 		Class *clazz = classFromString(string->chars);
 		if (clazz) {
 			const Class *c = clazz;
 			while (c) {
 				if (c == &_View) {
-					return $((View *) _alloc(clazz), initWithDictionary, dictionary, outlets);
+					View *view = $((View *) _alloc(clazz), init);
+
+					$(view, awakeWithDictionary, dictionary);
+
+					const Array *subviews = $(dictionary, objectForKeyPath, "subviews");
+					if (subviews) {
+						$(subviews, enumerateObjects, viewWithDictionary_recurse, view);
+					}
+
+					if (view->identifier) {
+						for (Outlet *outlet = _outlets; outlet->identifier; outlet++) {
+							if (strcmp(outlet->identifier, view->identifier) == 0) {
+								*outlet->view = view;
+							}
+						}
+					}
+					
+					return view;
 				}
 				c = c->superclass;
 			}
@@ -196,9 +253,7 @@ static void initialize(Class *clazz) {
 	_initialize(&_TextView);
 	_initialize(&_View);
 
-	((JSONViewInterface *) clazz->interface)->colorWithPath = colorWithPath;
-	((JSONViewInterface *) clazz->interface)->paddingWithPath = paddingWithPath;
-	((JSONViewInterface *) clazz->interface)->rectWithPath = rectWithPath;
+	((JSONViewInterface *) clazz->interface)->applyInlets = applyInlets;
 	((JSONViewInterface *) clazz->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
 	((JSONViewInterface *) clazz->interface)->viewWithData = viewWithData;
 	((JSONViewInterface *) clazz->interface)->viewWithDictionary = viewWithDictionary;
@@ -214,4 +269,3 @@ Class _JSONView = {
 };
 
 #undef _Class
-
