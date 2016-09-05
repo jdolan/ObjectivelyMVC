@@ -16,6 +16,7 @@ pkginclude_HEADERS = \
 	Image.h \
 	ImageView.h \
 	Input.h \
+	JSONView.h \
 	Label.h \
 	Text.h \
 	Log.h \
@@ -55,6 +56,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Image.c \
 	ImageView.c \
 	Input.c \
+	JSONView.c \
 	Label.c \
 	NavigationViewController.c \
 	Option.c \
