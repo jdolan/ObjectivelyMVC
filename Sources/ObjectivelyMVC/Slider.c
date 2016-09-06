@@ -61,13 +61,15 @@ static void layoutSubviews(View *self) {
 			int minWidth, maxWidth;
 			char text[64];
 
+			Text *label = (Text *) this->label;
+
 			snprintf(text, sizeof(text), this->labelFormat, this->min);
-			$(this->label->text->font, sizeCharacters, text, &minWidth, NULL);
+			$(label->font, sizeCharacters, text, &minWidth, NULL);
 
 			snprintf(text, sizeof(text), this->labelFormat, this->max);
-			$(this->label->text->font, sizeCharacters, text, &maxWidth, NULL);
+			$(label->font, sizeCharacters, text, &maxWidth, NULL);
 
-			this->bar->frame.w -= max(minWidth, maxWidth) + this->label->view.padding.left;
+			this->bar->frame.w -= max(minWidth, maxWidth) + label->view.padding.left;
 		}
 
 		const double fraction = clamp((this->value - this->min) / (this->max - this->min), 0.0, 1.0);
@@ -162,7 +164,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 		$(self->bar, addSubview, (View *) self->handle);
 
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
+		self->label = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->label);
 
 		self->label->view.alignment = ViewAlignmentMiddleRight;
@@ -205,7 +207,7 @@ static void setValue(Slider *self, double value) {
 		char text[64];
 		snprintf(text, sizeof(text), self->labelFormat, self->value);
 
-		$(self->label, setText, text);
+		$((Text *) self->label, setText, text);
 
 		if (self->delegate.didSetValue) {
 			self->delegate.didSetValue(self);

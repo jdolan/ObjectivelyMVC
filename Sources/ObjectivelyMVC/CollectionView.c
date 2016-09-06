@@ -25,8 +25,6 @@
 
 #include <ObjectivelyMVC/CollectionView.h>
 
-#include <ObjectivelyMVC/JSONView.h>
-
 static const EnumName CollectionViewAxisNames[] = {
 	NameEnum(CollectionViewAxisHorizontal),
 	NameEnum(CollectionViewAxisVertical),
@@ -60,12 +58,13 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
 
-	const Inlet inlets[] = {
-		MakeInlet("axis", InletTypeEnum, offsetof(CollectionView, axis), (ident) CollectionViewAxisNames),
-		MakeInlet("itemSize", InletTypeSize, offsetof(CollectionView, itemSize), NULL),
-		MakeInlet("itemSpacing", InletTypeSize, offsetof(CollectionView, itemSpacing), NULL),
-		MakeInlet(NULL, 0, 0, NULL)
-	};
+	CollectionView *this = (CollectionView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) CollectionViewAxisNames),
+		MakeInlet("itemSize", InletTypeSize, &this->itemSize, NULL),
+		MakeInlet("itemSpacing", InletTypeSize, &this->itemSpacing, NULL)
+	);
 
 	$$(JSONView, applyInlets, self, dictionary, inlets);
 }

@@ -29,8 +29,6 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
-#include <ObjectivelyMVC/JSONView.h>
-
 static const EnumName ViewAlignmentNames[] = {
 	NameEnum(ViewAlignmentNone),
 	NameEnum(ViewAlignmentTopLeft),
@@ -117,19 +115,18 @@ static void addSubview(View *self, View *subview) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	const Inlet inlets[] = {
-		MakeInlet("identifier", InletTypeCharacters, offsetof(View, identifier), NULL),
-		MakeInlet("alignment", InletTypeEnum, offsetof(View, alignment), (ident) ViewAlignmentNames),
-		MakeInlet("autoresizingMask", InletTypeEnum, offsetof(View, autoresizingMask), (ident) ViewAutoresizingNames),
-		MakeInlet("backgroundColor", InletTypeColor, offsetof(View, backgroundColor), NULL),
-		MakeInlet("borderColor", InletTypeColor, offsetof(View, borderColor), NULL),
-		MakeInlet("borderWidth", InletTypeInteger, offsetof(View, borderWidth), NULL),
-		MakeInlet("frame", InletTypeRectangle, offsetof(View, frame), NULL),
-		MakeInlet("isHidden", InletTypeBool, offsetof(View, isHidden), NULL),
-		MakeInlet("padding", InletTypeRectangle, offsetof(View, padding), NULL),
-		MakeInlet("zIndex", InletTypeInteger, offsetof(View, zIndex), NULL),
-		MakeInlet(NULL, 0, 0, NULL)
-	};
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("identifier", InletTypeCharacters, &self->identifier, NULL),
+		MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
+		MakeInlet("autoresizingMask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
+		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
+		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
+		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
+		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
+		MakeInlet("isHidden", InletTypeBool, &self->isHidden, NULL),
+		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
+		MakeInlet("zIndex", InletTypeInteger, &self->zIndex, NULL)
+	);
 
 	$$(JSONView, applyInlets, self, dictionary, inlets);
 }
@@ -149,14 +146,16 @@ static void becomeFirstResponder(View *self) {
  * @memberof View
  */
 static SDL_Rect bounds(const View *self) {
-	
-	SDL_Rect bounds = {
+
+	const SDL_Size size = $(self, size);
+
+	const SDL_Rect bounds = {
 		.x = self->padding.left,
 		.y = self->padding.top,
-		.w = self->frame.w - self->padding.left - self->padding.right,
-		.h = self->frame.h - self->padding.top - self->padding.bottom,
+		.w = size.w - self->padding.left - self->padding.right,
+		.h = size.h - self->padding.top - self->padding.bottom,
 	};
-	
+
 	return bounds;
 }
 
@@ -414,6 +413,10 @@ static void layoutIfNeeded(View *self) {
 	if (self->needsLayout) {
 		self->needsLayout = false;
 
+		if (self->autoresizingMask & ViewAutoresizingContain) {
+			$(self, sizeToFit);
+		}
+
 		$(self, layoutSubviews);
 	}
 	
@@ -574,7 +577,7 @@ static SDL_Rect renderFrame(const View *self) {
 	const View *view = self;
 	const View *superview = view->superview;
 	while (superview) {
-		
+
 		frame.x += superview->frame.x;
 		frame.y += superview->frame.y;
 
@@ -633,7 +636,10 @@ static void respondToEvent(View *self, const SDL_Event *event) {
  * @memberof View
  */
 static SDL_Size size(const View *self) {
-	return MakeSize(self->frame.w, self->frame.h);
+	return MakeSize(
+		max(self->frame.w, self->padding.left + self->padding.right),
+		max(self->frame.h, self->padding.top + self->padding.bottom)
+	);
 }
 
 /**
@@ -646,23 +652,25 @@ static SDL_Size sizeThatFits(const View *self) {
 	SDL_Size size = $(self, size);
 
 	if (self->autoresizingMask & ViewAutoresizingContain) {
-		size = MakeSize(0, 0);
+		SDL_Size minSize = MakeSize(0, 0);
 
 		Array *subviews = $(self, visibleSubviews);
-
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
 			const SDL_Size subviewSize = $(subview, sizeThatFits);
 
-			size.w = max(size.w, subview->frame.x + subviewSize.w);
-			size.h = max(size.h, subview->frame.y + subviewSize.h);
+			minSize.w = max(minSize.w, subview->frame.x + subviewSize.w);
+			minSize.h = max(minSize.h, subview->frame.y + subviewSize.h);
 		}
 
-		size.w += self->padding.left + self->padding.right;
-		size.h += self->padding.top + self->padding.bottom;
+		minSize.w += self->padding.left + self->padding.right;
+		minSize.h += self->padding.top + self->padding.bottom;
 		
 		release(subviews);
+
+		size.w = max(size.w, minSize.w);
+		size.h = max(size.h, minSize.h);
 	}
 
 	return size;
@@ -679,23 +687,6 @@ static void sizeToFit(View *self) {
 
 	self->frame.w = size.w;
 	self->frame.h = size.h;
-
-	$(self, layoutIfNeeded);
-
-	Array *subviews = $(self, visibleSubviews);
-	for (size_t i = 0; i < subviews->count; i++) {
-		
-		const View *subview = (View *) $(subviews, objectAtIndex, i);
-		const SDL_Size size = $(subview, sizeThatFits);
-
-		const int sx = subview->frame.x + size.w + self->padding.left + self->padding.right;
-		const int sy = subview->frame.y + size.h + self->padding.top + self->padding.bottom;
-
-		self->frame.w = max(self->frame.w, sx);
-		self->frame.h = max(self->frame.h, sy);
-	}
-
-	release(subviews);
 }
 
 /**

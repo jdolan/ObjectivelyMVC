@@ -41,8 +41,6 @@
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/ImageView.h>
-#include <ObjectivelyMVC/JSONView.h>
-#include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/NavigationViewController.h>
 #include <ObjectivelyMVC/Option.h>
@@ -61,5 +59,6 @@
 #include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>
 #include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/View+JSON.h>
 #include <ObjectivelyMVC/ViewController.h>
 #include <ObjectivelyMVC/WindowController.h>

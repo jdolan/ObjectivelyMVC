@@ -88,18 +88,77 @@ static SDL_Rect rectForArray(const Array *array) {
 
 static __thread Outlet *_outlets;
 
+static View *viewWithDictionary_init(const Dictionary *dictionary);
+
 /**
  * @brief ArrayEnumerator for subview recursion.
  */
 static _Bool viewWithDictionary_recurse(const Array *array, ident obj, ident data) {
 
-	View *subview = $$(JSONView, viewWithDictionary, cast(Dictionary, obj), _outlets);
+	View *subview = viewWithDictionary_init(cast(Dictionary, obj));
 
 	$(cast(View, data), addSubview, subview);
 
 	release(subview);
 
 	return false;
+}
+
+/**
+ * @brief Wakes the specified View, recursing its subviews if necessary.
+ */
+static void viewWithDictionary_awake(View *view, const Dictionary *dictionary) {
+
+	$(view, awakeWithDictionary, dictionary);
+
+	const Array *subviews = $(dictionary, objectForKeyPath, "subviews");
+	if (subviews) {
+		$(subviews, enumerateObjects, viewWithDictionary_recurse, view);
+	}
+
+	if (view->identifier) {
+		for (Outlet *outlet = _outlets; outlet->identifier; outlet++) {
+			if (strcmp(outlet->identifier, view->identifier) == 0) {
+				*outlet->view = view;
+			}
+		}
+	}
+}
+
+/**
+ * @brief Creates and initializes a View with the given Dictionary.
+ */
+static View *viewWithDictionary_init(const Dictionary *dictionary) {
+
+	String *className = $(dictionary, objectForKeyPath, "class");
+	if (className) {
+		Class *clazz = classForName(className->chars);
+		if (clazz) {
+			const Class *c = clazz;
+			while (c) {
+				if (c == &_View) {
+
+					View *view = $((View *) _alloc(clazz), init);
+
+					viewWithDictionary_awake(view, dictionary);
+
+					String *description = $((Object *) view, description);
+					MVC_LogDebug("Instantiated %s\n", description->chars);
+					release(description);
+
+					return view;
+				}
+				c = c->superclass;
+			}
+			MVC_LogError("Class %s does not extend View\n", className->chars);
+		} else {
+			MVC_LogError("Class %s not found. Did you _initialize it?\n", className->chars);
+		}
+	} else {
+		MVC_LogError("View Class not specified\n");
+	}
+
+	return NULL;
 }
 
 #pragma mark - JSONView
@@ -117,43 +176,53 @@ static void applyInlets(View *view, const Dictionary *dictionary, const Inlet *i
 		const ident obj = $(dictionary, objectForKeyPath, inlet->name);
 		if (obj) {
 
-			ident dest = ((ident) view) + inlet->offset;
 			switch (inlet->type) {
 				case InletTypeBool:
-					*((_Bool *) dest) = cast(Boole, obj)->value;
+					*((_Bool *) inlet->dest) = cast(Boole, obj)->value;
 					break;
 				case InletTypeCharacters:
-					*((char **) dest) = strdup(cast(String, obj)->chars);
+					*((char **) inlet->dest) = strdup(cast(String, obj)->chars);
 					break;
 				case InletTypeColor:
-					*((SDL_Color *) dest) = colorForArray(cast(Array, obj));
+					*((SDL_Color *) inlet->dest) = colorForArray(cast(Array, obj));
 					break;
 				case InletTypeDouble:
-					*((double *) dest) = cast(Number, obj)->value;
+					*((double *) inlet->dest) = cast(Number, obj)->value;
 					break;
 				case InletTypeFloat:
-					*((float *) dest) = cast(Number, obj)->value;
+					*((float *) inlet->dest) = cast(Number, obj)->value;
+					break;
+				case InletTypeFont:
+					*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
 					break;
 				case InletTypeEnum:
-					*((int *) dest) = valueof(inlet->data, (cast(String, obj))->chars);
+					*((int *) inlet->dest) = valueof(inlet->data, (cast(String, obj))->chars);
 					break;
 				case InletTypeImage:
-					*((Image **) dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
+					*((Image **) inlet->dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
 					break;
 				case InletTypeInteger:
-					*((int *) dest) = cast(Number, obj)->value;
+					*((int *) inlet->dest) = cast(Number, obj)->value;
 					break;
 				case InletTypeRectangle:
-					*((SDL_Rect *) dest) = rectForArray(cast(Array, obj));
+					*((SDL_Rect *) inlet->dest) = rectForArray(cast(Array, obj));
 					break;
 				case InletTypeSize:
-					*((SDL_Size *) dest) = sizeForArray(cast(Array, obj));
+					*((SDL_Size *) inlet->dest) = sizeForArray(cast(Array, obj));
+					break;
+				case InletTypeSubviews:
+					$(cast(Array, obj), enumerateObjects, viewWithDictionary_recurse, *(View **) inlet->dest);
 					break;
 				case InletTypeView:
-					*((View **) dest) = $$(JSONView, viewWithDictionary, cast(Dictionary, obj), _outlets);
-					break;
-				case InletTypeViews:
-					$(cast(Array, obj), enumerateObjects, viewWithDictionary_recurse, *(View **) dest);
+					if (inlet->data) {
+
+						$((View *) inlet->data, removeFromSuperview);
+						release(inlet->data);
+
+						*(View **) inlet->dest = viewWithDictionary_init(cast(Dictionary, obj));
+					} else {
+						viewWithDictionary_awake(*(View **) inlet->dest, cast(Dictionary, obj));
+					}
 					break;
 			}
 		}
@@ -203,47 +272,7 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
 	_outlets = outlets;
 
-	String *className = $(dictionary, objectForKeyPath, "class");
-	if (className) {
-		Class *clazz = classForName(className->chars);
-		if (clazz) {
-			const Class *c = clazz;
-			while (c) {
-				if (c == &_View) {
-
-					View *view = $((View *) _alloc(clazz), init);
-					$(view, awakeWithDictionary, dictionary);
-
-					const Array *subviews = $(dictionary, objectForKeyPath, "subviews");
-					if (subviews) {
-						$(subviews, enumerateObjects, viewWithDictionary_recurse, view);
-					}
-
-					if (view->identifier) {
-						for (Outlet *outlet = _outlets; outlet->identifier; outlet++) {
-							if (strcmp(outlet->identifier, view->identifier) == 0) {
-								*outlet->view = view;
-							}
-						}
-					}
-
-					String *description = $((Object *) view, description);
-					MVC_LogDebug("Instantiated %s\n", description->chars);
-					release(description);
-
-					return view;
-				}
-				c = c->superclass;
-			}
-			MVC_LogError("Class %s does not extend View\n", className->chars);
-		} else {
-			MVC_LogError("Class %s not found. Did you _initialize it?\n", className->chars);
-		}
-	} else {
-		MVC_LogError("View Class not specified\n");
-	}
-	
-	return NULL;
+	return viewWithDictionary_init(dictionary);
 }
 
 #pragma mark - Class lifecycle
@@ -259,7 +288,6 @@ static void initialize(Class *clazz) {
 	_initialize(&_CollectionView);
 	_initialize(&_ImageView);
 	_initialize(&_Input);
-	_initialize(&_Label);
 	_initialize(&_Panel);
 	_initialize(&_ScrollView);
 	_initialize(&_Select);

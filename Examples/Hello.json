@@ -3,13 +3,37 @@
 	"frame": [ 400, 50, 400, 300 ],
 	"contentView": [
 		{
-			"class": "Button",
-			"identifier": "button",
-			"style": "ControlStyleDefault",
-			"title": "Hello World!"
-		},
-		{
-			"class": "Checkbox"
-		},
+			"class": "Box",
+			"label": {
+				"text": "This is a Box"
+			},
+			"subviews": [
+				{
+					"class": "StackView",
+					"autoresizingMask": "ViewAutoresizingContain",
+					"spacing": 10,
+					"subviews": [
+						{
+							"class": "Button",
+							"identifier": "button",
+							"style": "ControlStyleDefault",
+							"title": {
+								"text": "Hello World!"
+							}
+						},
+						{
+							"class": "Input",
+							"control": {
+								"class": "Checkbox"
+							},
+							"label": {
+								"text": "This is a checkbox:"
+							}
+						}
+					]
+				}
+				
+			]
+		}
 	]
 }	

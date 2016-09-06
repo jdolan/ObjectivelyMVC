@@ -25,8 +25,6 @@
 
 #include <ObjectivelyMVC/ImageView.h>
 
-#include <ObjectivelyMVC/JSONView.h>
-
 static const EnumName BlendNames[] = {
 	NameEnum(GL_CONSTANT_ALPHA),
 	NameEnum(GL_CONSTANT_COLOR),
@@ -70,13 +68,14 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
 
-	const Inlet inlets[] = {
-		MakeInlet("alpha", InletTypeFloat, offsetof(ImageView, alpha), NULL),
-		MakeInlet("blend.src", InletTypeEnum, offsetof(ImageView, blend.src), (ident) BlendNames),
-		MakeInlet("blend.dst", InletTypeEnum, offsetof(ImageView, blend.dst), (ident) BlendNames),
-		MakeInlet("image", InletTypeImage, offsetof(ImageView, image), NULL),
-		MakeInlet(NULL, 0, 0, NULL)
-	};
+	ImageView *this = (ImageView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("alpha", InletTypeFloat, &this->alpha, NULL),
+		MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) BlendNames),
+		MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) BlendNames),
+		MakeInlet("image", InletTypeImage, &this->image, NULL)
+	);
 
 	$$(JSONView, applyInlets, self, dictionary, inlets);
 }

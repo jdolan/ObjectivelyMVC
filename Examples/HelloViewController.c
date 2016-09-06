@@ -179,7 +179,7 @@ static void loadView(ViewController *self) {
 	Panel *panel = $(alloc(Panel), initWithFrame, &frame);
 
 	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
-	$(button->title, setText, "This is a Button");
+	$(button->title, setText, "This is a really long Button");
 	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
 	
 	$((View *) panel->contentView, addSubview, (View *) button);
@@ -192,13 +192,12 @@ static void loadView(ViewController *self) {
 	release(textView);
 
 	Checkbox *checkbox = $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
-	Label *label = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
-	Input *input = $(alloc(Input), initWithOrientation, InputOrientationLeft, (Control *) checkbox, label);
+	Input *input = $(alloc(Input), initWithControl, (Control *) checkbox);
+	$(input->label, setText, "This is a checkbox:");
 	$((Control *) checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
 
 	$((View *) panel->contentView, addSubview, (View *) input);
 	release(checkbox);
-	release(label);
 	release(input);
 
 	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);

@@ -23,11 +23,7 @@
 
 #include <assert.h>
 
-#include <Objectively/Enum.h>
-
 #include <ObjectivelyMVC/Control.h>
-
-#include <ObjectivelyMVC/JSONView.h>
 
 static const EnumName ControlSelectionNames[] = {
 	NameEnum(ControlSelectionNone),
@@ -67,11 +63,12 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
 
-	const Inlet inlets[] = {
-		MakeInlet("selection", InletTypeEnum, offsetof(Control, selection), (ident) ControlSelectionNames),
-		MakeInlet("style", InletTypeEnum, offsetof(Control, style), (ident) ControlStyleNames),
-		MakeInlet(NULL, 0, 0, NULL)
-	};
+	Control *this = (Control *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames),
+		MakeInlet("style", InletTypeEnum, &this->style, (ident) ControlStyleNames)
+	);
 
 	$$(JSONView, applyInlets, self, dictionary, inlets);
 }

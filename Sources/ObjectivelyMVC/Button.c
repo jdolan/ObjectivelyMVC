@@ -23,8 +23,6 @@
 
 #include <assert.h>
 
-#include <Objectively/String.h>
-
 #include <ObjectivelyMVC/Button.h>
 
 #define _Class _Button
@@ -51,13 +49,14 @@ static void dealloc(Object *self) {
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
-	
+
 	Button *this = (Button *) self;
 
-	const String *title = $(dictionary, objectForKeyPath, "title");
-	if (title) {
-		$(this->title, setText, title->chars);
-	}
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("title", InletTypeView, &this->title, NULL)
+	);
+
+	$$(JSONView, applyInlets, self, dictionary, inlets);
 }
 
 /**
@@ -65,16 +64,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  */
 static View *init(View *self) {
 	return (View *) $((Button *) self, initWithFrame, NULL, ControlStyleDefault);
-}
-
-/**
- * @see View::layoutSubviews(View *)
- */
-static void layoutSubviews(View *self) {
-	
-	$(self, sizeToFit);
-	
-	super(View, self, layoutSubviews);
 }
 
 #pragma mark - Control
@@ -124,7 +113,9 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 		
 		$((View *) self, addSubview, (View *) self->title);
 		self->title->view.alignment = ViewAlignmentMiddleCenter;
-		
+
+		self->control.view.autoresizingMask = ViewAutoresizingContain;
+
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = BevelTypeOutset;
 			
@@ -148,8 +139,7 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	
+
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
 	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;

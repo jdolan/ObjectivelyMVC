@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -68,7 +68,7 @@ struct Box {
 	/**
 	 * @brief The label.
 	 */
-	Label *label;
+	Text *label;
 };
 
 /**

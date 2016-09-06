@@ -538,6 +538,8 @@ struct ViewInterface {
 
 extern Class _View;
 
+#include <ObjectivelyMVC/View+JSON.h>
+
 /**
  * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
  *

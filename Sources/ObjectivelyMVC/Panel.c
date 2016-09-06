@@ -24,10 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Control.h>
-#include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Panel.h>
-
-#include <ObjectivelyMVC/JSONView.h>
 
 #define _Class _Panel
 
@@ -53,13 +50,14 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
 
-	const Inlet inlets[] = {
-		MakeInlet("accessoryView", InletTypeViews, offsetof(Panel, accessoryView), NULL),
-		MakeInlet("contentView", InletTypeViews, offsetof(Panel, contentView), NULL),
-		MakeInlet("isDraggable", InletTypeBool, offsetof(Panel, isDraggable), NULL),
-		MakeInlet("isResiable", InletTypeBool, offsetof(Panel, isResizable), NULL),
-		MakeInlet(NULL, 0, 0, NULL)
-	};
+	Panel *this = (Panel *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("accessoryView", InletTypeSubviews, &this->accessoryView, NULL),
+		MakeInlet("contentView", InletTypeSubviews, &this->contentView, NULL),
+		MakeInlet("isDraggable", InletTypeBool, &this->isDraggable, NULL),
+		MakeInlet("isResiable", InletTypeBool, &this->isResizable, NULL)
+	);
 
 	$$(JSONView, applyInlets, self, dictionary, inlets);
 }

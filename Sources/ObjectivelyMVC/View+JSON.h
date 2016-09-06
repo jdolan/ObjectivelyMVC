@@ -24,7 +24,7 @@
 #pragma once
 
 #include <Objectively/Data.h>
-#include <Objectively/JSONPath.h>
+#include <Objectively/Enum.h>
 
 #include <ObjectivelyMVC/View.h>
 
@@ -44,12 +44,13 @@ typedef enum {
 	InletTypeDouble,
 	InletTypeEnum,
 	InletTypeFloat,
+	InletTypeFont,
 	InletTypeImage,
 	InletTypeInteger,
 	InletTypeRectangle,
 	InletTypeSize,
+	InletTypeSubviews,
 	InletTypeView,
-	InletTypeViews
 } InletType;
 
 typedef struct Inlet Inlet;
@@ -70,9 +71,9 @@ struct Inlet {
 	InletType type;
 
 	/**
-	 * @brief The offset of the View attribute, e.g. `offsetof(View, alignment)`.
+	 * @brief The Inlet destination.
 	 */
-	ptrdiff_t offset;
+	ident dest;
 
 	/**
 	 * @brief Type-specific data, e.g. an array of EnumNames.
@@ -83,9 +84,21 @@ struct Inlet {
 /**
  * @brief Creates an Inlet with the specified parameters.
  */
-#define MakeInlet(name, type, offset, data) \
+#define MakeInlet(name, type, dest, data) \
 	({ \
-		Inlet _inlet = { (name), (type), (offset), (data) }; _inlet; \
+		Inlet _inlet = { (name), (type), (dest), (data) }; _inlet; \
+	})
+
+/**
+ * @brief Creates a null-termianted array of Inlets.
+ */
+#define MakeInlets(...) \
+	({ \
+		const Inlet _inlets[] = { \
+			__VA_ARGS__, \
+			MakeInlet(NULL, -1, NULL, NULL) \
+		}; \
+		_inlets; \
 	})
 
 typedef struct Outlet Outlet;

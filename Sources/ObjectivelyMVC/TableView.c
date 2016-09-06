@@ -91,8 +91,8 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	const TableView *this = (TableView *) self;
 
-	const SDL_Size headerSize = $((View *) this->headerView, size);
-	const SDL_Size contentSize = $((View *) this->contentView, size);
+	const SDL_Size headerSize = $((View *) this->headerView, sizeThatFits);
+	const SDL_Size contentSize = $((View *) this->contentView, sizeThatFits);
 
 	return MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
 }

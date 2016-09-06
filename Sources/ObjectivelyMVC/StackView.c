@@ -25,9 +25,47 @@
 
 #include <ObjectivelyMVC/StackView.h>
 
+static const EnumName StackViewAxisNames[] = {
+	NameEnum(StackViewAxisVertical),
+	NameEnum(StackViewAxisHorizontal),
+	EnumNameLast
+};
+
+static const EnumName StackViewDistributionNames[] = {
+	NameEnum(StackViewDistributionDefault),
+	NameEnum(StackViewDistributionFill),
+	NameEnum(StackViewDistributionFillEqually),
+	EnumNameLast
+};
+
 #define _Class _StackView
 
 #pragma mark - View
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	StackView *this = (StackView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) StackViewAxisNames),
+		MakeInlet("distribution", InletTypeEnum, &this->distribution, (ident) StackViewDistributionNames),
+		MakeInlet("spacing", InletTypeInteger, &this->spacing, NULL)
+	);
+
+	$$(JSONView, applyInlets, self, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((StackView *) self, initWithFrame, NULL);
+}
 
 /**
  * @see View::layoutSubviews(View *)
@@ -215,6 +253,9 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
+
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
