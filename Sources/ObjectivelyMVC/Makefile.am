@@ -35,7 +35,6 @@ pkginclude_HEADERS = \
 	TextView.h \
 	Types.h \
 	View.h \
-	View+JSON.h \
 	ViewController.h \
 	WindowController.h
 
@@ -72,7 +71,6 @@ libObjectivelyMVC_la_SOURCES = \
 	Text.c \
 	TextView.c \
 	View.c \
-	View+JSON.c \
 	ViewController.c \
 	WindowController.c
 

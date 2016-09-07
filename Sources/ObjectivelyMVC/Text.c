@@ -61,7 +61,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("font", InletTypeFont, &this->font, NULL)
 	);
 
-	$$(JSONView, applyInlets, self, dictionary, inlets);
+	$(self, bind, dictionary, inlets);
 
 	$(self, sizeToFit);
 }

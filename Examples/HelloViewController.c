@@ -186,7 +186,7 @@ static void loadView(ViewController *self) {
 	release(button);
 
 	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
-	textView->defaultText = "This is a TextView";
+	textView->defaultText = strdup("This is a TextView");
 	
 	$((View *) panel->contentView, addSubview, (View *) textView);
 	release(textView);
@@ -277,12 +277,11 @@ static void loadView(ViewController *self) {
 
 	Button *jsonButton;
 
-	Outlet outlets[] = {
-		MakeOutlet("button", &jsonButton),
-		MakeOutlet(NULL, NULL),
-	};
+	Outlet *outlets = MakeOutlets(
+		MakeOutlet("button", &jsonButton)
+	);
 
-	View *view = $$(JSONView, viewWithContentsOfFile, "Hello.json", outlets);
+	View *view = $$(View, viewWithContentsOfFile, "Hello.json", outlets);
 	$(self->view, addSubview, view);
 
 	assert(jsonButton);

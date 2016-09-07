@@ -93,7 +93,7 @@ struct TextView {
 	/**
 	 * @brief The default text, displayed when no user-provided text is available.
 	 */
-	const char *defaultText;
+	char *defaultText;
 	
 	/**
 	 * @brief The delegate.
@@ -103,7 +103,7 @@ struct TextView {
 	/**
 	 * @brief True if this TextView supports editing, false otherwise.
 	 */
-	_Bool editable;
+	_Bool isEditable;
 	
 	/**
 	 * The editing position.

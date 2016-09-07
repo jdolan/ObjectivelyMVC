@@ -1,7 +1,28 @@
 {
 	"class": "Panel",
-	"frame": [ 400, 50, 400, 300 ],
+	"frame": [ 400, 50, 400, 0 ],
 	"contentView": [
+		{
+			"class": "Button",
+			"identifier": "button",
+			"style": "ControlStyleDefault",
+			"title": {
+				"text": "Hello World!"
+			}
+		},
+		{
+			"class": "TextView",
+			"defaultText": "This is a TextView"
+		}
+		{
+			"class": "Input",
+			"control": {
+				"class": "Checkbox"
+			},
+			"label": {
+				"text": "This is a checkbox:"
+			}
+		},
 		{
 			"class": "Box",
 			"label": {
@@ -9,30 +30,9 @@
 			},
 			"subviews": [
 				{
-					"class": "StackView",
-					"autoresizingMask": "ViewAutoresizingContain",
-					"spacing": 10,
-					"subviews": [
-						{
-							"class": "Button",
-							"identifier": "button",
-							"style": "ControlStyleDefault",
-							"title": {
-								"text": "Hello World!"
-							}
-						},
-						{
-							"class": "Input",
-							"control": {
-								"class": "Checkbox"
-							},
-							"label": {
-								"text": "This is a checkbox:"
-							}
-						}
-					]
+					"class": "Text",
+					"text": "With text inside"
 				}
-				
 			]
 		}
 	]

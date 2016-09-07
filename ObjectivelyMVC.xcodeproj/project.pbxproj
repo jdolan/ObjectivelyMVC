@@ -88,8 +88,6 @@
 		CE8E7FFF1C84E8DA00F4C3D4 /* TableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FFD1C84E8DA00F4C3D4 /* TableHeaderView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E80001C84F25400F4C3D4 /* TableCellView.c */; };
 		CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E80011C84F25400F4C3D4 /* TableCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE9C156B1D788DF900423224 /* View+JSON.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9C15691D788DF900423224 /* View+JSON.c */; };
-		CE9C156C1D788DF900423224 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9C156A1D788DF900423224 /* View+JSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
@@ -216,8 +214,6 @@
 		CE8E7FFD1C84E8DA00F4C3D4 /* TableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableHeaderView.h; sourceTree = "<group>"; };
 		CE8E80001C84F25400F4C3D4 /* TableCellView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableCellView.c; sourceTree = "<group>"; };
 		CE8E80011C84F25400F4C3D4 /* TableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableCellView.h; sourceTree = "<group>"; };
-		CE9C15691D788DF900423224 /* View+JSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "View+JSON.c"; sourceTree = "<group>"; };
-		CE9C156A1D788DF900423224 /* View+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+JSON.h"; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -348,8 +344,6 @@
 				CEF1D8BB1D4704950099A857 /* Types.h */,
 				CE12D4231C4C367100CD0B13 /* View.c */,
 				CE12D4241C4C367100CD0B13 /* View.h */,
-				CE9C15691D788DF900423224 /* View+JSON.c */,
-				CE9C156A1D788DF900423224 /* View+JSON.h */,
 				CE12D4251C4C367100CD0B13 /* ViewController.c */,
 				CE12D4261C4C367100CD0B13 /* ViewController.h */,
 				CEF1D8AA1D4630D20099A857 /* WindowController.c */,
@@ -498,7 +492,6 @@
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
-				CE9C156C1D788DF900423224 /* View+JSON.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
@@ -658,7 +651,6 @@
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
-				CE9C156B1D788DF900423224 /* View+JSON.c in Sources */,
 				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
 				CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */,
 				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,

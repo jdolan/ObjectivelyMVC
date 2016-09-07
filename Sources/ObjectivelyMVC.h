@@ -59,6 +59,5 @@
 #include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>
 #include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/View+JSON.h>
 #include <ObjectivelyMVC/ViewController.h>
 #include <ObjectivelyMVC/WindowController.h>

@@ -56,7 +56,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("title", InletTypeView, &this->title, NULL)
 	);
 
-	$$(JSONView, applyInlets, self, dictionary, inlets);
+	$(self, bind, dictionary, inlets);
 }
 
 /**

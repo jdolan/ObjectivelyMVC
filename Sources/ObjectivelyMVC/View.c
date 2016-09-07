@@ -23,11 +23,9 @@
 
 #include <assert.h>
 
-#include <Objectively/Enum.h>
-#include <Objectively/String.h>
+#include <Objectively.h>
 
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC.h>
 
 static const EnumName ViewAlignmentNames[] = {
 	NameEnum(ViewAlignmentNone),
@@ -57,6 +55,8 @@ Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
 Uint32 MVC_EVENT_UPDATE_BINDINGS;
 
 static View *_firstResponder;
+
+static __thread Outlet *_outlets;
 
 #define _Class _View
 
@@ -109,7 +109,146 @@ static void addSubview(View *self, View *subview) {
 }
 
 /**
- * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary)
+ * @return The SDL_Color for `array`.
+ */
+static SDL_Color bindColor(const Array *array) {
+
+	assert(array);
+	assert(array->count == 4);
+
+	const Number *r = $(array, objectAtIndex, 0);
+	const Number *g = $(array, objectAtIndex, 1);
+	const Number *b = $(array, objectAtIndex, 2);
+	const Number *a = $(array, objectAtIndex, 3);
+
+#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
+
+	SDL_Color color = {
+		ScaleColor(r->value),
+		ScaleColor(g->value),
+		ScaleColor(b->value),
+		ScaleColor(a->value)
+	};
+
+	return color;
+}
+
+/**
+ * @return The SDL_Size for `array`.
+ */
+static SDL_Size bindSize(const Array *array) {
+
+	assert(array);
+	assert(array->count == 2);
+
+	const Number *w = $(array, objectAtIndex, 2);
+	const Number *h = $(array, objectAtIndex, 3);
+
+	SDL_Size size = { w->value, h->value };
+	return size;
+}
+
+/**
+ * @return The SDL_Rect for `array`.
+ */
+static SDL_Rect bindRect(const Array *array) {
+
+	assert(array);
+	assert(array->count == 4);
+
+	const Number *x = $(array, objectAtIndex, 0);
+	const Number *y = $(array, objectAtIndex, 1);
+	const Number *w = $(array, objectAtIndex, 2);
+	const Number *h = $(array, objectAtIndex, 3);
+
+	SDL_Rect rect = { x->value, y->value, w->value, h->value };
+	return rect;
+}
+
+/**
+ * @brief ArrayEnumerator for bind subview recursion.
+ */
+static _Bool bindSubviews(const Array *array, ident obj, ident data) {
+
+	View *subview = $$(View, viewWithDictionary, cast(Dictionary, obj), _outlets);
+
+	$(cast(View, data), addSubview, subview);
+
+	release(subview);
+
+	return false;
+}
+
+/**
+ * @fn void View::bind(View *self, const Dictionary *dictionary, const Inlet *inlets)
+ *
+ * @memberof View
+ */
+static void bind(View *self, const Dictionary *dictionary, const Inlet *inlets) {
+
+	const Inlet *inlet = inlets;
+	while (inlet->name) {
+
+		const ident obj = $(dictionary, objectForKeyPath, inlet->name);
+		if (obj) {
+
+			switch (inlet->type) {
+				case InletTypeBool:
+					*((_Bool *) inlet->dest) = cast(Boole, obj)->value;
+					break;
+				case InletTypeCharacters:
+					*((char **) inlet->dest) = strdup(cast(String, obj)->chars);
+					break;
+				case InletTypeColor:
+					*((SDL_Color *) inlet->dest) = bindColor(cast(Array, obj));
+					break;
+				case InletTypeDouble:
+					*((double *) inlet->dest) = cast(Number, obj)->value;
+					break;
+				case InletTypeFloat:
+					*((float *) inlet->dest) = cast(Number, obj)->value;
+					break;
+				case InletTypeFont:
+					*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
+					break;
+				case InletTypeEnum:
+					*((int *) inlet->dest) = valueof(inlet->data, (cast(String, obj))->chars);
+					break;
+				case InletTypeImage:
+					*((Image **) inlet->dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
+					break;
+				case InletTypeInteger:
+					*((int *) inlet->dest) = cast(Number, obj)->value;
+					break;
+				case InletTypeRectangle:
+					*((SDL_Rect *) inlet->dest) = bindRect(cast(Array, obj));
+					break;
+				case InletTypeSize:
+					*((SDL_Size *) inlet->dest) = bindSize(cast(Array, obj));
+					break;
+				case InletTypeSubviews:
+					$(cast(Array, obj), enumerateObjects, bindSubviews, *(View **) inlet->dest);
+					break;
+				case InletTypeView:
+					if (inlet->data) {
+
+						$(*(View **) inlet->dest, removeFromSuperview);
+						release(*(View **) inlet->dest);
+
+						*(View **) inlet->dest = $$(View, viewWithDictionary, cast(Dictionary, obj), _outlets);
+					} else {
+						$(*(View **) inlet->dest, awakeWithDictionary, cast(Dictionary, obj));
+					}
+					break;
+			}
+		}
+		
+		inlet++;
+	}
+}
+
+/**
+ * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
  *
  * @memberof View
  */
@@ -125,10 +264,19 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("isHidden", InletTypeBool, &self->isHidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
+		MakeInlet("subviews", InletTypeSubviews, &self, NULL),
 		MakeInlet("zIndex", InletTypeInteger, &self->zIndex, NULL)
 	);
 
-	$$(JSONView, applyInlets, self, dictionary, inlets);
+	$(self, bind, dictionary, inlets);
+
+	if (self->identifier) {
+		for (Outlet *outlet = _outlets; outlet->identifier; outlet++) {
+			if (strcmp(outlet->identifier, self->identifier) == 0) {
+				*outlet->view = self;
+			}
+		}
+	}
 }
 
 /**
@@ -711,6 +859,87 @@ static SDL_Rect viewport(const View *self) {
 }
 
 /**
+ * @fn View *View::viewWithContentsOfFile(const char *path, Outlet *outlets)
+ *
+ * @memberof View
+ */
+static View *viewWithContentsOfFile(const char *path, Outlet *outlets) {
+
+	Data *data = $$(Data, dataWithContentsOfFile, path);
+
+	View *view = $$(View, viewWithData, data, outlets);
+
+	release(data);
+
+	return view;
+}
+
+/**
+ * @fn View *View::viewWithData(const Data *data, Outlet *outlets)
+ *
+ * @memberof View
+ */
+static View *viewWithData(const Data *data, Outlet *outlets) {
+
+	Dictionary *dictionary = $$(JSONSerialization, objectFromData, data, 0);
+
+	View *view = $$(View, viewWithDictionary, dictionary, outlets);
+
+	release(dictionary);
+
+	return view;
+}
+
+/**
+ * @fn View *View::viewWithDictionary(const Dictionary *dictionary, Outlet *outlets)
+ *
+ * @memberof View
+ */
+static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
+	static Once once;
+
+	do_once(&once, {
+		_initialize(&_Box);
+		_initialize(&_Button);
+		_initialize(&_Checkbox);
+		_initialize(&_CollectionView);
+		_initialize(&_ImageView);
+		_initialize(&_Input);
+		_initialize(&_Panel);
+		_initialize(&_ScrollView);
+		_initialize(&_Select);
+		_initialize(&_Slider);
+		_initialize(&_StackView);
+		_initialize(&_TableView);
+		_initialize(&_Text);
+		_initialize(&_TextView);
+	});
+
+	_outlets = outlets;
+
+	String *clazzName = $(dictionary, objectForKeyPath, "class");
+	if (clazzName) {
+		Class *clazz = classForName(clazzName->chars);
+		if (clazz) {
+			const Class *c = clazz;
+			while (c) {
+				if (c == &_View) {
+					View *view = $((View *) _alloc(clazz), init);
+
+					$(view, awakeWithDictionary, dictionary);
+
+					return view;
+				}
+				c = c->superclass;
+			}
+		}
+	}
+
+	assert(false);
+	return NULL;
+}
+
+/**
  * @brief Predicate for visibleSubviews.
  */
 static _Bool visibleSubviews_filter(ident obj, ident data) {
@@ -751,6 +980,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
+	((ViewInterface *) clazz->interface)->bind = bind;
 	((ViewInterface *) clazz->interface)->bounds = bounds;
 	((ViewInterface *) clazz->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
 	((ViewInterface *) clazz->interface)->clippingFrame = clippingFrame;
@@ -778,6 +1008,9 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 	((ViewInterface *) clazz->interface)->viewport = viewport;
+	((ViewInterface *) clazz->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
+	((ViewInterface *) clazz->interface)->viewWithData = viewWithData;
+	((ViewInterface *) clazz->interface)->viewWithDictionary = viewWithDictionary;
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->window = window;
 

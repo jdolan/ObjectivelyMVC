@@ -70,7 +70,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("style", InletTypeEnum, &this->style, (ident) ControlStyleNames)
 	);
 
-	$$(JSONView, applyInlets, self, dictionary, inlets);
+	$(self, bind, dictionary, inlets);
 }
 
 /**

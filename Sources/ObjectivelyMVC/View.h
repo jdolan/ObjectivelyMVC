@@ -27,6 +27,8 @@
 #include <SDL2/SDL_opengl.h>
 #include <SDL2/SDL_video.h>
 
+#include <Objectively/Data.h>
+#include <Objectively/Enum.h>
 #include <Objectively/Dictionary.h>
 #include <Objectively/MutableArray.h>
 
@@ -82,6 +84,81 @@ typedef enum {
 typedef struct {
 	int top, right, bottom, left;
 } Padding;
+
+/**
+ * @file
+ *
+ * @brief The JSONView type
+ */
+
+/**
+ * @brief Inlet type constants.
+ */
+typedef enum {
+	InletTypeBool,
+	InletTypeCharacters,
+	InletTypeColor,
+	InletTypeDouble,
+	InletTypeEnum,
+	InletTypeFloat,
+	InletTypeFont,
+	InletTypeImage,
+	InletTypeInteger,
+	InletTypeRectangle,
+	InletTypeSize,
+	InletTypeSubviews,
+	InletTypeView,
+} InletType;
+
+typedef struct Inlet Inlet;
+
+/**
+ * @brief Inlets enable inbound data binding of View attributes through JSON.
+ *
+ * @see View::bind(View *, const Dictionary *, const Inlet *)
+ */
+struct Inlet {
+
+	/**
+	 * @brief The Inlet name, e.g. `"alignment"`.
+	 */
+	const char *name;
+
+	/**
+	 * @brief The InletType, e.g. InletTypeEnum.
+	 */
+	InletType type;
+
+	/**
+	 * @brief The Inlet destination.
+	 */
+	ident dest;
+
+	/**
+	 * @brief Type-specific data, e.g. an array of EnumNames.
+	 */
+	ident data;
+};
+
+typedef struct Outlet Outlet;
+
+/**
+ * @brief Outlets enable outbound data binding of Views through JSON.
+ *
+ * @see View::viewWithDictionary(const Dictionary *, Outlet *)
+ */
+struct Outlet {
+
+	/**
+	 * @brief The View identifier.
+	 */
+	const char *identifier;
+
+	/**
+	 * @brief The output storage for the resolved View.
+	 */
+	View **view;
+};
 
 typedef struct ViewInterface ViewInterface;
 
@@ -152,7 +229,7 @@ struct View {
 	/**
 	 * @brief An optional identifier.
 	 *
-	 * @remarks Identifiers are commonly used to resolve outlets when loading Views via JSONView.
+	 * @remarks Identifiers are commonly used to resolve outlets when loading Views via View.
 	 */
 	char *identifier;
 	
@@ -212,8 +289,8 @@ struct ViewInterface {
 	 *
 	 * @param dictionary A Dictionary of properties describing this View.
 	 *
-	 * @remarks This method is invoked when loading via JSONView. Subclasses should
-	 * override this method to perform any customization based on the contents of `dictionary`.
+	 * @remarks This method is invoked when loading via View. Subclasses should override this method
+	 * to perform any customization based on the contents of `dictionary`.
 	 *
 	 * @memberof View
 	 */
@@ -230,6 +307,20 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*becomeFirstResponder)(View *self);
+
+	/**
+	 * @fn void View::bind(View *self, const Dictionary *dictionary, const Inlet *inlets)
+	 *
+	 * @brief Performs data binding for the Inlets described in `dictionary`.
+	 *
+	 * @param dictionary A Dictionary describing this View.
+	 * @param inlets The Inlets to bind.
+	 *
+	 * @remarks Subclasses will typically call this method from View::awakeWithDictionary.
+	 *
+	 * @memberof View
+	 */
+	void (*bind)(View *self, const Dictionary *dictionary, const Inlet *inlets);
 	
 	/**
 	 * @fn SDL_Rect View::bounds(const View *self)
@@ -326,8 +417,8 @@ struct ViewInterface {
 	 *
 	 * @return The initialized View, or `NULL` on error.
 	 *
-	 * @remarks JSONView::viewWithDictionary invokes this initializer when loading Views. Subclasses
-	 * wishing to support JSONView _must_ override this method to call their designated initializer.
+	 * @remarks View::viewWithDictionary invokes this initializer when loading Views. Subclasses
+	 * wishing to support View _must_ override this method to call their designated initializer.
 	 *
 	 * @memberof View
 	 */
@@ -516,6 +607,56 @@ struct ViewInterface {
 	SDL_Rect (*viewport)(const View *self);
 
 	/**
+	 * @static
+	 *
+	 * @fn View *View::viewWithContentsOfFile(const char *path)
+	 *
+	 * @brief Instantiates a View initialized with the contents of the JSON file at `path`.
+	 *
+	 * @param path A path to a JSON file describing a View.
+	 * @param outlets An optional array of Outlets to resolve.
+	 *
+	 * @return The initialized View, or `NULL` on error.
+	 *
+	 * @memberof View
+	 */
+	View *(*viewWithContentsOfFile)(const char *path, Outlet *outlets);
+
+	/**
+	 * @static
+	 *
+	 * @fn View *View::viewWithData(const Data *data)
+	 *
+	 * @brief Instantiates a View initialized with the contents of `data`.
+	 *
+	 * @param dictionary A Dictionary describing the View.
+	 * @param outlets An optional array of Outlets to resolve.
+	 *
+	 * @return The initialized View, or `NULL` on error.
+	 *
+	 * @memberof View
+	 */
+	View *(*viewWithData)(const Data *data, Outlet *outlets);
+
+	/**
+	 * @static
+	 *
+	 * @fn View *View::viewWithDictionary(const Dictionary *dictionary, Outlet *outlets)
+	 *
+	 * @brief Instantiates a View initialized with the attributes described in `dictionary`.
+	 *
+	 * @param dictionary A Dictionary describing the View.
+	 * @param outlets An optional array of Outlets to resolve.
+	 *
+	 * @return The initialized View, or `NULL` on error.
+	 *
+	 * @see View::initWithDictionary(View *, const Dictionary *, Outlet *outlets)
+	 *
+	 * @memberof View
+	 */
+	View *(*viewWithDictionary)(const Dictionary *dictionary, Outlet *outlets);
+
+	/**
 	 * @fn Array *View::visibleSubviews(const View *self)
 	 *
 	 * @return An Array of this View's visible subviews.
@@ -537,8 +678,6 @@ struct ViewInterface {
 };
 
 extern Class _View;
-
-#include <ObjectivelyMVC/View+JSON.h>
 
 /**
  * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
@@ -563,3 +702,43 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
  * High-DPI displays. This is particularly relevant for Views that render textures.
  */
 double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
+
+/**
+ * @brief Creates an Inlet with the specified parameters.
+ */
+#define MakeInlet(name, type, dest, data) \
+	({ \
+		Inlet _inlet = { (name), (type), (dest), (data) }; _inlet; \
+	})
+
+/**
+ * @brief Creates a null-termianted array of Inlets.
+ */
+#define MakeInlets(...) \
+	({ \
+		const Inlet _inlets[] = { \
+			__VA_ARGS__, \
+			MakeInlet(NULL, -1, NULL, NULL) \
+		}; \
+		_inlets; \
+	})
+
+/**
+ * @brief Creates an Outlet with the specified parameters.
+ */
+#define MakeOutlet(identifier, view) \
+	({ \
+		Outlet _outlet = { (identifier), (View **) (view) }; _outlet; \
+	})
+
+/**
+ * @brief Creates a null-termianted array of Outlets.
+ */
+#define MakeOutlets(...) \
+	({ \
+		Outlet _outlets[] = { \
+			__VA_ARGS__, \
+			MakeOutlet(NULL, NULL) \
+		}; \
+		_outlets; \
+	})
