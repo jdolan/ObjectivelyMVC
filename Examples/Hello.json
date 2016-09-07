@@ -12,16 +12,29 @@
 		},
 		{
 			"class": "TextView",
+			"identifier": "textView",
 			"defaultText": "This is a TextView"
 		}
 		{
 			"class": "Input",
 			"control": {
-				"class": "Checkbox"
+				"class": "Checkbox",
+				"identifier": "checkbox"
 			},
 			"label": {
 				"text": "This is a checkbox:"
 			}
+		},
+		{
+			"class": "Select",
+			"identifier": "select"
+		},
+		{
+			"class": "Slider",
+			"identifier": "slider",
+			"min": 0.0,
+			"max": 10.0,
+			"value": 5.0
 		},
 		{
 			"class": "Box",

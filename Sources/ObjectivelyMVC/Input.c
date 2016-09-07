@@ -62,7 +62,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	Input *this = (Input *) self;
 
 	const Inlet *inlets = MakeInlets(
-		MakeInlet("control", InletTypeView, &this->control, this->control),
+		MakeInlet("control", InletTypeView, &this->control, (ident) true),
 		MakeInlet("label", InletTypeView, &this->label, NULL),
 		MakeInlet("orientation", InletTypeEnum, &this->orientation, (ident) InputOrientationNames)
 	);

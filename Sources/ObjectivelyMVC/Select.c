@@ -49,6 +49,13 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Select *) self, initWithFrame, NULL, ControlStyleDefault);
+}
+
+/**
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
@@ -341,7 +348,8 @@ static void selectOptionWithValue(Select *self, ident value) {
 static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
+
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	

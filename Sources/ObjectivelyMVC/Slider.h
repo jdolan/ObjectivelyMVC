@@ -101,7 +101,7 @@ struct Slider {
 	/**
 	 * @brief The label format, e.g. `"%0.01f"`.
 	 */
-	const char *labelFormat;
+	char *labelFormat;
 	
 	/**
 	 * @brief The slider bounds.

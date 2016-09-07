@@ -40,11 +40,44 @@ static void dealloc(Object *self) {
 	release(this->bar);
 	release(this->handle);
 	release(this->label);
+
+	free(this->labelFormat);
 	
 	super(Object, self, dealloc);
 }
 
 #pragma mark - View
+
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	Slider *this = (Slider *) self;
+
+	double value = this->value;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("bar", InletTypeView, &this->bar, NULL),
+		MakeInlet("handle", InletTypeView, &this->handle, NULL),
+		MakeInlet("label", InletTypeView, &this->label, NULL),
+		MakeInlet("labelFormat", InletTypeCharacters, &this->labelFormat, NULL),
+		MakeInlet("min", InletTypeDouble, &this->min, NULL),
+		MakeInlet("max", InletTypeDouble, &this->max, NULL),
+		MakeInlet("step", InletTypeDouble, &this->step, NULL),
+		MakeInlet("value", InletTypeDouble, &value, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+
+	$(this, setValue, value);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Slider *) self, initWithFrame, NULL, ControlStyleDefault);
+}
 
 /**
  * @see View::layoutSubviews(View *)
@@ -172,7 +205,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 		$((View *) self, addSubview, (View *) self->label);
 
-		self->labelFormat = "%0.1f";
+		self->labelFormat = strdup("%0.1f");
 		
 		if (self->control.style == ControlStyleDefault) {
 
@@ -224,6 +257,8 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->render = render;
 	
