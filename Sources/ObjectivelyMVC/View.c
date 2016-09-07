@@ -27,7 +27,7 @@
 
 #include <ObjectivelyMVC.h>
 
-static const EnumName ViewAlignmentNames[] = {
+const EnumName ViewAlignmentNames[] = {
 	NameEnum(ViewAlignmentNone),
 	NameEnum(ViewAlignmentTopLeft),
 	NameEnum(ViewAlignmentTopCenter),
@@ -141,8 +141,8 @@ static SDL_Size bindSize(const Array *array) {
 	assert(array);
 	assert(array->count == 2);
 
-	const Number *w = $(array, objectAtIndex, 2);
-	const Number *h = $(array, objectAtIndex, 3);
+	const Number *w = $(array, objectAtIndex, 0);
+	const Number *h = $(array, objectAtIndex, 1);
 
 	SDL_Size size = { w->value, h->value };
 	return size;

@@ -67,6 +67,8 @@ typedef enum {
 	ViewAlignmentInternal = ViewAlignmentMaskInternal
 } ViewAlignment;
 
+extern const EnumName ViewAlignmentNames[];
+
 /**
  * @brief Auto-resizing constants, which are bitmasked.
  */

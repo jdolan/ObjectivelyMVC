@@ -1,13 +1,13 @@
 {
 	"class": "Panel",
-	"frame": [ 400, 50, 400, 0 ],
+	"frame": [ 50, 50, 0, 0 ],
 	"contentView": [
 		{
 			"class": "Button",
 			"identifier": "button",
 			"style": "ControlStyleDefault",
 			"title": {
-				"text": "Hello World!"
+				"text": "This is a Button"
 			}
 		},
 		{
@@ -37,16 +37,29 @@
 			"value": 5.0
 		},
 		{
-			"class": "Box",
-			"label": {
-				"text": "This is a Box"
-			},
-			"subviews": [
+			"class": "TableView",
+			"identifier": "tableView",
+			"columns": [
 				{
-					"class": "Text",
-					"text": "With text inside"
+					"identifier": "One"
+				},
+				{
+					"identifier": "Two"
+				},
+				{
+					"identifier": "Three"
 				}
-			]
+			],
+			"selection": "ControlSelectionMultiple"
+		},
+		{
+			"class": "CollectionView",
+			"identifier": "collectionView",
+			"autoresizingMask": "ViewAutoresizingWidth",
+			"frame": [0, 0, 0, 180 ],
+			"selection": "ControlSelectionMultiple",
+			"axis": "CollectionViewAxisHorizontal",
+			"itemSize": [ 64, 48 ]
 		}
 	]
 }	

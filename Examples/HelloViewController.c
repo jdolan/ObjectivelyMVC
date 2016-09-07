@@ -175,116 +175,50 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 
-	const SDL_Rect frame = { .x = 50, .y = 50 };
-	Panel *panel = $(alloc(Panel), initWithFrame, &frame);
-
-	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
-	$(button->title, setText, "This is a really long Button");
-	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
-	
-	$((View *) panel->contentView, addSubview, (View *) button);
-	release(button);
-
-	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
-	textView->defaultText = strdup("This is a TextView");
-	
-	$((View *) panel->contentView, addSubview, (View *) textView);
-	release(textView);
-
-	Checkbox *checkbox = $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
-	Input *input = $(alloc(Input), initWithControl, (Control *) checkbox);
-	$(input->label, setText, "This is a checkbox:");
-	$((Control *) checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
-
-	$((View *) panel->contentView, addSubview, (View *) input);
-	release(checkbox);
-	release(input);
-
-	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
-	$(select, addOption, "This is a select", (ident) 1);
-	$(select, addOption, "This is an option", (ident) 2);
-	$(select, addOption, "This is another", (ident) 3);
-	$((View *) select, sizeToFit);
-	
-	$((View *) panel->contentView, addSubview, (View *) select);
-	release(select);
-
-	Slider *slider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
-	slider->delegate.didSetValue = sliderDidSetValue;
-	slider->min = 0.1, slider->max = 10.0, slider->step = 0.1;
-	$(slider, setValue, 5.0);
-
-	$((View *) panel->contentView, addSubview, (View *) slider);
-	release(slider);
-
-	TableView *tableView = $(alloc(TableView), initWithFrame, NULL, ControlStyleDefault);
-	tableView->control.selection = ControlSelectionMultiple;
-
-	tableView->dataSource.numberOfRows = numberOfRows;
-	tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
-
-	tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
-	tableView->delegate.didSelectRowsAtIndexes = didSelectRowsAtIndexes;
-
-	TableColumn *column1 = $(alloc(TableColumn), initWithIdentifier, "One");
-	TableColumn *column2 = $(alloc(TableColumn), initWithIdentifier, "Two");
-	TableColumn *column3 = $(alloc(TableColumn), initWithIdentifier, "Three");
-
-	column1->comparator = comparator;
-	column2->comparator = comparator;
-	column3->comparator = comparator;
-
-	$(tableView, addColumn, column1);
-	$(tableView, addColumn, column2);
-	$(tableView, addColumn, column3);
-
-	release(column1);
-	release(column2);
-	release(column3);
-
-	$(tableView, reloadData);
-	$((View *) tableView, sizeToFit);
-
-	$((View *) panel->contentView, addSubview, (View *) tableView);
-	release(tableView);
-
-	CollectionView *collectionView = $(alloc(CollectionView), initWithFrame, NULL, ControlStyleDefault);
-	collectionView->axis = CollectionViewAxisHorizontal;
-
-	collectionView->control.selection = ControlSelectionMultiple;
-	collectionView->control.view.frame.h = 180;
-	collectionView->control.view.autoresizingMask = ViewAutoresizingWidth;
-
-	collectionView->dataSource.numberOfItems = numberOfItems;
-	collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
-
-	collectionView->delegate.itemForObjectAtIndexPath = itemForObjectAtIndexPath;
-	collectionView->delegate.didModifySelection = didModifySelection;
-
-	collectionView->itemSize.w = 64;
-	collectionView->itemSize.w = 48;
-
-	$(collectionView, reloadData);
-	
-	$((View *) panel->contentView, addSubview, (View *) collectionView);
-	release(collectionView);
-
-	$((View *) panel->contentView, sizeToFit);
-	$((View *) panel, sizeToFit);
-
-	$(self->view, addSubview, (View *) panel);
-	release(panel);
-
-	Button *jsonButton;
+	HelloViewController *this = (HelloViewController *) self;
 
 	Outlet *outlets = MakeOutlets(
-		MakeOutlet("button", &jsonButton)
+		MakeOutlet("button", &this->button),
+		MakeOutlet("textView", &this->textView),
+		MakeOutlet("checkbox", &this->checkbox),
+		MakeOutlet("select", &this->select),
+		MakeOutlet("slider", &this->slider),
+		MakeOutlet("tableView", &this->tableView),
+		MakeOutlet("collectionView", &this->collectionView)
 	);
 
-	View *view = $$(View, viewWithContentsOfFile, "Hello.json", outlets);
-	$(self->view, addSubview, view);
+	this->panel = (Panel *) $$(View, viewWithContentsOfFile, "Hello.json", outlets);
+	$(self->view, addSubview, (View *) this->panel);
 
-	assert(jsonButton);
+	$((Control *) this->button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
+	$((Control *) this->checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
+
+	$(this->select, addOption, "This is a select", (ident) 1);
+	$(this->select, addOption, "This is an option", (ident) 2);
+	$(this->select, addOption, "This is another", (ident) 3);
+	$((View *) this->select, sizeToFit);
+
+	this->slider->delegate.didSetValue = sliderDidSetValue;
+
+	this->tableView->dataSource.numberOfRows = numberOfRows;
+	this->tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
+	this->tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
+	this->tableView->delegate.didSelectRowsAtIndexes = didSelectRowsAtIndexes;
+
+	$(this->tableView, columnWithIdentifier, "One")->comparator = comparator;
+	$(this->tableView, columnWithIdentifier, "Two")->comparator = comparator;
+	$(this->tableView, columnWithIdentifier, "Three")->comparator = comparator;
+
+	$(this->tableView, reloadData);
+	$((View *) this->tableView, sizeToFit);
+
+	this->collectionView->dataSource.numberOfItems = numberOfItems;
+	this->collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
+
+	this->collectionView->delegate.itemForObjectAtIndexPath = itemForObjectAtIndexPath;
+	this->collectionView->delegate.didModifySelection = didModifySelection;
+
+	$(this->collectionView, reloadData);
 }
 
 #pragma mark - Class lifecycle

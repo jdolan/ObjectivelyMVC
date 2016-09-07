@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include <Objectively/String.h>
+
 #include <ObjectivelyMVC/TableView.h>
 
 #define _Class _TableView
@@ -46,6 +48,61 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - View
+
+/**
+ * @brief ArrayEnumerator for awaking TableColumns.
+ */
+static _Bool awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
+
+	const String *identifier = $(cast(Dictionary, obj), objectForKeyPath, "identifier");
+	assert(identifier);
+
+	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);
+	assert(column);
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("cellAlignment", InletTypeEnum, &column->cellAlignment, (ident) ViewAlignmentNames),
+		MakeInlet("maxWidth", InletTypeInteger, &column->maxWidth, NULL),
+		MakeInlet("minWidth", InletTypeInteger, &column->minWidth, NULL),
+		MakeInlet("width", InletTypeInteger, &column->width, NULL)
+	);
+
+	$((View *) data, bind, obj, inlets);
+	$((TableView *) data, addColumn, column);
+
+	release(column);
+}
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	TableView *this = (TableView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("alternateBackgroundColor", InletTypeColor, &this->alternateBackgroundColor, NULL),
+		MakeInlet("cellSpacing", InletTypeInteger, &this->cellSpacing, NULL),
+		MakeInlet("rowHeight", InletTypeInteger, &this->rowHeight, NULL),
+		MakeInlet("usesAlternateBackgroundColor", InletTypeBool, &this->usesAlternateBackgroundColor, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+
+	const Array *columns = $(dictionary, objectForKeyPath, "columns");
+	if (columns) {
+		$(columns, enumerateObjects, awakeWithDictionary_columns, self);
+	}
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((TableView *) self, initWithFrame, NULL, ControlStyleDefault);
+}
 
 /**
  * @see View::layoutSubviews(View *)
@@ -589,6 +646,8 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 

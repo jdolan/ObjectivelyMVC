@@ -52,6 +52,46 @@ struct HelloViewController {
 	 * @private
 	 */
 	HelloViewControllerInterface *interface;
+
+	/**
+	 * @brief A Panel.
+	 */
+	Panel *panel;
+
+	/**
+	 * @brief A Button
+	 */
+	Button *button;
+
+	/**
+	 * @brief A TextView.
+	 */
+	TextView *textView;
+
+	/**
+	 * @brief A Checkbox.
+	 */
+	Checkbox *checkbox;
+
+	/**
+	 * @brief A Select.
+	 */
+	Select *select;
+
+	/**
+	 * @brief A Slider.
+	 */
+	Slider *slider;
+
+	/**
+	 * @brief A TableView.
+	 */
+	TableView *tableView;
+
+	/**
+	 * @brief A CollectionView.
+	 */
+	CollectionView *collectionView;
 };
 
 /**

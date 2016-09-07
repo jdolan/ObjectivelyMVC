@@ -142,7 +142,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				const CollectionItemView *item = $(this, itemAtIndexPath, indexPath);
 				if (item) {
 
-					switch (this->control.selection) {
+					switch (self->selection) {
 						case ControlSelectionNone:
 							break;
 						case ControlSelectionSingle:
