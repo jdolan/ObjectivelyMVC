@@ -71,6 +71,7 @@ static _Bool awakeWithDictionary_columns(const Array *array, ident obj, ident da
 	$((TableView *) data, addColumn, column);
 
 	release(column);
+	return false;
 }
 
 /**
@@ -126,10 +127,6 @@ static void layoutSubviews(View *self) {
 		row->stackView.view.backgroundColor = row->assignedBackgroundColor;
 	}
 
-	super(View, self, layoutSubviews);
-
-	$((View *) this->contentView, sizeToFit);
-
 	View *headerView = (View *) this->headerView;
 	View *scrollView = (View *) this->scrollView;
 
@@ -139,6 +136,8 @@ static void layoutSubviews(View *self) {
 	} else {
 		scrollView->frame.y = 0;
 	}
+
+	super(View, self, layoutSubviews);
 }
 
 /**
@@ -163,29 +162,27 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	TableView *this = (TableView *) self;
 
-	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+	if (event->type == SDL_MOUSEBUTTONUP) {
 
 		if ($((View *) this->headerView, didReceiveEvent, event)) {
 
-			if (event->type == SDL_MOUSEBUTTONUP) {
-				const SDL_Point point = {
-					.x = event->button.x,
-					.y = event->button.y
-				};
+			const SDL_Point point = {
+				.x = event->button.x,
+				.y = event->button.y
+			};
 
-				TableColumn *column = $(this, columnAtPoint, &point);
-				if (column) {
-					$(this, setSortColumn, column);
-					$(this, reloadData);
-				}
+			TableColumn *column = $(this, columnAtPoint, &point);
+			if (column) {
+				$(this, setSortColumn, column);
+				$(this, reloadData);
 			}
 
 			return true;
 		}
 
-		if ($((View *) this->contentView, didReceiveEvent, event)) {
+		if ($((Control *) this->scrollView, highlighted) == false) {
+			if ($((View *) this->contentView, didReceiveEvent, event)) {
 
-			if (event->type == SDL_MOUSEBUTTONUP) {
 				const SDL_Point point = {
 					.x = event->button.x,
 					.y = event->button.y
@@ -202,9 +199,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 						case ControlSelectionNone:
 							break;
 						case ControlSelectionSingle:
-							if (row->isSelected) {
-								$(this, deselectRowAtIndex, index);
-							} else {
+							if (row->isSelected == false) {
 								$(this, deselectAll);
 								$(this, selectRowAtIndex, index);
 							}
@@ -227,13 +222,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 						IndexSet *selectedRowIndexes = $(this, selectedRowIndexes);
 
 						this->delegate.didSelectRowsAtIndexes(this, selectedRowIndexes);
-
+						
 						release(selectedRowIndexes);
 					}
 				}
+				
+				return true;
 			}
-
-			return true;
 		}
 	}
 
