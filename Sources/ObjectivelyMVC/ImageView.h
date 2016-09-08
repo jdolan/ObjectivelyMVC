@@ -32,6 +32,8 @@
  * @brief ImageView implementation.
  */
 
+extern const EnumName GLBlendNames[];
+
 typedef struct ImageView ImageView;
 typedef struct ImageViewInterface ImageViewInterface;
 

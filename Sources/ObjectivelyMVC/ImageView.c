@@ -21,9 +21,24 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <assert.h>
+
 #include <ObjectivelyMVC/ImageView.h>
 
-#include <assert.h>
+const EnumName GLBlendNames[] = MakeEnumNames(
+	MakeEnumName(GL_CONSTANT_ALPHA),
+	MakeEnumName(GL_CONSTANT_COLOR),
+	MakeEnumName(GL_DST_ALPHA),
+	MakeEnumName(GL_DST_COLOR),
+	MakeEnumName(GL_ONE),
+	MakeEnumName(GL_ONE_MINUS_DST_ALPHA),
+	MakeEnumName(GL_ONE_MINUS_DST_COLOR),
+	MakeEnumName(GL_ONE_MINUS_SRC_ALPHA),
+	MakeEnumName(GL_ONE_MINUS_SRC_COLOR),
+	MakeEnumName(GL_SRC_ALPHA),
+	MakeEnumName(GL_SRC_COLOR),
+	MakeEnumName(GL_ZERO)
+);
 
 #define _Class _ImageView
 
@@ -44,6 +59,32 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - View
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	ImageView *this = (ImageView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("alpha", InletTypeFloat, &this->alpha, NULL),
+		MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) GLBlendNames),
+		MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) GLBlendNames),
+		MakeInlet("image", InletTypeImage, &this->image, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((ImageView *) self, initWithImage, NULL);
+}
 
 /**
  * @see ViewInterface::render(View *, Renderer *)
@@ -164,6 +205,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->render = render;
 	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
 

@@ -25,6 +25,11 @@
 
 #include <ObjectivelyMVC/CollectionView.h>
 
+const EnumName CollectionViewAxisNames[] = MakeEnumNames(
+	MakeEnumName(CollectionViewAxisHorizontal),
+	MakeEnumName(CollectionViewAxisVertical)
+);
+
 #define _Class _CollectionView
 
 #pragma mark - Object
@@ -45,6 +50,34 @@ static void dealloc(Object *self) {
 
 #pragma mark - View
 
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	CollectionView *this = (CollectionView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) CollectionViewAxisNames),
+		MakeInlet("itemSize", InletTypeSize, &this->itemSize, NULL),
+		MakeInlet("itemSpacing", InletTypeSize, &this->itemSpacing, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((CollectionView *) self, initWithFrame, NULL, ControlStyleDefault);
+}
+
+/**
+ * @see View::layoutSubviews(View *)
+ */
 static void layoutSubviews(View *self) {
 
 	CollectionView *this = (CollectionView *) self;
@@ -108,13 +141,11 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				const CollectionItemView *item = $(this, itemAtIndexPath, indexPath);
 				if (item) {
 
-					switch (this->control.selection) {
+					switch (self->selection) {
 						case ControlSelectionNone:
 							break;
 						case ControlSelectionSingle:
-							if (item->isSelected) {
-								$(this, deselectItemAtIndexPath, indexPath);
-							} else {
+							if (item->isSelected == false) {
 								$(this, deselectAll);
 								$(this, selectItemAtIndexPath, indexPath);
 							}
@@ -452,6 +483,8 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;

@@ -45,6 +45,13 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Checkbox *) self, initWithFrame, NULL, ControlStyleDefault);
+}
+
+/**
  * @see View::render(View *, Renderer *)
  */
 static void render(View *self, Renderer *renderer) {
@@ -54,9 +61,9 @@ static void render(View *self, Renderer *renderer) {
 	Checkbox *this = (Checkbox *) self;
 	
 	if (this->control.state & ControlStateSelected) {
-		this->check->view.hidden = false;
+		this->check->view.isHidden = false;
 	} else {
-		this->check->view.hidden = true;
+		this->check->view.isHidden = true;
 	}
 }
 
@@ -110,7 +117,7 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 		$((View *) self, addSubview, (View *) self->box);
 		
 		if (self->control.style == ControlStyleDefault) {
-			self->box->bevel = BevelTypeInset;
+			self->box->bevel = ControlBevelTypeInset;
 
 			self->box->view.backgroundColor = Colors.DimGray;
 
@@ -138,6 +145,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->render = render;
 	
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;

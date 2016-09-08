@@ -35,45 +35,58 @@
  * @brief ActionFunction for Button.
  */
 static void buttonAction(Control *control, const SDL_Event *event, ident sender, ident data) {
-	printf("Button clicked\n");
+	printf("%s:\n", __func__);
 }
 
 /**
  * @brief ActionFunction for Checkbox.
  */
 static void checkboxAction(Control *control, const SDL_Event *event, ident sender, ident data) {
-	if ($(control, selected)) {
-		printf("Checkbox selected\n");
-	} else {
-		printf("Checkbox deselected\n");
-	}
+	printf("%s: %s\n", __func__, $(control, selected) ? "checked": "unchecked");
+}
+
+#pragma mark - TextViewDelegate
+
+/**
+ * @see TextViewDelegate::didEndEditing
+ */
+static void didEndEditing(TextView *textView) {
+	printf("%s: %s\n", __func__, textView->attributedText->string.chars);
+}
+
+#pragma mark - SelectDelegate
+
+/**
+ * @see SelectDelegate::didSelectOption
+ */
+static void didSelectOption(Select *select, Option *option) {
+	printf("%s: %s\n", __func__, option->title->text);
 }
 
 #pragma mark - SliderDelegate
 
 /**
- * @brief SliderDelegate callback.
+ * @see SliderDelegate::didSetValue
  */
-static void sliderDidSetValue(Slider *slider) {
-	printf("Slider value: %.1f\n", slider->value);
+static void didSetValue(Slider *slider) {
+	printf("%s: %.1f\n", __func__, slider->value);
 }
 
 #pragma mark - TableViewDataSource
 
 /**
- * @see TableViewDataSource::numberOfRows(const TableView *)
+ * @see TableViewDataSource::numberOfRows
  */
 static size_t numberOfRows(const TableView *tableView) {
 	return 3;
 }
 
 /**
- * @see TableViewDataSource::valueForColumnAndRow(const TableView *, const TableColumn *, int)
+ * @see TableViewDataSource::valueForColumnAndRow
  */
 static ident valueForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
 
 	const Array *columns = (Array *) tableView->columns;
-
 	const int col = $(columns, indexOfObject, (ident) column);
 
 	return (ident) (intptr_t) (columns->count * row + col);
@@ -82,19 +95,17 @@ static ident valueForColumnAndRow(const TableView *tableView, const TableColumn 
 #pragma mark - TableViewDelegate
 
 /**
- * @see TableViewDelegate::cellForColumnAndRow(const TableView *, const TableColumn *, int)
+ * @see TableViewDelegate::cellForColumnAndRow
  */
 static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
-
 	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
 
 	char text[8];
 	snprintf(text, sizeof(text), "%zd", value);
 
 	$(cell->text, setText, text);
-
 	return cell;
 }
 
@@ -110,28 +121,26 @@ static Order comparator(const ident a, const ident b) {
 }
 
 /**
- * @see TableViewDelegate::didSelectRowsAtIndexes(TableView *, const IndexSet *)
+ * @see TableViewDelegate::didSelectRowsAtIndexes
  */
 static void didSelectRowsAtIndexes(TableView *tableView, const IndexSet *indexes) {
 
 	String *string = $((Object *) indexes, description);
-
-	printf("Selected rows %s\n", string->chars);
-
+	printf("%s %s\n", __func__, string->chars);
 	release(string);
 }
 
 #pragma mark - CollectionViewDataSource
 
 /**
- * @see CollectionViewDataSource::numberOfItems(CollectionView *)
+ * @see CollectionViewDataSource::numberOfItems
  */
 static size_t numberOfItems(const CollectionView *collectionView) {
 	return 24;
 }
 
 /**
- * @see CollectionViewDataSource::objectForItemAtIndexPath(CollectionView *, const IndexPath *)
+ * @see CollectionViewDataSource::objectForItemAtIndexPath
  */
 static ident objectForItemAtIndexPath(const CollectionView *collectionView, const IndexPath *indexPath) {
 	return (ident) (intptr_t) $(indexPath, indexAtPosition, 0);
@@ -140,7 +149,7 @@ static ident objectForItemAtIndexPath(const CollectionView *collectionView, cons
 #pragma mark - CollectionViewDelegate
 
 /**
- * @see CollectionViewDelegate::itemForObjectAtIndexPath(const CollectionView *, const IndexPath *)
+ * @see CollectionViewDelegate::itemForObjectAtIndexPath
  */
 static CollectionItemView *itemForObjectAtIndexPath(const CollectionView *collectionView, const IndexPath *indexPath) {
 
@@ -150,19 +159,16 @@ static CollectionItemView *itemForObjectAtIndexPath(const CollectionView *collec
 	snprintf(text, sizeof(text), "%d", $(indexPath, indexAtPosition, 0));
 
 	$(item->text, setText, text);
-
 	return item;
 }
 
 /**
- * @see CollectionViewDelegate::didModifySelection(CollectionView *, const Array *)
+ * @see CollectionViewDelegate::didModifySelection
  */
 static void didModifySelection(CollectionView *collectionView, const Array *selectionIndexPaths) {
 
 	String *string = $(selectionIndexPaths, componentsJoinedByCharacters, ", ");
-
-	printf("Selected item %s\n", string->chars);
-
+	printf("%s: %s\n", __func__, string->chars);
 	release(string);
 }
 
@@ -175,106 +181,53 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 
-	const SDL_Rect frame = { .x = 50, .y = 50 };
-	Panel *panel = $(alloc(Panel), initWithFrame, &frame);
+	HelloViewController *this = (HelloViewController *) self;
 
-	Button *button = $(alloc(Button), initWithFrame, NULL, ControlStyleDefault);
-	$(button->title, setText, "This is a Button");
-	$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
-	
-	$((View *) panel->contentView, addSubview, (View *) button);
-	release(button);
+	Outlet *outlets = MakeOutlets(
+		MakeOutlet("button", &this->button),
+		MakeOutlet("checkbox", &this->checkbox),
+		MakeOutlet("textView", &this->textView),
+		MakeOutlet("select", &this->select),
+		MakeOutlet("slider", &this->slider),
+		MakeOutlet("tableView", &this->tableView),
+		MakeOutlet("collectionView", &this->collectionView)
+	);
 
-	TextView *textView = $(alloc(TextView), initWithFrame, NULL, ControlStyleDefault);
-	textView->defaultText = "This is a TextView";
-	
-	$((View *) panel->contentView, addSubview, (View *) textView);
-	release(textView);
+	this->panel = (Panel *) $$(View, viewWithContentsOfFile, "Hello.json", outlets);
+	$(self->view, addSubview, (View *) this->panel);
 
-	Checkbox *checkbox = $(alloc(Checkbox), initWithFrame, NULL, ControlStyleDefault);
-	Label *label = $(alloc(Label), initWithText, "This is a checkbox:", NULL);
-	Input *input = $(alloc(Input), initWithOrientation, InputOrientationLeft, (Control *) checkbox, label);
-	$((Control *) checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
+	$((Control *) this->button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
+	$((Control *) this->checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
 
-	$((View *) panel->contentView, addSubview, (View *) input);
-	release(checkbox);
-	release(label);
-	release(input);
+	this->textView->delegate.didEndEditing = didEndEditing;
 
-	Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
-	$(select, addOption, "This is a select", (ident) 1);
-	$(select, addOption, "This is an option", (ident) 2);
-	$(select, addOption, "This is another", (ident) 3);
-	$((View *) select, sizeToFit);
-	
-	$((View *) panel->contentView, addSubview, (View *) select);
-	release(select);
+	$(this->select, addOption, "This is a select", (ident) 1);
+	$(this->select, addOption, "This is an option", (ident) 2);
+	$(this->select, addOption, "This is another", (ident) 3);
+	this->select->delegate.didSelectOption = didSelectOption;
+	$((View *) this->select, sizeToFit);
 
-	Slider *slider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
-	slider->delegate.didSetValue = sliderDidSetValue;
-	slider->min = 0.1, slider->max = 10.0, slider->step = 0.1;
-	$(slider, setValue, 5.0);
+	this->slider->delegate.didSetValue = didSetValue;
 
-	$((View *) panel->contentView, addSubview, (View *) slider);
-	release(slider);
+	this->tableView->dataSource.numberOfRows = numberOfRows;
+	this->tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
+	this->tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
+	this->tableView->delegate.didSelectRowsAtIndexes = didSelectRowsAtIndexes;
 
-	TableView *tableView = $(alloc(TableView), initWithFrame, NULL, ControlStyleDefault);
-	tableView->control.selection = ControlSelectionMultiple;
+	$(this->tableView, columnWithIdentifier, "One")->comparator = comparator;
+	$(this->tableView, columnWithIdentifier, "Two")->comparator = comparator;
+	$(this->tableView, columnWithIdentifier, "Three")->comparator = comparator;
 
-	tableView->dataSource.numberOfRows = numberOfRows;
-	tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
+	$(this->tableView, reloadData);
+	$((View *) this->tableView, sizeToFit);
 
-	tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
-	tableView->delegate.didSelectRowsAtIndexes = didSelectRowsAtIndexes;
+	this->collectionView->dataSource.numberOfItems = numberOfItems;
+	this->collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
 
-	TableColumn *column1 = $(alloc(TableColumn), initWithIdentifier, "One");
-	TableColumn *column2 = $(alloc(TableColumn), initWithIdentifier, "Two");
-	TableColumn *column3 = $(alloc(TableColumn), initWithIdentifier, "Three");
+	this->collectionView->delegate.itemForObjectAtIndexPath = itemForObjectAtIndexPath;
+	this->collectionView->delegate.didModifySelection = didModifySelection;
 
-	column1->comparator = comparator;
-	column2->comparator = comparator;
-	column3->comparator = comparator;
-
-	$(tableView, addColumn, column1);
-	$(tableView, addColumn, column2);
-	$(tableView, addColumn, column3);
-
-	release(column1);
-	release(column2);
-	release(column3);
-
-	$(tableView, reloadData);
-	$((View *) tableView, sizeToFit);
-
-	$((View *) panel->contentView, addSubview, (View *) tableView);
-	release(tableView);
-
-	CollectionView *collectionView = $(alloc(CollectionView), initWithFrame, NULL, ControlStyleDefault);
-	collectionView->axis = CollectionViewAxisHorizontal;
-
-	collectionView->control.selection = ControlSelectionMultiple;
-	collectionView->control.view.frame.h = 180;
-	collectionView->control.view.autoresizingMask = ViewAutoresizingWidth;
-
-	collectionView->dataSource.numberOfItems = numberOfItems;
-	collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
-
-	collectionView->delegate.itemForObjectAtIndexPath = itemForObjectAtIndexPath;
-	collectionView->delegate.didModifySelection = didModifySelection;
-
-	collectionView->itemSize.w = 64;
-	collectionView->itemSize.w = 48;
-
-	$(collectionView, reloadData);
-	
-	$((View *) panel->contentView, addSubview, (View *) collectionView);
-	release(collectionView);
-
-	$((View *) panel->contentView, sizeToFit);
-	$((View *) panel, sizeToFit);
-
-	$(self->view, addSubview, (View *) panel);
-	release(panel);
+	$(this->collectionView, reloadData);
 }
 
 #pragma mark - Class lifecycle

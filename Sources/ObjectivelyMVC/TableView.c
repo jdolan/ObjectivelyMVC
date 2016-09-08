@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include <Objectively/String.h>
+
 #include <ObjectivelyMVC/TableView.h>
 
 #define _Class _TableView
@@ -48,6 +50,62 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @brief ArrayEnumerator for awaking TableColumns.
+ */
+static _Bool awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
+
+	const String *identifier = $(cast(Dictionary, obj), objectForKeyPath, "identifier");
+	assert(identifier);
+
+	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);
+	assert(column);
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("cellAlignment", InletTypeEnum, &column->cellAlignment, (ident) ViewAlignmentNames),
+		MakeInlet("maxWidth", InletTypeInteger, &column->maxWidth, NULL),
+		MakeInlet("minWidth", InletTypeInteger, &column->minWidth, NULL),
+		MakeInlet("width", InletTypeInteger, &column->width, NULL)
+	);
+
+	$((View *) data, bind, obj, inlets);
+	$((TableView *) data, addColumn, column);
+
+	release(column);
+	return false;
+}
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	TableView *this = (TableView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("alternateBackgroundColor", InletTypeColor, &this->alternateBackgroundColor, NULL),
+		MakeInlet("cellSpacing", InletTypeInteger, &this->cellSpacing, NULL),
+		MakeInlet("rowHeight", InletTypeInteger, &this->rowHeight, NULL),
+		MakeInlet("usesAlternateBackgroundColor", InletTypeBool, &this->usesAlternateBackgroundColor, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+
+	const Array *columns = $(dictionary, objectForKeyPath, "columns");
+	if (columns) {
+		$(columns, enumerateObjects, awakeWithDictionary_columns, self);
+	}
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((TableView *) self, initWithFrame, NULL, ControlStyleDefault);
+}
+
+/**
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
@@ -69,19 +127,17 @@ static void layoutSubviews(View *self) {
 		row->stackView.view.backgroundColor = row->assignedBackgroundColor;
 	}
 
-	super(View, self, layoutSubviews);
-
-	$((View *) this->contentView, sizeToFit);
-
 	View *headerView = (View *) this->headerView;
 	View *scrollView = (View *) this->scrollView;
 
-	if (headerView->hidden == false) {
+	if (headerView->isHidden == false) {
 		scrollView->frame.y = headerView->frame.h;
 		scrollView->frame.h = max(0, scrollView->frame.h - headerView->frame.h);
 	} else {
 		scrollView->frame.y = 0;
 	}
+
+	super(View, self, layoutSubviews);
 }
 
 /**
@@ -91,8 +147,8 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	const TableView *this = (TableView *) self;
 
-	const SDL_Size headerSize = $((View *) this->headerView, size);
-	const SDL_Size contentSize = $((View *) this->contentView, size);
+	const SDL_Size headerSize = $((View *) this->headerView, sizeThatFits);
+	const SDL_Size contentSize = $((View *) this->contentView, sizeThatFits);
 
 	return MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
 }
@@ -106,29 +162,27 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	TableView *this = (TableView *) self;
 
-	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+	if (event->type == SDL_MOUSEBUTTONUP) {
 
 		if ($((View *) this->headerView, didReceiveEvent, event)) {
 
-			if (event->type == SDL_MOUSEBUTTONUP) {
-				const SDL_Point point = {
-					.x = event->button.x,
-					.y = event->button.y
-				};
+			const SDL_Point point = {
+				.x = event->button.x,
+				.y = event->button.y
+			};
 
-				TableColumn *column = $(this, columnAtPoint, &point);
-				if (column) {
-					$(this, setSortColumn, column);
-					$(this, reloadData);
-				}
+			TableColumn *column = $(this, columnAtPoint, &point);
+			if (column) {
+				$(this, setSortColumn, column);
+				$(this, reloadData);
 			}
 
 			return true;
 		}
 
-		if ($((View *) this->contentView, didReceiveEvent, event)) {
+		if ($((Control *) this->scrollView, highlighted) == false) {
+			if ($((View *) this->contentView, didReceiveEvent, event)) {
 
-			if (event->type == SDL_MOUSEBUTTONUP) {
 				const SDL_Point point = {
 					.x = event->button.x,
 					.y = event->button.y
@@ -145,9 +199,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 						case ControlSelectionNone:
 							break;
 						case ControlSelectionSingle:
-							if (row->isSelected) {
-								$(this, deselectRowAtIndex, index);
-							} else {
+							if (row->isSelected == false) {
 								$(this, deselectAll);
 								$(this, selectRowAtIndex, index);
 							}
@@ -170,13 +222,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 						IndexSet *selectedRowIndexes = $(this, selectedRowIndexes);
 
 						this->delegate.didSelectRowsAtIndexes(this, selectedRowIndexes);
-
+						
 						release(selectedRowIndexes);
 					}
 				}
+				
+				return true;
 			}
-
-			return true;
 		}
 	}
 
@@ -589,6 +641,8 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 

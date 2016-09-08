@@ -44,10 +44,12 @@
  * @brief Bevel types.
  */
 typedef enum {
-	BevelTypeNone,
-	BevelTypeInset,
-	BevelTypeOutset
-} BevelType;
+	ControlBevelTypeNone,
+	ControlBevelTypeInset,
+	ControlBevelTypeOutset
+} ControlBevelType;
+
+extern const EnumName ControlBevelTypeNames[];
 
 /**
  * @brief Control selection styles, for Controls that support user selection.
@@ -57,6 +59,8 @@ typedef enum {
 	ControlSelectionSingle,
 	ControlSelectionMultiple
 } ControlSelection;
+
+extern const EnumName ControlSelectionNames[];
 
 /**
  * @brief Control states, which are bit-masked.
@@ -68,6 +72,8 @@ typedef enum {
 	ControlStateSelected = 0x4,
 	ControlStateFocused = 0x8,
 } ControlState;
+
+extern const EnumName ControlStateNames[];
 
 /**
  * @brief Control styles.
@@ -113,9 +119,9 @@ struct Control {
 	MutableArray *actions;
 	
 	/**
-	 * @brief The BevelType.
+	 * @brief The ControlBevelType.
 	 */
-	BevelType bevel;
+	ControlBevelType bevel;
 
 	/**
 	 * @brief The bit mask of ControlState.

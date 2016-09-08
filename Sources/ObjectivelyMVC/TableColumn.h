@@ -111,7 +111,7 @@ struct TableColumnInterface {
 	 * @brief The parent interface.
 	 */
 	ObjectInterface objectInterface;
-	
+
 	/**
 	 * @fn TableColumn *TableColumn::initWithIdentifier(TableColumn *self, const char *identifier)
 	 *

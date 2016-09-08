@@ -37,7 +37,9 @@
 static void dealloc(Object *self) {
 	
 	TextView *this = (TextView *) self;
-	
+
+	free(this->defaultText);
+
 	release(this->text);
 	
 	release(this->attributedText);
@@ -46,6 +48,30 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - View
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	TextView *this = (TextView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("defaultText", InletTypeCharacters, &this->defaultText, NULL),
+		MakeInlet("isEditable", InletTypeBool, &this->isEditable, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((TextView *) self, initWithFrame, NULL, ControlStyleDefault);
+}
 
 /**
  * @see View::render(View *, Renderer *)
@@ -109,7 +135,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	_Bool didEdit = false, didCaptureEvent = false;
 
 	TextView *this = (TextView *) self;
-	if (this->editable) {
+	if (this->isEditable) {
 		if (event->type == SDL_MOUSEBUTTONDOWN) {
 			if ($((View *) self, didReceiveEvent, event)) {
 				if ((self->state & ControlStateFocused) == 0) {
@@ -269,7 +295,7 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		self->attributedText = $$(MutableString, string);
 		assert(self->attributedText);
 		
-		self->editable = true;
+		self->isEditable = true;
 		
 		self->text = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->text);
@@ -277,7 +303,7 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		$((View *) self, addSubview, (View *) self->text);
 		
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = BevelTypeInset;
+			self->control.bevel = ControlBevelTypeInset;
 			
 			self->control.view.backgroundColor = Colors.DimGray;
 			
@@ -298,7 +324,9 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
+
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->render = render;
 	
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;

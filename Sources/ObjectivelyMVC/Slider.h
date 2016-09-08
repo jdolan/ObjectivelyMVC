@@ -24,7 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/Control.h>
-#include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/Text.h>
 
 /**
  * @file
@@ -96,12 +96,12 @@ struct Slider {
 	/**
 	 * @brief The label displaying the current value.
 	 */
-	Label *label;
+	Text *label;
 
 	/**
 	 * @brief The label format, e.g. `"%0.01f"`.
 	 */
-	const char *labelFormat;
+	char *labelFormat;
 	
 	/**
 	 * @brief The slider bounds.

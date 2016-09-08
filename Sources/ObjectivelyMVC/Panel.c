@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Control.h>
-#include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Panel.h>
 
 #define _Class _Panel
@@ -47,6 +46,29 @@ static void dealloc(Object *self) {
 
 #pragma mark - View
 
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	Panel *this = (Panel *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("accessoryView", InletTypeSubviews, &this->accessoryView, NULL),
+		MakeInlet("contentView", InletTypeSubviews, &this->contentView, NULL),
+		MakeInlet("isDraggable", InletTypeBool, &this->isDraggable, NULL),
+		MakeInlet("isResiable", InletTypeBool, &this->isResizable, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Panel *) self, initWithFrame, NULL);
+}
+
 /**
  * @see View::layoutSubviews(View *)
  */
@@ -61,7 +83,7 @@ static void layoutSubviews(View *self) {
 	resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
 	resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
 
-	resizeHandle->hidden = !this->isResizable;
+	resizeHandle->isHidden = !this->isResizable;
 }
 
 /**
@@ -207,6 +229,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 

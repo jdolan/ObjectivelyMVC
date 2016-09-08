@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <Objectively/String.h>
+
 #include <ObjectivelyMVC/TableColumn.h>
 
 #define _Class _TableColumn

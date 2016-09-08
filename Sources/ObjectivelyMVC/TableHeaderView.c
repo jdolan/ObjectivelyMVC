@@ -53,6 +53,18 @@ static void render(View *self, Renderer *renderer) {
 	SetColor(Colors.White);
 }
 
+/**
+ * @see View::sizeThatFits(const View *)
+ */
+static SDL_Size sizeThatFits(const View *self) {
+
+	SDL_Size size = super(View, self, sizeThatFits);
+
+	size.h = self->frame.h;
+
+	return size;
+}
+
 #pragma mark - TableHeaderView
 
 /**
@@ -83,6 +95,7 @@ static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tabl
 static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((TableHeaderViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
 }

@@ -40,11 +40,44 @@ static void dealloc(Object *self) {
 	release(this->bar);
 	release(this->handle);
 	release(this->label);
+
+	free(this->labelFormat);
 	
 	super(Object, self, dealloc);
 }
 
 #pragma mark - View
+
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	Slider *this = (Slider *) self;
+
+	double value = this->value;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("bar", InletTypeView, &this->bar, NULL),
+		MakeInlet("handle", InletTypeView, &this->handle, NULL),
+		MakeInlet("label", InletTypeView, &this->label, NULL),
+		MakeInlet("labelFormat", InletTypeCharacters, &this->labelFormat, NULL),
+		MakeInlet("min", InletTypeDouble, &this->min, NULL),
+		MakeInlet("max", InletTypeDouble, &this->max, NULL),
+		MakeInlet("step", InletTypeDouble, &this->step, NULL),
+		MakeInlet("value", InletTypeDouble, &value, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+
+	$(this, setValue, value);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Slider *) self, initWithFrame, NULL, ControlStyleDefault);
+}
 
 /**
  * @see View::layoutSubviews(View *)
@@ -57,17 +90,19 @@ static void layoutSubviews(View *self) {
 
 	if (this->max > this->min) {
 
-		if (((View *) this->label)->hidden == false) {
+		if (((View *) this->label)->isHidden == false) {
 			int minWidth, maxWidth;
 			char text[64];
 
+			Text *label = (Text *) this->label;
+
 			snprintf(text, sizeof(text), this->labelFormat, this->min);
-			$(this->label->text->font, sizeCharacters, text, &minWidth, NULL);
+			$(label->font, sizeCharacters, text, &minWidth, NULL);
 
 			snprintf(text, sizeof(text), this->labelFormat, this->max);
-			$(this->label->text->font, sizeCharacters, text, &maxWidth, NULL);
+			$(label->font, sizeCharacters, text, &maxWidth, NULL);
 
-			this->bar->frame.w -= max(minWidth, maxWidth) + this->label->view.padding.left;
+			this->bar->frame.w -= max(minWidth, maxWidth) + label->view.padding.left;
 		}
 
 		const double fraction = clamp((this->value - this->min) / (this->max - this->min), 0.0, 1.0);
@@ -162,7 +197,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 		$(self->bar, addSubview, (View *) self->handle);
 
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
+		self->label = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->label);
 
 		self->label->view.alignment = ViewAlignmentMiddleRight;
@@ -170,7 +205,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 		$((View *) self, addSubview, (View *) self->label);
 
-		self->labelFormat = "%0.1f";
+		self->labelFormat = strdup("%0.1f");
 		
 		if (self->control.style == ControlStyleDefault) {
 
@@ -178,7 +213,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 				self->control.view.frame.w = DEFAULT_SLIDER_WIDTH;
 			}
 			
-			self->handle->bevel = BevelTypeOutset;
+			self->handle->bevel = ControlBevelTypeOutset;
 			self->handle->view.backgroundColor = Colors.FocusedColor;
 			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
 			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;
@@ -205,7 +240,7 @@ static void setValue(Slider *self, double value) {
 		char text[64];
 		snprintf(text, sizeof(text), self->labelFormat, self->value);
 
-		$(self->label, setText, text);
+		$((Text *) self->label, setText, text);
 
 		if (self->delegate.didSetValue) {
 			self->delegate.didSetValue(self);
@@ -222,6 +257,8 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->render = render;
 	

@@ -47,6 +47,8 @@ typedef enum {
 	StackViewAxisHorizontal
 } StackViewAxis;
 
+extern const EnumName StackViewAxisNames[];
+
 /**
  * @brief Distribution models for filling a StackView's frame.
  */
@@ -55,6 +57,8 @@ typedef enum {
 	StackViewDistributionFill,
 	StackViewDistributionFillEqually,
 } StackViewDistribution;
+
+extern const EnumName StackViewDistributionNames[];
 
 typedef struct StackView StackView;
 typedef struct StackViewInterface StackViewInterface;

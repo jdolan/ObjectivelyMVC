@@ -44,6 +44,29 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::awakeWithDictionar(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	Box *this = (Box *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("label", InletTypeView, &this->label, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Box *) self, initWithFrame, NULL);
+}
+
+/**
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
@@ -51,7 +74,7 @@ static void layoutSubviews(View *self) {
 	super(View, self, layoutSubviews);
 
 	View *label = (View *) ((Box *) self)->label;
-	if (label->hidden == false) {
+	if (label->isHidden == false) {
 
 		const SDL_Size size = $(label, sizeThatFits);
 
@@ -71,15 +94,18 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 	self = (Box *) super(View, self, initWithFrame, frame);
 	if (self) {
 
-		self->label = $(alloc(Label), initWithText, NULL, $$(Font, defaultFont, FontCategorySecondaryLabel));
+		Font *font = $$(Font, defaultFont, FontCategorySecondaryLabel);
+		self->label = $(alloc(Text), initWithText, NULL, font);
 		assert(self->label);
 
-		self->label->view.backgroundColor = Colors.Gray;
-		self->label->view.alignment = ViewAlignmentInternal;
-		self->label->view.frame.x = DEFAULT_BOX_LABEL_X;
+		View *label = (View *) self->label;
 
-		self->label->view.padding.right = DEFAULT_BOX_LABEL_PADDING;
-		self->label->view.padding.left = DEFAULT_BOX_LABEL_PADDING;
+		label->backgroundColor = Colors.Gray;
+		label->alignment = ViewAlignmentInternal;
+		label->frame.x = DEFAULT_BOX_LABEL_X;
+
+		label->padding.right = DEFAULT_BOX_LABEL_PADDING;
+		label->padding.left = DEFAULT_BOX_LABEL_PADDING;
 
 		$((View *) self, addSubview, (View *) self->label);
 
@@ -106,6 +132,8 @@ static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
 	((BoxInterface *) clazz->interface)->initWithFrame = initWithFrame;

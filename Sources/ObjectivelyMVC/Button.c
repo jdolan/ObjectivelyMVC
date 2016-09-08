@@ -44,13 +44,26 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::layoutSubviews(View *)
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
-static void layoutSubviews(View *self) {
-	
-	$(self, sizeToFit);
-	
-	super(View, self, layoutSubviews);
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	Button *this = (Button *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("title", InletTypeView, &this->title, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Button *) self, initWithFrame, NULL, ControlStyleDefault);
 }
 
 #pragma mark - Control
@@ -65,7 +78,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		if (event->type == SDL_MOUSEBUTTONUP) {
 			self->state &= ~ControlStateHighlighted;
 			if (self->style == ControlStyleDefault) {
-				self->bevel = BevelTypeOutset;
+				self->bevel = ControlBevelTypeOutset;
 			}
 		}
 		
@@ -73,7 +86,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			if (event->type == SDL_MOUSEBUTTONDOWN) {
 				self->state |= ControlStateHighlighted;
 				if (self->style == ControlStyleDefault) {
-					self->bevel = BevelTypeInset;
+					self->bevel = ControlBevelTypeInset;
 				}
 			}
 			return true;
@@ -100,9 +113,11 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 		
 		$((View *) self, addSubview, (View *) self->title);
 		self->title->view.alignment = ViewAlignmentMiddleCenter;
-		
+
+		self->control.view.autoresizingMask = ViewAutoresizingContain;
+
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = BevelTypeOutset;
+			self->control.bevel = ControlBevelTypeOutset;
 			
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;
@@ -122,8 +137,9 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
 	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;

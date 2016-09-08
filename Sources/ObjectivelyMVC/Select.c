@@ -49,6 +49,13 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Select *) self, initWithFrame, NULL, ControlStyleDefault);
+}
+
+/**
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
@@ -64,12 +71,12 @@ static void layoutSubviews(View *self) {
 		
 		View *option = $(options, objectAtIndex, i);
 		if ((Option *) option == this->selectedOption) {
-			option->hidden = false;
+			option->isHidden = false;
 		} else {
-			option->hidden = this->control.state != ControlStateHighlighted;
+			option->isHidden = this->control.state != ControlStateHighlighted;
 		}
 		
-		if (option->hidden == false) {
+		if (option->isHidden == false) {
 
 			if (this->control.state == ControlStateHighlighted) {
 				if ((Option *) option == this->selectedOption) {
@@ -239,7 +246,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 		self->control.selection = ControlSelectionSingle;
 		
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = BevelTypeOutset;
+			self->control.bevel = ControlBevelTypeOutset;
 			
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;
@@ -341,7 +348,8 @@ static void selectOptionWithValue(Select *self, ident value) {
 static void initialize(Class *clazz) {
 	
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
+
+	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	

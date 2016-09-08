@@ -51,10 +51,10 @@ static void layoutSubviews(View *self) {
 
 	TableRowView *this = (TableRowView *) self;
 
+	this->stackView.spacing = this->tableView->cellSpacing;
+
 	const Array *cells = (Array *) this->cells;
 	const Array *columns = (Array *) this->tableView->columns;
-
-	this->stackView.spacing = this->tableView->cellSpacing;
 
 	assert(cells->count == columns->count);
 
@@ -67,8 +67,28 @@ static void layoutSubviews(View *self) {
 	}
 
 	super(View, self, layoutSubviews);
+}
 
-	$(self, sizeToFit);
+/**
+ * @see View::sizeThatFits(const View *)
+ */
+static SDL_Size sizeThatFits(const View *self) {
+
+	TableRowView *this = (TableRowView *) self;
+
+	SDL_Size size = MakeSize(0, this->tableView->rowHeight);
+
+	const Array *columns = (Array *) this->tableView->columns;
+	if (columns->count) {
+		for (size_t i = 0; i < columns->count; i++) {
+			const TableColumn *column = $(columns, objectAtIndex, i);
+			size.w += column->width;
+		}
+
+		size.w += (columns->count - 1) * this->tableView->cellSpacing;
+	}
+
+	return size;
 }
 
 #pragma mark - TableRowView
@@ -105,8 +125,7 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 
 		self->stackView.axis = StackViewAxisHorizontal;
 
-		self->stackView.view.autoresizingMask = ViewAutoresizingWidth;
-		self->stackView.view.backgroundColor = Colors.DefaultColor;
+		self->stackView.view.autoresizingMask = ViewAutoresizingWidth | ViewAutoresizingContain;
 	}
 	
 	return self;
@@ -172,6 +191,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((TableRowViewInterface *) clazz->interface)->addCell = addCell;
 	((TableRowViewInterface *) clazz->interface)->initWithTableView = initWithTableView;

@@ -45,6 +45,8 @@ typedef enum {
 	InputOrientationBelow
 } InputOrientation;
 
+extern const EnumName InputOrientationNames[];
+
 typedef struct Input Input;
 typedef struct InputInterface InputInterface;
 
@@ -80,9 +82,9 @@ struct Input {
 	Control *control;
 	
 	/**
-	 * @brief The Label.
+	 * @brief The label.
 	 */
-	Label *label;
+	Text *label;
 	
 	/**
 	 * @brief The Label orientation.
@@ -101,21 +103,28 @@ struct InputInterface {
 	StackViewInterface stackViewInterface;
 	
 	/**
-	 * @fn Input *Input::initWithOrientation(Input *self, InputOrientation orientation, Control *control, Label *label)
+	 * @fn Input *Input::initWithControl(Input *self, Control *control)
 	 *
-	 * @brief Initializes this Input with the given orientation.
+	 * @brief Initializes this Input with the given Control.
 	 *
-	 * @param orientation The InputOrientation.
 	 * @param control The Control.
-	 * @param Label The Label.
 	 *
 	 * @return The initialized Input, or `NULL` on error.
 	 *
 	 * @memberof Input
-	 *
-	 * @remarks The Label is instantiated and inserted at the specified orientation.
 	 */
-	Input *(*initWithOrientation)(Input *self, InputOrientation orientation, Control *control, Label *label);
+	Input *(*initWithControl)(Input *self, Control *control);
+
+	/**
+	 * @fn void Input::setOrientation(Input *self, InputOrientation orientation)
+	 *
+	 * @brief Sets this Input's orientation.
+	 *
+	 * @param orientation The InputOrientation.
+	 *
+	 * @memberof Input
+	 */
+	void (*setOrientation)(Input *self, InputOrientation orientation);
 };
 
 /**

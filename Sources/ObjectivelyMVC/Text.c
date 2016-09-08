@@ -48,6 +48,32 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	Text *this = (Text *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("text", InletTypeCharacters, &this->text, NULL),
+		MakeInlet("font", InletTypeFont, &this->font, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+
+	$(self, sizeToFit);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Text *) self, initWithText, NULL, NULL);
+}
+
+/**
  * @see View::render(View *, Renderer *)
  */
 static void render(View *self, Renderer *renderer) {
@@ -185,6 +211,8 @@ static void initialize(Class *self) {
 
 	((ObjectInterface *) self->interface)->dealloc = dealloc;
 
+	((ViewInterface *) self->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) self->interface)->init = init;
 	((ViewInterface *) self->interface)->render = render;
 	((ViewInterface *) self->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewInterface *) self->interface)->sizeThatFits = sizeThatFits;

@@ -25,9 +25,45 @@
 
 #include <ObjectivelyMVC/StackView.h>
 
+const EnumName StackViewAxisNames[] = MakeEnumNames(
+	MakeEnumName(StackViewAxisVertical),
+	MakeEnumName(StackViewAxisHorizontal),
+);
+
+const EnumName StackViewDistributionNames[] = MakeEnumNames(
+	MakeEnumName(StackViewDistributionDefault),
+	MakeEnumName(StackViewDistributionFill),
+	MakeEnumName(StackViewDistributionFillEqually),
+);
+
 #define _Class _StackView
 
 #pragma mark - View
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	StackView *this = (StackView *) self;
+
+	const Inlet *inlets = MakeInlets(
+		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) StackViewAxisNames),
+		MakeInlet("distribution", InletTypeEnum, &this->distribution, (ident) StackViewDistributionNames),
+		MakeInlet("spacing", InletTypeInteger, &this->spacing, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((StackView *) self, initWithFrame, NULL);
+}
 
 /**
  * @see View::layoutSubviews(View *)
@@ -154,22 +190,23 @@ static SDL_Size sizeThatFits(const View *self) {
 	const StackView *this = (StackView *) self;
 	
 	SDL_Size size = MakeSize(0, 0);
-	
+
 	Array *subviews = $(self, visibleSubviews);
 	if (subviews->count) {
 		
 		for (size_t i = 0; i < subviews->count; i++) {
 			
 			const View *subview = $(subviews, objectAtIndex, i);
+			const SDL_Size subviewSize = $(subview, sizeThatFits);
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
-					size.w = max(size.w, subview->frame.w);
-					size.h += subview->frame.h;
+					size.w = max(size.w, subviewSize.w);
+					size.h += subviewSize.h;
 					break;
 				case StackViewAxisHorizontal:
-					size.h = max(size.h, subview->frame.h);
-					size.w += subview->frame.w;
+					size.h = max(size.h, subviewSize.h);
+					size.w += subviewSize.w;
 					break;
 			}
 		}
@@ -215,6 +252,9 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
+
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
