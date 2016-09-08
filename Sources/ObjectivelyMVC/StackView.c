@@ -192,22 +192,23 @@ static SDL_Size sizeThatFits(const View *self) {
 	const StackView *this = (StackView *) self;
 	
 	SDL_Size size = MakeSize(0, 0);
-	
+
 	Array *subviews = $(self, visibleSubviews);
 	if (subviews->count) {
 		
 		for (size_t i = 0; i < subviews->count; i++) {
 			
 			const View *subview = $(subviews, objectAtIndex, i);
+			const SDL_Size subviewSize = $(subview, sizeThatFits);
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
-					size.w = max(size.w, subview->frame.w);
-					size.h += subview->frame.h;
+					size.w = max(size.w, subviewSize.w);
+					size.h += subviewSize.h;
 					break;
 				case StackViewAxisHorizontal:
-					size.h = max(size.h, subview->frame.h);
-					size.w += subview->frame.w;
+					size.h = max(size.h, subviewSize.h);
+					size.w += subviewSize.w;
 					break;
 			}
 		}
