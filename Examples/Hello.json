@@ -1,65 +1,53 @@
 {
 	"class": "Panel",
-	"frame": [ 50, 50, 0, 0 ],
-	"contentView": [
-		{
-			"class": "Button",
-			"identifier": "button",
-			"style": "ControlStyleDefault",
-			"title": {
-				"text": "This is a Button"
-			}
-		},
-		{
-			"class": "TextView",
-			"identifier": "textView",
-			"defaultText": "This is a TextView"
+	"frame": [50, 50, 0, 0],
+	"contentView": [{
+		"class": "Button",
+		"identifier": "button",
+		"style": "ControlStyleDefault",
+		"title": {
+			"text": "This is a Button"
 		}
-		{
-			"class": "Input",
-			"control": {
-				"class": "Checkbox",
-				"identifier": "checkbox"
-			},
-			"label": {
-				"text": "This is a checkbox:"
-			}
+	}, {
+		"class": "Input",
+		"control": {
+			"class": "Checkbox",
+			"identifier": "checkbox"
 		},
-		{
-			"class": "Select",
-			"identifier": "select"
-		},
-		{
-			"class": "Slider",
-			"identifier": "slider",
-			"min": 0.0,
-			"max": 10.0,
-			"value": 5.0
-		},
-		{
-			"class": "TableView",
-			"identifier": "tableView",
-			"columns": [
-				{
-					"identifier": "One"
-				},
-				{
-					"identifier": "Two"
-				},
-				{
-					"identifier": "Three"
-				}
-			],
-			"selection": "ControlSelectionMultiple"
-		},
-		{
-			"class": "CollectionView",
-			"identifier": "collectionView",
-			"autoresizingMask": "ViewAutoresizingWidth",
-			"frame": [0, 0, 0, 180 ],
-			"selection": "ControlSelectionMultiple",
-			"axis": "CollectionViewAxisHorizontal",
-			"itemSize": [ 64, 48 ]
+		"label": {
+			"text": "This is a checkbox:"
 		}
-	]
-}	
+	}, {
+		"class": "TextView",
+		"identifier": "textView",
+		"defaultText": "This is a TextView"
+	}, {
+		"class": "Select",
+		"identifier": "select"
+	}, {
+		"class": "Slider",
+		"identifier": "slider",
+		"min": 0.0,
+		"max": 10.0,
+		"value": 5.0
+	}, {
+		"class": "TableView",
+		"identifier": "tableView",
+		"columns": [{
+			"identifier": "One"
+		}, {
+			"identifier": "Two"
+		}, {
+			"identifier": "Three"
+		}],
+		"selection": "ControlSelectionMultiple"
+	}, {
+		"class": "CollectionView",
+		"identifier": "collectionView",
+		"autoresizingMask": "ViewAutoresizingWidth",
+		"frame": [0, 0, 0, 180],
+		"selection": "ControlSelectionMultiple",
+		"axis": "CollectionViewAxisHorizontal",
+		"itemSize": [64, 48]
+	}]
+}
