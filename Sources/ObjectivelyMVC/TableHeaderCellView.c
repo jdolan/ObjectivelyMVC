@@ -30,7 +30,7 @@
 #pragma mark - TableHeaderCellView
 
 /**
- * @fn TableHeaderCellView *TableHeaderCellView::init(TableHeaderCellView *self)
+ * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame)
  *
  * @memberof TableHeaderCellView
  */

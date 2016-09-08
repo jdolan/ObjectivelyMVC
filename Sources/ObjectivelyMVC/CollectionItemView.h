@@ -41,7 +41,7 @@ typedef struct CollectionItemViewInterface CollectionItemViewInterface;
  *
  * @extends View
  *
- * @ingroup
+ * @ingroup CollectionViews
  */
 struct CollectionItemView {
 	

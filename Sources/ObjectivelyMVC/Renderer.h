@@ -43,8 +43,6 @@ typedef struct View View;
  * @brief The Renderer type.
  *
  * @extends Object
- *
- * @ingroup
  */
 struct Renderer {
 	

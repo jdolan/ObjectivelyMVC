@@ -167,7 +167,7 @@ struct FontInterface {
 	Font *(*initWithPattern)(Font *self, ident pattern);
 	
 	/**
-	 * @fn void Font::renderCharacters(const Font *self, const char *text, SDL_Color color)
+	 * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color)
 	 *
 	 * @brief Renders the given characters in this Font.
 	 *

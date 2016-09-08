@@ -69,7 +69,7 @@ struct TableHeaderCellViewInterface {
 	TableCellViewInterface tableCellViewInterface;
 	
 	/**
-	 * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *rect)
+	 * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame)
 	 *
 	 * @brief Initializes this TableHeaderCellView with the specified frame.
 	 *

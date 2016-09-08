@@ -120,7 +120,7 @@ struct ImageViewInterface {
 	 *
 	 * @brief Sets the Image for this ImageView.
 	 *
-	 * @param Image An Image.
+	 * @param image An Image.
 	 *
 	 * @memberof ImageView
 	 */
