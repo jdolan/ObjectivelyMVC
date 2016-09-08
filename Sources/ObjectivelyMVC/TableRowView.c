@@ -51,10 +51,10 @@ static void layoutSubviews(View *self) {
 
 	TableRowView *this = (TableRowView *) self;
 
+	this->stackView.spacing = this->tableView->cellSpacing;
+
 	const Array *cells = (Array *) this->cells;
 	const Array *columns = (Array *) this->tableView->columns;
-
-	this->stackView.spacing = this->tableView->cellSpacing;
 
 	assert(cells->count == columns->count);
 

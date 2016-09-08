@@ -382,7 +382,7 @@ static _Bool canBecomeFirstResponder(const View *self) {
  */
 static _Bool containsPoint(const View *self, const SDL_Point *point) {
 	
-	const SDL_Rect frame = $(self, renderFrame);
+	const SDL_Rect frame = $(self, clippingFrame);
 	
 	return (_Bool) SDL_PointInRect(point, &frame);
 }
@@ -561,10 +561,6 @@ static void layoutIfNeeded(View *self) {
 	if (self->needsLayout) {
 		self->needsLayout = false;
 
-		if (self->autoresizingMask & ViewAutoresizingContain) {
-			$(self, sizeToFit);
-		}
-
 		$(self, layoutSubviews);
 	}
 	
@@ -578,6 +574,10 @@ static void layoutIfNeeded(View *self) {
  * @memberof View
  */
 static void layoutSubviews(View *self) {
+
+	if (self->autoresizingMask & ViewAutoresizingContain) {
+		$(self, sizeToFit);
+	}
 
 	const SDL_Rect bounds = $(self, bounds);
 	
