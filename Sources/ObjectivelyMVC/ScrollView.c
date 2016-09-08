@@ -135,8 +135,11 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
 			self->contentOffset.y = 0;
 		}
 
-		self->control.view.needsLayout = true;
+	} else {
+		self->contentOffset.x = self->contentOffset.y = 0;
 	}
+
+	self->control.view.needsLayout = true;
 }
 
 /**
@@ -155,6 +158,9 @@ static void setContentView(ScrollView *self, View *contentView) {
 	}
 
 	self->contentView = contentView;
+
+	const SDL_Point origin = { .x = 0, .y = 0 };
+	$(self, scrollToOffset, &origin);
 }
 
 #pragma mark - Class lifecycle
