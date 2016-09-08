@@ -78,7 +78,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		if (event->type == SDL_MOUSEBUTTONUP) {
 			self->state &= ~ControlStateHighlighted;
 			if (self->style == ControlStyleDefault) {
-				self->bevel = BevelTypeOutset;
+				self->bevel = ControlBevelTypeOutset;
 			}
 		}
 		
@@ -86,7 +86,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			if (event->type == SDL_MOUSEBUTTONDOWN) {
 				self->state |= ControlStateHighlighted;
 				if (self->style == ControlStyleDefault) {
-					self->bevel = BevelTypeInset;
+					self->bevel = ControlBevelTypeInset;
 				}
 			}
 			return true;
@@ -117,7 +117,7 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 		self->control.view.autoresizingMask = ViewAutoresizingContain;
 
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = BevelTypeOutset;
+			self->control.bevel = ControlBevelTypeOutset;
 			
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;

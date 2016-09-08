@@ -27,29 +27,27 @@
 
 #include <ObjectivelyMVC.h>
 
-const EnumName ViewAlignmentNames[] = {
-	NameEnum(ViewAlignmentNone),
-	NameEnum(ViewAlignmentTopLeft),
-	NameEnum(ViewAlignmentTopCenter),
-	NameEnum(ViewAlignmentTopRight),
-	NameEnum(ViewAlignmentMiddleLeft),
-	NameEnum(ViewAlignmentMiddleCenter),
-	NameEnum(ViewAlignmentMiddleRight),
-	NameEnum(ViewAlignmentBottomLeft),
-	NameEnum(ViewAlignmentBottomCenter),
-	NameEnum(ViewAlignmentBottomRight),
-	NameEnum(ViewAlignmentInternal),
-	EnumNameLast
-};
+const EnumName ViewAlignmentNames[] = MakeEnumNames(
+	MakeEnumName(ViewAlignmentNone),
+	MakeEnumName(ViewAlignmentTopLeft),
+	MakeEnumName(ViewAlignmentTopCenter),
+	MakeEnumName(ViewAlignmentTopRight),
+	MakeEnumName(ViewAlignmentMiddleLeft),
+	MakeEnumName(ViewAlignmentMiddleCenter),
+	MakeEnumName(ViewAlignmentMiddleRight),
+	MakeEnumName(ViewAlignmentBottomLeft),
+	MakeEnumName(ViewAlignmentBottomCenter),
+	MakeEnumName(ViewAlignmentBottomRight),
+	MakeEnumName(ViewAlignmentInternal),
+);
 
-static const EnumName ViewAutoresizingNames[] = {
-	NameEnum(ViewAutoresizingNone),
-	NameEnum(ViewAutoresizingWidth),
-	NameEnum(ViewAutoresizingHeight),
-	NameEnum(ViewAutoresizingFill),
-	NameEnum(ViewAutoresizingContain),
-	EnumNameLast
-};
+const EnumName ViewAutoresizingNames[] = MakeEnumNames(
+	MakeEnumName(ViewAutoresizingNone),
+	MakeEnumName(ViewAutoresizingWidth),
+	MakeEnumName(ViewAutoresizingHeight),
+	MakeEnumName(ViewAutoresizingFill),
+	MakeEnumName(ViewAutoresizingContain),
+);
 
 Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
 Uint32 MVC_EVENT_UPDATE_BINDINGS;

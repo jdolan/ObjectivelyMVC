@@ -303,7 +303,7 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		$((View *) self, addSubview, (View *) self->text);
 		
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = BevelTypeInset;
+			self->control.bevel = ControlBevelTypeInset;
 			
 			self->control.view.backgroundColor = Colors.DimGray;
 			

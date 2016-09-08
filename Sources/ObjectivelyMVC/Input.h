@@ -45,6 +45,8 @@ typedef enum {
 	InputOrientationBelow
 } InputOrientation;
 
+extern const EnumName InputOrientationNames[];
+
 typedef struct Input Input;
 typedef struct InputInterface InputInterface;
 

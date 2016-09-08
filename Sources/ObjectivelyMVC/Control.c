@@ -25,18 +25,29 @@
 
 #include <ObjectivelyMVC/Control.h>
 
-static const EnumName ControlSelectionNames[] = {
-	NameEnum(ControlSelectionNone),
-	NameEnum(ControlSelectionSingle),
-	NameEnum(ControlSelectionMultiple),
-	EnumNameLast
-};
+const EnumName ControlBevelTypeNames[] = MakeEnumNames(
+	MakeEnumName(ControlBevelTypeNone),
+	MakeEnumName(ControlBevelTypeInset),
+	MakeEnumName(ControlBevelTypeOutset),
+);
 
-static const EnumName ControlStyleNames[] = {
-	NameEnum(ControlStyleDefault),
-	NameEnum(ControlStyleCustom),
-	EnumNameLast
-};
+const EnumName ControlSelectionNames[] = MakeEnumNames(
+	MakeEnumName(ControlSelectionNone),
+	MakeEnumName(ControlSelectionSingle),
+	MakeEnumName(ControlSelectionMultiple),
+);
+
+const EnumName ControlStateNames[] = MakeEnumNames(
+	MakeEnumName(ControlStateDefault),
+	MakeEnumName(ControlStateHighlighted),
+	MakeEnumName(ControlStateSelected),
+	MakeEnumName(ControlStateFocused),
+);
+
+const EnumName ControlStyleNames[] = MakeEnumNames(
+	MakeEnumName(ControlStyleDefault),
+	MakeEnumName(ControlStyleCustom),
+);
 
 #define _Class _Control
 
@@ -91,7 +102,7 @@ static void render(View *self, Renderer *renderer) {
 	
 	const SDL_Rect frame = $(self, renderFrame);
 	
-	if (this->bevel == BevelTypeInset) {
+	if (this->bevel == ControlBevelTypeInset) {
 		
 		SetColor(Colors.Silver);
 		
@@ -121,7 +132,7 @@ static void render(View *self, Renderer *renderer) {
 		
 		$(renderer, drawLines, points, lengthof(points));
 
-	} else if (this->bevel == BevelTypeOutset) {
+	} else if (this->bevel == ControlBevelTypeOutset) {
 		
 		SetColor(Colors.Charcoal);
 		

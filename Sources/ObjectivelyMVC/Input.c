@@ -25,12 +25,11 @@
 
 #include <ObjectivelyMVC/Input.h>
 
-static const EnumName InputOrientationNames[] = {
-	NameEnum(InputOrientationLeft),
-	NameEnum(InputOrientationRight),
-	NameEnum(InputOrientationAbove),
-	NameEnum(InputOrientationBelow),
-	EnumNameLast
+const EnumName InputOrientationNames[] = {
+	MakeEnumName(InputOrientationLeft),
+	MakeEnumName(InputOrientationRight),
+	MakeEnumName(InputOrientationAbove),
+	MakeEnumName(InputOrientationBelow),
 };
 
 #define _Class _Input

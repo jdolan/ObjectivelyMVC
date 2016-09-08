@@ -25,11 +25,10 @@
 
 #include <ObjectivelyMVC/CollectionView.h>
 
-static const EnumName CollectionViewAxisNames[] = {
-	NameEnum(CollectionViewAxisHorizontal),
-	NameEnum(CollectionViewAxisVertical),
-	EnumNameLast
-};
+const EnumName CollectionViewAxisNames[] = MakeEnumNames(
+	MakeEnumName(CollectionViewAxisHorizontal),
+	MakeEnumName(CollectionViewAxisVertical)
+);
 
 #define _Class _CollectionView
 

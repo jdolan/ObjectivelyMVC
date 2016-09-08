@@ -246,7 +246,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 		self->control.selection = ControlSelectionSingle;
 		
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = BevelTypeOutset;
+			self->control.bevel = ControlBevelTypeOutset;
 			
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;

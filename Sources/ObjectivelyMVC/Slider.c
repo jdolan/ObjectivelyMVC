@@ -213,7 +213,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 				self->control.view.frame.w = DEFAULT_SLIDER_WIDTH;
 			}
 			
-			self->handle->bevel = BevelTypeOutset;
+			self->handle->bevel = ControlBevelTypeOutset;
 			self->handle->view.backgroundColor = Colors.FocusedColor;
 			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
 			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;

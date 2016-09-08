@@ -25,18 +25,16 @@
 
 #include <ObjectivelyMVC/StackView.h>
 
-static const EnumName StackViewAxisNames[] = {
-	NameEnum(StackViewAxisVertical),
-	NameEnum(StackViewAxisHorizontal),
-	EnumNameLast
-};
+const EnumName StackViewAxisNames[] = MakeEnumNames(
+	MakeEnumName(StackViewAxisVertical),
+	MakeEnumName(StackViewAxisHorizontal),
+);
 
-static const EnumName StackViewDistributionNames[] = {
-	NameEnum(StackViewDistributionDefault),
-	NameEnum(StackViewDistributionFill),
-	NameEnum(StackViewDistributionFillEqually),
-	EnumNameLast
-};
+const EnumName StackViewDistributionNames[] = MakeEnumNames(
+	MakeEnumName(StackViewDistributionDefault),
+	MakeEnumName(StackViewDistributionFill),
+	MakeEnumName(StackViewDistributionFillEqually),
+);
 
 #define _Class _StackView
 

@@ -80,6 +80,8 @@ typedef enum {
 	ViewAutoresizingContain = 0x4
 } ViewAutoresizing;
 
+extern const EnumName ViewAutoresizingNames[];
+
 /**
  * @brief Spacing applied to the inside of a View's frame.
  */

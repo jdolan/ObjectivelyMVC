@@ -43,6 +43,8 @@ typedef enum {
 	CollectionViewAxisHorizontal
 } CollectionViewAxis;
 
+extern const EnumName CollectionViewAxisNames[];
+
 typedef struct CollectionViewDataSource CollectionViewDataSource;
 typedef struct CollectionViewDelegate CollectionViewDelegate;
 

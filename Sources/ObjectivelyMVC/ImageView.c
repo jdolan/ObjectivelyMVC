@@ -25,21 +25,20 @@
 
 #include <ObjectivelyMVC/ImageView.h>
 
-static const EnumName BlendNames[] = {
-	NameEnum(GL_CONSTANT_ALPHA),
-	NameEnum(GL_CONSTANT_COLOR),
-	NameEnum(GL_DST_ALPHA),
-	NameEnum(GL_DST_COLOR),
-	NameEnum(GL_ONE),
-	NameEnum(GL_ONE_MINUS_DST_ALPHA),
-	NameEnum(GL_ONE_MINUS_DST_COLOR),
-	NameEnum(GL_ONE_MINUS_SRC_ALPHA),
-	NameEnum(GL_ONE_MINUS_SRC_COLOR),
-	NameEnum(GL_SRC_ALPHA),
-	NameEnum(GL_SRC_COLOR),
-	NameEnum(GL_ZERO),
-	EnumNameLast
-};
+const EnumName GLBlendNames[] = MakeEnumNames(
+	MakeEnumName(GL_CONSTANT_ALPHA),
+	MakeEnumName(GL_CONSTANT_COLOR),
+	MakeEnumName(GL_DST_ALPHA),
+	MakeEnumName(GL_DST_COLOR),
+	MakeEnumName(GL_ONE),
+	MakeEnumName(GL_ONE_MINUS_DST_ALPHA),
+	MakeEnumName(GL_ONE_MINUS_DST_COLOR),
+	MakeEnumName(GL_ONE_MINUS_SRC_ALPHA),
+	MakeEnumName(GL_ONE_MINUS_SRC_COLOR),
+	MakeEnumName(GL_SRC_ALPHA),
+	MakeEnumName(GL_SRC_COLOR),
+	MakeEnumName(GL_ZERO)
+);
 
 #define _Class _ImageView
 
@@ -72,8 +71,8 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	const Inlet *inlets = MakeInlets(
 		MakeInlet("alpha", InletTypeFloat, &this->alpha, NULL),
-		MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) BlendNames),
-		MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) BlendNames),
+		MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) GLBlendNames),
+		MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) GLBlendNames),
 		MakeInlet("image", InletTypeImage, &this->image, NULL)
 	);
 
