@@ -48,7 +48,7 @@ Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will re
 
 ### Full suite of Views and Controls
 
-ObjectivelyMVC provides a robust set of containers, views and form elements. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Bind `Actions` to `SDL_Event` types on each element, or use the specialized _delegate_ callbacks for convenience.
+ObjectivelyMVC provides a robust set of containers, views and form elements. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular or grid data with `TableView` and `CollectionView`. Bind `Actions` to `SDL_Event` types on each element, or use the specialized _delegate_ callbacks for convenience.
 
 ```c
 $((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_data);
@@ -60,17 +60,40 @@ Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
 select->delegate.didSelectOption = my_callback;
 ```
 
+### Programmatic or JSON-based layout options
+
+ObjectivelyMVC allows you to define your View hierarchy either programmatically, via JSON, or any combination of both. Programmatic layout gives you explicit control over the big picture, while JSON layout allows you to reduce boilerplate and avoid common pitfalls like memory leaks.
+
+```json
+{
+	"class": "Panel",
+	"frame": [50, 50, 0, 0],
+	"contentView": [{
+		"class": "Input",
+		"control": {
+			"class": "Checkbox",
+			"identifier": "checkbox"
+		},
+		"label": {
+			"text": "This is a checkbox:"
+		}
+	}]
+}
+```
+
 Examples
 ---
 
 ### HelloViewController
-An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu:
+An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu. This example uses JSON layout.
 
 ![Hello](Documentation/demo.gif)
 
  * [Hello.c](Examples/Hello.c) - The application source code
  * [HelloViewController.h](Examples/HelloViewController.h) - The `HelloViewController` header.
- * [HelloViewController.c](Examples/HelloViewController.c) - The `HelloViewController` source code. 
+ * [HelloViewController.c](Examples/HelloViewController.c) - The `HelloViewController` source code.
+ * [HelloViewController.json](Examples/HelloViewController.json) - The `HelloViewController` JSON layout. 
+
 
 ### Quetoo
 [Quetoo](https://github.com/jdolan/quetoo) is an open source FPS based on [idTech2](https://en.wikipedia.org/wiki/Quake_II_engine). Quetoo uses ObjectivelyMVC for its in-game user interface:
