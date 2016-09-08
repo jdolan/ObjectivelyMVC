@@ -15,7 +15,6 @@
 		CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0981C77AF73003E3CF7 /* Slider.c */; };
 		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4301C4C389300CD0B13 /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
 		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
@@ -29,11 +28,6 @@
 		CE12D4461C4C38C700CD0B13 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4241C4C367100CD0B13 /* View.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D44B1C4C867300CD0B13 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
-		CE12D44C1C4C86CE00CD0B13 /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
-		CE12D44E1C4C86CE00CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
-		CE12D44F1C4C86CE00CD0B13 /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
-		CE12D4501C4C86CE00CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
 		CE12D45C1C4C8F2400CD0B13 /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CE12D45E1C4C8F2400CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CE12D45F1C4C8F2400CD0B13 /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
@@ -47,9 +41,7 @@
 		CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46E1C4D82AF00CD0B13 /* Control.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4711C4DAF6100CD0B13 /* Action.c */; };
 		CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4721C4DAF6100CD0B13 /* Action.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4791C4EAD3600CD0B13 /* HelloViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */; };
 		CE12D47A1C4EAD3C00CD0B13 /* HelloViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */; };
-		CE12D47B1C4EAD4300CD0B13 /* HelloViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */; };
 		CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D47C1C4F35DF00CD0B13 /* Checkbox.c */; };
 		CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4801C4F3A1600CD0B13 /* Image.c */; };
@@ -62,8 +54,6 @@
 		CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D49C1C568A7600CD0B13 /* TextView.c */; };
 		CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D49D1C568A7600CD0B13 /* TextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D8741C5CF43500CD0B13 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D8731C5CF43500CD0B13 /* libObjectively.dylib */; };
-		CE12D8751C5CF45E00CD0B13 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D8731C5CF43500CD0B13 /* libObjectively.dylib */; };
-		CE12D8761C5CF47600CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE14A8CC1C66D89900B576FB /* Select.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CA1C66D89900B576FB /* Select.c */; };
 		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -103,13 +93,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CE12D4491C4C38D400CD0B13 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
-			remoteInfo = "ObjectivelyMVC-Xcode";
-		};
 		CE12D4631C4C8F5400CD0B13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
@@ -160,7 +143,6 @@
 		CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectivelyMVC.h; sourceTree = "<group>"; };
 		CE12D42B1C4C37E500CD0B13 /* Hello.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Hello.c; sourceTree = "<group>"; };
 		CE12D42D1C4C383D00CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		CE12D43B1C4C389300CD0B13 /* libObjectivelyMVC-Examples.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libObjectivelyMVC-Examples.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Hello"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4651C4D587E00CD0B13 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
 		CE12D4691C4D810F00CD0B13 /* Button.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Button.c; sourceTree = "<group>"; };
@@ -236,20 +218,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		CE12D4311C4C389300CD0B13 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE12D8751C5CF45E00CD0B13 /* libObjectively.dylib in Frameworks */,
-				CE12D44B1C4C867300CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
-				CE12D8761C5CF47600CD0B13 /* OpenGL.framework in Frameworks */,
-				CE12D44C1C4C86CE00CD0B13 /* libfontconfig.1.dylib in Frameworks */,
-				CE12D44E1C4C86CE00CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */,
-				CE12D44F1C4C86CE00CD0B13 /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
-				CE12D4501C4C86CE00CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CE12D4521C4C8E8E00CD0B13 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -446,7 +414,6 @@
 			isa = PBXGroup;
 			children = (
 				CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */,
-				CE12D43B1C4C389300CD0B13 /* libObjectivelyMVC-Examples.dylib */,
 				CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 			);
 			name = Products;
@@ -467,14 +434,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		CE12D4371C4C389300CD0B13 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE12D47B1C4EAD4300CD0B13 /* HelloViewController.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CED157CB1C4BF3AC00FBA2DE /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -519,24 +478,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		CE12D42E1C4C389300CD0B13 /* ObjectivelyMVC-Examples */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CE12D4381C4C389300CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Examples" */;
-			buildPhases = (
-				CE12D42F1C4C389300CD0B13 /* Sources */,
-				CE12D4311C4C389300CD0B13 /* Frameworks */,
-				CE12D4371C4C389300CD0B13 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				CE12D44A1C4C38D400CD0B13 /* PBXTargetDependency */,
-			);
-			name = "ObjectivelyMVC-Examples";
-			productName = "SDL_mvc-Xcode";
-			productReference = CE12D43B1C4C389300CD0B13 /* libObjectivelyMVC-Examples.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
-		};
 		CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello" */;
@@ -602,22 +543,12 @@
 			projectRoot = "";
 			targets = (
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
-				CE12D42E1C4C389300CD0B13 /* ObjectivelyMVC-Examples */,
 				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		CE12D42F1C4C389300CD0B13 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CE12D4301C4C389300CD0B13 /* Hello.c in Sources */,
-				CE12D4791C4EAD3600CD0B13 /* HelloViewController.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CE12D4511C4C8E8E00CD0B13 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -668,11 +599,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CE12D44A1C4C38D400CD0B13 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
-			targetProxy = CE12D4491C4C38D400CD0B13 /* PBXContainerItemProxy */;
-		};
 		CE12D4641C4C8F5400CD0B13 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
@@ -681,30 +607,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		CE12D4391C4C389300CD0B13 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		CE12D43A1C4C389300CD0B13 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				EXECUTABLE_PREFIX = lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		CE12D45A1C4C8E8E00CD0B13 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -835,15 +737,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE12D4381C4C389300CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Examples" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CE12D4391C4C389300CD0B13 /* Debug */,
-				CE12D43A1C4C389300CD0B13 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
