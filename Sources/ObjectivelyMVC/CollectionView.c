@@ -146,9 +146,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 						case ControlSelectionNone:
 							break;
 						case ControlSelectionSingle:
-							if (item->isSelected) {
-								$(this, deselectItemAtIndexPath, indexPath);
-							} else {
+							if (item->isSelected == false) {
 								$(this, deselectAll);
 								$(this, selectItemAtIndexPath, indexPath);
 							}
