@@ -38,7 +38,7 @@ const EnumName ViewAlignmentNames[] = MakeEnumNames(
 	MakeEnumName(ViewAlignmentBottomLeft),
 	MakeEnumName(ViewAlignmentBottomCenter),
 	MakeEnumName(ViewAlignmentBottomRight),
-	MakeEnumName(ViewAlignmentInternal),
+	MakeEnumName(ViewAlignmentInternal)
 );
 
 const EnumName ViewAutoresizingNames[] = MakeEnumNames(
@@ -46,7 +46,7 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 	MakeEnumName(ViewAutoresizingWidth),
 	MakeEnumName(ViewAutoresizingHeight),
 	MakeEnumName(ViewAutoresizingFill),
-	MakeEnumName(ViewAutoresizingContain),
+	MakeEnumName(ViewAutoresizingContain)
 );
 
 Uint32 MVC_EVENT_RENDER_DEVICE_RESET;

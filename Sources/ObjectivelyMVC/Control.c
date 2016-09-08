@@ -28,25 +28,25 @@
 const EnumName ControlBevelTypeNames[] = MakeEnumNames(
 	MakeEnumName(ControlBevelTypeNone),
 	MakeEnumName(ControlBevelTypeInset),
-	MakeEnumName(ControlBevelTypeOutset),
+	MakeEnumName(ControlBevelTypeOutset)
 );
 
 const EnumName ControlSelectionNames[] = MakeEnumNames(
 	MakeEnumName(ControlSelectionNone),
 	MakeEnumName(ControlSelectionSingle),
-	MakeEnumName(ControlSelectionMultiple),
+	MakeEnumName(ControlSelectionMultiple)
 );
 
 const EnumName ControlStateNames[] = MakeEnumNames(
 	MakeEnumName(ControlStateDefault),
 	MakeEnumName(ControlStateHighlighted),
 	MakeEnumName(ControlStateSelected),
-	MakeEnumName(ControlStateFocused),
+	MakeEnumName(ControlStateFocused)
 );
 
 const EnumName ControlStyleNames[] = MakeEnumNames(
 	MakeEnumName(ControlStyleDefault),
-	MakeEnumName(ControlStyleCustom),
+	MakeEnumName(ControlStyleCustom)
 );
 
 #define _Class _Control

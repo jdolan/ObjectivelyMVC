@@ -27,13 +27,13 @@
 
 const EnumName StackViewAxisNames[] = MakeEnumNames(
 	MakeEnumName(StackViewAxisVertical),
-	MakeEnumName(StackViewAxisHorizontal),
+	MakeEnumName(StackViewAxisHorizontal)
 );
 
 const EnumName StackViewDistributionNames[] = MakeEnumNames(
 	MakeEnumName(StackViewDistributionDefault),
 	MakeEnumName(StackViewDistributionFill),
-	MakeEnumName(StackViewDistributionFillEqually),
+	MakeEnumName(StackViewDistributionFillEqually)
 );
 
 #define _Class _StackView
