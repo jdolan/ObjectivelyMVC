@@ -359,7 +359,7 @@ struct ViewInterface {
 	 *
 	 * @param point A point in object space.
 	 *
-	 * @return True if the point falls within this Views frame.
+	 * @return True if the point falls within this View's clipped frame.
 	 *
 	 * @memberof View
 	 */
