@@ -574,7 +574,12 @@ static void layoutIfNeeded(View *self) {
 static void layoutSubviews(View *self) {
 
 	if (self->autoresizingMask & ViewAutoresizingContain) {
-		$(self, sizeToFit);
+
+		const SDL_Size size = $(self, size);
+		const SDL_Size sizeThatFits = $(self, sizeThatFits);
+
+		self->frame.w = max(size.w, sizeThatFits.w);
+		self->frame.h = max(size.h, sizeThatFits.h);
 	}
 
 	const SDL_Rect bounds = $(self, bounds);
@@ -903,6 +908,7 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(&_CollectionView);
 		_initialize(&_ImageView);
 		_initialize(&_Input);
+		_initialize(&_Label);
 		_initialize(&_Panel);
 		_initialize(&_ScrollView);
 		_initialize(&_Select);
