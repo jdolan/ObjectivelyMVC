@@ -125,7 +125,7 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 
 		self->stackView.axis = StackViewAxisHorizontal;
 
-		self->stackView.view.autoresizingMask = ViewAutoresizingWidth | ViewAutoresizingContain;
+		self->stackView.view.autoresizingMask |= ViewAutoresizingWidth;
 	}
 	
 	return self;
