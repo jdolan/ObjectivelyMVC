@@ -17,6 +17,7 @@ pkginclude_HEADERS = \
 	ImageView.h \
 	Input.h \
 	Text.h \
+	Label.h \
 	Log.h \
 	NavigationViewController.h \
 	Option.h \
@@ -54,6 +55,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Image.c \
 	ImageView.c \
 	Input.c \
+	Label.c \
 	NavigationViewController.c \
 	Option.c \
 	Panel.c \

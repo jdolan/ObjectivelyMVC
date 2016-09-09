@@ -95,12 +95,10 @@ static Input *initWithControl(Input *self, Control *control) {
 			self->control = $(alloc(Control), initWithFrame, NULL, ControlStyleDefault);
 		}
 
-		self->label = $(alloc(Text), initWithText, NULL, NULL);
+		self->label = $(alloc(Label), initWithText, NULL, NULL);
 		assert(self->label);
 
 		self->stackView.spacing = DEFAULT_INPUT_SPACING;
-
-		self->stackView.view.autoresizingMask = ViewAutoresizingContain;
 
 		$(self, setOrientation, InputOrientationLeft);
 	}

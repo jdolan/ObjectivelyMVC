@@ -15,7 +15,9 @@
 			"identifier": "checkbox"
 		},
 		"label": {
-			"text": "This is a checkbox:"
+			"text": {
+				"text": "This is a checkbox:"
+			}
 		}
 	}, {
 		"class": "TextView",

@@ -24,8 +24,8 @@
 #pragma once
 
 #include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/StackView.h>
-#include <ObjectivelyMVC/Text.h>
 
 /**
  * @file
@@ -84,7 +84,7 @@ struct Input {
 	/**
 	 * @brief The label.
 	 */
-	Text *label;
+	Label *label;
 	
 	/**
 	 * @brief The Label orientation.

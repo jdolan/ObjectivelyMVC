@@ -68,6 +68,8 @@
 		CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6603791CBBF93E00EB86CF /* ScrollView.c */; };
 		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
+		CE6BC17E1D821B0D0070FB2D /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6BC17C1D821B0D0070FB2D /* Label.c */; };
+		CE6BC17F1D821B0D0070FB2D /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6BC17D1D821B0D0070FB2D /* Label.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
@@ -184,6 +186,8 @@
 		CE6603791CBBF93E00EB86CF /* ScrollView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollView.c; sourceTree = "<group>"; };
 		CE66037A1CBBF93E00EB86CF /* ScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollView.h; sourceTree = "<group>"; };
 		CE6BC16E1D79B2920070FB2D /* HelloViewController.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = HelloViewController.json; sourceTree = "<group>"; };
+		CE6BC17C1D821B0D0070FB2D /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
+		CE6BC17D1D821B0D0070FB2D /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
 		CE76279C1D4A5A5800EEEE78 /* Renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Renderer.c; sourceTree = "<group>"; };
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
@@ -275,6 +279,8 @@
 				CE12D40C1C4C367100CD0B13 /* ImageView.h */,
 				CE8E7FF41C7FAD9100F4C3D4 /* Input.c */,
 				CE8E7FF51C7FAD9100F4C3D4 /* Input.h */,
+				CE6BC17C1D821B0D0070FB2D /* Label.c */,
+				CE6BC17D1D821B0D0070FB2D /* Label.h */,
 				CE12D4651C4D587E00CD0B13 /* Log.h */,
 				CE12D4211C4C367100CD0B13 /* Makefile.am */,
 				CE562EBA1D6876AB006DF143 /* NavigationViewController.c */,
@@ -449,6 +455,7 @@
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
+				CE6BC17F1D821B0D0070FB2D /* Label.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
@@ -586,6 +593,7 @@
 				CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */,
 				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
+				CE6BC17E1D821B0D0070FB2D /* Label.c in Sources */,
 				CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */,
 				CE8E7FFE1C84E8DA00F4C3D4 /* TableHeaderView.c in Sources */,
 				CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */,
