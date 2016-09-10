@@ -41,6 +41,13 @@ struct SDL_Size {
 #define MakeSize(w, h) \
 	({ SDL_Size _size = { (w), (h) }; _size; })
 
+
+/**
+ * @brief Creates an SDL_Rect with the given origin and size.
+ */
+#define MakeRect(x, y, w, h) \
+	({ SDL_Rect _rect = { (x), (y), (w), (h) }; _rect; })
+
 /**
  * @remarks Push this SDL_EventType to prompt `View::renderDeviceReset`.
  */
