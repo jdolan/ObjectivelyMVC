@@ -51,5 +51,16 @@
 		"selection": "ControlSelectionMultiple",
 		"axis": "CollectionViewAxisHorizontal",
 		"itemSize": [64, 48]
+	}],
+	"accessoryView": [{
+		"class": "Button",
+		"title": {
+			"text": "Cancel"
+		}
+	}, {
+		"class": "Button",
+		"title": {
+			"text": "Apply"
+		}
 	}]
 }

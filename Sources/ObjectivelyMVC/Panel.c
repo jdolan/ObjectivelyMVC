@@ -74,9 +74,15 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	super(View, self, layoutSubviews);
-
 	const Panel *this = (Panel *) self;
+
+	Array *accessories = $((View *) this->accessoryView, visibleSubviews);
+
+	this->accessoryView->view.isHidden = accessories->count == 0;
+
+	release(accessories);
+
+	super(View, self, layoutSubviews);
 
 	View *resizeHandle = (View *) this->resizeHandle;
 
@@ -175,7 +181,7 @@ static Image *_resize;
  */
 static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 	
-	self = (Panel *) super(View, self, initWithFrame, frame);
+	self = (Panel *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 
 		View *this = (View *) self;
@@ -183,17 +189,20 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->isDraggable = true;
 		self->isResizable = true;
 
+		self->stackView.spacing = DEFAULT_PANEL_SPACING;
+
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
-		self->contentView->spacing = DEFAULT_PANEL_STACK_VIEW_SPACING;
+		self->contentView->spacing = DEFAULT_PANEL_SPACING;
+
 		$(this, addSubview, (View *) self->contentView);
 
 		self->accessoryView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->accessoryView);
 
 		self->accessoryView->axis = StackViewAxisHorizontal;
-		self->accessoryView->spacing = DEFAULT_PANEL_STACK_VIEW_SPACING;
+		self->accessoryView->spacing = DEFAULT_PANEL_SPACING;
 		self->accessoryView->view.alignment = ViewAlignmentMiddleRight;
 
 		$(this, addSubview, (View *) self->accessoryView);
@@ -208,8 +217,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		$((View *) self, addSubview, (View *) self->resizeHandle);
 
-		this->autoresizingMask = ViewAutoresizingContain;
-		
 		this->backgroundColor = Colors.DefaultColor;
 		this->borderColor = Colors.DarkGray;
 		this->borderWidth = 1;
@@ -250,7 +257,7 @@ static void destroy(Class *clazz) {
 
 Class _Panel = {
 	.name = "Panel",
-	.superclass = &_View,
+	.superclass = &_StackView,
 	.instanceSize = sizeof(Panel),
 	.interfaceOffset = offsetof(Panel, interface),
 	.interfaceSize = sizeof(PanelInterface),

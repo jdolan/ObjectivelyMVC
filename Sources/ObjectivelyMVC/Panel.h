@@ -35,7 +35,7 @@
 
 #define DEFAULT_PANEL_PADDING 10
 #define DEFAULT_PANEL_RESIZE_HANDLE_SIZE 10
-#define DEFAULT_PANEL_STACK_VIEW_SPACING 10
+#define DEFAULT_PANEL_SPACING 10
 
 typedef struct Panel Panel;
 typedef struct PanelInterface PanelInterface;
@@ -57,7 +57,7 @@ struct Panel {
 	 *
 	 * @private
 	 */
-	View view;
+	StackView stackView;
 	
 	/**
 	 * @brief The typed interface.
@@ -112,7 +112,7 @@ struct PanelInterface {
 	/**
 	 * @brief The parent interface.
 	 */
-	ViewInterface viewInterface;
+	StackViewInterface stackViewInterface;
 	
 	/**
 	 * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
