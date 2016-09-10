@@ -87,30 +87,92 @@ extern const EnumName ViewAutoresizingNames[];
  */
 typedef struct {
 	int top, right, bottom, left;
-} Padding;
+} ViewPadding;
 
 /**
- * @file
- *
- * @brief The JSONView type
+ * @brief Relative positioning of subviews within their superview.
  */
+typedef enum {
+	ViewPositionBefore = -1,
+	ViewPositionAfter = 1
+} ViewPosition;
 
 /**
  * @brief Inlet type constants.
  */
 typedef enum {
+
+	/**
+	 * @remarks Inlet destination must be of type `Bool *`.
+	 */
 	InletTypeBool,
+
+	/**
+	 * @remarks Inlet destination must be of type `char **`. The inbound C string is copied via
+	 * `strdup`, and thus the receiver should `free` it when it is no longer needed.
+	 */
 	InletTypeCharacters,
+
+	/**
+	 * @remarks Inlet destination must be of type `SDL_Color *`.
+	 */
 	InletTypeColor,
+
+	/**
+	 * @remarks Inlet destination must be of type `double *`.
+	 */
 	InletTypeDouble,
+
+	/**
+	 * @remarks Inlet destination must be of an `enum` type. Inlet data must provide a null-
+	 * terminated array of EnumNames.
+	 *
+	 * @see valueof
+	 * @see MakeEnumNames
+	 */
 	InletTypeEnum,
+
+	/**
+	 * @remarks Inlet destination must be of type `float *`.
+	 */
 	InletTypeFloat,
+
+	/**
+	 * @remarks Inlet destination must be of type `Font **`.
+	 */
 	InletTypeFont,
+
+	/**
+	 * @remarks Inlet destination must be of type `Image **`.
+	 */
 	InletTypeImage,
+
+	/**
+	 * @remarks Inlet destination must be of type `int *`.
+	 */
 	InletTypeInteger,
+
+	/**
+	 * @remarks Inlet destination must be of type `SDL_Rect *`.
+	 */
 	InletTypeRectangle,
+
+	/**
+	 * @remarks Inlet destination must be of type `SDL_Size *`.
+	 */
 	InletTypeSize,
+
+	/**
+	 * @remarks Inlet destination must be of type `View **` The subviews of the specified View are
+	 * populated from the bound array of View definitions.
+	 */
 	InletTypeSubviews,
+
+	/**
+	 * @remarks Inlet destination must be of type `View **`. If the inbound View definition includes
+	 * a `"class"` designation, the existing View is replaced in its View hierarchy, and released.
+	 * Otherwise, the existing View is simply visited with the View definition.
+	 */
 	InletTypeView,
 } InletType;
 
@@ -245,7 +307,7 @@ struct View {
 	/**
 	 * @brief The padding.
 	 */
-	Padding padding;
+	ViewPadding padding;
 	
 	/**
 	 * @brief All contained views.
@@ -280,11 +342,27 @@ struct ViewInterface {
 	 *
 	 * @brief Adds a subview to this view, to be drawn above its siblings.
 	 *
-	 * @param subview The subview.
+	 * @param subview The subview to add.
+	 *
+	 * @remarks This method is equivalent to
+	 * `$(view, addSubviewRelativeTo, subview, NULL, OrderSame)`.
 	 *
 	 * @memberof View
 	 */
 	void (*addSubview)(View *self, View *subview);
+
+	/**
+	 * @fn void View::addSubviewRelativeTo(View *self, View *subview, View *other, ViewPosition position)
+	 *
+	 * @brief Adds a subview to this view, positioned relatively to `otherView`.
+	 *
+	 * @param subview The subview to add.
+	 * @param other An optional View to position `subview` relative to.
+	 * @param position The relative position.
+	 *
+	 * @memberof View
+	 */
+	void (*addSubviewRelativeTo)(View *self, View *subview, View *other, ViewPosition position);
 
 	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)

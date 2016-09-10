@@ -94,14 +94,39 @@ static String *description(const Object *self) {
  * @memberof View
  */
 static void addSubview(View *self, View *subview) {
+	$(self, addSubviewRelativeTo, subview, NULL, OrderSame);
+}
+
+/**
+ * @fn void View::addSubviewRelativeTo(View *self, View *subview, View *other, ViewPosition position)
+ *
+ * @memberof View
+ */
+static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPosition position) {
 
 	assert(subview);
-	
+
 	if (subview->superview != self) {
 		subview->superview = self;
 
-		$(self->subviews, addObject, subview);
-		
+		if (other && other->superview == self) {
+
+			const Array *subviews = (Array *) self->subviews;
+			const int index = $(subviews, indexOfObject, other);
+
+			if (position == ViewPositionAfter) {
+				if (index == subviews->count - 1) {
+					$(self->subviews, addObject, subview);
+				} else {
+					$(self->subviews, insertObjectAtIndex, subview, index + 1);
+				}
+			} else {
+				$(self->subviews, insertObjectAtIndex, subview, index);
+			}
+		} else {
+			$(self->subviews, addObject, subview);
+		}
+
 		self->needsLayout = true;
 	}
 }
@@ -227,18 +252,33 @@ static void bind(View *self, const Dictionary *dictionary, const Inlet *inlets) 
 				case InletTypeSubviews:
 					$(cast(Array, obj), enumerateObjects, bindSubviews, *(View **) inlet->dest);
 					break;
-				case InletTypeView:
-					if ($(cast(Dictionary, obj), objectForKeyPath, "class")) {
-						View *view = *(View **) inlet->dest;
+				case InletTypeView: {
+
+					View *view = *(View **) inlet->dest;
+					const Dictionary *dict = cast(Dictionary, obj);
+					if ($(dict, objectForKeyPath, "class")) {
+
+						View *subview = $$(View, viewWithDictionary, dict, _outlets);
+
 						if (view) {
-							$(self, removeSubview, view);
+							assert(view->object.referenceCount == 2);
+
+							if (view->superview) {
+								$(view->superview, addSubviewRelativeTo, subview, view, ViewPositionBefore);
+								$(view->superview, removeSubview, view);
+							}
+
+							release(view);
 						}
-						*((View **) inlet->dest) = $$(View, viewWithDictionary, obj, _outlets);
+
+						*((View **) inlet->dest) = subview;
 					} else {
-						assert(*(View **) inlet->dest);
-						$(*(View **) inlet->dest, awakeWithDictionary, obj);
+						assert(view);
+						$(view, awakeWithDictionary, dict);
 					}
+					
 					break;
+				}
 			}
 		}
 		
@@ -990,6 +1030,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->description = description;
 
 	((ViewInterface *) clazz->interface)->addSubview = addSubview;
+	((ViewInterface *) clazz->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->interface)->bind = bind;
