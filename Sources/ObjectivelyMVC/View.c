@@ -655,6 +655,7 @@ static void layoutSubviews(View *self) {
 
 		const SDL_Size size = $(self, size);
 		const SDL_Size sizeThatFits = $(self, sizeThatFits);
+
 		const SDL_Size resize = MakeSize(max(size.w, sizeThatFits.w), max(size.h, sizeThatFits.h));
 
 		$(self, resize, &resize);
@@ -898,15 +899,20 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size subviewSize = $(subview, sizeThatFits);
 
-			size.w = max(size.w, subview->frame.x + subviewSize.w);
-			size.h = max(size.h, subview->frame.y + subviewSize.h);
+			const SDL_Size subviewSize = $(subview, size);
+			const SDL_Size subviewSizeThatFits = $(subview, sizeThatFits);
+
+			const int sw = max(subviewSize.w, subviewSizeThatFits.w);
+			const int sh = max(subviewSize.h, subviewSizeThatFits.h);
+
+			size.w = max(size.w, subview->frame.x + sw);
+			size.h = max(size.h, subview->frame.y + sh);
 		}
 
 		size.w += self->padding.left + self->padding.right;
 		size.h += self->padding.top + self->padding.bottom;
-		
+
 		release(subviews);
 	}
 
@@ -920,9 +926,9 @@ static SDL_Size sizeThatFits(const View *self) {
  */
 static void sizeToFit(View *self) {
 
-	const SDL_Size sizeThatFits = $(self, sizeThatFits);
+	const SDL_Size size = $(self, sizeThatFits);
 
-	$(self, resize, &sizeThatFits);
+	$(self, resize, &size);
 }
 
 /**

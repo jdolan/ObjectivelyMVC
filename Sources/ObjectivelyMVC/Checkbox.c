@@ -129,8 +129,6 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 			self->box->view.padding.bottom = DEFAULT_CHECKBOX_PADDING;
 			self->box->view.padding.left = DEFAULT_CHECKBOX_PADDING;
 		}
-
-		$((View *) self, sizeToFit);
 	}
 	
 	return self;

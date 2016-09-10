@@ -68,9 +68,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	$(self, bind, dictionary, inlets);
 
-	assert(this->control);
-	assert(this->label);
-
 	$(this, setOrientation, this->orientation);
 }
 

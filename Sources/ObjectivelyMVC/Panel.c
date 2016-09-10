@@ -194,6 +194,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		self->accessoryView->axis = StackViewAxisHorizontal;
 		self->accessoryView->spacing = DEFAULT_PANEL_STACK_VIEW_SPACING;
+		self->accessoryView->view.alignment = ViewAlignmentMiddleRight;
 
 		$(this, addSubview, (View *) self->accessoryView);
 
