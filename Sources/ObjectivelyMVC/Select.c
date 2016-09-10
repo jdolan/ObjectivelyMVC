@@ -62,10 +62,6 @@ static void layoutSubviews(View *self) {
 	
 	Select *this = (Select *) self;
 
-	if (this->comparator) {
-		$(this->options, sort, this->comparator);
-	}
-
 	const Array *options = (Array *) this->options;
 	for (size_t i = 0; i < options->count; i++) {
 		
@@ -89,44 +85,43 @@ static void layoutSubviews(View *self) {
 			}
 		}
 	}
-	
-	$((View *) this->stackView, sizeToFit);
 
-	this->stackView->view.needsLayout = true;
-	
 	if (this->control.state == ControlStateHighlighted) {
 		this->stackView->view.borderWidth = 1;
 	} else {
 		this->stackView->view.borderWidth = 0;
 	}
-	
+
+	$((View *) this->stackView, sizeToFit);
+
 	super(View, self, layoutSubviews);
 }
 
 /**
- * @see View::sizeToFit(View *)
+ * @see View::sizeThatFits(const View *)
  */
-static void sizeToFit(View *self) {
-	
-	super(View, self, sizeToFit);
-	
+static SDL_Size sizeThatFits(const View *self) {
+
 	const Select *this = (Select *) self;
 
+	SDL_Size size = super(View, self, sizeThatFits);
+
 	if (((Control *) self)->style == ControlStyleDefault) {
-		self->frame.w = DEFAULT_SELECT_WIDTH;
+		size.w = DEFAULT_SELECT_WIDTH;
 	} else {
-		self->frame.w = 0;
+		size.w = 0;
 	}
 
 	const Array *options = (Array *) this->options;
 	for (size_t i = 0; i < options->count; i++) {
 
 		const View *option = (View *) $(options, objectAtIndex, i);
+		const SDL_Size optionSize = $(option, sizeThatFits);
 
-		SDL_Size size = $(option, sizeThatFits);
-
-		self->frame.w = max(self->frame.w, size.w + self->padding.left + self->padding.right);
+		size.w = max(size.w, optionSize.w + self->padding.left + self->padding.right);
 	}
+
+	return size;
 }
 
 #pragma mark - Control
@@ -200,6 +195,20 @@ static void stateDidChange(Control *self) {
 #pragma mark - Select
 
 /**
+ * @brief ArrayEnumerator to remove Options from the Select's StackView.
+ */
+static _Bool addOption_removeOptions(const Array *array, ident obj, ident data) {
+	$((View *) data, removeSubview, (View *) obj); return false;
+}
+
+/**
+ * @brief ArrayEnumerator to add Options to the Select's StacKView.
+ */
+static _Bool addOption_addOptions(const Array *array, ident obj, ident data) {
+	$((View *) data, addSubview, (View *) obj); return false;
+}
+
+/**
  * @fn void Select::addOption(Select *self, const char *title, ident value)
  *
  * @memberof Select
@@ -211,7 +220,13 @@ static void addOption(Select *self, const char *title, ident value) {
 	
 	$(self->options, addObject, option);
 	$((View *) self->stackView, addSubview, (View *) option);
-	
+
+	if (self->comparator) {
+		$((Array *) self->options, enumerateObjects, addOption_removeOptions, self);
+		$(self->options, sort, self->comparator);
+		$((Array *) self->options, enumerateObjects, addOption_addOptions, self);
+	}
+
 	if (self->selectedOption == NULL) {
 		self->selectedOption = option;
 	}
@@ -240,7 +255,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 		$((View *) self, addSubview, (View *) self->stackView);
 		
 		self->stackView->view.alignment = ViewAlignmentMiddleLeft;
-		self->stackView->view.autoresizingMask = ViewAutoresizingWidth;
+		self->stackView->view.autoresizingMask |= ViewAutoresizingWidth;
 		self->stackView->view.borderWidth = 1;
 
 		self->control.selection = ControlSelectionSingle;
@@ -251,9 +266,9 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;
 			}
+
+			self->stackView->view.borderColor = Colors.Silver;
 		}
-		
-		self->stackView->view.borderColor = Colors.Silver;
 	}
 	
 	return self;
@@ -351,7 +366,7 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
