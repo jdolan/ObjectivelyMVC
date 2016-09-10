@@ -106,15 +106,7 @@ static void layoutSubviews(View *self) {
 			}
 		}
 
-		int pos;
-		switch (this->axis) {
-			case StackViewAxisVertical:
-				pos = bounds.y;
-				break;
-			case StackViewAxisHorizontal:
-				pos = bounds.x;
-				break;
-		}
+		int pos = 0;
 
 		const float scale = requestedSize ? availableSize / (float) requestedSize : 1.0;
 
@@ -194,16 +186,21 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size subviewSize = $(subview, sizeThatFits);
+
+			const SDL_Size subviewSize = $(subview, size);
+			const SDL_Size subviewSizeThatFits = $(subview, sizeThatFits);
+
+			const int sw = max(subviewSize.w, subviewSizeThatFits.w);
+			const int sh = max(subviewSize.h, subviewSizeThatFits.h);
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
-					size.w = max(size.w, subviewSize.w);
-					size.h += subviewSize.h;
+					size.w = max(size.w, sw);
+					size.h += sh;
 					break;
 				case StackViewAxisHorizontal:
-					size.h = max(size.h, subviewSize.h);
-					size.w += subviewSize.w;
+					size.h = max(size.h, sh);
+					size.w += sw;
 					break;
 			}
 		}
