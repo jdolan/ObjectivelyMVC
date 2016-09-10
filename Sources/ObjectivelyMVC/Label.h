@@ -84,28 +84,6 @@ struct LabelInterface {
 	 * @memberof Label
 	 */
 	Label *(*initWithText)(Label *self, const char *text, Font *font);
-
-	/**
-	 * @fn void Label::setFont(Label *self, Font *font)
-	 *
-	 * @brief Sets this Label's font.
-	 *
-	 * @param font The Font to set.
-	 *
-	 * @memberof Label
-	 */
-	void (*setFont)(Label *self, Font *font);
-
-	/**
-	 * @fn void Label::setText(Label *self, const char *text)
-	 *
-	 * @brief Sets this Label's text.
-	 *
-	 * @param text The text to set.
-	 *
-	 * @memberof Label
-	 */
-	void (*setText)(Label *self, const char *text);
 };
 
 /**

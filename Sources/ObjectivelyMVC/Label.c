@@ -58,7 +58,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	$(self, bind, dictionary, inlets);
 
-	$(self, sizeToFit);
+	self->needsLayout = true;
 }
 
 /**
@@ -83,36 +83,12 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 		self->text = $(alloc(Text), initWithText, text, font);
 		assert(self->text);
 
-		self->view.autoresizingMask = ViewAutoresizingContain;
-
 		$((View *) self, addSubview, (View *) self->text);
+
+		self->view.autoresizingMask = ViewAutoresizingContain;
 	}
 
 	return self;
-}
-
-/**
- * @fn void Label::setFont(Label *self, Font *font)
- *
- * @memberof Label
- */
-static void setFont(Label *self, Font *font) {
-
-	$(self->text, setFont, font);
-
-	$((View *) self, sizeToFit);
-}
-
-/**
- * @fn void Label::setText(Label *self, const char *text)
- *
- * @memberof Label
- */
-static void setText(Label *self, const char *text) {
-
-	$(self->text, setText, text);
-
-	$((View *) self, sizeToFit);
 }
 
 #pragma mark - Class lifecycle
@@ -128,8 +104,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->init = init;
 
 	((LabelInterface *) clazz->interface)->initWithText = initWithText;
-	((LabelInterface *) clazz->interface)->setFont = setFont;
-	((LabelInterface *) clazz->interface)->setText = setText;
 }
 
 Class _Label = {
