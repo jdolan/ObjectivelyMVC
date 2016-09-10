@@ -228,14 +228,15 @@ static void bind(View *self, const Dictionary *dictionary, const Inlet *inlets) 
 					$(cast(Array, obj), enumerateObjects, bindSubviews, *(View **) inlet->dest);
 					break;
 				case InletTypeView:
-					if (inlet->data) {
-
-						$(*(View **) inlet->dest, removeFromSuperview);
-						release(*(View **) inlet->dest);
-
-						*(View **) inlet->dest = $$(View, viewWithDictionary, cast(Dictionary, obj), _outlets);
+					if ($(cast(Dictionary, obj), objectForKeyPath, "class")) {
+						View *view = *(View **) inlet->dest;
+						if (view) {
+							$(self, removeSubview, view);
+						}
+						*((View **) inlet->dest) = $$(View, viewWithDictionary, obj, _outlets);
 					} else {
-						$(*(View **) inlet->dest, awakeWithDictionary, cast(Dictionary, obj));
+						assert(*(View **) inlet->dest);
+						$(*(View **) inlet->dest, awakeWithDictionary, obj);
 					}
 					break;
 			}
@@ -577,9 +578,9 @@ static void layoutSubviews(View *self) {
 
 		const SDL_Size size = $(self, size);
 		const SDL_Size sizeThatFits = $(self, sizeThatFits);
+		const SDL_Size resize = MakeSize(max(size.w, sizeThatFits.w), max(size.h, sizeThatFits.h));
 
-		self->frame.w = max(size.w, sizeThatFits.w);
-		self->frame.h = max(size.h, sizeThatFits.h);
+		$(self, resize, &resize);
 	}
 
 	const SDL_Rect bounds = $(self, bounds);
@@ -757,6 +758,20 @@ static void resignFirstResponder(View *self) {
 }
 
 /**
+ * @fn void View::resize(View *self, const SDL_Size *size)
+ */
+static void resize(View *self, const SDL_Size *size) {
+
+	if (self->frame.w != size->w || self->frame.h != size->h) {
+
+		self->frame.w = size->w;
+		self->frame.h = size->h;
+
+		self->needsLayout = true;
+	}
+}
+
+/**
  * @brief ArrayEnumerator for respondToEvent recursion.
  */
 static _Bool respondToEvent_recurse(const Array *array, ident obj, ident data) {
@@ -787,10 +802,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
  * @memberof View
  */
 static SDL_Size size(const View *self) {
-	return MakeSize(
-		max(self->frame.w, self->padding.left + self->padding.right),
-		max(self->frame.h, self->padding.top + self->padding.bottom)
-	);
+	return MakeSize(self->frame.w, self->frame.h);
 }
 
 /**
@@ -803,7 +815,7 @@ static SDL_Size sizeThatFits(const View *self) {
 	SDL_Size size = $(self, size);
 
 	if (self->autoresizingMask & ViewAutoresizingContain) {
-		SDL_Size minSize = MakeSize(0, 0);
+		size = MakeSize(0, 0);
 
 		Array *subviews = $(self, visibleSubviews);
 		for (size_t i = 0; i < subviews->count; i++) {
@@ -811,17 +823,14 @@ static SDL_Size sizeThatFits(const View *self) {
 			const View *subview = $(subviews, objectAtIndex, i);
 			const SDL_Size subviewSize = $(subview, sizeThatFits);
 
-			minSize.w = max(minSize.w, subview->frame.x + subviewSize.w);
-			minSize.h = max(minSize.h, subview->frame.y + subviewSize.h);
+			size.w = max(size.w, subview->frame.x + subviewSize.w);
+			size.h = max(size.h, subview->frame.y + subviewSize.h);
 		}
 
-		minSize.w += self->padding.left + self->padding.right;
-		minSize.h += self->padding.top + self->padding.bottom;
+		size.w += self->padding.left + self->padding.right;
+		size.h += self->padding.top + self->padding.bottom;
 		
 		release(subviews);
-
-		size.w = max(size.w, minSize.w);
-		size.h = max(size.h, minSize.h);
 	}
 
 	return size;
@@ -834,10 +843,9 @@ static SDL_Size sizeThatFits(const View *self) {
  */
 static void sizeToFit(View *self) {
 
-	const SDL_Size size = $(self, sizeThatFits);
+	const SDL_Size sizeThatFits = $(self, sizeThatFits);
 
-	self->frame.w = size.w;
-	self->frame.h = size.h;
+	$(self, resize, &sizeThatFits);
 }
 
 /**
@@ -1006,6 +1014,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewInterface *) clazz->interface)->renderFrame = renderFrame;
 	((ViewInterface *) clazz->interface)->resignFirstResponder = resignFirstResponder;
+	((ViewInterface *) clazz->interface)->resize = resize;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->size = size;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;

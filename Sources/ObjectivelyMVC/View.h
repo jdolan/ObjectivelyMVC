@@ -551,6 +551,17 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*resignFirstResponder)(View *self);
+
+	/**
+	 * @fn void View::resize(View *self, const SDL_Size *size)
+	 *
+	 * @brief Resizes this View to the specified size.
+	 *
+	 * @param size The size to set.
+	 *
+	 * @memberof View
+	 */
+	void (*resize)(View *self, const SDL_Size *size);
 	
 	/**
 	 * @fn void View::respondToEvent(View *self, const SDL_Event *event)
