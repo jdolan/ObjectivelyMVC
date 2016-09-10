@@ -395,8 +395,6 @@ static void reloadData(CollectionView *self) {
 		release(item);
 		release(indexPath);
 	}
-
-	$((View *) self, layoutSubviews);
 }
 
 /**
