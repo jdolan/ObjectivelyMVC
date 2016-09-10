@@ -344,7 +344,6 @@ static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
 	}
 }
 
-
 /**
  * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
  *
@@ -500,7 +499,7 @@ static void reloadData(TableView *self) {
 
 	$((Array *) self->rows, enumerateObjects, reloadData_addRows, self->contentView);
 
-	$((View *) self, layoutSubviews);
+	self->control.view.needsLayout = true;
 }
 
 /**
