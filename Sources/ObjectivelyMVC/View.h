@@ -174,6 +174,7 @@ typedef enum {
 	 * Otherwise, the existing View is simply visited with the View definition.
 	 */
 	InletTypeView,
+	
 } InletType;
 
 typedef struct Inlet Inlet;

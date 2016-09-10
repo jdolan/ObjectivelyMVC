@@ -189,11 +189,72 @@ static SDL_Rect bindRect(const Array *array) {
 }
 
 /**
+ * @brief Binds the given View with the specified Dictionary.
+ */
+static View *bindView(View **view, const Dictionary *dictionary) {
+
+	assert(dictionary);
+
+	String *clazzName = $(dictionary, objectForKeyPath, "class");
+	if (clazzName) {
+		Class *clazz = classForName(clazzName->chars);
+		if (clazz) {
+			const Class *c = clazz;
+			while (c) {
+				if (c == &_View) {
+
+					MVC_LogInfo("Instantiating View of class %s\n", clazz->name);
+
+					View *newView = $((View *) _alloc(clazz), init);
+					$(newView, awakeWithDictionary, dictionary);
+
+					if (view && *view) {
+						assert((*view)->object.referenceCount == 2);
+
+						if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+							String *viewDesc = $((Object *) *view, description);
+							String *newViewDesc = $((Object *) newView, description);
+
+							MVC_LogDebug("Replacing View %s with %s\n", viewDesc->chars, newViewDesc->chars);
+
+							release(viewDesc);
+							release(newViewDesc);
+						}
+
+						if ((*view)->superview) {
+							$((*view)->superview, addSubviewRelativeTo, newView, *view, ViewPositionBefore);
+							$((*view)->superview, removeSubview, *view);
+						}
+
+						release(*view);
+					}
+
+					return newView;
+				}
+				c = c->superclass;
+			}
+			MVC_LogError("Class %s is not a subclass of View\n", clazz->name);
+		} else {
+			MVC_LogError("Class %s not found. Did you remember to _initialize it?\n", clazzName->chars);
+		}
+	} else {
+		assert(*view);
+
+		$(*view, awakeWithDictionary, dictionary);
+
+		return *view;
+	}
+
+	assert(false);
+	return NULL;
+}
+
+/**
  * @brief ArrayEnumerator for bind subview recursion.
  */
 static _Bool bindSubviews(const Array *array, ident obj, ident data) {
 
-	View *subview = $$(View, viewWithDictionary, cast(Dictionary, obj), _outlets);
+	View *subview = bindView(NULL, cast(Dictionary, obj));
 
 	$(cast(View, data), addSubview, subview);
 
@@ -252,33 +313,9 @@ static void bind(View *self, const Dictionary *dictionary, const Inlet *inlets) 
 				case InletTypeSubviews:
 					$(cast(Array, obj), enumerateObjects, bindSubviews, *(View **) inlet->dest);
 					break;
-				case InletTypeView: {
-
-					View *view = *(View **) inlet->dest;
-					const Dictionary *dict = cast(Dictionary, obj);
-					if ($(dict, objectForKeyPath, "class")) {
-
-						View *subview = $$(View, viewWithDictionary, dict, _outlets);
-
-						if (view) {
-							assert(view->object.referenceCount == 2);
-
-							if (view->superview) {
-								$(view->superview, addSubviewRelativeTo, subview, view, ViewPositionBefore);
-								$(view->superview, removeSubview, view);
-							}
-
-							release(view);
-						}
-
-						*((View **) inlet->dest) = subview;
-					} else {
-						assert(view);
-						$(view, awakeWithDictionary, dict);
-					}
-					
+				case InletTypeView:
+					*((View **) inlet->dest) = bindView(inlet->dest, cast(Dictionary, obj));
 					break;
-				}
 			}
 		}
 		
@@ -969,26 +1006,13 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
 	_outlets = outlets;
 
-	String *clazzName = $(dictionary, objectForKeyPath, "class");
-	if (clazzName) {
-		Class *clazz = classForName(clazzName->chars);
-		if (clazz) {
-			const Class *c = clazz;
-			while (c) {
-				if (c == &_View) {
-					View *view = $((View *) _alloc(clazz), init);
+	View *view = bindView(NULL, dictionary);
 
-					$(view, awakeWithDictionary, dictionary);
-
-					return view;
-				}
-				c = c->superclass;
-			}
-		}
+	for (const Outlet *outlet = outlets; outlet->identifier; outlet++) {
+		assert(*outlet->view);
 	}
 
-	assert(false);
-	return NULL;
+	return view;
 }
 
 /**
