@@ -183,7 +183,7 @@ static SDL_Size contentSize(const Panel *self) {
 
 	SDL_Size size = $(contentView, sizeThatContains);
 
-	if ($(accessoryView, isVisible)) {
+	if (accessoryView->hidden == false) {
 		const SDL_Size accessorySize = $(accessoryView, sizeThatContains);
 		size.h -= accessorySize.h + self->stackView.spacing;
 	}

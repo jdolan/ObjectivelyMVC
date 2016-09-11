@@ -305,6 +305,15 @@ struct TableViewInterface {
 	int (*rowAtPoint)(const TableView *self, const SDL_Point *point);
 
 	/**
+	 * @fn SDL_Rect TableView::scrollableArea(const TableView *self)
+	 *
+	 * @return The frame available to this TableView's ScrollView.
+	 *
+	 * @memberof TableView
+	 */
+	SDL_Rect (*scrollableArea)(const TableView *self);
+
+	/**
 	 * @fn void TableView::selectAll(TableView *self)
 	 *
 	 * @brief Selects all rows in this TableView.

@@ -112,6 +112,11 @@ static void layoutSubviews(View *self) {
 
 	TableView *this = (TableView *) self;
 
+	View *scrollView = (View *) this->scrollView;
+
+	scrollView->frame = $(this, scrollableArea);
+	scrollView->needsLayout = true;
+
 	const Array *rows = (Array *) this->rows;
 	for (size_t i = 0; i < rows->count; i++) {
 
@@ -125,16 +130,6 @@ static void layoutSubviews(View *self) {
 		}
 
 		row->stackView.view.backgroundColor = row->assignedBackgroundColor;
-	}
-
-	View *headerView = (View *) this->headerView;
-	View *scrollView = (View *) this->scrollView;
-
-	if (headerView->hidden == false) {
-		scrollView->frame.y = headerView->frame.h;
-		scrollView->frame.h = max(0, scrollView->frame.h - headerView->frame.h);
-	} else {
-		scrollView->frame.y = 0;
 	}
 
 	super(View, self, layoutSubviews);
@@ -367,10 +362,12 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
+		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
+
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL, style);
 		assert(self->scrollView);
 
-		self->scrollView->control.view.autoresizingMask = ViewAutoresizingFill;
+		self->scrollView->control.view.autoresizingMask |= ViewAutoresizingWidth;
 
 		$(self->scrollView, setContentView, (View *) self->contentView);
 
@@ -536,6 +533,25 @@ static int rowAtPoint(const TableView *self, const SDL_Point *point) {
 }
 
 /**
+ * @fn SDL_Rect TableView::scrollableArea(const TableView *self)
+ *
+ * @memberof TableView
+ */
+static SDL_Rect scrollableArea(const TableView *self) {
+
+	const View *headerView = (View *) self->headerView;
+
+	SDL_Rect frame = $((View *) self, bounds);
+
+	if ($(headerView, isVisible)) {
+		frame.y = headerView->frame.h;
+		frame.h -= headerView->frame.h;
+	}
+
+	return frame;
+}
+
+/**
  * @brief ArrayEnumerator for all row selection.
  */
 static _Bool selectAll_enumerate(const Array *array, ident obj, ident data) {
@@ -657,6 +673,7 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->interface)->reloadData = reloadData;
 	((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
 	((TableViewInterface *) clazz->interface)->rowAtPoint = rowAtPoint;
+	((TableViewInterface *) clazz->interface)->scrollableArea = scrollableArea;
 	((TableViewInterface *) clazz->interface)->selectedRowIndexes = selectedRowIndexes;
 	((TableViewInterface *) clazz->interface)->selectAll = selectAll;
 	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
