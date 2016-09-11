@@ -67,7 +67,9 @@ struct Panel {
 	PanelInterface *interface;
 
 	/**
-	 * @brief The optional Buttons container.
+	 * @brief The optional accessories container.
+	 *
+	 * @remarks This View is hidden by default.
 	 */
 	StackView *accessoryView;
 

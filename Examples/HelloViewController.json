@@ -1,66 +1,73 @@
 {
 	"class": "Panel",
 	"frame": [50, 50, 0, 0],
-	"contentView": [{
-		"class": "Button",
-		"identifier": "button",
-		"style": "ControlStyleDefault",
-		"title": {
-			"text": "This is a Button"
-		}
-	}, {
-		"class": "Input",
-		"control": {
-			"class": "Checkbox",
-			"identifier": "checkbox"
-		},
-		"label": {
-			"text": {
-				"text": "This is a checkbox:"
+	"contentView": {
+		"subviews": [{
+			"class": "Button",
+			"identifier": "button",
+			"style": "ControlStyleDefault",
+			"title": {
+				"text": "This is a Buttonaaa"
 			}
-		}
-	}, {
-		"class": "TextView",
-		"identifier": "textView",
-		"defaultText": "This is a TextView"
-	}, {
-		"class": "Select",
-		"identifier": "select"
-	}, {
-		"class": "Slider",
-		"identifier": "slider",
-		"min": 0.0,
-		"max": 10.0,
-		"value": 5.0
-	}, {
-		"class": "TableView",
-		"identifier": "tableView",
-		"columns": [{
-			"identifier": "One"
 		}, {
-			"identifier": "Two"
+			"class": "Input",
+			"control": {
+				"class": "Checkbox",
+				"identifier": "checkbox"
+			},
+			"label": {
+				"text": {
+					"text": "This is a checkbox:"
+				}
+			}
 		}, {
-			"identifier": "Three"
-		}],
-		"selection": "ControlSelectionMultiple"
-	}, {
-		"class": "CollectionView",
-		"identifier": "collectionView",
-		"autoresizingMask": "ViewAutoresizingWidth",
-		"frame": [0, 0, 0, 180],
-		"selection": "ControlSelectionMultiple",
-		"axis": "CollectionViewAxisHorizontal",
-		"itemSize": [64, 48]
-	}],
-	"accessoryView": [{
-		"class": "Button",
-		"title": {
-			"text": "Cancel"
-		}
-	}, {
-		"class": "Button",
-		"title": {
-			"text": "Apply"
-		}
-	}]
+			"class": "TextView",
+			"identifier": "textView",
+			"defaultText": "This is a TextView"
+		}, {
+			"class": "Select",
+			"identifier": "select"
+		}, {
+			"class": "Slider",
+			"identifier": "slider",
+			"min": 0.0,
+			"max": 10.0,
+			"value": 5.0
+		}, {
+			"class": "TableView",
+			"identifier": "tableView",
+			"autoresizingMask": "ViewAutoresizingWidth",
+			"frame": [0, 0, 0, 120],
+			"columns": [{
+				"identifier": "One"
+			}, {
+				"identifier": "Two"
+			}, {
+				"identifier": "Three"
+			}],
+			"selection": "ControlSelectionMultiple"
+		}, {
+			"class": "CollectionView",
+			"identifier": "collectionView",
+			"autoresizingMask": "ViewAutoresizingWidth",
+			"frame": [0, 0, 0, 180],
+			"selection": "ControlSelectionMultiple",
+			"axis": "CollectionViewAxisHorizontal",
+			"itemSize": [64, 48]
+		}]
+	},
+	"accessoryView": {
+		"isHidden": false,
+		"subviews": [{
+			"class": "Button",
+			"title": {
+				"text": "Cancel"
+			}
+		}, {
+			"class": "Button",
+			"title": {
+				"text": "Apply"
+			}
+		}]
+	}
 }

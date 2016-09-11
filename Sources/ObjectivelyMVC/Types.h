@@ -36,17 +36,22 @@ struct SDL_Size {
 };
 
 /**
- * @brief Creates an SDL_Size with the given dimensions.
+ * @brief Creates an SDL_Point with the given coordinates.
  */
-#define MakeSize(w, h) \
-	({ SDL_Size _size = { (w), (h) }; _size; })
-
+#define MakePoint(x, y) \
+	({ SDL_Point _point = { (x), (y) }; _point; })
 
 /**
  * @brief Creates an SDL_Rect with the given origin and size.
  */
 #define MakeRect(x, y, w, h) \
 	({ SDL_Rect _rect = { (x), (y), (w), (h) }; _rect; })
+
+/**
+ * @brief Creates an SDL_Size with the given dimensions.
+ */
+#define MakeSize(w, h) \
+	({ SDL_Size _size = { (w), (h) }; _size; })
 
 /**
  * @remarks Push this SDL_EventType to prompt `View::renderDeviceReset`.

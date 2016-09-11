@@ -94,7 +94,7 @@ static void layoutSubviews(View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size size = $(subview, sizeThatFits);
+			const SDL_Size size = $(subview, size);
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
@@ -175,38 +175,36 @@ static void layoutSubviews(View *self) {
  */
 static SDL_Size sizeThatFits(const View *self) {
 	
-	const StackView *this = (StackView *) self;
-
 	SDL_Size size = super(View, self, sizeThatFits);
 
 	if (self->autoresizingMask & ViewAutoresizingContain) {
-		size = MakeSize(0, 0);
+
+		const StackView *this = (StackView *) self;
+
+		switch (this->axis) {
+			case StackViewAxisVertical:
+				size.h = self->padding.top + self->padding.bottom;
+				break;
+			case StackViewAxisHorizontal:
+				size.w = self->padding.left + self->padding.right;
+				break;
+		}
 
 		Array *subviews = $(self, visibleSubviews);
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-
-			const SDL_Size subviewSize = $(subview, size);
-			const SDL_Size subviewSizeThatFits = $(subview, sizeThatFits);
-
-			const int sw = max(subviewSize.w, subviewSizeThatFits.w);
-			const int sh = max(subviewSize.h, subviewSizeThatFits.h);
+			const SDL_Size subviewSize = $(subview, sizeThatFits);
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
-					size.w = max(size.w, sw);
-					size.h += sh;
+					size.h += subviewSize.h;
 					break;
 				case StackViewAxisHorizontal:
-					size.h = max(size.h, sh);
-					size.w += sw;
+					size.w += subviewSize.w;
 					break;
 			}
 		}
-
-		size.w += self->padding.left + self->padding.right;
-		size.h += self->padding.top + self->padding.bottom;
 
 		if (subviews->count) {
 			switch (this->axis) {
@@ -218,7 +216,7 @@ static SDL_Size sizeThatFits(const View *self) {
 					break;
 			}
 		}
-		
+
 		release(subviews);
 	}
 

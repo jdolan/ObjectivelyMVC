@@ -338,7 +338,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
 		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
-		MakeInlet("isHidden", InletTypeBool, &self->isHidden, NULL),
+		MakeInlet("hidden", InletTypeBool, &self->isHidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
 		MakeInlet("subviews", InletTypeSubviews, &self, NULL),
 		MakeInlet("zIndex", InletTypeInteger, &self->zIndex, NULL)
@@ -667,14 +667,18 @@ static void layoutSubviews(View *self) {
 	for (size_t i = 0; i < subviews->count; i++) {
 			
 		View *subview = (View *) $(subviews, objectAtIndex, i);
-		
+
+		SDL_Size subviewSize = $(subview, size);
+
 		if (subview->autoresizingMask & ViewAutoresizingWidth) {
-			subview->frame.w = bounds.w;
+			subviewSize.w = bounds.w;
 		}
 		
 		if (subview->autoresizingMask & ViewAutoresizingHeight) {
-			subview->frame.h = bounds.h;
+			subviewSize.h = bounds.h;
 		}
+
+		$(subview, resize, &subviewSize);
 		
 		switch (subview->alignment) {
 
@@ -704,7 +708,7 @@ static void layoutSubviews(View *self) {
 				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
 				break;
 			case ViewAlignmentMiddleRight:
-				subview->frame.x = bounds.w - subview->frame.w;
+				subview->frame.x = bounds.w -subview->frame.w;
 				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
 				break;
 			
@@ -892,6 +896,14 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	SDL_Size size = $(self, size);
 
+	if (self->autoresizingMask & ViewAutoresizingWidth) {
+		size.w = 0;
+	}
+
+	if (self->autoresizingMask & ViewAutoresizingHeight) {
+		size.h = 0;
+	}
+
 	if (self->autoresizingMask & ViewAutoresizingContain) {
 		size = MakeSize(0, 0);
 
@@ -899,15 +911,19 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
+			const SDL_Size subviewSize = $(subview, sizeThatFits);
 
-			const SDL_Size subviewSize = $(subview, size);
-			const SDL_Size subviewSizeThatFits = $(subview, sizeThatFits);
+			SDL_Point subviewOrigin = MakePoint(0, 0);
+			switch (subview->alignment) {
+				case ViewAlignmentNone:
+					subviewOrigin = MakePoint(subview->frame.x, subview->frame.y);
+					break;
+				default:
+					break;
+			}
 
-			const int sw = max(subviewSize.w, subviewSizeThatFits.w);
-			const int sh = max(subviewSize.h, subviewSizeThatFits.h);
-
-			size.w = max(size.w, subview->frame.x + sw);
-			size.h = max(size.h, subview->frame.y + sh);
+			size.w = max(size.w, subviewOrigin.x + subviewSize.w);
+			size.h = max(size.h, subviewOrigin.y + subviewSize.h);
 		}
 
 		size.w += self->padding.left + self->padding.right;

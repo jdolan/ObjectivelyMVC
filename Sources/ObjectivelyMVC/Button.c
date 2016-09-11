@@ -66,6 +66,22 @@ static View *init(View *self) {
 	return (View *) $((Button *) self, initWithFrame, NULL, ControlStyleDefault);
 }
 
+/**
+ * @see View::sizeThatFits(const View *)
+ */
+static SDL_Size sizeThatFits(const View *self) {
+
+	SDL_Size size = super(View, self, sizeThatFits);
+
+	const Button *this = (Button *) self;
+
+	if (this->control.style == ControlStyleDefault) {
+		size.w = max(size.w, DEFAULT_BUTTON_MIN_WIDTH);
+	}
+
+	return size;
+}
+
 #pragma mark - Control
 
 /**
@@ -115,6 +131,7 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 		self->title->view.alignment = ViewAlignmentMiddleCenter;
 
 		self->control.view.autoresizingMask = ViewAutoresizingContain;
+		self->control.view.clipsSubviews = true;
 
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = ControlBevelTypeOutset;
@@ -139,6 +156,7 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 

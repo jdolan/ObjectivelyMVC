@@ -124,6 +124,7 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 		assert(self->tableView);
 
 		self->stackView.axis = StackViewAxisHorizontal;
+		self->stackView.distribution = StackViewDistributionFill;
 
 		self->stackView.view.autoresizingMask |= ViewAutoresizingWidth;
 	}

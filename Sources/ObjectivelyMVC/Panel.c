@@ -53,8 +53,8 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	Panel *this = (Panel *) self;
 
 	const Inlet *inlets = MakeInlets(
-		MakeInlet("accessoryView", InletTypeSubviews, &this->accessoryView, NULL),
-		MakeInlet("contentView", InletTypeSubviews, &this->contentView, NULL),
+		MakeInlet("accessoryView", InletTypeView, &this->accessoryView, NULL),
+		MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
 		MakeInlet("isDraggable", InletTypeBool, &this->isDraggable, NULL),
 		MakeInlet("isResiable", InletTypeBool, &this->isResizable, NULL)
 	);
@@ -74,15 +74,9 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	const Panel *this = (Panel *) self;
-
-	Array *accessories = $((View *) this->accessoryView, visibleSubviews);
-
-	this->accessoryView->view.isHidden = accessories->count == 0;
-
-	release(accessories);
-
 	super(View, self, layoutSubviews);
+
+	const Panel *this = (Panel *) self;
 
 	View *resizeHandle = (View *) this->resizeHandle;
 
@@ -204,6 +198,8 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->accessoryView->axis = StackViewAxisHorizontal;
 		self->accessoryView->spacing = DEFAULT_PANEL_SPACING;
 		self->accessoryView->view.alignment = ViewAlignmentMiddleRight;
+
+		self->accessoryView->view.isHidden = true;
 
 		$(this, addSubview, (View *) self->accessoryView);
 
