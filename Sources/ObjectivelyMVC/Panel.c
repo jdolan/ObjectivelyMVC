@@ -155,10 +155,10 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	} else if (event->type == SDL_MOUSEMOTION) {
 		if (this->isResizing) {
 
-			SDL_Size size = $(self, sizeThatFits);
+			SDL_Size size = $(self, size);
 
-			size.w = max(size.w, self->frame.w + event->motion.xrel);
-			size.h = max(size.h, self->frame.h + event->motion.yrel);
+			size.w = clamp(size.w + event->motion.xrel, this->minSize.w, this->maxSize.w);
+			size.h = clamp(size.h + event->motion.yrel, this->minSize.h, this->maxSize.h);
 
 			$(self, resize, &size);
 
@@ -207,6 +207,8 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		self->isDraggable = true;
 		self->isResizable = true;
+
+		self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
 
 		self->stackView.spacing = DEFAULT_PANEL_SPACING;
 
