@@ -115,6 +115,15 @@ struct PanelInterface {
 	 * @brief The parent interface.
 	 */
 	StackViewInterface stackViewInterface;
+
+	/**
+	 * @fn SDL_Size Panel::contentSize(const Panel *self)
+	 *
+	 * @return The available content size.
+	 *
+	 * @memberof Panel
+	 */
+	SDL_Size (*contentSize)(const Panel *self);
 	
 	/**
 	 * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)

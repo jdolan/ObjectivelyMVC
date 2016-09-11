@@ -74,9 +74,13 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	super(View, self, layoutSubviews);
-
 	const Panel *this = (Panel *) self;
+
+	const SDL_Size size = $(this, contentSize);
+
+	$((View *) this->contentView, resize, &size);
+
+	super(View, self, layoutSubviews);
 
 	View *resizeHandle = (View *) this->resizeHandle;
 
@@ -167,6 +171,26 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 #pragma mark - Panel
 
+/**
+ * @fn SDL_Size Panel::contentSize(const Panel *self)
+ *
+ * @memberof Panel
+ */
+static SDL_Size contentSize(const Panel *self) {
+
+	const View *accessoryView = (View *) self->accessoryView;
+	const View *contentView = (View *) self->contentView;
+
+	SDL_Size size = $(contentView, sizeThatContains);
+
+	if ($(accessoryView, isVisible)) {
+		const SDL_Size accessorySize = $(accessoryView, sizeThatContains);
+		size.h -= accessorySize.h + self->stackView.spacing;
+	}
+
+	return size;
+}
+
 static Image *_resize;
 
 /**
@@ -240,6 +264,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
+	((PanelInterface *) clazz->interface)->contentSize = contentSize;
 	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
 	_resize = $(alloc(Image), initWithName, "resize.png");
