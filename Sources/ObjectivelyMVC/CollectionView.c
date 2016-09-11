@@ -395,6 +395,8 @@ static void reloadData(CollectionView *self) {
 		release(item);
 		release(indexPath);
 	}
+
+	self->control.view.needsLayout = true;
 }
 
 /**
