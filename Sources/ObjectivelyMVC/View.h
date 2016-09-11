@@ -663,18 +663,45 @@ struct ViewInterface {
 	SDL_Size (*size)(const View *self);
 
 	/**
-	 * @fn void View::sizeThatFits(const View *self)
+	 * @fn SDL_Size View::sizeThatContains(const View *self)
 	 *
-	 * @return The minimum size that fits this View with margin.
+	 * @return An SDL_Size that contains this View's subviews.
+	 *
+	 * @remarks The returned size is greater than or equal to View::sizeThatFits.
+	 *
+	 * @memberof View
+	 */
+	SDL_Size (*sizeThatContains)(const View *self);
+
+	/**
+	 * @fn SDL_Size View::sizeThatFits(const View *self)
+	 *
+	 * @return An SDL_Size that fits this View's subviews.
+	 *
+	 * @remarks The default implementation of this method returns the View's current size, or an
+	 * appropriate value based on this View's `autoresizingMask`.
 	 *
 	 * @memberof View
 	 */
 	SDL_Size (*sizeThatFits)(const View *self);
+
+	/**
+	 * @fn void View::sizeToContain(View *self)
+	 *
+	 * @brief Resizes this View to contain its subviews.
+	 *
+	 * @see View::sizeThatContains(const View *)
+	 *
+	 * @memberof View
+	 */
+	void (*sizeToContain)(View *self);
 	
 	/**
 	 * @fn void View::sizeToFit(View *self)
 	 *
-	 * @brief Resizes this View to contain its subviews.
+	 * @brief Resizes this View to fit its subviews.
+	 *
+	 * @see View::sizeThatFits(const View *)
 	 *
 	 * @memberof View
 	 */

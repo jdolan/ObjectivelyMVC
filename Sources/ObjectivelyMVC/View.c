@@ -652,13 +652,7 @@ static void layoutIfNeeded(View *self) {
 static void layoutSubviews(View *self) {
 
 	if (self->autoresizingMask & ViewAutoresizingContain) {
-
-		const SDL_Size size = $(self, size);
-		const SDL_Size sizeThatFits = $(self, sizeThatFits);
-
-		const SDL_Size resize = MakeSize(max(size.w, sizeThatFits.w), max(size.h, sizeThatFits.h));
-
-		$(self, resize, &resize);
+		$(self, sizeToContain);
 	}
 
 	const SDL_Rect bounds = $(self, bounds);
@@ -668,7 +662,7 @@ static void layoutSubviews(View *self) {
 			
 		View *subview = (View *) $(subviews, objectAtIndex, i);
 
-		SDL_Size subviewSize = $(subview, size);
+		SDL_Size subviewSize = $(subview, sizeThatContains);
 
 		if (subview->autoresizingMask & ViewAutoresizingWidth) {
 			subviewSize.w = bounds.w;
@@ -888,6 +882,19 @@ static SDL_Size size(const View *self) {
 }
 
 /**
+ * @fn SDL_Size View::sizeThatContains(const View *self)
+ *
+ * @memberof View
+ */
+static SDL_Size sizeThatContains(const View *self) {
+
+	const SDL_Size size = $(self, size);
+	const SDL_Size sizeThatFits = $(self, sizeThatFits);
+
+	return MakeSize(max(size.w, sizeThatFits.w), max(size.h, sizeThatFits.h));
+}
+
+/**
  * @fn void View::sizeThatFits(const View *self)
  *
  * @memberof View
@@ -933,6 +940,18 @@ static SDL_Size sizeThatFits(const View *self) {
 	}
 
 	return size;
+}
+
+/**
+ * @fn void View::sizeToContain(View *self)
+ *
+ * @memberof View
+ */
+static void sizeToContain(View *self) {
+
+	const SDL_Size size = $(self, sizeThatContains);
+
+	$(self, resize, &size);
 }
 
 /**
@@ -1104,7 +1123,9 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->resize = resize;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->size = size;
+	((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->interface)->sizeToContain = sizeToContain;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 	((ViewInterface *) clazz->interface)->viewport = viewport;
