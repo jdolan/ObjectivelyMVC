@@ -83,7 +83,7 @@ static void layoutSubviews(View *self) {
 	resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
 	resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
 
-	resizeHandle->isHidden = !this->isResizable;
+	resizeHandle->hidden = !this->isResizable;
 }
 
 /**
@@ -199,7 +199,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->accessoryView->spacing = DEFAULT_PANEL_SPACING;
 		self->accessoryView->view.alignment = ViewAlignmentMiddleRight;
 
-		self->accessoryView->view.isHidden = true;
+		self->accessoryView->view.hidden = true;
 
 		$(this, addSubview, (View *) self->accessoryView);
 

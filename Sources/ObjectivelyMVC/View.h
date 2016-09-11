@@ -291,7 +291,7 @@ struct View {
 	/**
 	 * @brief If `true`, this View is not drawn.
 	 */
-	_Bool isHidden;
+	_Bool hidden;
 
 	/**
 	 * @brief An optional identifier.

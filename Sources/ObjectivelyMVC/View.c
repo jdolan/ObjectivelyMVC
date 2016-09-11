@@ -338,7 +338,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
 		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
-		MakeInlet("hidden", InletTypeBool, &self->isHidden, NULL),
+		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
 		MakeInlet("subviews", InletTypeSubviews, &self, NULL),
 		MakeInlet("zIndex", InletTypeInteger, &self->zIndex, NULL)
@@ -528,7 +528,7 @@ static void draw(View *self, Renderer *renderer) {
 	
 	assert(renderer);
 	
-	if (self->isHidden == false) {
+	if (self->hidden == false) {
 
 		$(renderer, addView, self);
 
@@ -612,7 +612,7 @@ static _Bool isFirstResponder(const View *self) {
 static _Bool isVisible(const View *self) {
 
 	for (const View *view = self; view; view = view->superview) {
-		if (view->isHidden) {
+		if (view->hidden) {
 			return false;
 		}
 	}
@@ -1044,7 +1044,7 @@ static _Bool visibleSubviews_filter(ident obj, ident data) {
 
 	const View *view = (View *) obj;
 
-	return view->isHidden == false && view->alignment != ViewAlignmentInternal;
+	return view->hidden == false && view->alignment != ViewAlignmentInternal;
 }
 
 /**

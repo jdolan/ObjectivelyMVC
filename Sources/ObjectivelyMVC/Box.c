@@ -74,7 +74,7 @@ static void layoutSubviews(View *self) {
 	super(View, self, layoutSubviews);
 
 	View *label = (View *) ((Box *) self)->label;
-	if (label->isHidden == false) {
+	if (label->hidden == false) {
 
 		const SDL_Size size = $(label, sizeThatFits);
 

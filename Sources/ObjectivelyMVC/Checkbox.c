@@ -61,9 +61,9 @@ static void render(View *self, Renderer *renderer) {
 	Checkbox *this = (Checkbox *) self;
 	
 	if (this->control.state & ControlStateSelected) {
-		this->check->view.isHidden = false;
+		this->check->view.hidden = false;
 	} else {
-		this->check->view.isHidden = true;
+		this->check->view.hidden = true;
 	}
 }
 
