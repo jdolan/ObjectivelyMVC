@@ -151,12 +151,13 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	} else if (event->type == SDL_MOUSEMOTION) {
 		if (this->isResizing) {
 
-			const SDL_Size size = $(self, sizeThatFits);
+			SDL_Size size = $(self, sizeThatFits);
 
-			self->frame.w = max(self->frame.w + event->motion.xrel, size.w);
-			self->frame.h = max(self->frame.h + event->motion.yrel, size.h);
+			size.w = max(size.w, self->frame.w + event->motion.xrel);
+			size.h = max(size.h, self->frame.h + event->motion.yrel);
 
-			self->needsLayout = true;
+			$(self, resize, &size);
+
 		} else if (this->isDragging) {
 			self->frame.x += event->motion.xrel;
 			self->frame.y += event->motion.yrel;
@@ -189,6 +190,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		assert(self->contentView);
 
 		self->contentView->spacing = DEFAULT_PANEL_SPACING;
+		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
 
 		$(this, addSubview, (View *) self->contentView);
 

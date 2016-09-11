@@ -37,7 +37,6 @@
 			"class": "TableView",
 			"identifier": "tableView",
 			"autoresizingMask": "ViewAutoresizingWidth",
-			"frame": [0, 0, 0, 120],
 			"columns": [{
 				"identifier": "One"
 			}, {
