@@ -7,7 +7,7 @@
 			"identifier": "button",
 			"style": "ControlStyleDefault",
 			"title": {
-				"text": "This is a Buttonaaa"
+				"text": "This is a Button"
 			}
 		}, {
 			"class": "Input",
