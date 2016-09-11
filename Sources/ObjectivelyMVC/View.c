@@ -918,7 +918,7 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size subviewSize = $(subview, sizeThatFits);
+			const SDL_Size subviewSize = $(subview, sizeThatContains);
 
 			SDL_Point subviewOrigin = MakePoint(0, 0);
 			switch (subview->alignment) {
