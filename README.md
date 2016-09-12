@@ -68,16 +68,19 @@ ObjectivelyMVC allows you to define your View hierarchy either programmatically,
 {
 	"class": "Panel",
 	"frame": [50, 50, 0, 0],
-	"contentView": [{
-		"class": "Input",
-		"control": {
-			"class": "Checkbox",
-			"identifier": "checkbox"
-		},
-		"label": {
-			"text": "This is a checkbox:"
-		}
-	}]
+	"autoresizingMask": "ViewAutoresizingWidth",
+	"contentView": {
+		"subviews": [{
+			"class": "Input",
+			"control": {
+				"class": "Checkbox",
+				"identifier": "checkbox"
+			},
+			"label": {
+				"text": "This is a checkbox:"
+			}
+		}]
+	}
 }
 ```
 
