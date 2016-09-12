@@ -83,6 +83,8 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 		self->text = $(alloc(Text), initWithText, text, font);
 		assert(self->text);
 
+		self->text->view.alignment = ViewAlignmentMiddleLeft;
+
 		$((View *) self, addSubview, (View *) self->text);
 
 		self->view.autoresizingMask = ViewAutoresizingContain;
