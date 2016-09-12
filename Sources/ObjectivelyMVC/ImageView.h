@@ -67,6 +67,11 @@ struct ImageView {
 	struct {
 		GLenum src, dst;
 	} blend;
+
+	/**
+	 * @brief The drawing color.
+	 */
+	SDL_Color color;
 	
 	/**
 	 * @brief The image.

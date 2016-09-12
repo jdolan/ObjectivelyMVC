@@ -103,8 +103,10 @@ static void render(View *self, Renderer *renderer) {
 	}
 
 	if (this->texture) {
+		SetColor(this->color);
 		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, drawTexture, this->texture, &frame);
+		SetColor(Colors.White);
 	}
 }
 
@@ -135,6 +137,8 @@ static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
 
 		self->blend.src = GL_SRC_ALPHA;
 		self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
+
+		self->color = Colors.White;
 	}
 
 	return self;
