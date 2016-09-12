@@ -172,6 +172,8 @@ static void setImage(ImageView *self, Image *image) {
 
 	if (image) {
 		self->image = retain(image);
+	} else {
+		self->image = NULL;
 	}
 
 	self->texture = 0;
