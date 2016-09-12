@@ -222,9 +222,10 @@ static void addOption(Select *self, const char *title, ident value) {
 	$((View *) self->stackView, addSubview, (View *) option);
 
 	if (self->comparator) {
-		$((Array *) self->options, enumerateObjects, addOption_removeOptions, self);
+		const Array *options = (Array *) self->options;
+		$(options, enumerateObjects, addOption_removeOptions, self->stackView);
 		$(self->options, sort, self->comparator);
-		$((Array *) self->options, enumerateObjects, addOption_addOptions, self);
+		$(options, enumerateObjects, addOption_addOptions, self->stackView);
 	}
 
 	if (self->selectedOption == NULL) {
