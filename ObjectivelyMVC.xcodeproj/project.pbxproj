@@ -282,7 +282,6 @@
 				CE6BC1801D837D550070FB2D /* Label.c */,
 				CE6BC1811D837D550070FB2D /* Label.h */,
 				CE12D4651C4D587E00CD0B13 /* Log.h */,
-				CE12D4211C4C367100CD0B13 /* Makefile.am */,
 				CE562EBA1D6876AB006DF143 /* NavigationViewController.c */,
 				CE562EBB1D6876AB006DF143 /* NavigationViewController.h */,
 				CE14A8CE1C68CE3C00B576FB /* Option.c */,
@@ -322,6 +321,7 @@
 				CE12D4261C4C367100CD0B13 /* ViewController.h */,
 				CEF1D8AA1D4630D20099A857 /* WindowController.c */,
 				CEF1D8AB1D4630D20099A857 /* WindowController.h */,
+				CE12D4211C4C367100CD0B13 /* Makefile.am */,
 			);
 			path = ObjectivelyMVC;
 			sourceTree = "<group>";

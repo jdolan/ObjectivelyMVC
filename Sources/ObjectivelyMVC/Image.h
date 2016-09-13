@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <Objectively/Object.h>
+#include <Objectively/Data.h>
 
 #include <SDL2/SDL_video.h>
 
@@ -73,6 +73,19 @@ struct ImageInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @fn Image *Image::initWithData(Image *self, const Data *data)
+	 *
+	 * @brief Initializes this Image with the specified Data.
+	 *
+	 * @param data The raw image data.
+	 *
+	 * @return The initialized Image, or `NULL` on error.
+	 *
+	 * @memberof Image
+	 */
+	Image *(*initWithData)(Image *image, const Data *data);
+
+	/**
 	 * @fn Image *Image::initWithName(Image *self, const char *name)
 	 *
 	 * @brief Initializes this Image, loading it from disk by the given name.
@@ -80,6 +93,9 @@ struct ImageInterface {
 	 * @param name The image name.
 	 *
 	 * @return The initialized Image, or `NULL` on error.
+	 *
+	 * @remarks The image search path defaults to `PKGDATADIR`, e.g. `$prefix/share/ObjectivelyMVC`.
+	 * If set, the environment variable `OBJECTIVELYMVC_DATA_DIR` will override this behavior.
 	 *
 	 * @memberof Image
 	 */
@@ -97,6 +113,8 @@ struct ImageInterface {
 	 * @remarks The surface's reference count is incremented, so that you can (and should) call
 	 * `SDL_FreeSurface` when you no longer need it. The Image will also free the surface on
 	 * `dealloc`.
+	 *
+	 * @remarks Designated initializer.
 	 *
 	 * @memberof Image
 	 */

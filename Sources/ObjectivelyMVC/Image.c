@@ -51,31 +51,42 @@ static void dealloc(Object *self) {
 #pragma mark - Image
 
 /**
+ * @fn Image *Image::initWithData(Image *self, const Data *data)
+ *
+ * @memberof Image
+ */
+static Image *initWithData(Image *self, const Data *data) {
+
+	SDL_RWops *ops = SDL_RWFromConstMem(data->bytes, data->length);
+	if (ops) {
+		self = $(self, initWithSurface, IMG_Load_RW(ops, 0));
+		if (self) {
+			SDL_FreeSurface(self->surface);
+		}
+	}
+	
+	SDL_FreeRW(ops);
+	return self;
+}
+
+/**
  * @fn Image *Image::initWithName(Image *self, const char *name)
  *
  * @memberof Image
  */
 static Image *initWithName(Image *self, const char *name) {
 
-	self = (Image *) super(Object, self, init);
+	char *path;
+	asprintf(&path, "%s/%s", getenv("OBJECTIVELYMVC_DATA_DIR") ?: PKGDATADIR, name);
+
+	MVC_LogDebug("%s\n", path);
+
+	self = $(self, initWithSurface, IMG_Load(path));
 	if (self) {
-
-		char *dir = getenv("OBJECTIVELYMVC_DATA_DIR");
-		if (dir == NULL) {
-			dir = PKGDATADIR;
-		}
-
-		char *path;
-		asprintf(&path, "%s/%s", dir, name);
-
-		MVC_LogDebug("%s\n", path);
-
-		self->surface = IMG_Load(path);
-		assert(self->surface);
-		
-		free(path);
+		SDL_FreeSurface(self->surface);
 	}
-	
+
+	free(path);
 	return self;
 }
 
@@ -106,6 +117,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ImageInterface *) clazz->interface)->initWithData = initWithData;
 	((ImageInterface *) clazz->interface)->initWithName = initWithName;
 	((ImageInterface *) clazz->interface)->initWithSurface = initWithSurface;
 }
