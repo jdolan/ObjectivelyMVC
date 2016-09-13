@@ -301,6 +301,8 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		assert(self->text);
 		
 		$((View *) self, addSubview, (View *) self->text);
+
+		self->control.view.clipsSubviews = true;
 		
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = ControlBevelTypeInset;
