@@ -33,9 +33,9 @@
  * @brief Draggable containers.
  */
 
-#define DEFAULT_PANEL_PADDING 10
+#define DEFAULT_PANEL_PADDING 12
 #define DEFAULT_PANEL_RESIZE_HANDLE_SIZE 10
-#define DEFAULT_PANEL_SPACING 10
+#define DEFAULT_PANEL_SPACING 12
 
 typedef struct Panel Panel;
 typedef struct PanelInterface PanelInterface;
