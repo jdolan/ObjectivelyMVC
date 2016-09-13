@@ -31,7 +31,7 @@ case "$host" in
 		HOST_NAME="MINGW"
 		HOST_CFLAGS="-D_GNU_SOURCE"
 		HOST_LDFLAGS="-no-undefined"
-		HOST_LIBS="-lopengl32"
+		HOST_LIBS="-lopengl32 -lglu32"
 		;;
 	*)
 		HOST_NAME="LINUX"
