@@ -29,7 +29,8 @@ case "$host" in
 		;;
 	*-mingw*)
 		HOST_NAME="MINGW"
-		HOST_LDFLAGS="-D_GNU_SOURCE -no-undefined"
+		HOST_CFLAGS="-D_GNU_SOURCE"
+		HOST_LDFLAGS="-no-undefined"
 		HOST_LIBS="-lopengl32"
 		;;
 	*)
