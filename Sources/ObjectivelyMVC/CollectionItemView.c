@@ -64,6 +64,7 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 		assert(self->text);
 
 		self->text->view.alignment = ViewAlignmentMiddleCenter;
+		self->text->view.zIndex = 1;
 
 		$((View *) self, addSubview, (View *) self->text);
 
