@@ -109,7 +109,10 @@ static void render(View *self, Renderer *renderer) {
 		if (this->position == this->attributedText->string.length) {
 			$(this->text->font, sizeCharacters, text, &w, &h);
 		} else {
-			char *chars = strndup(text, this->position);
+//			char *chars = strndup(text, this->position);
+			char *chars = calloc(this->position + 1, sizeof(char));
+			strncpy(chars, text, this->position);
+			
 			$(this->text->font, sizeCharacters, chars, &w, &h);
 			free(chars);
 		}
