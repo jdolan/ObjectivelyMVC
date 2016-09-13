@@ -51,9 +51,10 @@ static void dealloc(Object *self) {
 
 	ImageView *this = (ImageView *) self;
 
-	release(this->image);
-
-	glDeleteTextures(1, &this->texture);
+	if (this->image) {
+		release(this->image);
+		glDeleteTextures(1, &this->texture);
+	}
 
 	super(Object, self, dealloc);
 }
