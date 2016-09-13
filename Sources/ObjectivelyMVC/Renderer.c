@@ -81,6 +81,9 @@ static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
 
 	GLenum format;
 	switch (surface->format->BytesPerPixel) {
+		case 1:
+			format = GL_LUMINANCE;
+			break;
 		case 3:
 			format = GL_RGB;
 			break;
