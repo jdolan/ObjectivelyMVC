@@ -7,4 +7,4 @@ include_HEADERS = \
 	ObjectivelyMVC.h
 
 pkgconfigdir = $(libdir)/pkgconfig
-nodist_pkgconfig_DATA = ObjectivelyMVC.pc
+pkgconfig_DATA = ObjectivelyMVC.pc
