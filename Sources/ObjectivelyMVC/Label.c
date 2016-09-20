@@ -80,7 +80,7 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 	self = (Label *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
-		self->text = $alloc(Text, initWithText, text, font);
+		self->text = alloc(Text, initWithText, text, font);
 		assert(self->text);
 
 		self->text->view.alignment = ViewAlignmentMiddleLeft;

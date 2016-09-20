@@ -173,12 +173,12 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 
 		self->control.view.autoresizingMask = ViewAutoresizingContain;
 
-		self->box = $alloc(Control, initWithFrame, frame, style);
+		self->box = alloc(Control, initWithFrame, frame, style);
 		assert(self->box);
 
 		self->box->view.alignment = ViewAlignmentMiddleCenter;
 
-		self->check = $alloc(ImageView, initWithImage, _check);
+		self->check = alloc(ImageView, initWithImage, _check);
 		assert(self->check);
 		
 		self->check->view.autoresizingMask = ViewAutoresizingFill;
@@ -221,8 +221,8 @@ static void initialize(Class *clazz) {
 	
 	((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
-	Data *checkData = $alloc(Data, initWithBytes, _checkData, lengthof(_checkData));
-	_check = $alloc(Image, initWithData, checkData);
+	Data *checkData = alloc(Data, initWithBytes, _checkData, lengthof(_checkData));
+	_check = alloc(Image, initWithData, checkData);
 	release(checkData);
 }
 

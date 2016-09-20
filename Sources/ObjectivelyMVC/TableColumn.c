@@ -57,7 +57,7 @@ static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier
 	self = (TableColumn *) super(Object, self, init);
 	if (self) {
 
-		self->headerCell = $alloc(TableHeaderCellView, initWithFrame, NULL);
+		self->headerCell = alloc(TableHeaderCellView, initWithFrame, NULL);
 		assert(self->headerCell);
 		
 		self->identifier = strdup(identifier);

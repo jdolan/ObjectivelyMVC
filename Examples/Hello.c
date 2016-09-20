@@ -57,9 +57,9 @@ int main(int argc, char **argv) {
 
 	SDL_GL_SetSwapInterval(0);
 
-	WindowController *windowController = $alloc(WindowController, initWithWindow, window);
+	WindowController *windowController = alloc(WindowController, initWithWindow, window);
 
-	ViewController *viewController = (ViewController *) $alloc(HelloViewController, init);
+	ViewController *viewController = (ViewController *) alloc(HelloViewController, init);
 
 	$(windowController, setViewController, viewController);
 

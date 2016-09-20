@@ -300,7 +300,7 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		
 		self->isEditable = true;
 		
-		self->text = $alloc(Text, initWithText, NULL, NULL);
+		self->text = alloc(Text, initWithText, NULL, NULL);
 		assert(self->text);
 		
 		$((View *) self, addSubview, (View *) self->text);

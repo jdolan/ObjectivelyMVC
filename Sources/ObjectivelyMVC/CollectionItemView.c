@@ -53,14 +53,14 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 	
 	self = (CollectionItemView *) super(View, self, initWithFrame, frame);
 	if (self) {
-		self->imageView = $alloc(ImageView, initWithFrame, frame);
+		self->imageView = alloc(ImageView, initWithFrame, frame);
 		assert(self->imageView);
 
 		self->imageView->view.autoresizingMask = ViewAutoresizingFill;
 
 		$((View *) self, addSubview, (View *) self->imageView);
 
-		self->text = $alloc(Text, initWithText, NULL, NULL);
+		self->text = alloc(Text, initWithText, NULL, NULL);
 		assert(self->text);
 
 		self->text->view.alignment = ViewAlignmentMiddleCenter;

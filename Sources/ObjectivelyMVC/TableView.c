@@ -57,7 +57,7 @@ static _Bool awakeWithDictionary_columns(const Array *array, ident obj, ident da
 	const String *identifier = $(cast(Dictionary, obj), objectForKeyPath, "identifier");
 	assert(identifier);
 
-	TableColumn *column = $alloc(TableColumn, initWithIdentifier, identifier->chars);
+	TableColumn *column = alloc(TableColumn, initWithIdentifier, identifier->chars);
 	assert(column);
 
 	const Inlet inlets[] = MakeInlets(
@@ -354,17 +354,17 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 		self->rows = $$(MutableArray, array);
 		assert(self->rows);
 
-		self->headerView = $alloc(TableHeaderView, initWithTableView, self);
+		self->headerView = alloc(TableHeaderView, initWithTableView, self);
 		assert(self->headerView);
 
 		$((View *) self, addSubview, (View *) self->headerView);
 
-		self->contentView = $alloc(StackView, initWithFrame, NULL);
+		self->contentView = alloc(StackView, initWithFrame, NULL);
 		assert(self->contentView);
 
 		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
 
-		self->scrollView = $alloc(ScrollView, initWithFrame, NULL, style);
+		self->scrollView = alloc(ScrollView, initWithFrame, NULL, style);
 		assert(self->scrollView);
 
 		self->scrollView->control.view.autoresizingMask |= ViewAutoresizingWidth;
@@ -465,7 +465,7 @@ static void reloadData(TableView *self) {
 	const size_t numberOfRows = self->dataSource.numberOfRows(self);
 	for (size_t i = 0; i < numberOfRows; i++) {
 
-		TableRowView *row = $alloc(TableRowView, initWithTableView, self);
+		TableRowView *row = alloc(TableRowView, initWithTableView, self);
 		assert(row);
 
 		$(self->rows, addObject, row);
@@ -587,7 +587,7 @@ static IndexSet *selectedRowIndexes(const TableView *self) {
 		}
 	}
 
-	return $alloc(IndexSet, initWithIndexes, indexes, count);
+	return alloc(IndexSet, initWithIndexes, indexes, count);
 }
 
 /**
