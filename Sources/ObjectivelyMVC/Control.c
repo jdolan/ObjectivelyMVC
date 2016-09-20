@@ -76,7 +76,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	Control *this = (Control *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames),
 		MakeInlet("style", InletTypeEnum, &this->style, (ident) ControlStyleNames)
 	);

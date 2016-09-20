@@ -183,7 +183,7 @@ static void loadView(ViewController *self) {
 
 	HelloViewController *this = (HelloViewController *) self;
 
-	Outlet *outlets = MakeOutlets(
+	Outlet outlets[] = MakeOutlets(
 		MakeOutlet("button", &this->button),
 		MakeOutlet("checkbox", &this->checkbox),
 		MakeOutlet("textView", &this->textView),

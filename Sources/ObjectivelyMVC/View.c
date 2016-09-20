@@ -327,7 +327,7 @@ static void bind(View *self, const Dictionary *dictionary, const Inlet *inlets) 
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("identifier", InletTypeCharacters, &self->identifier, NULL),
 		MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
 		MakeInlet("autoresizingMask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),

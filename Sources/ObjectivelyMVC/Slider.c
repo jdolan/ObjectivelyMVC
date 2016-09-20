@@ -56,7 +56,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	double value = this->value;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("bar", InletTypeView, &this->bar, NULL),
 		MakeInlet("handle", InletTypeView, &this->handle, NULL),
 		MakeInlet("label", InletTypeView, &this->label, NULL),

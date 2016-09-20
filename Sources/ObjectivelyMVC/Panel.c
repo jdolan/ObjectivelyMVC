@@ -82,7 +82,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	Panel *this = (Panel *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("accessoryView", InletTypeView, &this->accessoryView, NULL),
 		MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
 		MakeInlet("isDraggable", InletTypeBool, &this->isDraggable, NULL),

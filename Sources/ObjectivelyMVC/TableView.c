@@ -60,7 +60,7 @@ static _Bool awakeWithDictionary_columns(const Array *array, ident obj, ident da
 	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);
 	assert(column);
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("cellAlignment", InletTypeEnum, &column->cellAlignment, (ident) ViewAlignmentNames),
 		MakeInlet("maxWidth", InletTypeInteger, &column->maxWidth, NULL),
 		MakeInlet("minWidth", InletTypeInteger, &column->minWidth, NULL),
@@ -83,7 +83,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	TableView *this = (TableView *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("alternateBackgroundColor", InletTypeColor, &this->alternateBackgroundColor, NULL),
 		MakeInlet("cellSpacing", InletTypeInteger, &this->cellSpacing, NULL),
 		MakeInlet("rowHeight", InletTypeInteger, &this->rowHeight, NULL),

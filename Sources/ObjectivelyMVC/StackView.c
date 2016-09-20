@@ -49,7 +49,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	StackView *this = (StackView *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) StackViewAxisNames),
 		MakeInlet("distribution", InletTypeEnum, &this->distribution, (ident) StackViewDistributionNames),
 		MakeInlet("spacing", InletTypeInteger, &this->spacing, NULL)

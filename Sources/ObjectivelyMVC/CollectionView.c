@@ -59,7 +59,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	CollectionView *this = (CollectionView *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) CollectionViewAxisNames),
 		MakeInlet("itemSize", InletTypeSize, &this->itemSize, NULL),
 		MakeInlet("itemSpacing", InletTypeSize, &this->itemSpacing, NULL)

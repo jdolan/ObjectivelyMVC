@@ -70,7 +70,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	ImageView *this = (ImageView *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("alpha", InletTypeFloat, &this->alpha, NULL),
 		MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) GLBlendNames),
 		MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) GLBlendNames),

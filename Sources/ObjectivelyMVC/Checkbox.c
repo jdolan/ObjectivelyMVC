@@ -109,7 +109,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	Checkbox *this = (Checkbox *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("check", InletTypeView, &this->check, NULL)
 	);
 

@@ -828,38 +828,28 @@ double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
  * @brief Creates an Inlet with the specified parameters.
  */
 #define MakeInlet(name, type, dest, data) \
-	({ \
-		Inlet _inlet = { (name), (type), (dest), (data) }; _inlet; \
-	})
+	{ (name), (type), (dest), (data) }
 
 /**
  * @brief Creates a null-termianted array of Inlets.
  */
 #define MakeInlets(...) \
-	({ \
-		const Inlet _inlets[] = { \
-			__VA_ARGS__, \
-			MakeInlet(NULL, -1, NULL, NULL) \
-		}; \
-		_inlets; \
-	})
+	{ \
+		__VA_ARGS__, \
+		MakeInlet(NULL, -1, NULL, NULL) \
+	}
 
 /**
  * @brief Creates an Outlet with the specified parameters.
  */
 #define MakeOutlet(identifier, view) \
-	({ \
-		Outlet _outlet = { (identifier), (View **) (view) }; _outlet; \
-	})
+	{ (identifier), (View **) (view) }
 
 /**
  * @brief Creates a null-termianted array of Outlets.
  */
 #define MakeOutlets(...) \
-	({ \
-		Outlet _outlets[] = { \
-			__VA_ARGS__, \
-			MakeOutlet(NULL, NULL) \
-		}; \
-		_outlets; \
-	})
+	{ \
+		__VA_ARGS__, \
+		MakeOutlet(NULL, NULL) \
+	}

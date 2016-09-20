@@ -52,7 +52,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	Box *this = (Box *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("label", InletTypeView, &this->label, NULL)
 	);
 

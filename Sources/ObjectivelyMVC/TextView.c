@@ -58,7 +58,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	TextView *this = (TextView *) self;
 
-	const Inlet *inlets = MakeInlets(
+	const Inlet inlets[] = MakeInlets(
 		MakeInlet("defaultText", InletTypeCharacters, &this->defaultText, NULL),
 		MakeInlet("isEditable", InletTypeBool, &this->isEditable, NULL)
 	);
