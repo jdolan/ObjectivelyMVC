@@ -268,7 +268,7 @@ static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_
 		}
 
 		if (index < self->items->array.count) {
-			return $(alloc(IndexPath), initWithIndex, index);
+			return $alloc(IndexPath, initWithIndex, index);
 		}
 	}
 
@@ -284,7 +284,7 @@ static IndexPath *indexPathForItem(const CollectionView *self, const CollectionI
 
 	const int index = $((Array *) self->items, indexOfObject, (ident) item);
 	if (index > -1) {
-		return $(alloc(IndexPath), initWithIndex, index);
+		return $alloc(IndexPath, initWithIndex, index);
 	}
 
 	return NULL;
@@ -302,12 +302,12 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 		self->items = $$(MutableArray, array);
 
-		self->contentView = $(alloc(View), initWithFrame, NULL);
+		self->contentView = $alloc(View, initWithFrame, NULL);
 		assert(self->contentView);
 
 		self->contentView->autoresizingMask = ViewAutoresizingContain;
 
-		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL, style);
+		self->scrollView = $alloc(ScrollView, initWithFrame, NULL, style);
 		assert(self->scrollView);
 
 		self->scrollView->control.view.autoresizingMask = ViewAutoresizingFill;
@@ -384,7 +384,7 @@ static void reloadData(CollectionView *self) {
 	const size_t numberOfItems = self->dataSource.numberOfItems(self);
 	for (size_t i = 0; i < numberOfItems; i++) {
 
-		IndexPath *indexPath = $(alloc(IndexPath), initWithIndex, i);
+		IndexPath *indexPath = $alloc(IndexPath, initWithIndex, i);
 
 		CollectionItemView *item = self->delegate.itemForObjectAtIndexPath(self, indexPath);
 		assert(item);

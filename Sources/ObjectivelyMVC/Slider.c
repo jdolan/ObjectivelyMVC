@@ -184,7 +184,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 	
 	self = (Slider *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-		self->bar = $(alloc(View), initWithFrame, frame);
+		self->bar = $alloc(View, initWithFrame, frame);
 		assert(self->bar);
 
 		self->bar->alignment = ViewAlignmentMiddleLeft;
@@ -192,12 +192,12 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 		$((View *) self, addSubview, self->bar);
 
-		self->handle = $(alloc(Control), initWithFrame, NULL, style);
+		self->handle = $alloc(Control, initWithFrame, NULL, style);
 		assert(self->handle);
 
 		$(self->bar, addSubview, (View *) self->handle);
 
-		self->label = $(alloc(Text), initWithText, NULL, NULL);
+		self->label = $alloc(Text, initWithText, NULL, NULL);
 		assert(self->label);
 
 		self->label->view.alignment = ViewAlignmentMiddleRight;

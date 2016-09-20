@@ -111,13 +111,13 @@ static Font *defaultFont(FontCategory category) {
 	static Once once;
 
 	do_once(&once, {
-		_normal = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 14, 0);
+		_normal = $alloc(Font, initWithAttributes, DEFAULT_FONT_FAMILY, 14, 0);
 		assert(_normal);
 
-		_smaller = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 12, 0);
+		_smaller = $alloc(Font, initWithAttributes, DEFAULT_FONT_FAMILY, 12, 0);
 		assert(_smaller);
 
-		_bigger = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 16, 0);
+		_bigger = $alloc(Font, initWithAttributes, DEFAULT_FONT_FAMILY, 16, 0);
 		assert(_bigger);
 	});
 

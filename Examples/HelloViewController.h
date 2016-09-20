@@ -103,6 +103,17 @@ struct HelloViewControllerInterface {
 	 * @brief The parent interface.
 	 */
 	ViewControllerInterface viewControllerInterface;
+
+	/**
+	 * @fn HelloViewController *HelloViewController::init(HelloViewController *self)
+	 *
+	 * @brief Initializes this HelloViewController.
+	 *
+	 * @return The intialized HelloViewController, or `NULL` on error.
+	 *
+	 * @memberof HelloViewController
+	 */
+	HelloViewController *(*init)(HelloViewController *self);
 };
 
 /**

@@ -99,7 +99,7 @@ static ident valueForColumnAndRow(const TableView *tableView, const TableColumn 
  */
 static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
 
-	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
+	TableCellView *cell = $alloc(TableCellView, initWithFrame, NULL);
 	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
 
 	char text[8];
@@ -153,7 +153,7 @@ static ident objectForItemAtIndexPath(const CollectionView *collectionView, cons
  */
 static CollectionItemView *itemForObjectAtIndexPath(const CollectionView *collectionView, const IndexPath *indexPath) {
 
-	CollectionItemView *item = $(alloc(CollectionItemView), initWithFrame, NULL);
+	CollectionItemView *item = $alloc(CollectionItemView, initWithFrame, NULL);
 
 	char text[64];
 	snprintf(text, sizeof(text), "%d", $(indexPath, indexAtPosition, 0));
@@ -235,6 +235,17 @@ static void loadView(ViewController *self) {
 	$(this->collectionView, reloadData);
 }
 
+#pragma mark - HelloViewController
+
+/**
+ * @fn HelloViewController *HelloViewController::init(HelloViewController *self)
+ *
+ * @memberof HelloViewController
+ */
+static HelloViewController *init(HelloViewController *self) {
+	return (HelloViewController *) super(ViewController, self, init);
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -243,6 +254,9 @@ static void loadView(ViewController *self) {
 static void initialize(Class *clazz) {
 
 	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
+
+	((HelloViewControllerInterface *) clazz->interface)->init = init;
+
 }
 
 Class _HelloViewController = {

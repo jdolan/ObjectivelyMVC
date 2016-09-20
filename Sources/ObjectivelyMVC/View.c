@@ -290,13 +290,13 @@ static void bind(View *self, const Dictionary *dictionary, const Inlet *inlets) 
 					*((float *) inlet->dest) = cast(Number, obj)->value;
 					break;
 				case InletTypeFont:
-					*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
+					*((Font **) inlet->dest) = $alloc(Font, initWithName, cast(String, obj)->chars);
 					break;
 				case InletTypeEnum:
 					*((int *) inlet->dest) = valueof(inlet->data, (cast(String, obj))->chars);
 					break;
 				case InletTypeImage:
-					*((Image **) inlet->dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
+					*((Image **) inlet->dest) = $alloc(Image, initWithName, cast(String, obj)->chars);
 					break;
 				case InletTypeInteger:
 					*((int *) inlet->dest) = cast(Number, obj)->value;
@@ -830,6 +830,34 @@ static void resignFirstResponder(View *self) {
 	}
 }
 
+///**
+// * @brief ArrayEnumerator for resize recursion.
+// */
+//static _Bool resize_recurse(const Array *array, ident obj, ident data) {
+//
+//	View *subview = (View *) obj;
+//
+//	SDL_Size size = $(subview, size);
+//
+//	switch (subview->autoresizingMask) {
+//		case ViewAutoresizingWidth:
+//			size.w = 0;
+//			break;
+//		case ViewAutoresizingHeight:
+//			size.h = 0;
+//			break;
+//		case ViewAutoresizingContain:
+//			size.w = size.h = 0;
+//			break;
+//		default:
+//			break;
+//	}
+//
+//	$(subview, resize, &size);
+//
+//	return false;
+//}
+
 /**
  * @fn void View::resize(View *self, const SDL_Size *size)
  */
@@ -841,6 +869,8 @@ static void resize(View *self, const SDL_Size *size) {
 		self->frame.h = size->h;
 
 		self->needsLayout = true;
+
+//		$((Array *) self->subviews, enumerateObjects, resize_recurse, NULL);
 	}
 }
 

@@ -52,7 +52,7 @@ static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) 
 	
 	self = (TableCellView *) super(View, self, initWithFrame, NULL);
 	if (self) {
-		self->text = $(alloc(Text), initWithText, NULL, NULL);
+		self->text = $alloc(Text, initWithText, NULL, NULL);
 		assert(self->text);
 
 		self->text->view.alignment = ViewAlignmentMiddleLeft;
