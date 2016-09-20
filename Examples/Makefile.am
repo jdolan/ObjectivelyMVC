@@ -11,6 +11,7 @@ Hello_SOURCES = \
 
 CFLAGS += \
 	-I$(top_srcdir)/Sources \
+	-DEXAMPLES=\"$(abs_srcdir)\" \
 	@HOST_CFLAGS@ \
 	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \

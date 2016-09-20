@@ -193,7 +193,12 @@ static void loadView(ViewController *self) {
 		MakeOutlet("collectionView", &this->collectionView)
 	);
 
-	this->panel = (Panel *) $$(View, viewWithContentsOfFile, "HelloViewController.json", outlets);
+	#ifndef EXAMPLES
+	# define EXAMPLES "."
+	#endif
+
+	this->panel = (Panel *) $$(View, viewWithContentsOfFile, EXAMPLES"/HelloViewController.json", outlets);
+
 	$(self->view, addSubview, (View *) this->panel);
 
 	$((Control *) this->button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);

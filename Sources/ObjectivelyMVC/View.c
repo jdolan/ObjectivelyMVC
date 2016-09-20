@@ -237,11 +237,8 @@ static View *bindView(View **view, const Dictionary *dictionary) {
 		} else {
 			MVC_LogError("Class %s not found. Did you remember to _initialize it?\n", clazzName->chars);
 		}
-	} else {
-		assert(*view);
-
-		$(*view, awakeWithDictionary, dictionary);
-
+	} else if (view) {
+		$(cast(View, *view), awakeWithDictionary, dictionary);
 		return *view;
 	}
 
@@ -271,7 +268,7 @@ static _Bool bindSubviews(const Array *array, ident obj, ident data) {
 static void bind(View *self, const Dictionary *dictionary, const Inlet *inlets) {
 
 	const Inlet *inlet = inlets;
-	while (inlet->name) {
+	while (inlet && inlet->name) {
 
 		const ident obj = $(dictionary, objectForKeyPath, inlet->name);
 		if (obj) {
