@@ -90,10 +90,10 @@ static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
 	self = (Input *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 
-		self->control = $(alloc(Control), initWithFrame, NULL, ControlStyleDefault);
+		self->control = alloc(Control, initWithFrame, NULL, ControlStyleDefault);
 		assert(self->control);
 
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
+		self->label = alloc(Label, initWithText, NULL, NULL);
 		assert(self->label);
 
 		$((View *) self, addSubview, (View *) self->control);

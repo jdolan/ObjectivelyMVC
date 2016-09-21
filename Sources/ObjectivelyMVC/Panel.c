@@ -240,7 +240,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		self->stackView.spacing = DEFAULT_PANEL_SPACING;
 
-		self->contentView = $(alloc(StackView), initWithFrame, NULL);
+		self->contentView = alloc(StackView, initWithFrame, NULL);
 		assert(self->contentView);
 
 		self->contentView->spacing = DEFAULT_PANEL_SPACING;
@@ -248,7 +248,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		$(this, addSubview, (View *) self->contentView);
 
-		self->accessoryView = $(alloc(StackView), initWithFrame, NULL);
+		self->accessoryView = alloc(StackView, initWithFrame, NULL);
 		assert(self->accessoryView);
 
 		self->accessoryView->axis = StackViewAxisHorizontal;
@@ -259,7 +259,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		$(this, addSubview, (View *) self->accessoryView);
 
-		self->resizeHandle = $(alloc(ImageView), initWithImage, _resize);
+		self->resizeHandle = alloc(ImageView, initWithImage, _resize);
 		assert(self->resizeHandle);
 
 		self->resizeHandle->view.alignment = ViewAlignmentInternal;
@@ -297,8 +297,10 @@ static void initialize(Class *clazz) {
 	((PanelInterface *) clazz->interface)->contentSize = contentSize;
 	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
-	Data *resizeData = $(alloc(Data), initWithBytes, _resizeData, lengthof(_resizeData));
-	_resize = $(alloc(Image), initWithData, resizeData);
+	Data *resizeData = alloc(Data, initWithBytes, _resizeData, lengthof(_resizeData));
+
+	_resize = alloc(Image, initWithData, resizeData);
+
 	release(resizeData);
 }
 

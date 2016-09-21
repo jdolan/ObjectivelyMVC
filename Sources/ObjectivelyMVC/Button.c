@@ -124,7 +124,7 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 	self = (Button *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 		
-		self->title = $(alloc(Text), initWithText, NULL, NULL);
+		self->title = alloc(Text, initWithText, NULL, NULL);
 		assert(self->title);
 		
 		$((View *) self, addSubview, (View *) self->title);

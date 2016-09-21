@@ -17,7 +17,7 @@ Features
 ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight Object-oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you're' using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.
 
 ```c
-WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
+WindowController *windowController = alloc(WindowController, initWithWindow, window);
 ```
 
 ### Easily embeddable in any SDL2 / OpenGL application
@@ -39,7 +39,7 @@ Array *fonts = $$(Font, allFonts);
 ...
 release(fonts);
 ...
-Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will render at 48pt on Retina displays
+Font *verdana = alloc(Font, initWithAttributes, "Verdana", 24, 0); // will render at 48pt on Retina displays
 ```
 
 ### Full suite of Views and Controls
@@ -51,7 +51,7 @@ $((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_
 ```
 
 ```c
-Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
+Select *select = alloc(Select, initWithFrame, NULL, ControlStyleDefault);
 ...
 select->delegate.didSelectOption = my_callback;
 ```
