@@ -298,7 +298,9 @@ static void initialize(Class *clazz) {
 	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
 	Data *resizeData = alloc(Data, initWithBytes, _resizeData, lengthof(_resizeData));
+
 	_resize = alloc(Image, initWithData, resizeData);
+
 	release(resizeData);
 }
 

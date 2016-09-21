@@ -222,7 +222,9 @@ static void initialize(Class *clazz) {
 	((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
 	Data *checkData = alloc(Data, initWithBytes, _checkData, lengthof(_checkData));
+
 	_check = alloc(Image, initWithData, checkData);
+
 	release(checkData);
 }
 
