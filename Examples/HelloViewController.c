@@ -235,17 +235,6 @@ static void loadView(ViewController *self) {
 	$(this->collectionView, reloadData);
 }
 
-#pragma mark - HelloViewController
-
-/**
- * @fn HelloViewController *HelloViewController::init(HelloViewController *self)
- *
- * @memberof HelloViewController
- */
-static HelloViewController *init(HelloViewController *self) {
-	return (HelloViewController *) super(ViewController, self, init);
-}
-
 #pragma mark - Class lifecycle
 
 /**
@@ -254,9 +243,6 @@ static HelloViewController *init(HelloViewController *self) {
 static void initialize(Class *clazz) {
 
 	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
-
-	((HelloViewControllerInterface *) clazz->interface)->init = init;
-
 }
 
 Class _HelloViewController = {
