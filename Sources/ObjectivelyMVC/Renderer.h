@@ -23,10 +23,10 @@
 
 #pragma once
 
-#include <Objectively/MutableArray.h>
-
 #include <SDL2/SDL_video.h>
 #include <SDL2/SDL_opengl.h>
+
+#include <Objectively/MutableArray.h>
 
 /**
  * @file
@@ -45,14 +45,14 @@ typedef struct View View;
  * @extends Object
  */
 struct Renderer {
-	
+
 	/**
 	 * @brief The parent.
 	 *
 	 * @private
 	 */
 	Object object;
-	
+
 	/**
 	 * @brief The typed interface.
 	 *
@@ -70,7 +70,7 @@ struct Renderer {
  * @brief The Renderer interface.
  */
 struct RendererInterface {
-	
+
 	/**
 	 * @brief The parent interface.
 	 */

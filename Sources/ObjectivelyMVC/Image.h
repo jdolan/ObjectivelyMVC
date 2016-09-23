@@ -22,13 +22,13 @@
 
 #pragma once
 
-#include <Objectively/Data.h>
-
 #include <SDL2/SDL_video.h>
+
+#include <Objectively/Data.h>
 
 /**
  * @file
- * 
+ *
  * @brief Images.
  */
 
