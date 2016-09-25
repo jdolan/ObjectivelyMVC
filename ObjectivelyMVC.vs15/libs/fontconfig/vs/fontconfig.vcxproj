@@ -68,7 +68,7 @@
     <ClInclude Include="..\win32\include\unistd.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3A6F5F2F-287D-41D4-862C-D75540872574}</ProjectGuid>
+    <ProjectGuid>{E69A8597-88FE-4A17-AF6C-903A8215A4B0}</ProjectGuid>
     <RootNamespace>fontconfig</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
