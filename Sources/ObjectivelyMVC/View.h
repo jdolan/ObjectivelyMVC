@@ -27,6 +27,11 @@
 #include <SDL2/SDL_opengl.h>
 #include <SDL2/SDL_video.h>
 
+/**
+ * @brief Undefine interface for MinGW-64 / Windows.
+ */
+#undef interfaces
+
 #include <Objectively/Data.h>
 #include <Objectively/Enum.h>
 #include <Objectively/Dictionary.h>
@@ -174,7 +179,7 @@ typedef enum {
 	 * Otherwise, the existing View is simply visited with the View definition.
 	 */
 	InletTypeView,
-	
+
 } InletType;
 
 typedef struct Inlet Inlet;
@@ -252,27 +257,27 @@ struct View {
 	 * @private
 	 */
 	ViewInterface *interface;
-	
+
 	/**
 	 * @brief The alignment.
 	 */
 	ViewAlignment alignment;
-	
+
 	/**
 	 * @brief The ViewAutoresizing bitmask.
 	 */
 	int autoresizingMask;
-	
+
 	/**
 	 * @brief The background color.
 	 */
 	SDL_Color backgroundColor;
-	
+
 	/**
 	 * @brief The border color.
 	 */
 	SDL_Color borderColor;
-	
+
 	/**
 	 * @brief The border width.
 	 */
@@ -282,12 +287,12 @@ struct View {
 	 * @brief If true, subviews will be clipped to this View's frame.
 	 */
 	_Bool clipsSubviews;
-	
+
 	/**
 	 * @brief The frame, relative to the superview.
 	 */
 	SDL_Rect frame;
-	
+
 	/**
 	 * @brief If `true`, this View is not drawn.
 	 */
@@ -299,17 +304,17 @@ struct View {
 	 * @remarks Identifiers are commonly used to resolve outlets when loading Views via View.
 	 */
 	char *identifier;
-	
+
 	/**
 	 * @brief If true,
 	 */
 	_Bool needsLayout;
-	
+
 	/**
 	 * @brief The padding.
 	 */
 	ViewPadding padding;
-	
+
 	/**
 	 * @brief All contained views.
 	 */
@@ -404,7 +409,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*bind)(View *self, const Dictionary *dictionary, const Inlet *inlets);
-	
+
 	/**
 	 * @fn SDL_Rect View::bounds(const View *self)
 	 *
@@ -465,7 +470,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*didReceiveEvent)(const View *self, const SDL_Event *event);
-	
+
 	/**
 	 * @fn void View::draw(View *self, Renderer *renderer)
 	 *
@@ -473,9 +478,9 @@ struct ViewInterface {
 	 *
 	 * @param renderer The Renderer with which to draw.
 	 *
-	 * @remarks The default implementation of this method adds the View to the Renderer for the 
+	 * @remarks The default implementation of this method adds the View to the Renderer for the
 	 * current frame, and recurses its subviews. Actual drawing is performed in View::render.
-	 * 
+	 *
 	 * @see View::render(View *, Renderer *)
 	 *
 	 * @memberof View
@@ -521,7 +526,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	View *(*initWithFrame)(View *self, const SDL_Rect *frame);
-	
+
 	/**
 	 * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
 	 *
@@ -559,7 +564,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*layoutIfNeeded)(View *self);
-	
+
 	/**
 	 * @fn View::layoutSubviews(View *self)
 	 *
@@ -568,7 +573,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*layoutSubviews)(View *self);
-	
+
 	/**
 	 * @fn void View::removeFromSuperview(View *self)
 	 *
@@ -588,13 +593,13 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*removeSubview)(View *self, View *subview);
-	
+
 	/**
 	 * @fn void View::render(View *self, Renderer *renderer)
 	 *
 	 * @brief Renders this View using the given renderer.
 	 *
-	 * @remarks Subclasses should override this method to perform actual drawing operations. This 
+	 * @remarks Subclasses should override this method to perform actual drawing operations. This
 	 * method is called by `draw` as the View hierarchy is drawn.
 	 *
 	 * @memberof View
@@ -641,7 +646,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*resize)(View *self, const SDL_Size *size);
-	
+
 	/**
 	 * @fn void View::respondToEvent(View *self, const SDL_Event *event)
 	 *
@@ -695,7 +700,7 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*sizeToContain)(View *self);
-	
+
 	/**
 	 * @fn void View::sizeToFit(View *self)
 	 *

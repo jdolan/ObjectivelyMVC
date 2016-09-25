@@ -29,7 +29,7 @@
 
 #if defined(__APPLE__)
 #define DEFAULT_FONT_FAMILY "Helvetica Neue"
-#elif defined(__MINGW32__)
+#elif defined(__MINGW32__) || defined(_MSC_VER)
 #define DEFAULT_FONT_FAMILY "Verdana"
 #else
 #define DEFAULT_FONT_FAMILY "DejaVu Sans"

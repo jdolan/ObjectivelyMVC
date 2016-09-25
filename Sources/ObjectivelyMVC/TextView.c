@@ -103,7 +103,8 @@ static void render(View *self, Renderer *renderer) {
 	}
 	
 	if ($((Control *) this, focused)) {
-		text = text ?: "";
+		if (!text)
+			text = "";
 		
 		int w, h;
 		if (this->position == this->attributedText->string.length) {

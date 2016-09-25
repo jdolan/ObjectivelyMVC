@@ -21,7 +21,10 @@
  */
 
 #include <assert.h>
+
+#if !defined(_MSC_VER)
 #include <unistd.h>
+#endif
 
 #include <SDL2/SDL_image.h>
 
@@ -76,8 +79,8 @@ static Image *initWithData(Image *self, const Data *data) {
  */
 static Image *initWithName(Image *self, const char *name) {
 
-	char *path;
-	asprintf(&path, "%s/%s", getenv("OBJECTIVELYMVC_DATA_DIR") ?: PKGDATADIR, name);
+	char *path, *data_dir = getenv("OBJECTIVELYMVC_DATA_DIR");
+	asprintf(&path, "%s/%s", data_dir ? data_dir : PKGDATADIR, name);
 
 	MVC_LogDebug("%s\n", path);
 

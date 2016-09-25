@@ -260,6 +260,7 @@ static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_
 		int index;
 		switch (self->axis) {
 			case CollectionViewAxisVertical:
+			default:
 				index = row * cols + col;
 				break;
 			case CollectionViewAxisHorizontal:
