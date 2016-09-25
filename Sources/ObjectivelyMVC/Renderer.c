@@ -226,7 +226,7 @@ static void endFrame(const Renderer *self) {
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glDisable(GL_BLEND);
 
-	glColor3i(1, 1, 1);
+	glColor3f(1.0, 1.0, 1.0);
 
 	const GLenum err = glGetError();
 	if (err) {
