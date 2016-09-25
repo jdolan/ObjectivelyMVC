@@ -1,1 +1,0 @@
-copy vs\config.h.vs15 win32\include\config.h /Y
