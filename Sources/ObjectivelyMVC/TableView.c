@@ -574,7 +574,7 @@ static void selectAll(TableView *self) {
  */
 static IndexSet *selectedRowIndexes(const TableView *self) {
 
-	int *indexes = malloc(sizeof(int) * self->rows->array.count);
+	int *indexes = alloca(sizeof(int) * self->rows->array.count);
 	size_t count = 0;
 
 	const Array *rows = (Array *) self->rows;
@@ -587,10 +587,7 @@ static IndexSet *selectedRowIndexes(const TableView *self) {
 		}
 	}
 
-	IndexSet *set = alloc(IndexSet, initWithIndexes, indexes, count);
-	free(indexes);
-
-	return set;
+	return alloc(IndexSet, initWithIndexes, indexes, count);
 }
 
 /**
