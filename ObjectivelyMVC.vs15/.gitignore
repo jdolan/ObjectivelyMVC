@@ -1,0 +1,6 @@
+/tmp
+/bin
+/*.opendb
+/*.db
+/*.user
+*.suo
