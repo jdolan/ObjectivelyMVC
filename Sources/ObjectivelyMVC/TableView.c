@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <malloc.h>
 
 #include <Objectively/String.h>
 
