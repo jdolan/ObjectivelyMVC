@@ -99,7 +99,7 @@ static ident valueForColumnAndRow(const TableView *tableView, const TableColumn 
  */
 static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
 
-	TableCellView *cell = alloc(TableCellView, initWithFrame, NULL);
+	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
 	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
 
 	char text[8];
@@ -153,7 +153,7 @@ static ident objectForItemAtIndexPath(const CollectionView *collectionView, cons
  */
 static CollectionItemView *itemForObjectAtIndexPath(const CollectionView *collectionView, const IndexPath *indexPath) {
 
-	CollectionItemView *item = alloc(CollectionItemView, initWithFrame, NULL);
+	CollectionItemView *item = $(alloc(CollectionItemView), initWithFrame, NULL);
 
 	char text[64];
 	snprintf(text, sizeof(text), "%d", $(indexPath, indexAtPosition, 0));

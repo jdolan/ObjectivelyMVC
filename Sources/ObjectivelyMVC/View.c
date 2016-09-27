@@ -290,13 +290,13 @@ static void view_bind(View *self, const Dictionary *dictionary, const Inlet *inl
 					*((float *) inlet->dest) = cast(Number, obj)->value;
 					break;
 				case InletTypeFont:
-					*((Font **) inlet->dest) = alloc(Font, initWithName, cast(String, obj)->chars);
+					*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
 					break;
 				case InletTypeEnum:
 					*((int *) inlet->dest) = valueof(inlet->data, (cast(String, obj))->chars);
 					break;
 				case InletTypeImage:
-					*((Image **) inlet->dest) = alloc(Image, initWithName, cast(String, obj)->chars);
+					*((Image **) inlet->dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
 					break;
 				case InletTypeInteger:
 					*((int *) inlet->dest) = cast(Number, obj)->value;

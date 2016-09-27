@@ -215,7 +215,7 @@ static _Bool addOption_addOptions(const Array *array, ident obj, ident data) {
  */
 static void addOption(Select *self, const char *title, ident value) {
 	
-	Option *option = alloc(Option, initWithTitle, title, value);
+	Option *option = $(alloc(Option), initWithTitle, title, value);
 	assert(option);
 	
 	$(self->options, addObject, option);
@@ -250,7 +250,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 		self->options = $$(MutableArray, array);
 		assert(self->options);
 		
-		self->stackView = alloc(StackView, initWithFrame, NULL);
+		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
 		
 		$((View *) self, addSubview, (View *) self->stackView);
