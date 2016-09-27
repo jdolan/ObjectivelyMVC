@@ -265,7 +265,7 @@ static _Bool bindSubviews(const Array *array, ident obj, ident data) {
  *
  * @memberof View
  */
-static void view_bind(View *self, const Dictionary *dictionary, const Inlet *inlets) {
+static void _bind(View *self, const Dictionary *dictionary, const Inlet *inlets) {
 
 	const Inlet *inlet = inlets;
 	while (inlet && inlet->name) {
@@ -1125,7 +1125,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
-	((ViewInterface *) clazz->interface)->bind = view_bind;
+	((ViewInterface *) clazz->interface)->bind = _bind;
 	((ViewInterface *) clazz->interface)->bounds = bounds;
 	((ViewInterface *) clazz->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
 	((ViewInterface *) clazz->interface)->clippingFrame = clippingFrame;

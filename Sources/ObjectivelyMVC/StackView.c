@@ -82,7 +82,6 @@ static void layoutSubviews(View *self) {
 		int availableSize, requestedSize = 0;
 		switch (this->axis) {
 			case StackViewAxisVertical:
-			default:
 				availableSize = bounds.h;
 				break;
 			case StackViewAxisHorizontal:

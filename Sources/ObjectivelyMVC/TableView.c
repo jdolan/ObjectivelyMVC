@@ -22,7 +22,6 @@
  */
 
 #include <assert.h>
-#include <stdlib.h>
 
 #include <Objectively/String.h>
 
@@ -575,7 +574,7 @@ static void selectAll(TableView *self) {
  */
 static IndexSet *selectedRowIndexes(const TableView *self) {
 
-	int *indexes = alloca(sizeof(int) * self->rows->array.count);
+	int indexes[self->rows->array.count];
 	size_t count = 0;
 
 	const Array *rows = (Array *) self->rows;

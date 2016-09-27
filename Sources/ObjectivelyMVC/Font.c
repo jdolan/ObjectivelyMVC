@@ -122,7 +122,6 @@ static Font *defaultFont(FontCategory category) {
 	});
 
 	switch (category) {
-		default:
 		case FontCategoryDefault:
 		case FontCategoryPrimaryLabel:
 		case FontCategoryPrimaryControl:
