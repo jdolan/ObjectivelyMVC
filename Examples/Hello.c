@@ -21,22 +21,22 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#if defined(_MSC_VER)
-#define SDL_MAIN_HANDLED
-#endif
-
 #include <assert.h>
-
-#include <Objectively.h>
-#include <ObjectivelyMVC.h>
-
-#include "HelloViewController.h"
 
 #if defined(__APPLE__)
 #include <OpenGL/glu.h>
 #else
 #include <GL/glu.h>
 #endif
+
+#if defined(_MSC_VER)
+#define SDL_MAIN_HANDLED
+#endif
+
+#include <Objectively.h>
+#include <ObjectivelyMVC.h>
+
+#include "HelloViewController.h"
 
 static void drawScene(SDL_Window *window);
 

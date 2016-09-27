@@ -11,6 +11,7 @@ pkginclude_HEADERS = \
 	CollectionItemView.h \
 	CollectionView.h \
 	Colors.h \
+	Config.h \
 	Control.h \
 	Font.h \
 	Image.h \
