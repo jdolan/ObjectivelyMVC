@@ -229,7 +229,7 @@ static Action *actionForEvent(const Control *self, const SDL_Event *event) {
  */
 static void addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data) {
 	
-	Action *action = alloc(Action, initWithEventType, eventType, function, sender, data);
+	Action *action = $(alloc(Action), initWithEventType, eventType, function, sender, data);
 	
 	$(self->actions, addObject, action);
 	

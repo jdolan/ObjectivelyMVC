@@ -194,7 +194,7 @@ static void setImageWithSurface(ImageView *self, SDL_Surface *surface) {
 	$(self, setImage, NULL);
 
 	if (surface) {
-		Image *image = alloc(Image, initWithSurface, surface);
+		Image *image = $(alloc(Image), initWithSurface, surface);
 		assert(image);
 
 		$(self, setImage, image);

@@ -86,7 +86,7 @@ static ViewController *init(ViewController *self) {
  */
 static void loadView(ViewController *self) {
 
-	self->view = alloc(View, initWithFrame, NULL);
+	self->view = $(alloc(View), initWithFrame, NULL);
 	assert(self->view);
 
 	self->view->autoresizingMask = ViewAutoresizingFill;
