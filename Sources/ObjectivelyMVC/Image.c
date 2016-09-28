@@ -83,8 +83,8 @@ static Image *initWithData(Image *self, const Data *data) {
  */
 static Image *initWithName(Image *self, const char *name) {
 
-	char *path;
-	asprintf(&path, "%s/%s", getenv("OBJECTIVELYMVC_DATA_DIR") ?: PKGDATADIR, name);
+	char *path, *datadir = getenv("OBJECTIVELYMVC_DATA_DIR");
+	asprintf(&path, "%s/%s", datadir ? datadir : PKGDATADIR, name);
 
 	MVC_LogDebug("%s\n", path);
 
