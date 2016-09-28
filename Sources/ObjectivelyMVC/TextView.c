@@ -23,6 +23,7 @@
 
 #include <assert.h>
 
+#include <Objectively/Config.h>
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/TextView.h>

@@ -25,6 +25,8 @@
 
 #include <fontconfig/fontconfig.h>
 
+#include <Objectively/Config.h>
+
 #include <Objectively/MutableArray.h>
 #include <Objectively/Once.h>
 #include <Objectively/String.h>

@@ -30,7 +30,7 @@
 /**
  * @brief Undefine interface for MinGW-64 / Windows.
  */
-#undef interfaces
+#undef interface
 
 #include <Objectively/Data.h>
 #include <Objectively/Enum.h>

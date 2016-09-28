@@ -28,6 +28,8 @@
 
 #include <SDL2/SDL_image.h>
 
+#include <Objectively/Config.h>
+
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
 
