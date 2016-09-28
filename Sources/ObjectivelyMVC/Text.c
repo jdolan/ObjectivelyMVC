@@ -165,8 +165,7 @@ static SDL_Size naturalSize(const Text *self) {
  */
 static void setFont(Text *self, Font *font) {
 	
-	if (!font)
-		font = $$(Font, defaultFont, FontCategoryDefault);
+	font = font ?: $$(Font, defaultFont, FontCategoryDefault);
 	
 	if (font != self->font) {
 		

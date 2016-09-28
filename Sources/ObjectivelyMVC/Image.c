@@ -20,9 +20,11 @@
  *
  */
 
+#include <ObjectivelyMVC/Config.h>
+
 #include <assert.h>
 
-#if !defined(_MSC_VER)
+#if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
@@ -81,8 +83,8 @@ static Image *initWithData(Image *self, const Data *data) {
  */
 static Image *initWithName(Image *self, const char *name) {
 
-	char *path, *data_dir = getenv("OBJECTIVELYMVC_DATA_DIR");
-	asprintf(&path, "%s/%s", data_dir ? data_dir : PKGDATADIR, name);
+	char *path;
+	asprintf(&path, "%s/%s", getenv("OBJECTIVELYMVC_DATA_DIR") ?: PKGDATADIR, name);
 
 	MVC_LogDebug("%s\n", path);
 
