@@ -20,8 +20,13 @@
  *
  */
 
+#include <ObjectivelyMVC/Config.h>
+
 #include <assert.h>
+
+#if HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 
 #include <SDL2/SDL_image.h>
 

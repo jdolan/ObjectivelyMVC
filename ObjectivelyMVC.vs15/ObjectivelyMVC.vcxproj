@@ -1,0 +1,229 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{AD4CEB0F-306E-4D57-B579-503239939766}</ProjectGuid>
+    <RootNamespace>ObjectivelyMVC</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_clang_c2</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_clang_c2</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140_clang_c2</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140_clang_c2</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <OutDir>bin\Win$(PlatformArchitecture)$(Configuration)\</OutDir>
+    <IntDir>tmp\$(ProjectName)\Win$(PlatformArchitecture)$(Configuration)\</IntDir>
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <OutDir>bin\Win$(PlatformArchitecture)$(Configuration)\</OutDir>
+    <IntDir>tmp\$(ProjectName)\Win$(PlatformArchitecture)$(Configuration)\</IntDir>
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <OutDir>bin\Win$(PlatformArchitecture)$(Configuration)\</OutDir>
+    <IntDir>tmp\$(ProjectName)\Win$(PlatformArchitecture)$(Configuration)\</IntDir>
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <OutDir>bin\Win$(PlatformArchitecture)$(Configuration)\</OutDir>
+    <IntDir>tmp\$(ProjectName)\Win$(PlatformArchitecture)$(Configuration)\</IntDir>
+    <UseMultiToolTask>true</UseMultiToolTask>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4068;4996;4115;4706;4204;4244;4245;4100;4267;4305;4267;4018;4702;4311</DisableSpecificWarnings>
+      <CLanguageStandard>gnu99</CLanguageStandard>
+      <PreprocessorDefinitions>PTW32_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4068;4996;4115;4706;4204;4244;4245;4100;4267;4305;4267;4018;4702;4311</DisableSpecificWarnings>
+      <CLanguageStandard>gnu99</CLanguageStandard>
+      <PreprocessorDefinitions>PTW32_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4068;4996;4115;4706;4204;4244;4245;4100;4267;4305;4267;4018;4702;4311</DisableSpecificWarnings>
+      <CLanguageStandard>gnu99</CLanguageStandard>
+      <PreprocessorDefinitions>PTW32_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <DisableSpecificWarnings>4068;4996;4115;4706;4204;4244;4245;4100;4267;4305;4267;4018;4702;4311</DisableSpecificWarnings>
+      <CLanguageStandard>gnu99</CLanguageStandard>
+      <PreprocessorDefinitions>PTW32_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Action.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Box.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Button.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Checkbox.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionItemView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Font.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ImageView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Input.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Label.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Log.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\NavigationViewController.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Option.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\StackView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TableCellView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TableColumn.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TableHeaderCellView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TableHeaderView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TableRowView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TableView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Text.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TextView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Types.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\View.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ViewController.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\WindowController.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Button.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Checkbox.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionItemView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Colors.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Control.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Font.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Image.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ImageView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Input.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Label.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\NavigationViewController.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Option.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Slider.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\StackView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TableCellView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TableColumn.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TableHeaderCellView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TableHeaderView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TableRowView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TableView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Text.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TextView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\View.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ViewController.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\WindowController.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

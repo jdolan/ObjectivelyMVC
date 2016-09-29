@@ -21,13 +21,17 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <assert.h>
+
 #if defined(__APPLE__)
 #include <OpenGL/glu.h>
 #else
 #include <GL/glu.h>
 #endif
 
-#include <assert.h>
+#if defined(_MSC_VER)
+#define SDL_MAIN_HANDLED
+#endif
 
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>

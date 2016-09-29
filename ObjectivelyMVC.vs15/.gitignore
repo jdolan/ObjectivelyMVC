@@ -1,0 +1,7 @@
+/tmp
+/bin
+/*.opendb
+/*.db
+/*.user
+*.suo
+/ipch
