@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 
 	WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 
-	ViewController *viewController = $((ViewController *) _alloc(&_HelloViewController), init);
+	ViewController *viewController = $((ViewController *) alloc(HelloViewController), init);
 
 	$(windowController, setViewController, viewController);
 
