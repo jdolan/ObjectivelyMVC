@@ -23,8 +23,6 @@
 
 #include <assert.h>
 
-#include <Objectively/Config.h>
-
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Slider.h>
 

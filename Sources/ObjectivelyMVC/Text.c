@@ -23,8 +23,6 @@
 
 #include <assert.h>
 
-#include <Objectively/Config.h>
-
 #include <ObjectivelyMVC/Text.h>
 
 #define _Class _Text

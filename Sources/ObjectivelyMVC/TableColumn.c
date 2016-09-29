@@ -25,7 +25,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Objectively/Config.h>
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/TableColumn.h>
