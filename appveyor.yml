@@ -19,6 +19,20 @@ install:
     Pop-Location
 
     [Environment]::CurrentDirectory = $PWD
+
+    md -Path "..\Objectively"
+
+    Push-Location "..\Objectively\"
+
+    [Environment]::CurrentDirectory = $PWD
+
+    (New-Object System.Net.WebClient).DownloadFile("https://ci.appveyor.com/api/projects/Paril/objectively/artifacts/__dep.zip?job=Platform%3A+" + $env:PLATFORM, "tmp.zip")
+    7z e tmp.zip -aos "*"
+    Remove-Item "tmp.*"
+
+    Pop-Location
+
+    [Environment]::CurrentDirectory = $PWD
 build:
   parallel: true
   verbosity: minimal
