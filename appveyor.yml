@@ -28,7 +28,7 @@ install:
 
     (New-Object System.Net.WebClient).DownloadFile("https://ci.appveyor.com/api/projects/Paril/objectively/artifacts/__dep.zip?job=Platform%3A+" + $env:PLATFORM, "tmp.zip")
 
-    7z e tmp.zip -aos "*"
+    7z x tmp.zip -aos "*"
 
     Remove-Item "tmp.*"
 
