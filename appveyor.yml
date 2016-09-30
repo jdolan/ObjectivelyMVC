@@ -38,4 +38,14 @@ install:
 build:
   parallel: true
   verbosity: minimal
+after_build:
+- ps: >-
+    7z a __dep.zip -r *.h
+
+    7z a __dep.zip -r *.lib
+
+    7z a __dep.zip -r *.dll
 test: off
+deploy: off
+artifacts:
+- path: __dep.zip
