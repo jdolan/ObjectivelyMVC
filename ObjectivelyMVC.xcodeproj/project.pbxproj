@@ -58,6 +58,8 @@
 		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE14A8D01C68CE3C00B576FB /* Option.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CE1C68CE3C00B576FB /* Option.c */; };
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */ = {isa = PBXBuildFile; fileRef = CE1CCDA21D9E859F00891F05 /* View+JSON.c */; };
+		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; };
 		CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBA1D6876AB006DF143 /* NavigationViewController.c */; };
 		CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBB1D6876AB006DF143 /* NavigationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBE1D6A08DD006DF143 /* CollectionView.c */; };
@@ -174,6 +176,8 @@
 		CE14A8CB1C66D89900B576FB /* Select.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Select.h; sourceTree = "<group>"; };
 		CE14A8CE1C68CE3C00B576FB /* Option.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Option.c; sourceTree = "<group>"; };
 		CE14A8CF1C68CE3C00B576FB /* Option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Option.h; sourceTree = "<group>"; };
+		CE1CCDA21D9E859F00891F05 /* View+JSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "View+JSON.c"; sourceTree = "<group>"; };
+		CE1CCDA31D9E859F00891F05 /* View+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+JSON.h"; sourceTree = "<group>"; };
 		CE562EBA1D6876AB006DF143 /* NavigationViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NavigationViewController.c; sourceTree = "<group>"; };
 		CE562EBB1D6876AB006DF143 /* NavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationViewController.h; sourceTree = "<group>"; };
 		CE562EBE1D6A08DD006DF143 /* CollectionView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionView.c; sourceTree = "<group>"; };
@@ -319,6 +323,8 @@
 				CEF1D8BB1D4704950099A857 /* Types.h */,
 				CE12D4231C4C367100CD0B13 /* View.c */,
 				CE12D4241C4C367100CD0B13 /* View.h */,
+				CE1CCDA21D9E859F00891F05 /* View+JSON.c */,
+				CE1CCDA31D9E859F00891F05 /* View+JSON.h */,
 				CE12D4251C4C367100CD0B13 /* ViewController.c */,
 				CE12D4261C4C367100CD0B13 /* ViewController.h */,
 				CEF1D8AA1D4630D20099A857 /* WindowController.c */,
@@ -457,6 +463,7 @@
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
+				CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */,
 				CE6BC1831D837D550070FB2D /* Label.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
@@ -582,6 +589,7 @@
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE0943AC1D60FFEC00C11408 /* TableRowView.c in Sources */,
 				CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */,
+				CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */,
 				CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */,
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,

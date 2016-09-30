@@ -39,7 +39,7 @@
 
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Renderer.h>
-#include <ObjectivelyMVC/Types.h>
+#include <ObjectivelyMVC/View+JSON.h>
 
 /**
  * @file
@@ -101,154 +101,6 @@ typedef enum {
 	ViewPositionBefore = -1,
 	ViewPositionAfter = 1
 } ViewPosition;
-
-/**
- * @brief Inlet type constants.
- */
-typedef enum {
-
-	/**
-	 * @remarks Inlet destination must be of type `Bool *`.
-	 */
-	InletTypeBool,
-
-	/**
-	 * @remarks Inlet destination must be of type `char **`. The inbound C string is copied via
-	 * `strdup`, and thus the receiver should `free` it when it is no longer needed.
-	 */
-	InletTypeCharacters,
-
-	/**
-	 * @remarks Inlet destination must be of type `SDL_Color *`.
-	 */
-	InletTypeColor,
-
-	/**
-	 * @remarks Inlet destination must be of type `double *`.
-	 */
-	InletTypeDouble,
-
-	/**
-	 * @remarks Inlet destination must be of an `enum *` type. Inlet data must provide a null-
-	 * terminated array of EnumNames.
-	 *
-	 * @see valueof
-	 * @see MakeEnumNames
-	 */
-	InletTypeEnum,
-
-	/**
-	 * @remarks Inlet destination must be of type `float *`.
-	 */
-	InletTypeFloat,
-
-	/**
-	 * @remarks Inlet destination must be of type `Font **`.
-	 */
-	InletTypeFont,
-
-	/**
-	 * @remarks Inlet destination must be of type `Image **`.
-	 */
-	InletTypeImage,
-
-	/**
-	 * @remarks Inlet destination must be of type `int *`.
-	 */
-	InletTypeInteger,
-
-	/**
-	 * @remarks Inlet destination must be of type `SDL_Rect *`.
-	 */
-	InletTypeRectangle,
-
-	/**
-	 * @remarks Inlet destination must be of type `SDL_Size *`.
-	 */
-	InletTypeSize,
-
-	/**
-	 * @remarks Inlet destination must be of type `View **` The subviews of the specified View are
-	 * populated from the bound array of View definitions.
-	 */
-	InletTypeSubviews,
-
-	/**
-	 * @remarks Inlet destination must be of type `View **`. If the inbound View definition includes
-	 * a `"class"` designation, the existing View is replaced in its View hierarchy, and released.
-	 * Otherwise, the existing View is simply visited with the View definition.
-	 */
-	InletTypeView,
-
-	/**
-	 * @remarks Inlet destination is of an application-defined type. The Inlet data must provide
-	 * an InletBinding function. That function is responsible for populating the Inlet destination.
-	 */
-	InletTypeApplicationDefined,
-
-} InletType;
-
-typedef struct Inlet Inlet;
-
-/**
- * @brief A function pointer for Inlet binding.
- *
- * @param inlet The Inlet.
- * @param obj The Object resolved from the JSON Dictionary.
- *
- * @remarks For Inlets of type InletTypeApplicationDefined, applications must provide a pointer to
- * a function of this prototype as their Inlet's data. ObjectivelyMVC will invoke the function to
- * resolve the JSON data binding.
- */
-typedef void (*InletBinding)(const Inlet *inlet, ident obj);
-
-/**
- * @brief Inlets enable inbound data binding of View attributes through JSON.
- *
- * @see View::bind(View *, const Dictionary *, const Inlet *)
- */
-struct Inlet {
-
-	/**
-	 * @brief The Inlet name, e.g. `"alignment"`.
-	 */
-	const char *name;
-
-	/**
-	 * @brief The InletType, e.g. InletTypeEnum.
-	 */
-	InletType type;
-
-	/**
-	 * @brief The Inlet destination.
-	 */
-	ident dest;
-
-	/**
-	 * @brief Type-specific data, e.g. an array of EnumNames.
-	 */
-	ident data;
-};
-
-typedef struct Outlet Outlet;
-
-/**
- * @brief Outlets enable outbound data binding of Views through JSON.
- *
- * @see View::viewWithDictionary(const Dictionary *, Outlet *)
- */
-struct Outlet {
-
-	/**
-	 * @brief The View identifier.
-	 */
-	const char *identifier;
-
-	/**
-	 * @brief The output storage for the resolved View.
-	 */
-	View **view;
-};
 
 typedef struct ViewInterface ViewInterface;
 
@@ -472,7 +324,9 @@ struct ViewInterface {
 	/**
 	 * @fn int View::depth(const View *self)
 	 *
-	 * @return The depth of this View (ancestors + `zIndex`).
+	 * @return The depth of this View (`ancestor depth + zIndex + 1`).
+	 *
+	 * @remarks This method is called by Renderer::render to sort Views and enforce draw order.
 	 *
 	 * @memberof View
 	 */
@@ -524,7 +378,8 @@ struct ViewInterface {
 	 * @return The initialized View, or `NULL` on error.
 	 *
 	 * @remarks View::viewWithDictionary invokes this initializer when loading Views. Subclasses
-	 * wishing to support View _must_ override this method to call their designated initializer.
+	 * wishing to support JSON binding _must_ override this method to call their designated
+	 * initializer.
 	 *
 	 * @memberof View
 	 */
@@ -847,32 +702,3 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
  */
 double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
 
-/**
- * @brief Creates an Inlet with the specified parameters.
- */
-#define MakeInlet(name, type, dest, data) \
-	{ (name), (type), (dest), (data) }
-
-/**
- * @brief Creates a null-termianted array of Inlets.
- */
-#define MakeInlets(...) \
-	{ \
-		__VA_ARGS__, \
-		MakeInlet(NULL, -1, NULL, NULL) \
-	}
-
-/**
- * @brief Creates an Outlet with the specified parameters.
- */
-#define MakeOutlet(identifier, view) \
-	{ (identifier), (View **) (view) }
-
-/**
- * @brief Creates a null-termianted array of Outlets.
- */
-#define MakeOutlets(...) \
-	{ \
-		__VA_ARGS__, \
-		MakeOutlet(NULL, NULL) \
-	}

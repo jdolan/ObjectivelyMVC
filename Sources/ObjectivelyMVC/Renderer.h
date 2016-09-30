@@ -28,6 +28,8 @@
 
 #include <Objectively/MutableArray.h>
 
+#include <ObjectivelyMVC/Types.h>
+
 /**
  * @file
  *
@@ -36,8 +38,6 @@
 
 typedef struct Renderer Renderer;
 typedef struct RendererInterface RendererInterface;
-
-typedef struct View View;
 
 /**
  * @brief The Renderer type.
