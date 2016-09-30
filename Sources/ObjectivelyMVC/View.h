@@ -129,7 +129,7 @@ typedef enum {
 	InletTypeDouble,
 
 	/**
-	 * @remarks Inlet destination must be of an `enum` type. Inlet data must provide a null-
+	 * @remarks Inlet destination must be of an `enum *` type. Inlet data must provide a null-
 	 * terminated array of EnumNames.
 	 *
 	 * @see valueof
@@ -180,9 +180,27 @@ typedef enum {
 	 */
 	InletTypeView,
 
+	/**
+	 * @remarks Inlet destination is of an application-defined type. The Inlet data must provide
+	 * an InletBinding function. That function is responsible for populating the Inlet destination.
+	 */
+	InletTypeApplicationDefined,
+
 } InletType;
 
 typedef struct Inlet Inlet;
+
+/**
+ * @brief A function pointer for Inlet binding.
+ *
+ * @param inlet The Inlet.
+ * @param obj The Object resolved from the JSON Dictionary.
+ *
+ * @remarks For Inlets of type InletTypeApplicationDefined, applications must provide a pointer to
+ * a function of this prototype as their Inlet's data. ObjectivelyMVC will invoke the function to
+ * resolve the JSON data binding.
+ */
+typedef void (*InletBinding)(const Inlet *inlet, ident obj);
 
 /**
  * @brief Inlets enable inbound data binding of View attributes through JSON.
