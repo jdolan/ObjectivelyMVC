@@ -37,7 +37,6 @@ static void dealloc(Object *self) {
 	ViewController *this = (ViewController *) self;
 	
 	release(this->childViewControllers);
-	
 	release(this->view);
 
 	super(Object, self, dealloc);

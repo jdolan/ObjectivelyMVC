@@ -26,6 +26,11 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_pixels.h>
 
+/**
+ * @brief Undefine interface for MinGW-64 / Windows.
+ */
+#undef interface
+
 typedef struct View View;
 
 typedef struct SDL_Size SDL_Size;

@@ -23,9 +23,9 @@
 
 #pragma once
 
-#include <SDL2/SDL_events.h>
-
 #include <Objectively/Object.h>
+
+#include <ObjectivelyMVC/Types.h>
 
 /**
  * @file

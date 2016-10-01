@@ -27,11 +27,6 @@
 #include <SDL2/SDL_opengl.h>
 #include <SDL2/SDL_video.h>
 
-/**
- * @brief Undefine interface for MinGW-64 / Windows.
- */
-#undef interface
-
 #include <Objectively/Data.h>
 #include <Objectively/Enum.h>
 #include <Objectively/Dictionary.h>
