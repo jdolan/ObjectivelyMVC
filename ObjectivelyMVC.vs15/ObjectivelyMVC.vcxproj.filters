@@ -114,6 +114,9 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\WindowController.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\View+JSON.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c">
@@ -210,6 +213,9 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\WindowController.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\View+JSON.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
   </ItemGroup>

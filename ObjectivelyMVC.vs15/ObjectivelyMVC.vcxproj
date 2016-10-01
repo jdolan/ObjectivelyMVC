@@ -185,6 +185,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Text.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TextView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Types.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\View+JSON.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\View.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ViewController.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\WindowController.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Text.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TextView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\View+JSON.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\View.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ViewController.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\WindowController.c" />
