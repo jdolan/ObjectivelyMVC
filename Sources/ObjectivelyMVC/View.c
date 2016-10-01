@@ -179,16 +179,16 @@ static void becomeFirstResponder(View *self) {
  */
 static void _bind(View *self, const Dictionary *dictionary, const Inlet *inlets) {
 
-	const Inlet *inlet = inlets;
-	while (inlet && inlet->name) {
-
-		const ident obj = $(dictionary, objectForKeyPath, inlet->name);
-		if (obj) {
-			BindInlet(inlet, obj);
+	if (inlets) {
+		for (const Inlet *inlet = inlets; inlet->name; inlet++) {
+			const ident obj = $(dictionary, objectForKeyPath, inlet->name);
+			if (obj) {
+				BindInlet(inlet, obj);
+			}
 		}
-		
-		inlet++;
 	}
+
+	$(self, updateBindings);
 }
 
 /**
@@ -908,8 +908,10 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
 	BindInlet(&MakeInlet(NULL, InletTypeView, &view, NULL), (ident) dictionary);
 
-	for (const Outlet *outlet = outlets; outlet->identifier; outlet++) {
-		assert(*outlet->view);
+	if (outlets) {
+		for (const Outlet *outlet = outlets; outlet->identifier; outlet++) {
+			assert(*outlet->view);
+		}
 	}
 
 	return view;
