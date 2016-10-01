@@ -187,8 +187,8 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 /**
  * @brief ArrayEnumerator for all item deselection.
  */
-static _Bool deselectAll_enumerate(const Array *array, ident obj, ident data) {
-	$((CollectionItemView *) obj, setSelected, false); return false;
+static void deselectAll_enumerate(const Array *array, ident obj, ident data) {
+	$((CollectionItemView *) obj, setSelected, false);
 }
 
 /**
@@ -218,8 +218,8 @@ static void deselectItemAtIndexPath(CollectionView *self, const IndexPath *index
 /**
  * @brief ArrayEnumerator for item deselection.
  */
-static _Bool deselectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ident data) {
-	$((CollectionItemView *) obj, setSelected, false); return false;
+static void deselectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ident data) {
+	$((CollectionItemView *) obj, setSelected, false);
 }
 
 /**
@@ -364,8 +364,8 @@ static CollectionItemView *itemAtIndexPath(const CollectionView *self, const Ind
 /**
  * @brief ArrayEnumerator to remove CollectionItemViews from the collection's contentView.
  */
-static _Bool reloadData_removeItems(const Array *array, ident obj, ident data) {
-	$((View *) data, removeSubview, (View *) obj); return false;
+static void reloadData_removeItems(const Array *array, ident obj, ident data) {
+	$((View *) data, removeSubview, (View *) obj);
 }
 
 /**
@@ -402,8 +402,8 @@ static void reloadData(CollectionView *self) {
 /**
  * @brief ArrayEnumerator for all item selection.
  */
-static _Bool selectAll_enumerate(const Array *array, ident obj, ident data) {
-	$((CollectionItemView *) obj, setSelected, true); return false;
+static void selectAll_enumerate(const Array *array, ident obj, ident data) {
+	$((CollectionItemView *) obj, setSelected, true);
 }
 
 /**
@@ -458,8 +458,8 @@ static void selectItemAtIndexPath(CollectionView *self, const IndexPath *indexPa
 /**
  * @brief ArrayEnumerator for item selection.
  */
-static _Bool selectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ident data) {
-	$((CollectionView *) data, selectItemAtIndexPath, (IndexPath *) obj); return false;
+static void selectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ident data) {
+	$((CollectionView *) data, selectItemAtIndexPath, (IndexPath *) obj);
 }
 
 /**

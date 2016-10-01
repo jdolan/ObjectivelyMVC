@@ -135,8 +135,8 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 /**
  * @brief ArrayEnumerator to remove TableCellViews from the row.
  */
-static _Bool removeAllCells_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) obj, removeFromSuperview); return false;
+static void removeAllCells_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) obj, removeFromSuperview);
 }
 
 /**

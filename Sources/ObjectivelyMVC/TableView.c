@@ -52,7 +52,7 @@ static void dealloc(Object *self) {
 /**
  * @brief ArrayEnumerator for awaking TableColumns.
  */
-static _Bool awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
+static void awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
 
 	const String *identifier = $(cast(Dictionary, obj), objectForKeyPath, "identifier");
 	assert(identifier);
@@ -71,7 +71,6 @@ static _Bool awakeWithDictionary_columns(const Array *array, ident obj, ident da
 	$((TableView *) data, addColumn, column);
 
 	release(column);
-	return false;
 }
 
 /**
@@ -297,8 +296,8 @@ static TableColumn *columnWithIdentifier(const TableView *self, const char *iden
 /**
  * @brief ArrayEnumerator for all Row deselection.
  */
-static _Bool deselectAll_enumerate(const Array *array, ident obj, ident data) {
-	$((TableRowView *) obj, setSelected, false); return false;
+static void deselectAll_enumerate(const Array *array, ident obj, ident data) {
+	$((TableRowView *) obj, setSelected, false);
 }
 
 /**
@@ -396,8 +395,8 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 /**
  * @brief ArrayEnumerator to remove TableRowViews from the table's contentView.
  */
-static _Bool reloadData_removeRows(const Array *array, ident obj, ident data) {
-	$((View *) data, removeSubview, (View *) obj); return false;
+static void reloadData_removeRows(const Array *array, ident obj, ident data) {
+	$((View *) data, removeSubview, (View *) obj);
 }
 
 static __thread TableView *_sortTableView;
@@ -435,8 +434,8 @@ static Order reloadData_sortRows(const ident a, const ident b) {
 /**
  * @brief ArrayEnumerator to add TableRowViews to the table's contentView.
  */
-static _Bool reloadData_addRows(const Array *array, ident obj, ident data) {
-	$((View *) data, addSubview, (View *) obj); return false;
+static void reloadData_addRows(const Array *array, ident obj, ident data) {
+	$((View *) data, addSubview, (View *) obj);
 }
 
 /**
@@ -554,8 +553,8 @@ static SDL_Rect scrollableArea(const TableView *self) {
 /**
  * @brief ArrayEnumerator for all row selection.
  */
-static _Bool selectAll_enumerate(const Array *array, ident obj, ident data) {
-	$((TableRowView *) obj, setSelected, true); return false;
+static void selectAll_enumerate(const Array *array, ident obj, ident data) {
+	$((TableRowView *) obj, setSelected, true);
 }
 
 /**

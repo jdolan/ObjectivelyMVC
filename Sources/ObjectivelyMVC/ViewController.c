@@ -94,7 +94,10 @@ static void loadView(ViewController *self) {
 	SDL_Window *window = $(self->view, window);
 	assert(window);
 
-	SDL_GetWindowSize(window, &self->view->frame.w, &self->view->frame.h);
+	SDL_Size size;
+	SDL_GetWindowSize(window, &size.w, &size.h);
+
+	$(self->view, resize, &size);
 }
 
 /**
@@ -144,16 +147,6 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
 
 	if (self->view) {
-
-		if (event->type == SDL_WINDOWEVENT) {
-			if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-				if (self->view->autoresizingMask & ViewAutoresizingFill) {
-					const SDL_Size size = MakeSize(event->window.data1, event->window.data2);
-					$(self->view, resize, &size);
-				}
-			}
-		}
-
 		$(self->view, respondToEvent, event);
 	}
 }

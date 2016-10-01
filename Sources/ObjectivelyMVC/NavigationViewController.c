@@ -44,14 +44,12 @@ static NavigationViewController *init(NavigationViewController *self) {
 /**
  * @brief ArrayEnumerator for pushViewController.
  */
-static _Bool pushViewController_enumerate(const Array *array, ident obj, ident data) {
+static void pushViewController_enumerate(const Array *array, ident obj, ident data) {
 
 	ViewController *this = (ViewController *) data;
 	ViewController *that = (ViewController *) obj;
 
 	$(this->view, removeSubview, that->view);
-
-	return false;
 }
 
 /**

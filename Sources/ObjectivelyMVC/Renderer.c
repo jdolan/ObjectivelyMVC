@@ -276,7 +276,7 @@ static Order render_sort(const ident a, const ident b) {
 /**
  * @brief ArrayEnumerator for rendering Views.
  */
-static _Bool render_renderView(const Array *array, ident obj, ident data) {
+static void render_renderView(const Array *array, ident obj, ident data) {
 
 	View *view = (View *) obj;
 
@@ -289,8 +289,6 @@ static _Bool render_renderView(const Array *array, ident obj, ident data) {
 
 		$(view, render, (Renderer *) data);
 	}
-
-	return false;
 }
 
 /**

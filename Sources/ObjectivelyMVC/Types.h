@@ -51,13 +51,3 @@ struct SDL_Size {
  * @brief Creates an SDL_Size with the given dimensions.
  */
 #define MakeSize(w, h) (SDL_Size) { (w), (h) }
-
-/**
- * @remarks Push this SDL_EventType to prompt `View::renderDeviceReset`.
- */
-extern Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
-
-/**
- * @remarks Push this SDL_EventType to prompt `View::updateBindings`.
- */
-extern Uint32 MVC_EVENT_UPDATE_BINDINGS;

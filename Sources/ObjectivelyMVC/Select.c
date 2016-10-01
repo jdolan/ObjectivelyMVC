@@ -197,15 +197,15 @@ static void stateDidChange(Control *self) {
 /**
  * @brief ArrayEnumerator to remove Options from the Select's StackView.
  */
-static _Bool addOption_removeOptions(const Array *array, ident obj, ident data) {
-	$((View *) data, removeSubview, (View *) obj); return false;
+static void addOption_removeOptions(const Array *array, ident obj, ident data) {
+	$((View *) data, removeSubview, (View *) obj);
 }
 
 /**
  * @brief ArrayEnumerator to add Options to the Select's StacKView.
  */
-static _Bool addOption_addOptions(const Array *array, ident obj, ident data) {
-	$((View *) data, addSubview, (View *) obj); return false;
+static void addOption_addOptions(const Array *array, ident obj, ident data) {
+	$((View *) data, addSubview, (View *) obj);
 }
 
 /**
@@ -294,8 +294,8 @@ static Option *optionWithValue(const Select *self, const ident value) {
 /**
  * @brief ArrayEnumerator for removeAllOptions.
  */
-static _Bool removeAllOptions_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) obj, removeFromSuperview); return false;
+static void removeAllOptions_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) obj, removeFromSuperview);
 }
 
 /**

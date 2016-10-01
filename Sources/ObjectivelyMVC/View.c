@@ -49,9 +49,6 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 	MakeEnumName(ViewAutoresizingContain)
 );
 
-Uint32 MVC_EVENT_RENDER_DEVICE_RESET;
-Uint32 MVC_EVENT_UPDATE_BINDINGS;
-
 static View *_firstResponder;
 
 static __thread Outlet *_outlets;
@@ -342,8 +339,8 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 /**
  * @brief ArrayEnumerator for draw recursion.
  */
-static _Bool draw_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, draw, (Renderer *) data); return false;
+static void draw_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, draw, (Renderer *) data);
 }
 
 /**
@@ -450,8 +447,8 @@ static _Bool isVisible(const View *self) {
 /**
  * @brief ArrayEnumerator for layoutIfNeeded recursion.
  */
-static _Bool layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, layoutIfNeeded); return false;
+static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, layoutIfNeeded);
 }
 
 /**
@@ -612,12 +609,19 @@ static void render(View *self, Renderer *renderer) {
 }
 
 /**
+ * @brief ArrayEnumerator for renderDeviceDidReset recursion.
+ */
+static void renderDeviceDidReset_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, renderDeviceDidReset);
+}
+
+/**
  * @fn void View::renderDeviceDidReset(View *self)
  *
  * @memberof View
  */
 static void renderDeviceDidReset(View *self) {
-
+	$((Array *) self->subviews, enumerateObjects, renderDeviceDidReset_recurse, NULL);
 }
 
 /**
@@ -663,7 +667,7 @@ static void resignFirstResponder(View *self) {
 ///**
 // * @brief ArrayEnumerator for resize recursion.
 // */
-//static _Bool resize_recurse(const Array *array, ident obj, ident data) {
+//static void resize_recurse(const Array *array, ident obj, ident data) {
 //
 //	View *subview = (View *) obj;
 //
@@ -684,8 +688,6 @@ static void resignFirstResponder(View *self) {
 //	}
 //
 //	$(subview, resize, &size);
-//
-//	return false;
 //}
 
 /**
@@ -707,8 +709,8 @@ static void resize(View *self, const SDL_Size *size) {
 /**
  * @brief ArrayEnumerator for respondToEvent recursion.
  */
-static _Bool respondToEvent_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, respondToEvent, (const SDL_Event *) data); return false;
+static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, respondToEvent, (const SDL_Event *) data);
 }
 
 /**
@@ -720,10 +722,14 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 	assert(event);
 
-	if (event->type == MVC_EVENT_RENDER_DEVICE_RESET) {
-		$(self, renderDeviceDidReset);
-	} else if (event->type == MVC_EVENT_UPDATE_BINDINGS) {
-		$(self, updateBindings);
+	if (event->type == SDL_WINDOWEVENT) {
+		if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+			if (self->superview == NULL) {
+				if (self->autoresizingMask & ViewAutoresizingFill) {
+					$(self, resize, &MakeSize(event->window.data1, event->window.data2));
+				}
+			}
+		}
 	}
 
 	$((Array *) self->subviews, enumerateObjects, respondToEvent_recurse, (ident) event);
@@ -824,12 +830,19 @@ static void sizeToFit(View *self) {
 }
 
 /**
+ * @brief ArrayEnumerator for updateBindings recursion.
+ */
+static void updateBindings_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, updateBindings);
+}
+
+/**
  * @fn void View::updateBindings(View *self)
  *
  * @memberof View
  */
 static void updateBindings(View *self) {
-
+	$((Array *) self->subviews, enumerateObjects, updateBindings_recurse, NULL);
 }
 
 /**
@@ -906,7 +919,7 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
 	View *view = NULL;
 
-	BindInlet(&MakeInlet(NULL, InletTypeView, &view, NULL), (ident) dictionary);
+	BindInlet(&MakeInlet(NULL, InletTypeView, &view, NULL), dictionary);
 
 	if (outlets) {
 		for (const Outlet *outlet = outlets; outlet->identifier; outlet++) {
@@ -995,9 +1008,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->viewWithDictionary = viewWithDictionary;
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->window = window;
-
-	MVC_EVENT_RENDER_DEVICE_RESET = SDL_RegisterEvents(1);
-	MVC_EVENT_UPDATE_BINDINGS = SDL_RegisterEvents(1);
 }
 
 Class _View = {

@@ -192,7 +192,7 @@ static void bindView(const Inlet *inlet, ident obj) {
 /**
  * @brief ArrayEnumerator for bind subview recursion.
  */
-static _Bool bindSubviews_enumerate(const Array *array, ident obj, ident data) {
+static void bindSubviews_enumerate(const Array *array, ident obj, ident data) {
 
 	View *subview = NULL;
 
@@ -203,8 +203,6 @@ static _Bool bindSubviews_enumerate(const Array *array, ident obj, ident data) {
 	$(cast(View, data), addSubview, subview);
 
 	release(subview);
-
-	return false;
 }
 
 /**

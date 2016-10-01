@@ -84,6 +84,10 @@ static void setViewController(WindowController *self, ViewController *viewContro
 		} else {
 			self->viewController = NULL;
 		}
+
+		if (self->viewController) {
+			$(self->viewController, loadViewIfNeeded);
+		}
 	}
 }
 
