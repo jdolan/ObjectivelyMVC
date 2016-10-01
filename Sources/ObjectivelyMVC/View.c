@@ -722,11 +722,17 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 	assert(event);
 
-	if (event->type == SDL_WINDOWEVENT) {
-		if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-			if (self->superview == NULL) {
+	if (self->superview == NULL) {
+		if (event->type == SDL_WINDOWEVENT) {
+			if (event->window.event == SDL_WINDOWEVENT_SHOWN
+				|| event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+
 				if (self->autoresizingMask & ViewAutoresizingFill) {
-					$(self, resize, &MakeSize(event->window.data1, event->window.data2));
+
+					SDL_Size size;
+					SDL_GetWindowSize($(self, window), &size.w, &size.h);
+
+					$(self, resize, &size);
 				}
 			}
 		}
