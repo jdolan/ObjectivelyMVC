@@ -70,26 +70,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
-    <OutDir>bin\Win$(PlatformArchitecture)$(Configuration)\</OutDir>
-    <IntDir>tmp\$(ProjectName)\Win$(PlatformArchitecture)$(Configuration)\</IntDir>
+    <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
-    <OutDir>bin\Win$(PlatformArchitecture)$(Configuration)\</OutDir>
-    <IntDir>tmp\$(ProjectName)\Win$(PlatformArchitecture)$(Configuration)\</IntDir>
+    <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
-    <OutDir>bin\Win$(PlatformArchitecture)$(Configuration)\</OutDir>
-    <IntDir>tmp\$(ProjectName)\Win$(PlatformArchitecture)$(Configuration)\</IntDir>
+    <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
-    <OutDir>bin\Win$(PlatformArchitecture)$(Configuration)\</OutDir>
-    <IntDir>tmp\$(ProjectName)\Win$(PlatformArchitecture)$(Configuration)\</IntDir>
+    <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
+    <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
