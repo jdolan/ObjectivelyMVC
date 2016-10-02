@@ -35,20 +35,19 @@ typedef struct Text Text;
 typedef struct TextInterface TextInterface;
 
 /**
- * @brief The Text type.
+ * @brief Text rendered with TrueType fonts.
  * @extends View
  */
 struct Text {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	View view;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	TextInterface *interface;
 	

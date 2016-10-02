@@ -39,7 +39,7 @@ typedef struct Option Option;
 typedef struct OptionInterface OptionInterface;
 
 /**
- * @brief The Option type.
+ * @brief Select Options.
  * @extends View
  * @ingroup Controls
  */
@@ -47,13 +47,12 @@ struct Option {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	View view;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	OptionInterface *interface;
 	

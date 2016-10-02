@@ -100,13 +100,12 @@ struct TableView {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Control control;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	TableViewInterface *interface;
 

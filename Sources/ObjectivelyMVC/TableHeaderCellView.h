@@ -42,13 +42,12 @@ struct TableHeaderCellView {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	TableCellView tableCellView;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	TableHeaderCellViewInterface *interface;
 };

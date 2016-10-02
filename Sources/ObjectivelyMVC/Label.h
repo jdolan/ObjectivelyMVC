@@ -41,13 +41,12 @@ struct Label {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	View view;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	LabelInterface *interface;
 

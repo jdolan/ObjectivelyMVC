@@ -60,13 +60,12 @@ struct Input {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	StackView stackView;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	InputInterface *interface;
 	

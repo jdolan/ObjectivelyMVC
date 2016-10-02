@@ -32,27 +32,26 @@
 
 /**
  * @file
- * @brief The OpenGL renderer.
+ * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
  */
 
 typedef struct Renderer Renderer;
 typedef struct RendererInterface RendererInterface;
 
 /**
- * @brief The Renderer type.
+ * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
  * @extends Object
  */
 struct Renderer {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Object object;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	RendererInterface *interface;
 

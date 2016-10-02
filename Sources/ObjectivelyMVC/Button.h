@@ -27,8 +27,7 @@
 
 /**
  * @file
- * 
- * @brief Buttons
+ * @brief Buttons are Controls that respond to click events.
  */
 
 typedef struct Button Button;
@@ -37,7 +36,7 @@ typedef struct ButtonInterface ButtonInterface;
 #define DEFAULT_BUTTON_MIN_WIDTH 100
 
 /**
- * @brief The Button type.
+ * @brief Buttons are Controls that respond to click events.
  * @extends Control
  * @ingroup Controls
  */
@@ -45,13 +44,12 @@ struct Button {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	ButtonInterface *interface;
 	

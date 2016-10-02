@@ -44,13 +44,12 @@ struct NavigationViewController {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	ViewController viewController;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	NavigationViewControllerInterface *interface;
 };

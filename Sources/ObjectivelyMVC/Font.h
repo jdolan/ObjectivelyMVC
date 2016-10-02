@@ -37,7 +37,6 @@
 
 /**
  * @file
- * 
  * @brief TrueType fonts.
  */
 
@@ -58,20 +57,19 @@ typedef struct Font Font;
 typedef struct FontInterface FontInterface;
 
 /**
- * @brief The Font type.
+ * @brief TrueType fonts.
  * @extends Object
  */
 struct Font {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Object object;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	FontInterface *interface;
 	

@@ -45,13 +45,12 @@ struct TableRowView {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	StackView stackView;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	TableRowViewInterface *interface;
 

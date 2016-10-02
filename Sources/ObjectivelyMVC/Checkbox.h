@@ -29,8 +29,7 @@
 
 /**
  * @file
- * 
- * @brief Checkboxes.
+ * @brief Checkboxes are toggle Controls that respond to click events.
  */
 
 typedef struct Checkbox Checkbox;
@@ -40,7 +39,7 @@ typedef struct CheckboxInterface CheckboxInterface;
 #define DEFAULT_CHECKBOX_SIZE 18
 
 /**
- * @brief The Checkbox type.
+ * @brief Checkboxes are toggle Controls that respond to click events.
  * @extends Control
  * @ingroup Controls
  */
@@ -48,13 +47,12 @@ struct Checkbox {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	CheckboxInterface *interface;
 

@@ -28,7 +28,7 @@
 
 /**
  * @file
- * @brief Sliders.
+ * @brief A Control allowing users to drag a handle to select a numeric value.
  */
 
 #define DEFAULT_SLIDER_HANDLE_WIDTH 10
@@ -53,7 +53,7 @@ struct SliderDelegate {
 };
 
 /**
- * @brief The Slider type.
+ * @brief A Control allowing users to drag a handle to select a numeric value.
  * @extends Control
  * @ingroup Controls
  */
@@ -61,13 +61,12 @@ struct Slider {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Control control;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	SliderInterface *interface;
 

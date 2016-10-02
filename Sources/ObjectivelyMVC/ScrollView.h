@@ -49,7 +49,7 @@ struct ScrollViewDelegate {
 };
 
 /**
- * @brief The ScrollView type.
+ * @brief ScrollViews allow users to pan their internal contents.
  * @extends View
  * @ingroup Controls
  */
@@ -57,13 +57,12 @@ struct ScrollView {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	ScrollViewInterface *interface;
 

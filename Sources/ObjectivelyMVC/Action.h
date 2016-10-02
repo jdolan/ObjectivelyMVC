@@ -43,7 +43,7 @@ typedef struct Control Control;
 typedef void (*ActionFunction)(Control *control, const SDL_Event *event, ident sender, ident data);
 
 /**
- * @brief The Action type.
+ * @brief Actions bind event-driven behavior to Controls.
  * @extends Object
  * @ingroup Controls
  */
@@ -51,13 +51,12 @@ struct Action {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Object object;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	ActionInterface *interface;
 

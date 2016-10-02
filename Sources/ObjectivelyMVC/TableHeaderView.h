@@ -27,7 +27,7 @@
 
 /**
  * @file
- * @brief Columns for TableViews.
+ * @brief Header rows for TableViews.
  */
 
 #define DEFAULT_TABLE_HEADER_VIEW_HEIGHT 22
@@ -36,7 +36,7 @@ typedef struct TableHeaderView TableHeaderView;
 typedef struct TableHeaderViewInterface TableHeaderViewInterface;
 
 /**
- * @brief The TableHeaderView type.
+ * @brief Header rows for TableViews.
  * @extends View
  * @ingroup Tables
  */
@@ -44,13 +44,12 @@ struct TableHeaderView {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	TableRowView tableRowView;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	TableHeaderViewInterface *interface;
 };

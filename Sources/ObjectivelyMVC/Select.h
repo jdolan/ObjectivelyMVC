@@ -29,7 +29,7 @@
 
 /**
  * @file
- * @brief Select Control.
+ * @brief A Control allowing users to select one or more Options.
  */
 
 #define DEFAULT_SELECT_WIDTH 100
@@ -53,7 +53,7 @@ struct SelectDelegate {
 };
 
 /**
- * @brief The Select type.
+ * @brief A Control allowing users to select one or more Options.
  * @extends Control
  * @ingroup Controls
  */
@@ -61,13 +61,12 @@ struct Select {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Control control;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	SelectInterface *interface;
 

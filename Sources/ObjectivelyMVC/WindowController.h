@@ -29,14 +29,14 @@
 
 /**
  * @file
- * @brief WindowControllers are responsible for managing the presentation of ViewControllers.
+ * @brief A WindowController manages a ViewController and its descendants within an SDL_Window.
  */
 
 typedef struct WindowController WindowController;
 typedef struct WindowControllerInterface WindowControllerInterface;
 
 /**
- * @brief The WindowController type.
+ * @brief A WindowController manages a ViewController and its descendants within an SDL_Window.
  * @extends Object
  * @ingroup ViewControllers
  */
@@ -44,13 +44,12 @@ struct WindowController {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Object object;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	WindowControllerInterface *interface;
 

@@ -49,13 +49,12 @@ struct Box {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	View view;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	BoxInterface *interface;
 

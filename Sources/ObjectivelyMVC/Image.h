@@ -23,27 +23,26 @@
 
 /**
  * @file
- * @brief Images.
+ * @brief Image loading.
  */
 
 typedef struct Image Image;
 typedef struct ImageInterface ImageInterface;
 
 /**
- * @brief The Image type.
+ * @brief Image loading.
  * @extends Object
  */
 struct Image {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Object object;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	ImageInterface *interface;
 

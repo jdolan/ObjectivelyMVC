@@ -30,7 +30,6 @@
 
 /**
  * @file
- * 
  * @brief Controls are Views which capture events and dispatch Actions.
  */
 
@@ -88,7 +87,7 @@ typedef enum {
 typedef struct ControlInterface ControlInterface;
 
 /**
- * @brief The Control type.
+ * @brief Controls are Views which capture events and dispatch Actions.
  * @extends View
  * @ingroup Controls
  */
@@ -96,13 +95,12 @@ struct Control {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	View view;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	ControlInterface *interface;
 

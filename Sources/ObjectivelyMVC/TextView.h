@@ -29,8 +29,7 @@
 
 /**
  * @file
- * 
- * @brief TextViews provide editable text field Controls.
+ * @brief A Control for presenting and capturing user-provied Text.
  */
 
 #define DEFAULT_TEXTVIEW_PADDING 10
@@ -63,7 +62,7 @@ struct TextViewDelegate {
 };
 
 /**
- * @brief The TextView type.
+ * @brief A Control for presenting and capturing user-provied Text.
  * @extends Control
  * @ingroup Controls
  */
@@ -71,13 +70,12 @@ struct TextView {
 
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	TextViewInterface *interface;
 	

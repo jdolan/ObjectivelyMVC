@@ -28,7 +28,7 @@
 
 /**
  * @file
- * @brief ImageView implementation.
+ * @brief ImageViews render an Image in the context of a View hierarchy.
  */
 
 extern const EnumName GLBlendNames[];
@@ -37,7 +37,7 @@ typedef struct ImageView ImageView;
 typedef struct ImageViewInterface ImageViewInterface;
 
 /**
- * @brief The ImageView type.
+ * @brief ImageViews render an Image in the context of a View hierarchy.
  * @extends View
  */
 struct ImageView {
@@ -49,7 +49,7 @@ struct ImageView {
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	ImageViewInterface *interface;
 

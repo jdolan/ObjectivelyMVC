@@ -44,13 +44,12 @@ struct CollectionItemView {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	View view;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	CollectionItemViewInterface *interface;
 

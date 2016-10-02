@@ -38,7 +38,7 @@
 
 /**
  * @file
- * @brief The View type.
+ * @brief Views are the fundamental building blocks of ObjectivelyMVC user interfaces.
  */
 
 #define ViewAlignmentMaskTop      0x1
@@ -99,12 +99,12 @@ typedef enum {
 typedef struct ViewInterface ViewInterface;
 
 /**
- * @brief The View type.
+ * @brief Views are the fundamental building blocks of ObjectivelyMVC user interfaces.
  * @extends Object
- * @details Views are the fundamental building blocks of ObjectivelyMVC user interfaces. They
- * provide organization and coordination of layout, drawing and event handling. Views maintain
- * hierarchical relationships among other Views, whereby each View's parent, or `superview`,
- * dictates where it will be drawn on the screen, which events it will be eligible to receive, etc.
+ * @details Views provide organization and coordination of layout, drawing and event handling.
+ * Views maintain hierarchical relationships among other Views, whereby each View's parent, or 
+ * `superview`, dictates where it will be drawn on the screen, which events it will be eligible to 
+ * receive, etc.
  */
 struct View {
 
@@ -115,7 +115,7 @@ struct View {
 
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	ViewInterface *interface;
 

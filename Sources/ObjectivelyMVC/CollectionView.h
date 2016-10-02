@@ -105,13 +105,12 @@ struct CollectionView {
 	
 	/**
 	 * @brief The parent.
-	 * @private
 	 */
 	Control control;
 	
 	/**
 	 * @brief The typed interface.
-	 * @private
+	 * @protected
 	 */
 	CollectionViewInterface *interface;
 
