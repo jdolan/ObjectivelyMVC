@@ -27,15 +27,12 @@
 
 /**
  * @file
- * 
  * @brief StackViews are containers that manage the arrangement of their subviews.
  */
 
 /**
  * @defgroup Containers Containers
- *
  * @brief Containers allow for grouping and positioning of related Views.
- *
  * @remarks All containers have a default `autoResizingMask` of ViewAutoResizingContain.
  */
 
@@ -64,24 +61,20 @@ typedef struct StackView StackView;
 typedef struct StackViewInterface StackViewInterface;
 
 /**
- * @brief The StackView type.
- *
+ * @brief StackViews are containers that manage the arrangement of their subviews.
  * @extends View
- *
  * @ingroup Containers
  */
 struct StackView {
 
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	View view;
 
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	StackViewInterface *interface;
@@ -114,13 +107,10 @@ struct StackViewInterface {
 
 	/**
 	 * @fn StackView *StackView::initWithFrame(StackView *self, const SDL_Rect *frame)
-	 *
 	 * @brief Initializes this StackView with the specified frame.
-	 *
+	 * @param self The StackView.
 	 * @param frame The frame.
-	 *
 	 * @return The initialized StackView, or `NULL` on error.
-	 *
 	 * @memberof StackView
 	 */
 	StackView *(*initWithFrame)(StackView *self, const SDL_Rect *frame);

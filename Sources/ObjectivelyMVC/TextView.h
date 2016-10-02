@@ -64,23 +64,19 @@ struct TextViewDelegate {
 
 /**
  * @brief The TextView type.
- *
  * @extends Control
- *
  * @ingroup Controls
  */
 struct TextView {
 
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	TextViewInterface *interface;
@@ -128,14 +124,11 @@ struct TextViewInterface {
 
 	/**
 	 * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style)
-	 *
 	 * @brief Initializes this TextView with the specified frame.
-	 *
+	 * @param self The TextView.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.
-	 *
 	 * @return The initialized TextView, or `NULL` on error.
-	 *
 	 * @memberof TextView
 	 */
 	TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame, ControlStyle style);

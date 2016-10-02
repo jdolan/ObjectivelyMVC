@@ -27,7 +27,6 @@
 
 /**
  * @file
- *
  * @brief JSON data binding for Views.
  */
 
@@ -60,7 +59,6 @@ typedef enum {
 	/**
 	 * @remarks Inlet destination must be of an `enum *` type. Inlet data must provide a null-
 	 * terminated array of EnumNames.
-	 *
 	 * @see valueof
 	 * @see MakeEnumNames
 	 */
@@ -121,7 +119,6 @@ typedef struct Inlet Inlet;
 
 /**
  * @brief Inlets enable inbound data binding of View attributes through JSON.
- *
  * @see View::bind(View *, const Dictionary *, const Inlet *)
  */
 struct Inlet {
@@ -149,10 +146,8 @@ struct Inlet {
 
 /**
  * @brief A function pointer for Inlet binding.
- *
  * @param inlet The Inlet.
  * @param obj The Object resolved from the JSON Dictionary.
- *
  * @remarks For Inlets of type InletTypeApplicationDefined, applications must provide a pointer to
  * a function of this prototype as their Inlet's data. ObjectivelyMVC will invoke the function to
  * resolve the JSON data binding.
@@ -168,7 +163,6 @@ typedef struct Outlet Outlet;
 
 /**
  * @brief Outlets enable outbound data binding of Views through JSON.
- *
  * @see View::viewWithDictionary(const Dictionary *, Outlet *)
  */
 struct Outlet {

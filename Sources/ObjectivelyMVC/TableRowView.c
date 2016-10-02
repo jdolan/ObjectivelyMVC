@@ -95,7 +95,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
 /**
  * @fn void TableRowView::addCell(TableRowView *self, TableCellView *cell)
- *
  * @memberof TableRowView
  */
 static void addCell(TableRowView *self, TableCellView *cell) {
@@ -109,7 +108,6 @@ static void addCell(TableRowView *self, TableCellView *cell) {
 
 /**
  * @fn TableRowView *TableRowView::initWithTableView(TableRowView *self, TableView *tableView)
- *
  * @memberof TableRowView
  */
 static TableRowView *initWithTableView(TableRowView *self, TableView *tableView) {
@@ -141,9 +139,7 @@ static void removeAllCells_enumerate(const Array *array, ident obj, ident data) 
 
 /**
  * @fn void TableRowView::removeAllCells(TableRowView *self)
- *
  * @brief Removes all cells from this row.
- *
  * @memberof TableRowView
  */
 static void removeAllCells(TableRowView *self) {
@@ -155,7 +151,6 @@ static void removeAllCells(TableRowView *self) {
 
 /**
  * @fn void TableRowView::removeCell(TableRowView *self, TableCellView *cell)
- *
  * @memberof TableRowView
  */
 static void removeCell(TableRowView *self, TableCellView *cell) {
@@ -169,7 +164,6 @@ static void removeCell(TableRowView *self, TableCellView *cell) {
 
 /**
  * @fn void TableRowView::setSelected(TableRowView *self, _Bool selected)
- *
  * @memberof TableRowView
  */
 static void setSelected(TableRowView *self, _Bool selected) {

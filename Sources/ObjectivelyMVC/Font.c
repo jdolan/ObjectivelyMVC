@@ -64,7 +64,6 @@ static Order allFonts_sort(const ident a, const ident b) {
 
 /**
  * @fn Array *Font::allFonts(void)
- *
  * @memberof Font
  */
 static Array *allFonts(void) {
@@ -104,7 +103,6 @@ static Font *_bigger;
 
 /**
  * @fn Font *Font::defaultFont(FontCategory)
- *
  * @memberof Font
  */
 static Font *defaultFont(FontCategory category) {
@@ -137,7 +135,6 @@ static Font *defaultFont(FontCategory category) {
 
 /**
  * @fn Font *Font::initWithAttributes(Font *self, const char *family, int ptsize, int style)
- *
  * @memberof Font
  */
 static Font *initWithAttributes(Font *self, const char *family, int ptsize, int style) {
@@ -170,7 +167,6 @@ static Font *initWithAttributes(Font *self, const char *family, int ptsize, int 
 
 /**
  * @fn Font *Font::initWithName(Font *self, const char *name)
- *
  * @memberof Font
  */
 static Font *initWithName(Font *self, const char *name) {
@@ -188,7 +184,6 @@ static Font *initWithName(Font *self, const char *name) {
 
 /**
  * @fn Font *Font::initWithPattern(Font *self, ident pattern)
- *
  * @memberof Font
  */
 static Font *initWithPattern(Font *self, ident pattern) {
@@ -247,7 +242,6 @@ static Font *initWithPattern(Font *self, ident pattern) {
 
 /**
  * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color)
- *
  * @memberof Font
  */
 static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color) {
@@ -256,7 +250,6 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 
 /**
  * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
- *
  * @memberof Font
  */
 static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {

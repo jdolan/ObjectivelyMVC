@@ -46,7 +46,6 @@ static void dealloc(Object *self) {
 
 /**
  * @fn CollectionItemView *CollectionItemView::initWithFrame(CollectionItemView *self)
- *
  * @memberof CollectionItemView
  */
 static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rect *frame) {
@@ -81,7 +80,6 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 
 /**
  * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool selected)
- *
  * @memberof CollectionItemView
  */
 static void setSelected(CollectionItemView *self, _Bool selected) {

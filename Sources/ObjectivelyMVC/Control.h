@@ -36,7 +36,6 @@
 
 /**
  * @defgroup Controls Controls
- *
  * @brief Controls capture input events and dispatch Actions.
  */
 
@@ -90,30 +89,25 @@ typedef struct ControlInterface ControlInterface;
 
 /**
  * @brief The Control type.
- *
  * @extends View
- *
  * @ingroup Controls
  */
 struct Control {
 
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	View view;
 
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	ControlInterface *interface;
 
 	/**
 	 * @brief The Actions bound to this Control.
-	 *
 	 * @private
 	 */
 	MutableArray *actions;
@@ -151,97 +145,83 @@ struct ControlInterface {
 
 	/**
 	 * @fn Action *Control::actionForEvent(const Control *self, const SDL_Event *event)
-	 *
+	 * @param self The Control.
+	 * @param event An SDL_Event.
 	 * @memberof Control
 	 */
 	Action *(*actionForEvent)(const Control *self, const SDL_Event *event);
 
 	/**
-	 * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident data)
-	 *
+	 * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
 	 * @brief Adds an Action for the given event type to this Control.
-	 *
+	 * @param self The Control.
 	 * @param eventType The event type.
 	 * @param function The ActionFunction.
 	 * @param sender The sender.
 	 * @param data The data.
-	 *
 	 * @memberof Control
 	 */
 	void (*addActionForEventType)(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data);
 
 	/**
 	 * @fn _Bool Control::captureEvent(Control *self, const SDL_Event *event)
-	 *
 	 * @brief Captures a given event, potentially altering the state of this Control.
-	 *
+	 * @param self The Control.
 	 * @param event The event.
-	 *
 	 * @return True if the Event was captured, false otherwise.
-	 *
 	 * @remarks Subclasses should override this method to capture events.
-	 *
 	 * @memberof Control
 	 */
 	_Bool (*captureEvent)(Control *self, const SDL_Event *event);
 	
 	/**
 	 * @fn _Bool Control::enabled(const Control *self)
-	 *
+	 * @param self The Control.
 	 * @return True if this Control is enabled, false otherwise.
-	 *
 	 * @memberof Control
 	 */
 	_Bool (*enabled)(const Control *self);
 
 	/**
 	 * @fn _Bool Control::focused(const Control *self)
-	 *
+	 * @param self The Control.
 	 * @return True if this Control is focused, false otherwise.
-	 *
 	 * @memberof Control
 	 */
 	_Bool (*focused)(const Control *self);
 
 	/**
 	 * @fn _Bool Control::highlighted(const Control *self)
-	 *
+	 * @param self The Control.
 	 * @return True if this Control is highlighted, false otherwise.
-	 *
 	 * @memberof Control
 	 */
 	_Bool (*highlighted)(const Control *self);
 
 	/**
 	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style)
-	 *
 	 * @brief Initializes this Control with the specified frame and style.
-	 *
+	 * @param self The Control.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.
-	 *
 	 * @return The intialized Control, or `NULL` on error.
-	 *
 	 * @memberof Control
 	 */
 	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
 	 * @fn _Bool Control::selected(const Control *self)
-	 *
+	 * @param self The Control.
 	 * @return True if this Control is selected, false otherwise.
-	 *
 	 * @memberof Control
 	 */
 	_Bool (*selected)(const Control *self);
 	
 	/**
 	 * @fn void Control::stateDidChange(Control *self)
-	 *
 	 * @brief Called when the state of this Control changes.
-	 *
+	 * @param self The Control.
 	 * @remarks Subclasses may implement this method to handle discrete state changes.
-	 *
 	 * @memberof Control
 	 */
 	void (*stateDidChange)(Control *self);

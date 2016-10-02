@@ -28,7 +28,6 @@
 
 /**
  * @file
- *
  * @brief Rows for TableViews.
  */
 
@@ -38,24 +37,20 @@ typedef struct TableRowView TableRowView;
 typedef struct TableRowViewInterface TableRowViewInterface;
 
 /**
- * @brief The TableRowView type.
- *
+ * @brief Rows for TableViews.
  * @extends StackView
- *
  * @ingroup Tables
  */
 struct TableRowView {
 	
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	StackView stackView;
 	
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	TableRowViewInterface *interface;
@@ -93,57 +88,46 @@ struct TableRowViewInterface {
 
 	/**
 	 * @fn void TableRowView::addCell(TableRowView *self, TableCellView *cell)
-	 *
 	 * @brief Adds the specified cell to this row.
-	 *
+	 * @param self The TableRowView.
 	 * @param cell The cell.
-	 *
 	 * @memberof TableRowView
 	 */
 	void (*addCell)(TableRowView *self, TableCellView *cell);
 	
 	/**
 	 * @fn TableRowView *TableRowView::initWithTableView(TableRowView *self, TableView *tableView)
-	 *
 	 * @brief Initializes this TableRowView with the given table.
-	 *
+	 * @param self The TableRowView.
 	 * @param tableView The table.
-	 *
 	 * @return The initialized TableRowView, or `NULL` on error.
-	 *
 	 * @memberof TableRowView
 	 */
 	TableRowView *(*initWithTableView)(TableRowView *self, TableView *tableView);
 
 	/**
 	 * @fn void TableRowView::removeAllCells(TableRowView *self)
-	 *
 	 * @brief Removes all cells from this row.
-	 *
+	 * @param self The TableRowView.
 	 * @memberof TableRowView
 	 */
 	void (*removeAllCells)(TableRowView *self);
 
 	/**
 	 * @fn void TableRowView::removeCell(TableRowView *self, TableCellView *cell)
-	 *
 	 * @brief Removes the specified cell from this row.
-	 *
+	 * @param self The TableRowView.
 	 * @param cell The cell.
-	 *
 	 * @memberof TableRowView
 	 */
 	void (*removeCell)(TableRowView *self, TableCellView *cell);
 
 	/**
 	 * @fn void TableRowView::setSelected(TableRowView *self, _Bool selected)
-	 *
 	 * @brief Sets the selected state of this row.
-	 *
+	 * @param self The TableRowView.
 	 * @param selected The selected state.
-	 *
 	 * @remarks Subclasses may override this method to change the visual cue for selection.
-	 *
 	 * @memberof TableRowView
 	 */
 	void (*setSelected)(TableRowView *self, _Bool selected);

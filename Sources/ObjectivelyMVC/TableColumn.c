@@ -49,7 +49,6 @@ static void dealloc(Object *self) {
 
 /**
  * @fn TableColumn *TableColumn::init(TableColumn *self)
- *
  * @memberof TableColumn
  */
 static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier) {

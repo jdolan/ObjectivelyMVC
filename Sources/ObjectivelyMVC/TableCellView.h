@@ -27,7 +27,6 @@
 
 /**
  * @file
- *
  * @brief Cells for TableViews.
  */
 
@@ -38,23 +37,19 @@ typedef struct TableCellViewInterface TableCellViewInterface;
 
 /**
  * @brief Cells for TableViews.
- *
  * @extends View
- *
  * @ingroup Tables
  */
 struct TableCellView {
 	
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	View view;
 	
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	TableCellViewInterface *interface;
@@ -77,13 +72,10 @@ struct TableCellViewInterface {
 	
 	/**
 	 * @fn TableCellView *TableCellView::initWithFrame(TableCellView *self, const SDL_Rect *frame)
-	 *
 	 * @brief Initializes this TableCellView with the specified frame.
-	 *
+	 * @param self The TableCellView.
 	 * @param frame The frame.
-	 *
 	 * @return The initialized TableCellView, or `NULL` on error.
-	 *
 	 * @memberof TableCellView
 	 */
 	TableCellView *(*initWithFrame)(TableCellView *self, const SDL_Rect *frame);

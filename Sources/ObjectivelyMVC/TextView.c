@@ -287,7 +287,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 /**
  * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style)
- *
  * @memberof TextView
  */
 static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style) {

@@ -29,7 +29,6 @@
 
 /**
  * @file
- * 
  * @brief Actions bind event-driven behavior to Controls.
  */
 
@@ -45,23 +44,19 @@ typedef void (*ActionFunction)(Control *control, const SDL_Event *event, ident s
 
 /**
  * @brief The Action type.
- *
  * @extends Object
- *
  * @ingroup Controls
  */
 struct Action {
 
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	Object object;
 
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	ActionInterface *interface;
@@ -99,16 +94,13 @@ struct ActionInterface {
 
 	/**
 	 * @fn Action *Action::initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
-	 *
 	 * @brief Initializes this Action with the given function and data.
-	 *
+	 * @param self The Action.
 	 * @param eventType The event type.
 	 * @param function The ActionFunction.
 	 * @param sender The sender.
 	 * @param data The data.
-	 *
 	 * @return The initialized Action, or `NULL` on error.
-	 *
 	 * @memberof Action
 	 */
 	Action *(*initWithEventType)(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data);

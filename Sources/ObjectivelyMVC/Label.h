@@ -27,7 +27,6 @@
 
 /**
  * @file
- *
  * @brief The Label type.
  */
 
@@ -36,21 +35,18 @@ typedef struct LabelInterface LabelInterface;
 
 /**
  * @brief Labels provide a configurable container for Text.
- *
  * @extends View
  */
 struct Label {
 
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	View view;
 
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	LabelInterface *interface;
@@ -73,14 +69,11 @@ struct LabelInterface {
 
 	/**
 	 * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
-	 *
 	 * @brief Initializes this Label with the given text and Font.
-	 *
+	 * @param self The Label.
 	 * @param text The text.
 	 * @param font The Font.
-	 *
 	 * @return The initialized Label, or `NULL` on error.
-	 *
 	 * @memberof Label
 	 */
 	Label *(*initWithText)(Label *self, const char *text, Font *font);

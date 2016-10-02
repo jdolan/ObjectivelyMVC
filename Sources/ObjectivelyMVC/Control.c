@@ -205,7 +205,6 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 /**
  * @fn Action *Controll::actionForEvent(const Control *self, const SDL_Event *event)
- *
  * @memberof Control
  */
 static Action *actionForEvent(const Control *self, const SDL_Event *event) {
@@ -224,7 +223,6 @@ static Action *actionForEvent(const Control *self, const SDL_Event *event) {
 
 /**
  * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
- *
  * @memberof Control
  */
 static void addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data) {
@@ -238,7 +236,6 @@ static void addActionForEventType(Control *self, SDL_EventType eventType, Action
 
 /**
  * @fn _Bool Control::captureEvent(Control *self, const SDL_Event *event)
- *
  * @memberof Control
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
@@ -247,7 +244,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 /**
  * @fn _Bool Control::enabled(const Control *self)
- *
  * @memberof Control
  */
 static _Bool enabled(const Control *self) {
@@ -256,7 +252,6 @@ static _Bool enabled(const Control *self) {
 
 /**
  * @fn _Bool Control::focused(const Control *self)
- *
  * @memberof Control
  */
 static _Bool focused(const Control *self) {
@@ -265,7 +260,6 @@ static _Bool focused(const Control *self) {
 
 /**
  * @fn _Bool Control::highlighted(const Control *self)
- *
  * @memberof Control
  */
 static _Bool highlighted(const Control *self) {
@@ -274,7 +268,6 @@ static _Bool highlighted(const Control *self) {
 
 /**
  * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style)
- *
  * @memberof Control
  */
 static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style) {
@@ -304,7 +297,6 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle
 
 /**
  * @fn _Bool Control::selected(const Control *self)
- *
  * @memberof Control
  */
 static _Bool selected(const Control *self) {
@@ -313,7 +305,6 @@ static _Bool selected(const Control *self) {
 
 /**
  * @fn void Control::stateDidChange(Control *self)
- *
  * @memberof Control
  */
 static void stateDidChange(Control *self) {

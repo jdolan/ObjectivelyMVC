@@ -27,7 +27,6 @@
 
 /**
  * @file
- *
  * @brief Columns for TableViews.
  */
 
@@ -38,23 +37,19 @@ typedef struct TableHeaderViewInterface TableHeaderViewInterface;
 
 /**
  * @brief The TableHeaderView type.
- *
  * @extends View
- *
  * @ingroup Tables
  */
 struct TableHeaderView {
 	
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	TableRowView tableRowView;
 	
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	TableHeaderViewInterface *interface;
@@ -72,13 +67,10 @@ struct TableHeaderViewInterface {
 	
 	/**
 	 * @fn TableHeaderView *TableHeaderView::initWithTableView(TableHeaderView *self, TableView *tableView)
-	 *
 	 * @brief Initializes this TableHeaderView with the give table.
-	 *
+	 * @param self The TableHeaderView.
 	 * @param tableView The table.
-	 *
 	 * @return The initialized TableHeaderView, or `NULL` on error.
-	 *
 	 * @memberof TableHeaderView
 	 */
 	TableHeaderView *(*initWithTableView)(TableHeaderView *self, TableView *tableView);

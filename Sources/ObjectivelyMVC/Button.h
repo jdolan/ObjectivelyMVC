@@ -38,23 +38,19 @@ typedef struct ButtonInterface ButtonInterface;
 
 /**
  * @brief The Button type.
- *
  * @extends Control
- *
  * @ingroup Controls
  */
 struct Button {
 
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	ButtonInterface *interface;
@@ -77,14 +73,11 @@ struct ButtonInterface {
 
 	/**
 	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
-	 *
 	 * @brief Initializes this Button with the specified frame and style.
-	 *
+	 * @param self The Button.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.
-	 *
 	 * @return The initialized Button, or `NULL` on error.
-	 *
 	 * @memberof Button
 	 */
 	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame, ControlStyle style);

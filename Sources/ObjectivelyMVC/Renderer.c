@@ -47,7 +47,6 @@ static void dealloc(Object *self) {
 
 /**
  * @fn void Renderer::addView(Renderer *self, View *view)
- *
  * @memberof Renderer
  */
 static void addView(Renderer *self, View *view) {
@@ -56,7 +55,6 @@ static void addView(Renderer *self, View *view) {
 
 /**
  * @fn void Renderer::beginFrame(const Renderer *self)
- *
  * @memberof Renderer
  */
 static void beginFrame(const Renderer *self) {
@@ -72,7 +70,6 @@ static void beginFrame(const Renderer *self) {
 
 /**
  * @fn void Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
- *
  * @memberof Renderer
  */
 static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
@@ -113,7 +110,6 @@ static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
 
 /**
  * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points)
- *
  * @memberof Renderer
  */
 static void drawLine(const Renderer *self, const SDL_Point *points) {
@@ -125,7 +121,6 @@ static void drawLine(const Renderer *self, const SDL_Point *points) {
 
 /**
  * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, GLuint count)
- *
  * @memberof Renderer
  */
 static void drawLines(const Renderer *self, const SDL_Point *points, GLuint count) {
@@ -138,7 +133,6 @@ static void drawLines(const Renderer *self, const SDL_Point *points, GLuint coun
 
 /**
  * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
- *
  * @memberof Renderer
  */
 static void drawRect(const Renderer *self, const SDL_Rect *rect) {
@@ -165,7 +159,6 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 
 /**
  * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
- *
  * @memberof Renderer
  */
 static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *rect) {
@@ -206,7 +199,6 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 
 /**
  * @fn void Renderer::endFrame(const Renderer *self)
- *
  * @memberof Renderer
  */
 static void endFrame(const Renderer *self) {
@@ -236,7 +228,6 @@ static void endFrame(const Renderer *self) {
 
 /**
  * @fn void Renderer::fillRect(const Renderer *self, const SDL_Rect *rect)
- *
  * @memberof Renderer
  */
 static void fillRect(const Renderer *self, const SDL_Rect *rect) {
@@ -248,7 +239,6 @@ static void fillRect(const Renderer *self, const SDL_Rect *rect) {
 
 /**
  * @fn Renderer *Renderer::init(Renderer *self)
- *
  * @memberof Renderer
  */
 static Renderer *init(Renderer *self) {
@@ -293,7 +283,6 @@ static void render_renderView(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void Renderer::drawViews(Renderer *self)
- *
  * @memberof Renderer
  */
 static void render(Renderer *self) {

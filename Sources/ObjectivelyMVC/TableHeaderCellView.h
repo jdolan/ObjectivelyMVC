@@ -27,7 +27,6 @@
 
 /**
  * @file
- *
  * @brief Header cells for TableViews.
  */
 
@@ -35,24 +34,20 @@ typedef struct TableHeaderCellView TableHeaderCellView;
 typedef struct TableHeaderCellViewInterface TableHeaderCellViewInterface;
 
 /**
- * @brief The TableHeaderCellView type.
- *
+ * @brief Header cells for TableViews.
  * @extends TableCellView
- *
  * @ingroup Tables
  */
 struct TableHeaderCellView {
 	
 	/**
 	 * @brief The parent.
-	 *
 	 * @private
 	 */
 	TableCellView tableCellView;
 	
 	/**
 	 * @brief The typed interface.
-	 *
 	 * @private
 	 */
 	TableHeaderCellViewInterface *interface;
@@ -70,13 +65,10 @@ struct TableHeaderCellViewInterface {
 	
 	/**
 	 * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame)
-	 *
 	 * @brief Initializes this TableHeaderCellView with the specified frame.
-	 *
+	 * @param self The TableHeaderCellView.
 	 * @param frame The frame.
-	 *
 	 * @return The initialized TableHeaderCellView, or `NULL` on error.
-	 *
 	 * @memberof TableHeaderCellView
 	 */
 	TableHeaderCellView *(*initWithFrame)(TableHeaderCellView *self, const SDL_Rect *frame);

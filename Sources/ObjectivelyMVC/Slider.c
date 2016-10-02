@@ -177,7 +177,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 /**
  * @fn Slider *Slider::init(Slider *self)
- *
  * @memberof Slider
  */
 static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle style) {
@@ -225,7 +224,6 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 /**
  * @fn void Slider::setValue(Slider *self, double value)
- *
  * @memberof Slider
  */
 static void setValue(Slider *self, double value) {

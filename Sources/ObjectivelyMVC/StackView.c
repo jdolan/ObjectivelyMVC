@@ -227,7 +227,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
 /**
  * @fn StackView *StackView::initWithFrame(StackView *self, const SDL_Rect *frame)
- *
  * @memberof StackView
  */
 static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
