@@ -653,31 +653,31 @@ static void setSortColumn(TableView *self, TableColumn *column) {
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
-	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
-	((TableViewInterface *) clazz->interface)->columnAtPoint = columnAtPoint;
-	((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;
-	((TableViewInterface *) clazz->interface)->deselectAll = deselectAll;
-	((TableViewInterface *) clazz->interface)->deselectRowAtIndex = deselectRowAtIndex;
-	((TableViewInterface *) clazz->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
-	((TableViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((TableViewInterface *) clazz->interface)->reloadData = reloadData;
-	((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
-	((TableViewInterface *) clazz->interface)->rowAtPoint = rowAtPoint;
-	((TableViewInterface *) clazz->interface)->scrollableArea = scrollableArea;
-	((TableViewInterface *) clazz->interface)->selectedRowIndexes = selectedRowIndexes;
-	((TableViewInterface *) clazz->interface)->selectAll = selectAll;
-	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
-	((TableViewInterface *) clazz->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
-	((TableViewInterface *) clazz->interface)->setSortColumn = setSortColumn;
+	((TableViewInterface *) clazz->def->interface)->addColumn = addColumn;
+	((TableViewInterface *) clazz->def->interface)->columnAtPoint = columnAtPoint;
+	((TableViewInterface *) clazz->def->interface)->columnWithIdentifier = columnWithIdentifier;
+	((TableViewInterface *) clazz->def->interface)->deselectAll = deselectAll;
+	((TableViewInterface *) clazz->def->interface)->deselectRowAtIndex = deselectRowAtIndex;
+	((TableViewInterface *) clazz->def->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
+	((TableViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((TableViewInterface *) clazz->def->interface)->reloadData = reloadData;
+	((TableViewInterface *) clazz->def->interface)->removeColumn = removeColumn;
+	((TableViewInterface *) clazz->def->interface)->rowAtPoint = rowAtPoint;
+	((TableViewInterface *) clazz->def->interface)->scrollableArea = scrollableArea;
+	((TableViewInterface *) clazz->def->interface)->selectedRowIndexes = selectedRowIndexes;
+	((TableViewInterface *) clazz->def->interface)->selectAll = selectAll;
+	((TableViewInterface *) clazz->def->interface)->selectRowAtIndex = selectRowAtIndex;
+	((TableViewInterface *) clazz->def->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
+	((TableViewInterface *) clazz->def->interface)->setSortColumn = setSortColumn;
 }
 
 Class _TableView = {

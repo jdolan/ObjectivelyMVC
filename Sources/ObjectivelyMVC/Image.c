@@ -120,11 +120,11 @@ Image *initWithSurface(Image *self, SDL_Surface *surface) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ImageInterface *) clazz->interface)->initWithData = initWithData;
-	((ImageInterface *) clazz->interface)->initWithName = initWithName;
-	((ImageInterface *) clazz->interface)->initWithSurface = initWithSurface;
+	((ImageInterface *) clazz->def->interface)->initWithData = initWithData;
+	((ImageInterface *) clazz->def->interface)->initWithName = initWithName;
+	((ImageInterface *) clazz->def->interface)->initWithSurface = initWithSurface;
 }
 
 Class _Image = {

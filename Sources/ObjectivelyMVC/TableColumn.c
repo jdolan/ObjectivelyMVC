@@ -78,9 +78,9 @@ static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((TableColumnInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
+	((TableColumnInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
 }
 
 Class _TableColumn = {

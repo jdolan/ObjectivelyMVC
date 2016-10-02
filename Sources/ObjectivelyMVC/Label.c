@@ -100,12 +100,12 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
 
-	((LabelInterface *) clazz->interface)->initWithText = initWithText;
+	((LabelInterface *) clazz->def->interface)->initWithText = initWithText;
 }
 
 Class _Label = {

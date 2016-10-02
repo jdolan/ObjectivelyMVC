@@ -207,20 +207,20 @@ static void setText(Text *self, const char *text) {
 /**
  * @see Class::initialize(Class *)
  */
-static void initialize(Class *self) {
+static void initialize(Class *clazz) {
 
-	((ObjectInterface *) self->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) self->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) self->interface)->init = init;
-	((ViewInterface *) self->interface)->render = render;
-	((ViewInterface *) self->interface)->renderDeviceDidReset = renderDeviceDidReset;
-	((ViewInterface *) self->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->render = render;
+	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
-	((TextInterface *) self->interface)->initWithText = initWithText;
-	((TextInterface *) self->interface)->naturalSize = naturalSize;
-	((TextInterface *) self->interface)->setFont = setFont;
-	((TextInterface *) self->interface)->setText = setText;
+	((TextInterface *) clazz->def->interface)->initWithText = initWithText;
+	((TextInterface *) clazz->def->interface)->naturalSize = naturalSize;
+	((TextInterface *) clazz->def->interface)->setFont = setFont;
+	((TextInterface *) clazz->def->interface)->setText = setText;
 }
 
 Class _Text = {

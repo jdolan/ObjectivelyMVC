@@ -279,15 +279,15 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((FontInterface *) clazz->interface)->allFonts = allFonts;
-	((FontInterface *) clazz->interface)->defaultFont = defaultFont;
-	((FontInterface *) clazz->interface)->initWithAttributes = initWithAttributes;
-	((FontInterface *) clazz->interface)->initWithName = initWithName;
-	((FontInterface *) clazz->interface)->initWithPattern = initWithPattern;
-	((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
-	((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
+	((FontInterface *) clazz->def->interface)->allFonts = allFonts;
+	((FontInterface *) clazz->def->interface)->defaultFont = defaultFont;
+	((FontInterface *) clazz->def->interface)->initWithAttributes = initWithAttributes;
+	((FontInterface *) clazz->def->interface)->initWithName = initWithName;
+	((FontInterface *) clazz->def->interface)->initWithPattern = initWithPattern;
+	((FontInterface *) clazz->def->interface)->renderCharacters = renderCharacters;
+	((FontInterface *) clazz->def->interface)->sizeCharacters = sizeCharacters;
 
 	const FcBool res = FcInit();
 	assert(res == FcTrue);

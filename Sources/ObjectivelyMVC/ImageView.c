@@ -210,17 +210,17 @@ static void setImageWithSurface(ImageView *self, SDL_Surface *surface) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->render = render;
-	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->render = render;
+	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 
-	((ImageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((ImageViewInterface *) clazz->interface)->initWithImage = initWithImage;
-	((ImageViewInterface *) clazz->interface)->setImage = setImage;
-	((ImageViewInterface *) clazz->interface)->setImageWithSurface = setImageWithSurface;
+	((ImageViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((ImageViewInterface *) clazz->def->interface)->initWithImage = initWithImage;
+	((ImageViewInterface *) clazz->def->interface)->setImage = setImage;
+	((ImageViewInterface *) clazz->def->interface)->setImageWithSurface = setImageWithSurface;
 }
 
 Class _ImageView = {

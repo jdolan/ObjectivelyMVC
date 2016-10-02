@@ -312,19 +312,19 @@ static void render(Renderer *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((RendererInterface *) clazz->interface)->addView = addView;
-	((RendererInterface *) clazz->interface)->beginFrame = beginFrame;
-	((RendererInterface *) clazz->interface)->createTexture = createTexture;
-	((RendererInterface *) clazz->interface)->drawLine = drawLine;
-	((RendererInterface *) clazz->interface)->drawLines = drawLines;
-	((RendererInterface *) clazz->interface)->drawRect = drawRect;
-	((RendererInterface *) clazz->interface)->drawTexture = drawTexture;
-	((RendererInterface *) clazz->interface)->endFrame = endFrame;
-	((RendererInterface *) clazz->interface)->fillRect = fillRect;
-	((RendererInterface *) clazz->interface)->init = init;
-	((RendererInterface *) clazz->interface)->render = render;
+	((RendererInterface *) clazz->def->interface)->addView = addView;
+	((RendererInterface *) clazz->def->interface)->beginFrame = beginFrame;
+	((RendererInterface *) clazz->def->interface)->createTexture = createTexture;
+	((RendererInterface *) clazz->def->interface)->drawLine = drawLine;
+	((RendererInterface *) clazz->def->interface)->drawLines = drawLines;
+	((RendererInterface *) clazz->def->interface)->drawRect = drawRect;
+	((RendererInterface *) clazz->def->interface)->drawTexture = drawTexture;
+	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
+	((RendererInterface *) clazz->def->interface)->fillRect = fillRect;
+	((RendererInterface *) clazz->def->interface)->init = init;
+	((RendererInterface *) clazz->def->interface)->render = render;
 }
 
 Class _Renderer = {

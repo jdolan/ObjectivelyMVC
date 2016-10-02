@@ -77,9 +77,9 @@ static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) 
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	
-	((TableCellViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TableCellViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
 Class _TableCellView = {

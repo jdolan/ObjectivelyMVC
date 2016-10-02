@@ -101,10 +101,10 @@ static void setSelected(CollectionItemView *self, _Bool selected) {
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	
-	((CollectionItemViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((CollectionItemViewInterface *) clazz->interface)->setSelected = setSelected;
+	((CollectionItemViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((CollectionItemViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }
 
 Class _CollectionItemView = {

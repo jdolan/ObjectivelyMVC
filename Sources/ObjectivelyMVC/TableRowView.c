@@ -189,16 +189,16 @@ static void setSelected(TableRowView *self, _Bool selected) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
-	((TableRowViewInterface *) clazz->interface)->addCell = addCell;
-	((TableRowViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
-	((TableRowViewInterface *) clazz->interface)->removeAllCells = removeAllCells;
-	((TableRowViewInterface *) clazz->interface)->removeCell = removeCell;
-	((TableRowViewInterface *) clazz->interface)->setSelected = setSelected;
+	((TableRowViewInterface *) clazz->def->interface)->addCell = addCell;
+	((TableRowViewInterface *) clazz->def->interface)->initWithTableView = initWithTableView;
+	((TableRowViewInterface *) clazz->def->interface)->removeAllCells = removeAllCells;
+	((TableRowViewInterface *) clazz->def->interface)->removeCell = removeCell;
+	((TableRowViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }
 
 Class _TableRowView = {

@@ -51,7 +51,7 @@ static TableHeaderCellView *initWithFrame(TableHeaderCellView *self, const SDL_R
  */
 static void initialize(Class *clazz) {
 
-	((TableHeaderCellViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TableHeaderCellViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
 Class _TableHeaderCellView = {

@@ -198,15 +198,15 @@ static void setOrientation(Input *self, InputOrientation orientation) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
 
-	((InputInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((InputInterface *) clazz->interface)->setControl = setControl;
-	((InputInterface *) clazz->interface)->setLabel = setLabel;
-	((InputInterface *) clazz->interface)->setOrientation = setOrientation;
+	((InputInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((InputInterface *) clazz->def->interface)->setControl = setControl;
+	((InputInterface *) clazz->def->interface)->setLabel = setLabel;
+	((InputInterface *) clazz->def->interface)->setOrientation = setOrientation;
 }
 
 Class _Input = {
