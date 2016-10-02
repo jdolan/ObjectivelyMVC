@@ -46,3 +46,14 @@ test: off
 deploy: off
 artifacts:
 - path: __dep.zip
+on_success:
+- ps: >-
+    $token = $env:API_TOKEN
+
+    $headers = @{ "Authorization" = "Bearer $token"}
+
+    $body = @{accountName = $env:API_NAME; projectSlug = "quetoo"}
+
+    $bodyAsJson = $body | ConvertTo-json
+
+    Invoke-Restmethod -uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method Post -Body $bodyAsjson -ContentType "application/json"
