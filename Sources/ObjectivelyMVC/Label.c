@@ -72,7 +72,6 @@ static View *init(View *self) {
 
 /**
  * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
- *
  * @memberof Label
  */
 static Label *initWithText(Label *self, const char *text, Font *font) {

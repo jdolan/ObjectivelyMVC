@@ -47,7 +47,6 @@ static void dealloc(Object *self) {
 
 /**
  * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
- *
  * @memberof WindowController
  */
 static WindowController *initWithWindow(WindowController *self, SDL_Window *window) {
@@ -70,7 +69,6 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 
 /**
  * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
- *
  * @memberof WindowController
  */
 static void setViewController(WindowController *self, ViewController *viewController) {
@@ -93,7 +91,6 @@ static void setViewController(WindowController *self, ViewController *viewContro
 
 /**
  * @fn void WindowController::render(WindowController *self)
- *
  * @memberof WindowController
  */
 static void render(WindowController *self) {
@@ -112,7 +109,6 @@ static void render(WindowController *self) {
 
 /**
  * @fn void WindowController:respondToEvent(WindowController *self, const SDL_Event *event)
- *
  * @memberof WindowController
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {

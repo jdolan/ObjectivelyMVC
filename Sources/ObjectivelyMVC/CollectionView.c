@@ -193,7 +193,6 @@ static void deselectAll_enumerate(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void CollectionView::deselectAll(CollectionView *self)
- *
  * @memberof CollectionView
  */
 static void deselectAll(CollectionView *self) {
@@ -202,7 +201,6 @@ static void deselectAll(CollectionView *self) {
 
 /**
  * @fn void CollectionView::deselectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath)
- *
  * @memberof CollectionView
  */
 static void deselectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath) {
@@ -224,7 +222,6 @@ static void deselectItemsAtIndexPaths_enumerate(const Array *array, ident obj, i
 
 /**
  * @fn void CollectionView::deselectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths)
- *
  * @memberof CollectionView
  */
 static void deselectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths) {
@@ -236,7 +233,6 @@ static void deselectItemsAtIndexPaths(CollectionView *self, const Array *indexPa
 
 /**
  * @fn IndexPath *CollectionView::indexPathForItemAtPoint(const CollectionView *self, const SDL_Point *point)
- *
  * @memberof CollectionView
  */
 static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_Point *point) {
@@ -277,7 +273,6 @@ static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_
 
 /**
  * @fn IndexPath *CollectionView::indexPathForItem(const CollectionView *self, const CollectionItemView *item)
- *
  * @memberof CollectionView
  */
 static IndexPath *indexPathForItem(const CollectionView *self, const CollectionItemView *item) {
@@ -292,7 +287,6 @@ static IndexPath *indexPathForItem(const CollectionView *self, const CollectionI
 
 /**
  * @fn CollectionView *CollectionView::initWithFrame(CollectionView *self, const SDL_Rect *frame, ControlStyle style)
- *
  * @memberof CollectionView
  */
 static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame, ControlStyle style) {
@@ -344,7 +338,6 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 /**
  * @fn CollectionItemView *CollectionView::itemAtIndexPath(const CollectionView *self, const IndexPath *indexPath)
- *
  * @memberof CollectionView
  */
 static CollectionItemView *itemAtIndexPath(const CollectionView *self, const IndexPath *indexPath) {
@@ -370,7 +363,6 @@ static void reloadData_removeItems(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void CollectionView::reloadData(CollectionView *self)
- *
  * @memberof CollectionView
  */
 static void reloadData(CollectionView *self) {
@@ -408,7 +400,6 @@ static void selectAll_enumerate(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void CollectionView::selectAll(CollectionView *self)
- *
  * @memberof CollectionView
  */
 static void selectAll(CollectionView *self) {
@@ -417,7 +408,6 @@ static void selectAll(CollectionView *self) {
 
 /**
  * @fn Array *CollectionView::selectionIndexPaths(const CollectionView *self)
- *
  * @memberof CollectionView
  */
 static Array *selectionIndexPaths(const CollectionView *self) {
@@ -442,7 +432,6 @@ static Array *selectionIndexPaths(const CollectionView *self) {
 
 /**
  * @fn void CollectionView::selectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath)
- *
  * @memberof CollectionView
  */
 static void selectItemAtIndexPath(CollectionView *self, const IndexPath *indexPath) {
@@ -464,7 +453,6 @@ static void selectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ide
 
 /**
  * @fn void CollectionView::selectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths)
- *
  * @memberof CollectionView
  */
 static void selectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths) {

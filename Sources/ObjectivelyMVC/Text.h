@@ -28,7 +28,6 @@
 
 /**
  * @file
- *
  * @brief Text rendered with TrueType fonts.
  */
 
@@ -36,23 +35,19 @@ typedef struct Text Text;
 typedef struct TextInterface TextInterface;
 
 /**
- * @brief The Text type.
- *
+ * @brief Text rendered with TrueType fonts.
  * @extends View
  */
 struct Text {
 
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	View view;
 
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	TextInterface *interface;
 	
@@ -63,25 +58,20 @@ struct Text {
 
 	/**
 	 * @brief The Font.
-	 *
 	 * @remarks Do not set this property directly.
-	 *
 	 * @see Text::setFont(Text *, Font *)
 	 */
 	Font *font;
 
 	/**
 	 * @brief The text.
-	 *
 	 * @remarks Do not set this property directly.
-	 *
 	 * @see Text::setText(Text *, const char *)
 	 */
 	char *text;
 
 	/**
 	 * @brief The rendered texture.
-	 *
 	 * @private
 	 */
 	GLuint texture;
@@ -99,45 +89,37 @@ struct TextInterface {
 
 	/**
 	 * @fn Text *Text::initWithText(Text *self, const char *text, Font *font)
-	 *
 	 * @brief Initializes this Text with the given text and Font.
-	 *
+	 * @param self The Text.
 	 * @param text The text.
 	 * @param font The Font.
-	 *
 	 * @return The initialized Text, or `NULL` on error.
-	 *
 	 * @memberof Text
 	 */
 	Text *(*initWithText)(Text *self, const char *text, Font *font);
 	
 	/**
 	 * @fn SDL_Size Text::naturalSize(const Text *self)
-	 *
 	 * @brief Resolves the rendered size of this Text.
-	 *
+	 * @param self The Text.
 	 * @memberof Text
 	 */
 	SDL_Size (*naturalSize)(const Text *self);
 
 	/**
 	 * @fn void Text::setFont(Text *self, Font *font)
-	 *
 	 * @brief Sets this Text's font.
-	 *
+	 * @param self The Text.
 	 * @param font The Font to set.
-	 *
 	 * @memberof Text
 	 */
 	void (*setFont)(Text *self, Font *font);
 	
 	/**
 	 * @fn void Text::setText(Text *self, const char *text)
-	 *
 	 * @brief Sets this Text's text.
-	 *
+	 * @param self The Text.
 	 * @param text The text to set.
-	 *
 	 * @memberof Text
 	 */
 	void (*setText)(Text *self, const char *text);

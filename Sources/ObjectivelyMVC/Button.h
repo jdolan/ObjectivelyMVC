@@ -27,8 +27,7 @@
 
 /**
  * @file
- * 
- * @brief Buttons
+ * @brief Buttons are Controls that respond to click events.
  */
 
 typedef struct Button Button;
@@ -37,25 +36,20 @@ typedef struct ButtonInterface ButtonInterface;
 #define DEFAULT_BUTTON_MIN_WIDTH 100
 
 /**
- * @brief The Button type.
- *
+ * @brief Buttons are Controls that respond to click events.
  * @extends Control
- *
  * @ingroup Controls
  */
 struct Button {
 
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	ButtonInterface *interface;
 	
@@ -77,14 +71,11 @@ struct ButtonInterface {
 
 	/**
 	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
-	 *
 	 * @brief Initializes this Button with the specified frame and style.
-	 *
+	 * @param self The Button.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.
-	 *
 	 * @return The initialized Button, or `NULL` on error.
-	 *
 	 * @memberof Button
 	 */
 	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame, ControlStyle style);

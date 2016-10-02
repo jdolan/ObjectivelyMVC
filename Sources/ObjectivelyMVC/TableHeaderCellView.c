@@ -31,7 +31,6 @@
 
 /**
  * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame)
- *
  * @memberof TableHeaderCellView
  */
 static TableHeaderCellView *initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame) {

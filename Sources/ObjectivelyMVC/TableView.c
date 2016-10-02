@@ -234,7 +234,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 /**
  * @fn void TableView::addColumn(TableView *self, TableColumn *column)
- *
  * @memberof TableView
  */
 static void addColumn(TableView *self, TableColumn *column) {
@@ -246,7 +245,6 @@ static void addColumn(TableView *self, TableColumn *column) {
 
 /**
  * @fn TableColumn *TableView::columnAtPoint(const TableView *self, const SDL_Point *point)
- *
  * @memberof TableView
  */
 static TableColumn *columnAtPoint(const TableView *self, const SDL_Point *point) {
@@ -273,8 +271,7 @@ static TableColumn *columnAtPoint(const TableView *self, const SDL_Point *point)
 }
 
 /**
- * @fn TableColumn *TableView::columnWithIdentifier(const TableView *self)
- *
+ * @fn TableColumn *TableView::columnWithIdentifier(const TableView *self, const char *identifier)
  * @memberof TableView
  */
 static TableColumn *columnWithIdentifier(const TableView *self, const char *identifier) {
@@ -302,7 +299,6 @@ static void deselectAll_enumerate(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void TableView::deselectAll(TableView *self)
- *
  * @memberof TableView
  */
 static void deselectAll(TableView *self) {
@@ -311,7 +307,6 @@ static void deselectAll(TableView *self) {
 
 /**
  * @fn void TableView::deselectRowAtIndex(TableView *self, int index)
- *
  * @memberof TableView
  */
 static void deselectRowAtIndex(TableView *self, int index) {
@@ -326,7 +321,6 @@ static void deselectRowAtIndex(TableView *self, int index) {
 
 /**
  * @fn void TableView::deselectRowsAtIndexes(TableView *self, const IndexSet *indexes)
- *
  * @memberof TableView
  */
 static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
@@ -340,7 +334,6 @@ static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
 
 /**
  * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
- *
  * @memberof TableView
  */
 static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style) {
@@ -403,7 +396,6 @@ static __thread TableView *_sortTableView;
 
 /**
  * @brief Comparator for sorting TableViewRows.
- *
  * @remarks This function relies on thread-local-storage.
  */
 static Order reloadData_sortRows(const ident a, const ident b) {
@@ -440,7 +432,6 @@ static void reloadData_addRows(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void TableView::reloadData(TableView *self)
- *
  * @memberof TableView
  */
 static void reloadData(TableView *self) {
@@ -500,7 +491,6 @@ static void reloadData(TableView *self) {
 
 /**
  * @fn void TableView::removeColumn(TableView *self, TableColumn *column)
- *
  * @memberof TableView
  */
 static void removeColumn(TableView *self, TableColumn *column) {
@@ -516,7 +506,6 @@ static void removeColumn(TableView *self, TableColumn *column) {
 
 /**
  * @fn int TableView::rowAtPoint(const TableView *self, const SDL_Point *point)
- *
  * @memberof TableView
  */
 static int rowAtPoint(const TableView *self, const SDL_Point *point) {
@@ -533,7 +522,6 @@ static int rowAtPoint(const TableView *self, const SDL_Point *point) {
 
 /**
  * @fn SDL_Rect TableView::scrollableArea(const TableView *self)
- *
  * @memberof TableView
  */
 static SDL_Rect scrollableArea(const TableView *self) {
@@ -559,7 +547,6 @@ static void selectAll_enumerate(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void TableView::selectAll(TableView *self)
- *
  * @memberof TableView
  */
 static void selectAll(TableView *self) {
@@ -568,7 +555,6 @@ static void selectAll(TableView *self) {
 
 /**
  * @fn IndexSet *TableView::selectedRowIndexes(const TableView *self)
- *
  * @memberof TableView
  */
 static IndexSet *selectedRowIndexes(const TableView *self) {
@@ -591,7 +577,6 @@ static IndexSet *selectedRowIndexes(const TableView *self) {
 
 /**
  * @fn void TableView::selectRowAtIndex(TableView *self, int index)
- *
  * @memberof TableView
  */
 static void selectRowAtIndex(TableView *self, int index) {
@@ -606,7 +591,6 @@ static void selectRowAtIndex(TableView *self, int index) {
 
 /**
  * @fn void TableView::selectRowsAtIndexes(TableView *self, const IndexSet *indexes)
- *
  * @memberof TableView
  */
 static void selectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
@@ -620,7 +604,6 @@ static void selectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
 
 /**
  * @fn void TableView::setSortColumn(TableView *self, TableColumn *column)
- *
  * @memberof TableView
  */
 static void setSortColumn(TableView *self, TableColumn *column) {

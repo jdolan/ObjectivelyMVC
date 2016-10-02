@@ -25,7 +25,6 @@
 
 /**
  * @file
- *
  * @brief ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
  */
 

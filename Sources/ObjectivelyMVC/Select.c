@@ -176,7 +176,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 /**
  * @fn void Control::stateDidChange(Control *self)
- *
  * @memberof Control
  */
 static void stateDidChange(Control *self) {
@@ -210,7 +209,6 @@ static void addOption_addOptions(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void Select::addOption(Select *self, const char *title, ident value)
- *
  * @memberof Select
  */
 static void addOption(Select *self, const char *title, ident value) {
@@ -239,7 +237,6 @@ static void addOption(Select *self, const char *title, ident value) {
 
 /**
  * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
- *
  * @memberof Select
  */
 static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style) {
@@ -284,7 +281,6 @@ static _Bool optionWithValue_predicate(ident obj, ident data) {
 
 /**
  * @fn Option *Select::optionWithValue(const Select *self, ident value)
- *
  * @memberof Select
  */
 static Option *optionWithValue(const Select *self, const ident value) {
@@ -300,9 +296,7 @@ static void removeAllOptions_enumerate(const Array *array, ident obj, ident data
 
 /**
  * @fn void Select::removeAllOptions(Select *self)
- *
  * @brief Removes all Options from this Select.
- *
  * @memberof Select
  */
 static void removeAllOptions(Select *self) {
@@ -318,7 +312,6 @@ static void removeAllOptions(Select *self) {
 
 /**
  * @fn void Select::removeOption(Select *self, Option *option)
- *
  * @memberof Select
  */
 static void removeOption(Select *self, Option *option) {
@@ -336,7 +329,6 @@ static void removeOption(Select *self, Option *option) {
 
 /**
  * @fn void Select::removeOptionWithValue(Select *self, ident value)
- *
  * @memberof Select
  */
 static void removeOptionWithValue(Select *self, ident value) {
@@ -349,7 +341,6 @@ static void removeOptionWithValue(Select *self, ident value) {
 
 /**
  * @fn void Select::selectOptionWithValue(Select *self, ident value)
- *
  * @memberof Select
  */
 static void selectOptionWithValue(Select *self, ident value) {

@@ -29,7 +29,6 @@
 
 /**
  * @file
- *
  * @brief An Input stacks a Control and Label.
  */
 
@@ -52,11 +51,8 @@ typedef struct InputInterface InputInterface;
 
 /**
  * @brief An Input stacks a Label with a Control.
- *
  * @extends StackView
- *
  * @ingroup Containers
- *
  * @remarks Inputs are containers used to group a Text label with a Control. They simplify the
  * programmatic layout of forms, and give your application a standard, consistent aesthetic.
  */
@@ -64,15 +60,12 @@ struct Input {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	StackView stackView;
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	InputInterface *interface;
 	
@@ -104,46 +97,37 @@ struct InputInterface {
 	
 	/**
 	 * @fn Input *Input::initWithFrame(Input *self, const SDL_Rect *frame)
-	 *
 	 * @brief Initializes this Input with the specified frame.
-	 *
+	 * @param self The Input.
 	 * @param frame The frame.
-	 *
 	 * @return The initialized Input, or `NULL` on error.
-	 *
 	 * @memberof Input
 	 */
 	Input *(*initWithFrame)(Input *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn void Input::setControl(Input *self, Control *control)
-	 *
 	 * @brief Sets this Input's Control.
-	 *
+	 * @param self The Input.
 	 * @param control The Control.
-	 *
 	 * @memberof Input
 	 */
 	void (*setControl)(Input *self, Control *control);
 
 	/**
 	 * @fn void Input::setLabel(Input *self, Label *label)
-	 *
 	 * @brief Sets this Input's Label.
-	 *
+	 * @param self The Input.
 	 * @param label The Label.
-	 *
 	 * @memberof Input
 	 */
 	void (*setLabel)(Input *self, Label *label);
 
 	/**
 	 * @fn void Input::setOrientation(Input *self, InputOrientation orientation)
-	 *
 	 * @brief Sets this Input's orientation.
-	 *
+	 * @param self The Input.
 	 * @param orientation The InputOrientation.
-	 *
 	 * @memberof Input
 	 */
 	void (*setOrientation)(Input *self, InputOrientation orientation);

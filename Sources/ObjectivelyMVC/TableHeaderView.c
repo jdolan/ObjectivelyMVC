@@ -69,7 +69,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
 /**
  * @fn TableHeaderView *TableHeaderView::initWithTableView(TableHeaderView *self, TableView *tableView)
- *
  * @memberof TableHeaderView
  */
 static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tableView) {

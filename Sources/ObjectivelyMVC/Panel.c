@@ -203,7 +203,6 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 /**
  * @fn SDL_Size Panel::contentSize(const Panel *self)
- *
  * @memberof Panel
  */
 static SDL_Size contentSize(const Panel *self) {
@@ -223,7 +222,6 @@ static SDL_Size contentSize(const Panel *self) {
 
 /**
  * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
- *
  * @memberof Panel
  */
 static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {

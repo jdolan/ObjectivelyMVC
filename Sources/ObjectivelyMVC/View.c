@@ -87,7 +87,6 @@ static String *description(const Object *self) {
 
 /**
  * @fn void View::addSubview(View *self, View *subview)
- *
  * @memberof View
  */
 static void addSubview(View *self, View *subview) {
@@ -96,7 +95,6 @@ static void addSubview(View *self, View *subview) {
 
 /**
  * @fn void View::addSubviewRelativeTo(View *self, View *subview, View *other, ViewPosition position)
- *
  * @memberof View
  */
 static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPosition position) {
@@ -130,7 +128,6 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
 /**
  * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
- *
  * @memberof View
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -162,7 +159,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 /**
  * @fn void View::becomeFirstResponder(View *self)
- *
  * @memberof View
  */
 static void becomeFirstResponder(View *self) {
@@ -171,7 +167,6 @@ static void becomeFirstResponder(View *self) {
 
 /**
  * @fn void View::bind(View *self, const Dictionary *dictionary, const Inlet *inlets)
- *
  * @memberof View
  */
 static void _bind(View *self, const Dictionary *dictionary, const Inlet *inlets) {
@@ -190,7 +185,6 @@ static void _bind(View *self, const Dictionary *dictionary, const Inlet *inlets)
 
 /**
  * @fn SDL_Rect View::bounds(const View *self)
- *
  * @memberof View
  */
 static SDL_Rect bounds(const View *self) {
@@ -209,7 +203,6 @@ static SDL_Rect bounds(const View *self) {
 
 /**
  * @fn SDL_Rect View::clippingFrame(const View *self)
- *
  * @memberof View
  */
 static SDL_Rect clippingFrame(const View *self) {
@@ -253,7 +246,6 @@ static SDL_Rect clippingFrame(const View *self) {
 
 /**
  * @fn _Bool View::canBecomeFirstResponder(const View *self)
- *
  * @memberof View
  */
 static _Bool canBecomeFirstResponder(const View *self) {
@@ -277,7 +269,6 @@ static _Bool canBecomeFirstResponder(const View *self) {
 
 /**
  * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
- *
  * @memberof View
  */
 static _Bool containsPoint(const View *self, const SDL_Point *point) {
@@ -289,7 +280,6 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 
 /**
  * @fn int View::depth(const View *self)
- *
  * @memberof View
  */
 static int depth(const View *self) {
@@ -299,7 +289,6 @@ static int depth(const View *self) {
 
 /**
  * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
- *
  * @memberof View
  */
 static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
@@ -345,7 +334,6 @@ static void draw_recurse(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void View::draw(View *self, Renderer *renderer)
- *
  * @memberof View
  */
 static void draw(View *self, Renderer *renderer) {
@@ -362,7 +350,6 @@ static void draw(View *self, Renderer *renderer) {
 
 /**
  * @fn View *View::firstResponder(void)
- *
  * @memberof View
  */
 static View *firstResponder(void) {
@@ -371,7 +358,6 @@ static View *firstResponder(void) {
 
 /**
  * @fn View *View::init(View *self)
- *
  * @memberof View
  */
 static View *init(View *self) {
@@ -380,7 +366,6 @@ static View *init(View *self) {
 
 /**
  * @fn View *View::initWithFrame(View *self, const SDL_Rect *frame)
- *
  * @memberof View
  */
 static View *initWithFrame(View *self, const SDL_Rect *frame) {
@@ -404,7 +389,6 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 
 /**
  * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
- *
  * @memberof View
  */
 static _Bool isDescendantOfView(const View *self, const View *view) {
@@ -421,7 +405,6 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
 
 /**
  * @fn _Bool View::isFirstResponder(const View *self)
- *
  * @memberof View
  */
 static _Bool isFirstResponder(const View *self) {
@@ -430,7 +413,6 @@ static _Bool isFirstResponder(const View *self) {
 
 /**
  * @fn _Bool View::isVisible(const View *self)
- *
  * @memberof View
  */
 static _Bool isVisible(const View *self) {
@@ -453,7 +435,6 @@ static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void View::layoutIfNeeded(View *self)
- *
  * @memberof View
  */
 static void layoutIfNeeded(View *self) {
@@ -470,7 +451,6 @@ static void layoutIfNeeded(View *self) {
 
 /**
  * @fn View::layoutSubviews(View *self)
- *
  * @memberof View
  */
 static void layoutSubviews(View *self) {
@@ -548,7 +528,6 @@ static void layoutSubviews(View *self) {
 
 /**
  * @fn void View::removeFromSuperview(View *self)
- *
  * @memberof View
  */
 static void removeFromSuperview(View *self) {
@@ -560,7 +539,6 @@ static void removeFromSuperview(View *self) {
 
 /**
  * @fn void View::removeSubview(View *self, View *subview)
- *
  * @memberof View
  */
 static void removeSubview(View *self, View *subview) {
@@ -578,7 +556,6 @@ static void removeSubview(View *self, View *subview) {
 
 /**
  * @fn void View::render(View *self, Renderer *renderer)
- *
  * @memberof View
  */
 static void render(View *self, Renderer *renderer) {
@@ -617,7 +594,6 @@ static void renderDeviceDidReset_recurse(const Array *array, ident obj, ident da
 
 /**
  * @fn void View::renderDeviceDidReset(View *self)
- *
  * @memberof View
  */
 static void renderDeviceDidReset(View *self) {
@@ -626,7 +602,6 @@ static void renderDeviceDidReset(View *self) {
 
 /**
  * @fn SDL_Rect View::renderFrame(const View *self)
- *
  * @memberof View
  */
 static SDL_Rect renderFrame(const View *self) {
@@ -654,7 +629,6 @@ static SDL_Rect renderFrame(const View *self) {
 
 /**
  * @fn void View::resignFirstResponder(View *self)
- *
  * @memberof View
  */
 static void resignFirstResponder(View *self) {
@@ -692,6 +666,7 @@ static void resignFirstResponder(View *self) {
 
 /**
  * @fn void View::resize(View *self, const SDL_Size *size)
+ * @memberof View
  */
 static void resize(View *self, const SDL_Size *size) {
 
@@ -715,7 +690,6 @@ static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void View::respondToEvent(View *self, const SDL_Event *event)
- *
  * @memberof View
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
@@ -743,7 +717,6 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 /**
  * @fn SDL_Size View::size(const View *self)
- *
  * @memberof View
  */
 static SDL_Size size(const View *self) {
@@ -752,7 +725,6 @@ static SDL_Size size(const View *self) {
 
 /**
  * @fn SDL_Size View::sizeThatContains(const View *self)
- *
  * @memberof View
  */
 static SDL_Size sizeThatContains(const View *self) {
@@ -765,7 +737,6 @@ static SDL_Size sizeThatContains(const View *self) {
 
 /**
  * @fn void View::sizeThatFits(const View *self)
- *
  * @memberof View
  */
 static SDL_Size sizeThatFits(const View *self) {
@@ -813,7 +784,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
 /**
  * @fn void View::sizeToContain(View *self)
- *
  * @memberof View
  */
 static void sizeToContain(View *self) {
@@ -825,7 +795,6 @@ static void sizeToContain(View *self) {
 
 /**
  * @fn void View::sizeToFit(View *self)
- *
  * @memberof View
  */
 static void sizeToFit(View *self) {
@@ -844,7 +813,6 @@ static void updateBindings_recurse(const Array *array, ident obj, ident data) {
 
 /**
  * @fn void View::updateBindings(View *self)
- *
  * @memberof View
  */
 static void updateBindings(View *self) {
@@ -853,7 +821,6 @@ static void updateBindings(View *self) {
 
 /**
  * @fn SDL_Rect View::viewport(const View *self)
- *
  * @memberof View
  */
 static SDL_Rect viewport(const View *self) {
@@ -865,7 +832,6 @@ static SDL_Rect viewport(const View *self) {
 
 /**
  * @fn View *View::viewWithContentsOfFile(const char *path, Outlet *outlets)
- *
  * @memberof View
  */
 static View *viewWithContentsOfFile(const char *path, Outlet *outlets) {
@@ -881,7 +847,6 @@ static View *viewWithContentsOfFile(const char *path, Outlet *outlets) {
 
 /**
  * @fn View *View::viewWithData(const Data *data, Outlet *outlets)
- *
  * @memberof View
  */
 static View *viewWithData(const Data *data, Outlet *outlets) {
@@ -897,7 +862,6 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
 
 /**
  * @fn View *View::viewWithDictionary(const Dictionary *dictionary, Outlet *outlets)
- *
  * @memberof View
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
@@ -948,7 +912,6 @@ static _Bool visibleSubviews_filter(ident obj, ident data) {
 
 /**
  * @fn Array *View::visibleSubviews(const View *self)
- *
  * @memberof View
  */
 static Array *visibleSubviews(const View *self) {
@@ -957,7 +920,6 @@ static Array *visibleSubviews(const View *self) {
 
 /**
  * @fn SDL_Window *View::window(const View *self)
- *
  * @memberof View
  */
 static SDL_Window *window(const View *self) {
