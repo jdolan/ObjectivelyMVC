@@ -130,13 +130,13 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 
-	((BoxInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((BoxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
 Class _Box = {

@@ -94,10 +94,10 @@ static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tabl
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->interface)->render = render;
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->render = render;
+	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
-	((TableHeaderViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
+	((TableHeaderViewInterface *) clazz->def->interface)->initWithTableView = initWithTableView;
 }
 
 Class _TableHeaderView = {

@@ -332,22 +332,22 @@ static void stateDidChange(Control *self) {
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->render = render;
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->render = render;
+	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 	
-	((ControlInterface *) clazz->interface)->actionForEvent = actionForEvent;
-	((ControlInterface *) clazz->interface)->addActionForEventType = addActionForEventType;
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->interface)->enabled = enabled;
-	((ControlInterface *) clazz->interface)->focused = focused;
-	((ControlInterface *) clazz->interface)->highlighted = highlighted;
-	((ControlInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((ControlInterface *) clazz->interface)->selected = selected;
-	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
+	((ControlInterface *) clazz->def->interface)->actionForEvent = actionForEvent;
+	((ControlInterface *) clazz->def->interface)->addActionForEventType = addActionForEventType;
+	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->def->interface)->enabled = enabled;
+	((ControlInterface *) clazz->def->interface)->focused = focused;
+	((ControlInterface *) clazz->def->interface)->highlighted = highlighted;
+	((ControlInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((ControlInterface *) clazz->def->interface)->selected = selected;
+	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 }
 
 Class _Control = {

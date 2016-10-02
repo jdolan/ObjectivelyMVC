@@ -129,12 +129,12 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	
-	((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
-	((WindowControllerInterface *) clazz->interface)->render = render;
-	((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
-	((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
+	((WindowControllerInterface *) clazz->def->interface)->initWithWindow = initWithWindow;
+	((WindowControllerInterface *) clazz->def->interface)->render = render;
+	((WindowControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((WindowControllerInterface *) clazz->def->interface)->setViewController = setViewController;
 }
 
 Class _WindowController = {

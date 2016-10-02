@@ -170,13 +170,13 @@ static void setContentView(ScrollView *self, View *contentView) {
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
-	((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((ScrollViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
-	((ScrollViewInterface *) clazz->interface)->setContentView = setContentView;
+	((ScrollViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((ScrollViewInterface *) clazz->def->interface)->scrollToOffset = scrollToOffset;
+	((ScrollViewInterface *) clazz->def->interface)->setContentView = setContentView;
 }
 
 Class _ScrollView = {

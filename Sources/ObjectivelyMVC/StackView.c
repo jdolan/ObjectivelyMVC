@@ -247,13 +247,13 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
 
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 	
-	((StackViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((StackViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
 Class _StackView = {

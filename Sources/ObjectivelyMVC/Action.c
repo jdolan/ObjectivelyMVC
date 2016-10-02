@@ -58,7 +58,7 @@ static Action *initWithEventType(Action *self, SDL_EventType eventType, ActionFu
  */
 static void initialize(Class *clazz) {
 
-	((ActionInterface *) clazz->interface)->initWithEventType = initWithEventType;
+	((ActionInterface *) clazz->def->interface)->initWithEventType = initWithEventType;
 }
 
 Class _Action = {

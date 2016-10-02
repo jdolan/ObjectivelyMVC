@@ -287,15 +287,15 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 
-	((PanelInterface *) clazz->interface)->contentSize = contentSize;
-	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((PanelInterface *) clazz->def->interface)->contentSize = contentSize;
+	((PanelInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 
 	Data *resizeData = $(alloc(Data), initWithBytes, _resizeData, lengthof(_resizeData));
 

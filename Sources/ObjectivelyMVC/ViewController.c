@@ -157,16 +157,14 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	
-	ViewControllerInterface *viewController = (ViewControllerInterface *) clazz->interface;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	viewController->drawView = drawView;
-	viewController->init = init;
-	viewController->loadView = loadView;
-	viewController->loadViewIfNeeded = loadViewIfNeeded;
-	viewController->moveToParentViewController = moveToParentViewController;
-	viewController->respondToEvent = respondToEvent;
+	((ViewControllerInterface *) clazz->def->interface)->drawView = drawView;
+	((ViewControllerInterface *) clazz->def->interface)->init = init;
+	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
+	((ViewControllerInterface *) clazz->def->interface)->loadViewIfNeeded = loadViewIfNeeded;
+	((ViewControllerInterface *) clazz->def->interface)->moveToParentViewController = moveToParentViewController;
+	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 }
 
 Class _ViewController = {

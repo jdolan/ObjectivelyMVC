@@ -211,15 +211,15 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->render = render;
 	
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 	
-	((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((CheckboxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 
 	Data *checkData = $(alloc(Data), initWithBytes, _checkData, lengthof(_checkData));
 

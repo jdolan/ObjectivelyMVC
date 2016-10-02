@@ -104,11 +104,11 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 	
-	((OptionInterface *) clazz->interface)->initWithTitle = initWithTitle;
+	((OptionInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
 }
 
 Class _Option = {

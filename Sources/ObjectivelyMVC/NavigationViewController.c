@@ -135,13 +135,13 @@ static ViewController *topViewController(const NavigationViewController *self) {
  */
 static void initialize(Class *clazz) {
 
-	((NavigationViewControllerInterface *) clazz->interface)->init = init;
-	((NavigationViewControllerInterface *) clazz->interface)->pushViewController = pushViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->popToRootViewController = popToRootViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->popToViewController = popToViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->popViewController = popViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->rootViewController = rootViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->topViewController = topViewController;
+	((NavigationViewControllerInterface *) clazz->def->interface)->init = init;
+	((NavigationViewControllerInterface *) clazz->def->interface)->pushViewController = pushViewController;
+	((NavigationViewControllerInterface *) clazz->def->interface)->popToRootViewController = popToRootViewController;
+	((NavigationViewControllerInterface *) clazz->def->interface)->popToViewController = popToViewController;
+	((NavigationViewControllerInterface *) clazz->def->interface)->popViewController = popViewController;
+	((NavigationViewControllerInterface *) clazz->def->interface)->rootViewController = rootViewController;
+	((NavigationViewControllerInterface *) clazz->def->interface)->topViewController = topViewController;
 }
 
 Class _NavigationViewController = {

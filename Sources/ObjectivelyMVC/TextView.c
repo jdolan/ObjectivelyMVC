@@ -327,15 +327,15 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
  */
 static void initialize(Class *clazz) {
 	
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->render = render;
 	
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 	
-	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TextViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
 Class _TextView = {
