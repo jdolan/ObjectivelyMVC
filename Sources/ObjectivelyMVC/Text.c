@@ -123,7 +123,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
 /**
  * @fn Text *Text::initWithText(Text *self, const char *text, Font *font)
- *
  * @memberof Text
  */
 static Text *initWithText(Text *self, const char *text, Font *font) {
@@ -142,7 +141,6 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 
 /**
  * @fn SDL_Size Text::naturalSize(const Text *self)
- *
  * @memberof Text
  */
 static SDL_Size naturalSize(const Text *self) {
@@ -158,7 +156,6 @@ static SDL_Size naturalSize(const Text *self) {
 
 /**
  * @fn void Text::setFont(Text *self, Font *font)
- *
  * @memberof Text
  */
 static void setFont(Text *self, Font *font) {
@@ -181,7 +178,6 @@ static void setFont(Text *self, Font *font) {
 
 /**
  * @fn void Text::setText(Text *self, const char *text)
- *
  * @memberof Text
  */
 static void setText(Text *self, const char *text) {

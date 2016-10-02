@@ -29,8 +29,7 @@
 
 /**
  * @file
- * 
- * @brief Checkboxes.
+ * @brief Checkboxes are toggle Controls that respond to click events.
  */
 
 typedef struct Checkbox Checkbox;
@@ -40,25 +39,20 @@ typedef struct CheckboxInterface CheckboxInterface;
 #define DEFAULT_CHECKBOX_SIZE 18
 
 /**
- * @brief The Checkbox type.
- *
+ * @brief Checkboxes are toggle Controls that respond to click events.
  * @extends Control
- *
  * @ingroup Controls
  */
 struct Checkbox {
 
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	CheckboxInterface *interface;
 
@@ -69,7 +63,6 @@ struct Checkbox {
 
 	/**
 	 * @brief The check.
-	 *
 	 * @private
 	 */
 	ImageView *check;
@@ -87,14 +80,11 @@ struct CheckboxInterface {
 
 	/**
 	 * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame, ControlStyle style)
-	 *
 	 * @brief Initializes this Checkbox.
-	 *
+	 * @param self The Checkbox.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.
-	 *
 	 * @return The initialized Checkbox, or `NULL` on error.
-	 *
 	 * @memberof Checkbox
 	 */
 	Checkbox *(*initWithFrame)(Checkbox *self, const SDL_Rect *frame, ControlStyle style);

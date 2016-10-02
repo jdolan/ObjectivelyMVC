@@ -33,7 +33,6 @@
 
 /**
  * @fn NavigationViewController *NavigationViewController::init(NavigationViewController *self)
- *
  * @memberof NavigationViewController
  */
 static NavigationViewController *init(NavigationViewController *self) {
@@ -54,7 +53,6 @@ static void pushViewController_enumerate(const Array *array, ident obj, ident da
 
 /**
  * @fn void NavigationViewController::pushViewController(NavigationViewController *self, ViewController *viewController)
- *
  * @memberof NavigationViewController
  */
 static void pushViewController(NavigationViewController *self, ViewController *viewController) {
@@ -68,7 +66,6 @@ static void pushViewController(NavigationViewController *self, ViewController *v
 
 /**
  * @fn void NavigationViewController::popToRootViewController(NavigationViewController *self)
- *
  * @memberof NavigationViewController
  */
 static void popToRootViewController(NavigationViewController *self) {
@@ -81,7 +78,6 @@ static void popToRootViewController(NavigationViewController *self) {
 
 /**
  * @fn void NavigationViewController::popToViewController(NavigationViewController *self, const ViewController *viewController)
- *
  * @memberof NavigationViewController
  */
 static void popToViewController(NavigationViewController *self, const ViewController *viewController) {
@@ -99,7 +95,6 @@ static void popToViewController(NavigationViewController *self, const ViewContro
 
 /**
  * @fn void NavigationViewController::popViewController(NavigationViewController *self)
- *
  * @memberof NavigationViewController
  */
 static void popViewController(NavigationViewController *self) {
@@ -112,7 +107,6 @@ static void popViewController(NavigationViewController *self) {
 
 /**
  * @fn ViewController NavigationViewController::rootViewController(const NavigationViewController *self)
- *
  * @memberof NavigationViewController
  */
 static ViewController *rootViewController(const NavigationViewController *self) {
@@ -121,7 +115,6 @@ static ViewController *rootViewController(const NavigationViewController *self) 
 
 /**
  * @fn ViewController NavigationViewController::topViewController(const NavigationViewController *self)
- *
  * @memberof NavigationViewController
  */
 static ViewController *topViewController(const NavigationViewController *self) {

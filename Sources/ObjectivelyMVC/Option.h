@@ -29,7 +29,6 @@
 
 /**
  * @file
- *
  * @brief Select Options.
  */
 
@@ -40,25 +39,20 @@ typedef struct Option Option;
 typedef struct OptionInterface OptionInterface;
 
 /**
- * @brief The Option type.
- *
+ * @brief Select Options.
  * @extends View
- *
  * @ingroup Controls
  */
 struct Option {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	View view;
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	OptionInterface *interface;
 	
@@ -85,14 +79,11 @@ struct OptionInterface {
 	
 	/**
 	 * @fn Option *Option::initWithTitle(Option *self, const char *title, ident value)
-	 *
 	 * @brief Initializes this Option with the given title and value.
-	 *
+	 * @param self The Option.
 	 * @param title The title.
 	 * @param value The value.
-	 *
 	 * @return The initialized Option, or `NULL` on error.
-	 *
 	 * @memberof Option
 	 */
 	Option *(*initWithTitle)(Option *self, const char *title, ident value);

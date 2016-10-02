@@ -86,7 +86,6 @@ static void layoutSubviews(View *self) {
 
 /**
  * @fn Box *Box::initWithFrame(Box *self, const SDL_Rect *frame)
- *
  * @memberof Box
  */
 static Box *initWithFrame(Box *self, const SDL_Rect *frame) {

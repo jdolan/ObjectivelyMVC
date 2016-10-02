@@ -92,7 +92,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 /**
  * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
- *
  * @memberof ScrollView
  */
 static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style) {
@@ -114,7 +113,6 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, Contro
 
 /**
  * @brief Scrolls the content View to the specified offset.
- *
  * @memberof ScrollView
  */
 static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
@@ -144,7 +142,6 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
 
 /**
  * @fn void ScrollView::setContentView(ScrollView *self, View *contentView)
- *
  * @memberof ScrollView
  */
 static void setContentView(ScrollView *self, View *contentView) {

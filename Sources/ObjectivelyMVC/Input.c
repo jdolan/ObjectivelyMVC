@@ -82,7 +82,6 @@ static View *init(View *self) {
 
 /**
  * @fn Input *Input::initWithOrientation(Input *self, Control *control)
- *
  * @memberof Input
  */
 static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
@@ -109,7 +108,6 @@ static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
 
 /**
  * @fn void Input::setControl(Input *self, Control *control)
- *
  * @memberof Input
  */
 static void setControl(Input *self, Control *control) {
@@ -127,7 +125,6 @@ static void setControl(Input *self, Control *control) {
 
 /**
  * @fn void Input::setLabel(Input *self, Label *label)
- *
  * @memberof Input
  */
 static void setLabel(Input *self, Label *label) {
@@ -145,7 +142,6 @@ static void setLabel(Input *self, Label *label) {
 
 /**
  * @fn void Input::setOrientation(Input *self, InputOrientation orientation)
- *
  * @memberof Input
  */
 static void setOrientation(Input *self, InputOrientation orientation) {

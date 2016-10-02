@@ -37,7 +37,6 @@
 
 /**
  * @file
- * 
  * @brief TrueType fonts.
  */
 
@@ -58,23 +57,19 @@ typedef struct Font Font;
 typedef struct FontInterface FontInterface;
 
 /**
- * @brief The Font type.
- *
+ * @brief TrueType fonts.
  * @extends Object
  */
 struct Font {
 
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	Object object;
 
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	FontInterface *interface;
 	
@@ -101,94 +96,72 @@ struct FontInterface {
 	
 	/**
 	 * @static
-	 *
 	 * @fn Array *Font::allFonts(void)
-	 *
 	 * @return An Array of all available Font names.
-	 *
 	 * @memberof Font
 	 */
 	Array *(*allFonts)(void);
 
 	/**
 	 * @static
-	 *
 	 * @fn Font *Font::defaultFont(FontCategory category)
-	 *
 	 * @param category The FontCategory.
-	 *
 	 * @return The default Font for the given category.
-	 *
 	 * @memberof Font
 	 */
 	Font *(*defaultFont)(FontCategory category);
 
 	/**
 	 * @fn Font *Font::initWithAttributes(Font *self, const char *family, int ptsize, int style)
-	 *
 	 * @brief Initializes this Font with the given attributes.
-	 *
+	 * @param self The Font.
 	 * @param family The font family.
 	 * @param ptsize The point size.
 	 * @param style The style (e.g. `TTF_STYLE_BOLD`).
-	 *
 	 * @return The initialized Font, or `NULL` on error.
-	 *
 	 * @memberof Font
 	 */
 	Font *(*initWithAttributes)(Font *self, const char *family, int ptsize, int style);
 
 	/**
 	 * @fn Font *Font::initWithName(Font *self, const char *name)
-	 *
 	 * @brief Initializes this Font with the given Fontconfig name.
-	 *
+	 * @param self The Font.
 	 * @param name The Fontconfig name.
-	 *
 	 * @return The initialized Font, or `NULL` on error.
-	 *
 	 * @memberof Font
 	 */
 	Font *(*initWithName)(Font *self, const char *name);
 
 	/**
 	 * @fn Font *Font::initWithPattern(Font *self, FcPattern *pattern)
-	 *
 	 * @brief Initializes this Font with the given Fontconfig pattern.
-	 *
+	 * @param self The Font.
 	 * @param name The Fontconfig pattern.
-	 *
 	 * @return The initialized Font, or `NULL` on error.
-	 *
 	 * @memberof Font
-	 *
 	 * @private
 	 */
 	Font *(*initWithPattern)(Font *self, ident pattern);
 	
 	/**
 	 * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color)
-	 *
 	 * @brief Renders the given characters in this Font.
-	 *
+	 * @param self The Font.
 	 * @param chars The null-terminated UTF-8 encoded C string to render.
 	 * @param color The color.
-	 *
 	 * @return The rendered surface, or `NULL` on error.
-	 *
 	 * @memberof Font
 	 */
 	SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color);
 	
 	/**
 	 * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
-	 *
+	 * @param self The Font.
 	 * @param chars The null-terminated UTF-8 encoded C string to size.
 	 * @param w The width to return.
 	 * @param h The height to return.
-	 *
 	 * @return The size of the rendered characters in pixels.
-	 *
 	 * @memberof Font
 	 */
 	void (*sizeCharacters)(const Font *self, const char *chars, int *w, int *h);

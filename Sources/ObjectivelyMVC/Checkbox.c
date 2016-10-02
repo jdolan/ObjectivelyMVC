@@ -163,7 +163,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 /**
  * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame, ControlStyle style)
- *
  * @memberof Checkbox
  */
 static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlStyle style) {

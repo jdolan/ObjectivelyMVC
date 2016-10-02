@@ -29,8 +29,7 @@
 
 /**
  * @file
- *
- * @brief Select Control.
+ * @brief A Control allowing users to select one or more Options.
  */
 
 #define DEFAULT_SELECT_WIDTH 100
@@ -47,7 +46,6 @@ struct SelectDelegate {
 	
 	/**
 	 * @brief Called when a selection is made.
-	 *
 	 * @param select The Select.
 	 * @param option The selected Option.
 	 */
@@ -55,25 +53,20 @@ struct SelectDelegate {
 };
 
 /**
- * @brief The Select type.
- *
+ * @brief A Control allowing users to select one or more Options.
  * @extends Control
- *
  * @ingroup Controls
  */
 struct Select {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	Control control;
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	SelectInterface *interface;
 
@@ -89,7 +82,6 @@ struct Select {
 	
 	/**
 	 * @brief The Select Options.
-	 *
 	 * @private
 	 */
 	MutableArray *options;
@@ -101,7 +93,6 @@ struct Select {
 
 	/**
 	 * @brief The StackView for rendering all Options.
-	 *
 	 * @private
 	 */
 	StackView *stackView;
@@ -119,88 +110,73 @@ struct SelectInterface {
 	
 	/**
 	 * @fn void Select::addOption(Select *self, const char *title, ident value)
-	 *
 	 * @brief Creates and adds a new Option to this Select.
-	 *
+	 * @param self The Select.
 	 * @param title The Option title.
 	 * @param value The Option value.
-	 *
 	 * @memberof Select
 	 */
 	void (*addOption)(Select *self, const char *title, ident value);
 	
 	/**
 	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
-	 *
 	 * @brief Initializes this Select with the specified frame and style.
-	 *
+	 * @param self The Select.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.
-	 *
 	 * @return The initialized Select, or `NULL` on error.
-	 *
 	 * @memberof Select
 	 */
 	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame, ControlStyle style);
 	
 	/**
 	 * @fn Option *Select::optionWithValue(const Select *self, ident value)
-	 *
+	 * @param self The Select.
 	 * @param value The Option value.
-	 *
 	 * @return The first Option with the given value.
-	 *
 	 * @memberof Select
 	 */
 	Option *(*optionWithValue)(const Select *self, ident value);
 
 	/**
 	 * @fn void Select::removeAllOptions(Select *self)
-	 *
 	 * @brief Removes all Options from this Select.
-	 *
+	 * @param self The Select.
 	 * @memberof Select
 	 */
 	void (*removeAllOptions)(Select *self);
 
 	/**
 	 * @fn void Select::removeOption(Select *self, Option *option)
-	 *
 	 * @brief Removes the specified Option.
-	 *
-	 * @param value The Option to remove.
-	 *
+	 * @param self The Select.
+	 * @param option The Option to remove.
 	 * @memberof Select
 	 */
 	void (*removeOption)(Select *self, Option *option);
 
 	/**
 	 * @fn void Select::removeOptionWithValue(Select *self, ident value)
-	 *
 	 * @brief Removes first the Option with the given value.
-	 *
+	 * @param self The Select.
 	 * @param value The Option value.
-	 *
 	 * @memberof Select
 	 */
 	void (*removeOptionWithValue)(Select *self, ident value);
 	
 	/**
 	 * @fn void Select::selectOptionWithValue(Select *self, ident value)
-	 *
 	 * @brief Selects the first Option with the given value.
-	 *
+	 * @param self The Select.
 	 * @param value The Option value.
-	 *
 	 * @memberof Select
 	 */
 	void (*selectOptionWithValue)(Select *self, ident value);
 	
 	/**
 	 * @fn Option *Select::selectedOption(const Select *self)
-	 *
+	 * @param self The Select.
 	 * @return The selected Option, or `NULL`.
-	 *
 	 * @memberof Select
 	 */
 	Option *(*selectedOption)(const Select *self);

@@ -28,8 +28,7 @@
 
 /**
  * @file
- *
- * @brief ImageView implementation.
+ * @brief ImageViews render an Image in the context of a View hierarchy.
  */
 
 extern const EnumName GLBlendNames[];
@@ -38,8 +37,7 @@ typedef struct ImageView ImageView;
 typedef struct ImageViewInterface ImageViewInterface;
 
 /**
- * @brief The ImageView type.
- *
+ * @brief ImageViews render an Image in the context of a View hierarchy.
  * @extends View
  */
 struct ImageView {
@@ -51,8 +49,7 @@ struct ImageView {
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	ImageViewInterface *interface;
 
@@ -96,48 +93,38 @@ struct ImageViewInterface {
 
 	/**
 	 * @fn ImageView *ImageView::initWithImage(ImageView *self, const SDL_Rect *frame)
-	 *
 	 * @brief Initializes this ImageView with the specified frame.
-	 *
+	 * @param self The ImageView.
 	 * @param frame The frame.
-	 *
 	 * @return The initialized ImageView, or `NULL` on error.
-	 *
 	 * @memberof ImageView
 	 */
 	ImageView *(*initWithFrame)(ImageView *self, const SDL_Rect *frame);
 	
 	/**
 	 * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
-	 *
 	 * @brief Initializes this ImageView with the specified image.
-	 *
+	 * @param self The ImageView.
 	 * @param image The Image.
-	 *
 	 * @return The initialized ImageView, or `NULL` on error.
-	 *
 	 * @memberof ImageView
 	 */
 	ImageView *(*initWithImage)(ImageView *self, Image *image);
 
 	/**
 	 * @fn void ImageView::setImage(ImageView *self, Image *image);
-	 *
 	 * @brief Sets the Image for this ImageView.
-	 *
+	 * @param self The ImageView.
 	 * @param image An Image.
-	 *
 	 * @memberof ImageView
 	 */
 	void (*setImage)(ImageView *self, Image *image);
 
 	/**
 	 * @fn void ImageView::setImageWithSurface(ImageView *self, SDL_Surface *surface)
-	 *
 	 * @brief A convenience method to set this view's Image with a surface.
-	 *
+	 * @param self The ImageView.
 	 * @param surface The surface.
-	 *
 	 * @memberof ImageView
 	 */
 	void (*setImageWithSurface)(ImageView *image, SDL_Surface *surface);

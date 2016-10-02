@@ -116,7 +116,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 /**
  * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
- *
  * @memberof Button
  */
 static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style) {

@@ -64,7 +64,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
 /**
  * @fn Option *Option::initWithTitle(Option *self, const char *title, ident value)
- *
  * @memberof Option
  */
 static Option *initWithTitle(Option *self, const char *title, ident value) {

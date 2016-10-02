@@ -27,7 +27,6 @@
 
 /**
  * @file
- *
  * @brief ScrollViews allow users to pan their internal contents.
  */
 
@@ -50,25 +49,20 @@ struct ScrollViewDelegate {
 };
 
 /**
- * @brief The ScrollView type.
- *
+ * @brief ScrollViews allow users to pan their internal contents.
  * @extends View
- *
  * @ingroup Controls
  */
 struct ScrollView {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	Control control;
 
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	ScrollViewInterface *interface;
 
@@ -95,36 +89,29 @@ struct ScrollViewInterface {
 	
 	/**
 	 * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
-	 *
 	 * @brief Initializes this ScrollView with the specified frame and style.
-	 *
+	 * @param self The ScrollView.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.
-	 *
 	 * @return The initialized ScrollView, or `NULL` on error.
-	 *
 	 * @memberof ScrollView
 	 */
 	ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
 	 * @fn void ScrollView::scrollToOffset(ScrollView *self, const SDL_Point offset);
-	 *
 	 * @brief Scrolls the content View to the specified offset.
-	 *
+	 * @param self The ScrollView.
 	 * @param offset The offset.
-	 *
 	 * @memberof ScrollView
 	 */
 	void (*scrollToOffset)(ScrollView *self, const SDL_Point *offset);
 
 	/**
 	 * @fn void ScrollView::setContentView(ScrollView *self, View *contentView)
-	 *
 	 * @brief Sets the content view of this ScrollView.
-	 *
+	 * @param self The ScrollView.
 	 * @param contentView The content view.
-	 *
 	 * @memberof ScrollView
 	 */
 	void (*setContentView)(ScrollView *self, View *contentView);

@@ -29,33 +29,27 @@
 
 /**
  * @file
- *
- * @brief WindowControllers are responsible for managing the presentation of ViewControllers.
+ * @brief A WindowController manages a ViewController and its descendants within an SDL_Window.
  */
 
 typedef struct WindowController WindowController;
 typedef struct WindowControllerInterface WindowControllerInterface;
 
 /**
- * @brief The WindowController type.
- *
+ * @brief A WindowController manages a ViewController and its descendants within an SDL_Window.
  * @extends Object
- *
  * @ingroup ViewControllers
  */
 struct WindowController {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	Object object;
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	WindowControllerInterface *interface;
 
@@ -87,49 +81,38 @@ struct WindowControllerInterface {
 	
 	/**
 	 * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
-	 *
 	 * @brief Initializes this WindowController with the given window.
-	 *
+	 * @param self The WindowController.
 	 * @param window The window.
-	 *
 	 * @return The initialized WindowController, or `NULL` on error.
-	 *
 	 * @remarks The window must be accelerated (`SDL_WINDOW_OPENGL`). See `SDL_CreateWindow`.
-	 *
 	 * @memberof WindowController
 	 */
 	WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
 
 	/**
 	 * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
-	 *
 	 * @brief Presents the specified ViewController.
-	 *
+	 * @param self The WindowController.
 	 * @param viewController The ViewController.
-	 *
 	 * @memberof WindowController
 	 */
 	void (*setViewController)(WindowController *self, ViewController *viewController);
 
 	/**
 	 * @fn void WindowController::render(WindowController *self)
-	 *
 	 * @brief Renders the ViewController's View.
-	 *
-	 * @remarks Your application should call this method once per frame to render the 
-	 * View hierarchy.
-	 *
+	 * @param self The WindowController.
+	 * @remarks Your application should call this method once per frame to render the View hierarchy.
 	 * @memberof WindowController
 	 */
 	void (*render)(WindowController *self);
 
 	/**
 	 * @fn void WindowController:respondToEvent(WindowController *self, const SDL_Event *event)
-	 *
 	 * @brief Responds to the given event.
-	 *
+	 * @param self The WindowController.
 	 * @param event The SDL_Event.
-	 *
 	 * @memberof WindowController
 	 */
 	void (*respondToEvent)(WindowController * self, const SDL_Event *event);

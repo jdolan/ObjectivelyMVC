@@ -127,7 +127,6 @@ static void renderDeviceDidReset(View *self) {
 
 /**
  * @fn ImageView *ImageView::initWithImage(ImageView *self, const SDL_Rect *frame)
- *
  * @memberof ImageView
  */
 static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
@@ -147,7 +146,6 @@ static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
 
 /**
  * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
- *
  * @memberof ImageView
  */
 static ImageView *initWithImage(ImageView *self, Image *image) {
@@ -168,7 +166,6 @@ static ImageView *initWithImage(ImageView *self, Image *image) {
 
 /**
  * @fn void ImageView::setImage(ImageView *self, Image *image);
- *
  * @memberof ImageView
  */
 static void setImage(ImageView *self, Image *image) {
@@ -186,7 +183,6 @@ static void setImage(ImageView *self, Image *image) {
 
 /**
  * @fn void ImageView::setImageWithSurface(ImageView *self, SDL_Surface *surface)
- *
  * @memberof ImageView
  */
 static void setImageWithSurface(ImageView *self, SDL_Surface *surface) {

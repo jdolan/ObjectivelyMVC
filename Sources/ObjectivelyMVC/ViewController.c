@@ -46,7 +46,6 @@ static void dealloc(Object *self) {
 
 /**
  * @fn void ViewController::drawView(ViewController *self, Renderer *renderer)
- *
  * @memberof ViewController
  */
 static void drawView(ViewController *self, Renderer *renderer) {
@@ -64,7 +63,6 @@ static void drawView(ViewController *self, Renderer *renderer) {
 
 /**
  * @fn ViewController *ViewController::init(ViewController *self)
- *
  * @memberof ViewController
  */
 static ViewController *init(ViewController *self) {
@@ -80,7 +78,6 @@ static ViewController *init(ViewController *self) {
 
 /**
  * @fn void ViewController:loadView(ViewController *self)
- *
  * @memberof ViewController
  */
 static void loadView(ViewController *self) {
@@ -101,7 +98,6 @@ static void loadView(ViewController *self) {
 
 /**
  * @fn void ViewController::loadViewIfNeeded(ViewController *self)
- *
  * @memberof ViewController
  */
 static void loadViewIfNeeded(ViewController *self) {
@@ -115,7 +111,6 @@ static void loadViewIfNeeded(ViewController *self) {
 
 /**
  * @fn void ViewController::moveToParentViewController(ViewController *self, ViewController *parentViewController)
- *
  * @memberof ViewController
  */
 static void moveToParentViewController(ViewController *self, ViewController *parentViewController) {
@@ -140,7 +135,6 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 
 /**
  * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
- *
  * @memberof ViewController
  */
 static void respondToEvent(ViewController *self, const SDL_Event *event) {

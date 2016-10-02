@@ -29,7 +29,6 @@
 
 /**
  * @file
- *
  * @brief The CollectionItemView type.
  */
 
@@ -38,24 +37,19 @@ typedef struct CollectionItemViewInterface CollectionItemViewInterface;
 
 /**
  * @brief CollectionViewItems are a visual representation of an item within a CollectionView.
- *
  * @extends View
- *
  * @ingroup CollectionViews
  */
 struct CollectionItemView {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	View view;
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	CollectionItemViewInterface *interface;
 
@@ -87,26 +81,20 @@ struct CollectionItemViewInterface {
 	
 	/**
 	 * @fn CollectionItemView *CollectionItemView::initWithFrame(CollectionItemView *self, const SDL_Rect *frame)
-	 *
 	 * @brief Initializes this CollectionItemView with the specified frame.
-	 *
+	 * @param self The CollectionItemView.
 	 * @param frame The frame.
-	 *
 	 * @return The initialized CollectionItemView, or `NULL` on error.
-	 *
 	 * @memberof CollectionItemView
 	 */
 	CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool selected)
-	 *
 	 * @brief Sets the selected state of this item.
-	 *
+	 * @param self The CollectionItemView.
 	 * @param selected The selected state.
-	 *
 	 * @remarks Subclasses may override this method to change the visual cue for selection.
-	 *
 	 * @memberof CollectionItemView
 	 */
 	void (*setSelected)(CollectionItemView *self, _Bool selected);

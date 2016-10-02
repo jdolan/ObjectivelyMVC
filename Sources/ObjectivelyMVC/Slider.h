@@ -28,8 +28,7 @@
 
 /**
  * @file
- *
- * @brief Sliders.
+ * @brief A Control allowing users to drag a handle to select a numeric value.
  */
 
 #define DEFAULT_SLIDER_HANDLE_WIDTH 10
@@ -54,25 +53,20 @@ struct SliderDelegate {
 };
 
 /**
- * @brief The Slider type.
- *
+ * @brief A Control allowing users to drag a handle to select a numeric value.
  * @extends Control
- *
  * @ingroup Controls
  */
 struct Slider {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	Control control;
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	SliderInterface *interface;
 
@@ -88,7 +82,6 @@ struct Slider {
 
 	/**
 	 * @brief The slider handle.
-	 *
 	 * @private
 	 */
 	Control *handle;
@@ -131,20 +124,18 @@ struct SliderInterface {
 	
 	/**
 	 * @fn Slider *Slider::init(Slider *self)
-	 *
 	 * @brief Initializes this Slider.
-	 *
+	 * @param self The Slider.
 	 * @return The initialized Slider, or `NULL` on error.
-	 *
 	 * @memberof Slider
 	 */
 	Slider *(*initWithFrame)(Slider *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
 	 * @fn void Slider::setValue(Slider *self, double value)
-	 *
 	 * @brief Sets this Slider's value, invalidating its layout and notifying the delegate.
-	 *
+	 * @param self The Slider.
+	 * @param value The value.
 	 * @memberof Slider
 	 */
 	void (*setValue)(Slider *self, double value);

@@ -29,7 +29,6 @@
 
 /**
  * @file
- *
  * @brief Columns for TableViews.
  */
 
@@ -39,25 +38,20 @@ typedef struct TableColumn TableColumn;
 typedef struct TableColumnInterface TableColumnInterface;
 
 /**
- * @brief The TableColumn type.
- *
+ * @brief Columns for TableViews.
  * @extends Object
- *
  * @ingroup Tables
  */
 struct TableColumn {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	Object object;
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	TableColumnInterface *interface;
 
@@ -114,11 +108,10 @@ struct TableColumnInterface {
 
 	/**
 	 * @fn TableColumn *TableColumn::initWithIdentifier(TableColumn *self, const char *identifier)
-	 *
 	 * @brief Initializes this TableColumn with the given identifier.
-	 *
+	 * @param self The TableColumn.
+	 * @param identifier The column identifier.
 	 * @return The initialized TableColumn, or `NULL` on error.
-	 *
 	 * @memberof TableColumn
 	 */
 	TableColumn *(*initWithIdentifier)(TableColumn *self, const char *identifier);

@@ -27,6 +27,11 @@
 #include <SDL2/SDL_pixels.h>
 
 /**
+ * @file
+ * @brief ObjectivelyMVC base types.
+ */
+
+/**
  * @brief Undefine interface for MinGW-64 / Windows.
  */
 #undef interface

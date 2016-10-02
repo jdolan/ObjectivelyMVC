@@ -28,8 +28,7 @@
 
 /**
  * @file
- *
- * @brief A container View with a positioned label.
+ * @brief A container View with a positioned Label.
  */
 
 #define DEFAULT_BOX_PADDING 10
@@ -40,12 +39,9 @@ typedef struct Box Box;
 typedef struct BoxInterface BoxInterface;
 
 /**
- * @brief A container View with a positioned label.
- *
+ * @brief A container View with a positioned Label.
  * @extends View
- *
  * @ingroup Containers
- *
  * @remarks Boxes are container Views with a positioned label. Boxes are useful when grouping
  * Controls, Inputs or custom Views within a larger View (e.g. Panel).
  */
@@ -53,15 +49,12 @@ struct Box {
 	
 	/**
 	 * @brief The parent.
-	 *
-	 * @private
 	 */
 	View view;
 	
 	/**
 	 * @brief The typed interface.
-	 *
-	 * @private
+	 * @protected
 	 */
 	BoxInterface *interface;
 
@@ -83,13 +76,10 @@ struct BoxInterface {
 	
 	/**
 	 * @fn Box *Box::initWithFrame(Box *self, const SDL_Rect *frame)
-	 *
 	 * @brief Initializes this Box.
-	 *
+	 * @param self The Box.
 	 * @param frame The frame.
-	 *
 	 * @return The initialized Box, or `NULL` on error.
-	 *
 	 * @memberof Box
 	 */
 	Box *(*initWithFrame)(Box *self, const SDL_Rect *frame);

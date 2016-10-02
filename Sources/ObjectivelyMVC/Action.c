@@ -31,7 +31,6 @@
 
 /**
  * @fn Action *Action::initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
- *
  * @memberof Action
  */
 static Action *initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data) {

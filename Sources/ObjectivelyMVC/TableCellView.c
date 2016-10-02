@@ -45,7 +45,6 @@ static void dealloc(Object *self) {
 
 /**
  * @fn TableCellView *TableCellView::initWithFrame(TableCellView *self, const SDL_Rect *frame)
- *
  * @memberof TableCellView
  */
 static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) {
