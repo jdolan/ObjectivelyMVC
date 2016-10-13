@@ -80,7 +80,7 @@ libObjectivelyMVC_la_SOURCES = \
 	WindowController.c
 
 libObjectivelyMVC_la_CFLAGS = \
-	-I$(top_srcdir) -I$(top_srcdir)/Sources -DPKGDATADIR=\"$(pkgdatadir)\" \
+	-I$(top_srcdir) -I$(top_srcdir)/Sources -I$(top_builddir)/Sources -DPKGDATADIR=\"$(pkgdatadir)\" \
 	@HOST_CFLAGS@ \
 	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \

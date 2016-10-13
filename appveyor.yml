@@ -1,4 +1,7 @@
 version: 1.0.{build}
+branches:
+  only:
+  - master
 configuration: Release
 platform:
 - Win32
@@ -63,3 +66,8 @@ on_success:
     Invoke-Restmethod -uri 'https://ci.appveyor.com/api/builds' -Headers $headers -Method Post -Body $bodyAsjson -ContentType "application/json"
 
     }
+cache:
+  - ObjectivelyMVC.vs15\libs\fontconfig\fontconfig\fontconfig.h -> appveyor.yml
+  - ObjectivelyMVC.vs15\libs\sdl\SDL2\tmp.zip -> appveyor.yml
+  - ObjectivelyMVC.vs15\libs\sdl_image\SDL2\tmp.zip -> appveyor.yml
+  - ObjectivelyMVC.vs15\libs\sdl_ttf\SDL2\tmp.zip -> appveyor.yml
