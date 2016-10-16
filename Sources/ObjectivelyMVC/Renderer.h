@@ -24,11 +24,10 @@
 #pragma once
 
 #include <SDL2/SDL_video.h>
-#include <SDL2/SDL_opengl.h>
 
 #include <Objectively/MutableArray.h>
 
-#include <ObjectivelyMVC/Types.h>
+#include <ObjectivelyMVC/Program.h>
 
 /**
  * @file

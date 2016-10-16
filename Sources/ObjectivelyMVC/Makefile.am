@@ -3,6 +3,9 @@ AUTOMAKE_OPTIONS = nostdinc
 pkgdatadir = $(datadir)/ObjectivelyMVC
 pkgincludedir = $(includedir)/ObjectivelyMVC
 
+noinst_HEADERS = \
+	OpenGL.h
+
 pkginclude_HEADERS = \
 	Action.h \
 	Box.h \
@@ -23,9 +26,11 @@ pkginclude_HEADERS = \
 	NavigationViewController.h \
 	Option.h \
 	Panel.h \
+	Program.h \
 	Renderer.h \
 	ScrollView.h \
 	Select.h \
+	Shader.h \
 	Slider.h \
 	StackView.h \
 	TableCellView.h \
@@ -59,11 +64,14 @@ libObjectivelyMVC_la_SOURCES = \
 	Input.c \
 	Label.c \
 	NavigationViewController.c \
+	OpenGL.c \
 	Option.c \
 	Panel.c \
+	Program.c \
 	Renderer.c \
 	ScrollView.c \
 	Select.c \
+	Shader.c \
 	Slider.c \
 	StackView.c \
 	TableCellView.c \
@@ -80,7 +88,9 @@ libObjectivelyMVC_la_SOURCES = \
 	WindowController.c
 
 libObjectivelyMVC_la_CFLAGS = \
-	-I$(top_srcdir) -I$(top_srcdir)/Sources -I$(top_builddir)/Sources -DPKGDATADIR=\"$(pkgdatadir)\" \
+	-I$(top_srcdir) \
+	-I$(top_srcdir)/Sources \
+	-DPKGDATADIR=\"$(pkgdatadir)\" \
 	@HOST_CFLAGS@ \
 	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \

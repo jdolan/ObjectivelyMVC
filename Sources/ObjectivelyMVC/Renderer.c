@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Log.h>
+#include <ObjectivelyMVC/OpenGL.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View.h>
 
@@ -296,6 +297,8 @@ static void render(Renderer *self) {
 
 #pragma mark - Class lifecycle
 
+#include <ObjectivelyMVC/Program.h>
+
 /**
  * @see Class::initialize(Class *)
  */
@@ -314,6 +317,10 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->fillRect = fillRect;
 	((RendererInterface *) clazz->def->interface)->init = init;
 	((RendererInterface *) clazz->def->interface)->render = render;
+
+	initializeOpenGL();
+
+	$$(Program, defaultProgram);
 }
 
 Class _Renderer = {
