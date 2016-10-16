@@ -23,71 +23,76 @@
 
 #pragma once
 
-#include <SDL2/SDL_opengl.h>
-
-#include <Objectively/Object.h>
-
-#include <ObjectivelyMVC/Types.h>
+#include <ObjectivelyMVC/Program.h>
 
 /**
  * @file
- * @brief An abstraction for OpenGL shaders (GLSL).
+ * @brief The default GLSL Program.
  */
 
-typedef struct Shader Shader;
-typedef struct ShaderInterface ShaderInterface;
+typedef struct DefaultProgram DefaultProgram;
+typedef struct DefaultProgramInterface DefaultProgramInterface;
 
 /**
- * @brief An abstraction for OpenGL shaders (GLSL).
- * @extends Object
+ * @brief The default GLSL Program.
+ * @extends Program
  */
-struct Shader {
+struct DefaultProgram {
 	
 	/**
 	 * @brief The parent.
 	 */
-	Object object;
+	Program program;
 	
 	/**
 	 * @brief The typed interface.
 	 * @protected
 	 */
-	ShaderInterface *interface;
+	DefaultProgramInterface *interface;
 
 	/**
-	 * @brief The shader information log.
+	 * @brief The color Uniform.
 	 */
-	GLchar *info;
+	Uniform *color;
 
 	/**
-	 * @brief The shader name.
+	 * @brief The sampler Uniform.
 	 */
-	GLuint name;
+	Uniform *sampler;
+
+	/**
+	 * @brief The texture coordinate Attribute.
+	 */
+	Attribute *texcoord;
+
+	/**
+	 * @brief The vertex Attribute.
+	 */
+	Attribute *vertex;
 };
 
 /**
- * @brief The Shader interface.
+ * @brief The DefaultProgram interface.
  */
-struct ShaderInterface {
+struct DefaultProgramInterface {
 	
 	/**
 	 * @brief The parent interface.
 	 */
-	ObjectInterface objectInterface;
-
+	ProgramInterface programInterface;
+	
 	/**
-	 * @fn Shader *Shader::initWithSource(Shader *self, GLenum type, const GLchar *src)
-	 * @brief Initializes this Shader with the specified type and source.
-	 * @param The Shader.
-	 * @param type The type (e.g. `GL_VERTEX_SHADER` or `GL_FRAGMENT_SHADER`).
-	 * @param source A NULL-terminated GLSL source string.
-	 * @return The initialized Shader, or `NULL` on error.
-	 * @memberof Shader
+	 * @fn DefaultProgram *DefaultProgram::init(DefaultProgram *self)
+	 * @brief Initializes this DefaultProgram.
+	 * @param The DefaultProgram.
+	 * @return The initialized DefaultProgram, or `NULL` on error.
+	 * @memberof DefaultProgram
 	 */
-	Shader *(*initWithSource)(Shader *self, GLenum type, const GLchar *source);
+	DefaultProgram *(*init)(DefaultProgram *self);
 };
 
 /**
- * @brief The Shader Class.
+ * @brief The DefaultProgram Class.
  */
-extern Class _Shader;
+extern Class _DefaultProgram;
+

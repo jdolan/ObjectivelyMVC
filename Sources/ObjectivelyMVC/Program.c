@@ -23,9 +23,6 @@
 
 #include <assert.h>
 
-#include <Objectively/Once.h>
-#include <Objectively/Value.h>
-
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/OpenGL.h>
 #include <ObjectivelyMVC/Program.h>
@@ -41,10 +38,12 @@ static void dealloc(Object *self) {
 	
 	Program *this = (Program *) self;
 
+	free(this->info);
+
 	glDeleteProgram(this->name);
 
 	release(this->shaders);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -56,59 +55,13 @@ static void dealloc(Object *self) {
  */
 static void attachShader(Program *self, Shader *shader) {
 
-	$(self->shaders, addObject, shader);
+	assert(shader);
+	assert(shader->name);
 
 	glAttachShader(self->name, shader->name);
 	assert(glGetError() == GL_NO_ERROR);
-}
 
-static Program *_defaultProgram;
-
-/**
- * @fn Program *Program::defaultProgram(void)
- * @memberof Program
- */
-static Program *defaultProgram(void) {
-	static Once once;
-
-	do_once(&once, ({
-		Shader *vs = $(alloc(Shader), initWithSource, GL_VERTEX_SHADER, "\
-			#version 120 \n\
-			attribute vec2 vertex; \
-			void main() { \
-				gl_Position = vec4(vertex.x, vertex.y, 0.0, 1.0); \
-			}");
-
-		Shader *fs = $(alloc(Shader), initWithSource, GL_FRAGMENT_SHADER, "\
-			#version 120 \n\
-			uniform vec4 color; \
-			void main() { \
-				gl_FragColor = color; \
-			}");
-
-		_defaultProgram = $(alloc(Program), init);
-
-		$(_defaultProgram, attachShader, vs);
-		$(_defaultProgram, attachShader, fs);
-
-		const GLchar *attributes[] = { "vertex", NULL };
-		const GLchar *uniforms[] = { "color", NULL };
-
-		$(_defaultProgram, link, attributes, uniforms);
-
-		release(vs);
-		release(fs);
-	}));
-
-	return _defaultProgram;
-}
-
-/**
- * @brief Predicate for getAttribute.
- */
-static _Bool getAttribute_predicate(const ident obj, ident data) {
-	const Attribute *attribute = ((Value *) obj)->value;
-	return strcmp((const char *) attribute->name, (const char *) data) == 0;
+	$(self->shaders, addObject, shader);
 }
 
 /**
@@ -117,36 +70,14 @@ static _Bool getAttribute_predicate(const ident obj, ident data) {
  */
 static Attribute *getAttribute(Program *self, const GLchar *name) {
 
-	assert(name);
+	Attribute *attribute = calloc(1, sizeof(*attribute));
+	assert(attribute);
 
-	Value *value = $((Array *) self->attributes, findObject, getAttribute_predicate, (ident) name);
-	if (value == NULL) {
+	attribute->name = name;
+	attribute->location = glGetAttribLocation(self->name, attribute->name);
+	assert(attribute->location != -1);
 
-		Attribute *attribute = calloc(1, sizeof(*attribute));
-		assert(attribute);
-
-		attribute->name = name;
-		attribute->location = glGetAttribLocation(self->name, attribute->name);
-
-		if (attribute->location == -1) {
-			MVC_LogWarn("Failed to resolve Attribute %s\n", attribute->name);
-		}
-
-		value = $(alloc(Value), initWithValue, attribute);
-		value->destroy = free;
-
-		$(self->attributes, addObject, value);
-	}
-
-	return (Attribute *) value->value;
-}
-
-/**
- * @brief Predicate for getUniform.
- */
-static _Bool getUniform_predicate(const ident obj, ident data) {
-	const Attribute *attribute = ((Value *) obj)->value;
-	return strcmp((const char *) attribute->name, (const char *) data) == 0;
+	return attribute;
 }
 
 /**
@@ -155,28 +86,14 @@ static _Bool getUniform_predicate(const ident obj, ident data) {
  */
 static Uniform *getUniform(Program *self, const GLchar *name) {
 
-	assert(name);
+	Uniform *uniform = calloc(1, sizeof(*uniform));
+	assert(uniform);
 
-	Value *value = $((Array *) self->uniforms, findObject, getUniform_predicate, (ident) name);
-	if (value == NULL) {
+	uniform->name = name;
+	uniform->location = glGetUniformLocation(self->name, uniform->name);
+	assert(uniform->location != -1);
 
-		Uniform *uniform = calloc(1, sizeof(*uniform));
-		assert(uniform);
-
-		uniform->name = name;
-		uniform->location = glGetUniformLocation(self->name, uniform->name);
-
-		if (uniform->location == -1) {
-			MVC_LogWarn("Failed to resolve Uniform %s\n", uniform->name);
-		}
-
-		value = $(alloc(Value), initWithValue, uniform);
-		value->destroy = free;
-
-		$(self->uniforms, addObject, value);
-	}
-
-	return (Uniform *) value->value;
+	return uniform;
 }
 
 /**
@@ -191,37 +108,37 @@ static Program *init(Program *self) {
 		self->name = glCreateProgram();
 		assert(self->name);
 
-		self->attributes = $$(MutableArray, array);
-		assert(self->attributes);
-
 		self->shaders = $$(MutableArray, array);
 		assert(self->shaders);
-
-		self->uniforms = $$(MutableArray, array);
-		assert(self->uniforms);
 	}
 	
 	return self;
 }
 
 /**
- * @fn void Program::link(Program *self, const char **attributes, const char **uniforms)
+ * @fn void Program::link(Program *self)
  * @memberof Program
  */
-static void link(Program *self, const char **attributes, const char **uniforms) {
+static void link(Program *self) {
 
 	glLinkProgram(self->name);
 
-	const char **attr = attributes;
-	while (*attr) {
-		Attribute *attribute = $(self, getAttribute, *attr++);
-		assert(attribute->location != -1);
-	}
+	GLint i;
+	glGetProgramiv(self->name, GL_LINK_STATUS, &i);
+	if (i != GL_TRUE) {
 
-	const char **unif = uniforms;
-	while (*unif) {
-		Uniform *uniform = $(self, getUniform, *unif++);
-		assert(uniform->location != -1);
+		glGetProgramiv(self->name, GL_INFO_LOG_LENGTH, &i);
+
+		free(self->info);
+
+		self->info = malloc(i);
+		assert(self->info);
+
+		glGetProgramInfoLog(self->name, i, NULL, self->info);
+		MVC_LogError("Failed to link program: %s\n", self->info);
+
+		glDeleteProgram(self->name);
+		self->name = 0;
 	}
 }
 
@@ -243,20 +160,11 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ProgramInterface *) clazz->def->interface)->attachShader = attachShader;
-	((ProgramInterface *) clazz->def->interface)->defaultProgram = defaultProgram;
 	((ProgramInterface *) clazz->def->interface)->getAttribute = getAttribute;
 	((ProgramInterface *) clazz->def->interface)->getUniform = getUniform;
 	((ProgramInterface *) clazz->def->interface)->init = init;
 	((ProgramInterface *) clazz->def->interface)->link = link;
 	((ProgramInterface *) clazz->def->interface)->use = use;
-}
-
-/**
- * @see Class::destroy(Class *)
- */
-static void destroy(Class *clazz) {
-
-	release(_defaultProgram);
 }
 
 Class _Program = {
@@ -266,7 +174,6 @@ Class _Program = {
 	.interfaceOffset = offsetof(Program, interface),
 	.interfaceSize = sizeof(ProgramInterface),
 	.initialize = initialize,
-	.destroy = destroy,
 };
 
 #undef _Class

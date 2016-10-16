@@ -38,6 +38,8 @@ static void dealloc(Object *self) {
 
 	Shader *this = (Shader *) self;
 
+	free(this->info);
+
 	glDeleteShader(this->name);
 	
 	super(Object, self, dealloc);
@@ -46,35 +48,36 @@ static void dealloc(Object *self) {
 #pragma mark - Shader
 
 /**
- * @fn Shader *Shader::initWithSource(Shader *self, GLenum type, const GLchar *src)
+ * @fn Shader *Shader::initWithSource(Shader *self, GLenum type, const GLchar *source)
  * @memberof Shader
  */
-static Shader *initWithSource(Shader *self, GLenum type, const GLchar *src) {
+static Shader *initWithSource(Shader *self, GLenum type, const GLchar *source) {
 	
 	self = (Shader *) super(Object, self, init);
 	if (self) {
-
-		assert(src);
+		assert(source);
 
 		self->name = glCreateShader(type);
 		assert(self->name);
 
-		GLint length = strlen(src);
+		GLint i = strlen(source);
 
-		glShaderSource(self->name, 1, (const GLchar **) &src, &length);
+		glShaderSource(self->name, 1, (const GLchar **) &source, &i);
 		glCompileShader(self->name);
 
-		GLint compiled = GL_FALSE;
-		glGetShaderiv(self->name, GL_COMPILE_STATUS, &compiled);
-		if (compiled != GL_TRUE) {
+		glGetShaderiv(self->name, GL_COMPILE_STATUS, &i);
+		if (i != GL_TRUE) {
 
-			glGetShaderiv(self->name, GL_INFO_LOG_LENGTH, &length);
-			GLchar *log = calloc(length, 1);
+			glGetShaderiv(self->name, GL_INFO_LOG_LENGTH, &i);
 
-			glGetShaderInfoLog(self->name, length - 1, NULL, log);
-			MVC_LogError("Failed to compile shader: %s\n", log);
+			self->info = malloc(i);
+			assert(self->info);
 
-			free(log);
+			glGetShaderInfoLog(self->name, i, NULL, self->info);
+			MVC_LogError("Failed to compile shader: %s\n", self->info);
+
+			glDeleteShader(self->name);
+			self->name = 0;
 		}
 	}
 	

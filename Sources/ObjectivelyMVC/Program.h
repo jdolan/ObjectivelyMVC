@@ -89,9 +89,9 @@ struct Program {
 	ProgramInterface *interface;
 
 	/**
-	 * @brief The program Attributes.
+	 * @brief The program's information log.
 	 */
-	MutableArray *attributes;
+	GLchar *info;
 
 	/**
 	 * @brief The program name.
@@ -102,11 +102,6 @@ struct Program {
 	 * @brief The Shaders comprising this Program.
 	 */
 	MutableArray *shaders;
-
-	/**
-	 * @brief The program Uniforms.
-	 */
-	MutableArray *uniforms;
 };
 
 /**
@@ -129,18 +124,11 @@ struct ProgramInterface {
 	void (*attachShader)(Program *self, Shader *shader);
 
 	/**
-	 * @static
-	 * @fn Program *Program::defaultProgram(void)
-	 * @return The default Program.
-	 * @memberof Program
-	 */
-	Program *(*defaultProgram)(void);
-
-	/**
 	 * @fn Attribute *Program::getAttribute(Program *sef, const GLchar *name)
 	 * @param self The Program.
 	 * @param name The Attribute name.
 	 * @return The Attribute by the given name.
+	 * @remarks The returned Attribute must be freed by the caller.
 	 * @memberof Program
 	 */
 	Attribute *(*getAttribute)(Program *self, const GLchar *name);
@@ -150,6 +138,7 @@ struct ProgramInterface {
 	 * @param self The Program.
 	 * @param name The Uniform name.
 	 * @return The Uniform by the given name.
+	 * @remarks The returned Uniform must be freed by the caller.
 	 * @memberof Program
 	 */
 	Uniform *(*getUniform)(Program *self, const GLchar *name);
@@ -165,14 +154,11 @@ struct ProgramInterface {
 
 	/**
 	 * @fn void Program::link(Program *self)
-	 * @brief Links this Program, resolving the specified required Attributes and Uniforms.
+	 * @brief Links this Program.
 	 * @param self The Program.
-	 * @param attributes A NULL-terminated list of required Attribute names.
-	 * @param uniforms A NULL-terminated list of required Uniform names.
-	 * @remarks This method raises an assertion error if any of the named variables fail to resolve.
 	 * @memberof Program
 	 */
-	void (*link)(Program *self, const GLchar **attributes, const GLchar **uniforms);
+	void (*link)(Program *self);
 
 	/**
 	 * @fn void Program::use(Program *self)

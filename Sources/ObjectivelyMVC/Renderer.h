@@ -55,6 +55,11 @@ struct Renderer {
 	RendererInterface *interface;
 
 	/**
+	 * @brief The GLSL Program to be bound for rendering.
+	 */
+	Program *program;
+
+	/**
 	 * @brief The Views to be drawn each frame.
 	 */
 	MutableArray *views;

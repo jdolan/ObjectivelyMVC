@@ -23,6 +23,7 @@
 
 #include <assert.h>
 
+#include <ObjectivelyMVC/DefaultProgram.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/OpenGL.h>
 #include <ObjectivelyMVC/Renderer.h>
@@ -39,6 +40,7 @@ static void dealloc(Object *self) {
 
 	Renderer *this = (Renderer *) self;
 
+	release(this->program);
 	release(this->views);
 
 	super(Object, self, dealloc);
@@ -246,8 +248,12 @@ static Renderer *init(Renderer *self) {
 	
 	self = (Renderer *) super(Object, self, init);
 	if (self) {
+
 		self->views = $$(MutableArray, array);
 		assert(self->views);
+
+		self->program = (Program *) $(alloc(DefaultProgram), init);
+		assert(self->program);
 	}
 
 	return self;
@@ -319,8 +325,6 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->render = render;
 
 	initializeOpenGL();
-
-	$$(Program, defaultProgram);
 }
 
 Class _Renderer = {

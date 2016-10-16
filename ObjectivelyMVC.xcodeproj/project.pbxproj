@@ -15,6 +15,8 @@
 		CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0981C77AF73003E3CF7 /* Slider.c */; };
 		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE0CC51D1DB3FA1F00CF0668 /* DefaultProgram.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0CC51B1DB3FA1F00CF0668 /* DefaultProgram.c */; };
+		CE0CC51E1DB3FA1F00CF0668 /* DefaultProgram.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0CC51C1DB3FA1F00CF0668 /* DefaultProgram.h */; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
 		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
@@ -137,6 +139,8 @@
 		CE0AD0971C7241DE003E3CF7 /* styles.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = styles.css; sourceTree = "<group>"; };
 		CE0AD0981C77AF73003E3CF7 /* Slider.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Slider.c; sourceTree = "<group>"; };
 		CE0AD0991C77AF73003E3CF7 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Slider.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		CE0CC51B1DB3FA1F00CF0668 /* DefaultProgram.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DefaultProgram.c; sourceTree = "<group>"; };
+		CE0CC51C1DB3FA1F00CF0668 /* DefaultProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultProgram.h; sourceTree = "<group>"; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
 		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
@@ -289,6 +293,8 @@
 				CE9305C21D9B277E00D62770 /* Config.h.in */,
 				CE12D46D1C4D82AF00CD0B13 /* Control.c */,
 				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
+				CE0CC51B1DB3FA1F00CF0668 /* DefaultProgram.c */,
+				CE0CC51C1DB3FA1F00CF0668 /* DefaultProgram.h */,
 				CE12D4091C4C367100CD0B13 /* Font.c */,
 				CE12D40A1C4C367100CD0B13 /* Font.h */,
 				CE12D4801C4F3A1600CD0B13 /* Image.c */,
@@ -495,6 +501,7 @@
 				CEC26AF51DB2CC5300525BEE /* Shader.h in Headers */,
 				CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */,
 				CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */,
+				CE0CC51E1DB3FA1F00CF0668 /* DefaultProgram.h in Headers */,
 				CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */,
 				CE0943A91D60F23100C11408 /* TableColumn.h in Headers */,
 				CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */,
@@ -616,6 +623,7 @@
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
 				CEC26AEC1DB2C06C00525BEE /* Program.c in Sources */,
 				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
+				CE0CC51D1DB3FA1F00CF0668 /* DefaultProgram.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
 				CEC26AF41DB2CC5300525BEE /* Shader.c in Sources */,
