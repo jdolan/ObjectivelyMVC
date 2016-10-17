@@ -57,7 +57,6 @@ static void dealloc(Object *self) {
 
 	Renderer *this = (Renderer *) self;
 
-	glDeleteBuffers(1, &this->buffers.color);
 	glDeleteBuffers(1, &this->buffers.texcoord);
 	glDeleteBuffers(1, &this->buffers.vertex);
 
@@ -94,6 +93,7 @@ static void beginFrame(Renderer *self) {
 
 	glUseProgram(self->program->name);
 
+	glEnableVertexAttribArray(self->attributes.texcoord);
 	glEnableVertexAttribArray(self->attributes.vertex);
 
 	$(self, setDrawColor, &Colors.White);
@@ -160,6 +160,7 @@ static void drawLines(const Renderer *self, const SDL_Point *points, GLuint coun
 
 	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(SDL_Point), points);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glDrawArrays(GL_LINE_STRIP, 0, count);
 }
@@ -188,6 +189,7 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 
 	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glDrawArrays(GL_LINE_LOOP, 0, 4);
 }
@@ -225,15 +227,13 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 
 	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.texcoord);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(texcoords), texcoords);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glEnableVertexAttribArray(self->attributes.texcoord);
-
-	glDrawArrays(GL_QUADS, 0, 4);
-
-	glDisableVertexAttribArray(self->attributes.texcoord);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 	glBindTexture(GL_TEXTURE_2D, self->textures.null);
 }
@@ -243,6 +243,11 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
  * @memberof Renderer
  */
 static void endFrame(Renderer *self) {
+
+	glDisableVertexAttribArray(self->attributes.texcoord);
+	glDisableVertexAttribArray(self->attributes.vertex);
+
+	glUseProgram(0);
 
 	SDL_Window *window = SDL_GL_GetCurrentWindow();
 
@@ -255,10 +260,6 @@ static void endFrame(Renderer *self) {
 
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glDisable(GL_BLEND);
-
-	glDisableVertexAttribArray(self->attributes.vertex);
-
-	glUseProgram(0);
 
 	const GLenum err = glGetError();
 	if (err) {
@@ -274,7 +275,25 @@ static void fillRect(const Renderer *self, const SDL_Rect *rect) {
 
 	assert(rect);
 
-	glRecti(rect->x - 1, rect->y, rect->x + rect->w, rect->y + rect->h + 1);
+	GLint verts[8];
+
+	verts[0] = rect->x - 1;
+	verts[1] = rect->y;
+
+	verts[2] = rect->x + rect->w;
+	verts[3] = rect->y;
+
+	verts[4] = rect->x + rect->w;
+	verts[5] = rect->y + rect->h + 1;
+
+	verts[6] = rect->x - 1;
+	verts[7] = rect->y + rect->h + 1;
+
+	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 /**
@@ -345,24 +364,21 @@ static void renderDeviceDidReset(Renderer *self) {
 
 	Shader *vertexShader = $(alloc(Shader), initWithSource, GL_VERTEX_SHADER, "\
 		#version 120 \n\
-		attribute vec4 color; \
 		attribute vec2 texcoord; \
 		attribute vec2 vertex; \
-		varying vec4 fragColor; \
-		varying vec2 fragTexcoord; \
+		varying vec2 st; \
 		void main() { \
-			gl_Position = vec4(vertex.x, vertex.y, 0.0, 1.0); \
-			fragColor = max(color, 0.9); \
-			fragTexcoord = texcoord; \
+			gl_Position = gl_ProjectionMatrix * vec4(vertex.x, vertex.y, 0.0, 1.0); \
+			st = texcoord; \
 		}");
 
 	Shader *fragmentShader = $(alloc(Shader), initWithSource, GL_FRAGMENT_SHADER, "\
 		#version 120 \n\
+		uniform vec4 color; \
 		uniform sampler2D sampler; \
-		varying vec4 fragColor; \
-		varying vec2 fragTexcoord; \
+		varying vec2 st; \
 		void main() { \
-			gl_FragColor = fragColor * texture2D(sampler, fragTexcoord); \
+			gl_FragColor = color * texture2D(sampler, st); \
 		}");
 
 	self->program = (Program *) $(alloc(Program), init);
@@ -377,19 +393,11 @@ static void renderDeviceDidReset(Renderer *self) {
 	$(self->program, link);
 	assert(self->program->name);
 
-	self->attributes.color = $(self->program, getAttributeLocation, "color");
 	self->attributes.texcoord = $(self->program, getAttributeLocation, "texcoord");
 	self->attributes.vertex = $(self->program, getAttributeLocation, "vertex");
-	self->uniforms.sampler = $(self->program, getUniformLocation, "sampler");
+	self->uniforms.color = $(self->program, getUniformLocation, "color");
 
 	const size_t len = 64;
-
-	glGenBuffers(1, &self->buffers.color);
-	assert(self->buffers.color);
-
-	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.color);
-	glBufferData(GL_ARRAY_BUFFER, len * sizeof(GLubyte) * 4, NULL, GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(self->attributes.color, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, NULL);
 
 	glGenBuffers(1, &self->buffers.texcoord);
 	assert(self->buffers.texcoord);
@@ -416,7 +424,12 @@ static void renderDeviceDidReset(Renderer *self) {
  * @memberof Renderer
  */
 static void setDrawColor(Renderer *self, const SDL_Color *color) {
-	glVertexAttrib4ubv(self->attributes.color, (const GLubyte *) color);
+	glUniform4fv(self->uniforms.color, 1, (const GLfloat []) {
+		color->r / 255.0,
+		color->g / 255.0,
+		color->b / 255.0,
+		color->a / 255.0
+	});
 }
 
 #pragma mark - Class lifecycle

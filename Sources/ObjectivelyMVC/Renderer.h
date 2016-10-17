@@ -60,11 +60,6 @@ struct Renderer {
 	 */
 	struct {
 		/**
-		 * @brief The color attribute.
-		 */
-		GLint color;
-
-		/**
 		 * @brief The texture coordinate attribute.
 		 */
 		GLint texcoord;
@@ -80,11 +75,6 @@ struct Renderer {
 	 * @protected
 	 */
 	struct {
-		/**
-		 * @brief The colors buffer.
-		 */
-		GLuint color;
-
 		/**
 		 * @brief The texture coordinate buffer.
 		 */
@@ -113,9 +103,9 @@ struct Renderer {
 	 */
 	struct {
 		/**
-		 * @brief The sampler uniform.
+		 * @brief The color uniform.
 		 */
-		GLint sampler;
+		GLint color;
 	} uniforms;
 
 	/**
