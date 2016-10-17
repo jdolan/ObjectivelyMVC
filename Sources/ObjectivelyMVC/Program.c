@@ -65,33 +65,25 @@ static void attachShader(Program *self, Shader *shader) {
 }
 
 /**
- * @fn GLint Program::getAttribute(Program *sef, const GLchar *name)
+ * @fn GLint Program::getAttributeLocation(Program *sef, const GLchar *name)
  * @memberof Program
  */
-static Attribute *getAttribute(Program *self, const GLchar *name) {
+static GLint getAttributeLocation(Program *self, const GLchar *name) {
 
-	Attribute *attribute = calloc(1, sizeof(*attribute));
-	assert(attribute);
-
-	attribute->name = name;
-	attribute->location = glGetAttribLocation(self->name, attribute->name);
-	assert(attribute->location != -1);
+	GLint attribute = glGetAttribLocation(self->name, name);
+	assert(attribute != -1);
 
 	return attribute;
 }
 
 /**
- * @fn Uniform *Program::getUniform(Program *sef, const GLchar *name)
+ * @fn GLint Program::getUniformLocation(Program *sef, const GLchar *name)
  * @memberof Program
  */
-static Uniform *getUniform(Program *self, const GLchar *name) {
+static GLint getUniformLocation(Program *self, const GLchar *name) {
 
-	Uniform *uniform = calloc(1, sizeof(*uniform));
-	assert(uniform);
-
-	uniform->name = name;
-	uniform->location = glGetUniformLocation(self->name, uniform->name);
-	assert(uniform->location != -1);
+	GLint uniform = glGetUniformLocation(self->name, name);
+	assert(uniform != -1);
 
 	return uniform;
 }
@@ -160,8 +152,8 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ProgramInterface *) clazz->def->interface)->attachShader = attachShader;
-	((ProgramInterface *) clazz->def->interface)->getAttribute = getAttribute;
-	((ProgramInterface *) clazz->def->interface)->getUniform = getUniform;
+	((ProgramInterface *) clazz->def->interface)->getAttributeLocation = getAttributeLocation;
+	((ProgramInterface *) clazz->def->interface)->getUniformLocation = getUniformLocation;
 	((ProgramInterface *) clazz->def->interface)->init = init;
 	((ProgramInterface *) clazz->def->interface)->link = link;
 	((ProgramInterface *) clazz->def->interface)->use = use;

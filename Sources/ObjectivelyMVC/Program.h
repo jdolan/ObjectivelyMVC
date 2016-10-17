@@ -34,40 +34,6 @@
 
 typedef struct Attribute Attribute;
 
-/**
- * @brief Vertex Attributes.
- */
-struct Attribute {
-
-	/**
-	 * @brief The Attribute location.
-	 */
-	GLint location;
-
-	/**
-	 * @brief The Attribute name.
-	 */
-	const GLchar *name;
-};
-
-typedef struct Uniform Uniform;
-
-/**
- * @brief Uniform Program variables.
- */
-struct Uniform {
-
-	/**
-	 * @brief The Uniform location.
-	 */
-	GLint location;
-
-	/**
-	 * @brief The Uniform name.
-	 */
-	const GLchar *name;
-};
-
 typedef struct Program Program;
 typedef struct ProgramInterface ProgramInterface;
 
@@ -124,24 +90,22 @@ struct ProgramInterface {
 	void (*attachShader)(Program *self, Shader *shader);
 
 	/**
-	 * @fn Attribute *Program::getAttribute(Program *sef, const GLchar *name)
+	 * @fn GLint Program::getAttributeLocation(Program *sef, const GLchar *name)
 	 * @param self The Program.
-	 * @param name The Attribute name.
-	 * @return The Attribute by the given name.
-	 * @remarks The returned Attribute must be freed by the caller.
+	 * @param name The vertex attribute name.
+	 * @return The location of the attribute by the given name.
 	 * @memberof Program
 	 */
-	Attribute *(*getAttribute)(Program *self, const GLchar *name);
+	GLint (*getAttributeLocation)(Program *self, const GLchar *name);
 
 	/**
-	 * @fn Uniform *Program::getUniform(Program *sef, const GLchar *name)
+	 * @fn GLint Program::getUniformLocation(Program *sef, const GLchar *name)
 	 * @param self The Program.
-	 * @param name The Uniform name.
-	 * @return The Uniform by the given name.
-	 * @remarks The returned Uniform must be freed by the caller.
+	 * @param name The uniform variable name.
+	 * @return The location of the uniform by the given name.
 	 * @memberof Program
 	 */
-	Uniform *(*getUniform)(Program *self, const GLchar *name);
+	GLint (*getUniformLocation)(Program *self, const GLchar *name);
 	
 	/**
 	 * @fn Program *Program::init(Program *self)

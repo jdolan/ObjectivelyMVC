@@ -55,7 +55,71 @@ struct Renderer {
 	RendererInterface *interface;
 
 	/**
-	 * @brief The GLSL Program to be bound for rendering.
+	 * @brief Attribute variables.
+	 * @protected
+	 */
+	struct {
+		/**
+		 * @brief The color attribute.
+		 */
+		GLint color;
+
+		/**
+		 * @brief The texture coordinate attribute.
+		 */
+		GLint texcoord;
+
+		/**
+		 * @brief The vertex attribute.
+		 */
+		GLint vertex;
+	} attributes;
+
+	/**
+	 * @brief Vertex buffer objects.
+	 * @protected
+	 */
+	struct {
+		/**
+		 * @brief The colors buffer.
+		 */
+		GLuint color;
+
+		/**
+		 * @brief The texture coordinate buffer.
+		 */
+		GLuint texcoord;
+
+		/**
+		 * @brief The vertex buffer.
+		 */
+		GLuint vertex;
+	} buffers;
+
+	/**
+	 * @brief Texture objects.
+	 * @protected
+	 */
+	struct {
+		/**
+		 * @brief The null texture object.
+		 */
+		GLuint null;
+	} textures;
+
+	/**
+	 * @brief Uniform objects.
+	 * @protected
+	 */
+	struct {
+		/**
+		 * @brief The sampler uniform.
+		 */
+		GLint sampler;
+	} uniforms;
+
+	/**
+	 * @brief The GLSL Program to use for rendering.
 	 */
 	Program *program;
 
@@ -85,14 +149,14 @@ struct RendererInterface {
 	void (*addView)(Renderer *self, View *view);
 
 	/**
-	 * @fn void Renderer::beginFrame(const Renderer *self)
+	 * @fn void Renderer::beginFrame(Renderer *self)
 	 * @brief Sets up OpenGL state.
 	 * @param self The Renderer.
 	 * @remarks This method is called by the WindowController to begin rendering. Override this 
 	 * method for custom OpenGL state setup, if desired.
 	 * @memberof Renderer
 	 */
-	void (*beginFrame)(const Renderer *self);
+	void (*beginFrame)(Renderer *self);
 
 	/**
 	 * @fn void Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
@@ -150,7 +214,7 @@ struct RendererInterface {
 	 * method for custom OpenGL state teardown, if desired.
 	 * @memberof Renderer
 	 */
-	void (*endFrame)(const Renderer *self);
+	void (*endFrame)(Renderer *self);
 
 	/**
 	 * @fn void Renderer::fillRect(const Renderer *self, const SDL_Rect *rect)
@@ -177,6 +241,23 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	void (*render)(Renderer *self);
+
+	/**
+	 * @fn void Renderer::renderDeviceDidReset(Renderer *self)
+	 * @brief This method is invoked when the render context is invalidated.
+	 * @param self The Renderer.
+	 * @memberof Renderer
+	 */
+	void (*renderDeviceDidReset)(Renderer *self);
+
+	/**
+	 * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
+	 * @brief Sets the primary color for drawing operations.
+	 * @param self The Renderer.
+	 * @param color The color.
+	 * @memberof Renderer
+	 */
+	void (*setDrawColor)(Renderer *self, const SDL_Color *color);
 };
 
 /**

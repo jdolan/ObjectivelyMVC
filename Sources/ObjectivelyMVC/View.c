@@ -562,7 +562,7 @@ static void render(View *self, Renderer *renderer) {
 	
 	if (self->backgroundColor.a) {
 
-		SetColor(self->backgroundColor);
+		$(renderer, setDrawColor, &self->backgroundColor);
 		
 		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, fillRect, &frame);
@@ -570,7 +570,7 @@ static void render(View *self, Renderer *renderer) {
 		
 	if (self->borderWidth && self->borderColor.a) {
 
-		SetColor(self->borderColor);
+		$(renderer, setDrawColor, &self->borderColor);
 		
 		SDL_Rect frame = $(self, renderFrame);
 		for (int i = 0; i < self->borderWidth; i++) {
@@ -582,7 +582,7 @@ static void render(View *self, Renderer *renderer) {
 		}
 	}
 
-	SetColor(Colors.White);
+	$(renderer, setDrawColor, &Colors.White);
 }
 
 /**

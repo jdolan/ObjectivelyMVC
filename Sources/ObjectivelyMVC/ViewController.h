@@ -133,6 +133,16 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*moveToParentViewController)(ViewController *self, ViewController *parentViewController);
+
+	/**
+	 * @fn void ViewController::renderDeviceDidReset(ViewController *self)
+	 * @brief This method is invoked when the render context is invalidated.
+	 * @param self The ViewController.
+	 * @remarks Subclasses should override this method to recreate any texture resources or other
+	 * OpenGL objects they own.
+	 * @memberof ViewController
+	 */
+	void (*renderDeviceDidReset)(ViewController *self);
 	
 	/**
 	 * @fn void ViewController:respondToEvent(ViewController *self, const SDL_Event *event)

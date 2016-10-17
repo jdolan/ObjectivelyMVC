@@ -104,10 +104,10 @@ static void render(View *self, Renderer *renderer) {
 	}
 
 	if (this->texture) {
-		SetColor(this->color);
+		$(renderer, setDrawColor, &this->color);
 		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, drawTexture, this->texture, &frame);
-		SetColor(Colors.White);
+		$(renderer, setDrawColor, &Colors.White);
 	}
 }
 

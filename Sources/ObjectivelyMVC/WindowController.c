@@ -113,6 +113,15 @@ static void render(WindowController *self) {
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
+	if (event->type == SDL_WINDOWEVENT) {
+		if (event->window.event == SDL_WINDOWEVENT_SHOWN) {
+			$(self->renderer, renderDeviceDidReset);
+			if (self->viewController) {
+				$(self->viewController, renderDeviceDidReset);
+			}
+		}
+	}
+
 	if (self->viewController) {
 		$(self->viewController, respondToEvent, event);
 	}

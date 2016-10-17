@@ -23,13 +23,30 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/DefaultProgram.h>
+#include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/OpenGL.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View.h>
 
 #define _Class _Renderer
+
+static Image *_null;
+static const unsigned char _nullData[] = {
+	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
+	0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+	0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x77, 0x53, 0xde, 0x00, 0x00, 0x00,
+	0x09, 0x70, 0x48, 0x59, 0x73, 0x00, 0x00, 0x0b, 0x13, 0x00, 0x00, 0x0b,
+	0x13, 0x01, 0x00, 0x9a, 0x9c, 0x18, 0x00, 0x00, 0x00, 0x07, 0x74, 0x49,
+	0x4d, 0x45, 0x07, 0xe0, 0x0a, 0x10, 0x14, 0x18, 0x17, 0xda, 0xde, 0xe8,
+	0x2e, 0x00, 0x00, 0x00, 0x1d, 0x69, 0x54, 0x58, 0x74, 0x43, 0x6f, 0x6d,
+	0x6d, 0x65, 0x6e, 0x74, 0x00, 0x00, 0x00, 0x00, 0x00, 0x43, 0x72, 0x65,
+	0x61, 0x74, 0x65, 0x64, 0x20, 0x77, 0x69, 0x74, 0x68, 0x20, 0x47, 0x49,
+	0x4d, 0x50, 0x64, 0x2e, 0x65, 0x07, 0x00, 0x00, 0x00, 0x0c, 0x49, 0x44,
+	0x41, 0x54, 0x08, 0xd7, 0x63, 0xf8, 0xff, 0xff, 0x3f, 0x00, 0x05, 0xfe,
+	0x02, 0xfe, 0xdc, 0xcc, 0x59, 0xe7, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45,
+	0x4e, 0x44, 0xae, 0x42, 0x60, 0x82
+};
 
 #pragma mark - Object
 
@@ -39,6 +56,12 @@
 static void dealloc(Object *self) {
 
 	Renderer *this = (Renderer *) self;
+
+	glDeleteBuffers(1, &this->buffers.color);
+	glDeleteBuffers(1, &this->buffers.texcoord);
+	glDeleteBuffers(1, &this->buffers.vertex);
+
+	glDeleteTextures(1, &this->textures.null);
 
 	release(this->program);
 	release(this->views);
@@ -57,18 +80,23 @@ static void addView(Renderer *self, View *view) {
 }
 
 /**
- * @fn void Renderer::beginFrame(const Renderer *self)
+ * @fn void Renderer::beginFrame(Renderer *self)
  * @memberof Renderer
  */
-static void beginFrame(const Renderer *self) {
+static void beginFrame(Renderer *self) {
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_SCISSOR_TEST);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindTexture(GL_TEXTURE_2D, self->textures.null);
+
+	glUseProgram(self->program->name);
+
+	glEnableVertexAttribArray(self->attributes.vertex);
+
+	$(self, setDrawColor, &Colors.White);
 }
 
 /**
@@ -130,7 +158,9 @@ static void drawLines(const Renderer *self, const SDL_Point *points, GLuint coun
 
 	assert(points);
 
-	glVertexPointer(2, GL_INT, 0, points);
+	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(SDL_Point), points);
+
 	glDrawArrays(GL_LINE_STRIP, 0, count);
 }
 
@@ -156,7 +186,9 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 	verts[6] = rect->x;
 	verts[7] = rect->y + rect->h;
 
-	glVertexPointer(2, GL_INT, 0, verts);
+	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
+
 	glDrawArrays(GL_LINE_LOOP, 0, 4);
 }
 
@@ -189,25 +221,28 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 	verts[6] = rect->x;
 	verts[7] = rect->y + rect->h;
 
-	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	glVertexPointer(2, GL_INT, 0, verts);
-	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
+
+	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.texcoord);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(texcoords), texcoords);
+
+	glEnableVertexAttribArray(self->attributes.texcoord);
 
 	glDrawArrays(GL_QUADS, 0, 4);
 
-	glDisable(GL_TEXTURE_2D);
+	glDisableVertexAttribArray(self->attributes.texcoord);
+
+	glBindTexture(GL_TEXTURE_2D, self->textures.null);
 }
 
 /**
- * @fn void Renderer::endFrame(const Renderer *self)
+ * @fn void Renderer::endFrame(Renderer *self)
  * @memberof Renderer
  */
-static void endFrame(const Renderer *self) {
-
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+static void endFrame(Renderer *self) {
 
 	SDL_Window *window = SDL_GL_GetCurrentWindow();
 
@@ -221,7 +256,9 @@ static void endFrame(const Renderer *self) {
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glDisable(GL_BLEND);
 
-	glColor3f(1.0, 1.0, 1.0);
+	glDisableVertexAttribArray(self->attributes.vertex);
+
+	glUseProgram(0);
 
 	const GLenum err = glGetError();
 	if (err) {
@@ -252,8 +289,7 @@ static Renderer *init(Renderer *self) {
 		self->views = $$(MutableArray, array);
 		assert(self->views);
 
-		self->program = (Program *) $(alloc(DefaultProgram), init);
-		assert(self->program);
+		$(self, renderDeviceDidReset);
 	}
 
 	return self;
@@ -301,6 +337,88 @@ static void render(Renderer *self) {
 	$(self->views, removeAllObjects);
 }
 
+/**
+ * @fn void Renderer::renderDeviceDidReset(Renderer *self)
+ * @memberof Renderer
+ */
+static void renderDeviceDidReset(Renderer *self) {
+
+	Shader *vertexShader = $(alloc(Shader), initWithSource, GL_VERTEX_SHADER, "\
+		#version 120 \n\
+		attribute vec4 color; \
+		attribute vec2 texcoord; \
+		attribute vec2 vertex; \
+		varying vec4 fragColor; \
+		varying vec2 fragTexcoord; \
+		void main() { \
+			gl_Position = vec4(vertex.x, vertex.y, 0.0, 1.0); \
+			fragColor = max(color, 0.9); \
+			fragTexcoord = texcoord; \
+		}");
+
+	Shader *fragmentShader = $(alloc(Shader), initWithSource, GL_FRAGMENT_SHADER, "\
+		#version 120 \n\
+		uniform sampler2D sampler; \
+		varying vec4 fragColor; \
+		varying vec2 fragTexcoord; \
+		void main() { \
+			gl_FragColor = fragColor * texture2D(sampler, fragTexcoord); \
+		}");
+
+	self->program = (Program *) $(alloc(Program), init);
+	assert(self->program);
+
+	$(self->program, attachShader, vertexShader);
+	$(self->program, attachShader, fragmentShader);
+
+	release(vertexShader);
+	release(fragmentShader);
+
+	$(self->program, link);
+	assert(self->program->name);
+
+	self->attributes.color = $(self->program, getAttributeLocation, "color");
+	self->attributes.texcoord = $(self->program, getAttributeLocation, "texcoord");
+	self->attributes.vertex = $(self->program, getAttributeLocation, "vertex");
+	self->uniforms.sampler = $(self->program, getUniformLocation, "sampler");
+
+	const size_t len = 64;
+
+	glGenBuffers(1, &self->buffers.color);
+	assert(self->buffers.color);
+
+	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.color);
+	glBufferData(GL_ARRAY_BUFFER, len * sizeof(GLubyte) * 4, NULL, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(self->attributes.color, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, NULL);
+
+	glGenBuffers(1, &self->buffers.texcoord);
+	assert(self->buffers.texcoord);
+
+	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.texcoord);
+	glBufferData(GL_ARRAY_BUFFER, len * sizeof(GLfloat) * 2, NULL, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(self->attributes.texcoord, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+
+	glGenBuffers(1, &self->buffers.vertex);
+	assert(self->buffers.vertex);
+
+	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
+	glBufferData(GL_ARRAY_BUFFER, len * sizeof(GLint) * 2, NULL, GL_DYNAMIC_DRAW);
+	glVertexAttribPointer(self->attributes.vertex, 2, GL_INT, GL_FALSE, 0, NULL);
+
+	self->textures.null = $(self, createTexture, _null->surface);
+	assert(self->textures.null);
+
+	assert(glGetError() == GL_NO_ERROR);
+}
+
+/**
+ * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
+ * @memberof Renderer
+ */
+static void setDrawColor(Renderer *self, const SDL_Color *color) {
+	glVertexAttrib4ubv(self->attributes.color, (const GLubyte *) color);
+}
+
 #pragma mark - Class lifecycle
 
 #include <ObjectivelyMVC/Program.h>
@@ -323,8 +441,19 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->fillRect = fillRect;
 	((RendererInterface *) clazz->def->interface)->init = init;
 	((RendererInterface *) clazz->def->interface)->render = render;
+	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
 
 	initializeOpenGL();
+
+	_null = $(alloc(Image), initWithBytes, _nullData, lengthof(_nullData));
+}
+
+/**
+ * @see Class::destroy(Class *)
+ */
+static void destroy(Class *clazz) {
+	release(_null);
 }
 
 Class _Renderer = {
@@ -334,6 +463,7 @@ Class _Renderer = {
 	.interfaceOffset = offsetof(Renderer, interface),
 	.interfaceSize = sizeof(RendererInterface),
 	.initialize = initialize,
+	.destroy = destroy,
 };
 
 #undef _Class

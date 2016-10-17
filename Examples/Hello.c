@@ -83,8 +83,6 @@ int main(int argc, char **argv) {
 
 		drawScene(window);
 
-		SetColor(Colors.White);
-
 		$(windowController, render);
 
 		SDL_GL_SwapWindow(window);

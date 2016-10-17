@@ -220,11 +220,7 @@ static void initialize(Class *clazz) {
 	
 	((CheckboxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 
-	Data *checkData = $(alloc(Data), initWithBytes, _checkData, lengthof(_checkData));
-
-	_check = $(alloc(Image), initWithData, checkData);
-
-	release(checkData);
+	_check = $(alloc(Image), initWithBytes, _checkData, lengthof(_checkData));
 }
 
 /**

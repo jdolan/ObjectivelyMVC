@@ -38,7 +38,7 @@ static void render(View *self, Renderer *renderer) {
 
 	const SDL_Rect frame = $(self, renderFrame);
 
-	SetColor(self->borderColor);
+	$(renderer, setDrawColor, &self->borderColor);
 
 	SDL_Point points[2];
 
@@ -50,7 +50,7 @@ static void render(View *self, Renderer *renderer) {
 
 	$(renderer, drawLine, points);
 
-	SetColor(Colors.White);
+	$(renderer, setDrawColor, &Colors.White);
 }
 
 /**

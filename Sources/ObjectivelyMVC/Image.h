@@ -63,6 +63,17 @@ struct ImageInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @fn Image *Image::initWithBytes(Image *self, const uint8_t *bytes, size_t length)
+	 * @brief Initializes this Image with the specified bytes.
+	 * @param self The Image.
+	 * @param bytes The raw image bytes.
+	 * @param length The length of `bytes`.
+	 * @return The initialized Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*initWithBytes)(Image *self, const uint8_t *bytes, size_t length);
+
+	/**
 	 * @fn Image *Image::initWithData(Image *self, const Data *data)
 	 * @brief Initializes this Image with the specified Data.
 	 * @param self The Image.
@@ -70,7 +81,7 @@ struct ImageInterface {
 	 * @return The initialized Image, or `NULL` on error.
 	 * @memberof Image
 	 */
-	Image *(*initWithData)(Image *image, const Data *data);
+	Image *(*initWithData)(Image *self, const Data *data);
 
 	/**
 	 * @fn Image *Image::initWithName(Image *self, const char *name)
