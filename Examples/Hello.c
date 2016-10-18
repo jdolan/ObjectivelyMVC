@@ -23,16 +23,6 @@
 
 #include <assert.h>
 
-#if defined(__APPLE__)
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
-#endif
-
-#if defined(_MSC_VER)
-#define SDL_MAIN_HANDLED
-#endif
-
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
@@ -43,7 +33,7 @@ static void drawScene(SDL_Window *window);
 /**
  * @brief Program entry point.
  */
-int main(int argc, char **argv) {
+int main(int argc, char *argv[]) {
 
 	MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
 	
@@ -124,8 +114,8 @@ static long getCurrentTime(void) {
 }
 
 /**
- * @brief Renders a teapot, demonstrating ObjectivelyMVC integrating with a
- * vanilla SDL2 / OpenGL application.
+ * @brief Renders a rotating cube, demonstrating ObjectivelyMVC integrating with a vanilla SDL2 / 
+ * OpenGL application.
  */
 static void drawScene(SDL_Window *window) {
 
@@ -137,11 +127,11 @@ static void drawScene(SDL_Window *window) {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	glTranslatef(0.0, 0.0, -1.0);
 
 	glPushMatrix();
 	
-	glRotatef(getCurrentTime() * 0.1, 0.0, 1.0, 0.0);
+	glRotatef(getCurrentTime() * 0.1, 1.0, 1.0, 1.0);
 
 	glEnable(GL_DEPTH_TEST);
 
