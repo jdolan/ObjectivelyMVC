@@ -3,9 +3,6 @@ AUTOMAKE_OPTIONS = nostdinc
 pkgdatadir = $(datadir)/ObjectivelyMVC
 pkgincludedir = $(includedir)/ObjectivelyMVC
 
-noinst_HEADERS = \
-	OpenGL.h
-
 pkginclude_HEADERS = \
 	Action.h \
 	Box.h \
@@ -15,6 +12,7 @@ pkginclude_HEADERS = \
 	CollectionView.h \
 	Colors.h \
 	Config.h \
+	Context.h \
 	Control.h \
 	Font.h \
 	Image.h \
@@ -57,6 +55,7 @@ libObjectivelyMVC_la_SOURCES = \
 	CollectionItemView.c \
 	CollectionView.c \
 	Colors.c \
+	Context.c \
 	Control.c \
 	Font.c \
 	Image.c \
@@ -64,7 +63,6 @@ libObjectivelyMVC_la_SOURCES = \
 	Input.c \
 	Label.c \
 	NavigationViewController.c \
-	OpenGL.c \
 	Option.c \
 	Panel.c \
 	Program.c \

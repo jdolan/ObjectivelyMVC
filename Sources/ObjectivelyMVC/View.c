@@ -565,7 +565,7 @@ static void render(View *self, Renderer *renderer) {
 		$(renderer, setDrawColor, &self->backgroundColor);
 		
 		const SDL_Rect frame = $(self, renderFrame);
-		$(renderer, fillRect, &frame);
+		$(renderer, drawRectFilled, &frame);
 	}
 		
 	if (self->borderWidth && self->borderColor.a) {

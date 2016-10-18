@@ -25,7 +25,6 @@
 
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/OpenGL.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View.h>
 
@@ -48,6 +47,31 @@ static const unsigned char _nullData[] = {
 	0x4e, 0x44, 0xae, 0x42, 0x60, 0x82
 };
 
+#define VERTEX_ATTRIBUTE "vertex"
+#define TEXCOORD_ATTRIBUTE "texcoord"
+#define COLOR_UNIFORM "color"
+
+static const char *_vertexShader = "\
+	#version 120 \n\
+	attribute vec2 "VERTEX_ATTRIBUTE"; \
+	attribute vec2 "TEXCOORD_ATTRIBUTE"; \
+	varying vec2 st; \
+	void main() { \
+		gl_Position = gl_ProjectionMatrix * vec4("VERTEX_ATTRIBUTE", 0.0, 1.0); \
+		st = texcoord; \
+	}";
+
+static const char *_fragmentShader = "\
+	#version 120 \n\
+	uniform vec4 "COLOR_UNIFORM"; \
+	uniform sampler2D sampler; \
+	varying vec2 st; \
+	void main() { \
+		gl_FragColor = "COLOR_UNIFORM" * texture2D(sampler, st); \
+	}";
+
+
+
 #pragma mark - Object
 
 /**
@@ -57,11 +81,12 @@ static void dealloc(Object *self) {
 
 	Renderer *this = (Renderer *) self;
 
-	glDeleteBuffers(1, &this->buffers.texcoord);
-	glDeleteBuffers(1, &this->buffers.vertex);
+	glDeleteTextures(1, &this->nullTexture);
 
-	glDeleteTextures(1, &this->textures.null);
+	glDeleteBuffers(1, &this->texcoordBuffer);
+	glDeleteBuffers(1, &this->vertexBuffer);
 
+	release(this->context);
 	release(this->program);
 	release(this->views);
 
@@ -89,12 +114,12 @@ static void beginFrame(Renderer *self) {
 
 	glEnable(GL_SCISSOR_TEST);
 
-	glBindTexture(GL_TEXTURE_2D, self->textures.null);
+	glBindTexture(GL_TEXTURE_2D, self->nullTexture);
 
 	glUseProgram(self->program->name);
 
-	glEnableVertexAttribArray(self->attributes.texcoord);
-	glEnableVertexAttribArray(self->attributes.vertex);
+	glEnableVertexAttribArray(self->vertexAttribute);
+	glEnableVertexAttribArray(self->texcoordAttribute);
 
 	$(self, setDrawColor, &Colors.White);
 }
@@ -158,7 +183,7 @@ static void drawLines(const Renderer *self, const SDL_Point *points, GLuint coun
 
 	assert(points);
 
-	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, self->vertexBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(SDL_Point), points);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -187,11 +212,40 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 	verts[6] = rect->x;
 	verts[7] = rect->y + rect->h;
 
-	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, self->vertexBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glDrawArrays(GL_LINE_LOOP, 0, 4);
+}
+
+/**
+ * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
+ * @memberof Renderer
+ */
+static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
+
+	assert(rect);
+
+	GLint verts[8];
+
+	verts[0] = rect->x - 1;
+	verts[1] = rect->y;
+
+	verts[2] = rect->x + rect->w;
+	verts[3] = rect->y;
+
+	verts[4] = rect->x + rect->w;
+	verts[5] = rect->y + rect->h + 1;
+
+	verts[6] = rect->x - 1;
+	verts[7] = rect->y + rect->h + 1;
+
+	glBindBuffer(GL_ARRAY_BUFFER, self->vertexBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 /**
@@ -209,33 +263,15 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 		0.0, 1.0
 	};
 
-	GLint verts[8];
-
-	verts[0] = rect->x;
-	verts[1] = rect->y;
-
-	verts[2] = rect->x + rect->w;
-	verts[3] = rect->y;
-
-	verts[4] = rect->x + rect->w;
-	verts[5] = rect->y + rect->h;
-
-	verts[6] = rect->x;
-	verts[7] = rect->y + rect->h;
-
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.texcoord);
+	glBindBuffer(GL_ARRAY_BUFFER, self->texcoordBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(texcoords), texcoords);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	$(self, drawRectFilled, rect);
 
-	glBindTexture(GL_TEXTURE_2D, self->textures.null);
+	glBindTexture(GL_TEXTURE_2D, self->nullTexture);
 }
 
 /**
@@ -244,8 +280,8 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
  */
 static void endFrame(Renderer *self) {
 
-	glDisableVertexAttribArray(self->attributes.texcoord);
-	glDisableVertexAttribArray(self->attributes.vertex);
+	glDisableVertexAttribArray(self->texcoordAttribute);
+	glDisableVertexAttribArray(self->vertexAttribute);
 
 	glUseProgram(0);
 
@@ -265,35 +301,6 @@ static void endFrame(Renderer *self) {
 	if (err) {
 		MVC_LogError("GL error: %d\n", err);
 	}
-}
-
-/**
- * @fn void Renderer::fillRect(const Renderer *self, const SDL_Rect *rect)
- * @memberof Renderer
- */
-static void fillRect(const Renderer *self, const SDL_Rect *rect) {
-
-	assert(rect);
-
-	GLint verts[8];
-
-	verts[0] = rect->x - 1;
-	verts[1] = rect->y;
-
-	verts[2] = rect->x + rect->w;
-	verts[3] = rect->y;
-
-	verts[4] = rect->x + rect->w;
-	verts[5] = rect->y + rect->h + 1;
-
-	verts[6] = rect->x - 1;
-	verts[7] = rect->y + rect->h + 1;
-
-	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
 /**
@@ -362,59 +369,43 @@ static void render(Renderer *self) {
  */
 static void renderDeviceDidReset(Renderer *self) {
 
-	Shader *vertexShader = $(alloc(Shader), initWithSource, GL_VERTEX_SHADER, "\
-		#version 120 \n\
-		attribute vec2 texcoord; \
-		attribute vec2 vertex; \
-		varying vec2 st; \
-		void main() { \
-			gl_Position = gl_ProjectionMatrix * vec4(vertex.x, vertex.y, 0.0, 1.0); \
-			st = texcoord; \
-		}");
+	release(self->context);
 
-	Shader *fragmentShader = $(alloc(Shader), initWithSource, GL_FRAGMENT_SHADER, "\
-		#version 120 \n\
-		uniform vec4 color; \
-		uniform sampler2D sampler; \
-		varying vec2 st; \
-		void main() { \
-			gl_FragColor = color * texture2D(sampler, st); \
-		}");
+	self->context = $(alloc(Context), initWithContext, SDL_GL_GetCurrentContext());
+	assert(self->context);
+
+	glGenBuffers(1, &self->vertexBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, self->vertexBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 0x10000, NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &self->texcoordBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, self->texcoordBuffer);
+	glBufferData(GL_ARRAY_BUFFER, 0x10000, NULL, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	self->nullTexture = $(self, createTexture, _null->surface);
 
 	self->program = (Program *) $(alloc(Program), init);
 	assert(self->program);
 
-	$(self->program, attachShader, vertexShader);
-	$(self->program, attachShader, fragmentShader);
-
-	release(vertexShader);
-	release(fragmentShader);
+	$(self->program, attachShaderSource, GL_VERTEX_SHADER, _vertexShader);
+	$(self->program, attachShaderSource, GL_FRAGMENT_SHADER, _fragmentShader);
 
 	$(self->program, link);
 	assert(self->program->name);
 
-	self->attributes.texcoord = $(self->program, getAttributeLocation, "texcoord");
-	self->attributes.vertex = $(self->program, getAttributeLocation, "vertex");
-	self->uniforms.color = $(self->program, getUniformLocation, "color");
+	self->vertexAttribute = $(self->program, getAttributeLocation, VERTEX_ATTRIBUTE);
+	self->texcoordAttribute = $(self->program, getAttributeLocation, TEXCOORD_ATTRIBUTE);
+	self->colorUniform = $(self->program, getUniformLocation, COLOR_UNIFORM);
 
-	const size_t len = 64;
+	glBindBuffer(GL_ARRAY_BUFFER, self->vertexBuffer);
+	glVertexAttribPointer(self->vertexAttribute, 2, GL_INT, GL_FALSE, 0, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glGenBuffers(1, &self->buffers.texcoord);
-	assert(self->buffers.texcoord);
-
-	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.texcoord);
-	glBufferData(GL_ARRAY_BUFFER, len * sizeof(GLfloat) * 2, NULL, GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(self->attributes.texcoord, 2, GL_FLOAT, GL_FALSE, 0, NULL);
-
-	glGenBuffers(1, &self->buffers.vertex);
-	assert(self->buffers.vertex);
-
-	glBindBuffer(GL_ARRAY_BUFFER, self->buffers.vertex);
-	glBufferData(GL_ARRAY_BUFFER, len * sizeof(GLint) * 2, NULL, GL_DYNAMIC_DRAW);
-	glVertexAttribPointer(self->attributes.vertex, 2, GL_INT, GL_FALSE, 0, NULL);
-
-	self->textures.null = $(self, createTexture, _null->surface);
-	assert(self->textures.null);
+	glBindBuffer(GL_ARRAY_BUFFER, self->texcoordBuffer);
+	glVertexAttribPointer(self->texcoordAttribute, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	assert(glGetError() == GL_NO_ERROR);
 }
@@ -424,7 +415,7 @@ static void renderDeviceDidReset(Renderer *self) {
  * @memberof Renderer
  */
 static void setDrawColor(Renderer *self, const SDL_Color *color) {
-	glUniform4fv(self->uniforms.color, 1, (const GLfloat []) {
+	glUniform4fv(self->colorUniform, 1, (const GLfloat []) {
 		color->r / 255.0,
 		color->g / 255.0,
 		color->b / 255.0,
@@ -441,6 +432,8 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
  */
 static void initialize(Class *clazz) {
 
+	_initialize(&_Context);
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((RendererInterface *) clazz->def->interface)->addView = addView;
@@ -449,15 +442,13 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->drawLine = drawLine;
 	((RendererInterface *) clazz->def->interface)->drawLines = drawLines;
 	((RendererInterface *) clazz->def->interface)->drawRect = drawRect;
+	((RendererInterface *) clazz->def->interface)->drawRectFilled = drawRectFilled;
 	((RendererInterface *) clazz->def->interface)->drawTexture = drawTexture;
 	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
-	((RendererInterface *) clazz->def->interface)->fillRect = fillRect;
 	((RendererInterface *) clazz->def->interface)->init = init;
 	((RendererInterface *) clazz->def->interface)->render = render;
 	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
-
-	initializeOpenGL();
 
 	_null = $(alloc(Image), initWithBytes, _nullData, lengthof(_nullData));
 }

@@ -23,11 +23,9 @@
 
 #pragma once
 
-#include <SDL2/SDL_opengl.h>
-
 #include <Objectively/Object.h>
 
-#include <ObjectivelyMVC/Types.h>
+#include <ObjectivelyMVC/Context.h>
 
 /**
  * @file
@@ -63,6 +61,11 @@ struct Shader {
 	 * @brief The shader name.
 	 */
 	GLuint name;
+
+	/**
+	 * @brief The shader type.
+	 */
+	GLenum type;
 };
 
 /**
@@ -79,7 +82,7 @@ struct ShaderInterface {
 	 * @fn Shader *Shader::initWithSource(Shader *self, GLenum type, const GLchar *src)
 	 * @brief Initializes this Shader with the specified type and source.
 	 * @param The Shader.
-	 * @param type The type (e.g. `GL_VERTEX_SHADER` or `GL_FRAGMENT_SHADER`).
+	 * @param type The shader type (`GL_VERTEX_SHADER` or `GL_FRAGMENT_SHADER`).
 	 * @param source A NULL-terminated GLSL source string.
 	 * @return The initialized Shader, or `NULL` on error.
 	 * @memberof Shader

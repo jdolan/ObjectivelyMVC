@@ -21,9 +21,10 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#include <SDL2/SDL_video.h>
+#include <assert.h>
 
-#include <ObjectivelyMVC/OpenGL.h>
+#include <ObjectivelyMVC/Context.h>
+#include <ObjectivelyMVC/Log.h>
 
 PFNGLATTACHSHADERPROC glAttachShader;
 PFNGLBINDATTRIBLOCATIONPROC glBindAttribLocation;
@@ -51,8 +52,45 @@ PFNGLUNIFORM4FVPROC glUniform4fv;
 PFNGLUSEPROGRAMPROC glUseProgram;
 PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 
-void initializeOpenGL(void) {
+#define _Class _Context
 
+#pragma mark - Context
+
+/**
+ * @fn Context *Context::initWithContext(Context *self, SDL_GLContext *context)
+ * @memberof Context
+ */
+static Context *initWithContext(Context *self, SDL_GLContext *context) {
+	
+	self = (Context *) super(Object, self, init);
+	if (self) {
+
+		self->context = context;
+		assert(self->context);
+
+		int major, minor;
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
+		SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
+
+		if (major < 2 || (major == 2 && minor < 1)) {
+			MVC_LogError("OpenGL version %s insufficient.\n"
+						 "ObjectivelyMVC requires 2.1 or greater\n", glGetString(GL_VERSION));
+			assert(false);
+		}
+	}
+	
+	return self;
+}
+
+#pragma mark - Class lifecycle
+
+/**
+ * @see Class::initialize(Class *)
+ */
+static void initialize(Class *clazz) {
+		
+	((ContextInterface *) clazz->def->interface)->initWithContext = initWithContext;
+	
 	glAttachShader = (PFNGLATTACHSHADERPROC) SDL_GL_GetProcAddress("glAttachShader");
 	glBindAttribLocation = (PFNGLBINDATTRIBLOCATIONPROC) SDL_GL_GetProcAddress("glBindAttribLocation");
 	glBindBuffer = (PFNGLBINDBUFFERPROC) SDL_GL_GetProcAddress("glBindBuffer");
@@ -79,3 +117,15 @@ void initializeOpenGL(void) {
 	glUseProgram = (PFNGLUSEPROGRAMPROC) SDL_GL_GetProcAddress("glUseProgram");
 	glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC) SDL_GL_GetProcAddress("glVertexAttribPointer");
 }
+
+Class _Context = {
+	.name = "Context",
+	.superclass = &_Object,
+	.instanceSize = sizeof(Context),
+	.interfaceOffset = offsetof(Context, interface),
+	.interfaceSize = sizeof(ContextInterface),
+	.initialize = initialize,
+};
+
+#undef _Class
+

@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/OpenGL.h>
 #include <ObjectivelyMVC/Program.h>
 
 #define _Class _Program
@@ -62,6 +61,19 @@ static void attachShader(Program *self, Shader *shader) {
 	assert(glGetError() == GL_NO_ERROR);
 
 	$(self->shaders, addObject, shader);
+}
+
+/**
+ * @fn void Program::attachShaderSource(Program *self, GLenum type, const GLchar *source)
+ * @memberof Program
+ */
+static void attachShaderSource(Program *self, GLenum type, const GLchar *source) {
+
+	Shader *shader = $(alloc(Shader), initWithSource, type, source);
+
+	$(self, attachShader, shader);
+
+	release(shader);
 }
 
 /**
@@ -149,9 +161,12 @@ static void use(Program *self) {
  */
 static void initialize(Class *clazz) {
 	
+	_initialize(&_Context);
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ProgramInterface *) clazz->def->interface)->attachShader = attachShader;
+	((ProgramInterface *) clazz->def->interface)->attachShaderSource = attachShaderSource;
 	((ProgramInterface *) clazz->def->interface)->getAttributeLocation = getAttributeLocation;
 	((ProgramInterface *) clazz->def->interface)->getUniformLocation = getUniformLocation;
 	((ProgramInterface *) clazz->def->interface)->init = init;

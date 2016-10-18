@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/OpenGL.h>
 #include <ObjectivelyMVC/Shader.h>
 
 #define _Class _Shader
@@ -55,11 +54,14 @@ static Shader *initWithSource(Shader *self, GLenum type, const GLchar *source) {
 	
 	self = (Shader *) super(Object, self, init);
 	if (self) {
-		assert(source);
 
-		self->name = glCreateShader(type);
+		self->type = type;
+		assert(self->type);
+
+		self->name = glCreateShader(self->type);
 		assert(self->name);
 
+		assert(source);
 		GLint i = strlen(source);
 
 		glShaderSource(self->name, 1, (const GLchar **) &source, &i);
@@ -90,7 +92,9 @@ static Shader *initWithSource(Shader *self, GLenum type, const GLchar *source) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
+	_initialize(&_Context);
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	
 	((ShaderInterface *) clazz->def->interface)->initWithSource = initWithSource;

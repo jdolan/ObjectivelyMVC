@@ -54,7 +54,7 @@ struct WindowController {
 	WindowControllerInterface *interface;
 
 	/**
-	 * @brief The renderer.
+	 * @brief The Renderer.
 	 */
 	Renderer *renderer;
 

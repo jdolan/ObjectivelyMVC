@@ -55,63 +55,44 @@ struct Renderer {
 	RendererInterface *interface;
 
 	/**
-	 * @brief Attribute variables.
-	 * @protected
+	 * @brief The color uniform.
 	 */
-	struct {
-		/**
-		 * @brief The texture coordinate attribute.
-		 */
-		GLint texcoord;
-
-		/**
-		 * @brief The vertex attribute.
-		 */
-		GLint vertex;
-	} attributes;
+	GLint colorUniform;
 
 	/**
-	 * @brief Vertex buffer objects.
-	 * @protected
+	 * @brief The OpenGL Context.
 	 */
-	struct {
-		/**
-		 * @brief The texture coordinate buffer.
-		 */
-		GLuint texcoord;
-
-		/**
-		 * @brief The vertex buffer.
-		 */
-		GLuint vertex;
-	} buffers;
+	Context *context;
 
 	/**
-	 * @brief Texture objects.
-	 * @protected
+	 * @brief The null texture object.
 	 */
-	struct {
-		/**
-		 * @brief The null texture object.
-		 */
-		GLuint null;
-	} textures;
-
-	/**
-	 * @brief Uniform objects.
-	 * @protected
-	 */
-	struct {
-		/**
-		 * @brief The color uniform.
-		 */
-		GLint color;
-	} uniforms;
+	GLuint nullTexture;
 
 	/**
 	 * @brief The GLSL Program to use for rendering.
 	 */
 	Program *program;
+
+	/**
+	 * @brief The texture coordinate attribute.
+	 */
+	GLint texcoordAttribute;
+
+	/**
+	 * @brief The texture coordinate buffer.
+	 */
+	GLuint texcoordBuffer;
+
+	/**
+	 * @brief The vertex attribute.
+	 */
+	GLint vertexAttribute;
+
+	/**
+	 * @brief The vertex buffer.
+	 */
+	GLuint vertexBuffer;
 
 	/**
 	 * @brief The Views to be drawn each frame.
@@ -187,6 +168,15 @@ struct RendererInterface {
 	void (*drawRect)(const Renderer *self, const SDL_Rect *rect);
 
 	/**
+	 * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
+	 * @brief Fills a rectangle using `glRecti`.
+	 * @param self The Renderer.
+	 * @param rect The rectangle.
+	 * @memberof Renderer
+	 */
+	void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect);
+
+	/**
 	 * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
 	 * @brief Draws textured `GL_QUAD` in the given rectangle.
 	 * @param self The Renderer.
@@ -205,15 +195,6 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	void (*endFrame)(Renderer *self);
-
-	/**
-	 * @fn void Renderer::fillRect(const Renderer *self, const SDL_Rect *rect)
-	 * @brief Fills a rectangle using `glRecti`.
-	 * @param self The Renderer.
-	 * @param rect The rectangle.
-	 * @memberof Renderer
-	 */
-	void (*fillRect)(const Renderer *self, const SDL_Rect *rect);
 
 	/**
 	 * @fn Renderer *Renderer::init(Renderer *self)

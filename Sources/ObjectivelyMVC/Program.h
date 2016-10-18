@@ -65,7 +65,7 @@ struct Program {
 	GLuint name;
 
 	/**
-	 * @brief The Shaders comprising this Program.
+	 * @brief The shaders comprising this program.
 	 */
 	MutableArray *shaders;
 };
@@ -88,6 +88,16 @@ struct ProgramInterface {
 	 * @memberof Program
 	 */
 	void (*attachShader)(Program *self, Shader *shader);
+
+	/**
+	 * @fn void Program::attachShaderSource(Program *self, GLenum type, const GLchar *source)
+	 * @brief A convenience method to compile and attach a Shader from a GLSL source string.
+	 * @param self The Program.
+	 * @param type The Shader type (`GL_VERTEX_SHADER` or `GL_FRAGMENT_SHADER`).
+	 * @param source A NULL-terminated GLSL source string.
+	 * @memberof Program
+	 */
+	void (*attachShaderSource)(Program *self, GLenum type, const GLchar *source);
 
 	/**
 	 * @fn GLint Program::getAttributeLocation(Program *sef, const GLchar *name)

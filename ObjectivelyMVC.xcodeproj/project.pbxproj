@@ -15,6 +15,8 @@
 		CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0981C77AF73003E3CF7 /* Slider.c */; };
 		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE0E7AA31DB5337E00856D38 /* Context.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0E7AA11DB5337E00856D38 /* Context.c */; };
+		CE0E7AA41DB5337E00856D38 /* Context.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0E7AA21DB5337E00856D38 /* Context.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
 		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
@@ -46,7 +48,6 @@
 		CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4801C4F3A1600CD0B13 /* Image.c */; };
 		CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4811C4F3A1600CD0B13 /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4861C4F3D3500CD0B13 /* check.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE12D4851C4F3C5900CD0B13 /* check.png */; };
 		CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4931C547BDD00CD0B13 /* StackView.c */; };
 		CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4941C547BDD00CD0B13 /* StackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
@@ -86,8 +87,6 @@
 		CEC26AED1DB2C06C00525BEE /* Program.h in Headers */ = {isa = PBXBuildFile; fileRef = CEC26AEB1DB2C06C00525BEE /* Program.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEC26AF41DB2CC5300525BEE /* Shader.c in Sources */ = {isa = PBXBuildFile; fileRef = CEC26AF21DB2CC5300525BEE /* Shader.c */; };
 		CEC26AF51DB2CC5300525BEE /* Shader.h in Headers */ = {isa = PBXBuildFile; fileRef = CEC26AF31DB2CC5300525BEE /* Shader.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEC26B031DB3303F00525BEE /* OpenGL.c in Sources */ = {isa = PBXBuildFile; fileRef = CEC26B011DB3303F00525BEE /* OpenGL.c */; };
-		CEC26B041DB3303F00525BEE /* OpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = CEC26B021DB3303F00525BEE /* OpenGL.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
@@ -95,7 +94,6 @@
 		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
 		CEF1D8911D4270150099A857 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
-		CEF1D8931D42A2C70099A857 /* resize.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEF1D8921D429F7A0099A857 /* resize.png */; };
 		CEF1D8A01D440C7B0099A857 /* Box.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D89E1D440C7B0099A857 /* Box.c */; };
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
@@ -120,8 +118,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */,
-				CEF1D8931D42A2C70099A857 /* resize.png in CopyFiles */,
-				CE12D4861C4F3D3500CD0B13 /* check.png in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,6 +134,8 @@
 		CE0AD0981C77AF73003E3CF7 /* Slider.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Slider.c; sourceTree = "<group>"; };
 		CE0AD0991C77AF73003E3CF7 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Slider.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE0CC51F1DB452EC00CF0668 /* null.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = null.png; sourceTree = "<group>"; };
+		CE0E7AA11DB5337E00856D38 /* Context.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Context.c; sourceTree = "<group>"; };
+		CE0E7AA21DB5337E00856D38 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
 		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
@@ -154,7 +152,7 @@
 		CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectivelyMVC.h; sourceTree = "<group>"; };
 		CE12D42B1C4C37E500CD0B13 /* Hello.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Hello.c; sourceTree = "<group>"; };
 		CE12D42D1C4C383D00CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Hello"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Example"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4651C4D587E00CD0B13 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
 		CE12D4691C4D810F00CD0B13 /* Button.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Button.c; sourceTree = "<group>"; };
 		CE12D46A1C4D810F00CD0B13 /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Button.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -215,8 +213,6 @@
 		CEC26AEB1DB2C06C00525BEE /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Program.h; sourceTree = "<group>"; };
 		CEC26AF21DB2CC5300525BEE /* Shader.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Shader.c; sourceTree = "<group>"; };
 		CEC26AF31DB2CC5300525BEE /* Shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Shader.h; sourceTree = "<group>"; };
-		CEC26B011DB3303F00525BEE /* OpenGL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = OpenGL.c; sourceTree = "<group>"; };
-		CEC26B021DB3303F00525BEE /* OpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGL.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -288,6 +284,8 @@
 				CE12D4081C4C367100CD0B13 /* Colors.h */,
 				CE9305C31D9B27F900D62770 /* Config.h */,
 				CE9305C21D9B277E00D62770 /* Config.h.in */,
+				CE0E7AA11DB5337E00856D38 /* Context.c */,
+				CE0E7AA21DB5337E00856D38 /* Context.h */,
 				CE12D46D1C4D82AF00CD0B13 /* Control.c */,
 				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
 				CE12D4091C4C367100CD0B13 /* Font.c */,
@@ -303,8 +301,6 @@
 				CE12D4651C4D587E00CD0B13 /* Log.h */,
 				CE562EBA1D6876AB006DF143 /* NavigationViewController.c */,
 				CE562EBB1D6876AB006DF143 /* NavigationViewController.h */,
-				CEC26B011DB3303F00525BEE /* OpenGL.c */,
-				CEC26B021DB3303F00525BEE /* OpenGL.h */,
 				CE14A8CE1C68CE3C00B576FB /* Option.c */,
 				CE14A8CF1C68CE3C00B576FB /* Option.h */,
 				CEF1D88B1D4265A70099A857 /* Panel.c */,
@@ -446,7 +442,7 @@
 			isa = PBXGroup;
 			children = (
 				CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */,
-				CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
+				CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -478,6 +474,7 @@
 				CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */,
 				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
 				CE9305C41D9B27F900D62770 /* Config.h in Headers */,
+				CE0E7AA41DB5337E00856D38 /* Context.h in Headers */,
 				CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */,
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
@@ -487,7 +484,6 @@
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
-				CEC26B041DB3303F00525BEE /* OpenGL.h in Headers */,
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
 				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
 				CEC26AED1DB2C06C00525BEE /* Program.h in Headers */,
@@ -515,9 +511,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */ = {
+		CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello" */;
+			buildConfigurationList = CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Example" */;
 			buildPhases = (
 				CE12D4511C4C8E8E00CD0B13 /* Sources */,
 				CE12D4521C4C8E8E00CD0B13 /* Frameworks */,
@@ -528,9 +524,9 @@
 			dependencies = (
 				CE12D4641C4C8F5400CD0B13 /* PBXTargetDependency */,
 			);
-			name = "ObjectivelyMVC-Hello";
+			name = "ObjectivelyMVC-Example";
 			productName = HelloMVC;
-			productReference = CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */;
+			productReference = CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */;
 			productType = "com.apple.product-type.tool";
 		};
 		CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */ = {
@@ -580,7 +576,7 @@
 			projectRoot = "";
 			targets = (
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
-				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
+				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */,
 			);
 		};
 /* End PBXProject section */
@@ -606,6 +602,7 @@
 				CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */,
 				CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
+				CE0E7AA31DB5337E00856D38 /* Context.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
@@ -613,7 +610,6 @@
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE6BC1821D837D550070FB2D /* Label.c in Sources */,
 				CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */,
-				CEC26B031DB3303F00525BEE /* OpenGL.c in Sources */,
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
 				CEC26AEC1DB2C06C00525BEE /* Program.c in Sources */,
@@ -797,7 +793,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello" */ = {
+		CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Example" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE12D45A1C4C8E8E00CD0B13 /* Debug */,

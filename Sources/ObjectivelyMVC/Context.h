@@ -24,6 +24,16 @@
 #pragma once
 
 #include <SDL2/SDL_opengl.h>
+#include <SDL2/SDL_video.h>
+
+#include <Objectively/Object.h>
+
+#include <ObjectivelyMVC/Types.h>
+
+/**
+ * @file
+ * @brief An OpenGL 2.1 context.
+ */
 
 extern PFNGLATTACHSHADERPROC glAttachShader;
 extern PFNGLBINDATTRIBLOCATIONPROC glBindAttribLocation;
@@ -51,4 +61,55 @@ extern PFNGLUNIFORM4FVPROC glUniform4fv;
 extern PFNGLUSEPROGRAMPROC glUseProgram;
 extern PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 
-extern void initializeOpenGL(void);
+typedef struct Context Context;
+typedef struct ContextInterface ContextInterface;
+
+/**
+ * @brief An OpenGL 2.1 context.
+ * @extends Object
+ */
+struct Context {
+	
+	/**
+	 * @brief The parent.
+	 */
+	Object object;
+	
+	/**
+	 * @brief The typed interface.
+	 * @protected
+	 */
+	ContextInterface *interface;
+
+	/**
+	 * @brief The backing context.
+	 */
+	SDL_GLContext *context;
+};
+
+/**
+ * @brief The Context interface.
+ */
+struct ContextInterface {
+	
+	/**
+	 * @brief The parent interface.
+	 */
+	ObjectInterface objectInterface;
+	
+	/**
+	 * @fn Context *Context::initWithContext(Context *self, SDL_GLContext *context)
+	 * @brief Initializes this Context with the backing SDL_GLContext.
+	 * @param The Context.
+	 * @param context The backing SDL_GLContext.
+	 * @return The initialized Context, or `NULL` on error.
+	 * @memberof Context
+	 */
+	Context *(*initWithContext)(Context *self, SDL_GLContext *context);
+};
+
+/**
+ * @brief The Context Class.
+ */
+extern Class _Context;
+
