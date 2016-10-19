@@ -149,7 +149,7 @@
 		CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectivelyMVC.h; sourceTree = "<group>"; };
 		CE12D42B1C4C37E500CD0B13 /* Hello.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Hello.c; sourceTree = "<group>"; };
 		CE12D42D1C4C383D00CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Example"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Hello"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4651C4D587E00CD0B13 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
 		CE12D4691C4D810F00CD0B13 /* Button.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Button.c; sourceTree = "<group>"; };
 		CE12D46A1C4D810F00CD0B13 /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Button.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -439,7 +439,7 @@
 			isa = PBXGroup;
 			children = (
 				CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */,
-				CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */,
+				CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -508,9 +508,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */ = {
+		CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Example" */;
+			buildConfigurationList = CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello" */;
 			buildPhases = (
 				CE12D4511C4C8E8E00CD0B13 /* Sources */,
 				CE12D4521C4C8E8E00CD0B13 /* Frameworks */,
@@ -521,9 +521,9 @@
 			dependencies = (
 				CE12D4641C4C8F5400CD0B13 /* PBXTargetDependency */,
 			);
-			name = "ObjectivelyMVC-Example";
+			name = "ObjectivelyMVC-Hello";
 			productName = HelloMVC;
-			productReference = CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */;
+			productReference = CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */;
 			productType = "com.apple.product-type.tool";
 		};
 		CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */ = {
@@ -573,7 +573,7 @@
 			projectRoot = "";
 			targets = (
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
-				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Example */,
+				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 			);
 		};
 /* End PBXProject section */
@@ -789,7 +789,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Example" */ = {
+		CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CE12D45A1C4C8E8E00CD0B13 /* Debug */,
