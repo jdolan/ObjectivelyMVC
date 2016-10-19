@@ -91,8 +91,17 @@ struct WindowControllerInterface {
 	WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
 
 	/**
+	 * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
+	 * @brief Sets this WindowController's Renderer.
+	 * @param self The WindowController.
+	 * @param renderer The Renderer.
+	 * @memberof WindowController
+	 */
+	void (*setRenderer)(WindowController *self, Renderer *renderer);
+
+	/**
 	 * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
-	 * @brief Presents the specified ViewController.
+	 * @brief Sets this WindowController's ViewController.
 	 * @param self The WindowController.
 	 * @param viewController The ViewController.
 	 * @memberof WindowController
