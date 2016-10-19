@@ -78,7 +78,7 @@ struct ImageView {
 	/**
 	 * @brief The texture.
 	 */
-	GLuint texture;
+	ident texture;
 };
 
 /**

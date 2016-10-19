@@ -125,14 +125,14 @@ struct RendererInterface {
 	void (*beginFrame)(Renderer *self);
 
 	/**
-	 * @fn void Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
-	 * @brief Generates and binds to an OpenGL texture object, uploading the given surface.
+	 * @fn ident Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
+	 * @brief Generates and binds to a texture object, uploading the given surface.
 	 * @param self The Renderer.
 	 * @param surface The surface.
-	 * @return The OpenGL texture name, or `0` on error.
+	 * @return The opaque texture data, or NULL on error.
 	 * @memberof Renderer
 	 */
-	GLuint (*createTexture)(const Renderer *self, const SDL_Surface *surface);
+	ident (*createTexture)(const Renderer *self, const SDL_Surface *surface);
 
 	/**
 	 * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points)
@@ -144,14 +144,14 @@ struct RendererInterface {
 	void (*drawLine)(const Renderer *self, const SDL_Point *points);
 
 	/**
-	 * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, GLuint count)
+	 * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
 	 * @brief Draws line segments between adjacent points using `GL_LINE_STRIP`.
 	 * @param self The Renderer.
 	 * @param points The points.
 	 * @param count The length of points.
 	 * @memberof Renderer
 	 */
-	void (*drawLines)(const Renderer *self, const SDL_Point *points, GLuint count);
+	void (*drawLines)(const Renderer *self, const SDL_Point *points, size_t count);
 
 	/**
 	 * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
@@ -172,14 +172,14 @@ struct RendererInterface {
 	void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect);
 
 	/**
-	 * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
+	 * @fn void Renderer::drawTexture(const Renderer *self, ident texture, const SDL_Rect *dest)
 	 * @brief Draws textured `GL_QUAD` in the given rectangle.
 	 * @param self The Renderer.
 	 * @param texture The texture.
 	 * @param dest The destination in screen coordinates.
 	 * @memberof Renderer
 	 */
-	void (*drawTexture)(const Renderer *self, GLuint texture, const SDL_Rect *dest);
+	void (*drawTexture)(const Renderer *self, ident texture, const SDL_Rect *dest);
 
 	/**
 	 * @fn void Renderer::endFrame(const Renderer *self)

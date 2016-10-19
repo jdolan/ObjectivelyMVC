@@ -120,9 +120,6 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Program.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Context.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Shader.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
@@ -228,9 +225,6 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Program.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Context.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Shader.c">

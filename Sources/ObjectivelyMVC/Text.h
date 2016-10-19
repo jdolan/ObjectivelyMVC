@@ -74,7 +74,7 @@ struct Text {
 	 * @brief The rendered texture.
 	 * @private
 	 */
-	GLuint texture;
+	ident texture;
 };
 
 /**

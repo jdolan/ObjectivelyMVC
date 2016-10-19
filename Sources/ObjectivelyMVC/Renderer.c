@@ -115,7 +115,7 @@ static void beginFrame(Renderer *self) {
  * @fn void Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
  * @memberof Renderer
  */
-static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
+static ident createTexture(const Renderer *self, const SDL_Surface *surface) {
 
 	assert(surface);
 
@@ -148,7 +148,7 @@ static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
 	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format,
 				 GL_UNSIGNED_BYTE, surface->pixels);
 
-	return texture;
+	return (ident)texture;
 }
 
 /**
@@ -163,10 +163,10 @@ static void drawLine(const Renderer *self, const SDL_Point *points) {
 }
 
 /**
- * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, GLuint count)
+ * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
  * @memberof Renderer
  */
-static void drawLines(const Renderer *self, const SDL_Point *points, GLuint count) {
+static void drawLines(const Renderer *self, const SDL_Point *points, size_t count) {
 
 	assert(points);
 
@@ -236,10 +236,10 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 }
 
 /**
- * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
+ * @fn void Renderer::drawTexture(const Renderer *self, ident texture, const SDL_Rect *dest)
  * @memberof Renderer
  */
-static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *rect) {
+static void drawTexture(const Renderer *self, ident texture, const SDL_Rect *rect) {
 
 	assert(rect);
 
@@ -250,7 +250,7 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 		0.0, 1.0
 	};
 
-	glBindTexture(GL_TEXTURE_2D, texture);
+	glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
 
 	glBindBuffer(GL_ARRAY_BUFFER, self->texcoordBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(texcoords), texcoords);
