@@ -46,9 +46,6 @@
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/Renderer.h>
-#include <ObjectivelyMVC/RendererGL.h>
-#include <ObjectivelyMVC/RendererGL10.h>
-#include <ObjectivelyMVC/RendererGL20.h>
 #include <ObjectivelyMVC/ScrollView.h>
 #include <ObjectivelyMVC/Select.h>
 #include <ObjectivelyMVC/Slider.h>
