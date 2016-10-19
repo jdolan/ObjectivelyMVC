@@ -28,6 +28,15 @@
 
 #define _Class _Shader
 
+#pragma mark - OpenGL entry points
+
+static PFNGLCOMPILESHADERPROC glCompileShader;
+static PFNGLCREATESHADERPROC glCreateShader;
+static PFNGLDELETESHADERPROC glDeleteShader;
+static PFNGLGETSHADERINFOLOGPROC glGetShaderInfoLog;
+static PFNGLGETSHADERIVPROC glGetShaderiv;
+static PFNGLSHADERSOURCEPROC glShaderSource;
+
 #pragma mark - Object
 
 /**
@@ -93,11 +102,16 @@ static Shader *initWithSource(Shader *self, GLenum type, const GLchar *source) {
  */
 static void initialize(Class *clazz) {
 
-	_initialize(&_Context);
-
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	
 	((ShaderInterface *) clazz->def->interface)->initWithSource = initWithSource;
+
+	MVC_GL_GetProcAddress(glCompileShader);
+	MVC_GL_GetProcAddress(glCreateShader);
+	MVC_GL_GetProcAddress(glDeleteShader);
+	MVC_GL_GetProcAddress(glGetShaderInfoLog);
+	MVC_GL_GetProcAddress(glGetShaderiv);
+	MVC_GL_GetProcAddress(glShaderSource);
 }
 
 Class _Shader = {

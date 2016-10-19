@@ -30,6 +30,19 @@
 
 #define _Class _Renderer
 
+#pragma mark - OpenGL entry points
+
+static PFNGLBINDBUFFERPROC glBindBuffer;
+static PFNGLBUFFERDATAPROC glBufferData;
+static PFNGLBUFFERSUBDATAPROC glBufferSubData;
+static PFNGLDELETEBUFFERSPROC glDeleteBuffers;
+static PFNGLDISABLEVERTEXATTRIBARRAYPROC glDisableVertexAttribArray;
+static PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
+static PFNGLGENBUFFERSPROC glGenBuffers;
+static PFNGLUNIFORM4FVPROC glUniform4fv;
+static PFNGLUSEPROGRAMPROC glUseProgram;
+static PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
+
 static Image *_null;
 static const unsigned char _nullData[] = {
 	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
@@ -47,31 +60,6 @@ static const unsigned char _nullData[] = {
 	0x4e, 0x44, 0xae, 0x42, 0x60, 0x82
 };
 
-#define VERTEX_ATTRIBUTE "vertex"
-#define TEXCOORD_ATTRIBUTE "texcoord"
-#define COLOR_UNIFORM "color"
-
-static const char *_vertexShader = "\
-	#version 120 \n\
-	attribute vec2 "VERTEX_ATTRIBUTE"; \
-	attribute vec2 "TEXCOORD_ATTRIBUTE"; \
-	varying vec2 st; \
-	void main() { \
-		gl_Position = gl_ProjectionMatrix * vec4("VERTEX_ATTRIBUTE", 0.0, 1.0); \
-		st = texcoord; \
-	}";
-
-static const char *_fragmentShader = "\
-	#version 120 \n\
-	uniform vec4 "COLOR_UNIFORM"; \
-	uniform sampler2D sampler; \
-	varying vec2 st; \
-	void main() { \
-		gl_FragColor = "COLOR_UNIFORM" * texture2D(sampler, st); \
-	}";
-
-
-
 #pragma mark - Object
 
 /**
@@ -86,7 +74,6 @@ static void dealloc(Object *self) {
 	glDeleteBuffers(1, &this->texcoordBuffer);
 	glDeleteBuffers(1, &this->vertexBuffer);
 
-	release(this->context);
 	release(this->program);
 	release(this->views);
 
@@ -369,11 +356,6 @@ static void render(Renderer *self) {
  */
 static void renderDeviceDidReset(Renderer *self) {
 
-	release(self->context);
-
-	self->context = $(alloc(Context), initWithContext, SDL_GL_GetCurrentContext());
-	assert(self->context);
-
 	glGenBuffers(1, &self->vertexBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, self->vertexBuffer);
 	glBufferData(GL_ARRAY_BUFFER, 0x10000, NULL, GL_DYNAMIC_DRAW);
@@ -389,15 +371,31 @@ static void renderDeviceDidReset(Renderer *self) {
 	self->program = (Program *) $(alloc(Program), init);
 	assert(self->program);
 
-	$(self->program, attachShaderSource, GL_VERTEX_SHADER, _vertexShader);
-	$(self->program, attachShaderSource, GL_FRAGMENT_SHADER, _fragmentShader);
+	$(self->program, attachShaderSource, GL_VERTEX_SHADER, "\
+		#version 120 \n\
+		attribute vec2 vertex; \
+		attribute vec2 texcoord; \
+		varying vec2 st; \
+		void main() { \
+			gl_Position = gl_ProjectionMatrix * vec4(vertex, 0.0, 1.0); \
+			st = texcoord; \
+		}");
+
+	$(self->program, attachShaderSource, GL_FRAGMENT_SHADER, "\
+		#version 120 \n\
+		uniform vec4 color; \
+		uniform sampler2D sampler; \
+		varying vec2 st; \
+		void main() { \
+			gl_FragColor = color * texture2D(sampler, st); \
+		}");
 
 	$(self->program, link);
 	assert(self->program->name);
 
-	self->vertexAttribute = $(self->program, getAttributeLocation, VERTEX_ATTRIBUTE);
-	self->texcoordAttribute = $(self->program, getAttributeLocation, TEXCOORD_ATTRIBUTE);
-	self->colorUniform = $(self->program, getUniformLocation, COLOR_UNIFORM);
+	self->vertexAttribute = $(self->program, getAttributeLocation, "vertex");
+	self->texcoordAttribute = $(self->program, getAttributeLocation, "texcoord");
+	self->colorUniform = $(self->program, getUniformLocation, "color");
 
 	glBindBuffer(GL_ARRAY_BUFFER, self->vertexBuffer);
 	glVertexAttribPointer(self->vertexAttribute, 2, GL_INT, GL_FALSE, 0, NULL);
@@ -432,8 +430,6 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
  */
 static void initialize(Class *clazz) {
 
-	_initialize(&_Context);
-
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((RendererInterface *) clazz->def->interface)->addView = addView;
@@ -451,6 +447,17 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
 
 	_null = $(alloc(Image), initWithBytes, _nullData, lengthof(_nullData));
+
+	MVC_GL_GetProcAddress(glBindBuffer);
+	MVC_GL_GetProcAddress(glBufferData);
+	MVC_GL_GetProcAddress(glBufferSubData);
+	MVC_GL_GetProcAddress(glDeleteBuffers);
+	MVC_GL_GetProcAddress(glDisableVertexAttribArray);
+	MVC_GL_GetProcAddress(glEnableVertexAttribArray);
+	MVC_GL_GetProcAddress(glGenBuffers);
+	MVC_GL_GetProcAddress(glUniform4fv);
+	MVC_GL_GetProcAddress(glUseProgram);
+	MVC_GL_GetProcAddress(glVertexAttribPointer);
 }
 
 /**

@@ -15,8 +15,6 @@
 		CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0981C77AF73003E3CF7 /* Slider.c */; };
 		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE0E7AA31DB5337E00856D38 /* Context.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0E7AA11DB5337E00856D38 /* Context.c */; };
-		CE0E7AA41DB5337E00856D38 /* Context.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0E7AA21DB5337E00856D38 /* Context.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
 		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
@@ -61,6 +59,7 @@
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */ = {isa = PBXBuildFile; fileRef = CE1CCDA21D9E859F00891F05 /* View+JSON.c */; };
 		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE3BCDB41DB654A9002E6C6D /* OpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = CE3BCDB31DB6541A002E6C6D /* OpenGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBA1D6876AB006DF143 /* NavigationViewController.c */; };
 		CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBB1D6876AB006DF143 /* NavigationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBE1D6A08DD006DF143 /* CollectionView.c */; };
@@ -134,8 +133,6 @@
 		CE0AD0981C77AF73003E3CF7 /* Slider.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Slider.c; sourceTree = "<group>"; };
 		CE0AD0991C77AF73003E3CF7 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Slider.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE0CC51F1DB452EC00CF0668 /* null.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = null.png; sourceTree = "<group>"; };
-		CE0E7AA11DB5337E00856D38 /* Context.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Context.c; sourceTree = "<group>"; };
-		CE0E7AA21DB5337E00856D38 /* Context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Context.h; sourceTree = "<group>"; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
 		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
@@ -183,6 +180,7 @@
 		CE14A8CF1C68CE3C00B576FB /* Option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Option.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE1CCDA21D9E859F00891F05 /* View+JSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "View+JSON.c"; sourceTree = "<group>"; };
 		CE1CCDA31D9E859F00891F05 /* View+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+JSON.h"; sourceTree = "<group>"; };
+		CE3BCDB31DB6541A002E6C6D /* OpenGL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGL.h; sourceTree = "<group>"; };
 		CE562EBA1D6876AB006DF143 /* NavigationViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NavigationViewController.c; sourceTree = "<group>"; };
 		CE562EBB1D6876AB006DF143 /* NavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = NavigationViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE562EBE1D6A08DD006DF143 /* CollectionView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionView.c; sourceTree = "<group>"; };
@@ -284,8 +282,6 @@
 				CE12D4081C4C367100CD0B13 /* Colors.h */,
 				CE9305C31D9B27F900D62770 /* Config.h */,
 				CE9305C21D9B277E00D62770 /* Config.h.in */,
-				CE0E7AA11DB5337E00856D38 /* Context.c */,
-				CE0E7AA21DB5337E00856D38 /* Context.h */,
 				CE12D46D1C4D82AF00CD0B13 /* Control.c */,
 				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
 				CE12D4091C4C367100CD0B13 /* Font.c */,
@@ -301,6 +297,7 @@
 				CE12D4651C4D587E00CD0B13 /* Log.h */,
 				CE562EBA1D6876AB006DF143 /* NavigationViewController.c */,
 				CE562EBB1D6876AB006DF143 /* NavigationViewController.h */,
+				CE3BCDB31DB6541A002E6C6D /* OpenGL.h */,
 				CE14A8CE1C68CE3C00B576FB /* Option.c */,
 				CE14A8CF1C68CE3C00B576FB /* Option.h */,
 				CEF1D88B1D4265A70099A857 /* Panel.c */,
@@ -474,7 +471,6 @@
 				CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */,
 				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
 				CE9305C41D9B27F900D62770 /* Config.h in Headers */,
-				CE0E7AA41DB5337E00856D38 /* Context.h in Headers */,
 				CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */,
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
@@ -484,6 +480,7 @@
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
+				CE3BCDB41DB654A9002E6C6D /* OpenGL.h in Headers */,
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
 				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
 				CEC26AED1DB2C06C00525BEE /* Program.h in Headers */,
@@ -602,7 +599,6 @@
 				CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */,
 				CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
-				CE0E7AA31DB5337E00856D38 /* Context.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
