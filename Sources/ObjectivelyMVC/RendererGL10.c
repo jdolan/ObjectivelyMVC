@@ -243,7 +243,7 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
  * @memberof RendererGL10
  */
 static void setScissor(Renderer *self, const SDL_Rect *rect) {
-	glScissor(rect->x - 1, rect->y - 1, rect->w + 1, rect->h + 1);
+	glScissor(rect->x, rect->y, rect->w, rect->h);
 }
 
 /**
