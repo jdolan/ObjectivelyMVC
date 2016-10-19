@@ -28,6 +28,18 @@
 
 #define _Class _Program
 
+#pragma mark - OpenGL entry points
+
+static PFNGLATTACHSHADERPROC glAttachShader;
+static PFNGLCREATEPROGRAMPROC glCreateProgram;
+static PFNGLDELETEPROGRAMPROC glDeleteProgram;
+static PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation;
+static PFNGLGETPROGRAMINFOLOGPROC glGetProgramInfoLog;
+static PFNGLGETPROGRAMIVPROC glGetProgramiv;
+static PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
+static PFNGLLINKPROGRAMPROC glLinkProgram;
+static PFNGLUSEPROGRAMPROC glUseProgram;
+
 #pragma mark - Object
 
 /**
@@ -161,8 +173,6 @@ static void use(Program *self) {
  */
 static void initialize(Class *clazz) {
 	
-	_initialize(&_Context);
-
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ProgramInterface *) clazz->def->interface)->attachShader = attachShader;
@@ -172,6 +182,16 @@ static void initialize(Class *clazz) {
 	((ProgramInterface *) clazz->def->interface)->init = init;
 	((ProgramInterface *) clazz->def->interface)->link = link;
 	((ProgramInterface *) clazz->def->interface)->use = use;
+
+	MVC_GL_GetProcAddress(glAttachShader);
+	MVC_GL_GetProcAddress(glCreateProgram);
+	MVC_GL_GetProcAddress(glDeleteProgram);
+	MVC_GL_GetProcAddress(glGetAttribLocation);
+	MVC_GL_GetProcAddress(glGetProgramInfoLog);
+	MVC_GL_GetProcAddress(glGetProgramiv);
+	MVC_GL_GetProcAddress(glGetUniformLocation);
+	MVC_GL_GetProcAddress(glLinkProgram);
+	MVC_GL_GetProcAddress(glUseProgram);
 }
 
 Class _Program = {

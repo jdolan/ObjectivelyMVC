@@ -60,11 +60,6 @@ struct Renderer {
 	GLint colorUniform;
 
 	/**
-	 * @brief The OpenGL Context.
-	 */
-	Context *context;
-
-	/**
 	 * @brief The null texture object.
 	 */
 	GLuint nullTexture;

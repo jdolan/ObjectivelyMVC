@@ -12,7 +12,6 @@ pkginclude_HEADERS = \
 	CollectionView.h \
 	Colors.h \
 	Config.h \
-	Context.h \
 	Control.h \
 	Font.h \
 	Image.h \
@@ -23,6 +22,7 @@ pkginclude_HEADERS = \
 	Log.h \
 	NavigationViewController.h \
 	Option.h \
+	OpenGL.h \
 	Panel.h \
 	Program.h \
 	Renderer.h \
@@ -55,7 +55,6 @@ libObjectivelyMVC_la_SOURCES = \
 	CollectionItemView.c \
 	CollectionView.c \
 	Colors.c \
-	Context.c \
 	Control.c \
 	Font.c \
 	Image.c \

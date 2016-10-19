@@ -23,9 +23,11 @@
 
 #pragma once
 
+
 #include <Objectively/Object.h>
 
-#include <ObjectivelyMVC/Context.h>
+#include <ObjectivelyMVC/OpenGL.h>
+#include <ObjectivelyMVC/Types.h>
 
 /**
  * @file
