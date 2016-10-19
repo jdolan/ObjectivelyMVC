@@ -23,56 +23,58 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/RendererGL.h>
+#include <ObjectivelyMVC/OpenGL.h>
+#include <ObjectivelyMVC/Renderer.h>
 
 /**
  * @file
- * @brief An OpenGL 1.0 compatible Renderer implementation.
+ * @brief A base class for OpenGL Renderer implementations.
  */
 
-typedef struct RendererGL10 RendererGL10;
-typedef struct RendererGL10Interface RendererGL10Interface;
+typedef struct RendererGL RendererGL;
+typedef struct RendererGLInterface RendererGLInterface;
 
 /**
- * @brief An OpenGL 1.0 compatible Renderer implementation.
- * @extends RendererGL
+ * @brief A base class for OpenGL Renderer implementations.
+ * @extends Renderer
  */
-struct RendererGL10 {
-
+struct RendererGL {
+	
 	/**
 	 * @brief The parent.
 	 */
-	RendererGL rendererGL;
-
+	Renderer renderer;
+	
 	/**
 	 * @brief The typed interface.
 	 * @protected
 	 */
-	RendererGL10Interface *interface;
+	RendererGLInterface *interface;
 };
 
 /**
- * @brief The Renderer interface.
+ * @brief The RendererGL interface.
  */
-struct RendererGL10Interface {
-
+struct RendererGLInterface {
+	
 	/**
 	 * @brief The parent interface.
 	 */
 	RendererInterface rendererInterface;
-
+	
 	/**
-	 * @fn RendererGL10 *RendererGL10::init(RendererGL10 *self)
-	 * @brief Initializes this OpenGL 1.0 Renderer.
-	 * @param self The OpenGL 1.0 Renderer.
-	 * @return The initialized Renderer, or `NULL` on error.
-	 * @memberof RendererGL10
+	 * @protected
+	 * @fn RendererGL *RendererGL::init(RendererGL *self)
+	 * @brief Initializes this OpenGL Renderer.
+	 * @param The RendererGL.
+	 * @return The initialized RendererGL, or `NULL` on error.
+	 * @memberof RendererGL
 	 */
-	RendererGL10 *(*init)(RendererGL10 *self);
+	RendererGL *(*init)(RendererGL *self);
 };
 
 /**
- * @brief The RendererGL10 Class.
+ * @brief The RendererGL Class.
  */
-extern Class _RendererGL10;
+extern Class _RendererGL;
 

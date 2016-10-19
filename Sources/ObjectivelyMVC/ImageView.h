@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/Image.h>
+#include <ObjectivelyMVC/OpenGL.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -52,11 +53,6 @@ struct ImageView {
 	 * @protected
 	 */
 	ImageViewInterface *interface;
-
-	/**
-	 * @brief The alpha.
-	 */
-	GLfloat alpha;
 
 	/**
 	 * @brief The blend function.

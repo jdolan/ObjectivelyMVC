@@ -23,31 +23,27 @@
 
 #pragma once
 
-#include <SDL2/SDL_video.h>
-
-#include <Objectively/MutableArray.h>
-
-#include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/Program.h>
+#include <ObjectivelyMVC/RendererGL.h>
 
 /**
  * @file
- * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
+ * @brief An OpenGL 2.0 compatible Renderer.
  */
 
 typedef struct RendererGL20 RendererGL20;
 typedef struct RendererGL20Interface RendererGL20Interface;
 
 /**
- * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
- * @extends Object
+ * @brief An OpenGL 2.0 compatible Renderer.
+ * @extends RendererGL
  */
 struct RendererGL20 {
 
 	/**
 	 * @brief The parent.
 	 */
-	Renderer renderer;
+	RendererGL rendererGL;
 
 	/**
 	 * @brief The typed interface.
@@ -99,16 +95,16 @@ struct RendererGL20Interface {
 	/**
 	 * @brief The parent interface.
 	 */
-	RendererInterface rendererInterface;
+	RendererGLInterface rendererGLInterface;
 
 	/**
 	 * @fn RendererGL20 *RendererGL20::init(RendererGL20 *self)
-	 * @brief Initializes this RendererGL20.
+	 * @brief Initializes this OpenGL 2.0 Renderer.
 	 * @param self The RendererGL20.
 	 * @return The initialized RendererGL20, or `NULL` on error.
 	 * @memberof RendererGL20
 	 */
-	RendererGL20 *(*init) (RendererGL20 *self);
+	RendererGL20 *(*init)(RendererGL20 *self);
 };
 
 /**

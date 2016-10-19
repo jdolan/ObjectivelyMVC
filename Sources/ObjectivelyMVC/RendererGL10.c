@@ -23,85 +23,28 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/Types.h>
 #include <ObjectivelyMVC/RendererGL10.h>
-#include <ObjectivelyMVC/View.h>
 
 #define _Class _RendererGL10
 
-#pragma mark - RendererGL10
+#pragma mark - Renderer
 
 /**
- * @fn void RendererGL10::beginFrame(Renderer *self)
- * @memberof RendererGL10
+ * @see Renderer::beginFrame(Renderer *self)
  */
 static void beginFrame(Renderer *self) {
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	super(Renderer, self, beginFrame);
 
-	glEnable(GL_SCISSOR_TEST);
+	$(self, setDrawColor, &Colors.White);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-	super(Renderer, self, beginFrame);
 }
 
 /**
- * @fn void RendererGL10::createTexture(const Renderer *self, const SDL_Surface *surface)
- * @memberof RendererGL10
- */
-static ident createTexture(const Renderer *self, const SDL_Surface *surface) {
-
-	assert(surface);
-
-	GLenum format;
-	switch (surface->format->BytesPerPixel) {
-		case 1:
-			format = GL_LUMINANCE;
-			break;
-		case 3:
-			format = GL_RGB;
-			break;
-		case 4:
-			format = GL_RGBA;
-			break;
-		default:
-			MVC_LogError("Invalid surface format: %s\n",
-					 SDL_GetPixelFormatName(surface->format->format));
-			return NULL;
-	}
-
-	GLuint texture;
-	glGenTextures(1, &texture);
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format,
-				 GL_UNSIGNED_BYTE, surface->pixels);
-
-	return (ident)(ptrdiff_t)texture;
-}
-
-/**
- * @fn void RendererGL10::destroyTexture(const Renderer *self, ident texture)
- * @memberof RendererGL10
- */
-static void destroyTexture(const Renderer *self, ident texture) {
-
-	GLuint id = (GLuint)texture;
-	glDeleteTextures(1, &id);
-}
-
-/**
- * @fn void RendererGL10::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
- * @memberof RendererGL10
+ * @see Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
  */
 static void drawLines(const Renderer *self, const SDL_Point *points, size_t count) {
 	
@@ -112,8 +55,7 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
 }
 
 /**
- * @fn void RendererGL10::drawRect(const Renderer *self, const SDL_Rect *rect)
- * @memberof RendererGL10
+ * @see Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
  */
 static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 
@@ -138,8 +80,7 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 }
 
 /**
- * @fn void RendererGL10::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
- * @memberof RendererGL10
+ * @see Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
  */
 static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 
@@ -163,8 +104,7 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 }
 
 /**
- * @fn void RendererGL10::drawTexture(const Renderer *self, ident texture, const SDL_Rect *dest)
- * @memberof RendererGL10
+ * @see Renderer::drawTexture(const Renderer *self, ident texture, const SDL_Rect *dest)
  */
 static void drawTexture(const Renderer *self, ident texture, const SDL_Rect *rect) {
 
@@ -192,7 +132,7 @@ static void drawTexture(const Renderer *self, ident texture, const SDL_Rect *rec
 	verts[7] = rect->y + rect->h;
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
+	glBindTexture(GL_TEXTURE_2D, (GLuint) texture);
 
 	glVertexPointer(2, GL_INT, 0, verts);
 	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
@@ -203,67 +143,34 @@ static void drawTexture(const Renderer *self, ident texture, const SDL_Rect *rec
 }
 
 /**
- * @fn void RendererGL10::endFrame(RendererGL10 *self)
- * @memberof RendererGL10
+ * @see Renderer::endFrame(RendererGL10 *self)
  */
 static void endFrame(Renderer *self) {
 	
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	SDL_Window *window = SDL_GL_GetCurrentWindow();
-
-	SDL_Rect rect = { 0, 0 };
-	SDL_GL_GetDrawableSize(window, &rect.w, &rect.h);
-
-	$(self, setScissor, &rect);
-
-	glDisable(GL_SCISSOR_TEST);
-
-	glBlendFunc(GL_ONE, GL_ZERO);
-	glDisable(GL_BLEND);
-
-	const GLenum err = glGetError();
-	if (err) {
-		MVC_LogError("GL error: %d\n", err);
-	}
+	super(Renderer, self, endFrame);
 }
 
 /**
- * @fn void RendererGL10::setDrawColor(Renderer *self, const SDL_Color *color)
- * @memberof RendererGL10
+ * @see Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
  */
 static void setDrawColor(Renderer *self, const SDL_Color *color) {
-
 	glColor4ubv((const GLubyte *) color);
 }
 
-/**
- * @fn void RendererGL10::setScissor(Renderer *self, const SDL_Rect *rect)
- * @memberof RendererGL10
- */
-static void setScissor(Renderer *self, const SDL_Rect *rect) {
-	glScissor(rect->x, rect->y, rect->w, rect->h);
-}
+#pragma mark - RendererGL10
 
 /**
  * @fn RendererGL10 *RendererGL10::init(RendererGL10 *self)
  * @memberof RendererGL10
  */
 static RendererGL10 *init(RendererGL10 *self) {
-	
-	self = (RendererGL10 *) super(Renderer, self, init);
-
-	if (self) {
-
-	}
-	
-	return self;
+	return (RendererGL10 *) super(RendererGL, self, init);
 }
 
 #pragma mark - Class lifecycle
-
-#include <ObjectivelyMVC/Program.h>
 
 /**
  * @see Class::initialize(Class *)
@@ -271,22 +178,19 @@ static RendererGL10 *init(RendererGL10 *self) {
 static void initialize(Class *clazz) {
 
 	((RendererInterface *) clazz->def->interface)->beginFrame = beginFrame;
-	((RendererInterface *) clazz->def->interface)->createTexture = createTexture;
-	((RendererInterface *) clazz->def->interface)->destroyTexture = destroyTexture;
 	((RendererInterface *) clazz->def->interface)->drawLines = drawLines;
 	((RendererInterface *) clazz->def->interface)->drawRect = drawRect;
 	((RendererInterface *) clazz->def->interface)->drawRectFilled = drawRectFilled;
 	((RendererInterface *) clazz->def->interface)->drawTexture = drawTexture;
 	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
-	((RendererInterface *) clazz->def->interface)->setScissor = setScissor;
 
 	((RendererGL10Interface *) clazz->def->interface)->init = init;
 }
 
 Class _RendererGL10 = {
 	.name = "RendererGL10",
-	.superclass = &_Renderer,
+	.superclass = &_RendererGL,
 	.instanceSize = sizeof(RendererGL10),
 	.interfaceOffset = offsetof(RendererGL10, interface),
 	.interfaceSize = sizeof(RendererGL10Interface),

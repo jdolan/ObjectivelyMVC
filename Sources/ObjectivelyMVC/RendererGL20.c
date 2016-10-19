@@ -24,10 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Image.h>
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/Types.h>
 #include <ObjectivelyMVC/RendererGL20.h>
-#include <ObjectivelyMVC/View.h>
 
 #pragma mark - OpenGL entry points
 
@@ -44,8 +41,8 @@ static PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
 
 #pragma mark - Image data
 
-static Image *_null;
-static const unsigned char _nullData[] = {
+static Image *_nullTexture;
+static const unsigned char _nullTextureData[] = {
 	0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
 	0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
 	0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x77, 0x53, 0xde, 0x00, 0x00, 0x00,
@@ -82,88 +79,35 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
-#pragma mark - RendererGL20
+#pragma mark - Renderer
 
 /**
- * @fn void RendererGL20::beginFrame(Renderer *self)
- * @memberof RendererGL20
+ * @see Renderer::beginFrame(Renderer *self)
  */
 static void beginFrame(Renderer *self) {
+
+	super(Renderer, self, beginFrame);
+
 	RendererGL20 *this = (RendererGL20 *) self;
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnable(GL_SCISSOR_TEST);
-
-	glBindTexture(GL_TEXTURE_2D, this->nullTexture);
 
 	glUseProgram(this->program->name);
 
+	$(self, setDrawColor, &Colors.White);
+
+	glBindTexture(GL_TEXTURE_2D, this->nullTexture);
+
 	glEnableVertexAttribArray(this->vertexAttribute);
 	glEnableVertexAttribArray(this->texcoordAttribute);
-
-	super(Renderer, self, beginFrame);
 }
 
 /**
- * @fn void RendererGL20::createTexture(const Renderer *self, const SDL_Surface *surface)
- * @memberof RendererGL20
- */
-static ident createTexture(const Renderer *self, const SDL_Surface *surface) {
-
-	assert(surface);
-
-	GLenum format;
-	switch (surface->format->BytesPerPixel) {
-		case 1:
-			format = GL_LUMINANCE;
-			break;
-		case 3:
-			format = GL_RGB;
-			break;
-		case 4:
-			format = GL_RGBA;
-			break;
-		default:
-			MVC_LogError("Invalid surface format: %s\n",
-					 SDL_GetPixelFormatName(surface->format->format));
-			return NULL;
-	}
-
-	GLuint texture;
-	glGenTextures(1, &texture);
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format,
-				 GL_UNSIGNED_BYTE, surface->pixels);
-
-	return (ident)(ptrdiff_t)texture;
-}
-
-/**
- * @fn void RendererGL20::destroyTexture(const Renderer *self, ident texture)
- * @memberof RendererGL20
- */
-static void destroyTexture(const Renderer *self, ident texture) {
-
-	GLuint id = (GLuint)texture;
-	glDeleteTextures(1, &id);
-}
-
-/**
- * @fn void RendererGL20::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
- * @memberof RendererGL20
+ * @see Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
  */
 static void drawLines(const Renderer *self, const SDL_Point *points, size_t count) {
 	
 	assert(points);
 
-	RendererGL20 *this = (RendererGL20 *) self;
+	const RendererGL20 *this = (RendererGL20 *) self;
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(SDL_Point), points);
@@ -173,14 +117,13 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
 }
 
 /**
- * @fn void RendererGL20::drawRect(const Renderer *self, const SDL_Rect *rect)
- * @memberof RendererGL20
+ * @see Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
  */
 static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 
 	assert(rect);
 
-	RendererGL20 *this = (RendererGL20 *) self;
+	const RendererGL20 *this = (RendererGL20 *) self;
 
 	GLint verts[8];
 
@@ -204,14 +147,13 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 }
 
 /**
- * @fn void RendererGL20::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
- * @memberof RendererGL20
+ * @see Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
  */
 static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 
 	assert(rect);
 
-	RendererGL20 *this = (RendererGL20 *) self;
+	const RendererGL20 *this = (RendererGL20 *) self;
 
 	GLint verts[8];
 
@@ -235,14 +177,13 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 }
 
 /**
- * @fn void RendererGL20::drawTexture(const Renderer *self, ident texture, const SDL_Rect *dest)
- * @memberof RendererGL20
+ * @see Renderer::drawTexture(const Renderer *self, ident texture, const SDL_Rect *dest)
  */
 static void drawTexture(const Renderer *self, ident texture, const SDL_Rect *rect) {
 
 	assert(rect);
 
-	RendererGL20 *this = (RendererGL20 *) self;
+	const RendererGL20 *this = (RendererGL20 *) self;
 
 	const GLfloat texcoords[] = {
 		0.0, 0.0,
@@ -251,20 +192,37 @@ static void drawTexture(const Renderer *self, ident texture, const SDL_Rect *rec
 		0.0, 1.0
 	};
 
-	glBindTexture(GL_TEXTURE_2D, (GLuint)texture);
+	GLint verts[8];
+
+	verts[0] = rect->x;
+	verts[1] = rect->y;
+
+	verts[2] = rect->x + rect->w;
+	verts[3] = rect->y;
+
+	verts[4] = rect->x + rect->w;
+	verts[5] = rect->y + rect->h;
+
+	verts[6] = rect->x;
+	verts[7] = rect->y + rect->h;
+
+	glBindBuffer(GL_ARRAY_BUFFER, this->vertexBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, this->texcoordBuffer);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(texcoords), texcoords);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	$(self, drawRectFilled, rect);
+	glBindTexture(GL_TEXTURE_2D, (GLuint) texture);
+
+	glDrawArrays(GL_QUADS, 0, 4);
 
 	glBindTexture(GL_TEXTURE_2D, this->nullTexture);
 }
 
 /**
- * @fn void RendererGL20::endFrame(RendererGL20 *self)
- * @memberof RendererGL20
+ * @see Renderer::endFrame(Renderer *self)
  */
 static void endFrame(Renderer *self) {
 
@@ -273,31 +231,19 @@ static void endFrame(Renderer *self) {
 	glDisableVertexAttribArray(this->texcoordAttribute);
 	glDisableVertexAttribArray(this->vertexAttribute);
 
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	glUseProgram(0);
 
-	SDL_Window *window = SDL_GL_GetCurrentWindow();
-
-	SDL_Rect rect = { 0, 0 };
-	SDL_GL_GetDrawableSize(window, &rect.w, &rect.h);
-
-	$(self, setScissor, &rect);
-
-	glDisable(GL_SCISSOR_TEST);
-
-	glBlendFunc(GL_ONE, GL_ZERO);
-	glDisable(GL_BLEND);
-
-	const GLenum err = glGetError();
-	if (err) {
-		MVC_LogError("GL error: %d\n", err);
-	}
+	super(Renderer, self, endFrame);
 }
 
 /**
- * @fn void RendererGL20::renderDeviceDidReset(Renderer *self)
- * @memberof RendererGL20
+ * @see Renderer::renderDeviceDidReset(Renderer *self)
  */
 static void renderDeviceDidReset(Renderer *self) {
+
+	super(Renderer, self, renderDeviceDidReset);
 
 	RendererGL20 *this = (RendererGL20 *) self;
 
@@ -311,7 +257,7 @@ static void renderDeviceDidReset(Renderer *self) {
 	glBufferData(GL_ARRAY_BUFFER, 0x10000, NULL, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	this->nullTexture = (GLuint)$(self, createTexture, _null->surface);
+	this->nullTexture = (GLuint)$(self, createTexture, _nullTexture->surface);
 
 	this->program = (Program *) $(alloc(Program), init);
 	assert(this->program);
@@ -354,8 +300,7 @@ static void renderDeviceDidReset(Renderer *self) {
 }
 
 /**
- * @fn void RendererGL20::setDrawColor(Renderer *self, const SDL_Color *color)
- * @memberof RendererGL20
+ * @see Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
  */
 static void setDrawColor(Renderer *self, const SDL_Color *color) {
 
@@ -369,13 +314,7 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
 	});
 }
 
-/**
- * @fn void RendererGL20::setScissor(Renderer *self, const SDL_Rect *rect)
- * @memberof RendererGL20
- */
-static void setScissor(Renderer *self, const SDL_Rect *rect) {
-	glScissor(rect->x, rect->y, rect->w, rect->h);
-}
+#pragma mark - RendererGL20
 
 /**
  * @fn RendererGL20 *RendererGL20::init(RendererGL20 *self)
@@ -383,19 +322,15 @@ static void setScissor(Renderer *self, const SDL_Rect *rect) {
  */
 static RendererGL20 *init(RendererGL20 *self) {
 	
-	self = (RendererGL20 *) super(Renderer, self, init);
-
+	self = (RendererGL20 *) super(RendererGL, self, init);
 	if (self) {
-
+		$((Renderer *) self, renderDeviceDidReset);
 	}
 	
 	return self;
 }
 
-
 #pragma mark - Class lifecycle
-
-#include <ObjectivelyMVC/Program.h>
 
 /**
  * @see Class::initialize(Class *)
@@ -405,8 +340,6 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((RendererInterface *) clazz->def->interface)->beginFrame = beginFrame;
-	((RendererInterface *) clazz->def->interface)->createTexture = createTexture;
-	((RendererInterface *) clazz->def->interface)->destroyTexture = destroyTexture;
 	((RendererInterface *) clazz->def->interface)->drawLines = drawLines;
 	((RendererInterface *) clazz->def->interface)->drawRect = drawRect;
 	((RendererInterface *) clazz->def->interface)->drawRectFilled = drawRectFilled;
@@ -414,11 +347,10 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
 	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
-	((RendererInterface *) clazz->def->interface)->setScissor = setScissor;
 
 	((RendererGL20Interface *) clazz->def->interface)->init = init;
 
-	_null = $(alloc(Image), initWithBytes, _nullData, lengthof(_nullData));
+	_nullTexture = $(alloc(Image), initWithBytes, _nullTextureData, lengthof(_nullTextureData));
 
 	MVC_GL_GetProcAddress(glBindBuffer);
 	MVC_GL_GetProcAddress(glBufferData);
@@ -436,12 +368,12 @@ static void initialize(Class *clazz) {
  * @see Class::destroy(Class *)
  */
 static void destroy(Class *clazz) {
-	release(_null);
+	release(_nullTexture);
 }
 
 Class _RendererGL20 = {
 	.name = "RendererGL20",
-	.superclass = &_Renderer,
+	.superclass = &_RendererGL,
 	.instanceSize = sizeof(RendererGL20),
 	.interfaceOffset = offsetof(RendererGL20, interface),
 	.interfaceSize = sizeof(RendererGL20Interface),

@@ -31,7 +31,6 @@
 #include <Objectively/Dictionary.h>
 #include <Objectively/MutableArray.h>
 
-#include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View+JSON.h>
 

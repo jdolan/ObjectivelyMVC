@@ -64,6 +64,8 @@
 		CE3BCDD81DB78DB2002E6C6D /* RendererGL10.h in Headers */ = {isa = PBXBuildFile; fileRef = CE3BCDD41DB78DB2002E6C6D /* RendererGL10.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE3BCDD91DB78DB2002E6C6D /* RendererGL20.c in Sources */ = {isa = PBXBuildFile; fileRef = CE3BCDD51DB78DB2002E6C6D /* RendererGL20.c */; };
 		CE3BCDDA1DB78DB2002E6C6D /* RendererGL20.h in Headers */ = {isa = PBXBuildFile; fileRef = CE3BCDD61DB78DB2002E6C6D /* RendererGL20.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE3BCDDD1DB7920F002E6C6D /* RendererGL.c in Sources */ = {isa = PBXBuildFile; fileRef = CE3BCDDB1DB7920F002E6C6D /* RendererGL.c */; };
+		CE3BCDDE1DB7920F002E6C6D /* RendererGL.h in Headers */ = {isa = PBXBuildFile; fileRef = CE3BCDDC1DB7920F002E6C6D /* RendererGL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBA1D6876AB006DF143 /* NavigationViewController.c */; };
 		CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBB1D6876AB006DF143 /* NavigationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBE1D6A08DD006DF143 /* CollectionView.c */; };
@@ -189,6 +191,8 @@
 		CE3BCDD41DB78DB2002E6C6D /* RendererGL10.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RendererGL10.h; sourceTree = "<group>"; };
 		CE3BCDD51DB78DB2002E6C6D /* RendererGL20.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RendererGL20.c; sourceTree = "<group>"; };
 		CE3BCDD61DB78DB2002E6C6D /* RendererGL20.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RendererGL20.h; sourceTree = "<group>"; };
+		CE3BCDDB1DB7920F002E6C6D /* RendererGL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RendererGL.c; sourceTree = "<group>"; };
+		CE3BCDDC1DB7920F002E6C6D /* RendererGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RendererGL.h; sourceTree = "<group>"; };
 		CE562EBA1D6876AB006DF143 /* NavigationViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = NavigationViewController.c; sourceTree = "<group>"; };
 		CE562EBB1D6876AB006DF143 /* NavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = NavigationViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE562EBE1D6A08DD006DF143 /* CollectionView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionView.c; sourceTree = "<group>"; };
@@ -314,6 +318,8 @@
 				CEC26AEB1DB2C06C00525BEE /* Program.h */,
 				CE76279C1D4A5A5800EEEE78 /* Renderer.c */,
 				CE76279D1D4A5A5800EEEE78 /* Renderer.h */,
+				CE3BCDDB1DB7920F002E6C6D /* RendererGL.c */,
+				CE3BCDDC1DB7920F002E6C6D /* RendererGL.h */,
 				CE3BCDD31DB78DB2002E6C6D /* RendererGL10.c */,
 				CE3BCDD41DB78DB2002E6C6D /* RendererGL10.h */,
 				CE3BCDD51DB78DB2002E6C6D /* RendererGL20.c */,
@@ -496,9 +502,10 @@
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
 				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
 				CEC26AED1DB2C06C00525BEE /* Program.h in Headers */,
+				CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */,
+				CE3BCDDE1DB7920F002E6C6D /* RendererGL.h in Headers */,
 				CE3BCDDA1DB78DB2002E6C6D /* RendererGL20.h in Headers */,
 				CE3BCDD81DB78DB2002E6C6D /* RendererGL10.h in Headers */,
-				CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */,
 				CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */,
 				CE14A8CD1C66D89900B576FB /* Select.h in Headers */,
 				CEC26AF51DB2CC5300525BEE /* Shader.h in Headers */,
@@ -624,6 +631,7 @@
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
 				CEC26AEC1DB2C06C00525BEE /* Program.c in Sources */,
 				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
+				CE3BCDDD1DB7920F002E6C6D /* RendererGL.c in Sources */,
 				CE3BCDD71DB78DB2002E6C6D /* RendererGL10.c in Sources */,
 				CE3BCDD91DB78DB2002E6C6D /* RendererGL20.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,

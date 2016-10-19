@@ -25,14 +25,16 @@
 
 #include <SDL2/SDL_video.h>
 
-#include <ObjectivelyMVC/OpenGL.h>
-#include <ObjectivelyMVC/Types.h>
-
 #include <Objectively/MutableArray.h>
+
+#include <ObjectivelyMVC/Colors.h>
+#include <ObjectivelyMVC/Types.h>
 
 /**
  * @file
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
+ * @details This class defines the ObjectivelyMVC rendering API; it does not implement it. Your
+ * application should provide a concrete implementation, or use RendererGL10 or RendererGL20.
  */
 
 typedef struct Renderer Renderer;
@@ -40,6 +42,8 @@ typedef struct RendererInterface RendererInterface;
 
 /**
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
+ * @details This class defines the ObjectivelyMVC rendering API; it does not implement it. Your
+ * application should provide a concrete implementation, or use RendererGL10 or RendererGL20.
  * @extends Object
  */
 struct Renderer {
@@ -167,6 +171,7 @@ struct RendererInterface {
 	void (*endFrame)(Renderer *self);
 
 	/**
+	 * @protected
 	 * @fn Renderer *Renderer::init(Renderer *self)
 	 * @brief Initializes this Renderer.
 	 * @param self The Renderer.

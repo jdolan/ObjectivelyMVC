@@ -60,7 +60,6 @@ static void addView(Renderer *self, View *view) {
  */
 static void beginFrame(Renderer *self) {
 
-	$(self, setDrawColor, &Colors.White);
 }
 
 /**
@@ -148,8 +147,6 @@ static Renderer *init(Renderer *self) {
 
 		self->views = $$(MutableArray, array);
 		assert(self->views);
-
-		$(self, renderDeviceDidReset);
 	}
 
 	return self;

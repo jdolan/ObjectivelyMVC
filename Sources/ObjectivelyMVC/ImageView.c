@@ -73,9 +73,9 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	ImageView *this = (ImageView *) self;
 
 	const Inlet inlets[] = MakeInlets(
-		MakeInlet("alpha", InletTypeFloat, &this->alpha, NULL),
 		MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) GLBlendNames),
 		MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) GLBlendNames),
+		MakeInlet("color", InletTypeColor, &this->color, NULL),
 		MakeInlet("image", InletTypeImage, &this->image, NULL)
 	);
 
@@ -100,13 +100,17 @@ static void render(View *self, Renderer *renderer) {
 
 	if (this->texture == 0) {
 		if (this->image) {
-			this->image_renderer = retain(renderer);
 			this->texture = $(renderer, createTexture, this->image->surface);
 			assert(this->texture);
+
+			this->image_renderer = retain(renderer);
 		}
 	}
 
 	if (this->texture) {
+
+		// TODO: Actually use self->blend
+
 		$(renderer, setDrawColor, &this->color);
 		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, drawTexture, this->texture, &frame);
@@ -136,8 +140,6 @@ static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
 
 	self = (ImageView *) super(View, self, initWithFrame, frame);
 	if (self) {
-		self->alpha = 1.0;
-
 		self->blend.src = GL_SRC_ALPHA;
 		self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
 
