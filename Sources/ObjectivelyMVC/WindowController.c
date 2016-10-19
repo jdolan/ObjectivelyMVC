@@ -68,6 +68,24 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 }
 
 /**
+ * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
+ * @memberof WindowController
+ */
+static void setRenderer(WindowController *self, Renderer *renderer) {
+
+	if (self->renderer != renderer) {
+
+		release(self->renderer);
+
+		if (renderer) {
+			self->renderer = retain(renderer);
+		} else {
+			self->renderer = NULL;
+		}
+	}
+}
+
+/**
  * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
  * @memberof WindowController
  */
@@ -139,6 +157,7 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->def->interface)->initWithWindow = initWithWindow;
 	((WindowControllerInterface *) clazz->def->interface)->render = render;
 	((WindowControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((WindowControllerInterface *) clazz->def->interface)->setRenderer = setRenderer;
 	((WindowControllerInterface *) clazz->def->interface)->setViewController = setViewController;
 }
 
