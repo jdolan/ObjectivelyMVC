@@ -158,6 +158,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionItemView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Context.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Font.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h" />
@@ -168,9 +169,11 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\NavigationViewController.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Option.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Program.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Shader.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\StackView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableCellView.h" />
@@ -195,6 +198,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionItemView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Colors.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Context.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Control.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Font.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Image.c" />
@@ -204,9 +208,11 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\NavigationViewController.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Option.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Program.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Shader.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Slider.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\StackView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableCellView.c" />
