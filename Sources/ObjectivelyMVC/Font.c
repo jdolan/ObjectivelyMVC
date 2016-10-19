@@ -48,7 +48,7 @@ static void dealloc(Object *self) {
 		TTF_CloseFont(this->font);
 	}
 
-	free(this->name);
+	FcStrFree((FcChar8 *) this->name);
 
 	super(Object, self, dealloc);
 }

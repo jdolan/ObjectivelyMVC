@@ -90,7 +90,7 @@ static String *description(const Object *self) {
  * @memberof View
  */
 static void addSubview(View *self, View *subview) {
-	$(self, addSubviewRelativeTo, subview, NULL, OrderSame);
+	$(self, addSubviewRelativeTo, subview, NULL, ViewPositionAfter);
 }
 
 /**
