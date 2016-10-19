@@ -28,8 +28,6 @@
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View.h>
 
-#define _Class _Renderer
-
 #pragma mark - OpenGL entry points
 
 static PFNGLBINDBUFFERPROC glBindBuffer;
@@ -42,6 +40,8 @@ static PFNGLGENBUFFERSPROC glGenBuffers;
 static PFNGLUNIFORM4FVPROC glUniform4fv;
 static PFNGLUSEPROGRAMPROC glUseProgram;
 static PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
+
+#pragma mark - Image data
 
 static Image *_null;
 static const unsigned char _nullData[] = {
@@ -59,6 +59,8 @@ static const unsigned char _nullData[] = {
 	0x02, 0xfe, 0xdc, 0xcc, 0x59, 0xe7, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45,
 	0x4e, 0x44, 0xae, 0x42, 0x60, 0x82
 };
+
+#define _Class _Renderer
 
 #pragma mark - Object
 
