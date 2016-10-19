@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SetSwapInterval(0);
 
-	Renderer *renderer = (Renderer *) $(alloc(RendererGL10), init);
+	Renderer *renderer = $(alloc(Renderer), init);
 
 	WindowController *windowController = $(alloc(WindowController), initWithWindow, window, renderer);
 

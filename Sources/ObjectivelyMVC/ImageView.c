@@ -53,9 +53,10 @@ static void dealloc(Object *self) {
 
 	if (this->image) {
 		release(this->image);
-		
-		$(this->image_renderer, destroyTexture, this->texture);
-		release(this->image_renderer);
+	}
+	
+	if (this->texture) {
+		glDeleteTextures(1, &this->texture);
 	}
 
 	super(Object, self, dealloc);
@@ -102,8 +103,6 @@ static void render(View *self, Renderer *renderer) {
 		if (this->image) {
 			this->texture = $(renderer, createTexture, this->image->surface);
 			assert(this->texture);
-
-			this->image_renderer = retain(renderer);
 		}
 	}
 
@@ -127,7 +126,7 @@ static void renderDeviceDidReset(View *self) {
 
 	ImageView *this = (ImageView *) self;
 
-	this->texture = NULL;
+	this->texture = 0;
 }
 
 #pragma mark - ImageView

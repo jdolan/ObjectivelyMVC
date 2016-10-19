@@ -72,15 +72,8 @@ struct Text {
 
 	/**
 	 * @brief The rendered texture.
-	 * @private
 	 */
-	ident texture;
-
-	/**
-	 * @brief The renderer the texture was made with.
-	 * @private
-	 */
-	Renderer *texture_renderer;
+	GLuint texture;
 };
 
 /**

@@ -22,13 +22,9 @@ pkginclude_HEADERS = \
 	Log.h \
 	NavigationViewController.h \
 	Option.h \
-	OpenGL.h \
 	Panel.h \
 	Program.h \
 	Renderer.h \
-	RendererGL.h \
-	RendererGL10.h \
-	RendererGL20.h \
 	ScrollView.h \
 	Select.h \
 	Shader.h \
@@ -69,9 +65,6 @@ libObjectivelyMVC_la_SOURCES = \
 	Panel.c \
 	Program.c \
 	Renderer.c \
-	RendererGL.c \
-	RendererGL10.c \
-	RendererGL20.c \
 	ScrollView.c \
 	Select.c \
 	Shader.c \
