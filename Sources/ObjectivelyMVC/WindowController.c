@@ -110,6 +110,8 @@ static void setViewController(WindowController *self, ViewController *viewContro
  */
 static void render(WindowController *self) {
 
+	assert(self->renderer);
+	
 	$(self->renderer, beginFrame);
 
 	if (self->viewController) {

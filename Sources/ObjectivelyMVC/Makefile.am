@@ -26,6 +26,7 @@ pkginclude_HEADERS = \
 	Panel.h \
 	Program.h \
 	Renderer.h \
+	RendererGL10.h \
 	ScrollView.h \
 	Select.h \
 	Shader.h \
@@ -66,6 +67,8 @@ libObjectivelyMVC_la_SOURCES = \
 	Panel.c \
 	Program.c \
 	Renderer.c \
+	RendererGL10.c \
+	RendererGL20.c \
 	ScrollView.c \
 	Select.c \
 	Shader.c \

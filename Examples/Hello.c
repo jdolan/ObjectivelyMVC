@@ -25,7 +25,6 @@
 
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
-#include <ObjectivelyMVC/RendererGL10.h>
 
 #include "HelloViewController.h"
 
@@ -52,9 +51,9 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SetSwapInterval(0);
 
-	RendererGL10 *renderer = $(alloc(RendererGL10), init);
+	Renderer *renderer = (Renderer *) $(alloc(RendererGL10), init);
 
-	WindowController *windowController = $(alloc(WindowController), initWithWindow, window, (Renderer *) renderer);
+	WindowController *windowController = $(alloc(WindowController), initWithWindow, window, renderer);
 
 	ViewController *viewController = $((ViewController *) alloc(HelloViewController), init);
 
