@@ -40,7 +40,11 @@ static void dealloc(Object *self) {
 	
 	free(this->text);
 
-	glDeleteTextures(1, &this->texture);
+	if (this->texture)
+	{
+		$(this->texture_renderer, destroyTexture, this->texture);
+		release(this->texture_renderer);
+	}
 
 	super(Object, self, dealloc);
 }
@@ -84,9 +88,10 @@ static void render(View *self, Renderer *renderer) {
 	
 	if (this->text && strlen(this->text)) {
 		
-		if (this->texture == 0) {
+		if (this->texture == NULL) {
 			SDL_Surface *surface = $(this->font, renderCharacters, this->text, this->color);
 
+			this->texture_renderer = retain(renderer);
 			this->texture = $(renderer, createTexture, surface);
 
 			SDL_FreeSurface(surface);
@@ -108,7 +113,7 @@ static void renderDeviceDidReset(View *self) {
 
 	Text *this = (Text *) self;
 
-	this->texture = 0;
+	this->texture = NULL;
 }
 
 /**
@@ -168,8 +173,10 @@ static void setFont(Text *self, Font *font) {
 		self->font = retain(font);
 		
 		if (self->texture) {
-			glDeleteTextures(1, &self->texture);
-			self->texture = 0;
+			$(self->texture_renderer, destroyTexture, self->texture);
+			release(self->texture_renderer);
+			self->texture_renderer = NULL;
+			self->texture = NULL;
 		}
 
 		$((View *) self, sizeToFit);
@@ -191,8 +198,10 @@ static void setText(Text *self, const char *text) {
 	}
 	
 	if (self->texture) {
-		glDeleteTextures(1, &self->texture);
-		self->texture = 0;
+		$(self->texture_renderer, destroyTexture, self->texture);
+		release(self->texture_renderer);
+		self->texture_renderer = NULL;
+		self->texture = NULL;
 	}
 	
 	$((View *) self, sizeToFit);

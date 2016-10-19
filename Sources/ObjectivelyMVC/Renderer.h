@@ -25,9 +25,10 @@
 
 #include <SDL2/SDL_video.h>
 
-#include <Objectively/MutableArray.h>
+#include <ObjectivelyMVC/OpenGL.h>
+#include <ObjectivelyMVC/Types.h>
 
-#include <ObjectivelyMVC/Program.h>
+#include <Objectively/MutableArray.h>
 
 /**
  * @file
@@ -53,41 +54,6 @@ struct Renderer {
 	 * @protected
 	 */
 	RendererInterface *interface;
-
-	/**
-	 * @brief The color uniform.
-	 */
-	GLint colorUniform;
-
-	/**
-	 * @brief The null texture object.
-	 */
-	GLuint nullTexture;
-
-	/**
-	 * @brief The GLSL Program to use for rendering.
-	 */
-	Program *program;
-
-	/**
-	 * @brief The texture coordinate attribute.
-	 */
-	GLint texcoordAttribute;
-
-	/**
-	 * @brief The texture coordinate buffer.
-	 */
-	GLuint texcoordBuffer;
-
-	/**
-	 * @brief The vertex attribute.
-	 */
-	GLint vertexAttribute;
-
-	/**
-	 * @brief The vertex buffer.
-	 */
-	GLuint vertexBuffer;
 
 	/**
 	 * @brief The Views to be drawn each frame.
@@ -133,6 +99,15 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	ident (*createTexture)(const Renderer *self, const SDL_Surface *surface);
+
+	/**
+	 * @fn ident Renderer::destroyTexture(const Renderer *self, ident texture)
+	 * @brief Destroys the given texture.
+	 * @param self The Renderer.
+	 * @param texture The texture.
+	 * @memberof Renderer
+	 */
+	void (*destroyTexture)(const Renderer *self, ident texture);
 
 	/**
 	 * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points)
@@ -224,6 +199,14 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	void (*setDrawColor)(Renderer *self, const SDL_Color *color);
+	/**
+	 * @fn void Renderer::setScissor(Renderer *self, const SDL_Rect *rect)
+	 * @brief Sets the window scissor rectangle.
+	 * @param self The Renderer.
+	 * @param color The rect.
+	 * @memberof Renderer
+	 */
+	void (*setScissor)(Renderer *self, const SDL_Rect *rect);
 };
 
 /**

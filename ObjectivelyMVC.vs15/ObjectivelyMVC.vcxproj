@@ -170,6 +170,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Program.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\RendererGL20.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Shader.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Program.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\RendererGL20.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Shader.c" />

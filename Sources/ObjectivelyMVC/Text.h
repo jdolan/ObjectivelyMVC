@@ -75,6 +75,12 @@ struct Text {
 	 * @private
 	 */
 	ident texture;
+
+	/**
+	 * @brief The renderer the texture was made with.
+	 * @private
+	 */
+	Renderer *texture_renderer;
 };
 
 /**

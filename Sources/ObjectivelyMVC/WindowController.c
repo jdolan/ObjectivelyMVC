@@ -46,10 +46,10 @@ static void dealloc(Object *self) {
 #pragma mark - WindowController
 
 /**
- * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
+ * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window, Renderer *renderer)
  * @memberof WindowController
  */
-static WindowController *initWithWindow(WindowController *self, SDL_Window *window) {
+static WindowController *initWithWindow(WindowController *self, SDL_Window *window, Renderer *renderer) {
 	
 	self = (WindowController *) super(Object, self, init);
 	if (self) {
@@ -57,11 +57,8 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 		self->window = window;
 		assert(self->window);
 
-		self->renderer = $(alloc(Renderer), init);
+		self->renderer = retain(renderer);
 		assert(self->renderer);
-
-		Uint32 flags = SDL_GetWindowFlags(self->window);
-		assert(flags & SDL_WINDOW_OPENGL);
 	}
 	
 	return self;

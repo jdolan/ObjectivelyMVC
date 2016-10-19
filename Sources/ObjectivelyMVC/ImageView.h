@@ -74,6 +74,11 @@ struct ImageView {
 	 * @brief The image.
 	 */
 	Image *image;
+
+	/**
+	 * @brief The renderer the image was created from.
+	 */
+	Renderer *image_renderer;
 	
 	/**
 	 * @brief The texture.

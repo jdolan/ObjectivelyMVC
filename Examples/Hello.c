@@ -25,6 +25,7 @@
 
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
+#include <ObjectivelyMVC/RendererGL20.h>
 
 #include "HelloViewController.h"
 
@@ -51,7 +52,9 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SetSwapInterval(0);
 
-	WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
+	RendererGL20 *renderer = $(alloc(RendererGL20), init);
+
+	WindowController *windowController = $(alloc(WindowController), initWithWindow, window, (Renderer *) renderer);
 
 	ViewController *viewController = $((ViewController *) alloc(HelloViewController), init);
 
@@ -80,6 +83,7 @@ int main(int argc, char *argv[]) {
 
 	release(viewController);
 	release(windowController);
+	release(renderer);
 
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);

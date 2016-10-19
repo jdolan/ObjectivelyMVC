@@ -80,15 +80,15 @@ struct WindowControllerInterface {
 	ObjectInterface objectInterface;
 	
 	/**
-	 * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
-	 * @brief Initializes this WindowController with the given window.
+	 * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window, Renderer *renderer)
+	 * @brief Initializes this WindowController with the given window and given renderer.
 	 * @param self The WindowController.
 	 * @param window The window.
+	 * @param renderer The renderer.
 	 * @return The initialized WindowController, or `NULL` on error.
-	 * @remarks The window must be accelerated (`SDL_WINDOW_OPENGL`). See `SDL_CreateWindow`.
 	 * @memberof WindowController
 	 */
-	WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
+	WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window, Renderer *renderer);
 
 	/**
 	 * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
