@@ -97,10 +97,10 @@ struct RendererInterface {
 
 	/**
 	 * @fn GLuint Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
-	 * @brief Generates and binds to a texture object, uploading the given surface.
+	 * @brief Generates and binds to an OpenGL texture object, uploading the given surface.
 	 * @param self The Renderer.
 	 * @param surface The surface.
-	 * @return The texture name, or `0` on error.
+	 * @return The OpenGL texture name, or `0` on error.
 	 * @memberof Renderer
 	 */
 	GLuint (*createTexture)(const Renderer *self, const SDL_Surface *surface);

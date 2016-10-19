@@ -23,7 +23,6 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View.h>
@@ -165,20 +164,6 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 
 	assert(rect);
 
-	GLint verts[8];
-
-	verts[0] = rect->x - 1;
-	verts[1] = rect->y;
-
-	verts[2] = rect->x + rect->w;
-	verts[3] = rect->y;
-
-	verts[4] = rect->x + rect->w;
-	verts[5] = rect->y + rect->h + 1;
-
-	verts[6] = rect->x - 1;
-	verts[7] = rect->y + rect->h + 1;
-
 	glRecti(rect->x - 1, rect->y, rect->x + rect->w, rect->y + rect->h + 1);
 }
 
@@ -212,7 +197,7 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 	verts[7] = rect->y + rect->h;
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, (GLuint) texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glVertexPointer(2, GL_INT, 0, verts);
 	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
@@ -228,15 +213,17 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
  */
 static void endFrame(Renderer *self) {
 
+	$(self, setDrawColor, &Colors.White);
+
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
 	SDL_Window *window = SDL_GL_GetCurrentWindow();
 
-	SDL_Rect rect = { 0, 0 };
-	SDL_GL_GetDrawableSize(window, &rect.w, &rect.h);
+	int dw, dh;
+	SDL_GL_GetDrawableSize(window, &dw, &dh);
 
-	glScissor(rect.x, rect.y, rect.w, rect.h);
+	glScissor(0, 0, dw, dh);
 	glDisable(GL_SCISSOR_TEST);
 
 	glBlendFunc(GL_ONE, GL_ZERO);
@@ -256,7 +243,6 @@ static Renderer *init(Renderer *self) {
 	
 	self = (Renderer *) super(Object, self, init);
 	if (self) {
-
 		self->views = $$(MutableArray, array);
 		assert(self->views);
 	}
@@ -281,21 +267,15 @@ static Order render_sort(const ident a, const ident b) {
 static void render_renderView(const Array *array, ident obj, ident data) {
 
 	View *view = (View *) obj;
-	Renderer *renderer = (Renderer *) data;
 
 	const SDL_Rect frame = $(view, clippingFrame);
 	if (frame.w && frame.h) {
 
-		SDL_Rect scissor = MVC_TransformToWindow($(view, window), &frame);
+		const SDL_Rect scissor = MVC_TransformToWindow($(view, window), &frame);
 
-		scissor.x--;
-		scissor.y--;
-		scissor.w++;
-		scissor.h++;
+		glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 1, scissor.h + 1);
 
-		glScissor(scissor.x, scissor.y, scissor.w, scissor.h);
-
-		$(view, render, renderer);
+		$(view, render, (Renderer *) data);
 	}
 }
 
@@ -358,7 +338,7 @@ Class _Renderer = {
 	.instanceSize = sizeof(Renderer),
 	.interfaceOffset = offsetof(Renderer, interface),
 	.interfaceSize = sizeof(RendererInterface),
-	.initialize = initialize
+	.initialize = initialize,
 };
 
 #undef _Class
