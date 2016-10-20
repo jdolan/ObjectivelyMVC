@@ -80,15 +80,14 @@ struct WindowControllerInterface {
 	ObjectInterface objectInterface;
 	
 	/**
-	 * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window, Renderer *renderer)
-	 * @brief Initializes this WindowController with the given window and given renderer.
+	 * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
+	 * @brief Initializes this WindowController with the given window.
 	 * @param self The WindowController.
 	 * @param window The window.
-	 * @param renderer The renderer.
 	 * @return The initialized WindowController, or `NULL` on error.
 	 * @memberof WindowController
 	 */
-	WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window, Renderer *renderer);
+	WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
 
 	/**
 	 * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)

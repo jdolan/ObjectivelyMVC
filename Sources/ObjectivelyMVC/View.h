@@ -23,9 +23,6 @@
 
 #pragma once
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_video.h>
-
 #include <Objectively/Data.h>
 #include <Objectively/Enum.h>
 #include <Objectively/Dictionary.h>
@@ -160,7 +157,7 @@ struct View {
 
 	/**
 	 * @brief An optional identifier.
-	 * @remarks Identifiers are commonly used to resolve outlets when loading Views via View.
+	 * @remarks Identifiers are commonly used to resolve Outlets when loading Views via JSON.
 	 */
 	char *identifier;
 

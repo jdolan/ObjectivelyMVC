@@ -23,16 +23,18 @@
 
 #pragma once
 
-#include <SDL2/SDL_video.h>
-
-#include <ObjectivelyMVC/OpenGL.h>
-#include <ObjectivelyMVC/Types.h>
+#include <SDL2/SDL_opengl.h>
 
 #include <Objectively/MutableArray.h>
+
+#include <ObjectivelyMVC/Types.h>
 
 /**
  * @file
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
+ * @details This class provides an OpenGL 1.x implementation of the RendererInterface. Applications
+ * may extend this class and provide an implementation that meets their own OpenGL version
+ * requirements.
  */
 
 typedef struct Renderer Renderer;
@@ -40,6 +42,9 @@ typedef struct RendererInterface RendererInterface;
 
 /**
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
+ * @details This class provides an OpenGL 1.x implementation of the RendererInterface. Applications
+ * may extend this class and provide an implementation that meets their own OpenGL version
+ * requirements.
  * @extends Object
  */
 struct Renderer {
@@ -91,23 +96,14 @@ struct RendererInterface {
 	void (*beginFrame)(Renderer *self);
 
 	/**
-	 * @fn ident Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
-	 * @brief Generates and binds to a texture object, uploading the given surface.
+	 * @fn GLuint Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
+	 * @brief Generates and binds to an OpenGL texture object, uploading the given surface.
 	 * @param self The Renderer.
 	 * @param surface The surface.
-	 * @return The opaque texture data, or NULL on error.
+	 * @return The OpenGL texture name, or `0` on error.
 	 * @memberof Renderer
 	 */
-	ident (*createTexture)(const Renderer *self, const SDL_Surface *surface);
-
-	/**
-	 * @fn ident Renderer::destroyTexture(const Renderer *self, ident texture)
-	 * @brief Destroys the given texture.
-	 * @param self The Renderer.
-	 * @param texture The texture.
-	 * @memberof Renderer
-	 */
-	void (*destroyTexture)(const Renderer *self, ident texture);
+	GLuint (*createTexture)(const Renderer *self, const SDL_Surface *surface);
 
 	/**
 	 * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points)
@@ -147,14 +143,14 @@ struct RendererInterface {
 	void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect);
 
 	/**
-	 * @fn void Renderer::drawTexture(const Renderer *self, ident texture, const SDL_Rect *dest)
+	 * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
 	 * @brief Draws textured `GL_QUAD` in the given rectangle.
 	 * @param self The Renderer.
 	 * @param texture The texture.
 	 * @param dest The destination in screen coordinates.
 	 * @memberof Renderer
 	 */
-	void (*drawTexture)(const Renderer *self, ident texture, const SDL_Rect *dest);
+	void (*drawTexture)(const Renderer *self, GLuint texture, const SDL_Rect *dest);
 
 	/**
 	 * @fn void Renderer::endFrame(const Renderer *self)
@@ -167,6 +163,7 @@ struct RendererInterface {
 	void (*endFrame)(Renderer *self);
 
 	/**
+	 * @protected
 	 * @fn Renderer *Renderer::init(Renderer *self)
 	 * @brief Initializes this Renderer.
 	 * @param self The Renderer.
@@ -199,14 +196,6 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	void (*setDrawColor)(Renderer *self, const SDL_Color *color);
-	/**
-	 * @fn void Renderer::setScissor(Renderer *self, const SDL_Rect *rect)
-	 * @brief Sets the window scissor rectangle.
-	 * @param self The Renderer.
-	 * @param color The rect.
-	 * @memberof Renderer
-	 */
-	void (*setScissor)(Renderer *self, const SDL_Rect *rect);
 };
 
 /**

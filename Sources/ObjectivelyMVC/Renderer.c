@@ -23,7 +23,6 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View.h>
@@ -60,26 +59,52 @@ static void addView(Renderer *self, View *view) {
  */
 static void beginFrame(Renderer *self) {
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glEnable(GL_SCISSOR_TEST);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
 	$(self, setDrawColor, &Colors.White);
 }
 
 /**
- * @fn void Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
+ * @fn GLuint Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
  * @memberof Renderer
  */
-static ident createTexture(const Renderer *self, const SDL_Surface *surface) {
+static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
 
 	assert(surface);
 
-	return NULL;
-}
+	GLenum format;
+	switch (surface->format->BytesPerPixel) {
+		case 1:
+			format = GL_LUMINANCE;
+			break;
+		case 3:
+			format = GL_RGB;
+			break;
+		case 4:
+			format = GL_RGBA;
+			break;
+		default:
+			MVC_LogError("Invalid surface format: %s\n", SDL_GetPixelFormatName(surface->format->format));
+			return 0;
+	}
 
-/**
- * @fn void Renderer::destroyTexture(const Renderer *self, ident texture)
- * @memberof Renderer
- */
-static void destroyTexture(const Renderer *self, ident texture) {
+	GLuint texture;
+	glGenTextures(1, &texture);
 
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
+
+	return texture;
 }
 
 /**
@@ -100,6 +125,9 @@ static void drawLine(const Renderer *self, const SDL_Point *points) {
 static void drawLines(const Renderer *self, const SDL_Point *points, size_t count) {
 
 	assert(points);
+
+	glVertexPointer(2, GL_INT, 0, points);
+	glDrawArrays(GL_LINE_STRIP, 0, count);
 }
 
 /**
@@ -109,6 +137,23 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
 static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 
 	assert(rect);
+
+	GLint verts[8];
+
+	verts[0] = rect->x;
+	verts[1] = rect->y;
+
+	verts[2] = rect->x + rect->w;
+	verts[3] = rect->y;
+
+	verts[4] = rect->x + rect->w;
+	verts[5] = rect->y + rect->h;
+
+	verts[6] = rect->x;
+	verts[7] = rect->y + rect->h;
+
+	glVertexPointer(2, GL_INT, 0, verts);
+	glDrawArrays(GL_LINE_LOOP, 0, 4);
 }
 
 /**
@@ -118,15 +163,48 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 
 	assert(rect);
+
+	glRecti(rect->x - 1, rect->y, rect->x + rect->w, rect->y + rect->h + 1);
 }
 
 /**
- * @fn void Renderer::drawTexture(const Renderer *self, ident texture, const SDL_Rect *dest)
+ * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
  * @memberof Renderer
  */
-static void drawTexture(const Renderer *self, ident texture, const SDL_Rect *rect) {
+static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *rect) {
 
 	assert(rect);
+
+	const GLfloat texcoords[] = {
+		0.0, 0.0,
+		1.0, 0.0,
+		1.0, 1.0,
+		0.0, 1.0
+	};
+
+	GLint verts[8];
+
+	verts[0] = rect->x;
+	verts[1] = rect->y;
+
+	verts[2] = rect->x + rect->w;
+	verts[3] = rect->y;
+
+	verts[4] = rect->x + rect->w;
+	verts[5] = rect->y + rect->h;
+
+	verts[6] = rect->x;
+	verts[7] = rect->y + rect->h;
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glVertexPointer(2, GL_INT, 0, verts);
+	glTexCoordPointer(2, GL_FLOAT, 0, texcoords);
+
+	glDrawArrays(GL_QUADS, 0, 4);
+
+	glDisable(GL_TEXTURE_2D);
 }
 
 /**
@@ -135,6 +213,26 @@ static void drawTexture(const Renderer *self, ident texture, const SDL_Rect *rec
  */
 static void endFrame(Renderer *self) {
 
+	$(self, setDrawColor, &Colors.White);
+
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	SDL_Window *window = SDL_GL_GetCurrentWindow();
+
+	int dw, dh;
+	SDL_GL_GetDrawableSize(window, &dw, &dh);
+
+	glScissor(0, 0, dw, dh);
+	glDisable(GL_SCISSOR_TEST);
+
+	glBlendFunc(GL_ONE, GL_ZERO);
+	glDisable(GL_BLEND);
+
+	const GLenum err = glGetError();
+	if (err) {
+		MVC_LogError("GL error: %d\n", err);
+	}
 }
 
 /**
@@ -145,11 +243,8 @@ static Renderer *init(Renderer *self) {
 	
 	self = (Renderer *) super(Object, self, init);
 	if (self) {
-
 		self->views = $$(MutableArray, array);
 		assert(self->views);
-
-		$(self, renderDeviceDidReset);
 	}
 
 	return self;
@@ -172,20 +267,15 @@ static Order render_sort(const ident a, const ident b) {
 static void render_renderView(const Array *array, ident obj, ident data) {
 
 	View *view = (View *) obj;
-	Renderer *renderer = (Renderer *) data;
 
 	const SDL_Rect frame = $(view, clippingFrame);
 	if (frame.w && frame.h) {
 
-		SDL_Rect scissor = MVC_TransformToWindow($(view, window), &frame);
-		scissor.x--;
-		scissor.y--;
-		scissor.w++;
-		scissor.h++;
+		const SDL_Rect scissor = MVC_TransformToWindow($(view, window), &frame);
 
-		$(renderer, setScissor, &scissor);
+		glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 1, scissor.h + 1);
 
-		$(view, render, renderer);
+		$(view, render, (Renderer *) data);
 	}
 }
 
@@ -215,15 +305,7 @@ static void renderDeviceDidReset(Renderer *self) {
  * @memberof Renderer
  */
 static void setDrawColor(Renderer *self, const SDL_Color *color) {
-
-}
-
-/**
- * @fn void Renderer::setScissor(Renderer *self, const SDL_Rect *rect)
- * @memberof Renderer
- */
-static void setScissor(Renderer *self, const SDL_Rect *rect) {
-
+	glColor4ubv((const GLubyte *) color);
 }
 
 #pragma mark - Class lifecycle
@@ -238,7 +320,6 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->addView = addView;
 	((RendererInterface *) clazz->def->interface)->beginFrame = beginFrame;
 	((RendererInterface *) clazz->def->interface)->createTexture = createTexture;
-	((RendererInterface *) clazz->def->interface)->destroyTexture = destroyTexture;
 	((RendererInterface *) clazz->def->interface)->drawLine = drawLine;
 	((RendererInterface *) clazz->def->interface)->drawLines = drawLines;
 	((RendererInterface *) clazz->def->interface)->drawRect = drawRect;
@@ -249,7 +330,6 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->render = render;
 	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
-	((RendererInterface *) clazz->def->interface)->setScissor = setScissor;
 }
 
 Class _Renderer = {
@@ -258,7 +338,7 @@ Class _Renderer = {
 	.instanceSize = sizeof(Renderer),
 	.interfaceOffset = offsetof(Renderer, interface),
 	.interfaceSize = sizeof(RendererInterface),
-	.initialize = initialize
+	.initialize = initialize,
 };
 
 #undef _Class

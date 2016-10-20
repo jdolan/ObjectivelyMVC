@@ -54,11 +54,6 @@ struct ImageView {
 	ImageViewInterface *interface;
 
 	/**
-	 * @brief The alpha.
-	 */
-	GLfloat alpha;
-
-	/**
 	 * @brief The blend function.
 	 */
 	struct {
@@ -74,16 +69,11 @@ struct ImageView {
 	 * @brief The image.
 	 */
 	Image *image;
-
-	/**
-	 * @brief The renderer the image was created from.
-	 */
-	Renderer *image_renderer;
 	
 	/**
 	 * @brief The texture.
 	 */
-	ident texture;
+	GLuint texture;
 };
 
 /**
