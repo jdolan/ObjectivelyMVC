@@ -51,21 +51,32 @@ static void dealloc(Object *self) {
 #pragma mark - Image
 
 /**
- * @fn Image *Image::initWithData(Image *self, const Data *data)
+ * @fn Image *Image::initWithBytes(Image *self, const uint8_t *bytes, size_t length)
  * @memberof Image
  */
-static Image *initWithData(Image *self, const Data *data) {
+static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
 
-	SDL_RWops *ops = SDL_RWFromConstMem(data->bytes, data->length);
+	SDL_RWops *ops = SDL_RWFromConstMem(bytes, length);
 	if (ops) {
 		self = $(self, initWithSurface, IMG_Load_RW(ops, 0));
 		if (self) {
 			SDL_FreeSurface(self->surface);
 		}
 	}
-	
+
 	SDL_FreeRW(ops);
 	return self;
+}
+
+/**
+ * @fn Image *Image::initWithData(Image *self, const Data *data)
+ * @memberof Image
+ */
+static Image *initWithData(Image *self, const Data *data) {
+
+	assert(data);
+
+	return $(self, initWithBytes, data->bytes, data->length);
 }
 
 /**
@@ -74,18 +85,20 @@ static Image *initWithData(Image *self, const Data *data) {
  */
 static Image *initWithName(Image *self, const char *name) {
 
-	char *path;
-	asprintf(&path, "%s/%s", getenv("OBJECTIVELYMVC_DATA_DIR") ?: PKGDATADIR, name);
+	assert(name);
 
-	MVC_LogDebug("%s\n", path);
+	return $(self, initWithResource, $$(Resource, resourceWithName, name));
+}
 
-	self = $(self, initWithSurface, IMG_Load(path));
-	if (self) {
-		SDL_FreeSurface(self->surface);
-	}
+/**
+ * @fn Image *Image::initWithResource(Image *self, const Resource *resource)
+ * @memberof Image
+ */
+static Image *initWithResource(Image *self, const Resource *resource) {
 
-	free(path);
-	return self;
+	assert(resource);
+
+	return $(self, initWithData, resource->data);
 }
 
 /**
@@ -114,9 +127,18 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ImageInterface *) clazz->def->interface)->initWithBytes = initWithBytes;
 	((ImageInterface *) clazz->def->interface)->initWithData = initWithData;
 	((ImageInterface *) clazz->def->interface)->initWithName = initWithName;
+	((ImageInterface *) clazz->def->interface)->initWithResource = initWithResource;
 	((ImageInterface *) clazz->def->interface)->initWithSurface = initWithSurface;
+
+	$$(Resource, addResourcePath, PKGDATADIR);
+
+	const char *dir = getenv("OBJECTIVELYMVC_DATA_DIR");
+	if (dir) {
+		$$(Resource, addResourcePath, dir);
+	}
 }
 
 Class _Image = {

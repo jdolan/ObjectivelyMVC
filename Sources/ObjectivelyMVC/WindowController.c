@@ -53,18 +53,36 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 	
 	self = (WindowController *) super(Object, self, init);
 	if (self) {
-		
+
 		self->window = window;
 		assert(self->window);
 
+		const Uint32 flags = SDL_GetWindowFlags(self->window);
+		assert(flags & SDL_WINDOW_OPENGL);
+
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
-
-		Uint32 flags = SDL_GetWindowFlags(self->window);
-		assert(flags & SDL_WINDOW_OPENGL);
 	}
 	
 	return self;
+}
+
+/**
+ * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
+ * @memberof WindowController
+ */
+static void setRenderer(WindowController *self, Renderer *renderer) {
+
+	if (self->renderer != renderer) {
+
+		release(self->renderer);
+
+		if (renderer) {
+			self->renderer = retain(renderer);
+		} else {
+			self->renderer = NULL;
+		}
+	}
 }
 
 /**
@@ -95,6 +113,8 @@ static void setViewController(WindowController *self, ViewController *viewContro
  */
 static void render(WindowController *self) {
 
+	assert(self->renderer);
+	
 	$(self->renderer, beginFrame);
 
 	if (self->viewController) {
@@ -113,6 +133,19 @@ static void render(WindowController *self) {
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
+	if (event->type == SDL_WINDOWEVENT) {
+		if (event->window.event == SDL_WINDOWEVENT_SHOWN) {
+
+			if (self->renderer) {
+				$(self->renderer, renderDeviceDidReset);
+			}
+
+			if (self->viewController) {
+				$(self->viewController, renderDeviceDidReset);
+			}
+		}
+	}
+
 	if (self->viewController) {
 		$(self->viewController, respondToEvent, event);
 	}
@@ -130,6 +163,7 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->def->interface)->initWithWindow = initWithWindow;
 	((WindowControllerInterface *) clazz->def->interface)->render = render;
 	((WindowControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((WindowControllerInterface *) clazz->def->interface)->setRenderer = setRenderer;
 	((WindowControllerInterface *) clazz->def->interface)->setViewController = setViewController;
 }
 

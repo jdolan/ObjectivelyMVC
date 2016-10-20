@@ -117,26 +117,26 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 }
 
 /**
- * @see View::init(View *)
+ * @see View::draw(View *self, Renderer *renderer)
  */
-static View *init(View *self) {
-	return (View *) $((Checkbox *) self, initWithFrame, NULL, ControlStyleDefault);
-}
+static void draw(View *self, Renderer *renderer) {
 
-/**
- * @see View::render(View *, Renderer *)
- */
-static void render(View *self, Renderer *renderer) {
-	
-	super(View, self, render, renderer);
-	
 	Checkbox *this = (Checkbox *) self;
-	
+
 	if (this->control.state & ControlStateSelected) {
 		this->check->view.hidden = false;
 	} else {
 		this->check->view.hidden = true;
 	}
+
+	super(View, self, draw, renderer);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((Checkbox *) self, initWithFrame, NULL, ControlStyleDefault);
 }
 
 #pragma mark - Control
@@ -212,19 +212,15 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->def->interface)->draw = draw;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->render = render;
-	
+
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 	
 	((CheckboxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 
-	Data *checkData = $(alloc(Data), initWithBytes, _checkData, lengthof(_checkData));
-
-	_check = $(alloc(Image), initWithData, checkData);
-
-	release(checkData);
+	_check = $(alloc(Image), initWithBytes, _checkData, lengthof(_checkData));
 }
 
 /**

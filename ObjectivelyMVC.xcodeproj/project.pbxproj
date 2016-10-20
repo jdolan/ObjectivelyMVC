@@ -46,7 +46,6 @@
 		CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4801C4F3A1600CD0B13 /* Image.c */; };
 		CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4811C4F3A1600CD0B13 /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4861C4F3D3500CD0B13 /* check.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE12D4851C4F3C5900CD0B13 /* check.png */; };
 		CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4931C547BDD00CD0B13 /* StackView.c */; };
 		CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4941C547BDD00CD0B13 /* StackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
@@ -59,7 +58,7 @@
 		CE14A8D01C68CE3C00B576FB /* Option.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CE1C68CE3C00B576FB /* Option.c */; };
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */ = {isa = PBXBuildFile; fileRef = CE1CCDA21D9E859F00891F05 /* View+JSON.c */; };
-		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; };
+		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBA1D6876AB006DF143 /* NavigationViewController.c */; };
 		CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBB1D6876AB006DF143 /* NavigationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBE1D6A08DD006DF143 /* CollectionView.c */; };
@@ -89,7 +88,6 @@
 		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
 		CEF1D8911D4270150099A857 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
-		CEF1D8931D42A2C70099A857 /* resize.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = CEF1D8921D429F7A0099A857 /* resize.png */; };
 		CEF1D8A01D440C7B0099A857 /* Box.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D89E1D440C7B0099A857 /* Box.c */; };
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
@@ -114,8 +112,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */,
-				CEF1D8931D42A2C70099A857 /* resize.png in CopyFiles */,
-				CE12D4861C4F3D3500CD0B13 /* check.png in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,7 +459,6 @@
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
-				CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */,
 				CE6BC1831D837D550070FB2D /* Label.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
@@ -485,6 +480,7 @@
 				CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */,
 				CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */,
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
+				CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */,
 				CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -576,39 +572,39 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */,
-				CE0943A71D60F1A300C11408 /* TableColumn.c in Sources */,
 				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
+				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
-				CE0943B01D615CF800C11408 /* TableHeaderCellView.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,
+				CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */,
+				CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
-				CE0943AC1D60FFEC00C11408 /* TableRowView.c in Sources */,
-				CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */,
-				CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */,
-				CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */,
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
+				CE6BC1821D837D550070FB2D /* Label.c in Sources */,
+				CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */,
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,
-				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
+				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
 				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
-				CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */,
-				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
-				CE6BC1821D837D550070FB2D /* Label.c in Sources */,
 				CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */,
+				CE0943A71D60F1A300C11408 /* TableColumn.c in Sources */,
+				CE0943B01D615CF800C11408 /* TableHeaderCellView.c in Sources */,
 				CE8E7FFE1C84E8DA00F4C3D4 /* TableHeaderView.c in Sources */,
+				CE0943AC1D60FFEC00C11408 /* TableRowView.c in Sources */,
 				CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */,
 				CE12D43F1C4C38B500CD0B13 /* Text.c in Sources */,
 				CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */,
 				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,
+				CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */,
 				CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */,
+				CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

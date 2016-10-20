@@ -23,10 +23,6 @@
 
 #pragma once
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_opengl.h>
-#include <SDL2/SDL_video.h>
-
 #include <Objectively/Data.h>
 #include <Objectively/Enum.h>
 #include <Objectively/Dictionary.h>
@@ -161,7 +157,7 @@ struct View {
 
 	/**
 	 * @brief An optional identifier.
-	 * @remarks Identifiers are commonly used to resolve outlets when loading Views via View.
+	 * @remarks Identifiers are commonly used to resolve Outlets when loading Views via JSON.
 	 */
 	char *identifier;
 
@@ -422,7 +418,7 @@ struct ViewInterface {
 
 	/**
 	 * @fn void View::renderDeviceDidReset(View *self)
-	 * @brief This method is invoked from `respondToEvent` for `SDL_RENDER_DEVICE_RESET`.
+	 * @brief This method is invoked when the render context is invalidated.
 	 * @param self The View.
 	 * @remarks Subclasses should override this method to recreate any texture resources or other
 	 * OpenGL objects they own.

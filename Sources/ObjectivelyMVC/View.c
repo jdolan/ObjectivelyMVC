@@ -562,15 +562,15 @@ static void render(View *self, Renderer *renderer) {
 	
 	if (self->backgroundColor.a) {
 
-		SetColor(self->backgroundColor);
+		$(renderer, setDrawColor, &self->backgroundColor);
 		
 		const SDL_Rect frame = $(self, renderFrame);
-		$(renderer, fillRect, &frame);
+		$(renderer, drawRectFilled, &frame);
 	}
 		
 	if (self->borderWidth && self->borderColor.a) {
 
-		SetColor(self->borderColor);
+		$(renderer, setDrawColor, &self->borderColor);
 		
 		SDL_Rect frame = $(self, renderFrame);
 		for (int i = 0; i < self->borderWidth; i++) {
@@ -582,7 +582,7 @@ static void render(View *self, Renderer *renderer) {
 		}
 	}
 
-	SetColor(Colors.White);
+	$(renderer, setDrawColor, &Colors.White);
 }
 
 /**
@@ -991,11 +991,6 @@ Class _View = {
 
 SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
-	if (window == NULL) {
-		window = SDL_GL_GetCurrentWindow();
-	}
-
-	assert(window);
 	assert(rect);
 
 	SDL_Rect transformed = *rect;
