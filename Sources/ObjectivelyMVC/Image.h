@@ -89,7 +89,6 @@ struct ImageInterface {
 	 * @param self The Image.
 	 * @param name The image name.
 	 * @return The initialized Image, or `NULL` on error.
-	 * @remarks
 	 * @memberof Image
 	 */
 	Image *(*initWithName)(Image *self, const char *name);
@@ -98,7 +97,7 @@ struct ImageInterface {
 	 * @fn Image *Image::initWithResource(Image *self, const Resource *resource)
 	 * @brief Initializes this Image with the specified Resource.
 	 * @param self The Image.
-	 * @param data The Resource containing the image data.
+	 * @param resource The Resource containing the image data.
 	 * @return The initialized Image, or `NULL` on error.
 	 * @memberof Image
 	 */
