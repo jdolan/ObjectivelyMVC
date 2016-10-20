@@ -991,11 +991,6 @@ Class _View = {
 
 SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
-	if (window == NULL) {
-		window = SDL_GL_GetCurrentWindow();
-	}
-
-	assert(window);
 	assert(rect);
 
 	SDL_Rect transformed = *rect;
