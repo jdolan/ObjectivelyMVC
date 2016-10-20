@@ -21,9 +21,7 @@ Features
 ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight object oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you *are* using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.
 
 ```c
-Renderer *renderer = $(alloc(Renderer), init);
-
-WindowController *windowController = $(alloc(WindowController), initWithWindow, window, renderer);
+WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 ```
 
 ### Easily embeddable in any SDL2 / OpenGL application
