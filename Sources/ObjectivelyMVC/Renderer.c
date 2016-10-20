@@ -164,7 +164,7 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 
 	assert(rect);
 
-	glRecti(rect->x - 1, rect->y, rect->x + rect->w, rect->y + rect->h + 1);
+	glRecti(rect->x - 1, rect->y - 1, rect->x + rect->w + 1, rect->y + rect->h + 1);
 }
 
 /**
