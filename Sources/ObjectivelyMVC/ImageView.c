@@ -54,8 +54,11 @@ static void dealloc(Object *self) {
 	if (this->image) {
 		release(this->image);
 		
-		$(this->image_renderer, destroyTexture, this->texture);
-		release(this->image_renderer);
+		if (this->image_renderer)
+		{
+			$(this->image_renderer, destroyTexture, this->texture);
+			release(this->image_renderer);
+		}
 	}
 
 	super(Object, self, dealloc);
