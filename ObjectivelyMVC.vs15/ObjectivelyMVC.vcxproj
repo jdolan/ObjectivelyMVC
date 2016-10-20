@@ -168,13 +168,9 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\NavigationViewController.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Option.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Program.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\RendererGL10.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\RendererGL20.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Shader.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\StackView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableCellView.h" />
@@ -208,13 +204,9 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\NavigationViewController.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Option.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c" />
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Program.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
-    <ClCompile Include="..\Sources\ObjectivelyMVC\RendererGL10.c" />
-    <ClCompile Include="..\Sources\ObjectivelyMVC\RendererGL20.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Shader.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Slider.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\StackView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableCellView.c" />
