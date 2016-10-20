@@ -46,19 +46,22 @@ static void dealloc(Object *self) {
 #pragma mark - WindowController
 
 /**
- * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window, Renderer *renderer)
+ * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
  * @memberof WindowController
  */
-static WindowController *initWithWindow(WindowController *self, SDL_Window *window, Renderer *renderer) {
+static WindowController *initWithWindow(WindowController *self, SDL_Window *window) {
 	
 	self = (WindowController *) super(Object, self, init);
 	if (self) {
-		
+
 		self->window = window;
 		assert(self->window);
 
-		self->renderer = retain(renderer);
+		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
+
+		void *prev = SDL_SetWindowData(self->window, "WindowController", self);
+		assert(prev == NULL);
 	}
 	
 	return self;
@@ -136,7 +139,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 			if (self->renderer) {
 				$(self->renderer, renderDeviceDidReset);
 			}
-			
+
 			if (self->viewController) {
 				$(self->viewController, renderDeviceDidReset);
 			}

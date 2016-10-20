@@ -51,9 +51,7 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_SetSwapInterval(0);
 
-	Renderer *renderer = $(alloc(Renderer), init);
-
-	WindowController *windowController = $(alloc(WindowController), initWithWindow, window, renderer);
+	WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 
 	ViewController *viewController = $((ViewController *) alloc(HelloViewController), init);
 
@@ -82,7 +80,6 @@ int main(int argc, char *argv[]) {
 
 	release(viewController);
 	release(windowController);
-	release(renderer);
 
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
