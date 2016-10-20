@@ -59,9 +59,6 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
-
-		void *prev = SDL_SetWindowData(self->window, "WindowController", self);
-		assert(prev == NULL);
 	}
 	
 	return self;
