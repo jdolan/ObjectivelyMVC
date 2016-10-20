@@ -189,6 +189,16 @@ struct RendererInterface {
 	void (*renderDeviceDidReset)(Renderer *self);
 
 	/**
+	 * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)
+	 * @brief Sets the clipping frame for draw operations.
+	 * @details Primitives which fall outside of the clipping frame will not be visible.
+	 * @param self The Renderer.
+	 * @param clippingFrame The clipping frame, or `NULL` to disable clipping.
+	 * @memberof Renderer
+	 */
+	void (*setClippingFrame)(Renderer *self, const SDL_Rect *clippingFrame);
+
+	/**
 	 * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
 	 * @brief Sets the primary color for drawing operations.
 	 * @param self The Renderer.

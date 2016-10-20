@@ -218,12 +218,8 @@ static void endFrame(Renderer *self) {
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	SDL_Window *window = SDL_GL_GetCurrentWindow();
+	$(self, setClippingFrame, NULL);
 
-	int dw, dh;
-	SDL_GL_GetDrawableSize(window, &dw, &dh);
-
-	glScissor(0, 0, dw, dh);
 	glDisable(GL_SCISSOR_TEST);
 
 	glBlendFunc(GL_ONE, GL_ZERO);
@@ -268,14 +264,14 @@ static void render_renderView(const Array *array, ident obj, ident data) {
 
 	View *view = (View *) obj;
 
-	const SDL_Rect frame = $(view, clippingFrame);
-	if (frame.w && frame.h) {
+	Renderer *renderer = (Renderer *) data;
 
-		const SDL_Rect scissor = MVC_TransformToWindow($(view, window), &frame);
+	const SDL_Rect clippingFrame = $(view, clippingFrame);
+	if (clippingFrame.w && clippingFrame.h) {
 
-		glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 1, scissor.h + 1);
-
-		$(view, render, (Renderer *) data);
+		$(renderer, setClippingFrame, &clippingFrame);
+		
+		$(view, render, renderer);
 	}
 }
 
@@ -298,6 +294,27 @@ static void render(Renderer *self) {
  */
 static void renderDeviceDidReset(Renderer *self) {
 
+}
+
+/**
+ * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)
+ * @memberof Renderer
+ */
+static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
+
+	SDL_Window *window = SDL_GL_GetCurrentWindow();
+
+	SDL_Rect rect;
+	if (clippingFrame) {
+		rect = *clippingFrame;
+	} else {
+		rect = MakeRect(0, 0, 0, 0);
+		SDL_GL_GetDrawableSize(window, &rect.w, &rect.h);
+	}
+
+	const SDL_Rect scissor = MVC_TransformToWindow(window, &rect);
+
+	glScissor(scissor.x, scissor.y, scissor.w, scissor.h);
 }
 
 /**
@@ -329,6 +346,7 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->init = init;
 	((RendererInterface *) clazz->def->interface)->render = render;
 	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((RendererInterface *) clazz->def->interface)->setClippingFrame = setClippingFrame;
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
 }
 
