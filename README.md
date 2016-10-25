@@ -86,7 +86,7 @@ ObjectivelyMVC allows you to define your View hierarchy either programmatically,
 
 ### Cross platform
 
-_Wait, `gcc` or `clang`? Is this a Linux-only framework?_ Not at all. ObjectivelyMVC supports Windows XP and later, Apple OS X, and Linux. Support for other Unix derivatives is likely there, but untested. To build ObjectivelyMVC for Windows, you can use either MinGW-w64 (cross-compile or native), or recent [Visual Studio 15](https://www.visualstudio.com/) Previews, which include Clang.
+_Wait, `gcc` or `clang`? Is this a Linux-only framework?_ Not at all. ObjectivelyMVC supports Windows XP and later, Apple OS X, and Linux. Support for other Unix derivatives is likely there, but untested. To build ObjectivelyMVC for Windows, you can use either [MinGW-w64](https://mingw-w64.org) (cross-compile or native), or recent [Visual Studio 15](https://www.visualstudio.com/) Previews, which include Clang.
 
 
 Examples
