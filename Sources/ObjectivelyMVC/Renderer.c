@@ -54,10 +54,10 @@ static void addView(Renderer *self, View *view) {
 }
 
 /**
- * @fn void Renderer::beginFrame(const Renderer *self)
+ * @fn void Renderer::beginFrame(Renderer *self)
  * @memberof Renderer
  */
-static void beginFrame(const Renderer *self) {
+static void beginFrame(Renderer *self) {
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -66,10 +66,12 @@ static void beginFrame(const Renderer *self) {
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	$(self, setDrawColor, &Colors.White);
 }
 
 /**
- * @fn void Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
+ * @fn GLuint Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
  * @memberof Renderer
  */
 static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
@@ -88,9 +90,8 @@ static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
 			format = GL_RGBA;
 			break;
 		default:
-			MVC_LogError("Invalid surface format: %s\n",
-					 SDL_GetPixelFormatName(surface->format->format));
-			return -1;
+			MVC_LogError("Invalid surface format: %s\n", SDL_GetPixelFormatName(surface->format->format));
+			return 0;
 	}
 
 	GLuint texture;
@@ -102,8 +103,7 @@ static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_FALSE);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format,
-				 GL_UNSIGNED_BYTE, surface->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, surface->w, surface->h, 0, format, GL_UNSIGNED_BYTE, surface->pixels);
 
 	return texture;
 }
@@ -120,10 +120,10 @@ static void drawLine(const Renderer *self, const SDL_Point *points) {
 }
 
 /**
- * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, GLuint count)
+ * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
  * @memberof Renderer
  */
-static void drawLines(const Renderer *self, const SDL_Point *points, GLuint count) {
+static void drawLines(const Renderer *self, const SDL_Point *points, size_t count) {
 
 	assert(points);
 
@@ -155,6 +155,17 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 
 	glVertexPointer(2, GL_INT, 0, verts);
 	glDrawArrays(GL_LINE_LOOP, 0, 4);
+}
+
+/**
+ * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
+ * @memberof Renderer
+ */
+static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
+
+	assert(rect);
+
+	glRecti(rect->x - 1, rect->y - 1, rect->x + rect->w + 1, rect->y + rect->h + 1);
 }
 
 /**
@@ -198,43 +209,27 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 }
 
 /**
- * @fn void Renderer::endFrame(const Renderer *self)
+ * @fn void Renderer::endFrame(Renderer *self)
  * @memberof Renderer
  */
-static void endFrame(const Renderer *self) {
+static void endFrame(Renderer *self) {
+
+	$(self, setDrawColor, &Colors.White);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	SDL_Window *window = SDL_GL_GetCurrentWindow();
-
-	int dw, dh;
-	SDL_GL_GetDrawableSize(window, &dw, &dh);
-
-	glScissor(0, 0, dw, dh);
+	$(self, setClippingFrame, NULL);
 
 	glDisable(GL_SCISSOR_TEST);
 
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glDisable(GL_BLEND);
 
-	glColor3f(1.0, 1.0, 1.0);
-
 	const GLenum err = glGetError();
 	if (err) {
 		MVC_LogError("GL error: %d\n", err);
 	}
-}
-
-/**
- * @fn void Renderer::fillRect(const Renderer *self, const SDL_Rect *rect)
- * @memberof Renderer
- */
-static void fillRect(const Renderer *self, const SDL_Rect *rect) {
-
-	assert(rect);
-
-	glRecti(rect->x - 1, rect->y, rect->x + rect->w, rect->y + rect->h + 1);
 }
 
 /**
@@ -270,14 +265,14 @@ static void render_renderView(const Array *array, ident obj, ident data) {
 
 	View *view = (View *) obj;
 
-	const SDL_Rect frame = $(view, clippingFrame);
-	if (frame.w && frame.h) {
+	Renderer *renderer = (Renderer *) data;
 
-		const SDL_Rect scissor = MVC_TransformToWindow($(view, window), &frame);
+	const SDL_Rect clippingFrame = $(view, clippingFrame);
+	if (clippingFrame.w && clippingFrame.h) {
 
-		glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 1, scissor.h + 1);
-
-		$(view, render, (Renderer *) data);
+		$(renderer, setClippingFrame, &clippingFrame);
+		
+		$(view, render, renderer);
 	}
 }
 
@@ -292,6 +287,43 @@ static void render(Renderer *self) {
 	$((Array *) self->views, enumerateObjects, render_renderView, self);
 
 	$(self->views, removeAllObjects);
+}
+
+/**
+ * @fn void Renderer::renderDeviceDidReset(Renderer *self)
+ * @memberof Renderer
+ */
+static void renderDeviceDidReset(Renderer *self) {
+
+}
+
+/**
+ * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)
+ * @memberof Renderer
+ */
+static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
+
+	SDL_Window *window = SDL_GL_GetCurrentWindow();
+
+	SDL_Rect rect;
+	if (clippingFrame) {
+		rect = *clippingFrame;
+	} else {
+		rect = MakeRect(0, 0, 0, 0);
+		SDL_GL_GetDrawableSize(window, &rect.w, &rect.h);
+	}
+
+	const SDL_Rect scissor = MVC_TransformToWindow(window, &rect);
+
+	glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 1, scissor.h + 1);
+}
+
+/**
+ * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
+ * @memberof Renderer
+ */
+static void setDrawColor(Renderer *self, const SDL_Color *color) {
+	glColor4ubv((const GLubyte *) color);
 }
 
 #pragma mark - Class lifecycle
@@ -309,11 +341,14 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->drawLine = drawLine;
 	((RendererInterface *) clazz->def->interface)->drawLines = drawLines;
 	((RendererInterface *) clazz->def->interface)->drawRect = drawRect;
+	((RendererInterface *) clazz->def->interface)->drawRectFilled = drawRectFilled;
 	((RendererInterface *) clazz->def->interface)->drawTexture = drawTexture;
 	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
-	((RendererInterface *) clazz->def->interface)->fillRect = fillRect;
 	((RendererInterface *) clazz->def->interface)->init = init;
 	((RendererInterface *) clazz->def->interface)->render = render;
+	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((RendererInterface *) clazz->def->interface)->setClippingFrame = setClippingFrame;
+	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
 }
 
 Class _Renderer = {

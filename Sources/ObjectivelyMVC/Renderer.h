@@ -23,7 +23,6 @@
 
 #pragma once
 
-#include <SDL2/SDL_video.h>
 #include <SDL2/SDL_opengl.h>
 
 #include <Objectively/MutableArray.h>
@@ -33,6 +32,9 @@
 /**
  * @file
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
+ * @details This class provides an OpenGL 1.x implementation of the RendererInterface. Applications
+ * may extend this class and provide an implementation that meets their own OpenGL version
+ * requirements.
  */
 
 typedef struct Renderer Renderer;
@@ -40,6 +42,9 @@ typedef struct RendererInterface RendererInterface;
 
 /**
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
+ * @details This class provides an OpenGL 1.x implementation of the RendererInterface. Applications
+ * may extend this class and provide an implementation that meets their own OpenGL version
+ * requirements.
  * @extends Object
  */
 struct Renderer {
@@ -81,17 +86,17 @@ struct RendererInterface {
 	void (*addView)(Renderer *self, View *view);
 
 	/**
-	 * @fn void Renderer::beginFrame(const Renderer *self)
+	 * @fn void Renderer::beginFrame(Renderer *self)
 	 * @brief Sets up OpenGL state.
 	 * @param self The Renderer.
 	 * @remarks This method is called by the WindowController to begin rendering. Override this 
 	 * method for custom OpenGL state setup, if desired.
 	 * @memberof Renderer
 	 */
-	void (*beginFrame)(const Renderer *self);
+	void (*beginFrame)(Renderer *self);
 
 	/**
-	 * @fn void Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
+	 * @fn GLuint Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
 	 * @brief Generates and binds to an OpenGL texture object, uploading the given surface.
 	 * @param self The Renderer.
 	 * @param surface The surface.
@@ -110,14 +115,14 @@ struct RendererInterface {
 	void (*drawLine)(const Renderer *self, const SDL_Point *points);
 
 	/**
-	 * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, GLuint count)
+	 * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
 	 * @brief Draws line segments between adjacent points using `GL_LINE_STRIP`.
 	 * @param self The Renderer.
 	 * @param points The points.
 	 * @param count The length of points.
 	 * @memberof Renderer
 	 */
-	void (*drawLines)(const Renderer *self, const SDL_Point *points, GLuint count);
+	void (*drawLines)(const Renderer *self, const SDL_Point *points, size_t count);
 
 	/**
 	 * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
@@ -127,6 +132,15 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	void (*drawRect)(const Renderer *self, const SDL_Rect *rect);
+
+	/**
+	 * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
+	 * @brief Fills a rectangle using `glRecti`.
+	 * @param self The Renderer.
+	 * @param rect The rectangle.
+	 * @memberof Renderer
+	 */
+	void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect);
 
 	/**
 	 * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
@@ -146,18 +160,10 @@ struct RendererInterface {
 	 * method for custom OpenGL state teardown, if desired.
 	 * @memberof Renderer
 	 */
-	void (*endFrame)(const Renderer *self);
+	void (*endFrame)(Renderer *self);
 
 	/**
-	 * @fn void Renderer::fillRect(const Renderer *self, const SDL_Rect *rect)
-	 * @brief Fills a rectangle using `glRecti`.
-	 * @param self The Renderer.
-	 * @param rect The rectangle.
-	 * @memberof Renderer
-	 */
-	void (*fillRect)(const Renderer *self, const SDL_Rect *rect);
-
-	/**
+	 * @protected
 	 * @fn Renderer *Renderer::init(Renderer *self)
 	 * @brief Initializes this Renderer.
 	 * @param self The Renderer.
@@ -173,6 +179,33 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	void (*render)(Renderer *self);
+
+	/**
+	 * @fn void Renderer::renderDeviceDidReset(Renderer *self)
+	 * @brief This method is invoked when the render context is invalidated.
+	 * @param self The Renderer.
+	 * @memberof Renderer
+	 */
+	void (*renderDeviceDidReset)(Renderer *self);
+
+	/**
+	 * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)
+	 * @brief Sets the clipping frame for draw operations.
+	 * @details Primitives which fall outside of the clipping frame will not be visible.
+	 * @param self The Renderer.
+	 * @param clippingFrame The clipping frame, or `NULL` to disable clipping.
+	 * @memberof Renderer
+	 */
+	void (*setClippingFrame)(Renderer *self, const SDL_Rect *clippingFrame);
+
+	/**
+	 * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
+	 * @brief Sets the primary color for drawing operations.
+	 * @param self The Renderer.
+	 * @param color The color.
+	 * @memberof Renderer
+	 */
+	void (*setDrawColor)(Renderer *self, const SDL_Color *color);
 };
 
 /**

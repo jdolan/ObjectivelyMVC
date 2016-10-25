@@ -1,7 +1,7 @@
 ObjectivelyMVC Documentation {#index}
 ===
 
-Object oriented MVC framework for OpenGL, SDL2 and GNU C
+Cross-platform object oriented MVC framework for OpenGL, SDL2 and GNU C
 ---
 
 ObjectivelyMVC is a user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by 
@@ -12,6 +12,10 @@ video games that are already using SDL2. It is written in [GNU C](http://www.gnu
 
 Features
 ---
+### Cross platform
+
+_Wait, `gcc` or `clang`? Is this a Linux-only framework?_ Not at all. ObjectivelyMVC supports Windows XP and later, Apple OS X, and Linux. Support for other Unix derivatives is likely there, but untested. To build ObjectivelyMVC for Windows, you can use either MinGW-w64 (cross-compile or native), or recent [Visual Studio 15](https://www.visualstudio.com/) Previews, which include Clang.
+
 ### Object-oriented Model-View-Controller implementation in C
 
 ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight Object-oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you're' using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.

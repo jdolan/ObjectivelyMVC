@@ -134,6 +134,17 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 }
 
 /**
+ * @fn void ViewController::renderDeviceDidReset(ViewController *self)
+ * @memberof ViewController
+ */
+static void renderDeviceDidReset(ViewController *self) {
+
+	if (self->view) {
+		$(self->view, renderDeviceDidReset);
+	}
+}
+
+/**
  * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
  * @memberof ViewController
  */
@@ -158,6 +169,7 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
 	((ViewControllerInterface *) clazz->def->interface)->loadViewIfNeeded = loadViewIfNeeded;
 	((ViewControllerInterface *) clazz->def->interface)->moveToParentViewController = moveToParentViewController;
+	((ViewControllerInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 }
 

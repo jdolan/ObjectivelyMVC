@@ -19,7 +19,7 @@
 
 #include <SDL2/SDL_video.h>
 
-#include <Objectively/Data.h>
+#include <Objectively/Resource.h>
 
 /**
  * @file
@@ -63,6 +63,17 @@ struct ImageInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @fn Image *Image::initWithBytes(Image *self, const uint8_t *bytes, size_t length)
+	 * @brief Initializes this Image with the specified bytes.
+	 * @param self The Image.
+	 * @param bytes The raw image bytes.
+	 * @param length The length of `bytes`.
+	 * @return The initialized Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*initWithBytes)(Image *self, const uint8_t *bytes, size_t length);
+
+	/**
 	 * @fn Image *Image::initWithData(Image *self, const Data *data)
 	 * @brief Initializes this Image with the specified Data.
 	 * @param self The Image.
@@ -70,19 +81,27 @@ struct ImageInterface {
 	 * @return The initialized Image, or `NULL` on error.
 	 * @memberof Image
 	 */
-	Image *(*initWithData)(Image *image, const Data *data);
+	Image *(*initWithData)(Image *self, const Data *data);
 
 	/**
 	 * @fn Image *Image::initWithName(Image *self, const char *name)
-	 * @brief Initializes this Image, loading it from disk by the given name.
+	 * @brief Initializes this Image, loading the Resource by the given name.
 	 * @param self The Image.
 	 * @param name The image name.
 	 * @return The initialized Image, or `NULL` on error.
-	 * @remarks The image search path defaults to `PKGDATADIR`, e.g. `$prefix/share/ObjectivelyMVC`.
-	 * If set, the environment variable `OBJECTIVELYMVC_DATA_DIR` will override this behavior.
 	 * @memberof Image
 	 */
 	Image *(*initWithName)(Image *self, const char *name);
+
+	/**
+	 * @fn Image *Image::initWithResource(Image *self, const Resource *resource)
+	 * @brief Initializes this Image with the specified Resource.
+	 * @param self The Image.
+	 * @param resource The Resource containing the image data.
+	 * @return The initialized Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*initWithResource)(Image *self, const Resource *resource);
 
 	/**
 	 * @fn Image *Image::initWithSurface(Image *self, SDL_Surface *surface)

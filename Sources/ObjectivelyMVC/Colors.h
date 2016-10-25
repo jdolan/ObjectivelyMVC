@@ -196,6 +196,3 @@ extern const struct _Colors {
 	SDL_Color Yellow;
 	SDL_Color YellowGreen;
 } Colors;
-
-#define SetColor(c) \
-	glColor4ubv((const GLubyte *) &c)

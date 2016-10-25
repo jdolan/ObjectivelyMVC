@@ -54,11 +54,6 @@ struct ImageView {
 	ImageViewInterface *interface;
 
 	/**
-	 * @brief The alpha.
-	 */
-	GLfloat alpha;
-
-	/**
 	 * @brief The blend function.
 	 */
 	struct {
