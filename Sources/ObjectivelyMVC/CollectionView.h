@@ -98,7 +98,7 @@ struct CollectionViewDelegate {
 
 /**
  * @brief CollectionViews display items in a grid.
- * @extends View
+ * @extends Control
  * @ingroup CollectionViews
  */
 struct CollectionView {
