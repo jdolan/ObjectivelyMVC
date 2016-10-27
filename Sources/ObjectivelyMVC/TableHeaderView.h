@@ -37,7 +37,7 @@ typedef struct TableHeaderViewInterface TableHeaderViewInterface;
 
 /**
  * @brief Header rows for TableViews.
- * @extends View
+ * @extends TableRowView
  * @ingroup Tables
  */
 struct TableHeaderView {
