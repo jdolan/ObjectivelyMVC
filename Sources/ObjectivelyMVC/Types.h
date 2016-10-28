@@ -31,11 +31,6 @@
  * @brief ObjectivelyMVC base types.
  */
 
-/**
- * @brief Undefine interface for MinGW-64 / Windows.
- */
-#undef interface
-
 typedef struct View View;
 
 typedef struct SDL_Size SDL_Size;
