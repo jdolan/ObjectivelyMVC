@@ -26,7 +26,7 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_pixels.h>
 
-#include <Objectively/Types.h>
+#undef interface
 
 /**
  * @file
@@ -38,7 +38,7 @@ typedef struct View View;
 typedef struct SDL_Size SDL_Size;
 
 /**
- * @brief The SDL_Size type.
+ * @brief The Size type.
  */
 struct SDL_Size {
 	int w, h;
