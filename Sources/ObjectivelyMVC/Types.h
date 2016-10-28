@@ -26,6 +26,8 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_pixels.h>
 
+#include <Objectively/Types.h>
+
 /**
  * @file
  * @brief ObjectivelyMVC base types.
@@ -36,7 +38,7 @@ typedef struct View View;
 typedef struct SDL_Size SDL_Size;
 
 /**
- * @brief The Size type.
+ * @brief The SDL_Size type.
  */
 struct SDL_Size {
 	int w, h;
