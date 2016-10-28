@@ -40,7 +40,7 @@ typedef struct Select Select;
 typedef struct SelectInterface SelectInterface;
 
 /**
- * @brief The SelectDelegate protocol.
+ * @brief The Select delegate protocol.
  */
 struct SelectDelegate {
 	
