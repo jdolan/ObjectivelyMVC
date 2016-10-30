@@ -61,7 +61,7 @@ struct TableViewDataSource {
 	 * @param row The row.
 	 * @return The value for the cell at the given column and row.
 	 */
-	ident (*valueForColumnAndRow)(const TableView *tableView, const TableColumn *column, int row);
+	ident (*valueForColumnAndRow)(const TableView *tableView, const TableColumn *column, size_t row);
 };
 
 /**
@@ -76,7 +76,7 @@ struct TableViewDelegate {
 	 * @param row The row.
 	 * @return The cell for the given column and row.
 	 */
-	TableCellView *(*cellForColumnAndRow)(const TableView *tableView, const TableColumn *column, int row);
+	TableCellView *(*cellForColumnAndRow)(const TableView *tableView, const TableColumn *column, size_t row);
 
 	/**
 	 * @brief Called by the TableView when the row selection changes.
@@ -216,13 +216,13 @@ struct TableViewInterface {
 	void (*deselectAll)(TableView *self);
 
 	/**
-	 * @fn void TableView::deselectRowAtIndex(TableView *self, int index)
+	 * @fn void TableView::deselectRowAtIndex(TableView *self, size_t index)
 	 * @brief Deselects the row at the given index.
 	 * @param self The TableView.
 	 * @param index The index of the row to deselect.
 	 * @memberof TableView
 	 */
-	void (*deselectRowAtIndex)(TableView *self, int index);
+	void (*deselectRowAtIndex)(TableView *self, size_t index);
 
 	/**
 	 * @fn void TableView::deselectItemsAtIndexSets(TableView *self, const IndexSet *indexSet)
@@ -270,7 +270,7 @@ struct TableViewInterface {
 	 * @return The row index at the specified point, or `-1` if none.
 	 * @memberof TableView
 	 */
-	int (*rowAtPoint)(const TableView *self, const SDL_Point *point);
+	ssize_t (*rowAtPoint)(const TableView *self, const SDL_Point *point);
 
 	/**
 	 * @fn SDL_Rect TableView::scrollableArea(const TableView *self)
@@ -297,13 +297,13 @@ struct TableViewInterface {
 	IndexSet *(*selectedRowIndexes)(const TableView *self);
 
 	/**
-	 * @fn void TableView::selectRowAtIndex(TableView *self, int index)
+	 * @fn void TableView::selectRowAtIndex(TableView *self, size_t index)
 	 * @brief Selects the row at the given index.
 	 * @param self The TableView.
 	 * @param index The index of the row to select.
 	 * @memberof TableView
 	 */
-	void (*selectRowAtIndex)(TableView *self, int index);
+	void (*selectRowAtIndex)(TableView *self, size_t index);
 
 	/**
 	 * @fn void TableView::selectRowsAtIndexes(TableView *self, const IndexSet *indexes)

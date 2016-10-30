@@ -84,10 +84,10 @@ static size_t numberOfRows(const TableView *tableView) {
 /**
  * @see TableViewDataSource::valueForColumnAndRow
  */
-static ident valueForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
+static ident valueForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
 
 	const Array *columns = (Array *) tableView->columns;
-	const int col = $(columns, indexOfObject, (ident) column);
+	const size_t col = $(columns, indexOfObject, (ident) column);
 
 	return (ident) (intptr_t) (columns->count * row + col);
 }
@@ -97,7 +97,7 @@ static ident valueForColumnAndRow(const TableView *tableView, const TableColumn 
 /**
  * @see TableViewDelegate::cellForColumnAndRow
  */
-static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, int row) {
+static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
 	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
@@ -117,7 +117,7 @@ static Order comparator(const ident a, const ident b) {
 	const intptr_t p1 = (intptr_t) a;
 	const intptr_t p2 = (intptr_t) b;
 
-	return p1 - p2;
+	return (Order) (p1 - p2);
 }
 
 /**
@@ -156,7 +156,7 @@ static CollectionItemView *itemForObjectAtIndexPath(const CollectionView *collec
 	CollectionItemView *item = $(alloc(CollectionItemView), initWithFrame, NULL);
 
 	char text[64];
-	snprintf(text, sizeof(text), "%d", $(indexPath, indexAtPosition, 0));
+	snprintf(text, sizeof(text), "%zd", $(indexPath, indexAtPosition, 0));
 
 	$(item->text, setText, text);
 	return item;

@@ -277,7 +277,7 @@ static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_
  */
 static IndexPath *indexPathForItem(const CollectionView *self, const CollectionItemView *item) {
 
-	const int index = $((Array *) self->items, indexOfObject, (ident) item);
+	const ssize_t index = $((Array *) self->items, indexOfObject, (ident) item);
 	if (index > -1) {
 		return $(alloc(IndexPath), initWithIndex, index);
 	}
@@ -344,9 +344,9 @@ static CollectionItemView *itemAtIndexPath(const CollectionView *self, const Ind
 
 	if (indexPath) {
 		const Array *items = (Array *) self->items;
-		const int index = $(indexPath, indexAtPosition, 0);
+		const size_t index = $(indexPath, indexAtPosition, 0);
 
-		if (index > -1 && index < items->count) {
+		if (index < items->count) {
 			return $(items, objectAtIndex, index);
 		}
 	}

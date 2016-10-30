@@ -107,7 +107,7 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 		if (other && other->superview == self) {
 
 			const Array *subviews = (Array *) self->subviews;
-			const int index = $(subviews, indexOfObject, other);
+			const ssize_t index = $(subviews, indexOfObject, other);
 
 			if (position == ViewPositionAfter) {
 				if (index == subviews->count - 1) {

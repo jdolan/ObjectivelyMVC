@@ -56,7 +56,7 @@ static void dealloc(Object *self) {
  */
 static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
 
-	SDL_RWops *ops = SDL_RWFromConstMem(bytes, length);
+	SDL_RWops *ops = SDL_RWFromConstMem(bytes, (int) length);
 	if (ops) {
 		self = $(self, initWithSurface, IMG_Load_RW(ops, 0));
 		if (self) {

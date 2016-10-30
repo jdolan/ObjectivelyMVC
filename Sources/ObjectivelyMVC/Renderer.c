@@ -128,7 +128,8 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
 	assert(points);
 
 	glVertexPointer(2, GL_INT, 0, points);
-	glDrawArrays(GL_LINE_STRIP, 0, count);
+	
+	glDrawArrays(GL_LINE_STRIP, 0, (GLsizei) count);
 }
 
 /**

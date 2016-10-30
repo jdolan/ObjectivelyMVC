@@ -182,7 +182,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 					.y = event->button.y
 				};
 
-				const int index = $(this, rowAtPoint, &point);
+				const ssize_t index = $(this, rowAtPoint, &point);
 
 				const Array *rows = (Array *) this->rows;
 				if (index > -1 && index < rows->count) {
@@ -306,13 +306,13 @@ static void deselectAll(TableView *self) {
 }
 
 /**
- * @fn void TableView::deselectRowAtIndex(TableView *self, int index)
+ * @fn void TableView::deselectRowAtIndex(TableView *self, size_t index)
  * @memberof TableView
  */
-static void deselectRowAtIndex(TableView *self, int index) {
+static void deselectRowAtIndex(TableView *self, size_t index) {
 
 	const Array *rows = (Array *) self->rows;
-	if (index > -1 && index < rows->count) {
+	if (index < rows->count) {
 
 		TableRowView *row = $(rows, objectAtIndex, index);
 		$(row, setSelected, false);
@@ -404,8 +404,8 @@ static Order reloadData_sortRows(const ident a, const ident b) {
 	if (column->comparator) {
 		const Array *rows = (Array *) _sortTableView->rows;
 
-		const int row1 = $(rows, indexOfObject, a);
-		const int row2 = $(rows, indexOfObject, b);
+		const size_t row1 = $(rows, indexOfObject, a);
+		const size_t row2 = $(rows, indexOfObject, b);
 
 		const ident value1 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row1);
 		const ident value2 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row2);
@@ -505,10 +505,10 @@ static void removeColumn(TableView *self, TableColumn *column) {
 }
 
 /**
- * @fn int TableView::rowAtPoint(const TableView *self, const SDL_Point *point)
+ * @fn ssize_t TableView::rowAtPoint(const TableView *self, const SDL_Point *point)
  * @memberof TableView
  */
-static int rowAtPoint(const TableView *self, const SDL_Point *point) {
+static ssize_t rowAtPoint(const TableView *self, const SDL_Point *point) {
 
 	if (self->rowHeight) {
 		const SDL_Rect contentFrame = $((View *) self->contentView, renderFrame);
@@ -559,7 +559,7 @@ static void selectAll(TableView *self) {
  */
 static IndexSet *selectedRowIndexes(const TableView *self) {
 
-	int indexes[self->rows->array.count];
+	size_t indexes[self->rows->array.count];
 	size_t count = 0;
 
 	const Array *rows = (Array *) self->rows;
@@ -567,7 +567,6 @@ static IndexSet *selectedRowIndexes(const TableView *self) {
 
 		const TableRowView *row = $(rows, objectAtIndex, i);
 		if (row->isSelected) {
-
 			indexes[count++] = i;
 		}
 	}
@@ -576,13 +575,13 @@ static IndexSet *selectedRowIndexes(const TableView *self) {
 }
 
 /**
- * @fn void TableView::selectRowAtIndex(TableView *self, int index)
+ * @fn void TableView::selectRowAtIndex(TableView *self, size_t index)
  * @memberof TableView
  */
-static void selectRowAtIndex(TableView *self, int index) {
+static void selectRowAtIndex(TableView *self, size_t index) {
 
 	const Array *rows = (Array *) self->rows;
-	if (index > -1 && index < rows->count) {
+	if (index < rows->count) {
 
 		TableRowView *row = $(rows, objectAtIndex, index);
 		$(row, setSelected, true);
