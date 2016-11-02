@@ -89,7 +89,7 @@ struct TableViewDelegate {
 
 #define DEFAULT_TABLE_VIEW_PADDING 4
 #define DEFAULT_TABLE_VIEW_CELL_SPACING 2
-#define DEFAULT_TABLE_VIEW_ROW_HEIGHT 20
+#define DEFAULT_TABLE_VIEW_ROW_HEIGHT 24
 
 /**
  * @brief TableViews provide sortable, tabular presentations of data.
