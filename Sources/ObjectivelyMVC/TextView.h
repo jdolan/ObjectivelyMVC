@@ -52,24 +52,21 @@ struct TextViewDelegate {
 
 	/**
 	 * @brief Delegate callback for initiating text editing.
-	 * @param self The delegate.
 	 * @param textView The TextView.
 	 */
-	void (*didBeginEditing)(ident self, TextView *textView);
+	void (*didBeginEditing)(TextView *textView);
 	
 	/**
 	 * @brief Delegate callback for text input events.
-	 * @param self The delegate.
 	 * @param textView The TextView.
 	 */
-	void (*didEdit)(ident self, TextView *textView);
+	void (*didEdit)(TextView *textView);
 	
 	/**
 	 * @brief Delegate callback for finalizing text editing.
-	 * @param self The delegate.
 	 * @param textView The TextView.
 	 */
-	void (*didEndEditing)(ident self, TextView *textView);
+	void (*didEndEditing)(TextView *textView);
 };
 
 /**

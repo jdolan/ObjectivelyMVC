@@ -50,7 +50,7 @@ static void checkboxAction(Control *control, const SDL_Event *event, ident sende
 /**
  * @see TextViewDelegate::didEndEditing
  */
-static void didEndEditing(ident self, TextView *textView) {
+static void didEndEditing(TextView *textView) {
 	printf("%s: %s\n", __func__, textView->attributedText->string.chars);
 }
 
@@ -59,7 +59,7 @@ static void didEndEditing(ident self, TextView *textView) {
 /**
  * @see SelectDelegate::didSelectOption
  */
-static void didSelectOption(ident self, Select *select, Option *option) {
+static void didSelectOption(Select *select, Option *option) {
 	printf("%s: %s\n", __func__, option->title->text);
 }
 
@@ -68,7 +68,7 @@ static void didSelectOption(ident self, Select *select, Option *option) {
 /**
  * @see SliderDelegate::didSetValue
  */
-static void didSetValue(ident self, Slider *slider) {
+static void didSetValue(Slider *slider) {
 	printf("%s: %.1f\n", __func__, slider->value);
 }
 
@@ -77,14 +77,14 @@ static void didSetValue(ident self, Slider *slider) {
 /**
  * @see TableViewDataSource::numberOfRows
  */
-static size_t numberOfRows(ident self, const TableView *tableView) {
+static size_t numberOfRows(const TableView *tableView) {
 	return 3;
 }
 
 /**
  * @see TableViewDataSource::valueForColumnAndRow
  */
-static ident valueForColumnAndRow(ident self, const TableView *tableView, const TableColumn *column, size_t row) {
+static ident valueForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
 
 	const Array *columns = (Array *) tableView->columns;
 	const size_t col = $(columns, indexOfObject, (ident) column);
@@ -97,10 +97,10 @@ static ident valueForColumnAndRow(ident self, const TableView *tableView, const 
 /**
  * @see TableViewDelegate::cellForColumnAndRow
  */
-static TableCellView *cellForColumnAndRow(ident self, const TableView *tableView, const TableColumn *column, size_t row) {
+static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
-	const intptr_t value = (intptr_t) valueForColumnAndRow(self, tableView, column, row);
+	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
 
 	char text[8];
 	snprintf(text, sizeof(text), "%zd", value);
@@ -123,7 +123,7 @@ static Order comparator(const ident a, const ident b) {
 /**
  * @see TableViewDelegate::didSelectRowsAtIndexes
  */
-static void didSelectRowsAtIndexes(ident self, TableView *tableView, const IndexSet *indexes) {
+static void didSelectRowsAtIndexes(TableView *tableView, const IndexSet *indexes) {
 
 	String *string = $((Object *) indexes, description);
 	printf("%s %s\n", __func__, string->chars);
@@ -135,14 +135,14 @@ static void didSelectRowsAtIndexes(ident self, TableView *tableView, const Index
 /**
  * @see CollectionViewDataSource::numberOfItems
  */
-static size_t numberOfItems(ident self, const CollectionView *collectionView) {
+static size_t numberOfItems(const CollectionView *collectionView) {
 	return 24;
 }
 
 /**
  * @see CollectionViewDataSource::objectForItemAtIndexPath
  */
-static ident objectForItemAtIndexPath(ident self, const CollectionView *collectionView, const IndexPath *indexPath) {
+static ident objectForItemAtIndexPath(const CollectionView *collectionView, const IndexPath *indexPath) {
 	return (ident) (intptr_t) $(indexPath, indexAtPosition, 0);
 }
 
@@ -151,7 +151,7 @@ static ident objectForItemAtIndexPath(ident self, const CollectionView *collecti
 /**
  * @see CollectionViewDelegate::itemForObjectAtIndexPath
  */
-static CollectionItemView *itemForObjectAtIndexPath(ident self, const CollectionView *collectionView, const IndexPath *indexPath) {
+static CollectionItemView *itemForObjectAtIndexPath(const CollectionView *collectionView, const IndexPath *indexPath) {
 
 	CollectionItemView *item = $(alloc(CollectionItemView), initWithFrame, NULL);
 
@@ -165,7 +165,7 @@ static CollectionItemView *itemForObjectAtIndexPath(ident self, const Collection
 /**
  * @see CollectionViewDelegate::didModifySelection
  */
-static void didModifySelection(ident self, CollectionView *collectionView, const Array *selectionIndexPaths) {
+static void didModifySelection(CollectionView *collectionView, const Array *selectionIndexPaths) {
 
 	String *string = $(selectionIndexPaths, componentsJoinedByCharacters, ", ");
 	printf("%s: %s\n", __func__, string->chars);

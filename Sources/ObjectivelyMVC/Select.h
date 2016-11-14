@@ -51,11 +51,10 @@ struct SelectDelegate {
 	
 	/**
 	 * @brief Called when a selection is made.
-	 * @param self The delegate.
 	 * @param select The Select.
 	 * @param option The selected Option.
 	 */
-	void (*didSelectOption)(ident self, Select *select, Option *option);
+	void (*didSelectOption)(Select *select, Option *option);
 };
 
 /**

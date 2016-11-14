@@ -61,21 +61,18 @@ struct CollectionViewDataSource {
 	ident self;
 
 	/**
-	 * @brief Called by the CollectionView to determine the number of items in the collection.
-	 * @param self The data source.
 	 * @param collectionView The CollectionView.
 	 * @return The number of items in the CollectionView.
 	 */
-	size_t (*numberOfItems)(ident self, const CollectionView *collectionView);
+	size_t (*numberOfItems)(const CollectionView *collectionView);
 
 	/**
 	 * @brief Called by the CollectionView for the associated object of an item.
-	 * @param self The data source.
 	 * @param collectionView The CollectionView.
 	 * @param indexPath The index path.
 	 * @return The object for the item at the given index path.
 	 */
-	ident (*objectForItemAtIndexPath)(ident self, const CollectionView *collectionView, const IndexPath *indexPath);
+	ident (*objectForItemAtIndexPath)(const CollectionView *collectionView, const IndexPath *indexPath);
 };
 
 /**
@@ -90,21 +87,19 @@ struct CollectionViewDelegate {
 
 	/**
 	 * @brief Called by the CollectionView when items are selected or deselected.
-	 * @param self The delegate.
 	 * @param collectionView The CollectionView.
 	 * @param selectionIndexPaths The index paths of the current selection.
 	 * @remarks This function is optional.
 	 */
-	void (*didModifySelection)(ident self, CollectionView *collectionView, const Array *selectionIndexPaths);
+	void (*didModifySelection)(CollectionView *collectionView, const Array *selectionIndexPaths);
 
 	/**
 	 * @brief Called by the CollectionView to instantiate items.
-	 * @param self The delegate.
 	 * @param collectionView The CollectionView.
 	 * @param indexPath The index path.
 	 * @return The item for the index path.
 	 */
-	CollectionItemView *(*itemForObjectAtIndexPath)(ident self, const CollectionView *collectionView, const IndexPath *indexPath);
+	CollectionItemView *(*itemForObjectAtIndexPath)(const CollectionView *collectionView, const IndexPath *indexPath);
 };
 
 #define DEAFULT_COLLECTION_VIEW_PADDING 10
