@@ -144,7 +144,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 					self->state |= ControlStateFocused;
 					SDL_StartTextInput();
 					if (this->delegate.didBeginEditing) {
-						this->delegate.didBeginEditing(this);
+						this->delegate.didBeginEditing(this->delegate.self, this);
 					}
 				}
 				didCaptureEvent = true;
@@ -153,7 +153,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 					self->state &= ~ControlStateFocused;
 					SDL_StopTextInput();
 					if (this->delegate.didEndEditing) {
-						this->delegate.didEndEditing(this);
+						this->delegate.didEndEditing(this->delegate.self, this);
 					}
 				}
 			}
@@ -184,7 +184,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 						self->state &= ~ControlStateFocused;
 						SDL_StopTextInput();
 						if (this->delegate.didEndEditing) {
-							this->delegate.didEndEditing(this);
+							this->delegate.didEndEditing(this->delegate.self, this);
 						}
 						break;
 						
@@ -275,7 +275,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		
 		if (didEdit) {
 			if (this->delegate.didEdit) {
-				this->delegate.didEdit(this);
+				this->delegate.didEdit(this->delegate.self, this);
 			}
 		}
 	}

@@ -50,18 +50,26 @@ typedef struct TableViewInterface TableViewInterface;
 struct TableViewDataSource {
 
 	/**
-	 * @return The number of rows in the table.
+	 * @brief The data source self-reference.
 	 */
-	size_t (*numberOfRows)(const TableView *tableView);
+	ident self;
+
+	/**
+	 * @return The number of rows in the TableView.
+	 * @param self The data source.
+	 * @param tableView The TableView.
+	 */
+	size_t (*numberOfRows)(ident self, const TableView *tableView);
 
 	/**
 	 * @brief Called by the TableView for the associated value of a cell.
-	 * @param tableView The table.
+	 * @param self The data source.
+	 * @param tableView The TableView.
 	 * @param colum The column.
-	 * @param row The row.
-	 * @return The value for the cell at the given column and row.
+	 * @param row The row number.
+	 * @return The value for the cell at the given column and row number.
 	 */
-	ident (*valueForColumnAndRow)(const TableView *tableView, const TableColumn *column, size_t row);
+	ident (*valueForColumnAndRow)(ident self, const TableView *tableView, const TableColumn *column, size_t row);
 };
 
 /**
@@ -70,21 +78,28 @@ struct TableViewDataSource {
 struct TableViewDelegate {
 
 	/**
-	 * @brief Called by the TableView to instantiate cells.
-	 * @param tableView The table.
-	 * @param colum The column.
-	 * @param row The row.
-	 * @return The cell for the given column and row.
+	 * @brief The delegate self-reference.
 	 */
-	TableCellView *(*cellForColumnAndRow)(const TableView *tableView, const TableColumn *column, size_t row);
+	ident self;
+
+	/**
+	 * @brief Called by the TableView to instantiate cells.
+	 * @param self The delegate.
+	 * @param tableView The TableView.
+	 * @param column The TableColumn.
+	 * @param row The row number.
+	 * @return The cell for the given column and row number.
+	 */
+	TableCellView *(*cellForColumnAndRow)(ident self, const TableView *tableView, const TableColumn *column, size_t row);
 
 	/**
 	 * @brief Called by the TableView when the row selection changes.
+	 * @param self The delegate.
 	 * @param tableView The table.
 	 * @param selectedRowIndexes The indexes of the selected rows.
 	 * @remarks This function is optional.
 	 */
-	void (*didSelectRowsAtIndexes)(TableView *tableView, const IndexSet *selectedRowIndexes);
+	void (*didSelectRowsAtIndexes)(ident self, TableView *tableView, const IndexSet *selectedRowIndexes);
 };
 
 #define DEFAULT_TABLE_VIEW_PADDING 4

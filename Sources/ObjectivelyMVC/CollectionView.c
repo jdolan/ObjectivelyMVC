@@ -164,10 +164,12 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							break;
 					}
 
-					if (this->delegate.didModifySelection) {
+					CollectionViewDelegate *delegate = &this->delegate;
+
+					if (delegate->didModifySelection) {
 						Array *selectionIndexPaths = $(this, selectionIndexPaths);
 
-						this->delegate.didModifySelection(this, selectionIndexPaths);
+						delegate->didModifySelection(delegate->self, this, selectionIndexPaths);
 
 						release(selectionIndexPaths);
 					}
@@ -367,18 +369,21 @@ static void reloadData_removeItems(const Array *array, ident obj, ident data) {
  */
 static void reloadData(CollectionView *self) {
 
-	assert(self->dataSource.numberOfItems);
-	assert(self->delegate.itemForObjectAtIndexPath);
+	CollectionViewDataSource *dataSource = &self->dataSource;
+	CollectionViewDelegate *delegate = &self->delegate;
+
+	assert(dataSource->numberOfItems);
+	assert(delegate->itemForObjectAtIndexPath);
 
 	$((Array *) self->items, enumerateObjects, reloadData_removeItems, self->contentView);
 	$(self->items, removeAllObjects);
 
-	const size_t numberOfItems = self->dataSource.numberOfItems(self);
+	const size_t numberOfItems = dataSource->numberOfItems(dataSource->self, self);
 	for (size_t i = 0; i < numberOfItems; i++) {
 
 		IndexPath *indexPath = $(alloc(IndexPath), initWithIndex, i);
 
-		CollectionItemView *item = self->delegate.itemForObjectAtIndexPath(self, indexPath);
+		CollectionItemView *item = delegate->itemForObjectAtIndexPath(delegate->self, self, indexPath);
 		assert(item);
 		
 		$(self->items, addObject, item);

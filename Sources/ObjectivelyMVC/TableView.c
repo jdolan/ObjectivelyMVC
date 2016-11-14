@@ -212,10 +212,12 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							break;
 					}
 
-					if (this->delegate.didSelectRowsAtIndexes) {
+					TableViewDelegate *delegate = &this->delegate;
+
+					if (delegate->didSelectRowsAtIndexes) {
 						IndexSet *selectedRowIndexes = $(this, selectedRowIndexes);
 
-						this->delegate.didSelectRowsAtIndexes(this, selectedRowIndexes);
+						delegate->didSelectRowsAtIndexes(delegate->self, this, selectedRowIndexes);
 						
 						release(selectedRowIndexes);
 					}
@@ -407,8 +409,10 @@ static Order reloadData_sortRows(const ident a, const ident b) {
 		const size_t row1 = $(rows, indexOfObject, a);
 		const size_t row2 = $(rows, indexOfObject, b);
 
-		const ident value1 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row1);
-		const ident value2 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row2);
+		TableViewDataSource *ds = &_sortTableView->dataSource;
+
+		const ident value1 = ds->valueForColumnAndRow(ds->self, _sortTableView, column, row1);
+		const ident value2 = ds->valueForColumnAndRow(ds->self, _sortTableView, column, row2);
 
 		switch (column->order) {
 			case OrderAscending:
@@ -436,8 +440,11 @@ static void reloadData_addRows(const Array *array, ident obj, ident data) {
  */
 static void reloadData(TableView *self) {
 
-	assert(self->dataSource.numberOfRows);
-	assert(self->delegate.cellForColumnAndRow);
+	TableViewDataSource *dataSource = &self->dataSource;
+	TableViewDelegate *delegate = &self->delegate;
+
+	assert(dataSource->numberOfRows);
+	assert(delegate->cellForColumnAndRow);
 
 	$((Array *) self->rows, enumerateObjects, reloadData_removeRows, self->contentView);
 	$(self->rows, removeAllObjects);
@@ -452,7 +459,7 @@ static void reloadData(TableView *self) {
 		$(headerView, addCell, (TableCellView *) column->headerCell);
 	}
 
-	const size_t numberOfRows = self->dataSource.numberOfRows(self);
+	const size_t numberOfRows = dataSource->numberOfRows(dataSource->self, self);
 	for (size_t i = 0; i < numberOfRows; i++) {
 
 		TableRowView *row = $(alloc(TableRowView), initWithTableView, self);
@@ -464,7 +471,7 @@ static void reloadData(TableView *self) {
 		for (size_t j = 0; j < columns->count; j++) {
 			const TableColumn *column = $(columns, objectAtIndex, j);
 
-			TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i);
+			TableCellView *cell = delegate->cellForColumnAndRow(delegate->self, self, column, i);
 			assert(cell);
 
 			$(row, addCell, cell);

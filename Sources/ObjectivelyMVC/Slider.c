@@ -241,7 +241,7 @@ static void setValue(Slider *self, double value) {
 		$((Text *) self->label, setText, text);
 
 		if (self->delegate.didSetValue) {
-			self->delegate.didSetValue(self);
+			self->delegate.didSetValue(self->delegate.self, self);
 		}
 	}
 }

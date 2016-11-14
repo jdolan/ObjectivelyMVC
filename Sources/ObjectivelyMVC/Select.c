@@ -144,7 +144,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				if ($((View *) option, didReceiveEvent, event)) {
 					this->selectedOption = option;
 					if (this->delegate.didSelectOption) {
-						this->delegate.didSelectOption(this, option);
+						this->delegate.didSelectOption(this->delegate.self, this, option);
 					}
 					return true;
 				}
