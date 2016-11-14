@@ -43,6 +43,11 @@ typedef struct SelectInterface SelectInterface;
  * @brief The Select delegate protocol.
  */
 struct SelectDelegate {
+
+	/**
+	 * @brief The delegate self-reference.
+	 */
+	ident self;
 	
 	/**
 	 * @brief Called when a selection is made.
