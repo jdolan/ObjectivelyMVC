@@ -125,25 +125,27 @@ static void layoutSubviews(View *self) {
  */
 static _Bool controlReceivedEvent(const View *view, const SDL_Event *event) {
 
+	_Bool received = false;
 	Array *subviews = $(view, visibleSubviews);
 
 	for (size_t i = 0; i < subviews->count; i++) {
 
 		View *subview = $(subviews, objectAtIndex, i);
 		if (controlReceivedEvent(subview, event)) {
-			return true;
+			received = true;
+			break;
 		}
 
 		if ($((Object *) subview, isKindOfClass, &_Control)) {
 			if ($(subview, didReceiveEvent, event)) {
-				return true;
+				received = true;
+				break;
 			}
 		}
 	}
 
 	release(subviews);
-
-	return false;
+	return received;
 }
 
 /**
