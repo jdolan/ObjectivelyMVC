@@ -46,17 +46,25 @@ typedef struct TextViewInterface TextViewInterface;
 struct TextViewDelegate {
 
 	/**
+	 * @brief The delegate self-reference.
+	 */
+	ident self;
+
+	/**
 	 * @brief Delegate callback for initiating text editing.
+	 * @param textView The TextView.
 	 */
 	void (*didBeginEditing)(TextView *textView);
 	
 	/**
 	 * @brief Delegate callback for text input events.
+	 * @param textView The TextView.
 	 */
 	void (*didEdit)(TextView *textView);
 	
 	/**
 	 * @brief Delegate callback for finalizing text editing.
+	 * @param textView The TextView.
 	 */
 	void (*didEndEditing)(TextView *textView);
 };

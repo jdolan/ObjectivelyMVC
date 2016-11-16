@@ -47,7 +47,13 @@ typedef struct SliderInterface SliderInterface;
 struct SliderDelegate {
 
 	/**
+	 * @brief The delegate self-reference.
+	 */
+	ident self;
+
+	/**
 	 * @brief Delegate callback for Slider value modification.
+	 * @param slider The Slider.
 	 */
 	void (*didSetValue)(Slider *slider);
 };

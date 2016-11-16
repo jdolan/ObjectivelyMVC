@@ -41,9 +41,15 @@ typedef struct ScrollViewInterface ScrollViewInterface;
  * @brief The ScrollView delegate protocol.
  */
 struct ScrollViewDelegate {
+
+	/**
+	 * @brief The delegate self-reference.
+	 */
+	ident self;
 	
 	/**
 	 * @brief Delegate callback for view contents scrolling.
+	 * @param scrollView The ScrollView.
 	 */
 	void (*didScroll)(ScrollView *scrollView);
 };
