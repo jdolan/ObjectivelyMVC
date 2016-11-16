@@ -90,30 +90,6 @@ int main(int argc, char *argv[]) {
 }
 
 /**
- * @return The simulation time, in milliseconds.
- */
-static long getCurrentTime(void) {
-	static Date *start;
-	
-	if (start == NULL) {
-		start = $$(Date, date);
-	}
-
-	Date *date = $$(Date, date);
-
-	struct timeval delta;
-	delta.tv_sec = date->time.tv_sec - start->time.tv_sec;
-	delta.tv_usec = date->time.tv_usec - start->time.tv_usec;
-	
-	if (delta.tv_usec < 0) {
-		delta.tv_sec--;
-		delta.tv_usec += MSEC_PER_SEC;
-	}
-	
-	return delta.tv_sec * 1000.0 + delta.tv_usec / 1000.0;
-}
-
-/**
  * @brief Renders a rotating cube, demonstrating ObjectivelyMVC integrating with a vanilla SDL2 / 
  * OpenGL application.
  */
@@ -131,7 +107,7 @@ static void drawScene(SDL_Window *window) {
 
 	glPushMatrix();
 	
-	glRotatef(getCurrentTime() * 0.1, 1.0, 1.0, 1.0);
+	glRotatef(SDL_GetTicks() * 0.1, 1.0, 1.0, 1.0);
 
 	glEnable(GL_DEPTH_TEST);
 
