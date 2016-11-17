@@ -40,12 +40,12 @@ typedef struct LabelInterface LabelInterface;
 struct Label {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	View view;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	LabelInterface *interface;
@@ -62,7 +62,7 @@ struct Label {
 struct LabelInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
 

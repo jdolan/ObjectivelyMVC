@@ -110,12 +110,12 @@ struct TableViewDelegate {
 struct TableView {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Control control;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	TableViewInterface *interface;
@@ -187,7 +187,7 @@ struct TableView {
 struct TableViewInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ControlInterface controlInterface;
 

@@ -43,12 +43,12 @@ typedef struct ImageViewInterface ImageViewInterface;
 struct ImageView {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	View view;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	ImageViewInterface *interface;
@@ -82,7 +82,7 @@ struct ImageView {
 struct ImageViewInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
 

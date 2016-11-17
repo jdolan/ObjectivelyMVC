@@ -105,12 +105,12 @@ typedef struct ViewInterface ViewInterface;
 struct View {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Object object;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	ViewInterface *interface;
@@ -194,7 +194,7 @@ struct View {
 struct ViewInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ObjectInterface parentInterface;
 

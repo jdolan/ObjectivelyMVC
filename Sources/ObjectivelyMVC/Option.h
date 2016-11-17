@@ -44,12 +44,12 @@ typedef struct OptionInterface OptionInterface;
 struct Option {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	View view;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	OptionInterface *interface;
@@ -71,7 +71,7 @@ struct Option {
 struct OptionInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
 	

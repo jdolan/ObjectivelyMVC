@@ -43,12 +43,12 @@ typedef struct ButtonInterface ButtonInterface;
 struct Button {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Control control;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	ButtonInterface *interface;
@@ -65,7 +65,7 @@ struct Button {
 struct ButtonInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ControlInterface controlInterface;
 

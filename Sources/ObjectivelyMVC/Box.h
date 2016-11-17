@@ -48,12 +48,12 @@ typedef struct BoxInterface BoxInterface;
 struct Box {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	View view;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	BoxInterface *interface;
@@ -70,7 +70,7 @@ struct Box {
 struct BoxInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
 	

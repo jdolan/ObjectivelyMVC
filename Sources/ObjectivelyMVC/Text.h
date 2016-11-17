@@ -41,12 +41,12 @@ typedef struct TextInterface TextInterface;
 struct Text {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	View view;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	TextInterface *interface;
@@ -83,7 +83,7 @@ struct Text {
 struct TextInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
 

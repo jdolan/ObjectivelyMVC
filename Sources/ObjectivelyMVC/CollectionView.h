@@ -115,12 +115,12 @@ struct CollectionViewDelegate {
 struct CollectionView {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Control control;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	CollectionViewInterface *interface;
@@ -172,7 +172,7 @@ struct CollectionView {
 struct CollectionViewInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ControlInterface controlInterface;
 

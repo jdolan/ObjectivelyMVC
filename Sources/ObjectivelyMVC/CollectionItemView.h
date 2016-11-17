@@ -43,12 +43,12 @@ typedef struct CollectionItemViewInterface CollectionItemViewInterface;
 struct CollectionItemView {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	View view;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	CollectionItemViewInterface *interface;
@@ -75,7 +75,7 @@ struct CollectionItemView {
 struct CollectionItemViewInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
 	

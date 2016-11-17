@@ -63,12 +63,12 @@ typedef struct FontInterface FontInterface;
 struct Font {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Object object;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	FontInterface *interface;
@@ -90,7 +90,7 @@ struct Font {
 struct FontInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
 	

@@ -41,12 +41,12 @@ typedef struct TableHeaderCellViewInterface TableHeaderCellViewInterface;
 struct TableHeaderCellView {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	TableCellView tableCellView;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	TableHeaderCellViewInterface *interface;
@@ -58,7 +58,7 @@ struct TableHeaderCellView {
 struct TableHeaderCellViewInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	TableCellViewInterface tableCellViewInterface;
 	

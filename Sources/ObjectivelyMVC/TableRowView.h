@@ -44,12 +44,12 @@ typedef struct TableRowViewInterface TableRowViewInterface;
 struct TableRowView {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	StackView stackView;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	TableRowViewInterface *interface;
@@ -81,7 +81,7 @@ struct TableRowView {
 struct TableRowViewInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	StackViewInterface stackViewInterface;
 

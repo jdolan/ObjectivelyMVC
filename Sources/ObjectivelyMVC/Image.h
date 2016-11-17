@@ -36,12 +36,12 @@ typedef struct ImageInterface ImageInterface;
 struct Image {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Object object;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	ImageInterface *interface;
@@ -58,7 +58,7 @@ struct Image {
 struct ImageInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
 

@@ -53,12 +53,12 @@ typedef struct ViewControllerInterface ViewControllerInterface;
 struct ViewController {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Object object;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 */
 	ViewControllerInterface *interface;
 
@@ -84,7 +84,7 @@ struct ViewController {
 struct ViewControllerInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ObjectInterface parentInterface;
 	

@@ -49,12 +49,12 @@ typedef struct PanelInterface PanelInterface;
 struct Panel {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	StackView stackView;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	PanelInterface *interface;
@@ -113,7 +113,7 @@ struct Panel {
 struct PanelInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	StackViewInterface stackViewInterface;
 

@@ -45,12 +45,12 @@ typedef struct TableColumnInterface TableColumnInterface;
 struct TableColumn {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Object object;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	TableColumnInterface *interface;
@@ -102,7 +102,7 @@ struct TableColumn {
 struct TableColumnInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
 

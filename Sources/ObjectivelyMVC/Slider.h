@@ -66,12 +66,12 @@ struct SliderDelegate {
 struct Slider {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Control control;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	SliderInterface *interface;
@@ -124,7 +124,7 @@ struct Slider {
 struct SliderInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ControlInterface controlInterface;
 	

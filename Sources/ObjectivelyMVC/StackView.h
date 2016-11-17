@@ -68,12 +68,12 @@ typedef struct StackViewInterface StackViewInterface;
 struct StackView {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	View view;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	StackViewInterface *interface;
@@ -100,7 +100,7 @@ struct StackView {
 struct StackViewInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
 

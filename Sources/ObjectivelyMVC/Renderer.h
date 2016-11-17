@@ -50,12 +50,12 @@ typedef struct RendererInterface RendererInterface;
 struct Renderer {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Object object;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	RendererInterface *interface;
@@ -72,7 +72,7 @@ struct Renderer {
 struct RendererInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
 

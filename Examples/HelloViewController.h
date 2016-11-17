@@ -40,14 +40,14 @@ typedef struct HelloViewControllerInterface HelloViewControllerInterface;
 struct HelloViewController {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 *
 	 * @private
 	 */
 	ViewController viewController;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 *
 	 * @private
 	 */
@@ -100,7 +100,7 @@ struct HelloViewController {
 struct HelloViewControllerInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewControllerInterface viewControllerInterface;
 };

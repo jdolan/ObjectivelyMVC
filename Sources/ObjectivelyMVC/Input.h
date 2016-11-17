@@ -59,12 +59,12 @@ typedef struct InputInterface InputInterface;
 struct Input {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	StackView stackView;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	InputInterface *interface;
@@ -91,7 +91,7 @@ struct Input {
 struct InputInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	StackViewInterface viewInterface;
 	

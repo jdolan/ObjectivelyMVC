@@ -50,12 +50,12 @@ typedef void (*ActionFunction)(Control *control, const SDL_Event *event, ident s
 struct Action {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Object object;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	ActionInterface *interface;
@@ -87,7 +87,7 @@ struct Action {
 struct ActionInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
 

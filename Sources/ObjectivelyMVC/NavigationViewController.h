@@ -43,12 +43,12 @@ typedef struct NavigationViewControllerInterface NavigationViewControllerInterfa
 struct NavigationViewController {
 	
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	ViewController viewController;
 	
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	NavigationViewControllerInterface *interface;
@@ -60,7 +60,7 @@ struct NavigationViewController {
 struct NavigationViewControllerInterface {
 	
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewControllerInterface viewControllerInterface;
 	

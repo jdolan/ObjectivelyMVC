@@ -46,12 +46,12 @@ typedef struct CheckboxInterface CheckboxInterface;
 struct Checkbox {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	Control control;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	CheckboxInterface *interface;
@@ -74,7 +74,7 @@ struct Checkbox {
 struct CheckboxInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ControlInterface controltInterface;
 

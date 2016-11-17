@@ -94,12 +94,12 @@ typedef struct ControlInterface ControlInterface;
 struct Control {
 
 	/**
-	 * @brief The parent.
+	 * @brief The superclass.
 	 */
 	View view;
 
 	/**
-	 * @brief The typed interface.
+	 * @brief The interface.
 	 * @protected
 	 */
 	ControlInterface *interface;
@@ -137,7 +137,7 @@ struct Control {
 struct ControlInterface {
 
 	/**
-	 * @brief The parent interface.
+	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
 
