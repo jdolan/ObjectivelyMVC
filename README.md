@@ -1,6 +1,6 @@
 [![Build Status](http://ci.quetoo.org/buildStatus/icon?job=ObjectivelyMVC-Linux-x86_64)](http://ci.quetoo.org/job/ObjectivelyMVC-Linux-x86_64/)
 [![Zlib License](https://img.shields.io/badge/license-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
-![This software is PRE-ALPHA](https://img.shields.io/badge/development_stage-PRE_ALPHA-orange.svg)
+![This software is PRE-ALPHA](https://img.shields.io/badge/development_stage-ALPHA-yellow.svg)
 
 ObjectivelyMVC
 ===
