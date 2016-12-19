@@ -116,12 +116,12 @@ struct FontInterface {
 	 * @brief Initializes this Font with the given attributes.
 	 * @param self The Font.
 	 * @param family The font family.
-	 * @param ptsize The point size.
+	 * @param size The point size.
 	 * @param style The style (e.g. `TTF_STYLE_BOLD`).
 	 * @return The initialized Font, or `NULL` on error.
 	 * @memberof Font
 	 */
-	Font *(*initWithAttributes)(Font *self, const char *family, int ptsize, int style);
+	Font *(*initWithAttributes)(Font *self, const char *family, int size, int style);
 
 	/**
 	 * @fn Font *Font::initWithName(Font *self, const char *name)
@@ -154,6 +154,14 @@ struct FontInterface {
 	 * @memberof Font
 	 */
 	SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color);
+
+	/**
+	 * @fn void Font::renderDeviceDidReset(Font *self)
+	 * @brief This method should be invoked when the render context is invalidated.
+	 * @param self The Font.
+	 * @memberof Font
+	 */
+	void (*renderDeviceDidReset)(Font *self);
 	
 	/**
 	 * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)

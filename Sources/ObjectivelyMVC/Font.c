@@ -134,17 +134,17 @@ static Font *defaultFont(FontCategory category) {
 }
 
 /**
- * @fn Font *Font::initWithAttributes(Font *self, const char *family, int ptsize, int style)
+ * @fn Font *Font::initWithAttributes(Font *self, const char *family, int size, int style)
  * @memberof Font
  */
-static Font *initWithAttributes(Font *self, const char *family, int ptsize, int style) {
+static Font *initWithAttributes(Font *self, const char *family, int size, int style) {
 
 	FcPattern *pattern = FcPatternCreate();
 	assert(pattern);
 
 	FcPatternAddString(pattern, FC_FAMILY, (FcChar8 *) family);
 
-	FcPatternAddDouble(pattern, FC_SIZE, ptsize * MVC_WindowScale(NULL, NULL, NULL));
+	FcPatternAddDouble(pattern, FC_SIZE, (double) size);
 
 	if (style & TTF_STYLE_BOLD) {
 		if (style & TTF_STYLE_ITALIC) {
@@ -193,13 +193,25 @@ static Font *initWithPattern(Font *self, ident pattern) {
 
 		assert(pattern);
 
-		FcPatternAddString(pattern, FC_FONTFORMAT, (FcChar8 *) "TrueType");
+		FcPattern *search = FcPatternDuplicate(pattern);
+		assert(search);
 
-		FcConfigSubstitute(NULL, pattern, FcMatchFont);
-		FcDefaultSubstitute(pattern);
+		FcPatternAddString(search, FC_FONTFORMAT, (FcChar8 *) "TrueType");
+
+		double requestedSize;
+		if (FcPatternGetDouble(search, FC_SIZE, 0, &requestedSize) == FcResultMatch) {
+
+			FcPatternDel(search, FC_SIZE);
+
+			const double windowScale = MVC_WindowScale(NULL, NULL, NULL);
+			FcPatternAddDouble(search, FC_SIZE, requestedSize * windowScale);
+		}
+
+		FcConfigSubstitute(NULL, search, FcMatchFont);
+		FcDefaultSubstitute(search);
 
 		FcResult result;
-		FcPattern *match = FcFontMatch(NULL, pattern, &result);
+		FcPattern *match = FcFontMatch(NULL, search, &result);
 
 		if (result == FcResultMatch) {
 
@@ -223,7 +235,8 @@ static Font *initWithPattern(Font *self, ident pattern) {
 				}
 			}
 		}
-		
+
+		FcPatternDestroy(search);
 		FcPatternDestroy(match);
 
 		if (self->font == NULL) {
@@ -239,13 +252,25 @@ static Font *initWithPattern(Font *self, ident pattern) {
 	return self;
 }
 
-
 /**
  * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color)
  * @memberof Font
  */
 static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color) {
 	return TTF_RenderUTF8_Blended(self->font, chars, color);
+}
+
+/**
+ * @fn void Font::renderDeviceDidReset(Font *self)
+ * @memberof Font
+ */
+static void renderDeviceDidReset(Font *self) {
+
+	char *name = self->name;
+
+	$(self, initWithName, name);
+
+	release(name);
 }
 
 /**
@@ -280,6 +305,7 @@ static void initialize(Class *clazz) {
 	((FontInterface *) clazz->def->interface)->initWithName = initWithName;
 	((FontInterface *) clazz->def->interface)->initWithPattern = initWithPattern;
 	((FontInterface *) clazz->def->interface)->renderCharacters = renderCharacters;
+	((FontInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((FontInterface *) clazz->def->interface)->sizeCharacters = sizeCharacters;
 
 	const FcBool res = FcInit();

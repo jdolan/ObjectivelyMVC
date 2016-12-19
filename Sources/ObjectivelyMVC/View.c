@@ -1010,10 +1010,7 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
 double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight) {
 
-	if (window == NULL) {
-		window = SDL_GL_GetCurrentWindow();
-	}
-
+	window = window ?: SDL_GL_GetCurrentWindow();
 	assert(window);
 
 	int h;

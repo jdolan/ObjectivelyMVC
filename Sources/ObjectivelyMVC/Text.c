@@ -109,6 +109,8 @@ static void renderDeviceDidReset(View *self) {
 	Text *this = (Text *) self;
 
 	this->texture = 0;
+
+	$(this->font, renderDeviceDidReset);
 }
 
 /**
