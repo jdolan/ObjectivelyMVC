@@ -1,5 +1,0 @@
-Grab the latest SDL header files from the official website:
-https://www.libsdl.org/download-2.0.php and extract here.
-
-Do not overwrite any existing header files. They were
-specifically modified to compile properly with this project.
