@@ -106,18 +106,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_CollectionItemView(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "CollectionItemView";
-		_class.superclass = _View();
-		_class.instanceSize = sizeof(CollectionItemView);
-		_class.interfaceOffset = offsetof(CollectionItemView, interface);
-		_class.interfaceSize = sizeof(CollectionItemViewInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "CollectionItemView";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(CollectionItemView);
+		clazz.interfaceOffset = offsetof(CollectionItemView, interface);
+		clazz.interfaceSize = sizeof(CollectionItemViewInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

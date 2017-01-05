@@ -256,18 +256,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_StackView(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "StackView";
-		_class.superclass = _View();
-		_class.instanceSize = sizeof(StackView);
-		_class.interfaceOffset = offsetof(StackView, interface);
-		_class.interfaceSize = sizeof(StackViewInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "StackView";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(StackView);
+		clazz.interfaceOffset = offsetof(StackView, interface);
+		clazz.interfaceSize = sizeof(StackViewInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

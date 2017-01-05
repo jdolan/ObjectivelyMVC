@@ -83,18 +83,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_TableColumn(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "TableColumn";
-		_class.superclass = _Object();
-		_class.instanceSize = sizeof(TableColumn);
-		_class.interfaceOffset = offsetof(TableColumn, interface);
-		_class.interfaceSize = sizeof(TableColumnInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "TableColumn";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(TableColumn);
+		clazz.interfaceOffset = offsetof(TableColumn, interface);
+		clazz.interfaceSize = sizeof(TableColumnInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

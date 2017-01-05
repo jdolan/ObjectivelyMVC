@@ -168,18 +168,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_WindowController(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "WindowController";
-		_class.superclass = _Object();
-		_class.instanceSize = sizeof(WindowController);
-		_class.interfaceOffset = offsetof(WindowController, interface);
-		_class.interfaceSize = sizeof(WindowControllerInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "WindowController";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(WindowController);
+		clazz.interfaceOffset = offsetof(WindowController, interface);
+		clazz.interfaceSize = sizeof(WindowControllerInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

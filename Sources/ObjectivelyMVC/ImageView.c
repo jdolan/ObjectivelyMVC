@@ -221,18 +221,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_ImageView(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "ImageView";
-		_class.superclass = _View();
-		_class.instanceSize = sizeof(ImageView);
-		_class.interfaceOffset = offsetof(ImageView, interface);
-		_class.interfaceSize = sizeof(ImageViewInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "ImageView";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(ImageView);
+		clazz.interfaceOffset = offsetof(ImageView, interface);
+		clazz.interfaceSize = sizeof(ImageViewInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

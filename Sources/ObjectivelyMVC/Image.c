@@ -142,18 +142,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_Image(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "Image";
-		_class.superclass = _Object();
-		_class.instanceSize = sizeof(Image);
-		_class.interfaceOffset = offsetof(Image, interface);
-		_class.interfaceSize = sizeof(ImageInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "Image";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(Image);
+		clazz.interfaceOffset = offsetof(Image, interface);
+		clazz.interfaceSize = sizeof(ImageInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

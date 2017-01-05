@@ -138,18 +138,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_NavigationViewController(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "NavigationViewController";
-		_class.superclass = _ViewController();
-		_class.instanceSize = sizeof(NavigationViewController);
-		_class.interfaceOffset = offsetof(NavigationViewController, interface);
-		_class.interfaceSize = sizeof(NavigationViewControllerInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "NavigationViewController";
+		clazz.superclass = _ViewController();
+		clazz.instanceSize = sizeof(NavigationViewController);
+		clazz.interfaceOffset = offsetof(NavigationViewController, interface);
+		clazz.interfaceSize = sizeof(NavigationViewControllerInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

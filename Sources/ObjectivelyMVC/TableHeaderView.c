@@ -100,18 +100,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_TableHeaderView(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "TableHeaderView";
-		_class.superclass = _TableRowView();
-		_class.instanceSize = sizeof(TableHeaderView);
-		_class.interfaceOffset = offsetof(TableHeaderView, interface);
-		_class.interfaceSize = sizeof(TableHeaderViewInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "TableHeaderView";
+		clazz.superclass = _TableRowView();
+		clazz.instanceSize = sizeof(TableHeaderView);
+		clazz.interfaceOffset = offsetof(TableHeaderView, interface);
+		clazz.interfaceSize = sizeof(TableHeaderViewInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

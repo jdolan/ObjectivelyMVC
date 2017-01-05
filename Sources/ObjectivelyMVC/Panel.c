@@ -309,19 +309,19 @@ static void destroy(Class *clazz) {
 }
 
 Class *_Panel(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "Panel";
-		_class.superclass = _StackView();
-		_class.instanceSize = sizeof(Panel);
-		_class.interfaceOffset = offsetof(Panel, interface);
-		_class.interfaceSize = sizeof(PanelInterface);
-		_class.initialize = initialize;
-		_class.destroy = destroy;
+	if (!clazz.name) {
+		clazz.name = "Panel";
+		clazz.superclass = _StackView();
+		clazz.instanceSize = sizeof(Panel);
+		clazz.interfaceOffset = offsetof(Panel, interface);
+		clazz.interfaceSize = sizeof(PanelInterface);
+		clazz.initialize = initialize;
+		clazz.destroy = destroy;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

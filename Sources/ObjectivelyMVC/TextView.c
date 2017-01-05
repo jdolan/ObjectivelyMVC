@@ -338,18 +338,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_TextView(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "TextView";
-		_class.superclass = _Control();
-		_class.instanceSize = sizeof(TextView);
-		_class.interfaceOffset = offsetof(TextView, interface);
-		_class.interfaceSize = sizeof(TextViewInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "TextView";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(TextView);
+		clazz.interfaceOffset = offsetof(TextView, interface);
+		clazz.interfaceSize = sizeof(TextViewInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

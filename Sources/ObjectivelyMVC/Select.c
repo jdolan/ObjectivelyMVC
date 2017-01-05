@@ -373,18 +373,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_Select(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "Select";
-		_class.superclass = _Control();
-		_class.instanceSize = sizeof(Select);
-		_class.interfaceOffset = offsetof(Select, interface);
-		_class.interfaceSize = sizeof(SelectInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "Select";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(Select);
+		clazz.interfaceOffset = offsetof(Select, interface);
+		clazz.interfaceSize = sizeof(SelectInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

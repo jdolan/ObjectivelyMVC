@@ -267,18 +267,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_Slider(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "Slider";
-		_class.superclass = _Control();
-		_class.instanceSize = sizeof(Slider);
-		_class.interfaceOffset = offsetof(Slider, interface);
-		_class.interfaceSize = sizeof(SliderInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "Slider";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(Slider);
+		clazz.interfaceOffset = offsetof(Slider, interface);
+		clazz.interfaceSize = sizeof(SliderInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

@@ -206,18 +206,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_Input(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "Input";
-		_class.superclass = _StackView();
-		_class.instanceSize = sizeof(Input);
-		_class.interfaceOffset = offsetof(Input, interface);
-		_class.interfaceSize = sizeof(InputInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "Input";
+		clazz.superclass = _StackView();
+		clazz.instanceSize = sizeof(Input);
+		clazz.interfaceOffset = offsetof(Input, interface);
+		clazz.interfaceSize = sizeof(InputInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

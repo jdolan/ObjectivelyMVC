@@ -108,18 +108,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_Label(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "Label";
-		_class.superclass = _View();
-		_class.instanceSize = sizeof(Label);
-		_class.interfaceOffset = offsetof(Label, interface);
-		_class.interfaceSize = sizeof(LabelInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "Label";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(Label);
+		clazz.interfaceOffset = offsetof(Label, interface);
+		clazz.interfaceSize = sizeof(LabelInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

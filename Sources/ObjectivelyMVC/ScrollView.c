@@ -177,18 +177,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_ScrollView(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "ScrollView";
-		_class.superclass = _Control();
-		_class.instanceSize = sizeof(ScrollView);
-		_class.interfaceOffset = offsetof(ScrollView, interface);
-		_class.interfaceSize = sizeof(ScrollViewInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "ScrollView";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(ScrollView);
+		clazz.interfaceOffset = offsetof(ScrollView, interface);
+		clazz.interfaceSize = sizeof(ScrollViewInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class

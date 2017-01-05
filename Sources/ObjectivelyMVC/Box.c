@@ -139,18 +139,18 @@ static void initialize(Class *clazz) {
 }
 
 Class *_Box(void) {
-	static Class _class;
+	static Class clazz;
 	
-	if (!_class.name) {
-		_class.name = "Box";
-		_class.superclass = _View();
-		_class.instanceSize = sizeof(Box);
-		_class.interfaceOffset = offsetof(Box, interface);
-		_class.interfaceSize = sizeof(BoxInterface);
-		_class.initialize = initialize;
+	if (!clazz.name) {
+		clazz.name = "Box";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(Box);
+		clazz.interfaceOffset = offsetof(Box, interface);
+		clazz.interfaceSize = sizeof(BoxInterface);
+		clazz.initialize = initialize;
 	}
 
-	return &_class;
+	return &clazz;
 }
 
 #undef _Class
