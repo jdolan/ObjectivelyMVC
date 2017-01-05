@@ -31,7 +31,7 @@
  * @brief ImageViews render an Image in the context of a View hierarchy.
  */
 
-extern const EnumName GLBlendNames[];
+OBJECTIVELYMVC_EXPORT const EnumName GLBlendNames[];
 
 typedef struct ImageView ImageView;
 typedef struct ImageViewInterface ImageViewInterface;
@@ -125,4 +125,4 @@ struct ImageViewInterface {
 	void (*setImageWithSurface)(ImageView *image, SDL_Surface *surface);
 };
 
-extern Class *_ImageView(void);
+OBJECTIVELYMVC_EXPORT Class *_ImageView(void);

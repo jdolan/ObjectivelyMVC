@@ -143,4 +143,4 @@ struct TextViewInterface {
 /**
  * @brief The TextView Class.
  */
-extern Class *_TextView(void);
+OBJECTIVELYMVC_EXPORT Class *_TextView(void);

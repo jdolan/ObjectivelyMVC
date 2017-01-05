@@ -190,4 +190,4 @@ struct SelectInterface {
 /**
  * @brief The Select Class.
  */
-extern Class *_Select(void);
+OBJECTIVELYMVC_EXPORT Class *_Select(void);

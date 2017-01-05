@@ -62,7 +62,7 @@ typedef enum {
 	ViewAlignmentInternal = ViewAlignmentMaskInternal
 } ViewAlignment;
 
-extern const EnumName ViewAlignmentNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ViewAlignmentNames[];
 
 /**
  * @brief Auto-resizing constants, which are bitmasked.
@@ -75,7 +75,7 @@ typedef enum {
 	ViewAutoresizingContain = 0x4
 } ViewAutoresizing;
 
-extern const EnumName ViewAutoresizingNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
 
 /**
  * @brief Spacing applied to the inside of a View's frame.
@@ -574,7 +574,7 @@ struct ViewInterface {
 	SDL_Window *(*window)(const View *self);
 };
 
-extern Class *_View(void);
+OBJECTIVELYMVC_EXPORT Class *_View(void);
 
 /**
  * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
@@ -582,7 +582,7 @@ extern Class *_View(void);
  * @param rect A rectangle defined in object space.
  * @return The transformed rectangle.
  */
-extern SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
+OBJECTIVELYMVC_EXPORT SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
 
 /**
  * @brief Resolves the scale factor of the specified window for High-DPI support.
@@ -593,5 +593,5 @@ extern SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
  * @remarks Views and other classes should invoke this method to alter their rendering behavior for
  * High-DPI displays. This is particularly relevant for Views that render textures.
  */
-extern double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
+OBJECTIVELYMVC_EXPORT double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
 

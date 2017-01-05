@@ -25,6 +25,8 @@
 
 #include <SDL2/SDL_pixels.h>
 
+#include <ObjectivelyMVC/Types.h>
+
 /**
  * @file
  * @brief W3C Color constants.
@@ -34,7 +36,7 @@
  * @brief W3C Color constants.
  * @see http://www.w3schools.com/colors/colors_names.asp
  */
-extern const struct _Colors {
+OBJECTIVELYMVC_EXPORT const struct _Colors {
 	
 	SDL_Color DefaultColor;
 	SDL_Color HighlightedColor;

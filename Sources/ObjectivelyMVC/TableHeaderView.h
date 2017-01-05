@@ -78,4 +78,4 @@ struct TableHeaderViewInterface {
 /**
  * @brief The TableHeaderView Class.
  */
-extern Class *_TableHeaderView(void);
+OBJECTIVELYMVC_EXPORT Class *_TableHeaderView(void);

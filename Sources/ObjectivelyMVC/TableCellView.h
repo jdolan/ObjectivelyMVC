@@ -83,4 +83,4 @@ struct TableCellViewInterface {
 /**
  * @brief The TableCellView Class.
  */
-extern Class *_TableCellView(void);
+OBJECTIVELYMVC_EXPORT Class *_TableCellView(void);

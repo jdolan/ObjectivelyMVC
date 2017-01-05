@@ -139,5 +139,5 @@ struct PanelInterface {
 /**
  * @brief The Panel Class.
  */
-extern Class *_Panel(void);
+OBJECTIVELYMVC_EXPORT Class *_Panel(void);
 

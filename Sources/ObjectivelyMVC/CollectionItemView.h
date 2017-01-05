@@ -103,5 +103,5 @@ struct CollectionItemViewInterface {
 /**
  * @brief The CollectionItemView Class.
  */
-extern Class *_CollectionItemView(void);
+OBJECTIVELYMVC_EXPORT Class *_CollectionItemView(void);
 

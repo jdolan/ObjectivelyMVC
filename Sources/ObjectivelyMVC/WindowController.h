@@ -129,4 +129,4 @@ struct WindowControllerInterface {
 /**
  * @brief The WindowController Class.
  */
-extern Class *_WindowController(void);
+OBJECTIVELYMVC_EXPORT Class *_WindowController(void);

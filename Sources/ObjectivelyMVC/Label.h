@@ -81,4 +81,4 @@ struct LabelInterface {
 /**
  * @brief The Label Class.
  */
-extern Class *_Label(void);
+OBJECTIVELYMVC_EXPORT Class *_Label(void);

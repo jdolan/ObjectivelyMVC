@@ -88,5 +88,5 @@ struct BoxInterface {
 /**
  * @brief The Box Class.
  */
-extern Class *_Box(void);
+OBJECTIVELYMVC_EXPORT Class *_Box(void);
 

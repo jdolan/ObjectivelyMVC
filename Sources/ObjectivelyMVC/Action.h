@@ -108,4 +108,4 @@ struct ActionInterface {
 /**
  * @brief The Action Class.
  */
-extern Class *_Action(void);
+OBJECTIVELYMVC_EXPORT Class *_Action(void);

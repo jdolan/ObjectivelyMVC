@@ -108,4 +108,4 @@ struct HelloViewControllerInterface {
 /**
  * @brief The HelloViewController Class.
  */
-extern Class _HelloViewController;
+Class *_HelloViewController(void);

@@ -157,5 +157,5 @@ struct ViewControllerInterface {
 /**
  * @brief The ViewController Class.
  */
-extern Class *_ViewController(void);
+OBJECTIVELYMVC_EXPORT Class *_ViewController(void);
 

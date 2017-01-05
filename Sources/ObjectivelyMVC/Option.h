@@ -90,4 +90,4 @@ struct OptionInterface {
 /**
  * @brief The Option Class.
  */
-extern Class *_Option(void);
+OBJECTIVELYMVC_EXPORT Class *_Option(void);

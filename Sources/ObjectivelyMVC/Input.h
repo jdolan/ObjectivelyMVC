@@ -44,7 +44,7 @@ typedef enum {
 	InputOrientationBelow
 } InputOrientation;
 
-extern const EnumName InputOrientationNames[];
+OBJECTIVELYMVC_EXPORT const EnumName InputOrientationNames[];
 
 typedef struct Input Input;
 typedef struct InputInterface InputInterface;
@@ -136,4 +136,4 @@ struct InputInterface {
 /**
  * @brief The Input Class.
  */
-extern Class *_Input(void);
+OBJECTIVELYMVC_EXPORT Class *_Input(void);

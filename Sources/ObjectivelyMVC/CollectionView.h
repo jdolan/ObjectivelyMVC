@@ -42,7 +42,7 @@ typedef enum {
 	CollectionViewAxisHorizontal
 } CollectionViewAxis;
 
-extern const EnumName CollectionViewAxisNames[];
+OBJECTIVELYMVC_EXPORT const EnumName CollectionViewAxisNames[];
 
 typedef struct CollectionViewDataSource CollectionViewDataSource;
 typedef struct CollectionViewDelegate CollectionViewDelegate;
@@ -288,5 +288,5 @@ struct CollectionViewInterface {
 /**
  * @brief The CollectionView Class.
  */
-extern Class *_CollectionView(void);
+OBJECTIVELYMVC_EXPORT Class *_CollectionView(void);
 

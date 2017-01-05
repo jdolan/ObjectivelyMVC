@@ -135,5 +135,5 @@ struct TableRowViewInterface {
 /**
  * @brief The TableRowView Class.
  */
-extern Class *_TableRowView(void);
+OBJECTIVELYMVC_EXPORT Class *_TableRowView(void);
 

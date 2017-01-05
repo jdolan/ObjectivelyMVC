@@ -93,4 +93,4 @@ struct CheckboxInterface {
 /**
  * @brief The Checkbox Class.
  */
-extern Class *_Checkbox(void);
+OBJECTIVELYMVC_EXPORT Class *_Checkbox(void);

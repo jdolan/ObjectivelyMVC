@@ -27,6 +27,8 @@
 
 #include <Objectively/Array.h>
 
+#include <ObjectivelyMVC/Types.h>
+
 #if defined(__APPLE__)
 #define DEFAULT_FONT_FAMILY "Helvetica Neue"
 #elif defined(_WIN32)
@@ -178,4 +180,4 @@ struct FontInterface {
 /**
  * @brief The Font Class.
  */
-extern Class *_Font(void);
+OBJECTIVELYMVC_EXPORT Class *_Font(void);

@@ -84,4 +84,4 @@ struct ButtonInterface {
 /**
  * @brief The Button Class.
  */
-extern Class *_Button(void);
+OBJECTIVELYMVC_EXPORT Class *_Button(void);

@@ -126,5 +126,5 @@ struct ScrollViewInterface {
 /**
  * @brief The ScrollView Class.
  */
-extern Class *_ScrollView(void);
+OBJECTIVELYMVC_EXPORT Class *_ScrollView(void);
 

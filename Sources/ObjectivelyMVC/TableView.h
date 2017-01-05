@@ -338,4 +338,4 @@ struct TableViewInterface {
 /**
  * @brief The TableView Class.
  */
-extern Class *_TableView(void);
+OBJECTIVELYMVC_EXPORT Class *_TableView(void);

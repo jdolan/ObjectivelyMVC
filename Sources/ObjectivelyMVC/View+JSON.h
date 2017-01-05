@@ -157,7 +157,7 @@ typedef void (*InletBinding)(const Inlet *inlet, ident obj);
 /**
  * @brief The Array of InletBindings, indexed by InletType.
  */
-extern const InletBinding inletBindings[];
+OBJECTIVELYMVC_EXPORT const InletBinding inletBindings[];
 
 typedef struct Outlet Outlet;
 
