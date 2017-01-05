@@ -85,14 +85,14 @@ static void initialize(Class *clazz) {
 Class *_TableColumn(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "TableColumn";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(TableColumn);
 		clazz.interfaceOffset = offsetof(TableColumn, interface);
 		clazz.interfaceSize = sizeof(TableColumnInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

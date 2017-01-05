@@ -208,14 +208,14 @@ static void initialize(Class *clazz) {
 Class *_Input(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Input";
 		clazz.superclass = _StackView();
 		clazz.instanceSize = sizeof(Input);
 		clazz.interfaceOffset = offsetof(Input, interface);
 		clazz.interfaceSize = sizeof(InputInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

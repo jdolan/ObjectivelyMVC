@@ -258,14 +258,14 @@ static void initialize(Class *clazz) {
 Class *_StackView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "StackView";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(StackView);
 		clazz.interfaceOffset = offsetof(StackView, interface);
 		clazz.interfaceSize = sizeof(StackViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

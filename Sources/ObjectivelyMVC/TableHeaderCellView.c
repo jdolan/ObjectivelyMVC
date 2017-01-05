@@ -56,14 +56,14 @@ static void initialize(Class *clazz) {
 Class *_TableHeaderCellView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "TableHeaderCellView";
 		clazz.superclass = _TableCellView();
 		clazz.instanceSize = sizeof(TableHeaderCellView);
 		clazz.interfaceOffset = offsetof(TableHeaderCellView, interface);
 		clazz.interfaceSize = sizeof(TableHeaderCellViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

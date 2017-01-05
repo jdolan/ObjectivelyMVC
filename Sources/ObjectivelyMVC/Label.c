@@ -110,14 +110,14 @@ static void initialize(Class *clazz) {
 Class *_Label(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Label";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(Label);
 		clazz.interfaceOffset = offsetof(Label, interface);
 		clazz.interfaceSize = sizeof(LabelInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

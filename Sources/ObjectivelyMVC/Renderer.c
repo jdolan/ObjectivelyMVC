@@ -355,14 +355,14 @@ static void initialize(Class *clazz) {
 Class *_Renderer(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Renderer";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(Renderer);
 		clazz.interfaceOffset = offsetof(Renderer, interface);
 		clazz.interfaceSize = sizeof(RendererInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

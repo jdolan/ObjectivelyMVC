@@ -865,9 +865,8 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
  * @memberof View
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
-	static Once once;
 
-	do_once(&once, {
+	do_once({
 		_initialize(_Box());
 		_initialize(_Button());
 		_initialize(_Checkbox());
@@ -981,14 +980,14 @@ static void initialize(Class *clazz) {
 Class *_View(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "View";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(View);
 		clazz.interfaceOffset = offsetof(View, interface);
 		clazz.interfaceSize = sizeof(ViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

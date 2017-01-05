@@ -144,14 +144,14 @@ static void initialize(Class *clazz) {
 Class *_Image(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Image";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(Image);
 		clazz.interfaceOffset = offsetof(Image, interface);
 		clazz.interfaceSize = sizeof(ImageInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

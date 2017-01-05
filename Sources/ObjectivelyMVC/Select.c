@@ -375,14 +375,14 @@ static void initialize(Class *clazz) {
 Class *_Select(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Select";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(Select);
 		clazz.interfaceOffset = offsetof(Select, interface);
 		clazz.interfaceSize = sizeof(SelectInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

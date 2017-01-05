@@ -198,14 +198,14 @@ static void initialize(Class *clazz) {
 Class *_TableRowView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "TableRowView";
 		clazz.superclass = _StackView();
 		clazz.instanceSize = sizeof(TableRowView);
 		clazz.interfaceOffset = offsetof(TableRowView, interface);
 		clazz.interfaceSize = sizeof(TableRowViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

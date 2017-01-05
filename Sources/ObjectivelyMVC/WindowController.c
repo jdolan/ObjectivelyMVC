@@ -170,14 +170,14 @@ static void initialize(Class *clazz) {
 Class *_WindowController(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "WindowController";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(WindowController);
 		clazz.interfaceOffset = offsetof(WindowController, interface);
 		clazz.interfaceSize = sizeof(WindowControllerInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

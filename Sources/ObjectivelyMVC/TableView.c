@@ -665,14 +665,14 @@ static void initialize(Class *clazz) {
 Class *_TableView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "TableView";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(TableView);
 		clazz.interfaceOffset = offsetof(TableView, interface);
 		clazz.interfaceSize = sizeof(TableViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

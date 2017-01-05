@@ -494,14 +494,14 @@ static void initialize(Class *clazz) {
 Class *_CollectionView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "CollectionView";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(CollectionView);
 		clazz.interfaceOffset = offsetof(CollectionView, interface);
 		clazz.interfaceSize = sizeof(CollectionViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

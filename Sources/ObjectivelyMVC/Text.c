@@ -224,14 +224,14 @@ static void initialize(Class *clazz) {
 Class *_Text(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Text";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(Text);
 		clazz.interfaceOffset = offsetof(Text, interface);
 		clazz.interfaceSize = sizeof(TextInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

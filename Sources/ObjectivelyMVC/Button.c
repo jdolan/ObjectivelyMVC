@@ -165,14 +165,14 @@ static void initialize(Class *clazz) {
 Class *_Button(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Button";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(Button);
 		clazz.interfaceOffset = offsetof(Button, interface);
 		clazz.interfaceSize = sizeof(ButtonInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

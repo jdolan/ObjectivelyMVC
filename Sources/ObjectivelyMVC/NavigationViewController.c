@@ -140,14 +140,14 @@ static void initialize(Class *clazz) {
 Class *_NavigationViewController(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "NavigationViewController";
 		clazz.superclass = _ViewController();
 		clazz.instanceSize = sizeof(NavigationViewController);
 		clazz.interfaceOffset = offsetof(NavigationViewController, interface);
 		clazz.interfaceSize = sizeof(NavigationViewControllerInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

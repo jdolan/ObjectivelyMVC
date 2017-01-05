@@ -102,14 +102,14 @@ static void initialize(Class *clazz) {
 Class *_TableHeaderView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "TableHeaderView";
 		clazz.superclass = _TableRowView();
 		clazz.instanceSize = sizeof(TableHeaderView);
 		clazz.interfaceOffset = offsetof(TableHeaderView, interface);
 		clazz.interfaceSize = sizeof(TableHeaderViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

@@ -179,14 +179,14 @@ static void initialize(Class *clazz) {
 Class *_ScrollView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "ScrollView";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(ScrollView);
 		clazz.interfaceOffset = offsetof(ScrollView, interface);
 		clazz.interfaceSize = sizeof(ScrollViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

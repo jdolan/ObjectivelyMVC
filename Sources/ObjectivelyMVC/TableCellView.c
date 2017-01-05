@@ -84,14 +84,14 @@ static void initialize(Class *clazz) {
 Class *_TableCellView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "TableCellView";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(TableCellView);
 		clazz.interfaceOffset = offsetof(TableCellView, interface);
 		clazz.interfaceSize = sizeof(TableCellViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

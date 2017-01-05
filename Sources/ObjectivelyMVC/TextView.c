@@ -340,14 +340,14 @@ static void initialize(Class *clazz) {
 Class *_TextView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "TextView";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(TextView);
 		clazz.interfaceOffset = offsetof(TextView, interface);
 		clazz.interfaceSize = sizeof(TextViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

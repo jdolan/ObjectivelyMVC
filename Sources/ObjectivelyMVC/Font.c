@@ -26,7 +26,6 @@
 #include <fontconfig/fontconfig.h>
 
 #include <Objectively/MutableArray.h>
-#include <Objectively/Once.h>
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/Font.h>
@@ -106,9 +105,8 @@ static Font *_bigger;
  * @memberof Font
  */
 static Font *defaultFont(FontCategory category) {
-	static Once once;
 
-	do_once(&once, {
+	do_once({
 		_normal = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 14, 0);
 		assert(_normal);
 
@@ -331,7 +329,7 @@ static void destroy(Class *clazz) {
 Class *_Font(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Font";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(Font);
@@ -339,7 +337,7 @@ Class *_Font(void) {
 		clazz.interfaceSize = sizeof(FontInterface);
 		clazz.initialize = initialize;
 		clazz.destroy = destroy;
-	}
+	});
 
 	return &clazz;
 }

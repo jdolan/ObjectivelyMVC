@@ -311,7 +311,7 @@ static void destroy(Class *clazz) {
 Class *_Panel(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Panel";
 		clazz.superclass = _StackView();
 		clazz.instanceSize = sizeof(Panel);
@@ -319,7 +319,7 @@ Class *_Panel(void) {
 		clazz.interfaceSize = sizeof(PanelInterface);
 		clazz.initialize = initialize;
 		clazz.destroy = destroy;
-	}
+	});
 
 	return &clazz;
 }

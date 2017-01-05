@@ -223,14 +223,14 @@ static void initialize(Class *clazz) {
 Class *_ImageView(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "ImageView";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(ImageView);
 		clazz.interfaceOffset = offsetof(ImageView, interface);
 		clazz.interfaceSize = sizeof(ImageViewInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

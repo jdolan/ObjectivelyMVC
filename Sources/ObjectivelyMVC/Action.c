@@ -63,14 +63,14 @@ static void initialize(Class *clazz) {
 Class *_Action(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Action";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(Action);
 		clazz.interfaceOffset = offsetof(Action, interface);
 		clazz.interfaceSize = sizeof(ActionInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

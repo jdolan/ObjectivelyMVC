@@ -113,14 +113,14 @@ static void initialize(Class *clazz) {
 Class *_Option(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Option";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(Option);
 		clazz.interfaceOffset = offsetof(Option, interface);
 		clazz.interfaceSize = sizeof(OptionInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

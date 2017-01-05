@@ -248,14 +248,14 @@ static void initialize(Class *clazz) {
 Class *_HelloViewController(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "HelloViewController";
 		clazz.superclass = _ViewController();
 		clazz.instanceSize = sizeof(HelloViewController);
 		clazz.interfaceOffset = offsetof(HelloViewController, interface);
 		clazz.interfaceSize = sizeof(HelloViewControllerInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }

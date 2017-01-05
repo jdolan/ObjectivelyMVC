@@ -269,14 +269,14 @@ static void initialize(Class *clazz) {
 Class *_Slider(void) {
 	static Class clazz;
 	
-	if (!clazz.name) {
+	do_once({
 		clazz.name = "Slider";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(Slider);
 		clazz.interfaceOffset = offsetof(Slider, interface);
 		clazz.interfaceSize = sizeof(SliderInterface);
 		clazz.initialize = initialize;
-	}
+	});
 
 	return &clazz;
 }
