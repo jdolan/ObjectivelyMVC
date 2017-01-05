@@ -228,4 +228,4 @@ struct ControlInterface {
 /**
  * @brief The Control Class.
  */
-extern Class _Control;
+extern Class *_Control(void);

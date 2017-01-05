@@ -103,5 +103,5 @@ struct CollectionItemViewInterface {
 /**
  * @brief The CollectionItemView Class.
  */
-extern Class _CollectionItemView;
+extern Class *_CollectionItemView(void);
 

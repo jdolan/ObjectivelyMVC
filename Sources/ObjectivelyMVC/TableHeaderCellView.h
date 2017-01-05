@@ -76,5 +76,5 @@ struct TableHeaderCellViewInterface {
 /**
  * @brief The TableHeaderCellView Class.
  */
-extern Class _TableHeaderCellView;
+extern Class *_TableHeaderCellView(void);
 

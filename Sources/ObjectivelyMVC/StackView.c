@@ -255,13 +255,19 @@ static void initialize(Class *clazz) {
 	((StackViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _StackView = {
-	.name = "StackView",
-	.superclass = &_View,
-	.instanceSize = sizeof(StackView),
-	.interfaceOffset = offsetof(StackView, interface),
-	.interfaceSize = sizeof(StackViewInterface),
-	.initialize = initialize,
-};
+Class *_StackView(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "StackView";
+		_class.superclass = _View();
+		_class.instanceSize = sizeof(StackView);
+		_class.interfaceOffset = offsetof(StackView, interface);
+		_class.interfaceSize = sizeof(StackViewInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

@@ -136,7 +136,7 @@ static _Bool controlReceivedEvent(const View *view, const SDL_Event *event) {
 			break;
 		}
 
-		if ($((Object *) subview, isKindOfClass, &_Control)) {
+		if ($((Object *) subview, isKindOfClass, _Control())) {
 			if ($(subview, didReceiveEvent, event)) {
 				received = true;
 				break;
@@ -308,15 +308,21 @@ static void destroy(Class *clazz) {
 	release(_resize);
 }
 
-Class _Panel = {
-	.name = "Panel",
-	.superclass = &_StackView,
-	.instanceSize = sizeof(Panel),
-	.interfaceOffset = offsetof(Panel, interface),
-	.interfaceSize = sizeof(PanelInterface),
-	.initialize = initialize,
-	.destroy = destroy
-};
+Class *_Panel(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Panel";
+		_class.superclass = _StackView();
+		_class.instanceSize = sizeof(Panel);
+		_class.interfaceOffset = offsetof(Panel, interface);
+		_class.interfaceSize = sizeof(PanelInterface);
+		_class.initialize = initialize;
+		_class.destroy = destroy;
+	}
+
+	return &_class;
+}
 
 #undef _Class
 

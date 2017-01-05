@@ -266,14 +266,20 @@ static void initialize(Class *clazz) {
 	((SliderInterface *) clazz->def->interface)->setValue = setValue;
 }
 
-Class _Slider = {
-	.name = "Slider",
-	.superclass = &_Control,
-	.instanceSize = sizeof(Slider),
-	.interfaceOffset = offsetof(Slider, interface),
-	.interfaceSize = sizeof(SliderInterface),
-	.initialize = initialize,
-};
+Class *_Slider(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Slider";
+		_class.superclass = _Control();
+		_class.instanceSize = sizeof(Slider);
+		_class.interfaceOffset = offsetof(Slider, interface);
+		_class.interfaceSize = sizeof(SliderInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class
 

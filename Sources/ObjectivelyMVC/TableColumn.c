@@ -82,14 +82,20 @@ static void initialize(Class *clazz) {
 	((TableColumnInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
 }
 
-Class _TableColumn = {
-	.name = "TableColumn",
-	.superclass = &_Object,
-	.instanceSize = sizeof(TableColumn),
-	.interfaceOffset = offsetof(TableColumn, interface),
-	.interfaceSize = sizeof(TableColumnInterface),
-	.initialize = initialize,
-};
+Class *_TableColumn(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "TableColumn";
+		_class.superclass = _Object();
+		_class.instanceSize = sizeof(TableColumn);
+		_class.interfaceOffset = offsetof(TableColumn, interface);
+		_class.interfaceSize = sizeof(TableColumnInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class
 

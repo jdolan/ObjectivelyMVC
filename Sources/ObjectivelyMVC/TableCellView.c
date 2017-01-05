@@ -81,14 +81,20 @@ static void initialize(Class *clazz) {
 	((TableCellViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _TableCellView = {
-	.name = "TableCellView",
-	.superclass = &_View,
-	.instanceSize = sizeof(TableCellView),
-	.interfaceOffset = offsetof(TableCellView, interface),
-	.interfaceSize = sizeof(TableCellViewInterface),
-	.initialize = initialize,
-};
+Class *_TableCellView(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "TableCellView";
+		_class.superclass = _View();
+		_class.instanceSize = sizeof(TableCellView);
+		_class.interfaceOffset = offsetof(TableCellView, interface);
+		_class.interfaceSize = sizeof(TableCellViewInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class
 

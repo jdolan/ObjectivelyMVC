@@ -150,4 +150,4 @@ struct SliderInterface {
 /**
  * @brief The Slider Class.
  */
-extern Class _Slider;
+extern Class *_Slider(void);

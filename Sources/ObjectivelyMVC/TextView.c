@@ -337,13 +337,19 @@ static void initialize(Class *clazz) {
 	((TextViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _TextView = {
-	.name = "TextView",
-	.superclass = &_Control,
-	.instanceSize = sizeof(TextView),
-	.interfaceOffset = offsetof(TextView, interface),
-	.interfaceSize = sizeof(TextViewInterface),
-	.initialize = initialize,
-};
+Class *_TextView(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "TextView";
+		_class.superclass = _Control();
+		_class.instanceSize = sizeof(TextView);
+		_class.interfaceOffset = offsetof(TextView, interface);
+		_class.interfaceSize = sizeof(TextViewInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

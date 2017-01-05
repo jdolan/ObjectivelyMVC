@@ -162,13 +162,19 @@ static void initialize(Class *clazz) {
 	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _Button = {
-	.name = "Button",
-	.superclass = &_Control,
-	.instanceSize = sizeof(Button),
-	.interfaceOffset = offsetof(Button, interface),
-	.interfaceSize = sizeof(ButtonInterface),
-	.initialize = initialize,
-};
+Class *_Button(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Button";
+		_class.superclass = _Control();
+		_class.instanceSize = sizeof(Button);
+		_class.interfaceOffset = offsetof(Button, interface);
+		_class.interfaceSize = sizeof(ButtonInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

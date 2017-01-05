@@ -328,14 +328,20 @@ static void destroy(Class *clazz) {
 	TTF_Quit();
 }
 
-Class _Font = {
-	.name = "Font",
-	.superclass = &_Object,
-	.instanceSize = sizeof(Font),
-	.interfaceOffset = offsetof(Font, interface),
-	.interfaceSize = sizeof(FontInterface),
-	.initialize = initialize,
-	.destroy = destroy,
-};
+Class *_Font(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Font";
+		_class.superclass = _Object();
+		_class.instanceSize = sizeof(Font);
+		_class.interfaceOffset = offsetof(Font, interface);
+		_class.interfaceSize = sizeof(FontInterface);
+		_class.initialize = initialize;
+		_class.destroy = destroy;
+	}
+
+	return &_class;
+}
 
 #undef _Class

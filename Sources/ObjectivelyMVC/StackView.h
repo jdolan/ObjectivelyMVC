@@ -118,4 +118,4 @@ struct StackViewInterface {
 /**
  * @brief The StackView Class.
  */
-extern Class _StackView;
+extern Class *_StackView(void);

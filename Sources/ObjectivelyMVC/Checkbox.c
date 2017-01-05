@@ -230,14 +230,20 @@ static void destroy(Class *clazz) {
 	release(_check);
 }
 
-Class _Checkbox = {
-	.name = "Checkbox",
-	.superclass = &_Control,
-	.instanceSize = sizeof(Checkbox),
-	.interfaceOffset = offsetof(Checkbox, interface),
-	.interfaceSize = sizeof(CheckboxInterface),
-	.initialize = initialize,
-	.destroy = destroy,
-};
+Class *_Checkbox(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Checkbox";
+		_class.superclass = _Control();
+		_class.instanceSize = sizeof(Checkbox);
+		_class.interfaceOffset = offsetof(Checkbox, interface);
+		_class.interfaceSize = sizeof(CheckboxInterface);
+		_class.initialize = initialize;
+		_class.destroy = destroy;
+	}
+
+	return &_class;
+}
 
 #undef _Class

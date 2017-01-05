@@ -341,13 +341,19 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 }
 
-Class _Control = {
-	.name = "Control",
-	.superclass = &_View,
-	.instanceSize = sizeof(Control),
-	.interfaceOffset = offsetof(Control, interface),
-	.interfaceSize = sizeof(ControlInterface),
-	.initialize = initialize,
-};
+Class *_Control(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Control";
+		_class.superclass = _View();
+		_class.instanceSize = sizeof(Control);
+		_class.interfaceOffset = offsetof(Control, interface);
+		_class.interfaceSize = sizeof(ControlInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

@@ -110,14 +110,20 @@ static void initialize(Class *clazz) {
 	((OptionInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
 }
 
-Class _Option = {
-	.name = "Option",
-	.superclass = &_View,
-	.instanceSize = sizeof(Option),
-	.interfaceOffset = offsetof(Option, interface),
-	.interfaceSize = sizeof(OptionInterface),
-	.initialize = initialize,
-};
+Class *_Option(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Option";
+		_class.superclass = _View();
+		_class.instanceSize = sizeof(Option);
+		_class.interfaceOffset = offsetof(Option, interface);
+		_class.interfaceSize = sizeof(OptionInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class
 

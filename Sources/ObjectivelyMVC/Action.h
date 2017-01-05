@@ -108,4 +108,4 @@ struct ActionInterface {
 /**
  * @brief The Action Class.
  */
-extern Class _Action;
+extern Class *_Action(void);

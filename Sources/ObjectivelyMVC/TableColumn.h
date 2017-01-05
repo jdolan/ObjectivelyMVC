@@ -120,4 +120,4 @@ struct TableColumnInterface {
 /**
  * @brief The TableColumn Class.
  */
-extern Class _TableColumn;
+extern Class *_TableColumn(void);

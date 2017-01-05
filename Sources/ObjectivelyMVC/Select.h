@@ -190,4 +190,4 @@ struct SelectInterface {
 /**
  * @brief The Select Class.
  */
-extern Class _Select;
+extern Class *_Select(void);

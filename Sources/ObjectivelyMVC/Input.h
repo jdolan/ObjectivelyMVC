@@ -136,4 +136,4 @@ struct InputInterface {
 /**
  * @brief The Input Class.
  */
-extern Class _Input;
+extern Class *_Input(void);

@@ -107,13 +107,19 @@ static void initialize(Class *clazz) {
 	((LabelInterface *) clazz->def->interface)->initWithText = initWithText;
 }
 
-Class _Label = {
-	.name = "Label",
-	.superclass = &_View,
-	.instanceSize = sizeof(Label),
-	.interfaceOffset = offsetof(Label, interface),
-	.interfaceSize = sizeof(LabelInterface),
-	.initialize = initialize,
-};
+Class *_Label(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Label";
+		_class.superclass = _View();
+		_class.instanceSize = sizeof(Label);
+		_class.interfaceOffset = offsetof(Label, interface);
+		_class.interfaceSize = sizeof(LabelInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

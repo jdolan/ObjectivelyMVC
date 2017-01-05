@@ -574,7 +574,7 @@ struct ViewInterface {
 	SDL_Window *(*window)(const View *self);
 };
 
-extern Class _View;
+extern Class *_View(void);
 
 /**
  * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
@@ -582,7 +582,7 @@ extern Class _View;
  * @param rect A rectangle defined in object space.
  * @return The transformed rectangle.
  */
-SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
+extern SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
 
 /**
  * @brief Resolves the scale factor of the specified window for High-DPI support.
@@ -593,5 +593,5 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
  * @remarks Views and other classes should invoke this method to alter their rendering behavior for
  * High-DPI displays. This is particularly relevant for Views that render textures.
  */
-double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
+extern double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
 

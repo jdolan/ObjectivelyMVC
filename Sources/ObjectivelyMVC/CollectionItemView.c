@@ -105,14 +105,20 @@ static void initialize(Class *clazz) {
 	((CollectionItemViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }
 
-Class _CollectionItemView = {
-	.name = "CollectionItemView",
-	.superclass = &_View,
-	.instanceSize = sizeof(CollectionItemView),
-	.interfaceOffset = offsetof(CollectionItemView, interface),
-	.interfaceSize = sizeof(CollectionItemViewInterface),
-	.initialize = initialize,
-};
+Class *_CollectionItemView(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "CollectionItemView";
+		_class.superclass = _View();
+		_class.instanceSize = sizeof(CollectionItemView);
+		_class.interfaceOffset = offsetof(CollectionItemView, interface);
+		_class.interfaceSize = sizeof(CollectionItemViewInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class
 

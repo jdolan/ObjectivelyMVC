@@ -125,4 +125,4 @@ struct ImageViewInterface {
 	void (*setImageWithSurface)(ImageView *image, SDL_Surface *surface);
 };
 
-extern Class _ImageView;
+extern Class *_ImageView(void);

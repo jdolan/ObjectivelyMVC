@@ -129,4 +129,4 @@ struct WindowControllerInterface {
 /**
  * @brief The WindowController Class.
  */
-extern Class _WindowController;
+extern Class *_WindowController(void);

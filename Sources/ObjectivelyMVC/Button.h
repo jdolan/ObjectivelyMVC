@@ -84,4 +84,4 @@ struct ButtonInterface {
 /**
  * @brief The Button Class.
  */
-extern Class _Button;
+extern Class *_Button(void);

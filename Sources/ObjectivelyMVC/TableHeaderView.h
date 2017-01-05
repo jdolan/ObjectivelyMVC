@@ -78,4 +78,4 @@ struct TableHeaderViewInterface {
 /**
  * @brief The TableHeaderView Class.
  */
-extern Class _TableHeaderView;
+extern Class *_TableHeaderView(void);

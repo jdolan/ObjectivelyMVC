@@ -195,14 +195,20 @@ static void initialize(Class *clazz) {
 	((TableRowViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }
 
-Class _TableRowView = {
-	.name = "TableRowView",
-	.superclass = &_StackView,
-	.instanceSize = sizeof(TableRowView),
-	.interfaceOffset = offsetof(TableRowView, interface),
-	.interfaceSize = sizeof(TableRowViewInterface),
-	.initialize = initialize,
-};
+Class *_TableRowView(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "TableRowView";
+		_class.superclass = _StackView();
+		_class.instanceSize = sizeof(TableRowView);
+		_class.interfaceOffset = offsetof(TableRowView, interface);
+		_class.interfaceSize = sizeof(TableRowViewInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class
 

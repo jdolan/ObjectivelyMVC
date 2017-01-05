@@ -127,5 +127,5 @@ struct NavigationViewControllerInterface {
 /**
  * @brief The NavigationViewController Class.
  */
-extern Class _NavigationViewController;
+extern Class *_NavigationViewController(void);
 

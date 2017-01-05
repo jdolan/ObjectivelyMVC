@@ -83,4 +83,4 @@ struct TableCellViewInterface {
 /**
  * @brief The TableCellView Class.
  */
-extern Class _TableCellView;
+extern Class *_TableCellView(void);

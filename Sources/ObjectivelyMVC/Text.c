@@ -221,13 +221,19 @@ static void initialize(Class *clazz) {
 	((TextInterface *) clazz->def->interface)->setText = setText;
 }
 
-Class _Text = {
-	.name = "Text",
-	.superclass = &_View,
-	.instanceSize = sizeof(Text),
-	.interfaceOffset = offsetof(Text, interface),
-	.interfaceSize = sizeof(TextInterface),
-	.initialize = initialize,
-};
+Class *_Text(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Text";
+		_class.superclass = _View();
+		_class.instanceSize = sizeof(Text);
+		_class.interfaceOffset = offsetof(Text, interface);
+		_class.interfaceSize = sizeof(TextInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

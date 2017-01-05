@@ -81,4 +81,4 @@ struct LabelInterface {
 /**
  * @brief The Label Class.
  */
-extern Class _Label;
+extern Class *_Label(void);

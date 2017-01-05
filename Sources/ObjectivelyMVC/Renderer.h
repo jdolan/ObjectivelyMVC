@@ -211,5 +211,5 @@ struct RendererInterface {
 /**
  * @brief The Renderer Class.
  */
-extern Class _Renderer;
+extern Class *_Renderer(void);
 

@@ -372,14 +372,20 @@ static void initialize(Class *clazz) {
 	((SelectInterface *) clazz->def->interface)->selectOptionWithValue = selectOptionWithValue;
 }
 
-Class _Select = {
-	.name = "Select",
-	.superclass = &_Control,
-	.instanceSize = sizeof(Select),
-	.interfaceOffset = offsetof(Select, interface),
-	.interfaceSize = sizeof(SelectInterface),
-	.initialize = initialize,
-};
+Class *_Select(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Select";
+		_class.superclass = _Control();
+		_class.instanceSize = sizeof(Select);
+		_class.interfaceOffset = offsetof(Select, interface);
+		_class.interfaceSize = sizeof(SelectInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class
 

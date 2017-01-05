@@ -121,4 +121,4 @@ struct ImageInterface {
 /**
  * @brief The Image Class.
  */
-extern Class _Image;
+extern Class *_Image(void);

@@ -151,7 +151,7 @@ static void bindView(const Inlet *inlet, ident obj) {
 		if (clazz) {
 			const Class *c = clazz;
 			while (c) {
-				if (c == &_View) {
+				if (c == _View()) {
 
 					MVC_LogInfo("Instantiating View of class %s\n", clazz->name);
 

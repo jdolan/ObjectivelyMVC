@@ -138,13 +138,19 @@ static void initialize(Class *clazz) {
 	((BoxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _Box = {
-	.name = "Box",
-	.superclass = &_View,
-	.instanceSize = sizeof(Box),
-	.interfaceOffset = offsetof(Box, interface),
-	.interfaceSize = sizeof(BoxInterface),
-	.initialize = initialize,
-};
+Class *_Box(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Box";
+		_class.superclass = _View();
+		_class.instanceSize = sizeof(Box);
+		_class.interfaceOffset = offsetof(Box, interface);
+		_class.interfaceSize = sizeof(BoxInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

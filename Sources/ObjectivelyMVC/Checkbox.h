@@ -93,4 +93,4 @@ struct CheckboxInterface {
 /**
  * @brief The Checkbox Class.
  */
-extern Class _Checkbox;
+extern Class *_Checkbox(void);

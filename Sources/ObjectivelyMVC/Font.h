@@ -178,4 +178,4 @@ struct FontInterface {
 /**
  * @brief The Font Class.
  */
-extern Class _Font;
+extern Class *_Font(void);

@@ -135,5 +135,5 @@ struct TableRowViewInterface {
 /**
  * @brief The TableRowView Class.
  */
-extern Class _TableRowView;
+extern Class *_TableRowView(void);
 

@@ -143,4 +143,4 @@ struct TextViewInterface {
 /**
  * @brief The TextView Class.
  */
-extern Class _TextView;
+extern Class *_TextView(void);

@@ -60,13 +60,19 @@ static void initialize(Class *clazz) {
 	((ActionInterface *) clazz->def->interface)->initWithEventType = initWithEventType;
 }
 
-Class _Action = {
-	.name = "Action",
-	.superclass = &_Object,
-	.instanceSize = sizeof(Action),
-	.interfaceOffset = offsetof(Action, interface),
-	.interfaceSize = sizeof(ActionInterface),
-	.initialize = initialize,
-};
+Class *_Action(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "Action";
+		_class.superclass = _Object();
+		_class.instanceSize = sizeof(Action);
+		_class.interfaceOffset = offsetof(Action, interface);
+		_class.interfaceSize = sizeof(ActionInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

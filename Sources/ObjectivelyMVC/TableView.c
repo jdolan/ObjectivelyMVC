@@ -662,13 +662,19 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->def->interface)->setSortColumn = setSortColumn;
 }
 
-Class _TableView = {
-	.name = "TableView",
-	.superclass = &_Control,
-	.instanceSize = sizeof(TableView),
-	.interfaceOffset = offsetof(TableView, interface),
-	.interfaceSize = sizeof(TableViewInterface),
-	.initialize = initialize,
-};
+Class *_TableView(void) {
+	static Class _class;
+	
+	if (!_class.name) {
+		_class.name = "TableView";
+		_class.superclass = _Control();
+		_class.instanceSize = sizeof(TableView);
+		_class.interfaceOffset = offsetof(TableView, interface);
+		_class.interfaceSize = sizeof(TableViewInterface);
+		_class.initialize = initialize;
+	}
+
+	return &_class;
+}
 
 #undef _Class

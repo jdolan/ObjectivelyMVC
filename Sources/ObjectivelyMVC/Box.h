@@ -88,5 +88,5 @@ struct BoxInterface {
 /**
  * @brief The Box Class.
  */
-extern Class _Box;
+extern Class *_Box(void);
 
