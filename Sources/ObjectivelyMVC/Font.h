@@ -114,7 +114,7 @@ struct FontInterface {
 	Font *(*defaultFont)(FontCategory category);
 
 	/**
-	 * @fn Font *Font::initWithAttributes(Font *self, const char *family, int ptsize, int style)
+	 * @fn Font *Font::initWithAttributes(Font *self, const char *family, int size, int style)
 	 * @brief Initializes this Font with the given attributes.
 	 * @param self The Font.
 	 * @param family The font family.
