@@ -106,7 +106,9 @@ static Font *_bigger;
  */
 static Font *defaultFont(FontCategory category) {
 
-	do_once({
+	static Once once;
+	
+	do_once(&once, {
 		_normal = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 14, 0);
 		assert(_normal);
 
@@ -328,8 +330,9 @@ static void destroy(Class *clazz) {
 
 Class *_Font(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "Font";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(Font);

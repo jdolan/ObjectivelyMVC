@@ -139,8 +139,9 @@ static void initialize(Class *clazz) {
 
 Class *_NavigationViewController(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "NavigationViewController";
 		clazz.superclass = _ViewController();
 		clazz.instanceSize = sizeof(NavigationViewController);

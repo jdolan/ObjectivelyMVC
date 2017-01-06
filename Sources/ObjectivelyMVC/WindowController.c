@@ -169,8 +169,9 @@ static void initialize(Class *clazz) {
 
 Class *_WindowController(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "WindowController";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(WindowController);

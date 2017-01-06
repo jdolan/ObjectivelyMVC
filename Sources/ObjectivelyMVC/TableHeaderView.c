@@ -101,8 +101,9 @@ static void initialize(Class *clazz) {
 
 Class *_TableHeaderView(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "TableHeaderView";
 		clazz.superclass = _TableRowView();
 		clazz.instanceSize = sizeof(TableHeaderView);

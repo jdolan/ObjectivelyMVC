@@ -354,8 +354,9 @@ static void initialize(Class *clazz) {
 
 Class *_Renderer(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "Renderer";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(Renderer);

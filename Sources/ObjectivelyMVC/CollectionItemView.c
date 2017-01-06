@@ -107,8 +107,9 @@ static void initialize(Class *clazz) {
 
 Class *_CollectionItemView(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "CollectionItemView";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(CollectionItemView);

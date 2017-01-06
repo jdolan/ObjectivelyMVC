@@ -866,7 +866,9 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
-	do_once({
+	static Once once;
+	
+	do_once(&once, {
 		_initialize(_Box());
 		_initialize(_Button());
 		_initialize(_Checkbox());
@@ -979,8 +981,9 @@ static void initialize(Class *clazz) {
 
 Class *_View(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "View";
 		clazz.superclass = _Object();
 		clazz.instanceSize = sizeof(View);

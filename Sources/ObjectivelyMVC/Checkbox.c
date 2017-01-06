@@ -232,8 +232,9 @@ static void destroy(Class *clazz) {
 
 Class *_Checkbox(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "Checkbox";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(Checkbox);

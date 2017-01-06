@@ -223,8 +223,9 @@ static void initialize(Class *clazz) {
 
 Class *_Text(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "Text";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(Text);

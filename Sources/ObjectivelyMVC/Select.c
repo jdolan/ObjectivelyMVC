@@ -374,8 +374,9 @@ static void initialize(Class *clazz) {
 
 Class *_Select(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "Select";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(Select);

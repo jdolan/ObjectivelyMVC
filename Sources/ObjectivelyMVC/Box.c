@@ -140,8 +140,9 @@ static void initialize(Class *clazz) {
 
 Class *_Box(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "Box";
 		clazz.superclass = _View();
 		clazz.instanceSize = sizeof(Box);

@@ -207,8 +207,9 @@ static void initialize(Class *clazz) {
 
 Class *_Input(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "Input";
 		clazz.superclass = _StackView();
 		clazz.instanceSize = sizeof(Input);

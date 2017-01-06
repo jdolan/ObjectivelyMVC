@@ -664,8 +664,9 @@ static void initialize(Class *clazz) {
 
 Class *_TableView(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "TableView";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(TableView);

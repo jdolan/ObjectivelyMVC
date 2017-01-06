@@ -268,8 +268,9 @@ static void initialize(Class *clazz) {
 
 Class *_Slider(void) {
 	static Class clazz;
+	static Once once;
 	
-	do_once({
+	do_once(&once, {
 		clazz.name = "Slider";
 		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(Slider);
