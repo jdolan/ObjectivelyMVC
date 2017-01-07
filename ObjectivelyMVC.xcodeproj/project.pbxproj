@@ -124,7 +124,7 @@
 		CE0943AB1D60FFEC00C11408 /* TableRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableRowView.h; sourceTree = "<group>"; };
 		CE0943AE1D615CF800C11408 /* TableHeaderCellView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableHeaderCellView.c; sourceTree = "<group>"; };
 		CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableHeaderCellView.h; sourceTree = "<group>"; };
-		CE0AD0971C7241DE003E3CF7 /* styles.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = styles.css; sourceTree = "<group>"; };
+		CE0AD0971C7241DE003E3CF7 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		CE0AD0981C77AF73003E3CF7 /* Slider.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Slider.c; sourceTree = "<group>"; };
 		CE0AD0991C77AF73003E3CF7 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Slider.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
@@ -374,7 +374,7 @@
 				CE12D48F1C505FB400CD0B13 /* index.md */,
 				CE12D4901C505FB400CD0B13 /* layout.xml */,
 				CE7EA4CD1D479A9000BD37A3 /* quetoo.jpg */,
-				CE0AD0971C7241DE003E3CF7 /* styles.css */,
+				CE0AD0971C7241DE003E3CF7 /* style.css */,
 			);
 			path = Documentation;
 			sourceTree = "<group>";

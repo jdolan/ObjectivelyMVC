@@ -255,13 +255,24 @@ static void initialize(Class *clazz) {
 	((StackViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _StackView = {
-	.name = "StackView",
-	.superclass = &_View,
-	.instanceSize = sizeof(StackView),
-	.interfaceOffset = offsetof(StackView, interface),
-	.interfaceSize = sizeof(StackViewInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *StackView::_StackView(void)
+ * @memberof StackView
+ */
+Class *_StackView(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "StackView";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(StackView);
+		clazz.interfaceOffset = offsetof(StackView, interface);
+		clazz.interfaceSize = sizeof(StackViewInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

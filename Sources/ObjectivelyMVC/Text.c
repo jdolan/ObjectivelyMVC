@@ -221,13 +221,24 @@ static void initialize(Class *clazz) {
 	((TextInterface *) clazz->def->interface)->setText = setText;
 }
 
-Class _Text = {
-	.name = "Text",
-	.superclass = &_View,
-	.instanceSize = sizeof(Text),
-	.interfaceOffset = offsetof(Text, interface),
-	.interfaceSize = sizeof(TextInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Text::_Text(void)
+ * @memberof Text
+ */
+Class *_Text(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Text";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(Text);
+		clazz.interfaceOffset = offsetof(Text, interface);
+		clazz.interfaceSize = sizeof(TextInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

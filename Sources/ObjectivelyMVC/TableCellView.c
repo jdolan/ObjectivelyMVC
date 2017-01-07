@@ -81,14 +81,25 @@ static void initialize(Class *clazz) {
 	((TableCellViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _TableCellView = {
-	.name = "TableCellView",
-	.superclass = &_View,
-	.instanceSize = sizeof(TableCellView),
-	.interfaceOffset = offsetof(TableCellView, interface),
-	.interfaceSize = sizeof(TableCellViewInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *TableCellView::_TableCellView(void)
+ * @memberof TableCellView
+ */
+Class *_TableCellView(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "TableCellView";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(TableCellView);
+		clazz.interfaceOffset = offsetof(TableCellView, interface);
+		clazz.interfaceSize = sizeof(TableCellViewInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

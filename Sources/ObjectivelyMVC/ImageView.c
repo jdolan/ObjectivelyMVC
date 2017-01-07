@@ -220,13 +220,24 @@ static void initialize(Class *clazz) {
 	((ImageViewInterface *) clazz->def->interface)->setImageWithSurface = setImageWithSurface;
 }
 
-Class _ImageView = {
-	.name = "ImageView",
-	.superclass = &_View,
-	.instanceSize = sizeof(ImageView),
-	.interfaceOffset = offsetof(ImageView, interface),
-	.interfaceSize = sizeof(ImageViewInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *ImageView::_ImageView(void)
+ * @memberof ImageView
+ */
+Class *_ImageView(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "ImageView";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(ImageView);
+		clazz.interfaceOffset = offsetof(ImageView, interface);
+		clazz.interfaceSize = sizeof(ImageViewInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

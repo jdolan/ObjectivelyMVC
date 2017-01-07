@@ -23,46 +23,8 @@
 
 #pragma once
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_pixels.h>
-
-#undef interface
-
-#if defined(_MSC_VER)
- #include "WindowlyMVC.h"
+#ifdef BUILDING_OBJECTIVELYMVC
+ #define OBJECTIVELYMVC_EXPORT __declspec(dllexport)
+#else
+ #define OBJECTIVELYMVC_EXPORT __declspec(dllimport)
 #endif
-
-#ifndef OBJECTIVELYMVC_EXPORT
- #define OBJECTIVELYMVC_EXPORT extern
-#endif
-
-/**
- * @file
- * @brief ObjectivelyMVC base types.
- */
-
-typedef struct View View;
-
-typedef struct SDL_Size SDL_Size;
-
-/**
- * @brief The Size type.
- */
-struct SDL_Size {
-	int w, h;
-};
-
-/**
- * @brief Creates an SDL_Point with the given coordinates.
- */
-#define MakePoint(x, y) (SDL_Point) { (x), (y) }
-
-/**
- * @brief Creates an SDL_Rect with the given origin and size.
- */
-#define MakeRect(x, y, w, h) (SDL_Rect) { (x), (y), (w), (h) }
-
-/**
- * @brief Creates an SDL_Size with the given dimensions.
- */
-#define MakeSize(w, h) (SDL_Size) { (w), (h) }

@@ -865,24 +865,25 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
  * @memberof View
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
-	static Once once;
 
+	static Once once;
+	
 	do_once(&once, {
-		_initialize(&_Box);
-		_initialize(&_Button);
-		_initialize(&_Checkbox);
-		_initialize(&_CollectionView);
-		_initialize(&_ImageView);
-		_initialize(&_Input);
-		_initialize(&_Label);
-		_initialize(&_Panel);
-		_initialize(&_ScrollView);
-		_initialize(&_Select);
-		_initialize(&_Slider);
-		_initialize(&_StackView);
-		_initialize(&_TableView);
-		_initialize(&_Text);
-		_initialize(&_TextView);
+		_initialize(_Box());
+		_initialize(_Button());
+		_initialize(_Checkbox());
+		_initialize(_CollectionView());
+		_initialize(_ImageView());
+		_initialize(_Input());
+		_initialize(_Label());
+		_initialize(_Panel());
+		_initialize(_ScrollView());
+		_initialize(_Select());
+		_initialize(_Slider());
+		_initialize(_StackView());
+		_initialize(_TableView());
+		_initialize(_Text());
+		_initialize(_TextView());
 	});
 
 	_outlets = outlets;
@@ -978,14 +979,25 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->window = window;
 }
 
-Class _View = {
-	.name = "View",
-	.superclass = &_Object,
-	.instanceSize = sizeof(View),
-	.interfaceOffset = offsetof(View, interface),
-	.interfaceSize = sizeof(ViewInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *View::_View(void)
+ * @memberof View
+ */
+Class *_View(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "View";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(View);
+		clazz.interfaceOffset = offsetof(View, interface);
+		clazz.interfaceSize = sizeof(ViewInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

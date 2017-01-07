@@ -266,14 +266,25 @@ static void initialize(Class *clazz) {
 	((SliderInterface *) clazz->def->interface)->setValue = setValue;
 }
 
-Class _Slider = {
-	.name = "Slider",
-	.superclass = &_Control,
-	.instanceSize = sizeof(Slider),
-	.interfaceOffset = offsetof(Slider, interface),
-	.interfaceSize = sizeof(SliderInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Slider::_Slider(void)
+ * @memberof Slider
+ */
+Class *_Slider(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Slider";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(Slider);
+		clazz.interfaceOffset = offsetof(Slider, interface);
+		clazz.interfaceSize = sizeof(SliderInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

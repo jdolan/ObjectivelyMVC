@@ -352,14 +352,25 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
 }
 
-Class _Renderer = {
-	.name = "Renderer",
-	.superclass = &_Object,
-	.instanceSize = sizeof(Renderer),
-	.interfaceOffset = offsetof(Renderer, interface),
-	.interfaceSize = sizeof(RendererInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Renderer::_Renderer(void)
+ * @memberof Renderer
+ */
+Class *_Renderer(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Renderer";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(Renderer);
+		clazz.interfaceOffset = offsetof(Renderer, interface);
+		clazz.interfaceSize = sizeof(RendererInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

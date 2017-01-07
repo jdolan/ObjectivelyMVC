@@ -127,6 +127,9 @@ struct WindowControllerInterface {
 };
 
 /**
- * @brief The WindowController Class.
+ * @fn Class *WindowController::_WindowController(void)
+ * @brief The WindowController archetype.
+ * @return The WindowController Class.
+ * @memberof WindowController
  */
-extern Class _WindowController;
+OBJECTIVELYMVC_EXPORT Class *_WindowController(void);

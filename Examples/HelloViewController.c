@@ -245,13 +245,24 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
 }
 
-Class _HelloViewController = {
-	.name = "HelloViewController",
-	.superclass = &_ViewController,
-	.instanceSize = sizeof(HelloViewController),
-	.interfaceOffset = offsetof(HelloViewController, interface),
-	.interfaceSize = sizeof(HelloViewControllerInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *HelloViewController::_HelloViewController(void)
+ * @memberof HelloViewController
+ */
+Class *_HelloViewController(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "HelloViewController";
+		clazz.superclass = _ViewController();
+		clazz.instanceSize = sizeof(HelloViewController);
+		clazz.interfaceOffset = offsetof(HelloViewController, interface);
+		clazz.interfaceSize = sizeof(HelloViewControllerInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

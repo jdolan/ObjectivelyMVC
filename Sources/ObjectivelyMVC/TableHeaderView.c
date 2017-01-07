@@ -99,14 +99,25 @@ static void initialize(Class *clazz) {
 	((TableHeaderViewInterface *) clazz->def->interface)->initWithTableView = initWithTableView;
 }
 
-Class _TableHeaderView = {
-	.name = "TableHeaderView",
-	.superclass = &_TableRowView,
-	.instanceSize = sizeof(TableHeaderView),
-	.interfaceOffset = offsetof(TableHeaderView, interface),
-	.interfaceSize = sizeof(TableHeaderViewInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *TableHeaderView::_TableHeaderView(void)
+ * @memberof TableHeaderView
+ */
+Class *_TableHeaderView(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "TableHeaderView";
+		clazz.superclass = _TableRowView();
+		clazz.instanceSize = sizeof(TableHeaderView);
+		clazz.interfaceOffset = offsetof(TableHeaderView, interface);
+		clazz.interfaceSize = sizeof(TableHeaderViewInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

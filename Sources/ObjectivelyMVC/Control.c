@@ -341,13 +341,24 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 }
 
-Class _Control = {
-	.name = "Control",
-	.superclass = &_View,
-	.instanceSize = sizeof(Control),
-	.interfaceOffset = offsetof(Control, interface),
-	.interfaceSize = sizeof(ControlInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Control::_Control(void)
+ * @memberof Control
+ */
+Class *_Control(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Control";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(Control);
+		clazz.interfaceOffset = offsetof(Control, interface);
+		clazz.interfaceSize = sizeof(ControlInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

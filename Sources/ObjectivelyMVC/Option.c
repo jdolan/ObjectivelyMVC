@@ -110,14 +110,25 @@ static void initialize(Class *clazz) {
 	((OptionInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
 }
 
-Class _Option = {
-	.name = "Option",
-	.superclass = &_View,
-	.instanceSize = sizeof(Option),
-	.interfaceOffset = offsetof(Option, interface),
-	.interfaceSize = sizeof(OptionInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Option::_Option(void)
+ * @memberof Option
+ */
+Class *_Option(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Option";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(Option);
+		clazz.interfaceOffset = offsetof(Option, interface);
+		clazz.interfaceSize = sizeof(OptionInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

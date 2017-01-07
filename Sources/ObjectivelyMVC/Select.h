@@ -188,6 +188,9 @@ struct SelectInterface {
 };
 
 /**
- * @brief The Select Class.
+ * @fn Class *Select::_Select(void)
+ * @brief The Select archetype.
+ * @return The Select Class.
+ * @memberof Select
  */
-extern Class _Select;
+OBJECTIVELYMVC_EXPORT Class *_Select(void);

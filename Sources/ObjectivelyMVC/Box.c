@@ -138,13 +138,24 @@ static void initialize(Class *clazz) {
 	((BoxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _Box = {
-	.name = "Box",
-	.superclass = &_View,
-	.instanceSize = sizeof(Box),
-	.interfaceOffset = offsetof(Box, interface),
-	.interfaceSize = sizeof(BoxInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Box::_Box(void)
+ * @memberof Box
+ */
+Class *_Box(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Box";
+		clazz.superclass = _View();
+		clazz.instanceSize = sizeof(Box);
+		clazz.interfaceOffset = offsetof(Box, interface);
+		clazz.interfaceSize = sizeof(BoxInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

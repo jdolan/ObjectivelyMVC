@@ -141,13 +141,24 @@ static void initialize(Class *clazz) {
 	}
 }
 
-Class _Image = {
-	.name = "Image",
-	.superclass = &_Object,
-	.instanceSize = sizeof(Image),
-	.interfaceOffset = offsetof(Image, interface),
-	.interfaceSize = sizeof(ImageInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Image::_Image(void)
+ * @memberof Image
+ */
+Class *_Image(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Image";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(Image);
+		clazz.interfaceOffset = offsetof(Image, interface);
+		clazz.interfaceSize = sizeof(ImageInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

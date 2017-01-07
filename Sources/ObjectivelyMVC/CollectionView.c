@@ -491,14 +491,25 @@ static void initialize(Class *clazz) {
 	((CollectionViewInterface *) clazz->def->interface)->selectItemsAtIndexPaths = selectItemsAtIndexPaths;
 }
 
-Class _CollectionView = {
-	.name = "CollectionView",
-	.superclass = &_Control,
-	.instanceSize = sizeof(CollectionView),
-	.interfaceOffset = offsetof(CollectionView, interface),
-	.interfaceSize = sizeof(CollectionViewInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *CollectionView::_CollectionView(void)
+ * @memberof CollectionView
+ */
+Class *_CollectionView(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "CollectionView";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(CollectionView);
+		clazz.interfaceOffset = offsetof(CollectionView, interface);
+		clazz.interfaceSize = sizeof(CollectionViewInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

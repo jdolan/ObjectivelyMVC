@@ -74,7 +74,10 @@ struct TableHeaderCellViewInterface {
 };
 
 /**
- * @brief The TableHeaderCellView Class.
+ * @fn Class *TableHeaderCellView::_TableHeaderCellView(void)
+ * @brief The TableHeaderCellView archetype.
+ * @return The TableHeaderCellView Class.
+ * @memberof TableHeaderCellView
  */
-extern Class _TableHeaderCellView;
+OBJECTIVELYMVC_EXPORT Class *_TableHeaderCellView(void);
 

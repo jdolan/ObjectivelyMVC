@@ -79,6 +79,9 @@ struct LabelInterface {
 };
 
 /**
- * @brief The Label Class.
+ * @fn Class *Label::_Label(void)
+ * @brief The Label archetype.
+ * @return The Label Class.
+ * @memberof Label
  */
-extern Class _Label;
+OBJECTIVELYMVC_EXPORT Class *_Label(void);

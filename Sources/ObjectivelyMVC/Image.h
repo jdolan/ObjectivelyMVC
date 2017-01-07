@@ -21,6 +21,8 @@
 
 #include <Objectively/Resource.h>
 
+#include <ObjectivelyMVC/Types.h>
+
 /**
  * @file
  * @brief Image loading.
@@ -119,6 +121,9 @@ struct ImageInterface {
 };
 
 /**
- * @brief The Image Class.
+ * @fn Class *Image::_Image(void)
+ * @brief The Image archetype.
+ * @return The Image Class.
+ * @memberof Image
  */
-extern Class _Image;
+OBJECTIVELYMVC_EXPORT Class *_Image(void);

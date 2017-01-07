@@ -372,14 +372,25 @@ static void initialize(Class *clazz) {
 	((SelectInterface *) clazz->def->interface)->selectOptionWithValue = selectOptionWithValue;
 }
 
-Class _Select = {
-	.name = "Select",
-	.superclass = &_Control,
-	.instanceSize = sizeof(Select),
-	.interfaceOffset = offsetof(Select, interface),
-	.interfaceSize = sizeof(SelectInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Select::_Select(void)
+ * @memberof Select
+ */
+Class *_Select(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Select";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(Select);
+		clazz.interfaceOffset = offsetof(Select, interface);
+		clazz.interfaceSize = sizeof(SelectInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

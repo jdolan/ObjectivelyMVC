@@ -230,14 +230,25 @@ static void destroy(Class *clazz) {
 	release(_check);
 }
 
-Class _Checkbox = {
-	.name = "Checkbox",
-	.superclass = &_Control,
-	.instanceSize = sizeof(Checkbox),
-	.interfaceOffset = offsetof(Checkbox, interface),
-	.interfaceSize = sizeof(CheckboxInterface),
-	.initialize = initialize,
-	.destroy = destroy,
-};
+/**
+ * @fn Class *Checkbox::_Checkbox(void)
+ * @memberof Checkbox
+ */
+Class *_Checkbox(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Checkbox";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(Checkbox);
+		clazz.interfaceOffset = offsetof(Checkbox, interface);
+		clazz.interfaceSize = sizeof(CheckboxInterface);
+		clazz.initialize = initialize;
+		clazz.destroy = destroy;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

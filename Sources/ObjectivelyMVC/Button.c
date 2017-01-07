@@ -162,13 +162,24 @@ static void initialize(Class *clazz) {
 	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
-Class _Button = {
-	.name = "Button",
-	.superclass = &_Control,
-	.instanceSize = sizeof(Button),
-	.interfaceOffset = offsetof(Button, interface),
-	.interfaceSize = sizeof(ButtonInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Button::_Button(void)
+ * @memberof Button
+ */
+Class *_Button(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Button";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(Button);
+		clazz.interfaceOffset = offsetof(Button, interface);
+		clazz.interfaceSize = sizeof(ButtonInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

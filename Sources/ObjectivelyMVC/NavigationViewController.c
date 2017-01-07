@@ -137,14 +137,25 @@ static void initialize(Class *clazz) {
 	((NavigationViewControllerInterface *) clazz->def->interface)->topViewController = topViewController;
 }
 
-Class _NavigationViewController = {
-	.name = "NavigationViewController",
-	.superclass = &_ViewController,
-	.instanceSize = sizeof(NavigationViewController),
-	.interfaceOffset = offsetof(NavigationViewController, interface),
-	.interfaceSize = sizeof(NavigationViewControllerInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *NavigationViewController::_NavigationViewController(void)
+ * @memberof NavigationViewController
+ */
+Class *_NavigationViewController(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "NavigationViewController";
+		clazz.superclass = _ViewController();
+		clazz.instanceSize = sizeof(NavigationViewController);
+		clazz.interfaceOffset = offsetof(NavigationViewController, interface);
+		clazz.interfaceSize = sizeof(NavigationViewControllerInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

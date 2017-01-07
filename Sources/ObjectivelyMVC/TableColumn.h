@@ -118,6 +118,9 @@ struct TableColumnInterface {
 };
 
 /**
- * @brief The TableColumn Class.
+ * @fn Class *TableColumn::_TableColumn(void)
+ * @brief The TableColumn archetype.
+ * @return The TableColumn Class.
+ * @memberof TableColumn
  */
-extern Class _TableColumn;
+OBJECTIVELYMVC_EXPORT Class *_TableColumn(void);

@@ -137,7 +137,10 @@ struct PanelInterface {
 };
 
 /**
- * @brief The Panel Class.
+ * @fn Class *Panel::_Panel(void)
+ * @brief The Panel archetype.
+ * @return The Panel Class.
+ * @memberof Panel
  */
-extern Class _Panel;
+OBJECTIVELYMVC_EXPORT Class *_Panel(void);
 

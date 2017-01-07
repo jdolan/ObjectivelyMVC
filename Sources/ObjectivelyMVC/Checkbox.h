@@ -91,6 +91,9 @@ struct CheckboxInterface {
 };
 
 /**
- * @brief The Checkbox Class.
+ * @fn Class *Checkbox::_Checkbox(void)
+ * @brief The Checkbox archetype.
+ * @return The Checkbox Class.
+ * @memberof Checkbox
  */
-extern Class _Checkbox;
+OBJECTIVELYMVC_EXPORT Class *_Checkbox(void);

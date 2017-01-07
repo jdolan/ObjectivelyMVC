@@ -167,13 +167,24 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->def->interface)->setViewController = setViewController;
 }
 
-Class _WindowController = {
-	.name = "WindowController",
-	.superclass = &_Object,
-	.instanceSize = sizeof(WindowController),
-	.interfaceOffset = offsetof(WindowController, interface),
-	.interfaceSize = sizeof(WindowControllerInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *WindowController::_WindowController(void)
+ * @memberof WindowController
+ */
+Class *_WindowController(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "WindowController";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(WindowController);
+		clazz.interfaceOffset = offsetof(WindowController, interface);
+		clazz.interfaceSize = sizeof(WindowControllerInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

@@ -125,4 +125,4 @@ struct TextInterface {
 	void (*setText)(Text *self, const char *text);
 };
 
-extern Class _Text;
+OBJECTIVELYMVC_EXPORT Class *_Text(void);

@@ -155,7 +155,10 @@ struct ViewControllerInterface {
 };
 
 /**
- * @brief The ViewController Class.
+ * @fn Class *ViewController::_ViewController(void)
+ * @brief The ViewController archetype.
+ * @return The ViewController Class.
+ * @memberof ViewController
  */
-extern Class _ViewController;
+OBJECTIVELYMVC_EXPORT Class *_ViewController(void);
 

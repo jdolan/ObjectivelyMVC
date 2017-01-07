@@ -195,14 +195,25 @@ static void initialize(Class *clazz) {
 	((TableRowViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }
 
-Class _TableRowView = {
-	.name = "TableRowView",
-	.superclass = &_StackView,
-	.instanceSize = sizeof(TableRowView),
-	.interfaceOffset = offsetof(TableRowView, interface),
-	.interfaceSize = sizeof(TableRowViewInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *TableRowView::_TableRowView(void)
+ * @memberof TableRowView
+ */
+Class *_TableRowView(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "TableRowView";
+		clazz.superclass = _StackView();
+		clazz.instanceSize = sizeof(TableRowView);
+		clazz.interfaceOffset = offsetof(TableRowView, interface);
+		clazz.interfaceSize = sizeof(TableRowViewInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

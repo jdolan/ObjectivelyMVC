@@ -82,14 +82,25 @@ static void initialize(Class *clazz) {
 	((TableColumnInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
 }
 
-Class _TableColumn = {
-	.name = "TableColumn",
-	.superclass = &_Object,
-	.instanceSize = sizeof(TableColumn),
-	.interfaceOffset = offsetof(TableColumn, interface),
-	.interfaceSize = sizeof(TableColumnInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *TableColumn::_TableColumn(void)
+ * @memberof TableColumn
+ */
+Class *_TableColumn(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "TableColumn";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(TableColumn);
+		clazz.interfaceOffset = offsetof(TableColumn, interface);
+		clazz.interfaceSize = sizeof(TableColumnInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 

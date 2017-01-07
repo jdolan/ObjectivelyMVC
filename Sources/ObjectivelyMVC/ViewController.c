@@ -173,13 +173,24 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 }
 
-Class _ViewController = {
-	.name = "ViewController",
-	.superclass = &_Object,
-	.instanceSize = sizeof(ViewController),
-	.interfaceOffset = offsetof(ViewController, interface),
-	.interfaceSize = sizeof(ViewControllerInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *ViewController::_ViewController(void)
+ * @memberof ViewController
+ */
+Class *_ViewController(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "ViewController";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(ViewController);
+		clazz.interfaceOffset = offsetof(ViewController, interface);
+		clazz.interfaceSize = sizeof(ViewControllerInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

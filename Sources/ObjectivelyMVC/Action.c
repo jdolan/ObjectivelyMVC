@@ -60,13 +60,24 @@ static void initialize(Class *clazz) {
 	((ActionInterface *) clazz->def->interface)->initWithEventType = initWithEventType;
 }
 
-Class _Action = {
-	.name = "Action",
-	.superclass = &_Object,
-	.instanceSize = sizeof(Action),
-	.interfaceOffset = offsetof(Action, interface),
-	.interfaceSize = sizeof(ActionInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Action::_Action(void)
+ * @memberof Action
+ */
+Class *_Action(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Action";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(Action);
+		clazz.interfaceOffset = offsetof(Action, interface);
+		clazz.interfaceSize = sizeof(ActionInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

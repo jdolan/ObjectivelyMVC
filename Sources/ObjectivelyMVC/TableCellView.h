@@ -81,6 +81,9 @@ struct TableCellViewInterface {
 };
 
 /**
- * @brief The TableCellView Class.
+ * @fn Class *TableCellView::_TableCellView(void)
+ * @brief The TableCellView archetype.
+ * @return The TableCellView Class.
+ * @memberof TableCellView
  */
-extern Class _TableCellView;
+OBJECTIVELYMVC_EXPORT Class *_TableCellView(void);

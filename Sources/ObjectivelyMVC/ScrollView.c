@@ -176,13 +176,24 @@ static void initialize(Class *clazz) {
 	((ScrollViewInterface *) clazz->def->interface)->setContentView = setContentView;
 }
 
-Class _ScrollView = {
-	.name = "ScrollView",
-	.superclass = &_Control,
-	.instanceSize = sizeof(ScrollView),
-	.interfaceOffset = offsetof(ScrollView, interface),
-	.interfaceSize = sizeof(ScrollViewInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *ScrollView::_ScrollView(void)
+ * @memberof ScrollView
+ */
+Class *_ScrollView(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "ScrollView";
+		clazz.superclass = _Control();
+		clazz.instanceSize = sizeof(ScrollView);
+		clazz.interfaceOffset = offsetof(ScrollView, interface);
+		clazz.interfaceSize = sizeof(ScrollViewInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class

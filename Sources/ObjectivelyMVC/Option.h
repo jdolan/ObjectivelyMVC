@@ -88,6 +88,9 @@ struct OptionInterface {
 };
 
 /**
- * @brief The Option Class.
+ * @fn Class *Option::_Option(void)
+ * @brief The Option archetype.
+ * @return The Option Class.
+ * @memberof Option
  */
-extern Class _Option;
+OBJECTIVELYMVC_EXPORT Class *_Option(void);

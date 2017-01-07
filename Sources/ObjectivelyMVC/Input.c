@@ -205,14 +205,25 @@ static void initialize(Class *clazz) {
 	((InputInterface *) clazz->def->interface)->setOrientation = setOrientation;
 }
 
-Class _Input = {
-	.name = "Input",
-	.superclass = &_StackView,
-	.instanceSize = sizeof(Input),
-	.interfaceOffset = offsetof(Input, interface),
-	.interfaceSize = sizeof(InputInterface),
-	.initialize = initialize,
-};
+/**
+ * @fn Class *Input::_Input(void)
+ * @memberof Input
+ */
+Class *_Input(void) {
+	static Class clazz;
+	static Once once;
+	
+	do_once(&once, {
+		clazz.name = "Input";
+		clazz.superclass = _StackView();
+		clazz.instanceSize = sizeof(Input);
+		clazz.interfaceOffset = offsetof(Input, interface);
+		clazz.interfaceSize = sizeof(InputInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
 
 #undef _Class
 
