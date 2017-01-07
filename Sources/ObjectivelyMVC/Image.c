@@ -141,6 +141,10 @@ static void initialize(Class *clazz) {
 	}
 }
 
+/**
+ * @fn Class *Image::_Image(void)
+ * @memberof Image
+ */
 Class *_Image(void) {
 	static Class clazz;
 	static Once once;

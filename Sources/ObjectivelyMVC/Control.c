@@ -341,6 +341,10 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 }
 
+/**
+ * @fn Class *Control::_Control(void)
+ * @memberof Control
+ */
 Class *_Control(void) {
 	static Class clazz;
 	static Once once;

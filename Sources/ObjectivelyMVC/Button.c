@@ -162,6 +162,10 @@ static void initialize(Class *clazz) {
 	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
+/**
+ * @fn Class *Button::_Button(void)
+ * @memberof Button
+ */
 Class *_Button(void) {
 	static Class clazz;
 	static Once once;

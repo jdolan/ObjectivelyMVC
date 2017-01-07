@@ -221,6 +221,10 @@ static void initialize(Class *clazz) {
 	((TextInterface *) clazz->def->interface)->setText = setText;
 }
 
+/**
+ * @fn Class *Text::_Text(void)
+ * @memberof Text
+ */
 Class *_Text(void) {
 	static Class clazz;
 	static Once once;

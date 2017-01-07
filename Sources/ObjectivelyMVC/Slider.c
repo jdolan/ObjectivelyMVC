@@ -266,6 +266,10 @@ static void initialize(Class *clazz) {
 	((SliderInterface *) clazz->def->interface)->setValue = setValue;
 }
 
+/**
+ * @fn Class *Slider::_Slider(void)
+ * @memberof Slider
+ */
 Class *_Slider(void) {
 	static Class clazz;
 	static Once once;

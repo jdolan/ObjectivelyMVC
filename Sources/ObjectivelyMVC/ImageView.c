@@ -220,6 +220,10 @@ static void initialize(Class *clazz) {
 	((ImageViewInterface *) clazz->def->interface)->setImageWithSurface = setImageWithSurface;
 }
 
+/**
+ * @fn Class *ImageView::_ImageView(void)
+ * @memberof ImageView
+ */
 Class *_ImageView(void) {
 	static Class clazz;
 	static Once once;

@@ -81,6 +81,10 @@ static void initialize(Class *clazz) {
 	((TableCellViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
+/**
+ * @fn Class *TableCellView::_TableCellView(void)
+ * @memberof TableCellView
+ */
 Class *_TableCellView(void) {
 	static Class clazz;
 	static Once once;

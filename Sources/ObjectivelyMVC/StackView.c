@@ -255,6 +255,10 @@ static void initialize(Class *clazz) {
 	((StackViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
+/**
+ * @fn Class *StackView::_StackView(void)
+ * @memberof StackView
+ */
 Class *_StackView(void) {
 	static Class clazz;
 	static Once once;

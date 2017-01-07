@@ -245,6 +245,10 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
 }
 
+/**
+ * @fn Class *HelloViewController::_HelloViewController(void)
+ * @memberof HelloViewController
+ */
 Class *_HelloViewController(void) {
 	static Class clazz;
 	static Once once;

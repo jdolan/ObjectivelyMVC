@@ -195,6 +195,10 @@ static void initialize(Class *clazz) {
 	((TableRowViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }
 
+/**
+ * @fn Class *TableRowView::_TableRowView(void)
+ * @memberof TableRowView
+ */
 Class *_TableRowView(void) {
 	static Class clazz;
 	static Once once;

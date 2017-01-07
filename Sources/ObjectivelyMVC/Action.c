@@ -60,6 +60,10 @@ static void initialize(Class *clazz) {
 	((ActionInterface *) clazz->def->interface)->initWithEventType = initWithEventType;
 }
 
+/**
+ * @fn Class *Action::_Action(void)
+ * @memberof Action
+ */
 Class *_Action(void) {
 	static Class clazz;
 	static Once once;

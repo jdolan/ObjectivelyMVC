@@ -979,6 +979,10 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->window = window;
 }
 
+/**
+ * @fn Class *View::_View(void)
+ * @memberof View
+ */
 Class *_View(void) {
 	static Class clazz;
 	static Once once;

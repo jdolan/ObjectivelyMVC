@@ -205,6 +205,10 @@ static void initialize(Class *clazz) {
 	((InputInterface *) clazz->def->interface)->setOrientation = setOrientation;
 }
 
+/**
+ * @fn Class *Input::_Input(void)
+ * @memberof Input
+ */
 Class *_Input(void) {
 	static Class clazz;
 	static Once once;

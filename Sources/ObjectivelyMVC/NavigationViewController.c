@@ -137,6 +137,10 @@ static void initialize(Class *clazz) {
 	((NavigationViewControllerInterface *) clazz->def->interface)->topViewController = topViewController;
 }
 
+/**
+ * @fn Class *NavigationViewController::_NavigationViewController(void)
+ * @memberof NavigationViewController
+ */
 Class *_NavigationViewController(void) {
 	static Class clazz;
 	static Once once;

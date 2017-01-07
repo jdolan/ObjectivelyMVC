@@ -82,6 +82,10 @@ static void initialize(Class *clazz) {
 	((TableColumnInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
 }
 
+/**
+ * @fn Class *TableColumn::_TableColumn(void)
+ * @memberof TableColumn
+ */
 Class *_TableColumn(void) {
 	static Class clazz;
 	static Once once;

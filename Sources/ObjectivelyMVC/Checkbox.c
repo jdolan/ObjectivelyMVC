@@ -230,6 +230,10 @@ static void destroy(Class *clazz) {
 	release(_check);
 }
 
+/**
+ * @fn Class *Checkbox::_Checkbox(void)
+ * @memberof Checkbox
+ */
 Class *_Checkbox(void) {
 	static Class clazz;
 	static Once once;

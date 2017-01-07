@@ -308,6 +308,10 @@ static void destroy(Class *clazz) {
 	release(_resize);
 }
 
+/**
+ * @fn Class *Panel::_Panel(void)
+ * @memberof Panel
+ */
 Class *_Panel(void) {
 	static Class clazz;
 	static Once once;

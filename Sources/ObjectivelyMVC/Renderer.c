@@ -352,6 +352,10 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
 }
 
+/**
+ * @fn Class *Renderer::_Renderer(void)
+ * @memberof Renderer
+ */
 Class *_Renderer(void) {
 	static Class clazz;
 	static Once once;

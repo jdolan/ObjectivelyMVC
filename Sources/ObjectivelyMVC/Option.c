@@ -110,6 +110,10 @@ static void initialize(Class *clazz) {
 	((OptionInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
 }
 
+/**
+ * @fn Class *Option::_Option(void)
+ * @memberof Option
+ */
 Class *_Option(void) {
 	static Class clazz;
 	static Once once;

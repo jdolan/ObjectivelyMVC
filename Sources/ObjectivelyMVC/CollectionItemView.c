@@ -105,6 +105,10 @@ static void initialize(Class *clazz) {
 	((CollectionItemViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }
 
+/**
+ * @fn Class *CollectionItemView::_CollectionItemView(void)
+ * @memberof CollectionItemView
+ */
 Class *_CollectionItemView(void) {
 	static Class clazz;
 	static Once once;

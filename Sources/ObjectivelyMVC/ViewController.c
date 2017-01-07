@@ -173,6 +173,10 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 }
 
+/**
+ * @fn Class *ViewController::_ViewController(void)
+ * @memberof ViewController
+ */
 Class *_ViewController(void) {
 	static Class clazz;
 	static Once once;

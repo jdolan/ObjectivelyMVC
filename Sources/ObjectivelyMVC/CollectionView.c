@@ -491,6 +491,10 @@ static void initialize(Class *clazz) {
 	((CollectionViewInterface *) clazz->def->interface)->selectItemsAtIndexPaths = selectItemsAtIndexPaths;
 }
 
+/**
+ * @fn Class *CollectionView::_CollectionView(void)
+ * @memberof CollectionView
+ */
 Class *_CollectionView(void) {
 	static Class clazz;
 	static Once once;

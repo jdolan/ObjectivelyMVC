@@ -337,6 +337,10 @@ static void initialize(Class *clazz) {
 	((TextViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
+/**
+ * @fn Class *TextView::_TextView(void)
+ * @memberof TextView
+ */
 Class *_TextView(void) {
 	static Class clazz;
 	static Once once;

@@ -662,6 +662,10 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->def->interface)->setSortColumn = setSortColumn;
 }
 
+/**
+ * @fn Class *TableView::_TableView(void)
+ * @memberof TableView
+ */
 Class *_TableView(void) {
 	static Class clazz;
 	static Once once;

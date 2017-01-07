@@ -372,6 +372,10 @@ static void initialize(Class *clazz) {
 	((SelectInterface *) clazz->def->interface)->selectOptionWithValue = selectOptionWithValue;
 }
 
+/**
+ * @fn Class *Select::_Select(void)
+ * @memberof Select
+ */
 Class *_Select(void) {
 	static Class clazz;
 	static Once once;

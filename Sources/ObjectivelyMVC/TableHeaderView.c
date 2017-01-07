@@ -99,6 +99,10 @@ static void initialize(Class *clazz) {
 	((TableHeaderViewInterface *) clazz->def->interface)->initWithTableView = initWithTableView;
 }
 
+/**
+ * @fn Class *TableHeaderView::_TableHeaderView(void)
+ * @memberof TableHeaderView
+ */
 Class *_TableHeaderView(void) {
 	static Class clazz;
 	static Once once;

@@ -138,6 +138,10 @@ static void initialize(Class *clazz) {
 	((BoxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
+/**
+ * @fn Class *Box::_Box(void)
+ * @memberof Box
+ */
 Class *_Box(void) {
 	static Class clazz;
 	static Once once;

@@ -328,6 +328,10 @@ static void destroy(Class *clazz) {
 	TTF_Quit();
 }
 
+/**
+ * @fn Class *Font::_Font(void)
+ * @memberof Font
+ */
 Class *_Font(void) {
 	static Class clazz;
 	static Once once;

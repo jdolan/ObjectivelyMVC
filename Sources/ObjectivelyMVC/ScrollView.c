@@ -176,6 +176,10 @@ static void initialize(Class *clazz) {
 	((ScrollViewInterface *) clazz->def->interface)->setContentView = setContentView;
 }
 
+/**
+ * @fn Class *ScrollView::_ScrollView(void)
+ * @memberof ScrollView
+ */
 Class *_ScrollView(void) {
 	static Class clazz;
 	static Once once;

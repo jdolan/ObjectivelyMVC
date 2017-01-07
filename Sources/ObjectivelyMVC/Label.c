@@ -107,6 +107,10 @@ static void initialize(Class *clazz) {
 	((LabelInterface *) clazz->def->interface)->initWithText = initWithText;
 }
 
+/**
+ * @fn Class *Label::_Label(void)
+ * @memberof Label
+ */
 Class *_Label(void) {
 	static Class clazz;
 	static Once once;
