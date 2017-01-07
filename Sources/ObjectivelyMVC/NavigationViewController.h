@@ -125,7 +125,10 @@ struct NavigationViewControllerInterface {
 };
 
 /**
- * @brief The NavigationViewController Class.
+ * @fn Class *NavigationViewController::_NavigationViewController(void)
+ * @brief The NavigationViewController archetype.
+ * @return The NavigationViewController Class.
+ * @memberof NavigationViewController
  */
 OBJECTIVELYMVC_EXPORT Class *_NavigationViewController(void);
 

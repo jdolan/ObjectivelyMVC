@@ -121,6 +121,9 @@ struct ImageInterface {
 };
 
 /**
- * @brief The Image Class.
+ * @fn Class *Image::_Image(void)
+ * @brief The Image archetype.
+ * @return The Image Class.
+ * @memberof Image
  */
 OBJECTIVELYMVC_EXPORT Class *_Image(void);

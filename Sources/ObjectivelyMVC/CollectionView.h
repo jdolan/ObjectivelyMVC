@@ -286,7 +286,10 @@ struct CollectionViewInterface {
 };
 
 /**
- * @brief The CollectionView Class.
+ * @fn Class *CollectionView::_CollectionView(void)
+ * @brief The CollectionView archetype.
+ * @return The CollectionView Class.
+ * @memberof CollectionView
  */
 OBJECTIVELYMVC_EXPORT Class *_CollectionView(void);
 

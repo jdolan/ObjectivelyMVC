@@ -148,6 +148,9 @@ struct SliderInterface {
 };
 
 /**
- * @brief The Slider Class.
+ * @fn Class *Slider::_Slider(void)
+ * @brief The Slider archetype.
+ * @return The Slider Class.
+ * @memberof Slider
  */
 OBJECTIVELYMVC_EXPORT Class *_Slider(void);

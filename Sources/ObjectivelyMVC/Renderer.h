@@ -209,7 +209,10 @@ struct RendererInterface {
 };
 
 /**
- * @brief The Renderer Class.
+ * @fn Class *Renderer::_Renderer(void)
+ * @brief The Renderer archetype.
+ * @return The Renderer Class.
+ * @memberof Renderer
  */
 OBJECTIVELYMVC_EXPORT Class *_Renderer(void);
 

@@ -141,6 +141,9 @@ struct TextViewInterface {
 };
 
 /**
- * @brief The TextView Class.
+ * @fn Class *TextView::_TextView(void)
+ * @brief The TextView archetype.
+ * @return The TextView Class.
+ * @memberof TextView
  */
 OBJECTIVELYMVC_EXPORT Class *_TextView(void);

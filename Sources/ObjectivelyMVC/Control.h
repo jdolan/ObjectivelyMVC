@@ -226,6 +226,9 @@ struct ControlInterface {
 };
 
 /**
- * @brief The Control Class.
+ * @fn Class *Control::_Control(void)
+ * @brief The Control archetype.
+ * @return The Control Class.
+ * @memberof Control
  */
 OBJECTIVELYMVC_EXPORT Class *_Control(void);

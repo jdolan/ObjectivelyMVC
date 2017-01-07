@@ -82,6 +82,9 @@ struct ButtonInterface {
 };
 
 /**
- * @brief The Button Class.
+ * @fn Class *Button::_Button(void)
+ * @brief The Button archetype.
+ * @return The Button Class.
+ * @memberof Button
  */
 OBJECTIVELYMVC_EXPORT Class *_Button(void);

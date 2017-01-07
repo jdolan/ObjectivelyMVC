@@ -336,6 +336,9 @@ struct TableViewInterface {
 };
 
 /**
- * @brief The TableView Class.
+ * @fn Class *TableView::_TableView(void)
+ * @brief The TableView archetype.
+ * @return The TableView Class.
+ * @memberof TableView
  */
 OBJECTIVELYMVC_EXPORT Class *_TableView(void);

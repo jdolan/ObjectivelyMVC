@@ -86,7 +86,10 @@ struct BoxInterface {
 };
 
 /**
- * @brief The Box Class.
+ * @fn Class *Box::_Box(void)
+ * @brief The Box archetype.
+ * @return The Box Class.
+ * @memberof Box
  */
 OBJECTIVELYMVC_EXPORT Class *_Box(void);
 

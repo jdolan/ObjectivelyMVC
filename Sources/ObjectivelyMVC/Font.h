@@ -178,6 +178,9 @@ struct FontInterface {
 };
 
 /**
- * @brief The Font Class.
+ * @fn Class *Font::_Font(void)
+ * @brief The Font archetype.
+ * @return The Font Class.
+ * @memberof Font
  */
 OBJECTIVELYMVC_EXPORT Class *_Font(void);

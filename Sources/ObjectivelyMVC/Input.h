@@ -134,6 +134,9 @@ struct InputInterface {
 };
 
 /**
- * @brief The Input Class.
+ * @fn Class *Input::_Input(void)
+ * @brief The Input archetype.
+ * @return The Input Class.
+ * @memberof Input
  */
 OBJECTIVELYMVC_EXPORT Class *_Input(void);

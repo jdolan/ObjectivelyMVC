@@ -106,6 +106,9 @@ struct ActionInterface {
 };
 
 /**
- * @brief The Action Class.
+ * @fn Class *Action::_Action(void)
+ * @brief The Action archetype.
+ * @return The Action Class.
+ * @memberof Action
  */
 OBJECTIVELYMVC_EXPORT Class *_Action(void);

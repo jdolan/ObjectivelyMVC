@@ -116,6 +116,9 @@ struct StackViewInterface {
 };
 
 /**
- * @brief The StackView Class.
+ * @fn Class *StackView::_StackView(void)
+ * @brief The StackView archetype.
+ * @return The StackView Class.
+ * @memberof StackView
  */
 OBJECTIVELYMVC_EXPORT Class *_StackView(void);

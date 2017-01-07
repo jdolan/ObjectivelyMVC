@@ -106,6 +106,9 @@ struct HelloViewControllerInterface {
 };
 
 /**
- * @brief The HelloViewController Class.
+ * @fn Class *HelloViewController::_HelloViewController(void)
+ * @brief The HelloViewController archetype.
+ * @return The HelloViewController Class.
+ * @memberof HelloViewController
  */
 Class *_HelloViewController(void);

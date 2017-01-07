@@ -133,7 +133,10 @@ struct TableRowViewInterface {
 };
 
 /**
- * @brief The TableRowView Class.
+ * @fn Class *TableRowView::_TableRowView(void)
+ * @brief The TableRowView archetype.
+ * @return The TableRowView Class.
+ * @memberof TableRowView
  */
 OBJECTIVELYMVC_EXPORT Class *_TableRowView(void);
 
