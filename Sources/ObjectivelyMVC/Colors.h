@@ -37,7 +37,7 @@
  * @see http://www.w3schools.com/colors/colors_names.asp
  */
 OBJECTIVELYMVC_EXPORT const struct _Colors {
-	
+
 	SDL_Color DefaultColor;
 	SDL_Color HighlightedColor;
 	SDL_Color DisabledColor;
@@ -45,9 +45,9 @@ OBJECTIVELYMVC_EXPORT const struct _Colors {
 	SDL_Color FocusedColor;
 
 	SDL_Color AlternateColor;
-	
+
 	SDL_Color Clear;
-	
+
 	SDL_Color AliceBlue;
 	SDL_Color AntiqueWhite;
 	SDL_Color Aqua;

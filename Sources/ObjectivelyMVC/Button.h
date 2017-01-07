@@ -52,7 +52,7 @@ struct Button {
 	 * @protected
 	 */
 	ButtonInterface *interface;
-	
+
 	/**
 	 * @brief The title.
 	 */

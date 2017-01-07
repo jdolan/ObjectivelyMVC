@@ -89,7 +89,7 @@ struct RendererInterface {
 	 * @fn void Renderer::beginFrame(Renderer *self)
 	 * @brief Sets up OpenGL state.
 	 * @param self The Renderer.
-	 * @remarks This method is called by the WindowController to begin rendering. Override this 
+	 * @remarks This method is called by the WindowController to begin rendering. Override this
 	 * method for custom OpenGL state setup, if desired.
 	 * @memberof Renderer
 	 */

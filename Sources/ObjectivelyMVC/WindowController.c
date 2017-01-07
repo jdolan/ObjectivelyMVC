@@ -34,12 +34,12 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	WindowController *this = (WindowController *) self;
 
 	release(this->renderer);
 	release(this->viewController);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -50,7 +50,7 @@ static void dealloc(Object *self) {
  * @memberof WindowController
  */
 static WindowController *initWithWindow(WindowController *self, SDL_Window *window) {
-	
+
 	self = (WindowController *) super(Object, self, init);
 	if (self) {
 
@@ -63,7 +63,7 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
 	}
-	
+
 	return self;
 }
 
@@ -114,7 +114,7 @@ static void setViewController(WindowController *self, ViewController *viewContro
 static void render(WindowController *self) {
 
 	assert(self->renderer);
-	
+
 	$(self->renderer, beginFrame);
 
 	if (self->viewController) {
@@ -157,9 +157,9 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	
+
 	((WindowControllerInterface *) clazz->def->interface)->initWithWindow = initWithWindow;
 	((WindowControllerInterface *) clazz->def->interface)->render = render;
 	((WindowControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
@@ -174,7 +174,7 @@ static void initialize(Class *clazz) {
 Class *_WindowController(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "WindowController";
 		clazz.superclass = _Object();

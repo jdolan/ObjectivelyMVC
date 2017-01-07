@@ -145,17 +145,17 @@ static View *init(View *self) {
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
-	
+
 	if (event->type == SDL_MOUSEBUTTONUP) {
 
 		Checkbox *this = (Checkbox *) self;
-		
+
 		if ($((View *) this->box, didReceiveEvent, event)) {
 			self->state ^= ControlStateSelected;
 			return true;
 		}
 	}
-	
+
 	return super(Control, self, captureEvent, event);
 }
 
@@ -179,12 +179,12 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 
 		self->check = $(alloc(ImageView), initWithImage, _check);
 		assert(self->check);
-		
+
 		self->check->view.autoresizingMask = ViewAutoresizingFill;
-		
+
 		$((View *) self->box, addSubview, (View *) self->check);
 		$((View *) self, addSubview, (View *) self->box);
-		
+
 		if (self->control.style == ControlStyleDefault) {
 			self->box->bevel = ControlBevelTypeInset;
 
@@ -192,14 +192,14 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 
 			self->box->view.frame.w = DEFAULT_CHECKBOX_SIZE;
 			self->box->view.frame.h = DEFAULT_CHECKBOX_SIZE;
-			
+
 			self->box->view.padding.top = DEFAULT_CHECKBOX_PADDING;
 			self->box->view.padding.right = DEFAULT_CHECKBOX_PADDING;
 			self->box->view.padding.bottom = DEFAULT_CHECKBOX_PADDING;
 			self->box->view.padding.left = DEFAULT_CHECKBOX_PADDING;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -217,7 +217,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->init = init;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	
+
 	((CheckboxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 
 	_check = $(alloc(Image), initWithBytes, _checkData, lengthof(_checkData));
@@ -237,7 +237,7 @@ static void destroy(Class *clazz) {
 Class *_Checkbox(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Checkbox";
 		clazz.superclass = _Control();

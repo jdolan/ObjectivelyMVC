@@ -41,12 +41,12 @@ typedef struct CollectionItemViewInterface CollectionItemViewInterface;
  * @ingroup CollectionViews
  */
 struct CollectionItemView {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	View view;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -73,12 +73,12 @@ struct CollectionItemView {
  * @brief The CollectionItemView interface.
  */
 struct CollectionItemViewInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
-	
+
 	/**
 	 * @fn CollectionItemView *CollectionItemView::initWithFrame(CollectionItemView *self, const SDL_Rect *frame)
 	 * @brief Initializes this CollectionItemView with the specified frame.

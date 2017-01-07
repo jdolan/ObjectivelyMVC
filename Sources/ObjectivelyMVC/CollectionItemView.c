@@ -33,7 +33,7 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	CollectionItemView *this = (CollectionItemView *) self;
 
 	release(this->imageView);
@@ -49,7 +49,7 @@ static void dealloc(Object *self) {
  * @memberof CollectionItemView
  */
 static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rect *frame) {
-	
+
 	self = (CollectionItemView *) super(View, self, initWithFrame, frame);
 	if (self) {
 		self->imageView = $(alloc(ImageView), initWithFrame, frame);
@@ -74,7 +74,7 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 
 		self->view.clipsSubviews = true;
 	}
-	
+
 	return self;
 }
 
@@ -98,9 +98,9 @@ static void setSelected(CollectionItemView *self, _Bool selected) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	
+
 	((CollectionItemViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((CollectionItemViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }
@@ -112,7 +112,7 @@ static void initialize(Class *clazz) {
 Class *_CollectionItemView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "CollectionItemView";
 		clazz.superclass = _View();

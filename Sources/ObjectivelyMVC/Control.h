@@ -109,7 +109,7 @@ struct Control {
 	 * @private
 	 */
 	MutableArray *actions;
-	
+
 	/**
 	 * @brief The ControlBevelType.
 	 */
@@ -124,7 +124,7 @@ struct Control {
 	 * @brief The ControlSelection.
 	 */
 	ControlSelection selection;
-	
+
 	/**
 	 * @brief The ControlStyle.
 	 */
@@ -171,7 +171,7 @@ struct ControlInterface {
 	 * @memberof Control
 	 */
 	_Bool (*captureEvent)(Control *self, const SDL_Event *event);
-	
+
 	/**
 	 * @fn _Bool Control::enabled(const Control *self)
 	 * @param self The Control.
@@ -214,7 +214,7 @@ struct ControlInterface {
 	 * @memberof Control
 	 */
 	_Bool (*selected)(const Control *self);
-	
+
 	/**
 	 * @fn void Control::stateDidChange(Control *self)
 	 * @brief Called when the state of this Control changes.

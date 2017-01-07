@@ -41,12 +41,12 @@ typedef struct NavigationViewControllerInterface NavigationViewControllerInterfa
  * @ingroup ViewControllers
  */
 struct NavigationViewController {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	ViewController viewController;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -58,12 +58,12 @@ struct NavigationViewController {
  * @brief The NavigationViewController interface.
  */
 struct NavigationViewControllerInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ViewControllerInterface viewControllerInterface;
-	
+
 	/**
 	 * @fn NavigationViewController *NavigationViewController::init(NavigationViewController *self)
 	 * @brief Initializes this NavigationViewController.

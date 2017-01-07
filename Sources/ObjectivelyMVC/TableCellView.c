@@ -33,11 +33,11 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	TableCellView *this = (TableCellView *) self;
 
 	release(this->text);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -48,7 +48,7 @@ static void dealloc(Object *self) {
  * @memberof TableCellView
  */
 static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) {
-	
+
 	self = (TableCellView *) super(View, self, initWithFrame, NULL);
 	if (self) {
 		self->text = $(alloc(Text), initWithText, NULL, NULL);
@@ -65,7 +65,7 @@ static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) 
 		self->view.padding.right = DEFAULT_TABLE_CELL_VIEW_PADDING;
 		self->view.padding.bottom = DEFAULT_TABLE_CELL_VIEW_PADDING;
 	}
-	
+
 	return self;
 }
 
@@ -75,9 +75,9 @@ static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) 
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	
+
 	((TableCellViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
@@ -88,7 +88,7 @@ static void initialize(Class *clazz) {
 Class *_TableCellView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "TableCellView";
 		clazz.superclass = _View();

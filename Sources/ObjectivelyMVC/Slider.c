@@ -34,7 +34,7 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	Slider *this = (Slider *) self;
 
 	release(this->bar);
@@ -42,7 +42,7 @@ static void dealloc(Object *self) {
 	release(this->label);
 
 	free(this->labelFormat);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -83,9 +83,9 @@ static View *init(View *self) {
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
-	
+
 	super(View, self, layoutSubviews);
-	
+
 	Slider *this = (Slider *) self;
 
 	if (this->max > this->min) {
@@ -119,7 +119,7 @@ static void layoutSubviews(View *self) {
  * @see View::render(View *, Renderer *)
  */
 static void render(View *self, Renderer *renderer) {
-	
+
 	super(View, self, render, renderer);
 
 	Slider *this = (Slider *) self;
@@ -140,21 +140,21 @@ static void render(View *self, Renderer *renderer) {
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
-	
+
 	Slider *this = (Slider *) self;
-	
+
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		if ($((View *) this->handle, didReceiveEvent, event)) {
 			self->state |= ControlStateHighlighted;
 		}
 	}
-	
+
 	else if (event->type == SDL_MOUSEBUTTONUP) {
 		if (self->state & ControlStateHighlighted) {
 			self->state &= ~ControlStateHighlighted;
 		}
 	}
-	
+
 	else if (event->type == SDL_MOUSEMOTION) {
 		if (self->state & ControlStateHighlighted) {
 			const SDL_Rect frame = $((View *) this->bar, renderFrame);
@@ -169,7 +169,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			}
 		}
 	}
-	
+
 	return super(Control, self, captureEvent, event);
 }
 
@@ -180,7 +180,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
  * @memberof Slider
  */
 static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle style) {
-	
+
 	self = (Slider *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 		self->bar = $(alloc(View), initWithFrame, frame);
@@ -205,20 +205,20 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 		$((View *) self, addSubview, (View *) self->label);
 
 		self->labelFormat = strdup("%0.1f");
-		
+
 		if (self->control.style == ControlStyleDefault) {
 
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_SLIDER_WIDTH;
 			}
-			
+
 			self->handle->bevel = ControlBevelTypeOutset;
 			self->handle->view.backgroundColor = Colors.FocusedColor;
 			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
 			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -252,16 +252,16 @@ static void setValue(Slider *self, double value) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->render = render;
-	
+
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	
+
 	((SliderInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((SliderInterface *) clazz->def->interface)->setValue = setValue;
 }
@@ -273,7 +273,7 @@ static void initialize(Class *clazz) {
 Class *_Slider(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Slider";
 		clazz.superclass = _Control();

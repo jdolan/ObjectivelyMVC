@@ -36,7 +36,7 @@
  * @memberof NavigationViewController
  */
 static NavigationViewController *init(NavigationViewController *self) {
-	
+
 	return (NavigationViewController *) super(ViewController, self, init);
 }
 
@@ -88,7 +88,7 @@ static void popToViewController(NavigationViewController *self, const ViewContro
 		if (topViewController == viewController) {
 			break;
 		}
-		
+
 		$(self, popViewController);
 	}
 }
@@ -144,7 +144,7 @@ static void initialize(Class *clazz) {
 Class *_NavigationViewController(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "NavigationViewController";
 		clazz.superclass = _ViewController();

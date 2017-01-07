@@ -227,7 +227,7 @@ static SDL_Size contentSize(const Panel *self) {
  * @memberof Panel
  */
 static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
-	
+
 	self = (Panel *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 
@@ -276,7 +276,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		this->padding.top = this->padding.bottom = DEFAULT_PANEL_PADDING;
 		this->padding.left = this->padding.right = DEFAULT_PANEL_PADDING;
 	}
-	
+
 	return self;
 }
 
@@ -315,7 +315,7 @@ static void destroy(Class *clazz) {
 Class *_Panel(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Panel";
 		clazz.superclass = _StackView();

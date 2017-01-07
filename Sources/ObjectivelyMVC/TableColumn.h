@@ -43,12 +43,12 @@ typedef struct TableColumnInterface TableColumnInterface;
  * @ingroup Tables
  */
 struct TableColumn {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	Object object;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -69,7 +69,7 @@ struct TableColumn {
 	 * @brief The header cell.
 	 */
 	TableHeaderCellView *headerCell;
-	
+
 	/**
 	 * @brief The identifier.
 	 */
@@ -79,7 +79,7 @@ struct TableColumn {
 	 * @brief The maximum width.
 	 */
 	int maxWidth;
-	
+
 	/**
 	 * @brief The minimum width.
 	 */
@@ -100,7 +100,7 @@ struct TableColumn {
  * @brief The TableColumn interface.
  */
 struct TableColumnInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */

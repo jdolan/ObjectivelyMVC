@@ -93,7 +93,7 @@ static View *init(View *self) {
 static void render(View *self, Renderer *renderer) {
 
 	super(View, self, render, renderer);
-	
+
 	ImageView *this = (ImageView *) self;
 
 	if (this->texture == 0) {
@@ -150,7 +150,7 @@ static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
  * @memberof ImageView
  */
 static ImageView *initWithImage(ImageView *self, Image *image) {
-	
+
 	self = (ImageView *) $(self, initWithFrame, NULL);
 	if (self) {
 
@@ -161,7 +161,7 @@ static ImageView *initWithImage(ImageView *self, Image *image) {
 			self->view.frame.h = image->surface->h;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -227,7 +227,7 @@ static void initialize(Class *clazz) {
 Class *_ImageView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "ImageView";
 		clazz.superclass = _View();

@@ -39,12 +39,12 @@ typedef struct TableHeaderCellViewInterface TableHeaderCellViewInterface;
  * @ingroup Tables
  */
 struct TableHeaderCellView {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	TableCellView tableCellView;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -56,12 +56,12 @@ struct TableHeaderCellView {
  * @brief The TableHeaderCellView interface.
  */
 struct TableHeaderCellViewInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	TableCellViewInterface tableCellViewInterface;
-	
+
 	/**
 	 * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame)
 	 * @brief Initializes this TableHeaderCellView with the specified frame.

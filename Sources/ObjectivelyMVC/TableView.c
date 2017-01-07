@@ -35,7 +35,7 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	TableView *this = (TableView *) self;
 
 	release(this->columns);
@@ -216,11 +216,11 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 						IndexSet *selectedRowIndexes = $(this, selectedRowIndexes);
 
 						this->delegate.didSelectRowsAtIndexes(this, selectedRowIndexes);
-						
+
 						release(selectedRowIndexes);
 					}
 				}
-				
+
 				return true;
 			}
 		}
@@ -337,7 +337,7 @@ static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
  * @memberof TableView
  */
 static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style) {
-	
+
 	self = (TableView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 		self->columns = $$(MutableArray, array);
@@ -381,7 +381,7 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 			self->control.view.padding.left = 0;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -500,7 +500,7 @@ static void removeColumn(TableView *self, TableColumn *column) {
 	if (self->sortColumn == column) {
 		self->sortColumn = NULL;
 	}
-	
+
 	$(self->columns, removeObject, column);
 }
 
@@ -634,7 +634,7 @@ static void setSortColumn(TableView *self, TableColumn *column) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
@@ -669,7 +669,7 @@ static void initialize(Class *clazz) {
 Class *_TableView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "TableView";
 		clazz.superclass = _Control();

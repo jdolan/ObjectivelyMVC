@@ -85,7 +85,7 @@ static View *init(View *self) {
  * @memberof Input
  */
 static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
-	
+
 	self = (Input *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 
@@ -102,7 +102,7 @@ static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
 
 		self->stackView.spacing = DEFAULT_INPUT_SPACING;
 	}
-	
+
 	return self;
 }
 
@@ -212,7 +212,7 @@ static void initialize(Class *clazz) {
 Class *_Input(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Input";
 		clazz.superclass = _StackView();

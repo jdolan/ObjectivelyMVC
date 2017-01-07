@@ -42,12 +42,12 @@ typedef struct TableRowViewInterface TableRowViewInterface;
  * @ingroup Tables
  */
 struct TableRowView {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	StackView stackView;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -79,7 +79,7 @@ struct TableRowView {
  * @brief The TableRowView interface.
  */
 struct TableRowViewInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
@@ -93,7 +93,7 @@ struct TableRowViewInterface {
 	 * @memberof TableRowView
 	 */
 	void (*addCell)(TableRowView *self, TableCellView *cell);
-	
+
 	/**
 	 * @fn TableRowView *TableRowView::initWithTableView(TableRowView *self, TableView *tableView)
 	 * @brief Initializes this TableRowView with the given table.

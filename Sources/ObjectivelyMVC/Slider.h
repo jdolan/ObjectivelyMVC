@@ -64,12 +64,12 @@ struct SliderDelegate {
  * @ingroup Controls
  */
 struct Slider {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	Control control;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -101,17 +101,17 @@ struct Slider {
 	 * @brief The label format, e.g. `"%0.01f"`.
 	 */
 	char *labelFormat;
-	
+
 	/**
 	 * @brief The slider bounds.
 	 */
 	double min, max;
-	
+
 	/**
 	 * @brief The step to increment on key events.
 	 */
 	double step;
-	
+
 	/**
 	 * @brief The slider value.
 	 */
@@ -122,12 +122,12 @@ struct Slider {
  * @brief The Slider interface.
  */
 struct SliderInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ControlInterface controlInterface;
-	
+
 	/**
 	 * @fn Slider *Slider::init(Slider *self)
 	 * @brief Initializes this Slider.

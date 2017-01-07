@@ -114,7 +114,7 @@ static void initialize(Class *clazz) {
 Class *_Label(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Label";
 		clazz.superclass = _View();

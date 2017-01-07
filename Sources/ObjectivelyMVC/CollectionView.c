@@ -38,13 +38,13 @@ const EnumName CollectionViewAxisNames[] = MakeEnumNames(
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	CollectionView *this = (CollectionView *) self;
 
 	release(this->contentView);
 	release(this->items);
 	release(this->scrollView);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -332,7 +332,7 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 			self->contentView->padding.left = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -380,7 +380,7 @@ static void reloadData(CollectionView *self) {
 
 		CollectionItemView *item = self->delegate.itemForObjectAtIndexPath(self, indexPath);
 		assert(item);
-		
+
 		$(self->items, addObject, item);
 		$(self->contentView, addSubview, (View *) item);
 
@@ -468,7 +468,7 @@ static void selectItemsAtIndexPaths(CollectionView *self, const Array *indexPath
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
@@ -498,7 +498,7 @@ static void initialize(Class *clazz) {
 Class *_CollectionView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "CollectionView";
 		clazz.superclass = _Control();

@@ -46,12 +46,12 @@ typedef struct BoxInterface BoxInterface;
  * Controls, Inputs or custom Views within a larger View (e.g. Panel).
  */
 struct Box {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	View view;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -68,12 +68,12 @@ struct Box {
  * @brief The Box interface.
  */
 struct BoxInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
-	
+
 	/**
 	 * @fn Box *Box::initWithFrame(Box *self, const SDL_Rect *frame)
 	 * @brief Initializes this Box.

@@ -36,9 +36,9 @@ static void drawScene(SDL_Window *window);
 int main(int argc, char *argv[]) {
 
 	MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
-	
+
 	SDL_Init(SDL_INIT_VIDEO);
-	
+
 	SDL_Window *window = SDL_CreateWindow(__FILE__,
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
@@ -61,9 +61,9 @@ int main(int argc, char *argv[]) {
 		SDL_Event event;
 
 		if (SDL_PollEvent(&event)) {
-			
+
 			$(windowController, respondToEvent, &event);
-			
+
 			if (event.type == SDL_QUIT) {
 				break;
 			}
@@ -83,30 +83,30 @@ int main(int argc, char *argv[]) {
 
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
-	
+
 	SDL_Quit();
-	
+
 	return 0;
 }
 
 /**
- * @brief Renders a rotating cube, demonstrating ObjectivelyMVC integrating with a vanilla SDL2 / 
+ * @brief Renders a rotating cube, demonstrating ObjectivelyMVC integrating with a vanilla SDL2 /
  * OpenGL application.
  */
 static void drawScene(SDL_Window *window) {
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	
+
 	glOrtho(-2.0, 2.0, -2.0, 2.0, -3.0, 3.0);
-	
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	glTranslatef(0.0, 0.0, -1.0);
 
 	glPushMatrix();
-	
+
 	glRotatef(SDL_GetTicks() * 0.1, 1.0, 1.0, 1.0);
 
 	glEnable(GL_DEPTH_TEST);

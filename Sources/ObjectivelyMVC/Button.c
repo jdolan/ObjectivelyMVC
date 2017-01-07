@@ -33,11 +33,11 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	Button *this = (Button *) self;
-	
+
 	release(this->title);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -88,16 +88,16 @@ static SDL_Size sizeThatFits(const View *self) {
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
-	
+
 	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-		
+
 		if (event->type == SDL_MOUSEBUTTONUP) {
 			self->state &= ~ControlStateHighlighted;
 			if (self->style == ControlStyleDefault) {
 				self->bevel = ControlBevelTypeOutset;
 			}
 		}
-		
+
 		if ($((View *) self, didReceiveEvent, event)) {
 			if (event->type == SDL_MOUSEBUTTONDOWN) {
 				self->state |= ControlStateHighlighted;
@@ -108,7 +108,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			return true;
 		}
 	}
-	
+
 	return super(Control, self, captureEvent, event);
 }
 
@@ -119,13 +119,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
  * @memberof Button
  */
 static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style) {
-	
+
 	self = (Button *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-		
+
 		self->title = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->title);
-		
+
 		$((View *) self, addSubview, (View *) self->title);
 		self->title->view.alignment = ViewAlignmentMiddleCenter;
 
@@ -134,13 +134,13 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = ControlBevelTypeOutset;
-			
+
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;
 			}
 		}
 	}
-	
+
 	return self;
 }
 
@@ -169,7 +169,7 @@ static void initialize(Class *clazz) {
 Class *_Button(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Button";
 		clazz.superclass = _Control();

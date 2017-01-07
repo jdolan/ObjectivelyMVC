@@ -39,7 +39,7 @@ static Action *initWithEventType(Action *self, SDL_EventType eventType, ActionFu
 	if (self) {
 		self->eventType = eventType;
 		assert(self->eventType);
-		
+
 		self->function = function;
 		assert(self->function);
 
@@ -67,7 +67,7 @@ static void initialize(Class *clazz) {
 Class *_Action(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Action";
 		clazz.superclass = _Object();

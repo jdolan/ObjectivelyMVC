@@ -128,7 +128,7 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
 	assert(points);
 
 	glVertexPointer(2, GL_INT, 0, points);
-	
+
 	glDrawArrays(GL_LINE_STRIP, 0, (GLsizei) count);
 }
 
@@ -238,7 +238,7 @@ static void endFrame(Renderer *self) {
  * @memberof Renderer
  */
 static Renderer *init(Renderer *self) {
-	
+
 	self = (Renderer *) super(Object, self, init);
 	if (self) {
 		self->views = $$(MutableArray, array);
@@ -272,7 +272,7 @@ static void render_renderView(const Array *array, ident obj, ident data) {
 	if (clippingFrame.w && clippingFrame.h) {
 
 		$(renderer, setClippingFrame, &clippingFrame);
-		
+
 		$(view, render, renderer);
 	}
 }
@@ -359,7 +359,7 @@ static void initialize(Class *clazz) {
 Class *_Renderer(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Renderer";
 		clazz.superclass = _Object();

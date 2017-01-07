@@ -95,7 +95,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
  * @memberof ScrollView
  */
 static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style) {
-	
+
 	self = (ScrollView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
 		self->control.view.clipsSubviews = true;
@@ -107,7 +107,7 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, Contro
 			self->control.view.padding.left = 0;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -183,7 +183,7 @@ static void initialize(Class *clazz) {
 Class *_ScrollView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "ScrollView";
 		clazz.superclass = _Control();

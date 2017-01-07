@@ -57,28 +57,28 @@ typedef struct InputInterface InputInterface;
  * programmatic layout of forms, and give your application a standard, consistent aesthetic.
  */
 struct Input {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	StackView stackView;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
 	 */
 	InputInterface *interface;
-	
+
 	/**
 	 * @brief The Control.
 	 */
 	Control *control;
-	
+
 	/**
 	 * @brief The Label.
 	 */
 	Label *label;
-	
+
 	/**
 	 * @brief The Label orientation.
 	 */
@@ -89,12 +89,12 @@ struct Input {
  * @brief The Input interface.
  */
 struct InputInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	StackViewInterface viewInterface;
-	
+
 	/**
 	 * @fn Input *Input::initWithFrame(Input *self, const SDL_Rect *frame)
 	 * @brief Initializes this Input with the specified frame.

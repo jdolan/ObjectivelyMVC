@@ -35,9 +35,9 @@
 static void dealloc(Object *self) {
 
 	Text *this = (Text *) self;
-	
+
 	release(this->font);
-	
+
 	free(this->text);
 
 	glDeleteTextures(1, &this->texture);
@@ -81,9 +81,9 @@ static void render(View *self, Renderer *renderer) {
 	super(View, self, render, renderer);
 
 	Text *this = (Text *) self;
-	
+
 	if (this->text && strlen(this->text)) {
-		
+
 		if (this->texture == 0) {
 			SDL_Surface *surface = $(this->font, renderCharacters, this->text, this->color);
 
@@ -91,9 +91,9 @@ static void render(View *self, Renderer *renderer) {
 
 			SDL_FreeSurface(surface);
 		}
-		
+
 		assert(this->texture);
-		
+
 		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, drawTexture, this->texture, &frame);
 	}
@@ -161,14 +161,14 @@ static SDL_Size naturalSize(const Text *self) {
  * @memberof Text
  */
 static void setFont(Text *self, Font *font) {
-	
+
 	font = font ?: $$(Font, defaultFont, FontCategoryDefault);
-	
+
 	if (font != self->font) {
-		
+
 		release(self->font);
 		self->font = retain(font);
-		
+
 		if (self->texture) {
 			glDeleteTextures(1, &self->texture);
 			self->texture = 0;
@@ -191,12 +191,12 @@ static void setText(Text *self, const char *text) {
 	} else {
 		self->text = NULL;
 	}
-	
+
 	if (self->texture) {
 		glDeleteTextures(1, &self->texture);
 		self->texture = 0;
 	}
-	
+
 	$((View *) self, sizeToFit);
 }
 
@@ -228,7 +228,7 @@ static void initialize(Class *clazz) {
 Class *_Text(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Text";
 		clazz.superclass = _View();

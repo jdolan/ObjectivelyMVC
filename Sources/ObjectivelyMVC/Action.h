@@ -64,7 +64,7 @@ struct Action {
 	 * @brief The data.
 	 */
 	ident data;
-	
+
 	/**
 	 * @brief The event type.
 	 */

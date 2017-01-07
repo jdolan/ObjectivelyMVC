@@ -46,7 +46,7 @@ struct ScrollViewDelegate {
 	 * @brief The delegate self-reference.
 	 */
 	ident self;
-	
+
 	/**
 	 * @brief Delegate callback for view contents scrolling.
 	 * @param scrollView The ScrollView.
@@ -60,7 +60,7 @@ struct ScrollViewDelegate {
  * @ingroup Controls
  */
 struct ScrollView {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
@@ -87,12 +87,12 @@ struct ScrollView {
  * @brief The ScrollView interface.
  */
 struct ScrollViewInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ControlInterface controlInterface;
-	
+
 	/**
 	 * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
 	 * @brief Initializes this ScrollView with the specified frame and style.

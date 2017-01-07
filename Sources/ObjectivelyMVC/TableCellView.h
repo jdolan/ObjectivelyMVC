@@ -41,12 +41,12 @@ typedef struct TableCellViewInterface TableCellViewInterface;
  * @ingroup Tables
  */
 struct TableCellView {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	View view;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -63,12 +63,12 @@ struct TableCellView {
  * @brief The TableCellView interface.
  */
 struct TableCellViewInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
-	
+
 	/**
 	 * @fn TableCellView *TableCellView::initWithFrame(TableCellView *self, const SDL_Rect *frame)
 	 * @brief Initializes this TableCellView with the specified frame.

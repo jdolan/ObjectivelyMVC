@@ -50,7 +50,7 @@ struct Text {
 	 * @protected
 	 */
 	TextInterface *interface;
-	
+
 	/**
 	 * @brief The text color.
 	 */
@@ -97,7 +97,7 @@ struct TextInterface {
 	 * @memberof Text
 	 */
 	Text *(*initWithText)(Text *self, const char *text, Font *font);
-	
+
 	/**
 	 * @fn SDL_Size Text::naturalSize(const Text *self)
 	 * @brief Resolves the rendered size of this Text.
@@ -114,7 +114,7 @@ struct TextInterface {
 	 * @memberof Text
 	 */
 	void (*setFont)(Text *self, Font *font);
-	
+
 	/**
 	 * @fn void Text::setText(Text *self, const char *text)
 	 * @brief Sets this Text's text.

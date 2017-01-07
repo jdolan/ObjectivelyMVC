@@ -162,11 +162,11 @@ static void layoutSubviews(View *self) {
 					pos += subviewSize.w;
 					break;
 			}
-			
+
 			pos += this->spacing;
 		}
 	}
-	
+
 	release(subviews);
 }
 
@@ -174,7 +174,7 @@ static void layoutSubviews(View *self) {
  * @see View::sizeThatFits(const View *)
  */
 static SDL_Size sizeThatFits(const View *self) {
-	
+
 	SDL_Size size = super(View, self, sizeThatFits);
 
 	if (self->autoresizingMask & ViewAutoresizingContain) {
@@ -251,7 +251,7 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
-	
+
 	((StackViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
@@ -262,7 +262,7 @@ static void initialize(Class *clazz) {
 Class *_StackView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "StackView";
 		clazz.superclass = _View();

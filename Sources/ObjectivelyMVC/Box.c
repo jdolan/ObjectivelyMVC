@@ -33,11 +33,11 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	Box *this = (Box *) self;
 
 	release(this->label);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -89,7 +89,7 @@ static void layoutSubviews(View *self) {
  * @memberof Box
  */
 static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
-	
+
 	self = (Box *) super(View, self, initWithFrame, frame);
 	if (self) {
 
@@ -118,7 +118,7 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		self->view.padding.bottom = DEFAULT_BOX_PADDING;
 		self->view.padding.left = DEFAULT_BOX_PADDING;
 	}
-	
+
 	return self;
 }
 
@@ -128,7 +128,7 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
@@ -145,7 +145,7 @@ static void initialize(Class *clazz) {
 Class *_Box(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Box";
 		clazz.superclass = _View();

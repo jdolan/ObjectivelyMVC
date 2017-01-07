@@ -48,7 +48,7 @@ struct SelectDelegate {
 	 * @brief The delegate self-reference.
 	 */
 	ident self;
-	
+
 	/**
 	 * @brief Called when a selection is made.
 	 * @param select The Select.
@@ -63,12 +63,12 @@ struct SelectDelegate {
  * @ingroup Controls
  */
 struct Select {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	Control control;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -79,12 +79,12 @@ struct Select {
 	 * @brief An optional Comparator to sort Options.
 	 */
 	Comparator comparator;
-	
+
 	/**
 	 * @brief The SelectDelegate.
 	 */
 	SelectDelegate delegate;
-	
+
 	/**
 	 * @brief The Select Options.
 	 * @private
@@ -107,12 +107,12 @@ struct Select {
  * @brief The Select interface.
  */
 struct SelectInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ControlInterface controlInterface;
-	
+
 	/**
 	 * @fn void Select::addOption(Select *self, const char *title, ident value)
 	 * @brief Creates and adds a new Option to this Select.
@@ -122,7 +122,7 @@ struct SelectInterface {
 	 * @memberof Select
 	 */
 	void (*addOption)(Select *self, const char *title, ident value);
-	
+
 	/**
 	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
 	 * @brief Initializes this Select with the specified frame and style.
@@ -133,7 +133,7 @@ struct SelectInterface {
 	 * @memberof Select
 	 */
 	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame, ControlStyle style);
-	
+
 	/**
 	 * @fn Option *Select::optionWithValue(const Select *self, ident value)
 	 * @param self The Select.
@@ -168,7 +168,7 @@ struct SelectInterface {
 	 * @memberof Select
 	 */
 	void (*removeOptionWithValue)(Select *self, ident value);
-	
+
 	/**
 	 * @fn void Select::selectOptionWithValue(Select *self, ident value)
 	 * @brief Selects the first Option with the given value.
@@ -177,7 +177,7 @@ struct SelectInterface {
 	 * @memberof Select
 	 */
 	void (*selectOptionWithValue)(Select *self, ident value);
-	
+
 	/**
 	 * @fn Option *Select::selectedOption(const Select *self)
 	 * @param self The Select.

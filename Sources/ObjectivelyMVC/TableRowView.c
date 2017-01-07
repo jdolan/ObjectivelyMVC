@@ -111,7 +111,7 @@ static void addCell(TableRowView *self, TableCellView *cell) {
  * @memberof TableRowView
  */
 static TableRowView *initWithTableView(TableRowView *self, TableView *tableView) {
-	
+
 	self = (TableRowView *) super(StackView, self, initWithFrame, NULL);
 	if (self) {
 
@@ -126,7 +126,7 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 
 		self->stackView.view.autoresizingMask |= ViewAutoresizingWidth;
 	}
-	
+
 	return self;
 }
 
@@ -202,7 +202,7 @@ static void initialize(Class *clazz) {
 Class *_TableRowView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "TableRowView";
 		clazz.superclass = _StackView();

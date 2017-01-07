@@ -113,12 +113,12 @@ struct CollectionViewDelegate {
  * @ingroup CollectionViews
  */
 struct CollectionView {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	Control control;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -170,7 +170,7 @@ struct CollectionView {
  * @brief The CollectionView interface.
  */
 struct CollectionViewInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */

@@ -36,13 +36,13 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	Select *this = (Select *) self;
-	
+
 	release(this->options);
-	
+
 	release(this->stackView);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -59,19 +59,19 @@ static View *init(View *self) {
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
-	
+
 	Select *this = (Select *) self;
 
 	const Array *options = (Array *) this->options;
 	for (size_t i = 0; i < options->count; i++) {
-		
+
 		View *option = $(options, objectAtIndex, i);
 		if ((Option *) option == this->selectedOption) {
 			option->hidden = false;
 		} else {
 			option->hidden = this->control.state != ControlStateHighlighted;
 		}
-		
+
 		if (option->hidden == false) {
 
 			if (this->control.state == ControlStateHighlighted) {
@@ -130,16 +130,16 @@ static SDL_Size sizeThatFits(const View *self) {
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
-	
+
 	Select *this = (Select *) self;
-	
+
 	if (event->type == SDL_MOUSEBUTTONUP) {
 		if (self->state == ControlStateHighlighted) {
 			self->state &= ~ControlStateHighlighted;
 
 			const Array *options = (Array *) this->options;
 			for (size_t i = 0; i < options->count; i++) {
-				
+
 				Option *option = $(options, objectAtIndex, i);
 				if ($((View *) option, didReceiveEvent, event)) {
 					this->selectedOption = option;
@@ -154,13 +154,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			return true;
 		}
 	}
-	
+
 	else if (event->type == SDL_MOUSEMOTION) {
 		if (this->control.state == ControlStateHighlighted) {
-			
+
 			const Array *options = (Array *) this->options;
 			for (size_t i = 0; i < options->count; i++) {
-				
+
 				View *option = $(options, objectAtIndex, i);
 				if ($(option, didReceiveEvent, event)) {
 					option->backgroundColor = Colors.SelectedColor;
@@ -179,7 +179,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
  * @memberof Control
  */
 static void stateDidChange(Control *self) {
-	
+
 	((View *) self)->needsLayout = true;
 
 	if (self->state & ControlStateHighlighted) {
@@ -212,10 +212,10 @@ static void addOption_addOptions(const Array *array, ident obj, ident data) {
  * @memberof Select
  */
 static void addOption(Select *self, const char *title, ident value) {
-	
+
 	Option *option = $(alloc(Option), initWithTitle, title, value);
 	assert(option);
-	
+
 	$(self->options, addObject, option);
 	$((View *) self->stackView, addSubview, (View *) option);
 
@@ -231,7 +231,7 @@ static void addOption(Select *self, const char *title, ident value) {
 	}
 
 	self->control.view.needsLayout = true;
-	
+
 	release(option);
 }
 
@@ -240,27 +240,27 @@ static void addOption(Select *self, const char *title, ident value) {
  * @memberof Select
  */
 static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style) {
-	
+
 	self = (Select *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-		
+
 		self->options = $$(MutableArray, array);
 		assert(self->options);
-		
+
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
-		
+
 		$((View *) self, addSubview, (View *) self->stackView);
-		
+
 		self->stackView->view.alignment = ViewAlignmentMiddleLeft;
 		self->stackView->view.autoresizingMask |= ViewAutoresizingWidth;
 		self->stackView->view.borderWidth = 1;
 
 		self->control.selection = ControlSelectionSingle;
-		
+
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = ControlBevelTypeOutset;
-			
+
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;
 			}
@@ -268,7 +268,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 			self->stackView->view.borderColor = Colors.Silver;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -300,7 +300,7 @@ static void removeAllOptions_enumerate(const Array *array, ident obj, ident data
  * @memberof Select
  */
 static void removeAllOptions(Select *self) {
-	
+
 	$((Array *) self->options, enumerateObjects, removeAllOptions_enumerate, self);
 
 	$(self->options, removeAllObjects);
@@ -332,7 +332,7 @@ static void removeOption(Select *self, Option *option) {
  * @memberof Select
  */
 static void removeOptionWithValue(Select *self, ident value) {
-	
+
 	Option *option = (Option *) $(self, optionWithValue, value);
 	if (option) {
 		$(self, removeOption, option);
@@ -353,16 +353,16 @@ static void selectOptionWithValue(Select *self, ident value) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
-	
+
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
-	
+
 	((SelectInterface *) clazz->def->interface)->addOption = addOption;
 	((SelectInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((SelectInterface *) clazz->def->interface)->optionWithValue = optionWithValue;
@@ -379,7 +379,7 @@ static void initialize(Class *clazz) {
 Class *_Select(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Select";
 		clazz.superclass = _Control();

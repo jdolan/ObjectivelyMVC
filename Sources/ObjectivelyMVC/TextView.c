@@ -35,15 +35,15 @@
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	TextView *this = (TextView *) self;
 
 	free(this->defaultText);
 
 	release(this->text);
-	
+
 	release(this->attributedText);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -77,19 +77,19 @@ static View *init(View *self) {
  * @see View::render(View *, Renderer *)
  */
 static void render(View *self, Renderer *renderer) {
-	
+
 	super(View, self, render, renderer);
-	
+
 	TextView *this = (TextView *) self;
-	
+
 	const char *text = this->attributedText->string.chars;
-	
+
 	if (text == NULL || strlen(text) == 0) {
 		if ($((Control *) this, focused) == false) {
 			text = this->defaultText;
 		}
 	}
-	
+
 	if (text == NULL) {
 		$(this->text, setText, NULL);
 	} else {
@@ -101,21 +101,21 @@ static void render(View *self, Renderer *renderer) {
 			$(this->text, setText, text);
 		}
 	}
-	
+
 	if ($((Control *) this, focused)) {
 		text = text ?: "";
-		
+
 		int w, h;
 		if (this->position == this->attributedText->string.length) {
 			$(this->text->font, sizeCharacters, text, &w, &h);
 		} else {
 			char *chars = calloc(this->position + 1, sizeof(char));
 			strncpy(chars, text, this->position);
-			
+
 			$(this->text->font, sizeCharacters, chars, &w, &h);
 			free(chars);
 		}
-		
+
 		SDL_Rect frame = $((View *) this->text, renderFrame);
 
 		const SDL_Point points[] = {
@@ -133,7 +133,7 @@ static void render(View *self, Renderer *renderer) {
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
-	
+
 	_Bool didEdit = false, didCaptureEvent = false;
 
 	TextView *this = (TextView *) self;
@@ -170,12 +170,12 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		} else if (event->type == SDL_KEYDOWN) {
 			if (self->state & ControlStateFocused) {
 				didCaptureEvent = true;
-				
+
 				const char *chars = this->attributedText->string.chars;
 				const size_t len = this->attributedText->string.length;
-				
+
 				switch (event->key.keysym.sym) {
-						
+
 					case SDLK_ESCAPE:
 					case SDLK_KP_ENTER:
 					case SDLK_KP_TAB:
@@ -187,7 +187,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							this->delegate.didEndEditing(this);
 						}
 						break;
-						
+
 					case SDLK_BACKSPACE:
 					case SDLK_KP_BACKSPACE:
 						if (this->position > 0) {
@@ -197,7 +197,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							didEdit = true;
 						}
 						break;
-						
+
 					case SDLK_DELETE:
 						if (this->position < len) {
 							const Range range = { .location = this->position, .length = 1 };
@@ -205,7 +205,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							didEdit = true;
 						}
 						break;
-						
+
 					case SDLK_LEFT:
 						if (SDL_GetModState() & KMOD_CTRL) {
 							while (this->position > 0 && chars[this->position] == ' ') {
@@ -218,7 +218,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							this->position--;
 						}
 						break;
-						
+
 					case SDLK_RIGHT:
 						if (SDL_GetModState() & KMOD_CTRL) {
 							while (this->position < len && chars[this->position] == ' ') {
@@ -234,15 +234,15 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							this->position++;
 						}
 						break;
-						
+
 					case SDLK_HOME:
 						this->position = 0;
 						break;
-						
+
 					case SDLK_END:
 						this->position = len;
 						break;
-						
+
 					case SDLK_a:
 						if (SDL_GetModState() & KMOD_CTRL) {
 							this->position = 0;
@@ -253,7 +253,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							this->position = len;
 						}
 						break;
-						
+
 					case SDLK_v:
 						if ((SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) && SDL_HasClipboardText()) {
 							const char *text = SDL_GetClipboardText();
@@ -266,20 +266,20 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							didEdit = true;
 						}
 						break;
-						
+
 					default:
 						break;
 				}
 			}
 		}
-		
+
 		if (didEdit) {
 			if (this->delegate.didEdit) {
 				this->delegate.didEdit(this);
 			}
 		}
 	}
-	
+
 	return didCaptureEvent;
 }
 
@@ -295,21 +295,21 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 	if (self) {
 		self->attributedText = $$(MutableString, string);
 		assert(self->attributedText);
-		
+
 		self->isEditable = true;
-		
+
 		self->text = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->text);
-		
+
 		$((View *) self, addSubview, (View *) self->text);
 
 		self->control.view.clipsSubviews = true;
-		
+
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = ControlBevelTypeInset;
-			
+
 			self->control.view.backgroundColor = Colors.DimGray;
-			
+
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_TEXTVIEW_WIDTH;
 			}
@@ -325,15 +325,15 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->render = render;
-	
+
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	
+
 	((TextViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 }
 
@@ -344,7 +344,7 @@ static void initialize(Class *clazz) {
 Class *_TextView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "TextView";
 		clazz.superclass = _Control();

@@ -252,7 +252,7 @@ static void initialize(Class *clazz) {
 Class *_HelloViewController(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "HelloViewController";
 		clazz.superclass = _ViewController();

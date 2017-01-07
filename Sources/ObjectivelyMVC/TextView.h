@@ -55,13 +55,13 @@ struct TextViewDelegate {
 	 * @param textView The TextView.
 	 */
 	void (*didBeginEditing)(TextView *textView);
-	
+
 	/**
 	 * @brief Delegate callback for text input events.
 	 * @param textView The TextView.
 	 */
 	void (*didEdit)(TextView *textView);
-	
+
 	/**
 	 * @brief Delegate callback for finalizing text editing.
 	 * @param textView The TextView.
@@ -86,7 +86,7 @@ struct TextView {
 	 * @protected
 	 */
 	TextViewInterface *interface;
-	
+
 	/**
 	 * @brief The user-provided text.
 	 */
@@ -96,22 +96,22 @@ struct TextView {
 	 * @brief The default text, displayed when no user-provided text is available.
 	 */
 	char *defaultText;
-	
+
 	/**
 	 * @brief The delegate.
 	 */
 	TextViewDelegate delegate;
-	
+
 	/**
 	 * @brief True if this TextView supports editing, false otherwise.
 	 */
 	_Bool isEditable;
-	
+
 	/**
 	 * The editing position.
 	 */
 	size_t position;
-	
+
 	/**
 	 * @brief The text.
 	 */

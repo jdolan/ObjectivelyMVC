@@ -42,23 +42,23 @@ typedef struct OptionInterface OptionInterface;
  * @ingroup Controls
  */
 struct Option {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	View view;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
 	 */
 	OptionInterface *interface;
-	
+
 	/**
 	 * @brief The title.
 	 */
 	Text *title;
-	
+
 	/**
 	 * @brief The value.
 	 */
@@ -69,12 +69,12 @@ struct Option {
  * @brief The Option interface.
  */
 struct OptionInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ViewInterface viewInterface;
-	
+
 	/**
 	 * @fn Option *Option::initWithTitle(Option *self, const char *title, ident value)
 	 * @brief Initializes this Option with the given title and value.

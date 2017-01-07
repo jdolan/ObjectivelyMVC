@@ -74,12 +74,12 @@ struct Font {
 	 * @protected
 	 */
 	FontInterface *interface;
-	
+
 	/**
 	 * @brief The backing TTF_Font.
 	 */
 	TTF_Font *font;
-	
+
 	/**
 	 * @brief The TrueType font name, according to Fontconfig.
 	 */
@@ -95,7 +95,7 @@ struct FontInterface {
 	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
-	
+
 	/**
 	 * @static
 	 * @fn Array *Font::allFonts(void)
@@ -145,7 +145,7 @@ struct FontInterface {
 	 * @private
 	 */
 	Font *(*initWithPattern)(Font *self, ident pattern);
-	
+
 	/**
 	 * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color)
 	 * @brief Renders the given characters in this Font.
@@ -164,7 +164,7 @@ struct FontInterface {
 	 * @memberof Font
 	 */
 	void (*renderDeviceDidReset)(Font *self);
-	
+
 	/**
 	 * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
 	 * @param self The Font.

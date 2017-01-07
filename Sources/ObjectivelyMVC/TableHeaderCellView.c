@@ -34,12 +34,12 @@
  * @memberof TableHeaderCellView
  */
 static TableHeaderCellView *initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame) {
-	
+
 	self = (TableHeaderCellView *) super(TableCellView, self, initWithFrame, frame);
 	if (self) {
 
 	}
-	
+
 	return self;
 }
 
@@ -60,7 +60,7 @@ static void initialize(Class *clazz) {
 Class *_TableHeaderCellView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "TableHeaderCellView";
 		clazz.superclass = _TableCellView();

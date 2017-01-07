@@ -31,11 +31,11 @@
 #pragma mark - Object
 
 static void dealloc(Object *self) {
-	
+
 	Option *this = (Option *) self;
-	
+
 	release(this->title);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -67,7 +67,7 @@ static SDL_Size sizeThatFits(const View *self) {
  * @memberof Option
  */
 static Option *initWithTitle(Option *self, const char *title, ident value) {
-	
+
 	self = (Option *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
@@ -75,24 +75,24 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
 
 		self->title = $(alloc(Text), initWithText, title, font);
 		assert(self->title);
-		
+
 		self->value = value;
-		
+
 		self->title->view.alignment = ViewAlignmentMiddleLeft;
 		$((View *) self, addSubview, (View *) self->title);
-		
+
 		self->view.autoresizingMask = ViewAutoresizingWidth;
-		
+
 		self->view.frame.h = DEFAULT_OPTION_HEIGHT;
-		
+
 		self->view.padding.top = DEFAULT_OPTION_PADDING;
 		self->view.padding.right = DEFAULT_OPTION_PADDING;
 		self->view.padding.bottom = DEFAULT_OPTION_PADDING;
 		self->view.padding.left = DEFAULT_OPTION_PADDING;
-		
+
 		$((View *) self, sizeToFit);
 	}
-	
+
 	return self;
 }
 
@@ -102,11 +102,11 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	
+
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
-	
+
 	((OptionInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
 }
 
@@ -117,7 +117,7 @@ static void initialize(Class *clazz) {
 Class *_Option(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Option";
 		clazz.superclass = _View();

@@ -35,7 +35,7 @@
 static void dealloc(Object *self) {
 
 	ViewController *this = (ViewController *) self;
-	
+
 	release(this->childViewControllers);
 	release(this->view);
 
@@ -49,7 +49,7 @@ static void dealloc(Object *self) {
  * @memberof ViewController
  */
 static void drawView(ViewController *self, Renderer *renderer) {
-	
+
 	assert(renderer);
 
 	$(self, loadViewIfNeeded);
@@ -118,7 +118,7 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 	$(self, loadViewIfNeeded);
 
 	$(self->view, removeFromSuperview);
-	
+
 	if (self->parentViewController) {
 		$(self->parentViewController->childViewControllers, removeObject, self);
 	}
@@ -180,7 +180,7 @@ static void initialize(Class *clazz) {
 Class *_ViewController(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "ViewController";
 		clazz.superclass = _Object();

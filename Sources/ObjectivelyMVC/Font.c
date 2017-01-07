@@ -66,33 +66,33 @@ static Order allFonts_sort(const ident a, const ident b) {
  * @memberof Font
  */
 static Array *allFonts(void) {
-	
+
 	MutableArray *fonts = $$(MutableArray, array);
 
 	FcPattern *pattern = FcPatternCreate();
-	
+
 	FcPatternAddString(pattern, FC_FONTFORMAT, (FcChar8 *) "TrueType");
 	FcConfigSubstitute(NULL, pattern, FcMatchScan);
-	
+
 	FcObjectSet *objectSet = FcObjectSetBuild(FC_FULLNAME, NULL);
 	FcFontSet *fontSet = FcFontList(NULL, pattern, objectSet);
-	
+
 	FcPattern **font = fontSet->fonts;
 	for (int i = 0; i < fontSet->nfont; i++, font++) {
 
 		char *name = (char *) FcNameUnparse(*font);
 		String *string = $$(String, stringWithMemory, name, strlen(name));
-		
+
 		$(fonts, addObject, string);
 		release(string);
 	}
-	
+
 	FcFontSetDestroy(fontSet);
 	FcObjectSetDestroy(objectSet);
 	FcPatternDestroy(pattern);
 
 	$(fonts, sort, allFonts_sort);
-	
+
 	return (Array *) fonts;
 }
 
@@ -107,7 +107,7 @@ static Font *_bigger;
 static Font *defaultFont(FontCategory category) {
 
 	static Once once;
-	
+
 	do_once(&once, {
 		_normal = $(alloc(Font), initWithAttributes, DEFAULT_FONT_FAMILY, 14, 0);
 		assert(_normal);
@@ -278,7 +278,7 @@ static void renderDeviceDidReset(Font *self) {
  * @memberof Font
  */
 static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
-	
+
 	TTF_SizeUTF8(self->font, chars, w, h);
 
 	const float scale = MVC_WindowScale(NULL, NULL, NULL);
@@ -335,7 +335,7 @@ static void destroy(Class *clazz) {
 Class *_Font(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Font";
 		clazz.superclass = _Object();

@@ -41,12 +41,12 @@ typedef struct TableHeaderViewInterface TableHeaderViewInterface;
  * @ingroup Tables
  */
 struct TableHeaderView {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	TableRowView tableRowView;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -58,12 +58,12 @@ struct TableHeaderView {
  * @brief The TableHeaderView interface.
  */
 struct TableHeaderViewInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	TableRowViewInterface tableRowViewInterface;
-	
+
 	/**
 	 * @fn TableHeaderView *TableHeaderView::initWithTableView(TableHeaderView *self, TableView *tableView)
 	 * @brief Initializes this TableHeaderView with the give table.

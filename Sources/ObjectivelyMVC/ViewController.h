@@ -35,7 +35,7 @@
 /**
  * @defgroup ViewControllers View Controllers
  * @brief ViewControllers manage a View and its descendants.
- * @remarks In addition to managing a View hierarchy, ViewControllers themselves may be arranged in 
+ * @remarks In addition to managing a View hierarchy, ViewControllers themselves may be arranged in
  * a hierarchical fashion. Typically, an application will employ a single primary ViewController to
  * manage the window via the WindowController. This primary ViewController may have child
  * ViewControllers, and can add or remove those children from the View hierarchy at any time by calling
@@ -87,7 +87,7 @@ struct ViewControllerInterface {
 	 * @brief The superclass interface.
 	 */
 	ObjectInterface parentInterface;
-	
+
 	/**
 	 * @fn void ViewController::draw(ViewController *self, Renderer *renderer)
 	 * @brief Draws this ViewController's View hierarchy.
@@ -98,7 +98,7 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*drawView)(ViewController *self, Renderer *renderer);
-	
+
 	/**
 	 * @fn ViewController *ViewController::init(ViewController *self)
 	 * @brief Initializes this ViewController.
@@ -107,7 +107,7 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	ViewController *(*init)(ViewController *self);
-	
+
 	/**
 	 * @fn void ViewController::loadView(ViewController *self)
 	 * @brief Loads this ViewController's View.
@@ -124,7 +124,7 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*loadViewIfNeeded)(ViewController *self);
-	
+
 	/**
 	 * @fn void ViewController::moveToParent(ViewController *self, ViewController *parentViewController)
 	 * @brief Moves this ViewController to the specified parent.
@@ -143,7 +143,7 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*renderDeviceDidReset)(ViewController *self);
-	
+
 	/**
 	 * @fn void ViewController:respondToEvent(ViewController *self, const SDL_Event *event)
 	 * @brief Responds to the given event.

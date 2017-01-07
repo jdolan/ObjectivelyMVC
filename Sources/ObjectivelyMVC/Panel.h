@@ -43,16 +43,16 @@ typedef struct PanelInterface PanelInterface;
  * @brief Draggable and resizable container Views.
  * @extends StackView
  * @ingroup Containers
- * @remarks Panels are draggable containers, analagous to windows or dialogs in traditional 
+ * @remarks Panels are draggable containers, analagous to windows or dialogs in traditional
  * desktop environments. Panels can optionally be positioned and resized by the user.
  */
 struct Panel {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	StackView stackView;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -111,7 +111,7 @@ struct Panel {
  * @brief The Panel interface.
  */
 struct PanelInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
@@ -124,7 +124,7 @@ struct PanelInterface {
 	 * @memberof Panel
 	 */
 	SDL_Size (*contentSize)(const Panel *self);
-	
+
 	/**
 	 * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
 	 * @brief Initializes this Panel with the specified frame.

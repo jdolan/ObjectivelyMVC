@@ -52,13 +52,13 @@ static void dealloc(Object *self) {
  * @memberof TableColumn
  */
 static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier) {
-	
+
 	self = (TableColumn *) super(Object, self, init);
 	if (self) {
 
 		self->headerCell = $(alloc(TableHeaderCellView), initWithFrame, NULL);
 		assert(self->headerCell);
-		
+
 		self->identifier = strdup(identifier);
 		assert(self->identifier);
 
@@ -66,7 +66,7 @@ static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier
 
 		self->width = DEFAULT_TABLE_COLUMN_WIDTH;
 	}
-	
+
 	return self;
 }
 
@@ -76,7 +76,7 @@ static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((TableColumnInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
@@ -89,7 +89,7 @@ static void initialize(Class *clazz) {
 Class *_TableColumn(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "TableColumn";
 		clazz.superclass = _Object();

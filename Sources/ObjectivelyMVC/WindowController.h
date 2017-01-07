@@ -41,12 +41,12 @@ typedef struct WindowControllerInterface WindowControllerInterface;
  * @ingroup ViewControllers
  */
 struct WindowController {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	Object object;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -73,12 +73,12 @@ struct WindowController {
  * @brief The WindowController interface.
  */
 struct WindowControllerInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
-	
+
 	/**
 	 * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
 	 * @brief Initializes this WindowController with the given window.

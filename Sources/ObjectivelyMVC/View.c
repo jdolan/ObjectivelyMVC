@@ -69,7 +69,7 @@ static void dealloc(Object *self) {
 	$(this, removeFromSuperview);
 
 	release(this->subviews);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -272,9 +272,9 @@ static _Bool canBecomeFirstResponder(const View *self) {
  * @memberof View
  */
 static _Bool containsPoint(const View *self, const SDL_Point *point) {
-	
+
 	const SDL_Rect frame = $(self, clippingFrame);
-	
+
 	return (_Bool) SDL_PointInRect(point, &frame);
 }
 
@@ -337,9 +337,9 @@ static void draw_recurse(const Array *array, ident obj, ident data) {
  * @memberof View
  */
 static void draw(View *self, Renderer *renderer) {
-	
+
 	assert(renderer);
-	
+
 	if (self->hidden == false) {
 
 		$(renderer, addView, self);
@@ -372,7 +372,7 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 
 	self = (View *) super(Object, self, init);
 	if (self) {
-		
+
 		if (frame) {
 			self->frame = *frame;
 		}
@@ -383,7 +383,7 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->backgroundColor = Colors.Clear;
 		self->borderColor = Colors.White;
 	}
-	
+
 	return self;
 }
 
@@ -392,14 +392,14 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
  * @memberof View
  */
 static _Bool isDescendantOfView(const View *self, const View *view) {
-	
+
 	while (self) {
 		if (self == view) {
 			return true;
 		}
 		self = self->superview;
 	}
-	
+
 	return false;
 }
 
@@ -438,13 +438,13 @@ static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
  * @memberof View
  */
 static void layoutIfNeeded(View *self) {
-	
+
 	if (self->needsLayout) {
 		self->needsLayout = false;
 
 		$(self, layoutSubviews);
 	}
-	
+
 	const Array *subviews = (Array *) self->subviews;
 	$(subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
 }
@@ -460,10 +460,10 @@ static void layoutSubviews(View *self) {
 	}
 
 	const SDL_Rect bounds = $(self, bounds);
-	
+
 	const Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
-			
+
 		View *subview = (View *) $(subviews, objectAtIndex, i);
 
 		SDL_Size subviewSize = $(subview, sizeThatContains);
@@ -471,19 +471,19 @@ static void layoutSubviews(View *self) {
 		if (subview->autoresizingMask & ViewAutoresizingWidth) {
 			subviewSize.w = bounds.w;
 		}
-		
+
 		if (subview->autoresizingMask & ViewAutoresizingHeight) {
 			subviewSize.h = bounds.h;
 		}
 
 		$(subview, resize, &subviewSize);
-		
+
 		switch (subview->alignment) {
 
 			case ViewAlignmentNone:
 			case ViewAlignmentInternal:
 				break;
-			
+
 			case ViewAlignmentTopLeft:
 				subview->frame.x = 0;
 				subview->frame.y = 0;
@@ -496,7 +496,7 @@ static void layoutSubviews(View *self) {
 				subview->frame.x = bounds.w - subview->frame.w;
 				subview->frame.y = 0;
 				break;
-			
+
 			case ViewAlignmentMiddleLeft:
 				subview->frame.x = 0;
 				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
@@ -509,7 +509,7 @@ static void layoutSubviews(View *self) {
 				subview->frame.x = bounds.w -subview->frame.w;
 				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
 				break;
-			
+
 			case ViewAlignmentBottomLeft:
 				subview->frame.x = 0;
 				subview->frame.y = bounds.h - subview->frame.h;
@@ -531,7 +531,7 @@ static void layoutSubviews(View *self) {
  * @memberof View
  */
 static void removeFromSuperview(View *self) {
-	
+
 	if (self->superview) {
 		$(self->superview, removeSubview, self);
 	}
@@ -544,12 +544,12 @@ static void removeFromSuperview(View *self) {
 static void removeSubview(View *self, View *subview) {
 
 	assert(subview);
-	
+
 	if (subview->superview == self) {
 		subview->superview = NULL;
-		
+
 		$(self->subviews, removeObject, subview);
-		
+
 		self->needsLayout = true;
 	}
 }
@@ -559,19 +559,19 @@ static void removeSubview(View *self, View *subview) {
  * @memberof View
  */
 static void render(View *self, Renderer *renderer) {
-	
+
 	if (self->backgroundColor.a) {
 
 		$(renderer, setDrawColor, &self->backgroundColor);
-		
+
 		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, drawRectFilled, &frame);
 	}
-		
+
 	if (self->borderWidth && self->borderColor.a) {
 
 		$(renderer, setDrawColor, &self->borderColor);
-		
+
 		SDL_Rect frame = $(self, renderFrame);
 		for (int i = 0; i < self->borderWidth; i++) {
 			frame.x -= 1;
@@ -605,7 +605,7 @@ static void renderDeviceDidReset(View *self) {
  * @memberof View
  */
 static SDL_Rect renderFrame(const View *self) {
-	
+
 	SDL_Rect frame = self->frame;
 
 	const View *view = self;
@@ -619,11 +619,11 @@ static SDL_Rect renderFrame(const View *self) {
 			frame.x += superview->padding.left;
 			frame.y += superview->padding.top;
 		}
-		
+
 		view = superview;
 		superview = view->superview;
 	}
-	
+
 	return frame;
 }
 
@@ -867,7 +867,7 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
 	static Once once;
-	
+
 	do_once(&once, {
 		_initialize(_Box());
 		_initialize(_Button());
@@ -986,7 +986,7 @@ static void initialize(Class *clazz) {
 Class *_View(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "View";
 		clazz.superclass = _Object();

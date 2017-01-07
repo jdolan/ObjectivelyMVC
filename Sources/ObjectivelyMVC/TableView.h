@@ -108,12 +108,12 @@ struct TableViewDelegate {
  * @ingroup Tables
  */
 struct TableView {
-	
+
 	/**
 	 * @brief The superclass.
 	 */
 	Control control;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -139,7 +139,7 @@ struct TableView {
 	 * @brief The content View.
 	 */
 	StackView *contentView;
-	
+
 	/**
 	 * @brief The data source.
 	 */
@@ -185,7 +185,7 @@ struct TableView {
  * @brief The TableView interface.
  */
 struct TableViewInterface {
-	
+
 	/**
 	 * @brief The superclass interface.
 	 */

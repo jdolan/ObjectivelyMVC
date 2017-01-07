@@ -72,7 +72,7 @@ static SDL_Size sizeThatFits(const View *self) {
  * @memberof TableHeaderView
  */
 static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tableView) {
-	
+
 	self = (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
 	if (self) {
 
@@ -82,7 +82,7 @@ static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tabl
 			((View *) self)->frame.h = DEFAULT_TABLE_HEADER_VIEW_HEIGHT;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -106,7 +106,7 @@ static void initialize(Class *clazz) {
 Class *_TableHeaderView(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "TableHeaderView";
 		clazz.superclass = _TableRowView();

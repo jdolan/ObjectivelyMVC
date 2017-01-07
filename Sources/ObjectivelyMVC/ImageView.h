@@ -46,7 +46,7 @@ struct ImageView {
 	 * @brief The superclass.
 	 */
 	View view;
-	
+
 	/**
 	 * @brief The interface.
 	 * @protected
@@ -64,12 +64,12 @@ struct ImageView {
 	 * @brief The drawing color.
 	 */
 	SDL_Color color;
-	
+
 	/**
 	 * @brief The image.
 	 */
 	Image *image;
-	
+
 	/**
 	 * @brief The texture.
 	 */
@@ -95,7 +95,7 @@ struct ImageViewInterface {
 	 * @memberof ImageView
 	 */
 	ImageView *(*initWithFrame)(ImageView *self, const SDL_Rect *frame);
-	
+
 	/**
 	 * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
 	 * @brief Initializes this ImageView with the specified image.

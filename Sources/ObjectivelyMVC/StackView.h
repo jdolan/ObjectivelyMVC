@@ -77,7 +77,7 @@ struct StackView {
 	 * @protected
 	 */
 	StackViewInterface *interface;
-	
+
 	/**
 	 * @brief The axis.
 	 */
@@ -87,7 +87,7 @@ struct StackView {
 	 * @brief The distribution.
 	 */
 	StackViewDistribution distribution;
-	
+
 	/**
 	 * @brief The subview spacing.
 	 */

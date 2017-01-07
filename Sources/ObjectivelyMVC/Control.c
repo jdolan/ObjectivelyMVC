@@ -57,11 +57,11 @@ const EnumName ControlStyleNames[] = MakeEnumNames(
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
-	
+
 	Control *this = (Control *) self;
-	
+
 	release(this->actions);
-	
+
 	super(Object, self, dealloc);
 }
 
@@ -95,78 +95,78 @@ static View *init(View *self) {
  * @see View::render(View *, Renderer *)
  */
 static void render(View *self, Renderer *renderer) {
-	
+
 	super(View, self, render, renderer);
-	
+
 	Control *this = (Control *) self;
-	
+
 	const SDL_Rect frame = $(self, renderFrame);
-	
+
 	if (this->bevel == ControlBevelTypeInset) {
-		
+
 		$(renderer, setDrawColor, &Colors.Silver);
-		
+
 		SDL_Point points[3];
-		
+
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 1;
-		
+
 		points[1].x = frame.x + frame.w - 1;
 		points[1].y = frame.y + frame.h - 1;
-		
+
 		points[2].x = frame.x + frame.w - 1;
 		points[2].y = frame.y + 1;
-		
+
 		$(renderer, drawLines, points, lengthof(points));
-		
+
 		$(renderer, setDrawColor, &Colors.Charcoal);
-		
+
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 1;
-		
+
 		points[1].x = frame.x + 1;
 		points[1].y = frame.y + 1;
-		
+
 		points[2].x = frame.x + frame.w - 1;
 		points[2].y = frame.y + 1;
-		
+
 		$(renderer, drawLines, points, lengthof(points));
 
 	} else if (this->bevel == ControlBevelTypeOutset) {
-		
+
 		$(renderer, setDrawColor, &Colors.Charcoal);
-		
+
 		SDL_Point points[3];
-		
+
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 1;
-		
+
 		points[1].x = frame.x + frame.w - 1;
 		points[1].y = frame.y + frame.h - 1;
-		
+
 		points[2].x = frame.x + frame.w - 1;
 		points[2].y = frame.y + 1;
-		
+
 		$(renderer, drawLines, points, lengthof(points));
-		
+
 		$(renderer, setDrawColor, &Colors.Silver);
-		
+
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 1;
-		
+
 		points[1].x = frame.x + 1;
 		points[1].y = frame.y + 1;
-		
+
 		points[2].x = frame.x + frame.w - 1;
 		points[2].y = frame.y + 1;
-		
+
 		$(renderer, drawLines, points, lengthof(points));
 	}
-	
+
 	if (this->state & ControlStateFocused) {
 
 		$(renderer, setDrawColor, &Colors.Black);
-		
+
 		$(renderer, drawRect, &frame);
 	}
 
@@ -180,7 +180,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	static SDL_Event _capturedEvent;
 
 	Control *this = (Control *) self;
-	
+
 	const ControlState state = this->state;
 
 	if (memcmp(&_capturedEvent, event, sizeof(*event))) {
@@ -197,7 +197,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	if (this->state != state) {
 		$(this, stateDidChange);
 	}
-	
+
 	super(View, self, respondToEvent, event);
 }
 
@@ -208,10 +208,10 @@ static void respondToEvent(View *self, const SDL_Event *event) {
  * @memberof Control
  */
 static Action *actionForEvent(const Control *self, const SDL_Event *event) {
-	
+
 	Array *actions = (Array *) self->actions;
 	for (size_t i = 0; i < actions->count; i++) {
-		
+
 		Action *action = (Action *) $(actions, objectAtIndex, i);
 		if (action->eventType == event->type) {
 			return action;
@@ -226,11 +226,11 @@ static Action *actionForEvent(const Control *self, const SDL_Event *event) {
  * @memberof Control
  */
 static void addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data) {
-	
+
 	Action *action = $(alloc(Action), initWithEventType, eventType, function, sender, data);
-	
+
 	$(self->actions, addObject, action);
-	
+
 	release(action);
 }
 
@@ -271,7 +271,7 @@ static _Bool highlighted(const Control *self) {
  * @memberof Control
  */
 static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style) {
-	
+
 	self = (Control *) super(View, self, initWithFrame, frame);
 	if (self) {
 
@@ -280,18 +280,18 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle
 
 		self->style = style;
 		if (self->style == ControlStyleDefault) {
-			
+
 			if (self->view.frame.h == 0) {
 				self->view.frame.h = DEFAULT_CONTROL_HEIGHT;
 			}
-			
+
 			self->view.padding.top = DEFAULT_CONTROL_PADDING;
 			self->view.padding.right = DEFAULT_CONTROL_PADDING;
 			self->view.padding.bottom = DEFAULT_CONTROL_PADDING;
 			self->view.padding.left = DEFAULT_CONTROL_PADDING;
 		}
 	}
-	
+
 	return self;
 }
 
@@ -322,14 +322,14 @@ static void stateDidChange(Control *self) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	
+
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
-	
+
 	((ControlInterface *) clazz->def->interface)->actionForEvent = actionForEvent;
 	((ControlInterface *) clazz->def->interface)->addActionForEventType = addActionForEventType;
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
@@ -348,7 +348,7 @@ static void initialize(Class *clazz) {
 Class *_Control(void) {
 	static Class clazz;
 	static Once once;
-	
+
 	do_once(&once, {
 		clazz.name = "Control";
 		clazz.superclass = _View();
