@@ -107,6 +107,10 @@ An example application that creates a Window, enters its main loop and draws a s
 
 ![Quetoo](Documentation/quetoo.jpg)
 
-Installation & Usage
+Installation
 ---
 See [INSTALL.md](INSTALL.md) for installation and linking instructions.
+
+API documentation
+---
+The API documentation can be [browsed online](http://jaydolan.com/projects/ObjectivelyMVC) or generated with [Doxygen](http://www.doxygen.org) by running `make html`.
