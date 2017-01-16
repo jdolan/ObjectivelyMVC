@@ -12,6 +12,7 @@ video games that are already using SDL2. It is written in [GNU C](http://www.gnu
 
 Features
 ---
+
 ### Cross platform
 
 _Wait, `gcc` or `clang`? Is this a Linux-only framework?_ Not at all. ObjectivelyMVC supports Windows XP and later, Apple OS X, and Linux. Support for other Unix derivatives is likely there, but untested. To build ObjectivelyMVC for Windows, you can use either MinGW-w64 (cross-compile or native), or recent [Visual Studio 15](https://www.visualstudio.com/) Previews, which include Clang.
@@ -77,16 +78,12 @@ An example application that creates a Window, enters its main loop and draws a s
 
 ![Quetoo](quetoo.jpg)
 
-Documentation
+Installation
+---
+
+See [INSTALL.md](INSTALL.md) for installation and linking instructions.
+
+API documentation
 ---
 
 Browse the [Class hierarchy](hierarchy.html) to grok the API.
-
-Dependencies
----
-
-* [Objectively](https://github.com/jdolan/Objectively)
-* [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
-* [SDL2](https://www.libsdl.org/)
-* [SDL2_image](https://www.libsdl.org/projects/SDL_image/)
-* [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
