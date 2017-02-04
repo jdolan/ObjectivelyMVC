@@ -82,7 +82,7 @@ static void render(View *self, Renderer *renderer) {
 
 	Text *this = (Text *) self;
 
-	if (this->text && strlen(this->text)) {
+	if (this->text) {
 
 		if (this->texture == 0) {
 			SDL_Surface *surface = $(this->font, renderCharacters, this->text, this->color);
@@ -186,7 +186,7 @@ static void setText(Text *self, const char *text) {
 
 	free(self->text);
 
-	if (text) {
+	if (text && strlen(text)) {
 		self->text = strdup(text);
 	} else {
 		self->text = NULL;
