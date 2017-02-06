@@ -206,8 +206,6 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 		self->label->view.alignment = ViewAlignmentMiddleRight;
 		self->label->view.padding.left = DEFAULT_SLIDER_LABEL_PADDING;
 
-		self->snapToStep = DEFAULT_SLIDER_SNAP_TO_STEP;
-
 		$((View *) self, addSubview, (View *) self->label);
 
 		self->labelFormat = strdup("%0.1f");

@@ -35,7 +35,6 @@
 #define DEFAULT_SLIDER_HANDLE_HEIGHT 18
 #define DEFAULT_SLIDER_LABEL_PADDING 4
 #define DEFAULT_SLIDER_WIDTH 100
-#define DEFAULT_SLIDER_SNAP_TO_STEP false
 
 typedef struct SliderDelegate SliderDelegate;
 
@@ -114,7 +113,7 @@ struct Slider {
 	double step;
 
 	/**
-	 * @brief Enable snapping the sniper handle to the step
+	 * @brief Enable snapping the slider handle to the step
 	 */
 	_Bool snapToStep;
 
