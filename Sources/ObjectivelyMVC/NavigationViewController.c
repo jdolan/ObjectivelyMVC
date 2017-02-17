@@ -103,6 +103,13 @@ static void popViewController(NavigationViewController *self) {
 	if (viewController) {
 		$(viewController, moveToParentViewController, NULL);
 	}
+
+	ViewController *this = (ViewController *) self;
+	ViewController *that = $(self, topViewController);
+
+	if (that) {
+		$(this->view, addSubview, that->view);
+	}
 }
 
 /**
