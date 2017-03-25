@@ -161,9 +161,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			if (frame.w) {
 
 				const double fraction = (event->motion.x - frame.x) / (double) frame.w;
-				const double value = this->min + (this->max - this->min) * clamp(fraction, 0.0, 1.0);
+				double value = this->min + (this->max - this->min) * clamp(fraction, 0.0, 1.0);
 
-				$(this, setValue, value); // FIXME: Factor step into this
+				if (this->snapToStep) {
+					value = clamp(round(value / this->step) * this->step, this->min, this->max);
+				}
+
+				$(this, setValue, value);
 
 				return true;
 			}
@@ -287,4 +291,3 @@ Class *_Slider(void) {
 }
 
 #undef _Class
-

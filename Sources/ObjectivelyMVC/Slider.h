@@ -113,6 +113,11 @@ struct Slider {
 	double step;
 
 	/**
+	 * @brief Enable snapping the slider handle to the step
+	 */
+	_Bool snapToStep;
+
+	/**
 	 * @brief The slider value.
 	 */
 	double value;
