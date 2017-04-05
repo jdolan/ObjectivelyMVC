@@ -72,8 +72,8 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 			SDL_Point offset = this->contentOffset;
 
-			offset.x -= event->wheel.x * SCROLL_VIEW_MOUSE_WHEEL_SPEED;
-			offset.y += event->wheel.y * SCROLL_VIEW_MOUSE_WHEEL_SPEED;
+			offset.x -= event->wheel.x * this->step;
+			offset.y += event->wheel.y * this->step;
 
 			$(this, scrollToOffset, &offset);
 			return true;
@@ -98,9 +98,13 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, Contro
 
 	self = (ScrollView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
+		self->step = 1.0;
+
 		self->control.view.clipsSubviews = true;
 
 		if (style == ControlStyleDefault) {
+			self->step = SCROLL_VIEW_DEFAULT_STEP;
+			
 			self->control.view.padding.top = 0;
 			self->control.view.padding.right = 0;
 			self->control.view.padding.bottom = 0;
