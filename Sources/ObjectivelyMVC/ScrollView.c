@@ -98,13 +98,13 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, Contro
 
 	self = (ScrollView *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-		self->step = 16.0;
+		self->step = 1.0;
 
 		self->control.view.clipsSubviews = true;
 
 		if (style == ControlStyleDefault) {
 			self->step = SCROLL_VIEW_DEFAULT_STEP;
-
+			
 			self->control.view.padding.top = 0;
 			self->control.view.padding.right = 0;
 			self->control.view.padding.bottom = 0;
