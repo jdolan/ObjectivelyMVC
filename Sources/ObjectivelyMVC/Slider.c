@@ -187,6 +187,8 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 	self = (Slider *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
+		self->delegate.self = self; // Make delegate's self myself by default
+
 		self->bar = $(alloc(View), initWithFrame, frame);
 		assert(self->bar);
 
@@ -245,7 +247,7 @@ static void setValue(Slider *self, double value) {
 		$((Text *) self->label, setText, text);
 
 		if (self->delegate.didSetValue) {
-			self->delegate.didSetValue(self);
+			self->delegate.didSetValue(self->delegate.self);
 		}
 	}
 }

@@ -11,6 +11,7 @@ pkginclude_HEADERS = \
 	CollectionItemView.h \
 	CollectionView.h \
 	Colors.h \
+	ColorSelect.h \
 	Config.h \
 	Control.h \
 	Font.h \
@@ -52,6 +53,7 @@ libObjectivelyMVC_la_SOURCES = \
 	CollectionItemView.c \
 	CollectionView.c \
 	Colors.c \
+	ColorSelect.c \
 	Control.c \
 	Font.c \
 	Image.c \
