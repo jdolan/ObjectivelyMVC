@@ -25,6 +25,7 @@
 
 #include <ObjectivelyMVC/ColorSelect.h>
 #include <ObjectivelyMVC/StackView.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _ColorSelect
 
@@ -41,6 +42,8 @@ static void dealloc(Object *self) {
 	release(this->sliderG);
 	release(this->sliderB);
 	release(this->sliderA);
+
+	release(this->colorView);
 
 	super(Object, self, dealloc);
 }
@@ -75,12 +78,13 @@ static View *init(View *self) {
  */
 static void updateColor(ColorSelect *this) {
 
-	this->stackView.view.backgroundColor.r = this->color.r;
-	this->stackView.view.backgroundColor.g = this->color.g;
-	this->stackView.view.backgroundColor.b = this->color.b;
+	this->colorView->backgroundColor.r = this->color.r;
+	this->colorView->backgroundColor.g = this->color.g;
+	this->colorView->backgroundColor.b = this->color.b;
+	this->colorView->backgroundColor.a = this->color.a;
 
 	if (this->delegate.didSetColor) {
-		this->delegate.didSetColor(this);
+		this->delegate.didSetColor(this->delegate.self);
 	}
 }
 
@@ -147,72 +151,109 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 	self = (ColorSelect *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 
-		View *this = (View *) self;
-
 		self->useAlpha = useAlpha;
 
-		this->backgroundColor.a = 255;
+		self->delegate.self = self;
 
-		// Red slider
+		self->stackView.axis = StackViewAxisHorizontal;
 
-		self->sliderR = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		{
+			StackView *column = $(alloc(StackView), initWithFrame, NULL);
 
-		self->sliderR->delegate.self = self; // Set self to the ColorSelect
-		self->sliderR->delegate.didSetValue = didSetRed;
+			column->view.autoresizingMask = ViewAutoresizingWidth;
 
-		self->sliderR->min = 0.0;
-		self->sliderR->max = 255.0;
-		self->sliderR->step = 5.0;
+			{
+				// Red slider
 
-		self->sliderR->snapToStep = true;
+				self->sliderR = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 
-		$((View *) self, addSubview, (View *) self->sliderR);
+				self->sliderR->delegate.self = self; // Set self to the ColorSelect
+				self->sliderR->delegate.didSetValue = didSetRed;
 
-		// Green slider
+				self->sliderR->min = 0.0;
+				self->sliderR->max = 255.0;
+				self->sliderR->step = 5.0;
 
-		self->sliderG = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+				self->sliderR->snapToStep = true;
 
-		self->sliderG->delegate.self = self; // Set self to the ColorSelect
-		self->sliderG->delegate.didSetValue = didSetGreen;
+				self->sliderR->control.view.autoresizingMask = ViewAutoresizingWidth;
 
-		self->sliderG->min = 0.0;
-		self->sliderG->max = 255.0;
-		self->sliderG->step = 5.0;
+				$((View *) column, addSubview, (View *) self->sliderR);
 
-		self->sliderG->snapToStep = true;
+				// Green slider
 
-		$((View *) self, addSubview, (View *) self->sliderG);
+				self->sliderG = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 
-		// Blue slider
+				self->sliderG->delegate.self = self; // Set self to the ColorSelect
+				self->sliderG->delegate.didSetValue = didSetGreen;
 
-		self->sliderB = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+				self->sliderG->min = 0.0;
+				self->sliderG->max = 255.0;
+				self->sliderG->step = 5.0;
 
-		self->sliderB->delegate.self = self; // Set self to the ColorSelect
-		self->sliderB->delegate.didSetValue = didSetBlue;
+				self->sliderG->snapToStep = true;
 
-		self->sliderB->min = 0.0;
-		self->sliderB->max = 255.0;
-		self->sliderB->step = 5.0;
+				self->sliderG->control.view.autoresizingMask = ViewAutoresizingWidth;
 
-		self->sliderB->snapToStep = true;
+				$((View *) column, addSubview, (View *) self->sliderG);
 
-		$((View *) self, addSubview, (View *) self->sliderB);
+				// Blue slider
 
-		// Alpha slider
+				self->sliderB = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 
-		if (self->useAlpha) {
-			self->sliderA = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+				self->sliderB->delegate.self = self; // Set self to the ColorSelect
+				self->sliderB->delegate.didSetValue = didSetBlue;
 
-			self->sliderA->delegate.self = self; // Set self to the ColorSelect
-			self->sliderA->delegate.didSetValue = didSetAlpha;
+				self->sliderB->min = 0.0;
+				self->sliderB->max = 255.0;
+				self->sliderB->step = 5.0;
 
-			self->sliderA->min = 0.0;
-			self->sliderA->max = 255.0;
-			self->sliderA->step = 5.0;
+				self->sliderB->snapToStep = true;
 
-			self->sliderA->snapToStep = true;
+				self->sliderB->control.view.autoresizingMask = ViewAutoresizingWidth;
 
-			$((View *) self, addSubview, (View *) self->sliderA);
+				$((View *) column, addSubview, (View *) self->sliderB);
+
+				// Alpha slider
+
+				if (self->useAlpha) {
+					self->sliderA = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+
+					self->sliderA->delegate.self = self; // Set self to the ColorSelect
+					self->sliderA->delegate.didSetValue = didSetAlpha;
+
+					self->sliderA->min = 0.0;
+					self->sliderA->max = 255.0;
+					self->sliderA->step = 5.0;
+
+					self->sliderA->snapToStep = true;
+
+					self->sliderA->control.view.autoresizingMask = ViewAutoresizingWidth;
+
+					$((View *) column, addSubview, (View *) self->sliderA);
+				}
+			}
+
+			$((View *) self, addSubview, (View *) column);
+			release(column);
+		}
+
+		{
+			const SDL_Rect frame = MakeRect(0, 0, 32, 32);
+			View *column = $(alloc(View), initWithFrame, &frame); // Not a StackView because we need overlapping stuff
+
+			column->autoresizingMask = ViewAutoresizingFill;
+
+			{
+				self->colorView = $(alloc(View), init);
+
+				self->colorView->autoresizingMask = ViewAutoresizingFill;
+
+				$((View *) column, addSubview, self->colorView);
+			}
+
+			$((View *) self, addSubview, column);
+			release(column);
 		}
 
 		const SDL_Color defaultColor = { .r = 0, .g = 0, .b = 0, .a = 255 };

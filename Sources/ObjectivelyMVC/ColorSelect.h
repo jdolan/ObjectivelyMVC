@@ -98,6 +98,11 @@ struct ColorSelect {
 	Slider *sliderA;
 
 	/**
+	 * @brief The color preview.
+	 */
+	View *colorView;
+
+	/**
 	 * @brief If the alpha selector is enabled.
 	 */
 	_Bool useAlpha;
