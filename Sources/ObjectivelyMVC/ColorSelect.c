@@ -24,10 +24,101 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/ColorSelect.h>
+#include <ObjectivelyMVC/Input.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/View.h>
 
 #define _Class _ColorSelect
+
+#pragma mark - Helper functions
+
+/**
+ * @brief Helper function for initializing a slider
+ */
+static void addSlider(View *view, const char *label, Slider *slider) {
+
+	assert(view);
+	assert(slider);
+
+	Input *input = $(alloc(Input), initWithFrame, NULL);
+	assert(input);
+
+	slider->min = 0.0;
+	slider->max = 255.0;
+	slider->step = 5.0;
+
+	slider->snapToStep = true;
+
+	retain(slider); // Don't release with the Input
+
+	$(input, setControl, (Control *) slider);
+
+	$(input->label->text, setText, label);
+
+	input->label->view.frame.w = 16;
+
+	input->label->view.autoresizingMask &= ~ViewAutoresizingContain;
+
+	$(view, addSubview, (View *) input);
+
+	release(input);
+}
+
+#pragma mark - Actions & delegates
+
+/**
+ * @brief ColorSelectDelegate callback.
+ */
+static void didSetRed(Slider *slider) {
+
+	ColorSelect *this = (ColorSelect *) slider;
+
+	this->color.r = round(this->sliderR->value);
+
+	$((View *) this, updateBindings);
+}
+
+/**
+ * @brief ColorSelectDelegate callback.
+ */
+static void didSetGreen(Slider *slider) {
+
+	ColorSelect *this = (ColorSelect *) slider;
+
+	this->color.g = round(this->sliderG->value);
+
+	$((View *) this, updateBindings);
+}
+
+/**
+ * @brief ColorSelectDelegate callback.
+ */
+static void didSetBlue(Slider *slider) {
+
+	ColorSelect *this = (ColorSelect *) slider;
+
+	this->color.b = round(this->sliderB->value);
+
+	$((View *) this, updateBindings);
+}
+
+/**
+ * @brief ColorSelectDelegate callback.
+ */
+static void didSetAlpha(Slider *slider) {
+
+	ColorSelect *this = (ColorSelect *) slider;
+
+	if (this->useAlpha) {
+		this->color.a = round(this->sliderA->value);
+
+		$((View *) this, updateBindings);
+	} else  if (this->color.a != 255) {
+		this->color.a = 255;
+
+		$((View *) this, updateBindings);
+	}
+}
 
 #pragma mark - Object
 
@@ -93,60 +184,6 @@ static void updateBindings(View *self) {
 #pragma mark - ColorSelect
 
 /**
- * @brief ColorSelectDelegate callback.
- */
-static void didSetRed(Slider *slider) {
-
-	ColorSelect *this = (ColorSelect *) slider;
-
-	this->color.r = round(this->sliderR->value);
-
-	$((View *) this, updateBindings);
-}
-
-/**
- * @brief ColorSelectDelegate callback.
- */
-static void didSetGreen(Slider *slider) {
-
-	ColorSelect *this = (ColorSelect *) slider;
-
-	this->color.g = round(this->sliderG->value);
-
-	$((View *) this, updateBindings);
-}
-
-/**
- * @brief ColorSelectDelegate callback.
- */
-static void didSetBlue(Slider *slider) {
-
-	ColorSelect *this = (ColorSelect *) slider;
-
-	this->color.b = round(this->sliderB->value);
-
-	$((View *) this, updateBindings);
-}
-
-/**
- * @brief ColorSelectDelegate callback.
- */
-static void didSetAlpha(Slider *slider) {
-
-	ColorSelect *this = (ColorSelect *) slider;
-
-	if (this->useAlpha) {
-		this->color.a = round(this->sliderA->value);
-
-		$((View *) this, updateBindings);
-	} else  if (this->color.a != 255) {
-		this->color.a = 255;
-
-		$((View *) this, updateBindings);
-	}
-}
-
-/**
  * @fn ColorSelect *ColorSelect::initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Bool useAlpha)
  * @memberof ColorSelect
  */
@@ -167,74 +204,44 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 			column->view.autoresizingMask = ViewAutoresizingWidth;
 
 			{
+				const SDL_Rect sliderFrame = MakeRect(0, 0, frame->w - 32, DEFAULT_CONTROL_HEIGHT);
+
 				// Red slider
 
-				self->sliderR = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+				self->sliderR = $(alloc(Slider), initWithFrame, &sliderFrame, ControlStyleDefault);
+
+				addSlider((View *) column, "R", self->sliderR);
 
 				self->sliderR->delegate.self = self; // Set self to the ColorSelect
 				self->sliderR->delegate.didSetValue = didSetRed;
 
-				self->sliderR->min = 0.0;
-				self->sliderR->max = 255.0;
-				self->sliderR->step = 5.0;
-
-				self->sliderR->snapToStep = true;
-
-				self->sliderR->control.view.autoresizingMask = ViewAutoresizingWidth;
-
-				$((View *) column, addSubview, (View *) self->sliderR);
-
 				// Green slider
 
-				self->sliderG = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+				self->sliderG = $(alloc(Slider), initWithFrame, &sliderFrame, ControlStyleDefault);
+
+				addSlider((View *) column, "G", self->sliderG);
 
 				self->sliderG->delegate.self = self; // Set self to the ColorSelect
 				self->sliderG->delegate.didSetValue = didSetGreen;
 
-				self->sliderG->min = 0.0;
-				self->sliderG->max = 255.0;
-				self->sliderG->step = 5.0;
-
-				self->sliderG->snapToStep = true;
-
-				self->sliderG->control.view.autoresizingMask = ViewAutoresizingWidth;
-
-				$((View *) column, addSubview, (View *) self->sliderG);
-
 				// Blue slider
 
-				self->sliderB = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+				self->sliderB = $(alloc(Slider), initWithFrame, &sliderFrame, ControlStyleDefault);
+
+				addSlider((View *) column, "B", self->sliderB);
 
 				self->sliderB->delegate.self = self; // Set self to the ColorSelect
 				self->sliderB->delegate.didSetValue = didSetBlue;
 
-				self->sliderB->min = 0.0;
-				self->sliderB->max = 255.0;
-				self->sliderB->step = 5.0;
-
-				self->sliderB->snapToStep = true;
-
-				self->sliderB->control.view.autoresizingMask = ViewAutoresizingWidth;
-
-				$((View *) column, addSubview, (View *) self->sliderB);
-
 				// Alpha slider
 
 				if (self->useAlpha) {
-					self->sliderA = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+					self->sliderA = $(alloc(Slider), initWithFrame, &sliderFrame, ControlStyleDefault);
+
+					addSlider((View *) column, "A", self->sliderA);
 
 					self->sliderA->delegate.self = self; // Set self to the ColorSelect
 					self->sliderA->delegate.didSetValue = didSetAlpha;
-
-					self->sliderA->min = 0.0;
-					self->sliderA->max = 255.0;
-					self->sliderA->step = 5.0;
-
-					self->sliderA->snapToStep = true;
-
-					self->sliderA->control.view.autoresizingMask = ViewAutoresizingWidth;
-
-					$((View *) column, addSubview, (View *) self->sliderA);
 				}
 			}
 
@@ -243,7 +250,7 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 		}
 
 		{
-			const SDL_Rect frame = MakeRect(0, 0, 32, 32);
+			const SDL_Rect frame = MakeRect(0, 0, 16, 1);
 			View *column = $(alloc(View), initWithFrame, &frame); // Not a StackView because we need overlapping stuff
 
 			column->autoresizingMask = ViewAutoresizingHeight;
@@ -281,6 +288,8 @@ static void setColor(ColorSelect *self, const SDL_Color color) {
 
 	if (self->useAlpha) {
 		$(self->sliderA, setValue, color.a);
+	} else {
+		self->color.a = 255;
 	}
 }
 
