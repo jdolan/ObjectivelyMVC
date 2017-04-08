@@ -235,6 +235,8 @@ static ColorSelect *setColor(ColorSelect *self, const SDL_Color color) {
 	if (self->useAlpha) {
 		$(self->sliderA, setValue, color.a);
 	}
+
+	return self;
 }
 
 #pragma mark - Class lifecycle

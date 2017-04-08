@@ -176,6 +176,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionItemView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ColorSelect.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Font.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionItemView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Colors.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ColorSelect.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Control.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Font.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Image.c" />
