@@ -71,12 +71,14 @@ static View *init(View *self) {
 	return (View *) $((ColorSelect *) self, initWithFrame, NULL, true);
 }
 
-#pragma mark - ColorSelect
-
 /**
- * @brief Update colors.
+ * @see View::updateBindings(View *)
  */
-static void updateColor(ColorSelect *this) {
+static void updateBindings(View *self) {
+
+	super(View, self, updateBindings);
+
+	ColorSelect *this = (ColorSelect *) self;
 
 	this->colorView->backgroundColor.r = this->color.r;
 	this->colorView->backgroundColor.g = this->color.g;
@@ -88,6 +90,8 @@ static void updateColor(ColorSelect *this) {
 	}
 }
 
+#pragma mark - ColorSelect
+
 /**
  * @brief ColorSelectDelegate callback.
  */
@@ -97,7 +101,7 @@ static void didSetRed(Slider *slider) {
 
 	this->color.r = round(this->sliderR->value);
 
-	updateColor(this);
+	$((View *) this, updateBindings);
 }
 
 /**
@@ -109,7 +113,7 @@ static void didSetGreen(Slider *slider) {
 
 	this->color.g = round(this->sliderG->value);
 
-	updateColor(this);
+	$((View *) this, updateBindings);
 }
 
 /**
@@ -121,7 +125,7 @@ static void didSetBlue(Slider *slider) {
 
 	this->color.b = round(this->sliderB->value);
 
-	updateColor(this);
+	$((View *) this, updateBindings);
 }
 
 /**
@@ -134,11 +138,11 @@ static void didSetAlpha(Slider *slider) {
 	if (this->useAlpha) {
 		this->color.a = round(this->sliderA->value);
 
-		updateColor(this);
+		$((View *) this, updateBindings);
 	} else  if (this->color.a != 255) {
 		this->color.a = 255;
 
-		updateColor(this);
+		$((View *) this, updateBindings);
 	}
 }
 
@@ -242,7 +246,7 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 			const SDL_Rect frame = MakeRect(0, 0, 32, 32);
 			View *column = $(alloc(View), initWithFrame, &frame); // Not a StackView because we need overlapping stuff
 
-			column->autoresizingMask = ViewAutoresizingFill;
+			column->autoresizingMask = ViewAutoresizingHeight;
 
 			{
 				self->colorView = $(alloc(View), init);
@@ -269,6 +273,8 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
  */
 static void setColor(ColorSelect *self, const SDL_Color color) {
 
+	// Slider delegates will be triggered for updating colors
+
 	$(self->sliderR, setValue, color.r);
 	$(self->sliderG, setValue, color.g);
 	$(self->sliderB, setValue, color.b);
@@ -289,6 +295,7 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
 
 	((ColorSelectInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((ColorSelectInterface *) clazz->def->interface)->setColor = setColor;
