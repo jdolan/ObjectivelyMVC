@@ -223,10 +223,10 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 }
 
 /**
- * @fn ColorSelect *ColorSelect::setColor(ColorSelect *self, const SDL_Color color)
+ * @fn void ColorSelect::setColor(ColorSelect *self, const SDL_Color color)
  * @memberof ColorSelect
  */
-static ColorSelect *setColor(ColorSelect *self, const SDL_Color color) {
+static void setColor(ColorSelect *self, const SDL_Color color) {
 
 	$(self->sliderR, setValue, color.r);
 	$(self->sliderG, setValue, color.g);
@@ -235,8 +235,6 @@ static ColorSelect *setColor(ColorSelect *self, const SDL_Color color) {
 	if (self->useAlpha) {
 		$(self->sliderA, setValue, color.a);
 	}
-
-	return self;
 }
 
 #pragma mark - Class lifecycle

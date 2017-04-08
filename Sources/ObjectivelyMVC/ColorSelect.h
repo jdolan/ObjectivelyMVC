@@ -130,13 +130,13 @@ struct ColorSelectInterface {
 	ColorSelect *(*initWithFrame)(ColorSelect *self, const SDL_Rect *frame, _Bool useAlpha);
 
 	/**
-	 * @fn ColorSelect *ColorSelect::setColor(ColorSelect *self, const SDL_Color color)
+	 * @fn void ColorSelect::setColor(ColorSelect *self, const SDL_Color color)
 	 * @brief Sets the current color of the ColorSelect
 	 * @param self The ColorSelect.
 	 * @param color The color to change to
 	 * @memberof ColorSelect
 	 */
-	ColorSelect *(*setColor)(ColorSelect *self, const SDL_Color color);
+	void (*setColor)(ColorSelect *self, const SDL_Color color);
 };
 
 /**
