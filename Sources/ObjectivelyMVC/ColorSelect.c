@@ -43,19 +43,21 @@ static void addSlider(View *view, const char *label, Slider *slider) {
 	Input *input = $(alloc(Input), initWithFrame, NULL);
 	assert(input);
 
+	input->stackView.view.autoresizingMask = ViewAutoresizingWidth;
+
 	slider->min = 0.0;
 	slider->max = 255.0;
 	slider->step = 5.0;
 
 	slider->snapToStep = true;
 
+	slider->control.view.autoresizingMask = ViewAutoresizingWidth;
+
 	retain(slider); // Don't release with the Input
 
 	$(input, setControl, (Control *) slider);
 
 	$(input->label->text, setText, label);
-
-	input->label->view.frame.w = 16;
 
 	input->label->view.autoresizingMask &= ~ViewAutoresizingContain;
 
@@ -197,18 +199,19 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 		self->delegate.self = self;
 
 		self->stackView.axis = StackViewAxisHorizontal;
+		self->stackView.distribution = StackViewDistributionFill;
 
 		{
 			StackView *column = $(alloc(StackView), initWithFrame, NULL);
 
-			column->view.autoresizingMask = ViewAutoresizingWidth;
+			column->distribution = StackViewDistributionFillEqually;
+
+			column->view.autoresizingMask = ViewAutoresizingFill;
 
 			{
-				const SDL_Rect sliderFrame = MakeRect(0, 0, frame->w - 32, DEFAULT_CONTROL_HEIGHT);
-
 				// Red slider
 
-				self->sliderR = $(alloc(Slider), initWithFrame, &sliderFrame, ControlStyleDefault);
+				self->sliderR = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 
 				addSlider((View *) column, "R", self->sliderR);
 
@@ -217,7 +220,7 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 
 				// Green slider
 
-				self->sliderG = $(alloc(Slider), initWithFrame, &sliderFrame, ControlStyleDefault);
+				self->sliderG = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 
 				addSlider((View *) column, "G", self->sliderG);
 
@@ -226,7 +229,7 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 
 				// Blue slider
 
-				self->sliderB = $(alloc(Slider), initWithFrame, &sliderFrame, ControlStyleDefault);
+				self->sliderB = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 
 				addSlider((View *) column, "B", self->sliderB);
 
@@ -236,7 +239,7 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 				// Alpha slider
 
 				if (self->useAlpha) {
-					self->sliderA = $(alloc(Slider), initWithFrame, &sliderFrame, ControlStyleDefault);
+					self->sliderA = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
 
 					addSlider((View *) column, "A", self->sliderA);
 
@@ -250,10 +253,11 @@ static ColorSelect *initWithFrame(ColorSelect *self, const SDL_Rect *frame, _Boo
 		}
 
 		{
-			const SDL_Rect frame = MakeRect(0, 0, 16, 1);
-			View *column = $(alloc(View), initWithFrame, &frame); // Not a StackView because we need overlapping stuff
+			View *column = $(alloc(View), initWithFrame, NULL); // Not a StackView because we need overlapping stuff
 
 			column->autoresizingMask = ViewAutoresizingHeight;
+
+			column->frame.w = 16;
 
 			{
 				self->colorView = $(alloc(View), init);
