@@ -44,6 +44,7 @@ static void addSlider(View *view, const char *label, Slider *slider) {
 	assert(input);
 
 	input->stackView.view.autoresizingMask = ViewAutoresizingWidth;
+	input->stackView.view.padding.right = 6;
 
 	slider->min = 0.0;
 	slider->max = 255.0;
