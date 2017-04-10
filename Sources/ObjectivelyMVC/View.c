@@ -873,6 +873,7 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(_Button());
 		_initialize(_Checkbox());
 		_initialize(_CollectionView());
+		_initialize(_ColorSelect());
 		_initialize(_ImageView());
 		_initialize(_Input());
 		_initialize(_Label());
