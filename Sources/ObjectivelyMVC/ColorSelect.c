@@ -50,6 +50,8 @@ static void addSlider(View *view, const char *label, Slider *slider) {
 	slider->max = 255.0;
 	slider->step = 5.0;
 
+	$(slider, setLabelFormat, "%0.0f");
+
 	slider->snapToStep = true;
 
 	slider->control.view.autoresizingMask = ViewAutoresizingWidth;

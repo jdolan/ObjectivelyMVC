@@ -150,6 +150,23 @@ struct SliderInterface {
 	 * @memberof Slider
 	 */
 	void (*setValue)(Slider *self, double value);
+
+	/**
+	 * @fn void Slider::setLabelFormat(Slider *self, const char *labelFormat)
+	 * @brief Changes this Slider's label format and calls appropriate update functions
+	 * @param self The Slider.
+	 * @param labelFormat The new label format.
+	 * @memberof Slider
+	 */
+	void (*setLabelFormat)(Slider *self, const char *labelFormat);
+
+	/**
+	 * @fn void Slider::updateLabel(Slider *self)
+	 * @brief Forces an update on this Slider's label.
+	 * @param self The Slider.
+	 * @memberof Slider
+	 */
+	void (*updateLabel)(Slider *self);
 };
 
 /**

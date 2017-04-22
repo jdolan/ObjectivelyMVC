@@ -210,8 +210,6 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 		$((View *) self, addSubview, (View *) self->label);
 
-		self->labelFormat = strdup("%0.1f");
-
 		if (self->control.style == ControlStyleDefault) {
 
 			if (self->control.view.frame.w == 0) {
@@ -223,6 +221,10 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
 			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;
 		}
+
+		self->value = 0.0; // Zero it; the parent should set this after allocation anyway for good measure
+
+		$(self, setLabelFormat, "%0.1f");
 	}
 
 	return self;
@@ -239,17 +241,43 @@ static void setValue(Slider *self, double value) {
 	const double delta = fabs(self->value - value);
 	if (delta > __DBL_EPSILON__) {
 		self->value = value;
-		self->control.view.needsLayout = true;
 
-		char text[64];
-		snprintf(text, sizeof(text), self->labelFormat, self->value);
-
-		$((Text *) self->label, setText, text);
+		$(self, updateLabel);
 
 		if (self->delegate.didSetValue) {
 			self->delegate.didSetValue(self->delegate.self);
 		}
 	}
+}
+
+/**
+ * @fn void Slider::setLabelFormat(Slider *self, const char *labelFormat)
+ * @memberof Slider
+ */
+static void setLabelFormat(Slider *self, const char *labelFormat) {
+
+	if (self->labelFormat) {
+		free(self->labelFormat);
+	}
+
+	self->labelFormat = strdup(labelFormat);
+	$(self, updateLabel);
+}
+
+/**
+ * @fn void Slider::updateLabel(Slider *self)
+ * @memberof Slider
+ */
+static void updateLabel(Slider *self) {
+
+	// Force a delta difference so the label updates
+
+	self->control.view.needsLayout = true;
+
+	char text[64];
+	snprintf(text, sizeof(text), self->labelFormat, self->value);
+
+	$((Text *) self->label, setText, text);
 }
 
 #pragma mark - Class lifecycle
@@ -270,6 +298,8 @@ static void initialize(Class *clazz) {
 
 	((SliderInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((SliderInterface *) clazz->def->interface)->setValue = setValue;
+	((SliderInterface *) clazz->def->interface)->setLabelFormat = setLabelFormat;
+	((SliderInterface *) clazz->def->interface)->updateLabel = updateLabel;
 }
 
 /**
