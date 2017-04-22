@@ -76,6 +76,9 @@ static void dealloc(Object *self) {
 
 #pragma mark - View
 
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);

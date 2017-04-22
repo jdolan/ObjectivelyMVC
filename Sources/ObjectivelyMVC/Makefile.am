@@ -35,6 +35,9 @@ pkginclude_HEADERS = \
 	TableHeaderView.h \
 	TableRowView.h \
 	TableView.h \
+	TabView.h \
+	TabViewController.h \
+	TabViewItem.h \
 	TextView.h \
 	Types.h \
 	View.h \
@@ -74,6 +77,9 @@ libObjectivelyMVC_la_SOURCES = \
 	TableHeaderView.c \
 	TableRowView.c \
 	TableView.c \
+	TabView.c \
+	TabViewController.c \
+	TabViewItem.c \
 	Text.c \
 	TextView.c \
 	View.c \

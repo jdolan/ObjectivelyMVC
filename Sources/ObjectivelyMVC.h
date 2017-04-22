@@ -57,6 +57,9 @@
 #include <ObjectivelyMVC/TableHeaderView.h>
 #include <ObjectivelyMVC/TableRowView.h>
 #include <ObjectivelyMVC/TableView.h>
+#include <ObjectivelyMVC/TabView.h>
+#include <ObjectivelyMVC/TabViewController.h>
+#include <ObjectivelyMVC/TabViewItem.h>
 #include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>
 #include <ObjectivelyMVC/Types.h>

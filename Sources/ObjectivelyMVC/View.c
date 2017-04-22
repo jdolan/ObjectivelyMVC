@@ -101,29 +101,29 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
 	assert(subview);
 
-	if (subview->superview != self) {
-		subview->superview = self;
+	$(subview, removeFromSuperview);
 
-		if (other && other->superview == self) {
+	if (other && other->superview == self) {
 
-			const Array *subviews = (Array *) self->subviews;
-			const ssize_t index = $(subviews, indexOfObject, other);
+		const Array *subviews = (Array *) self->subviews;
+		const ssize_t index = $(subviews, indexOfObject, other);
 
-			if (position == ViewPositionAfter) {
-				if (index == subviews->count - 1) {
-					$(self->subviews, addObject, subview);
-				} else {
-					$(self->subviews, insertObjectAtIndex, subview, index + 1);
-				}
+		if (position == ViewPositionAfter) {
+			if (index == subviews->count - 1) {
+				$(self->subviews, addObject, subview);
 			} else {
-				$(self->subviews, insertObjectAtIndex, subview, index);
+				$(self->subviews, insertObjectAtIndex, subview, index + 1);
 			}
 		} else {
-			$(self->subviews, addObject, subview);
+			$(self->subviews, insertObjectAtIndex, subview, index);
 		}
-
-		self->needsLayout = true;
+	} else {
+		$(self->subviews, addObject, subview);
 	}
+
+	subview->superview = self;
+
+	self->needsLayout = true;
 }
 
 /**
@@ -546,9 +546,10 @@ static void removeSubview(View *self, View *subview) {
 	assert(subview);
 
 	if (subview->superview == self) {
-		subview->superview = NULL;
 
 		$(self->subviews, removeObject, subview);
+
+		subview->superview = NULL;
 
 		self->needsLayout = true;
 	}

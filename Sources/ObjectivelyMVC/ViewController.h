@@ -89,6 +89,15 @@ struct ViewControllerInterface {
 	ObjectInterface parentInterface;
 
 	/**
+	 * @fn void ViewController::addChildViewController(ViewController *self, ViewController *childViewController)
+	 * @brief Adds the specified child ViewController to this ViewController.
+	 * @param self The ViewController.
+	 * @param childViewController The child ViewController.
+	 * @memberof ViewController
+	 */
+	void (*addChildViewController)(ViewController *self, ViewController *childViewController);
+
+	/**
 	 * @fn void ViewController::draw(ViewController *self, Renderer *renderer)
 	 * @brief Draws this ViewController's View hierarchy.
 	 * @param self The ViewController.
@@ -133,6 +142,23 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*moveToParentViewController)(ViewController *self, ViewController *parentViewController);
+
+	/**
+	 * @fn void ViewController::removeChildViewController(ViewController *self, ViewController *childViewController)
+	 * @brief Removes the specified child ViewController from this ViewController.
+	 * @param self The ViewController.
+	 * @param childViewController The child ViewController.
+	 * @memberof ViewController
+	 */
+	void (*removeChildViewController)(ViewController *self, ViewController *childViewController);
+
+	/**
+	 * @fn void ViewController::removeFromParentViewController(ViewController *self)
+	 * @brief Removes this ViewController from its parent.
+	 * @param self The ViewController.
+	 * @memberof ViewController.
+	 */
+	void (*removeFromParentViewController)(ViewController *self);
 
 	/**
 	 * @fn void ViewController::renderDeviceDidReset(ViewController *self)
