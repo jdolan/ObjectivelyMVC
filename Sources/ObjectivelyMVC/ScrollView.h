@@ -30,7 +30,7 @@
  * @brief ScrollViews allow users to pan their internal contents.
  */
 
-#define SCROLL_VIEW_DEFAULT_STEP 12.0
+#define SCROLL_VIEW_DEFAULT_STEP 24.0
 
 typedef struct ScrollViewDelegate ScrollViewDelegate;
 
@@ -135,4 +135,3 @@ struct ScrollViewInterface {
  * @memberof ScrollView
  */
 OBJECTIVELYMVC_EXPORT Class *_ScrollView(void);
-
