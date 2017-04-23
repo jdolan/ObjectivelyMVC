@@ -116,10 +116,12 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 static void addTab(TabView *self, TabViewItem *tab) {
 
 	assert(tab);
-	assert(tab->view);
 
 	$(self->tabs, addObject, tab);
+
 	$((View *) self, addSubview, tab->view);
+
+	tab->view->hidden = true;
 
 	if (self->delegate.didAddTab) {
 		self->delegate.didAddTab(self, tab);
@@ -160,18 +162,29 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 static void removeTab(TabView *self, TabViewItem *tab) {
 
 	assert(tab);
-	assert(tab->view);
 
 	if (self->delegate.willRemoveTab) {
 		self->delegate.willRemoveTab(self, tab);
 	}
 
+	retain(tab);
+
+	$(self->tabs, removeObject, tab);
+	
+	$((View *) self, removeSubview, tab->view);
+
 	if (self->selectedTab == tab) {
 		$(self, selectTab, NULL);
 	}
 
-	$(self->tabs, removeObject, tab);
-	$((View *) self, removeSubview, tab->view);
+	release(tab);
+}
+
+/**
+ * @brief ArrayEnumerator for selectTab.
+ */
+static void selectTab_enumerate(const Array *array, ident obj, ident data) {
+	((TabViewItem *) obj)->view->hidden = ((TabView *) data)->selectedTab != obj;
 }
 
 /**
@@ -181,6 +194,8 @@ static void removeTab(TabView *self, TabViewItem *tab) {
 static void selectTab(TabView *self, TabViewItem *tab) {
 
 	self->selectedTab = tab ?: $((Array *) self->tabs, firstObject);
+
+	$((Array *) self->tabs, enumerateObjects, selectTab_enumerate, self);
 
 	if (self->selectedTab) {
 		self->selectedTab->state |= TabStateSelected;
