@@ -99,8 +99,8 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 
 		View *label = (View *) self->label;
 
-		label->backgroundColor = Colors.Gray;
 		label->alignment = ViewAlignmentInternal;
+		label->backgroundColor = Colors.Gray;
 		label->frame.x = DEFAULT_BOX_LABEL_X;
 
 		label->padding.right = DEFAULT_BOX_LABEL_PADDING;

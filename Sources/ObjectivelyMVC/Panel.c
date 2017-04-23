@@ -270,7 +270,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->resizeHandle->view.frame.w = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 		self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 
-		$((View *) self, addSubview, (View *) self->resizeHandle);
+		$(this, addSubview, (View *) self->resizeHandle);
 
 		this->backgroundColor = Colors.DefaultColor;
 		this->borderColor = Colors.DarkGray;
