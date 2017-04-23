@@ -435,6 +435,16 @@ struct ViewInterface {
 	SDL_Rect (*renderFrame)(const View *self);
 
 	/**
+	 * @fn void View::replaceSubview(View *self, View *subview, View *replacement)
+	 * @brief Replaces the specified subview with the given replacement.
+	 * @param self The View.
+	 * @param subview The subview to replace.
+	 * @param replacement The replacement subview.
+	 * @memberof View
+	 */
+	void (*replaceSubview)(View *self, View *subview, View *replacement);
+
+	/**
 	 * @fn void View::resignFirstResponder(View *self)
 	 * @brief Resigns first responder priority.
 	 * @param self The View.

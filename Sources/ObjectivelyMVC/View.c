@@ -629,6 +629,19 @@ static SDL_Rect renderFrame(const View *self) {
 }
 
 /**
+ * @fn void View::replaceSubview(View *self, View *subview, View *replacement)
+ * @memberof View
+ */
+static void replaceSubview(View *self, View *subview, View *replacement) {
+
+	assert(subview);
+	assert(replacement);
+
+	$(self, addSubviewRelativeTo, replacement, subview, ViewPositionAfter);
+	$(self, removeSubview, subview);
+}
+
+/**
  * @fn void View::resignFirstResponder(View *self)
  * @memberof View
  */
@@ -964,6 +977,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewInterface *) clazz->def->interface)->renderFrame = renderFrame;
+	((ViewInterface *) clazz->def->interface)->replaceSubview = replaceSubview;
 	((ViewInterface *) clazz->def->interface)->resignFirstResponder = resignFirstResponder;
 	((ViewInterface *) clazz->def->interface)->resize = resize;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
