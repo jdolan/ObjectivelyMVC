@@ -156,7 +156,7 @@ struct ViewControllerInterface {
 	 * @fn void ViewController::removeFromParentViewController(ViewController *self)
 	 * @brief Removes this ViewController from its parent.
 	 * @param self The ViewController.
-	 * @memberof ViewController.
+	 * @memberof ViewController
 	 */
 	void (*removeFromParentViewController)(ViewController *self);
 

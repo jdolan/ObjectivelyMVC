@@ -101,9 +101,19 @@ typedef enum {
 	InletTypeSubviews,
 
 	/**
-	 * @remarks Inlet destination must be of type `View **`. If the inbound View definition includes
-	 * a `"class"` designation, the existing View is replaced in its View hierarchy, and released.
-	 * Otherwise, the existing View is simply visited with the View definition.
+	 * @remarks Inlet destination must be of type `View **`.
+	 * @remarks By default, the destination View is awoken with the inbound View definition.
+	 * There are two notable exceptions to this behavior:
+	 *  * `"class"` - If the inbound View definition includes a `"class"` directive, a new View of
+	 *      the specified type is initialized, and the existing View is replaced and released. The
+	 *      type must be initialized in order for the class to be resolved. Use this behavior to
+	 *      substitute a specialized or custom View implementation.
+	 *  * `"include"` - If the inbound View definition specifies an `"include"` directive, the
+	 *      specified JSON file will be recursively processed. The existing View is replaced with 
+	 *      the resulting View, and subsequently released.
+	 * @see _initialize(Clazz *)
+	 * @see View::awakeWithDictionary(View *, const Dictionary *)
+	 * @see View::viewWithContentsOfFile(const char *path)
 	 */
 	InletTypeView,
 

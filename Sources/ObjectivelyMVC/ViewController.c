@@ -164,7 +164,7 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 
 /**
  * @fn void ViewController::removeFromParentViewController(ViewController *self)
- * @memberof ViewController.
+ * @memberof ViewController
  */
 static void removeFromParentViewController(ViewController *self) {
 
