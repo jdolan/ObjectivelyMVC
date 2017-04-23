@@ -69,11 +69,11 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 
 	TabViewController *this = (TabViewController *) self;
 
-	TabViewItem *tabViewItem = $(alloc(TabViewItem), initWithView, childViewController->view);
+	TabViewItem *tab = $(alloc(TabViewItem), initWithView, childViewController->view);
 
-	$(this->tabView, addTabViewItem, tabViewItem);
+	$(this->tabView, addTab, tab);
 
-	release(tabViewItem);
+	release(tab);
 }
 
 /**
@@ -85,9 +85,9 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 
 	TabViewController *this = (TabViewController *) self;
 
-	TabViewItem *tabViewItem = $(this, tabViewItemFor, childViewController);
+	TabViewItem *tab = $(this, tabForViewController, childViewController);
 
-	$(this->tabView, removeTabViewItem, tabViewItem);
+	$(this->tabView, removeTab, tab);
 }
 
 #pragma mark - TabViewController
@@ -97,26 +97,29 @@ static void removeChildViewController(ViewController *self, ViewController *chil
  * @memberof TabViewController
  */
 static TabViewController *init(TabViewController *self) {
-
 	return (TabViewController *) super(ViewController, self, init);
 }
 
 /**
  * @brief Predicate for tabViewItemFor.
  */
-static _Bool tabViewItemFor_predicate(const ident obj, ident data) {
+static _Bool tabForViewController_predicate(const ident obj, ident data) {
 	return ((TabViewItem *) obj)->view == data;
 }
 
 /**
- * @fn TabViewItem *TabViewController::tabViewForItem(const TabViewController *self, const ViewController *viewController)
+ * @fn TabViewItem *TabViewController::tabForViewController(const TabViewController *self, const ViewController *viewController)
  * @memberof TabViewController
  */
-static TabViewItem *tabViewItemFor(const TabViewController *self, const ViewController *viewController) {
+static TabViewItem *tabForViewController(const TabViewController *self, const ViewController *viewController) {
 
-	const Array *tabViewItems = (Array *) self->tabView->tabViewItems;
+	assert(viewController);
 
-	return $(tabViewItems, findObject, tabViewItemFor_predicate, (ident) viewController->view);
+	if (viewController->view) {
+		return $((Array *) self->tabView->tabs, findObject, tabForViewController_predicate, (ident) viewController->view);
+	}
+
+	return NULL;
 }
 
 #pragma mark - Class lifecycle
@@ -133,7 +136,7 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->removeChildViewController = removeChildViewController;
 
 	((TabViewControllerInterface *) clazz->def->interface)->init = init;
-	((TabViewControllerInterface *) clazz->def->interface)->tabViewItemFor = tabViewItemFor;
+	((TabViewControllerInterface *) clazz->def->interface)->tabForViewController = tabForViewController;
 }
 
 /**

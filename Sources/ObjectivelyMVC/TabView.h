@@ -53,23 +53,23 @@ struct TabViewDelegate {
 	/**
 	 * @brief Called when a tab is added.
 	 * @param tabView The TabView.
-	 * @param tabViewItem The TabViewItem.
+	 * @param tab The TabViewItem.
 	 */
-	void (*didAddTabViewItem)(TabView *tabView, TabViewItem *tabViewItem);
+	void (*didAddTab)(TabView *tabView, TabViewItem *tab);
 
 	/**
 	 * @brief Called when a tab is selected.
 	 * @param tabView The TabView.
-	 * @param tabViewItem The selected TabViewItem.
+	 * @param tab The selected TabViewItem.
 	 */
-	void (*didSelectTabViewItem)(TabView *tabView, TabViewItem *tabViewItem);
+	void (*didSelectTab)(TabView *tabView, TabViewItem *tab);
 
 	/**
 	 * @brief Called when a tab is to be removed.
 	 * @param tabView The TabView.
-	 * @param tabViewItem The TabViewItem.
+	 * @param tab The TabViewItem.
 	 */
-	void (*willRemoveTabViewItem)(TabView *tabView, TabViewItem *tabViewItem);
+	void (*willRemoveTab)(TabView *tabView, TabViewItem *tab);
 };
 
 /**
@@ -98,12 +98,12 @@ struct TabView {
 	/**
 	 * @brief The selected TabViewItem.
 	 */
-	TabViewItem *selectedTabViewItem;
+	TabViewItem *selectedTab;
 
 	/**
 	 * @brief The TabViewItems.
 	 */
-	MutableArray *tabViewItems;
+	MutableArray *tabs;
 };
 
 /**
@@ -117,13 +117,13 @@ struct TabViewInterface {
 	ViewInterface viewInterface;
 
 	/**
-	 * @fn void TabView::addTabViewItem(TabView *self, TabViewItem *tabViewItem)
+	 * @fn void TabView::addTab(TabView *self, TabViewItem *tab)
 	 * @brief Adds the specified TabViewItem to this TabView.
 	 * @param self The TabView.
-	 * @param tabViewItem The TabViewItem.
+	 * @param tab The TabViewItem.
 	 * @memberof TabView
 	 */
-	void (*addTabViewItem)(TabView *self, TabViewItem *tabViewItem);
+	void (*addTab)(TabView *self, TabViewItem *tab);
 
 	/**
 	 * @fn TabView *TabView::initWithFrame(TabView *self, const SDL_Rect *frame)
@@ -136,22 +136,31 @@ struct TabViewInterface {
 	TabView *(*initWithFrame)(TabView *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn void TabView::selectTabViewItem(TabView *self, TabViewItem *tabViewItem)
+	 * @fn void TabView::selectTab(TabView *self, TabViewItem *tab)
 	 * @brief Selects the specified TabViewItem.
 	 * @param self The TabView.
-	 * @param tabViewItem The TabViewItem.
+	 * @param tab The TabViewItem.
 	 * @memberof TabView
 	 */
-	void (*selectTabViewItem)(TabView *self, TabViewItem *tabViewItem);
+	void (*selectTab)(TabView *self, TabViewItem *tab);
 
 	/**
-	 * @fn void TabView::removeTabViewItem(TabView *self, TabViewItem *tabViewItem)
+	 * @fn void TabView::removeTab(TabView *self, TabViewItem *tab)
 	 * @brief Removes the specified TabViewItem from this TabView.
 	 * @param self The TabView.
-	 * @param tabViewItem The TabViewItem.
+	 * @param tab The TabViewItem.
 	 * @memberof TabView
 	 */
-	void (*removeTabViewItem)(TabView *self, TabViewItem *tabViewItem);
+	void (*removeTab)(TabView *self, TabViewItem *tab);
+
+	/**
+	 * @fn TabViewItem *TabView::tabWithIdentifier(const TabView *self, const char *identifier)
+	 * @param self The TabView.
+	 * @param identifier The identifier of the desired TabViewItem.
+	 * @return The TabViewItem with the specified identifier.
+	 * @memberof TabView
+	 */
+	TabViewItem *(*tabWithIdentifier)(const TabView *self, const char *identifier);
 };
 
 /**

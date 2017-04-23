@@ -54,7 +54,7 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
 
-	const String *identifier = $(cast(Dictionary, obj), objectForKeyPath, "identifier");
+	const String *identifier = $((Dictionary *) obj, objectForKeyPath, "identifier");
 	assert(identifier);
 
 	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);

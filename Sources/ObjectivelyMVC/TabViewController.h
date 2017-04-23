@@ -81,14 +81,14 @@ struct TabViewControllerInterface {
 	TabViewController *(*init)(TabViewController *self);
 
 	/**
-	 * @fn TabViewItem *TabViewController::tabViewForItem(const TabViewController *self, const ViewController *viewController)
+	 * @fn TabViewItem *TabViewController::tabForViewController(const TabViewController *self, const ViewController *viewController)
 	 * @brief Returns the TabViewItem for the specified child ViewController, or `NULL`.
 	 * @param self The TabViewController.
 	 * @param viewController The child ViewController.
 	 * @return The TabViewItem associated with the specified child ViewController.
 	 * @memberof TabViewController
 	 */
-	TabViewItem *(*tabViewItemFor)(const TabViewController *self, const ViewController *viewController);
+	TabViewItem *(*tabForViewController)(const TabViewController *self, const ViewController *viewController);
 };
 
 /**

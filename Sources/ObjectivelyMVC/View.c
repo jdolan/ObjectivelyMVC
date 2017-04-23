@@ -897,6 +897,7 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(_Slider());
 		_initialize(_StackView());
 		_initialize(_TableView());
+		_initialize(_TabView());
 		_initialize(_Text());
 		_initialize(_TextView());
 	});

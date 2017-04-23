@@ -47,21 +47,40 @@ static void dealloc(Object *self) {
 #pragma mark - TabViewItem
 
 /**
- * @fn TabViewItem *TabViewItem::initWithView(TabViewItem *self, View *view)
+ * @fn TabViewItem *TabViewItem::initWithIdentifier(TabViewItem *self, const char *identifier)
  * @memberof TabViewItem
  */
-static TabViewItem *initWithView(TabViewItem *self, View *view) {
+static TabViewItem *initWithIdentifier(TabViewItem *self, const char *identifier) {
 
 	self = (TabViewItem *) super(Object, self, init);
 	if (self) {
-		self->view = retain(view);
+		self->identifier = strdup(identifier);
+		assert(self->identifier);
 
 		self->label = $(alloc(Label), initWithText, NULL, NULL);
 		assert(self->label);
 
 		self->label->view.alignment = ViewAlignmentMiddleCenter;
 
-		self->state = TabStateDefault;
+		self->view = $(alloc(View), initWithFrame, NULL);
+		assert(self->view);
+
+		self->view->autoresizingMask = ViewAutoresizingContain;
+	}
+
+	return self;
+}
+
+/**
+ * @fn TabViewItem *TabViewItem::initWithView(TabViewItem *self, View *view)
+ * @memberof TabViewItem
+ */
+static TabViewItem *initWithView(TabViewItem *self, View *view) {
+
+	self = $(self, initWithIdentifier, view->identifier ?: _TabViewItem()->name);
+	if (self) {
+		release(self->view);
+		self->view = retain(view);
 	}
 
 	return self;
@@ -76,9 +95,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((TabViewItemInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
 	((TabViewItemInterface *) clazz->def->interface)->initWithView = initWithView;
-
-	//..
 }
 
 /**

@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include <Objectively/String.h>
+
 #include <ObjectivelyMVC/TabView.h>
 
 #define _Class _TabView
@@ -36,12 +38,34 @@ static void dealloc(Object *self) {
 
 	TabView *this = (TabView *) self;
 
-	release(this->tabViewItems);
+	release(this->tabs);
 
 	super(Object, self, dealloc);
 }
 
 #pragma mark - View
+
+/**
+ * @brief ArrayEnumerator for awaking TabViewItems.
+ */
+static void awakeWithDictionary_tabs(const Array *array, ident obj, ident data) {
+
+	const String *identifier = $((Dictionary *) obj, objectForKeyPath, "identifier");
+	assert(identifier);
+
+	TabViewItem *tab = $(alloc(TabViewItem), initWithIdentifier, identifier->chars);
+	assert(tab);
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("label", InletTypeView, &tab->label, NULL),
+		MakeInlet("view", InletTypeView, &tab->view, NULL)
+	);
+
+	$((View *) data, bind, obj, inlets);
+	$((TabView *) data, addTab, tab);
+
+	release(tab);
+}
 
 /**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
@@ -50,7 +74,10 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
 
-	// TODO: JSON binding
+	const Array *tabs = $(dictionary, objectForKeyPath, "tabs");
+	if (tabs) {
+		$(tabs, enumerateObjects, awakeWithDictionary_tabs, self);
+	}
 }
 
 /**
@@ -83,23 +110,23 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 #pragma mark - TabView
 
 /**
- * @fn void TabView::addTabViewItem(TabView *self, TabViewItem *tabViewItem)
+ * @fn void TabView::addTab(TabView *self, TabViewItem *tab)
  * @memberof TabView
  */
-static void addTabViewItem(TabView *self, TabViewItem *tabViewItem) {
+static void addTab(TabView *self, TabViewItem *tab) {
 
-	assert(tabViewItem);
-	assert(tabViewItem->view);
+	assert(tab);
+	assert(tab->view);
 
-	$(self->tabViewItems, addObject, tabViewItem);
-	$((View *) self, addSubview, tabViewItem->view);
+	$(self->tabs, addObject, tab);
+	$((View *) self, addSubview, tab->view);
 
-	if (self->delegate.didAddTabViewItem) {
-		self->delegate.didAddTabViewItem(self, tabViewItem);
+	if (self->delegate.didAddTab) {
+		self->delegate.didAddTab(self, tab);
 	}
 
-	if (self->selectedTabViewItem == NULL) {
-		$(self, selectTabViewItem, tabViewItem);
+	if (self->selectedTab == NULL) {
+		$(self, selectTab, tab);
 	}
 }
 
@@ -112,8 +139,8 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 	self = (TabView *) super(View, self, initWithFrame, frame);
 	if (self) {
 
-		self->tabViewItems = $$(MutableArray, array);
-		assert(self->tabViewItems);
+		self->tabs = $$(MutableArray, array);
+		assert(self->tabs);
 
 		self->view.autoresizingMask = ViewAutoresizingContain;
 
@@ -127,41 +154,67 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 }
 
 /**
- * @fn void TabView::selectTabViewItem(TabView *self, TabViewItem *tabViewItem)
+ * @fn void TabView::removeTab(TabView *self, TabViewItem *tab)
  * @memberof TabView
  */
-static void selectTabViewItem(TabView *self, TabViewItem *tabViewItem) {
+static void removeTab(TabView *self, TabViewItem *tab) {
 
-	self->selectedTabViewItem = tabViewItem ?: $((Array *) self->tabViewItems, firstObject);
+	assert(tab);
+	assert(tab->view);
 
-	if (self->selectedTabViewItem) {
-		self->selectedTabViewItem->state |= TabStateSelected;
+	if (self->delegate.willRemoveTab) {
+		self->delegate.willRemoveTab(self, tab);
+	}
 
-		if (self->delegate.didSelectTabViewItem) {
-			self->delegate.didSelectTabViewItem(self, self->selectedTabViewItem);
+	if (self->selectedTab == tab) {
+		$(self, selectTab, NULL);
+	}
+
+	$(self->tabs, removeObject, tab);
+	$((View *) self, removeSubview, tab->view);
+}
+
+/**
+ * @fn void TabView::selectTab(TabView *self, TabViewItem *tab)
+ * @memberof TabView
+ */
+static void selectTab(TabView *self, TabViewItem *tab) {
+
+	self->selectedTab = tab ?: $((Array *) self->tabs, firstObject);
+
+	if (self->selectedTab) {
+		self->selectedTab->state |= TabStateSelected;
+
+		if (self->delegate.didSelectTab) {
+			self->delegate.didSelectTab(self, self->selectedTab);
 		}
 	}
 }
 
 /**
- * @fn void TabView::removeTabViewItem(TabView *self, TabViewItem *tabViewItem)
+ * @brief NULL-safe Predicate for tabWithIdentifier.
+ */
+static _Bool tabWithIdentifier_predicate(const ident obj, ident data) {
+
+	const TabViewItem *tab = obj;
+
+	if (tab->identifier) {
+		if (data) {
+			return !strcmp(tab->identifier, data);
+		} else {
+			return false;
+		}
+	} else {
+		return data == NULL;
+	}
+}
+
+/**
+ * @fn TabViewItem *TabView::tabWithIdentifier(const TabView *self, const char *identifier)
  * @memberof TabView
  */
-static void removeTabViewItem(TabView *self, TabViewItem *tabViewItem) {
-
-	assert(tabViewItem);
-	assert(tabViewItem->view);
-
-	if (self->delegate.willRemoveTabViewItem) {
-		self->delegate.willRemoveTabViewItem(self, tabViewItem);
-	}
-
-	if (self->selectedTabViewItem == tabViewItem) {
-		$(self, selectTabViewItem, NULL);
-	}
-	
-	$(self->tabViewItems, removeObject, tabViewItem);
-	$((View *) self, removeSubview, tabViewItem->view);
+static TabViewItem *tabWithIdentifier(const TabView *self, const char *identifier) {
+	return $((Array *) self->tabs, findObject, tabWithIdentifier_predicate, (ident) identifier);
 }
 
 #pragma mark - Class lifecycle
@@ -178,10 +231,11 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 
-	((TabViewInterface *) clazz->def->interface)->addTabViewItem = addTabViewItem;
+	((TabViewInterface *) clazz->def->interface)->addTab = addTab;
 	((TabViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((TabViewInterface *) clazz->def->interface)->removeTabViewItem = removeTabViewItem;
-	((TabViewInterface *) clazz->def->interface)->selectTabViewItem = selectTabViewItem;
+	((TabViewInterface *) clazz->def->interface)->removeTab = removeTab;
+	((TabViewInterface *) clazz->def->interface)->selectTab = selectTab;
+	((TabViewInterface *) clazz->def->interface)->tabWithIdentifier = tabWithIdentifier;
 }
 
 /**

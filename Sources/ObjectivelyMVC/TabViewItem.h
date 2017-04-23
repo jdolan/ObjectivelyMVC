@@ -93,15 +93,25 @@ struct TabViewItemInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @fn TabViewItem *TabViewItem::initWithIdentifier(TabViewItem *self, const char *identifier)
+	 * @brief Initializes this TabViewItem with the specified identifier.
+	 * @param self The TabViewItem.
+	 * @param identifier The identifier.
+	 * @return The initialized TabViewItem, or `NULL` on error.
+	 * @remarks Designated initializer.
+	 * @memberof TabViewItem
+	 */
+	TabViewItem *(*initWithIdentifier)(TabViewItem *self, const char *identifier);
+
+	/**
 	 * @fn TabViewItem *TabViewItem::initWithView(TabViewItem *self, View *view)
-	 * @brief Initializes this TabViewItem.
+	 * @brief Initializes this TabViewItem with the specified View.
 	 * @param self The TabViewItem.
 	 * @param view The View to embed.
 	 * @return The initialized TabViewItem, or `NULL` on error.
 	 * @memberof TabViewItem
 	 */
 	TabViewItem *(*initWithView)(TabViewItem *self, View *view);
-
 };
 
 /**
