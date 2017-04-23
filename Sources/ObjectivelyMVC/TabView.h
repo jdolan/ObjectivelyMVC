@@ -25,7 +25,7 @@
 
 #include <Objectively/MutableArray.h>
 
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/TabViewItem.h>
 
 /**
@@ -33,6 +33,7 @@
  * @brief Tabbed pages within a single View.
  */
 
+#define DEFAULT_TAB_VIEW_SPACING 4
 #define DEFAULT_TAB_VIEW_PADDING 12
 
 typedef struct TabViewDelegate TabViewDelegate;
@@ -82,13 +83,18 @@ struct TabView {
 	/**
 	 * @brief The superclass.
 	 */
-	View view;
+	StackView stackView;
 
 	/**
 	 * @brief The interface.
 	 * @protected
 	 */
 	TabViewInterface *interface;
+
+	/**
+	 * @brief The tab content View.
+	 */
+	View *contentView;
 
 	/**
 	 * @brief The TabViewDelegate.
@@ -99,6 +105,11 @@ struct TabView {
 	 * @brief The selected TabViewItem.
 	 */
 	TabViewItem *selectedTab;
+
+	/**
+	 * @brief The tab selection container.
+	 */
+	StackView *tabSelectionView;
 
 	/**
 	 * @brief The TabViewItems.
@@ -114,7 +125,7 @@ struct TabViewInterface {
 	/**
 	 * @brief The superclass interface.
 	 */
-	ViewInterface viewInterface;
+	StackViewInterface stackViewInterface;
 
 	/**
 	 * @fn void TabView::addTab(TabView *self, TabViewItem *tab)
@@ -124,6 +135,14 @@ struct TabViewInterface {
 	 * @memberof TabView
 	 */
 	void (*addTab)(TabView *self, TabViewItem *tab);
+
+	/**
+	 * @fn SDL_Size TabView::contentSize(const TabView *self)
+	 * @param self The TabView.
+	 * @return The size of the largest configured TabViewItem View.
+	 * @memberof TabView
+	 */
+	SDL_Size (*contentSize)(const TabView *self);
 
 	/**
 	 * @fn TabView *TabView::initWithFrame(TabView *self, const SDL_Rect *frame)

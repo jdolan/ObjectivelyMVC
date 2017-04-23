@@ -38,6 +38,8 @@ static void dealloc(Object *self) {
 
 	TabView *this = (TabView *) self;
 
+	release(this->contentView);
+	release(this->tabSelectionView);
 	release(this->tabs);
 
 	super(Object, self, dealloc);
@@ -74,6 +76,15 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
 
+	TabView *this = (TabView *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
+		MakeInlet("tabSelectionView", InletTypeView, &this->tabSelectionView, NULL)
+	);
+
+	$(self, bind, dictionary, inlets);
+
 	const Array *tabs = $(dictionary, objectForKeyPath, "tabs");
 	if (tabs) {
 		$(tabs, enumerateObjects, awakeWithDictionary_tabs, self);
@@ -88,23 +99,45 @@ static View *init(View *self) {
 }
 
 /**
- * @see View::layoutSubviews(View *)
- */
-static void layoutSubviews(View *self) {
-
-	super(View, self, layoutSubviews);
-
-	// TODO: Layout subviews
-}
-
-/**
  * @see View::respondToEvent(View *, const SDL_Event *)
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
 	super(View, self, respondToEvent, event);
 
-	// TODO: Tab selection and visibility toggling
+	switch (event->type) {
+		case SDL_MOUSEBUTTONUP:
+		case SDL_FINGERUP:
+			break;
+		default:
+			return;
+	}
+
+	TabView *this = (TabView *) self;
+
+	const Array *tabs = (Array *) this->tabs;
+	for (size_t i = 0; i < tabs->count; i++) {
+
+		TabViewItem *tab = $(tabs, objectAtIndex, i);
+
+		if ($((View *) tab->label, didReceiveEvent, event)) {
+			$(this, selectTab, tab);
+		}
+	}
+}
+
+/**
+ * @see View::sizeThatFits(const View *)
+ */
+static SDL_Size sizeThatFits(const View *self) {
+
+	TabView *this = (TabView *) self;
+
+	const SDL_Size contentSize = $(this, contentSize);
+
+	$(this->contentView, resize, &contentSize);
+
+	return super(View, self, sizeThatFits);
 }
 
 #pragma mark - TabView
@@ -119,9 +152,7 @@ static void addTab(TabView *self, TabViewItem *tab) {
 
 	$(self->tabs, addObject, tab);
 
-	$((View *) self, addSubview, tab->view);
-
-	tab->view->hidden = true;
+	$((View *) self->tabSelectionView, addSubview, (View *) tab->label);
 
 	if (self->delegate.didAddTab) {
 		self->delegate.didAddTab(self, tab);
@@ -133,23 +164,75 @@ static void addTab(TabView *self, TabViewItem *tab) {
 }
 
 /**
+ * @fn SDL_Size TabView::contentSize(const TabView *self)
+ * @memberof TabView
+ */
+static SDL_Size contentSize(const TabView *self) {
+
+	SDL_Size size = MakeSize(0, 0);
+
+	const Array *tabs = (Array *) self->tabs;
+	for (size_t i = 0; i < tabs->count; i++) {
+
+		const TabViewItem *tab = $(tabs, objectAtIndex, i);
+		const SDL_Size tabSize = $(tab->view, sizeThatFits);
+
+		SDL_Point tabOrigin = MakePoint(0, 0);
+		switch (tab->view->alignment) {
+			case ViewAlignmentNone:
+				tabOrigin = MakePoint(tab->view->frame.x, tab->view->frame.y);
+				break;
+			default:
+				break;
+		}
+
+		size.w = max(size.w, tabOrigin.x + tabSize.w);
+		size.h = max(size.h, tabOrigin.y + tabSize.h);
+	}
+
+	size.w += self->contentView->padding.left + self->contentView->padding.right;
+	size.h += self->contentView->padding.top + self->contentView->padding.bottom;
+
+	return size;
+}
+
+/**
  * @fn TabView *TabView::initWithFrame(TabView *self, const SDL_Rect *frame)
  * @memberof TabView
  */
 static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 
-	self = (TabView *) super(View, self, initWithFrame, frame);
+	self = (TabView *) super(StackView, self, initWithFrame, frame);
 	if (self) {
+
+		self->contentView = $(alloc(View), initWithFrame, NULL);
+		assert(self->contentView);
+
+		self->contentView->autoresizingMask = ViewAutoresizingContain;
+
+		self->contentView->borderColor = Colors.DarkGray;
+		self->contentView->borderWidth = 1;
+
+		self->contentView->padding.top = DEFAULT_TAB_VIEW_PADDING;
+		self->contentView->padding.bottom = DEFAULT_TAB_VIEW_PADDING;
+		self->contentView->padding.left = DEFAULT_TAB_VIEW_PADDING;
+		self->contentView->padding.right = DEFAULT_TAB_VIEW_PADDING;
 
 		self->tabs = $$(MutableArray, array);
 		assert(self->tabs);
 
-		self->view.autoresizingMask = ViewAutoresizingContain;
+		self->tabSelectionView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->tabSelectionView);
 
-		self->view.padding.top = DEFAULT_TAB_VIEW_PADDING;
-		self->view.padding.right = DEFAULT_TAB_VIEW_PADDING;
-		self->view.padding.bottom = DEFAULT_TAB_VIEW_PADDING;
-		self->view.padding.left = DEFAULT_TAB_VIEW_PADDING;
+		self->tabSelectionView->axis = StackViewAxisHorizontal;
+		self->tabSelectionView->distribution = StackViewDistributionFillEqually;
+
+		self->tabSelectionView->view.autoresizingMask |= ViewAutoresizingWidth;
+
+		self->stackView.spacing = DEFAULT_TAB_VIEW_SPACING;
+
+		$((View *) self, addSubview, (View *) self->tabSelectionView);
+		$((View *) self, addSubview, self->contentView);
 	}
 
 	return self;
@@ -172,6 +255,7 @@ static void removeTab(TabView *self, TabViewItem *tab) {
 	$(self->tabs, removeObject, tab);
 	
 	$((View *) self, removeSubview, tab->view);
+	$((View *) self->tabSelectionView, removeSubview, (View *) tab->label);
 
 	if (self->selectedTab == tab) {
 		$(self, selectTab, NULL);
@@ -184,7 +268,16 @@ static void removeTab(TabView *self, TabViewItem *tab) {
  * @brief ArrayEnumerator for selectTab.
  */
 static void selectTab_enumerate(const Array *array, ident obj, ident data) {
-	((TabViewItem *) obj)->view->hidden = ((TabView *) data)->selectedTab != obj;
+
+	TabViewItem *tab = obj;
+
+	if (tab == ((TabView *) data)->selectedTab) {
+		tab->state |= TabStateSelected;
+		tab->label->view.backgroundColor = Colors.LightGrey;
+	} else {
+		tab->state &= ~TabStateSelected;
+		tab->label->view.backgroundColor = Colors.Clear;
+	}
 }
 
 /**
@@ -193,16 +286,31 @@ static void selectTab_enumerate(const Array *array, ident obj, ident data) {
  */
 static void selectTab(TabView *self, TabViewItem *tab) {
 
-	self->selectedTab = tab ?: $((Array *) self->tabs, firstObject);
+	if (self->selectedTab != tab) {
 
-	$((Array *) self->tabs, enumerateObjects, selectTab_enumerate, self);
-
-	if (self->selectedTab) {
-		self->selectedTab->state |= TabStateSelected;
-
-		if (self->delegate.didSelectTab) {
-			self->delegate.didSelectTab(self, self->selectedTab);
+		if (self->selectedTab) {
+			$(self->contentView, removeSubview, self->selectedTab->view);
 		}
+
+		const Array *tabs = (Array *) self->tabs;
+
+		if (tab) {
+			self->selectedTab = tab;
+		} else {
+			self->selectedTab = $(tabs, firstObject);
+		}
+
+		$(tabs, enumerateObjects, selectTab_enumerate, self);
+
+		if (self->selectedTab) {
+			$(self->contentView, addSubview, self->selectedTab->view);
+
+			if (self->delegate.didSelectTab) {
+				self->delegate.didSelectTab(self, self->selectedTab);
+			}
+		}
+
+		self->stackView.view.needsLayout = true;
 	}
 }
 
@@ -243,10 +351,11 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((TabViewInterface *) clazz->def->interface)->addTab = addTab;
+	((TabViewInterface *) clazz->def->interface)->contentSize = contentSize;
 	((TabViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((TabViewInterface *) clazz->def->interface)->removeTab = removeTab;
 	((TabViewInterface *) clazz->def->interface)->selectTab = selectTab;
@@ -263,7 +372,7 @@ Class *_TabView(void) {
 
 	do_once(&once, {
 		clazz.name = "TabView";
-		clazz.superclass = _View();
+		clazz.superclass = _StackView();
 		clazz.instanceSize = sizeof(TabView);
 		clazz.interfaceOffset = offsetof(TabView, interface);
 		clazz.interfaceSize = sizeof(TabViewInterface);

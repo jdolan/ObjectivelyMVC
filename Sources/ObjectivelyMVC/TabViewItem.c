@@ -57,10 +57,10 @@ static TabViewItem *initWithIdentifier(TabViewItem *self, const char *identifier
 		self->identifier = strdup(identifier);
 		assert(self->identifier);
 
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
+		self->label = $(alloc(Label), initWithText, self->identifier, NULL);
 		assert(self->label);
 
-		self->label->view.alignment = ViewAlignmentMiddleCenter;
+		self->label->text->view.alignment = ViewAlignmentMiddleCenter;
 
 		self->view = $(alloc(View), initWithFrame, NULL);
 		assert(self->view);

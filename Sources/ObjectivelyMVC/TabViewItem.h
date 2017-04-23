@@ -30,7 +30,7 @@
 
 /**
  * @file
- * @brief ..
+ * @brief TabViewItems embed Views in a TabView.
  */
 
 /**
@@ -45,7 +45,7 @@ typedef struct TabViewItem TabViewItem;
 typedef struct TabViewItemInterface TabViewItemInterface;
 
 /**
- * @brief The TabViewItem type.
+ * @brief TabViewItems embed Views in a TabView.
  * @extends Object
  */
 struct TabViewItem {
@@ -67,7 +67,7 @@ struct TabViewItem {
 	char *identifier;
 
 	/**
-	 * @brief The clickable Label to select this TabViewItem.
+	 * @brief The Label used to select this tab.
 	 */
 	Label *label;
 
