@@ -256,11 +256,9 @@ static _Bool canBecomeFirstResponder(const View *self) {
 
 	const View *view = self;
 	while (view) {
-
 		if ($(view, isFirstResponder)) {
 			return true;
 		}
-
 		view = view->superview;
 	}
 
@@ -283,7 +281,6 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
  * @memberof View
  */
 static int depth(const View *self) {
-
 	return self->zIndex + (self->superview ? $(self->superview, depth) + 1 : 0);
 }
 
@@ -524,6 +521,21 @@ static void layoutSubviews(View *self) {
 				break;
 		}
 	}
+}
+
+/**
+ * @brief ArrayEnumerator for removeAllSubviews.
+ */
+static void removeAllSubviews_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, removeSubview, obj);
+}
+
+/**
+ * @fn void View::removeAllSubviews(View *self)
+ * @memberof View
+ */
+static void removeAllSubviews(View *self) {
+	$((Array *) self->subviews, enumerateObjects, removeAllSubviews_enumerate, self);
 }
 
 /**
@@ -973,6 +985,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->isVisible = isVisible;
 	((ViewInterface *) clazz->def->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
 	((ViewInterface *) clazz->def->interface)->removeFromSuperview = removeFromSuperview;
 	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
 	((ViewInterface *) clazz->def->interface)->render = render;

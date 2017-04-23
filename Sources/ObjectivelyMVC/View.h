@@ -389,6 +389,14 @@ struct ViewInterface {
 	void (*layoutSubviews)(View *self);
 
 	/**
+	 * @fn void View::removeAllSubviews(View *self)
+	 * @brief Removes all subviews from this View.
+	 * @param self The View.
+	 * @memberof View
+	 */
+	void (*removeAllSubviews)(View *self);
+
+	/**
 	 * @fn void View::removeFromSuperview(View *self)
 	 * @brief Removes this View from its superview.
 	 * @param self The View.
