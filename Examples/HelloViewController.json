@@ -84,7 +84,7 @@
 						"class": "CollectionView",
 						"identifier": "collectionView",
 						"autoresizingMask": "ViewAutoresizingWidth",
-						"frame": [0, 0, 0, 180],
+						"frame": [0, 0, 300, 180],
 						"selection": "ControlSelectionMultiple",
 						"axis": "CollectionViewAxisHorizontal",
 						"itemSize": [64, 48]

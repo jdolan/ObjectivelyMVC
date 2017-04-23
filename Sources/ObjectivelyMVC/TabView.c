@@ -213,10 +213,8 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 		self->contentView->borderColor = Colors.DarkGray;
 		self->contentView->borderWidth = 1;
 
-		self->contentView->padding.top = DEFAULT_TAB_VIEW_PADDING;
-		self->contentView->padding.bottom = DEFAULT_TAB_VIEW_PADDING;
-		self->contentView->padding.left = DEFAULT_TAB_VIEW_PADDING;
-		self->contentView->padding.right = DEFAULT_TAB_VIEW_PADDING;
+		self->contentView->padding.top = self->contentView->padding.bottom = DEFAULT_TAB_VIEW_PADDING;
+		self->contentView->padding.left = self->contentView->padding.right = DEFAULT_TAB_VIEW_PADDING;
 
 		self->tabs = $$(MutableArray, array);
 		assert(self->tabs);
@@ -273,7 +271,7 @@ static void selectTab_enumerate(const Array *array, ident obj, ident data) {
 
 	if (tab == ((TabView *) data)->selectedTab) {
 		tab->state |= TabStateSelected;
-		tab->label->view.backgroundColor = Colors.LightGrey;
+		tab->label->view.backgroundColor = Colors.AlternateColor;
 	} else {
 		tab->state &= ~TabStateSelected;
 		tab->label->view.backgroundColor = Colors.Clear;
