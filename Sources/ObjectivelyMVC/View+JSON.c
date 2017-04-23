@@ -22,8 +22,6 @@
 
 #include <ObjectivelyMVC.h>
 
-#define _Class _View
-
 /**
  * @brief InletBinding for InletTypeBool.
  */
@@ -52,7 +50,7 @@ static void bindColor(const Inlet *inlet, ident obj) {
 	const Number *b = $(array, objectAtIndex, 2);
 	const Number *a = $(array, objectAtIndex, 3);
 
-#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
+	#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
 
 	SDL_Color color = {
 		ScaleColor(r->value),
@@ -143,44 +141,45 @@ static void bindSize(const Inlet *inlet, ident obj) {
  */
 static void bindView(const Inlet *inlet, ident obj) {
 
+	View *view = NULL, *original = *(View **) inlet->dest;
+
 	const Dictionary *dictionary = cast(Dictionary, obj);
 
-	String *clazzName = $(dictionary, objectForKeyPath, "class");
-	if (clazzName) {
-		Class *clazz = classForName(clazzName->chars);
-		if (clazz) {
-			const Class *c = clazz;
-			while (c) {
-				if (c == _View()) {
+	const String *clazzName = $(dictionary, objectForKeyPath, "class");
+	const String *includePath = $(dictionary, objectForKeyPath, "include");
 
-					MVC_LogInfo("Instantiating View of class %s\n", clazz->name);
-
-					View *view = $((View *) _alloc(clazz), init);
-					$(view, awakeWithDictionary, dictionary);
-
-					if (*(View **) inlet->dest) {
-
-						View *superview = (*(View **) inlet->dest)->superview;
-						if (superview) {
-							$(superview, addSubviewRelativeTo, view, *(View **) inlet->dest, ViewPositionBefore);
-							$(superview, removeSubview, *(View **) inlet->dest);
-						}
-
-						release(*(View **) inlet->dest);
-					}
-
-					*(View **) inlet->dest = view;
-					return;
-				}
-				c = c->superclass;
-			}
-			MVC_LogError("Class %s is not a subclass of View\n", clazz->name);
-		} else {
-			MVC_LogError("Class %s not found. Did you remember to _initialize it?\n", clazzName->chars);
-		}
+	if (clazzName == NULL && includePath == NULL) {
+		$(original, awakeWithDictionary, dictionary);
 	} else {
-		MVC_LogDebug("Binding View of class %s\n", (*(Object **) inlet->dest)->clazz->name);
-		$(*(View **) inlet->dest, awakeWithDictionary, dictionary);
+		if (clazzName) {
+			Class *clazz = classForName(clazzName->chars);
+			if (clazz) {
+				const Class *c = clazz;
+				while (c) {
+					if (c == _View()) {
+						break;
+					}
+					c = c->superclass;
+				}
+				assert(c);
+
+				view = $((View *) _alloc(clazz), init);
+				$(view, awakeWithDictionary, dictionary);
+			}
+		} else if (includePath) {
+			view = $$(View, viewWithContentsOfFile, includePath->chars, NULL);
+		}
+
+		assert(view);
+
+		if (original) {
+			if (original->superview) {
+				$(original->superview, replaceSubview, original, view);
+			}
+			release(original);
+		}
+
+		*(View **) inlet->dest = view;
 	}
 }
 
@@ -236,5 +235,3 @@ const InletBinding inletBindings[] = {
 	bindView,
 	bindApplicationDefined,
 };
-
-#undef _Class
