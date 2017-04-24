@@ -61,6 +61,9 @@ static TabViewItem *initWithIdentifier(TabViewItem *self, const char *identifier
 		assert(self->label);
 
 		self->label->text->view.alignment = ViewAlignmentMiddleCenter;
+		
+		self->label->view.padding.top = DEFAULT_TAB_VIEW_ITEM_LABEL_PADDING;
+		self->label->view.padding.bottom = DEFAULT_TAB_VIEW_ITEM_LABEL_PADDING;
 
 		self->view = $(alloc(View), initWithFrame, NULL);
 		assert(self->view);
