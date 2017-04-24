@@ -144,7 +144,12 @@ static SDL_Size sizeThatFits(const View *self) {
 	const SDL_Size headerSize = $((View *) this->headerView, sizeThatFits);
 	const SDL_Size contentSize = $((View *) this->contentView, sizeThatFits);
 
-	return MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
+	SDL_Size size = MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
+
+	size.w += self->padding.left + self->padding.right;
+	size.h += self->padding.top + self->padding.bottom;
+
+	return size;
 }
 
 #pragma mark - Control
@@ -530,7 +535,7 @@ static SDL_Rect scrollableArea(const TableView *self) {
 
 	SDL_Rect frame = $((View *) self, bounds);
 
-	if ($(headerView, isVisible)) {
+	if (headerView->hidden == false) {
 		frame.y = headerView->frame.h;
 		frame.h -= headerView->frame.h;
 	}
@@ -623,8 +628,6 @@ static void setSortColumn(TableView *self, TableColumn *column) {
 
 		self->sortColumn = column;
 		self->sortColumn->order = OrderAscending;
-
-		printf("Sorting by %s %d\n", self->sortColumn->identifier, self->sortColumn->order);
 	}
 }
 
