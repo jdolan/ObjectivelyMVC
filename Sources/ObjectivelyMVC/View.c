@@ -903,6 +903,7 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(_ImageView());
 		_initialize(_Input());
 		_initialize(_Label());
+		_initialize(_PageView());
 		_initialize(_Panel());
 		_initialize(_ScrollView());
 		_initialize(_Select());

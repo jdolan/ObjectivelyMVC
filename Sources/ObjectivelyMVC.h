@@ -45,6 +45,7 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/NavigationViewController.h>
 #include <ObjectivelyMVC/Option.h>
+#include <ObjectivelyMVC/PageView.h>
 #include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/ScrollView.h>

@@ -23,6 +23,7 @@ pkginclude_HEADERS = \
 	Log.h \
 	NavigationViewController.h \
 	Option.h \
+	PageView.h \
 	Panel.h \
 	Renderer.h \
 	ScrollView.h \
@@ -65,6 +66,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Label.c \
 	NavigationViewController.c \
 	Option.c \
+	PageView.c \
 	Panel.c \
 	Renderer.c \
 	ScrollView.c \
