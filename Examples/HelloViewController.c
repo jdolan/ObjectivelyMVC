@@ -224,8 +224,7 @@ static void loadView(ViewController *self) {
 	$(this->tableView, columnWithIdentifier, "Three")->comparator = comparator;
 
 	$(this->tableView, reloadData);
-	$((View *) this->tableView, sizeToFit);
-
+	
 	this->collectionView->dataSource.numberOfItems = numberOfItems;
 	this->collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
 
