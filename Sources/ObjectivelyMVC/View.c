@@ -101,29 +101,29 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
 	assert(subview);
 
-	if (subview->superview != self) {
-		subview->superview = self;
+	$(subview, removeFromSuperview);
 
-		if (other && other->superview == self) {
+	if (other && other->superview == self) {
 
-			const Array *subviews = (Array *) self->subviews;
-			const ssize_t index = $(subviews, indexOfObject, other);
+		const Array *subviews = (Array *) self->subviews;
+		const ssize_t index = $(subviews, indexOfObject, other);
 
-			if (position == ViewPositionAfter) {
-				if (index == subviews->count - 1) {
-					$(self->subviews, addObject, subview);
-				} else {
-					$(self->subviews, insertObjectAtIndex, subview, index + 1);
-				}
+		if (position == ViewPositionAfter) {
+			if (index == subviews->count - 1) {
+				$(self->subviews, addObject, subview);
 			} else {
-				$(self->subviews, insertObjectAtIndex, subview, index);
+				$(self->subviews, insertObjectAtIndex, subview, index + 1);
 			}
 		} else {
-			$(self->subviews, addObject, subview);
+			$(self->subviews, insertObjectAtIndex, subview, index);
 		}
-
-		self->needsLayout = true;
+	} else {
+		$(self->subviews, addObject, subview);
 	}
+
+	subview->superview = self;
+
+	self->needsLayout = true;
 }
 
 /**
@@ -256,11 +256,9 @@ static _Bool canBecomeFirstResponder(const View *self) {
 
 	const View *view = self;
 	while (view) {
-
 		if ($(view, isFirstResponder)) {
 			return true;
 		}
-
 		view = view->superview;
 	}
 
@@ -283,7 +281,6 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
  * @memberof View
  */
 static int depth(const View *self) {
-
 	return self->zIndex + (self->superview ? $(self->superview, depth) + 1 : 0);
 }
 
@@ -527,6 +524,21 @@ static void layoutSubviews(View *self) {
 }
 
 /**
+ * @brief ArrayEnumerator for removeAllSubviews.
+ */
+static void removeAllSubviews_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, removeSubview, obj);
+}
+
+/**
+ * @fn void View::removeAllSubviews(View *self)
+ * @memberof View
+ */
+static void removeAllSubviews(View *self) {
+	$((Array *) self->subviews, enumerateObjects, removeAllSubviews_enumerate, self);
+}
+
+/**
  * @fn void View::removeFromSuperview(View *self)
  * @memberof View
  */
@@ -546,9 +558,10 @@ static void removeSubview(View *self, View *subview) {
 	assert(subview);
 
 	if (subview->superview == self) {
-		subview->superview = NULL;
 
 		$(self->subviews, removeObject, subview);
+
+		subview->superview = NULL;
 
 		self->needsLayout = true;
 	}
@@ -625,6 +638,19 @@ static SDL_Rect renderFrame(const View *self) {
 	}
 
 	return frame;
+}
+
+/**
+ * @fn void View::replaceSubview(View *self, View *subview, View *replacement)
+ * @memberof View
+ */
+static void replaceSubview(View *self, View *subview, View *replacement) {
+
+	assert(subview);
+	assert(replacement);
+
+	$(self, addSubviewRelativeTo, replacement, subview, ViewPositionAfter);
+	$(self, removeSubview, subview);
 }
 
 /**
@@ -877,12 +903,14 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(_ImageView());
 		_initialize(_Input());
 		_initialize(_Label());
+		_initialize(_PageView());
 		_initialize(_Panel());
 		_initialize(_ScrollView());
 		_initialize(_Select());
 		_initialize(_Slider());
 		_initialize(_StackView());
 		_initialize(_TableView());
+		_initialize(_TabView());
 		_initialize(_Text());
 		_initialize(_TextView());
 	});
@@ -958,11 +986,13 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->isVisible = isVisible;
 	((ViewInterface *) clazz->def->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
 	((ViewInterface *) clazz->def->interface)->removeFromSuperview = removeFromSuperview;
 	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewInterface *) clazz->def->interface)->renderFrame = renderFrame;
+	((ViewInterface *) clazz->def->interface)->replaceSubview = replaceSubview;
 	((ViewInterface *) clazz->def->interface)->resignFirstResponder = resignFirstResponder;
 	((ViewInterface *) clazz->def->interface)->resize = resize;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;

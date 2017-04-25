@@ -45,6 +45,27 @@ static void dealloc(Object *self) {
 #pragma mark - ViewController
 
 /**
+ * @fn void ViewController::addChildViewController(ViewController *self, ViewController *childViewController)
+ * @memberof ViewController
+ */
+static void addChildViewController(ViewController *self, ViewController *childViewController) {
+
+	assert(childViewController);
+
+	$(childViewController, removeFromParentViewController);
+
+	$(self->childViewControllers, addObject, childViewController);
+	childViewController->parentViewController = self;
+
+	$(self, loadViewIfNeeded);
+	$(childViewController, loadViewIfNeeded);
+
+	$(self->view, addSubview, childViewController->view);
+	
+	$(childViewController->view, updateBindings);
+}
+
+/**
  * @fn void ViewController::drawView(ViewController *self, Renderer *renderer)
  * @memberof ViewController
  */
@@ -115,21 +136,40 @@ static void loadViewIfNeeded(ViewController *self) {
  */
 static void moveToParentViewController(ViewController *self, ViewController *parentViewController) {
 
-	$(self, loadViewIfNeeded);
-
-	$(self->view, removeFromSuperview);
-
 	if (self->parentViewController) {
-		$(self->parentViewController->childViewControllers, removeObject, self);
+		$(self->parentViewController, removeChildViewController, self);
 	}
 
-	self->parentViewController = parentViewController;
+	if (parentViewController) {
+		$(parentViewController, addChildViewController, self);
+	}
+}
+
+/**
+ * @fn void ViewController::removeChildViewController(ViewController *self, ViewController *childViewController)
+ * @memberof ViewController
+ */
+static void removeChildViewController(ViewController *self, ViewController *childViewController) {
+
+	assert(childViewController);
+
+	if (childViewController->parentViewController == self) {
+
+		$(self->childViewControllers, removeObject, childViewController);
+		$(self->view, removeSubview, childViewController->view);
+
+		childViewController->parentViewController = NULL;
+	}
+}
+
+/**
+ * @fn void ViewController::removeFromParentViewController(ViewController *self)
+ * @memberof ViewController
+ */
+static void removeFromParentViewController(ViewController *self) {
 
 	if (self->parentViewController) {
-		$(self->parentViewController->childViewControllers, addObject, self);
-		$(self->parentViewController->view, addSubview, self->view);
-
-		$(self->view, updateBindings);
+		$(self->parentViewController, removeChildViewController, self);
 	}
 }
 
@@ -164,11 +204,14 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewControllerInterface *) clazz->def->interface)->addChildViewController = addChildViewController;
 	((ViewControllerInterface *) clazz->def->interface)->drawView = drawView;
 	((ViewControllerInterface *) clazz->def->interface)->init = init;
 	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
 	((ViewControllerInterface *) clazz->def->interface)->loadViewIfNeeded = loadViewIfNeeded;
 	((ViewControllerInterface *) clazz->def->interface)->moveToParentViewController = moveToParentViewController;
+	((ViewControllerInterface *) clazz->def->interface)->removeChildViewController = removeChildViewController;
+	((ViewControllerInterface *) clazz->def->interface)->removeFromParentViewController = removeFromParentViewController;
 	((ViewControllerInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 }

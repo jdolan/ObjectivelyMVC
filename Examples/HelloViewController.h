@@ -59,6 +59,16 @@ struct HelloViewController {
 	Panel *panel;
 
 	/**
+	 * @brief The cancel Button.
+	 */
+	Button *cancel;
+
+	/**
+	 * @brief The apply Button.
+	 */
+	Button *apply;
+
+	/**
 	 * @brief A Button
 	 */
 	Button *button;

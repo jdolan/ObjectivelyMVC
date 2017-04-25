@@ -389,6 +389,14 @@ struct ViewInterface {
 	void (*layoutSubviews)(View *self);
 
 	/**
+	 * @fn void View::removeAllSubviews(View *self)
+	 * @brief Removes all subviews from this View.
+	 * @param self The View.
+	 * @memberof View
+	 */
+	void (*removeAllSubviews)(View *self);
+
+	/**
 	 * @fn void View::removeFromSuperview(View *self)
 	 * @brief Removes this View from its superview.
 	 * @param self The View.
@@ -433,6 +441,16 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	SDL_Rect (*renderFrame)(const View *self);
+
+	/**
+	 * @fn void View::replaceSubview(View *self, View *subview, View *replacement)
+	 * @brief Replaces the specified subview with the given replacement.
+	 * @param self The View.
+	 * @param subview The subview to replace.
+	 * @param replacement The replacement subview.
+	 * @memberof View
+	 */
+	void (*replaceSubview)(View *self, View *subview, View *replacement);
 
 	/**
 	 * @fn void View::resignFirstResponder(View *self)

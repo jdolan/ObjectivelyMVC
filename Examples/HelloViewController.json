@@ -3,67 +3,106 @@
 	"frame": [50, 50, 0, 0],
 	"contentView": {
 		"subviews": [{
-			"class": "Button",
-			"identifier": "button",
-			"style": "ControlStyleDefault",
-			"title": {
-				"text": "This is a Button"
-			}
-		}, {
-			"class": "Input",
-			"control": {
-				"class": "Checkbox",
-				"identifier": "checkbox"
-			},
-			"label": {
-				"text": {
-					"text": "This is a checkbox:"
+			"class": "TabView",
+			"identifier": "tabView",
+			"tabs": [{
+				"identifier": "controls",
+				"label": {
+					"text": {
+						"text": "Controls"
+					}
+				},
+				"view": {
+					"class": "StackView",
+					"spacing": 12,
+					"subviews": [{
+						"class": "Button",
+						"identifier": "button",
+						"style": "ControlStyleDefault",
+						"title": {
+							"text": "This is a Button"
+						}
+					}, {
+						"class": "Input",
+						"control": {
+							"class": "Checkbox",
+							"identifier": "checkbox"
+						},
+						"label": {
+							"text": {
+								"text": "This is a checkbox:"
+							}
+						}
+					}, {
+						"class": "TextView",
+						"identifier": "textView",
+						"defaultText": "This is a TextView"
+					}, {
+						"class": "Select",
+						"identifier": "select"
+					}, {
+						"class": "Slider",
+						"identifier": "slider",
+						"min": 0.0,
+						"max": 10.0,
+						"value": 5.0
+					}]
 				}
-			}
-		}, {
-			"class": "TextView",
-			"identifier": "textView",
-			"defaultText": "This is a TextView"
-		}, {
-			"class": "Select",
-			"identifier": "select"
-		}, {
-			"class": "Slider",
-			"identifier": "slider",
-			"min": 0.0,
-			"max": 10.0,
-			"value": 5.0
-		}, {
-			"class": "TableView",
-			"identifier": "tableView",
-			"autoresizingMask": "ViewAutoresizingWidth",
-			"columns": [{
-				"identifier": "One"
 			}, {
-				"identifier": "Two"
+				"identifier": "tables",
+				"label": {
+					"text": {
+						"text": "Tables"
+					}
+				},
+				"view": {
+					"class": "StackView",
+					"subviews": [{
+						"class": "TableView",
+						"identifier": "tableView",
+						"autoresizingMask": "ViewAutoresizingWidth",
+						"columns": [{
+							"identifier": "Column A"
+						}, {
+							"identifier": "Column B"
+						}, {
+							"identifier": "Column C"
+						}],
+						"selection": "ControlSelectionMultiple"
+					}]
+				}
 			}, {
-				"identifier": "Three"
-			}],
-			"selection": "ControlSelectionMultiple"
-		}, {
-			"class": "CollectionView",
-			"identifier": "collectionView",
-			"autoresizingMask": "ViewAutoresizingWidth",
-			"frame": [0, 0, 0, 180],
-			"selection": "ControlSelectionMultiple",
-			"axis": "CollectionViewAxisHorizontal",
-			"itemSize": [64, 48]
+				"identifier": "collections",
+				"label": {
+					"text": {
+						"text": "Collections"
+					}
+				},
+				"view": {
+					"class": "StackView",
+					"autoresizingMask": "ViewAutoresizingFill",
+					"subviews": [{
+						"class": "CollectionView",
+						"identifier": "collectionView",
+						"autoresizingMask": "ViewAutoresizingFill",
+						"selection": "ControlSelectionMultiple",
+						"itemSize": [64, 48],
+					}]
+				}
+			}]
 		}]
 	},
 	"accessoryView": {
 		"hidden": false,
 		"subviews": [{
 			"class": "Button",
+			"identifier": "cancel",
 			"title": {
 				"text": "Cancel"
 			}
 		}, {
 			"class": "Button",
+			"identifier": "apply",
 			"title": {
 				"text": "Apply"
 			}

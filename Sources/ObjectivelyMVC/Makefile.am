@@ -23,6 +23,7 @@ pkginclude_HEADERS = \
 	Log.h \
 	NavigationViewController.h \
 	Option.h \
+	PageView.h \
 	Panel.h \
 	Renderer.h \
 	ScrollView.h \
@@ -35,6 +36,9 @@ pkginclude_HEADERS = \
 	TableHeaderView.h \
 	TableRowView.h \
 	TableView.h \
+	TabView.h \
+	TabViewController.h \
+	TabViewItem.h \
 	TextView.h \
 	Types.h \
 	View.h \
@@ -62,6 +66,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Label.c \
 	NavigationViewController.c \
 	Option.c \
+	PageView.c \
 	Panel.c \
 	Renderer.c \
 	ScrollView.c \
@@ -74,6 +79,9 @@ libObjectivelyMVC_la_SOURCES = \
 	TableHeaderView.c \
 	TableRowView.c \
 	TableView.c \
+	TabView.c \
+	TabViewController.c \
+	TabViewItem.c \
 	Text.c \
 	TextView.c \
 	View.c \
