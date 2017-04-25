@@ -38,10 +38,10 @@ static void addSubview(View *self, View *subview) {
 
 	PageView *this = (PageView *) self;
 
+	subview->hidden = true;
+
 	if (this->currentPage == NULL) {
 		$(this, setCurrentPage, subview);
-	} else {
-		subview->hidden = true;
 	}
 }
 
@@ -62,6 +62,8 @@ static void removeSubview(View *self, View *subview) {
 	retain(subview);
 
 	super(View, self, removeSubview, subview);
+
+	subview->hidden = false;
 
 	if (subview == this->currentPage) {
 		$(this, setCurrentPage, NULL);
