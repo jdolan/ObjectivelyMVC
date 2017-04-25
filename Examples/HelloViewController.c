@@ -35,7 +35,7 @@
  * @brief ActionFunction for Button.
  */
 static void buttonAction(Control *control, const SDL_Event *event, ident sender, ident data) {
-	printf("%s:\n", __func__);
+	printf("%s: %s\n", __func__, ((View *) control)->identifier);
 }
 
 /**
@@ -78,7 +78,7 @@ static void didSetValue(Slider *slider) {
  * @see TableViewDataSource::numberOfRows
  */
 static size_t numberOfRows(const TableView *tableView) {
-	return 3;
+	return 7;
 }
 
 /**
@@ -100,10 +100,11 @@ static ident valueForColumnAndRow(const TableView *tableView, const TableColumn 
 static TableCellView *cellForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
-	const intptr_t value = (intptr_t) valueForColumnAndRow(tableView, column, row);
 
-	char text[8];
-	snprintf(text, sizeof(text), "%zd", value);
+	const ssize_t col = $((Array *) tableView->columns, indexOfObject, (ident) column);
+
+	char text[16];
+	snprintf(text, sizeof(text), "Cell %zd%c", row + 1, 'A' + (int) col);
 
 	$(cell->text, setText, text);
 	return cell;
@@ -184,6 +185,8 @@ static void loadView(ViewController *self) {
 	HelloViewController *this = (HelloViewController *) self;
 
 	Outlet outlets[] = MakeOutlets(
+		MakeOutlet("cancel", &this->cancel),
+		MakeOutlet("apply", &this->apply),
 		MakeOutlet("button", &this->button),
 		MakeOutlet("checkbox", &this->checkbox),
 		MakeOutlet("textView", &this->textView),
@@ -201,6 +204,8 @@ static void loadView(ViewController *self) {
 
 	$(self->view, addSubview, (View *) this->panel);
 
+	$((Control *) this->cancel, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
+	$((Control *) this->apply, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
 	$((Control *) this->button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
 	$((Control *) this->checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
 
@@ -219,9 +224,9 @@ static void loadView(ViewController *self) {
 	this->tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
 	this->tableView->delegate.didSelectRowsAtIndexes = didSelectRowsAtIndexes;
 
-	$(this->tableView, columnWithIdentifier, "One")->comparator = comparator;
-	$(this->tableView, columnWithIdentifier, "Two")->comparator = comparator;
-	$(this->tableView, columnWithIdentifier, "Three")->comparator = comparator;
+	$(this->tableView, columnWithIdentifier, "Column A")->comparator = comparator;
+	$(this->tableView, columnWithIdentifier, "Column B")->comparator = comparator;
+	$(this->tableView, columnWithIdentifier, "Column C")->comparator = comparator;
 
 	$(this->tableView, reloadData);
 	

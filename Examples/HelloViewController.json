@@ -62,11 +62,11 @@
 						"identifier": "tableView",
 						"autoresizingMask": "ViewAutoresizingWidth",
 						"columns": [{
-							"identifier": "One"
+							"identifier": "Column A"
 						}, {
-							"identifier": "Two"
+							"identifier": "Column B"
 						}, {
-							"identifier": "Three"
+							"identifier": "Column C"
 						}],
 						"selection": "ControlSelectionMultiple"
 					}]
@@ -80,13 +80,13 @@
 				},
 				"view": {
 					"class": "StackView",
+					"autoresizingMask": "ViewAutoresizingFill",
 					"subviews": [{
 						"class": "CollectionView",
 						"identifier": "collectionView",
 						"autoresizingMask": "ViewAutoresizingFill",
 						"selection": "ControlSelectionMultiple",
-						"axis": "CollectionViewAxisHorizontal",
-						"itemSize": [64, 48]
+						"itemSize": [64, 48],
 					}]
 				}
 			}]
@@ -96,11 +96,13 @@
 		"hidden": false,
 		"subviews": [{
 			"class": "Button",
+			"identifier": "cancel",
 			"title": {
 				"text": "Cancel"
 			}
 		}, {
 			"class": "Button",
+			"identifier": "apply",
 			"title": {
 				"text": "Apply"
 			}
