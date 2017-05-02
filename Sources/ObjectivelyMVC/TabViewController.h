@@ -97,4 +97,4 @@ struct TabViewControllerInterface {
  * @return The TabViewController Class.
  * @memberof TabViewController
  */
-OBJECTIVELY_EXPORT Class *_TabViewController(void);
+OBJECTIVELYMVC_EXPORT Class *_TabViewController(void);

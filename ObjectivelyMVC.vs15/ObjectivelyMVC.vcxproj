@@ -186,6 +186,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Log.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\NavigationViewController.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Option.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\PageView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
@@ -198,6 +199,9 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableHeaderView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableRowView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewController.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewItem.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Text.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TextView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Types.h" />
@@ -223,6 +227,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\Label.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\NavigationViewController.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Option.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\PageView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
@@ -235,6 +240,9 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableHeaderView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableRowView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewController.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewItem.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Text.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TextView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\View+JSON.c" />

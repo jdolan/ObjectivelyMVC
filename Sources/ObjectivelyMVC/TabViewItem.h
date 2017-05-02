@@ -122,4 +122,4 @@ struct TabViewItemInterface {
  * @return The TabViewItem Class.
  * @memberof TabViewItem
  */
-OBJECTIVELY_EXPORT Class *_TabViewItem(void);
+OBJECTIVELYMVC_EXPORT Class *_TabViewItem(void);
