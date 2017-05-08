@@ -120,6 +120,18 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\ColorSelect.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\PageView.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabView.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewItem.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewController.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c">
@@ -222,6 +234,18 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\ColorSelect.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\PageView.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabView.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewItem.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewController.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
   </ItemGroup>

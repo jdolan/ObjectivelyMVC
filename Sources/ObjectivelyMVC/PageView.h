@@ -119,4 +119,4 @@ struct PageViewInterface {
  * @return The PageView Class.
  * @memberof PageView
  */
-OBJECTIVELY_EXPORT Class *_PageView(void);
+OBJECTIVELYMVC_EXPORT Class *_PageView(void);

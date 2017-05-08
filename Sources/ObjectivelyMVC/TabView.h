@@ -180,4 +180,4 @@ struct TabViewInterface {
  * @return The TabView Class.
  * @memberof TabView
  */
-OBJECTIVELY_EXPORT Class *_TabView(void);
+OBJECTIVELYMVC_EXPORT Class *_TabView(void);
