@@ -217,14 +217,16 @@ static void removeTab(TabView *self, TabViewItem *tab) {
 static void selectTab_enumerate(const Array *array, ident obj, ident data) {
 
 	TabViewItem *tab = obj;
+	
+	int state = tab->state;
 
 	if (tab == ((TabView *) data)->selectedTab) {
-		tab->state |= TabStateSelected;
-		tab->label->view.backgroundColor = Colors.AlternateColor;
+		state |= TabStateSelected;
 	} else {
-		tab->state &= ~TabStateSelected;
-		tab->label->view.backgroundColor = Colors.Clear;
+		state &= ~TabStateSelected;
 	}
+
+	$(tab, setState, state);
 }
 
 /**

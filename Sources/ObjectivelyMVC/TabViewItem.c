@@ -69,6 +69,8 @@ static TabViewItem *initWithIdentifier(TabViewItem *self, const char *identifier
 		assert(self->view);
 
 		self->view->autoresizingMask = ViewAutoresizingContain;
+
+		$(self, setState, TabStateDefault);
 	}
 
 	return self;
@@ -89,6 +91,21 @@ static TabViewItem *initWithView(TabViewItem *self, View *view) {
 	return self;
 }
 
+/**
+ * @fn TabViewItem::setState(TabViewItem *self, int state)
+ * @memberof TabViewItem
+ */
+static void setState(TabViewItem *self, int state) {
+
+	self->state = state;
+
+	if (self->state & TabStateSelected) {
+		self->label->view.backgroundColor = Colors.AlternateColor;
+	} else {
+		self->label->view.backgroundColor = Colors.Clear;
+	}
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -100,6 +117,7 @@ static void initialize(Class *clazz) {
 
 	((TabViewItemInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
 	((TabViewItemInterface *) clazz->def->interface)->initWithView = initWithView;
+	((TabViewItemInterface *) clazz->def->interface)->setState = setState;
 }
 
 /**

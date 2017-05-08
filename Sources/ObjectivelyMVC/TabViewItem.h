@@ -114,6 +114,16 @@ struct TabViewItemInterface {
 	 * @memberof TabViewItem
 	 */
 	TabViewItem *(*initWithView)(TabViewItem *self, View *view);
+
+	/**
+	 * @fn TabViewItem::setState(TabViewItem *self, int state)
+	 * @brief Sets this TabViewItem's state, which may alter its appearance.
+	 * @param self The TabViewItem.
+	 * @param state The state.
+	 * @remarks Subclasses may override this method to apply custom styling.
+	 * @memberof TabViewItem
+	 */
+	void (*setState)(TabViewItem *self, int state);
 };
 
 /**
