@@ -245,6 +245,8 @@ static void addColumn(TableView *self, TableColumn *column) {
 	assert(column);
 
 	$(self->columns, addObject, column);
+
+	$((TableRowView *) self->headerView, addCell, (TableCellView *) column->headerCell);
 }
 
 /**
@@ -464,6 +466,8 @@ static void removeColumn(TableView *self, TableColumn *column) {
 	}
 
 	$(self->columns, removeObject, column);
+
+	$((TableRowView *) self->headerView, removeCell, (TableCellView *) column->headerCell);
 }
 
 /**
