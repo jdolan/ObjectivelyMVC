@@ -61,11 +61,6 @@ struct TableColumn {
 	ViewAlignment cellAlignment;
 
 	/**
-	 * @brief The sort comparator.
-	 */
-	Comparator comparator;
-
-	/**
 	 * @brief The header cell.
 	 */
 	TableHeaderCellView *headerCell;

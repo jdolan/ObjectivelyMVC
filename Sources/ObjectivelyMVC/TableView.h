@@ -63,7 +63,7 @@ struct TableViewDataSource {
 	/**
 	 * @brief Called by the TableView for the associated value of a cell.
 	 * @param tableView The TableView.
-	 * @param colum The column.
+	 * @param colum The Column.
 	 * @param row The row number.
 	 * @return The value for the cell at the given column and row number.
 	 */
@@ -91,11 +91,20 @@ struct TableViewDelegate {
 
 	/**
 	 * @brief Called by the TableView when the row selection changes.
-	 * @param tableView The table.
+	 * @param tableView The TableView.
 	 * @param selectedRowIndexes The indexes of the selected rows.
 	 * @remarks This function is optional.
 	 */
 	void (*didSelectRowsAtIndexes)(TableView *tableView, const IndexSet *selectedRowIndexes);
+
+	/**
+	 * @brief Called by the TableView when the sort column or order changes.
+	 * @param tableView The TableView.
+	 * @remarks This function is optional.
+	 * @remarks A typical implementation of this function would sort the data set by the sort
+	 * column's Comparator, and then call `$(tableView, reloadData`).
+	 */
+	void (*didSetSortColumn)(TableView *tableView);
 };
 
 #define DEFAULT_TABLE_VIEW_PADDING 4
