@@ -152,16 +152,6 @@ static SDL_Size sizeThatFits(const View *self) {
 	return size;
 }
 
-/**
- * @see View::updateBindings(View *self)
- */
-static void updateBindings(View *self) {
-
-	super(View, self, updateBindings);
-
-	$((TableView *) self, reloadData);
-}
-
 #pragma mark - Control
 
 /**
@@ -620,7 +610,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
-	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
