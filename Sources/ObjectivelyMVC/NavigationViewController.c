@@ -92,10 +92,6 @@ static void popToViewController(NavigationViewController *self, const ViewContro
 
 		$(self, popViewController);
 	}
-
-	if (topViewController) {
-		$(topViewController, viewWillAppear);
-	}
 }
 
 /**
