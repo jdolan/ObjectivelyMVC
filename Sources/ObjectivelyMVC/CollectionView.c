@@ -117,16 +117,6 @@ static void layoutSubviews(View *self) {
 	super(View, self, layoutSubviews);
 }
 
-/**
- * @see View::updateBindings(View *)
- */
-static void updateBindings(View *self) {
-
-	super(View, self, updateBindings);
-
-	$((CollectionView *) self, reloadData);
-}
-
 #pragma mark - Control
 
 /**
@@ -484,7 +474,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
