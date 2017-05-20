@@ -49,6 +49,7 @@ static void pushViewController_enumerate(const Array *array, ident obj, ident da
 	ViewController *that = (ViewController *) obj;
 
 	$(this->view, removeSubview, that->view);
+	$(that, viewWillDisappear);
 }
 
 /**
