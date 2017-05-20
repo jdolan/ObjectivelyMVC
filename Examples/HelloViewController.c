@@ -74,11 +74,21 @@ static void didSetValue(Slider *slider) {
 
 #pragma mark - TableViewDataSource
 
+static int tableData[7][3] = {
+	{ 1, 1, 1 },
+	{ 2, 2, 2 },
+	{ 3, 3, 3 },
+	{ 4, 4, 4 },
+	{ 5, 5, 5 },
+	{ 6, 6, 6 },
+	{ 7, 7, 7 }
+};
+
 /**
  * @see TableViewDataSource::numberOfRows
  */
 static size_t numberOfRows(const TableView *tableView) {
-	return 7;
+	return lengthof(tableData);
 }
 
 /**
@@ -86,10 +96,9 @@ static size_t numberOfRows(const TableView *tableView) {
  */
 static ident valueForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
 
-	const Array *columns = (Array *) tableView->columns;
-	const size_t col = $(columns, indexOfObject, (ident) column);
+	const ssize_t col = $((Array *) tableView->columns, indexOfObject, (ident) column);
 
-	return (ident) (intptr_t) (columns->count * row + col);
+	return (ident) (intptr_t) tableData[row][col];
 }
 
 #pragma mark - TableViewDelegate
@@ -104,21 +113,10 @@ static TableCellView *cellForColumnAndRow(const TableView *tableView, const Tabl
 	const ssize_t col = $((Array *) tableView->columns, indexOfObject, (ident) column);
 
 	char text[16];
-	snprintf(text, sizeof(text), "Cell %zd%c", row + 1, 'A' + (int) col);
+	snprintf(text, sizeof(text), "Cell %d%c", tableData[row][col], 'A' + (int) col);
 
 	$(cell->text, setText, text);
 	return cell;
-}
-
-/**
- * @brief Comparator for table sorting.
- */
-static Order comparator(const ident a, const ident b) {
-
-	const intptr_t p1 = (intptr_t) a;
-	const intptr_t p2 = (intptr_t) b;
-
-	return (Order) (p1 - p2);
 }
 
 /**
@@ -129,6 +127,39 @@ static void didSelectRowsAtIndexes(TableView *tableView, const IndexSet *indexes
 	String *string = $((Object *) indexes, description);
 	printf("%s %s\n", __func__, string->chars);
 	release(string);
+}
+
+static TableView *_tableView;
+
+/**
+ * @brief Comparator for table sorting.
+ */
+static int comparator(const void *a, const void *b) {
+
+	const ssize_t col = $((Array *) _tableView->columns, indexOfObject, _tableView->sortColumn);
+
+	switch (_tableView->sortColumn->order) {
+		case OrderAscending:
+			return *(int *)(a + col) - *(int *)(b + col);
+		case OrderDescending:
+			return *(int *)(b + col) - *(int *)(a + col);
+		case OrderSame:
+			return 0;
+	}
+}
+
+/**
+ * @see TableViewDelegate::didSetSortColumn
+ */
+static void didSetSortColumn(TableView *tableView) {
+
+	_tableView = tableView;
+	if (_tableView->sortColumn) {
+
+		qsort(tableData, lengthof(tableData), sizeof(tableData[0]), comparator);
+
+		$(tableView, reloadData);
+	}
 }
 
 #pragma mark - CollectionViewDataSource
@@ -223,10 +254,7 @@ static void loadView(ViewController *self) {
 	this->tableView->dataSource.valueForColumnAndRow = valueForColumnAndRow;
 	this->tableView->delegate.cellForColumnAndRow = cellForColumnAndRow;
 	this->tableView->delegate.didSelectRowsAtIndexes = didSelectRowsAtIndexes;
-
-	$(this->tableView, columnWithIdentifier, "Column A")->comparator = comparator;
-	$(this->tableView, columnWithIdentifier, "Column B")->comparator = comparator;
-	$(this->tableView, columnWithIdentifier, "Column C")->comparator = comparator;
+	this->tableView->delegate.didSetSortColumn = didSetSortColumn;
 
 	$(this->tableView, reloadData);
 	

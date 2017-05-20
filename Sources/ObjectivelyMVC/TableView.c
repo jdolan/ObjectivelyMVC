@@ -173,7 +173,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			TableColumn *column = $(this, columnAtPoint, &point);
 			if (column) {
 				$(this, setSortColumn, column);
-				$(this, reloadData);
 			}
 
 			return true;
@@ -246,6 +245,8 @@ static void addColumn(TableView *self, TableColumn *column) {
 	assert(column);
 
 	$(self->columns, addObject, column);
+
+	$((TableRowView *) self->headerView, addCell, (TableCellView *) column->headerCell);
 }
 
 /**
@@ -397,37 +398,6 @@ static void reloadData_removeRows(const Array *array, ident obj, ident data) {
 	$((View *) data, removeSubview, (View *) obj);
 }
 
-static __thread TableView *_sortTableView;
-
-/**
- * @brief Comparator for sorting TableViewRows.
- * @remarks This function relies on thread-local-storage.
- */
-static Order reloadData_sortRows(const ident a, const ident b) {
-
-	const TableColumn *column = _sortTableView->sortColumn;
-	if (column->comparator) {
-		const Array *rows = (Array *) _sortTableView->rows;
-
-		const size_t row1 = $(rows, indexOfObject, a);
-		const size_t row2 = $(rows, indexOfObject, b);
-
-		const ident value1 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row1);
-		const ident value2 = _sortTableView->dataSource.valueForColumnAndRow(_sortTableView, column, row2);
-
-		switch (column->order) {
-			case OrderAscending:
-				return column->comparator(value1, value2);
-			case OrderSame:
-				return OrderSame;
-			case OrderDescending:
-				return column->comparator(value2, value1);
-		}
-	}
-
-	return OrderSame;
-}
-
 /**
  * @brief ArrayEnumerator to add TableRowViews to the table's contentView.
  */
@@ -477,18 +447,6 @@ static void reloadData(TableView *self) {
 		}
 	}
 
-	if (self->sortColumn) {
-		_sortTableView = self;
-
-		MutableArray *rows = (MutableArray *) $((Object *) self->rows, copy);
-		$(rows, sort, reloadData_sortRows);
-
-		release(self->rows);
-		self->rows = rows;
-
-		_sortTableView = NULL;
-	}
-
 	$((Array *) self->rows, enumerateObjects, reloadData_addRows, self->contentView);
 
 	self->control.view.needsLayout = true;
@@ -503,10 +461,13 @@ static void removeColumn(TableView *self, TableColumn *column) {
 	assert(column);
 
 	if (self->sortColumn == column) {
+		self->sortColumn->order = OrderSame;
 		self->sortColumn = NULL;
 	}
 
 	$(self->columns, removeObject, column);
+
+	$((TableRowView *) self->headerView, removeCell, (TableCellView *) column->headerCell);
 }
 
 /**
@@ -612,22 +573,27 @@ static void selectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
  */
 static void setSortColumn(TableView *self, TableColumn *column) {
 
-	if (self->sortColumn) {
-		if (self->sortColumn == column) {
-			self->sortColumn->order = -self->sortColumn->order;
-			return;
+	if (self->sortColumn != column) {
+
+		if (self->sortColumn) {
+			self->sortColumn->order = OrderSame;
+			self->sortColumn = NULL;
 		}
 
-		self->sortColumn->order = OrderSame;
-		self->sortColumn = NULL;
+		if (column) {
+			assert($((Array *) self->columns, containsObject, column));
+
+			self->sortColumn = column;
+			self->sortColumn->order = OrderAscending;
+		}
+	} else {
+		if (self->sortColumn) {
+			self->sortColumn->order = -self->sortColumn->order;
+		}
 	}
 
-	if (column) {
-
-		assert($((Array *) self->columns, containsObject, column));
-
-		self->sortColumn = column;
-		self->sortColumn->order = OrderAscending;
+	if (self->delegate.didSetSortColumn) {
+		self->delegate.didSetSortColumn(self);
 	}
 }
 

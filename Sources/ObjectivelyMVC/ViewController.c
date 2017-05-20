@@ -61,8 +61,7 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 	$(childViewController, loadViewIfNeeded);
 
 	$(self->view, addSubview, childViewController->view);
-	
-	$(childViewController->view, updateBindings);
+	$(childViewController, viewWillAppear);
 }
 
 /**
@@ -156,9 +155,10 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 	if (childViewController->parentViewController == self) {
 
 		$(self->childViewControllers, removeObject, childViewController);
-		$(self->view, removeSubview, childViewController->view);
-
 		childViewController->parentViewController = NULL;
+
+		$(self->view, removeSubview, childViewController->view);
+		$(childViewController, viewWillDisappear);
 	}
 }
 
@@ -174,14 +174,32 @@ static void removeFromParentViewController(ViewController *self) {
 }
 
 /**
+ * @brief ArrayEnumerator for renderDeviceDidReset recursion.
+ */
+static void renderDeviceDidReset_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, renderDeviceDidReset);
+}
+
+/**
  * @fn void ViewController::renderDeviceDidReset(ViewController *self)
  * @memberof ViewController
  */
 static void renderDeviceDidReset(ViewController *self) {
 
-	if (self->view) {
-		$(self->view, renderDeviceDidReset);
+	if (self->parentViewController == NULL) {
+		if (self->view) {
+			$(self->view, renderDeviceDidReset);
+		}
 	}
+
+	$((Array *) self->childViewControllers, enumerateObjects, renderDeviceDidReset_recurse, NULL);
+}
+
+/**
+ * @brief ArrayEnumerator for respondToEvent recursion.
+ */
+static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, respondToEvent, data);
 }
 
 /**
@@ -190,9 +208,29 @@ static void renderDeviceDidReset(ViewController *self) {
  */
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
 
-	if (self->view) {
-		$(self->view, respondToEvent, event);
+	if (self->parentViewController == NULL) {
+		if (self->view) {
+			$(self->view, respondToEvent, event);
+		}
 	}
+
+	$((Array *) self->childViewControllers, enumerateObjects, respondToEvent_recurse, (ident) event);
+}
+
+/**
+ * @fn void ViewController::viewWillAppear(ViewController *self)
+ * @memberof ViewController
+ */
+static void viewWillAppear(ViewController *self) {
+
+}
+
+/**
+ * @fn void ViewController::viewWillDisappear(ViewController *self)
+ * @memberof ViewController
+ */
+static void viewWillDisappear(ViewController *self) {
+
 }
 
 #pragma mark - Class lifecycle
@@ -214,6 +252,8 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->removeFromParentViewController = removeFromParentViewController;
 	((ViewControllerInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewControllerInterface *) clazz->def->interface)->viewWillAppear = viewWillAppear;
+	((ViewControllerInterface *) clazz->def->interface)->viewWillDisappear = viewWillDisappear;
 }
 
 /**
