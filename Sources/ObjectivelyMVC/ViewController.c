@@ -176,14 +176,32 @@ static void removeFromParentViewController(ViewController *self) {
 }
 
 /**
+ * @brief ArrayEnumerator for renderDeviceDidReset recursion.
+ */
+static void renderDeviceDidReset_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, renderDeviceDidReset);
+}
+
+/**
  * @fn void ViewController::renderDeviceDidReset(ViewController *self)
  * @memberof ViewController
  */
 static void renderDeviceDidReset(ViewController *self) {
 
-	if (self->view) {
-		$(self->view, renderDeviceDidReset);
+	if (self->parentViewController == NULL) {
+		if (self->view) {
+			$(self->view, renderDeviceDidReset);
+		}
 	}
+
+	$((Array *) self->childViewControllers, enumerateObjects, renderDeviceDidReset_recurse, NULL);
+}
+
+/**
+ * @brief ArrayEnumerator for respondToEvent recursion.
+ */
+static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, respondToEvent, data);
 }
 
 /**
@@ -192,9 +210,13 @@ static void renderDeviceDidReset(ViewController *self) {
  */
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
 
-	if (self->view) {
-		$(self->view, respondToEvent, event);
+	if (self->parentViewController == NULL) {
+		if (self->view) {
+			$(self->view, respondToEvent, event);
+		}
 	}
+
+	$((Array *) self->childViewControllers, enumerateObjects, respondToEvent_recurse, (ident) event);
 }
 
 /**
