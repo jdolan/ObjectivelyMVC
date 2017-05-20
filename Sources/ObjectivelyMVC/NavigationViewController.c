@@ -82,7 +82,7 @@ static void popToRootViewController(NavigationViewController *self) {
  */
 static void popToViewController(NavigationViewController *self, const ViewController *viewController) {
 
-	const ViewController *topViewController;
+	ViewController *topViewController;
 	while ((topViewController = $(self, topViewController))) {
 
 		if (topViewController == viewController) {
@@ -90,6 +90,10 @@ static void popToViewController(NavigationViewController *self, const ViewContro
 		}
 
 		$(self, popViewController);
+	}
+
+	if (topViewController) {
+		$(topViewController, viewWillAppear);
 	}
 }
 
@@ -109,6 +113,7 @@ static void popViewController(NavigationViewController *self) {
 
 	if (that) {
 		$(this->view, addSubview, that->view);
+		$(that, viewWillAppear);
 	}
 }
 
