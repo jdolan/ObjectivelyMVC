@@ -100,6 +100,7 @@ static void addSubview(View *self, View *subview) {
 static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPosition position) {
 
 	assert(subview);
+	assert(subview != other);
 
 	$(subview, removeFromSuperview);
 
