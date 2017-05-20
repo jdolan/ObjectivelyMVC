@@ -178,6 +178,24 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*respondToEvent)(ViewController *self, const SDL_Event *event);
+
+	/**
+	 * @fn void ViewController::viewWillAppear(ViewController *self)
+	 * @brief This method is invoked when this ViewController's View is added to the View hierarchy.
+	 * @param self The ViewController.
+	 * @memberof ViewController
+	 * @remarks The default implementation of this method does nothing.
+	 */
+	void (*viewWillAppear)(ViewController *self);
+
+	/**
+	 * @fn void ViewController::viewWillDisappear(ViewController *self)
+	 * @brief This method is invoked when this ViewController's View is removed from the View hierarchy.
+	 * @param self The ViewController.
+	 * @memberof ViewController
+	 * @remarks The default implementation of this method does nothing.
+	 */
+	void (*viewWillDisappear)(ViewController *self);
 };
 
 /**

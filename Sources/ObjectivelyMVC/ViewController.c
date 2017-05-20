@@ -61,8 +61,8 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 	$(childViewController, loadViewIfNeeded);
 
 	$(self->view, addSubview, childViewController->view);
-	
-	$(childViewController->view, updateBindings);
+
+	$(childViewController, viewWillAppear);
 }
 
 /**
@@ -159,6 +159,8 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 		$(self->view, removeSubview, childViewController->view);
 
 		childViewController->parentViewController = NULL;
+
+		$(childViewController, viewWillDisappear);
 	}
 }
 
@@ -195,6 +197,22 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
 	}
 }
 
+/**
+ * @fn void ViewController::viewWillAppear(ViewController *self)
+ * @memberof ViewController
+ */
+static void viewWillAppear(ViewController *self) {
+
+}
+
+/**
+ * @fn void ViewController::viewWillDisappear(ViewController *self)
+ * @memberof ViewController
+ */
+static void viewWillDisappear(ViewController *self) {
+
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -214,6 +232,8 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->removeFromParentViewController = removeFromParentViewController;
 	((ViewControllerInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewControllerInterface *) clazz->def->interface)->viewWillAppear = viewWillAppear;
+	((ViewControllerInterface *) clazz->def->interface)->viewWillDisappear = viewWillDisappear;
 }
 
 /**
