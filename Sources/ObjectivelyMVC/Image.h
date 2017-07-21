@@ -118,6 +118,14 @@ struct ImageInterface {
 	 * @memberof Image
 	 */
 	Image *(*initWithSurface)(Image *self, SDL_Surface *surface);
+
+	/**
+	 * @fn SDL_Size Image::size(const Image *self)
+	 * @param self The Image.
+	 * @return The Image size.
+	 * @memberof Image
+	 */
+	SDL_Size (*size)(const Image *self);
 };
 
 /**
