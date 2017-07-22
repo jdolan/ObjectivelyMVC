@@ -110,14 +110,6 @@ static void loadView(ViewController *self) {
 	assert(self->view);
 
 	self->view->autoresizingMask = ViewAutoresizingFill;
-
-	SDL_Window *window = $(self->view, window);
-	assert(window);
-
-	SDL_Size size;
-	SDL_GetWindowSize(window, &size.w, &size.h);
-
-	$(self->view, resize, &size);
 }
 
 /**
