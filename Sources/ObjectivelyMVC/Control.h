@@ -156,7 +156,7 @@ struct ControlInterface {
 	 * @param eventType The event type.
 	 * @param function The ActionFunction.
 	 * @param sender The sender.
-	 * @param data The data.
+	 * @param data User data.
 	 * @memberof Control
 	 */
 	void (*addActionForEventType)(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data);
