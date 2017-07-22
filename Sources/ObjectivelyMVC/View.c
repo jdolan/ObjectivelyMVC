@@ -102,6 +102,8 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 	assert(subview);
 	assert(subview != other);
 
+	retain(subview);
+
 	$(subview, removeFromSuperview);
 
 	if (other && other->superview == self) {
@@ -121,6 +123,8 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 	} else {
 		$(self->subviews, addObject, subview);
 	}
+
+	release(subview);
 
 	subview->superview = self;
 
