@@ -156,7 +156,7 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 	$(self->childViewControllers, removeObject, childViewController);
 	childViewController->parentViewController = NULL;
 
-	$(self->view, removeSubview, childViewController->view);
+	$(childViewController->view, removeFromSuperview);
 	$(childViewController, viewWillDisappear);
 
 	release(that);
