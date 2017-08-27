@@ -141,7 +141,7 @@ static void bindSize(const Inlet *inlet, ident obj) {
  */
 static void bindView(const Inlet *inlet, ident obj) {
 
-	View *view = NULL, *original = *(View **) inlet->dest;
+	View *view = NULL, *source = *(View **) inlet->dest;
 
 	const Dictionary *dictionary = cast(Dictionary, obj);
 
@@ -149,7 +149,7 @@ static void bindView(const Inlet *inlet, ident obj) {
 	const String *includePath = $(dictionary, objectForKeyPath, "include");
 
 	if (clazzName == NULL && includePath == NULL) {
-		$(original, awakeWithDictionary, dictionary);
+		$(source, awakeWithDictionary, dictionary);
 	} else {
 		if (clazzName) {
 			Class *clazz = classForName(clazzName->chars);
@@ -172,11 +172,11 @@ static void bindView(const Inlet *inlet, ident obj) {
 
 		assert(view);
 
-		if (original) {
-			if (original->superview) {
-				$(original->superview, replaceSubview, original, view);
+		if (source) {
+			if (source->superview) {
+				$(source->superview, replaceSubview, source, view);
 			}
-			release(original);
+			release(source);
 		}
 
 		*(View **) inlet->dest = view;
