@@ -95,7 +95,7 @@ typedef enum {
 	InletTypeSize,
 
 	/**
-	 * @remarks Inlet destination must be of type `View **` The subviews of the specified View are
+	 * @remarks Inlet destination must be of type `View **`. The subviews of the specified View are
 	 * populated from the bound array of View definitions.
 	 */
 	InletTypeSubviews,
