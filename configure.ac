@@ -64,6 +64,8 @@ AC_CONFIG_FILES([
 	Sources/Makefile
 	Sources/ObjectivelyMVC.pc
 	Sources/ObjectivelyMVC/Makefile
+	Tests/Makefile
+	Tests/ObjectivelyMVC/Makefile
 	Examples/Makefile
 ])
 

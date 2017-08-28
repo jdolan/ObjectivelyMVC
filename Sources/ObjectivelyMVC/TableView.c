@@ -67,7 +67,7 @@ static void awakeWithDictionary_columns(const Array *array, ident obj, ident dat
 		MakeInlet("width", InletTypeInteger, &column->width, NULL)
 	);
 
-	$((View *) data, bind, obj, inlets);
+	$((View *) data, bind, inlets, obj);
 	$((TableView *) data, addColumn, column);
 
 	release(column);
@@ -89,7 +89,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("usesAlternateBackgroundColor", InletTypeBool, &this->usesAlternateBackgroundColor, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 
 	const Array *columns = $(dictionary, objectForKeyPath, "columns");
 	if (columns) {

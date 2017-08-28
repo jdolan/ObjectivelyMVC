@@ -29,6 +29,7 @@
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Colors.h>
+#include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View+JSON.h>
 
@@ -146,6 +147,11 @@ struct View {
 	_Bool clipsSubviews;
 
 	/**
+	 * @brief The Constraints held on this View.
+	 */
+	MutableArray *constraints;
+
+	/**
 	 * @brief The frame, relative to the superview.
 	 */
 	SDL_Rect frame;
@@ -172,18 +178,17 @@ struct View {
 	ViewPadding padding;
 
 	/**
-	 * @brief All contained views.
+	 * @brief The immediate subviews.
 	 */
 	MutableArray *subviews;
 
 	/**
-	 * @brief The containing View.
+	 * @brief The super View.
 	 */
 	View *superview;
 
 	/**
 	 * @brief The z-index.
-	 * @remarks
 	 */
 	int zIndex;
 };
@@ -197,6 +202,15 @@ struct ViewInterface {
 	 * @brief The superclass interface.
 	 */
 	ObjectInterface parentInterface;
+
+	/**
+	 * @fn void View::addConstraint(View *self, Constraint *constraint)
+	 * @brief Adds a Constraint on this View.
+	 * @param self The View.
+	 * @param constraint The Constraint.
+	 * @memberof View
+	 */
+	void (*addConstraint)(View *self, Constraint *constraint);
 
 	/**
 	 * @fn void View::addSubview(View *self, View *subview)
@@ -224,7 +238,7 @@ struct ViewInterface {
 	 * @brief Wakes this View with the specified Dictionary.
 	 * @param self The View.
 	 * @param dictionary A Dictionary of properties describing this View.
-	 * @remarks This method is invoked when loading via View. Subclasses should override this method
+	 * @remarks This method is invoked when loading via JSON. Subclasses should override this method
 	 * to perform any customization based on the contents of `dictionary`.
 	 * @memberof View
 	 */
@@ -234,22 +248,21 @@ struct ViewInterface {
 	 * @fn void View::becomeFirstResponder(View *self)
 	 * @brief Become the first responder in the View hierarchy.
 	 * @param self The View.
-	 * @remarks Becoming the first responder gives a View priority when handling
-	 * events.
+	 * @remarks Becoming the first responder gives a View priority when handling events.
 	 * @memberof View
 	 */
 	void (*becomeFirstResponder)(View *self);
 
 	/**
-	 * @fn void View::bind(View *self, const Dictionary *dictionary, const Inlet *inlets)
+	 * @fn void View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
 	 * @brief Performs data binding for the Inlets described in `dictionary`.
 	 * @param self The View.
-	 * @param dictionary A Dictionary describing this View.
 	 * @param inlets The Inlets to bind.
+	 * @param dictionary A Dictionary describing this View.
 	 * @remarks Subclasses will typically call this method from View::awakeWithDictionary.
 	 * @memberof View
 	 */
-	void (*bind)(View *self, const Dictionary *dictionary, const Inlet *inlets);
+	void (*bind)(View *self, const Inlet *inlets, const Dictionary *dictionary);
 
 	/**
 	 * @fn SDL_Rect View::bounds(const View *self)
@@ -389,12 +402,29 @@ struct ViewInterface {
 	void (*layoutSubviews)(View *self);
 
 	/**
+	 * @fn void View::removeAllConstraints(View *self)
+	 * @brief Removes all Constraints on this View.
+	 * @param self The View.
+	 * @memberof View
+	 */
+	void (*removeAllConstraints)(View *self);
+
+	/**
 	 * @fn void View::removeAllSubviews(View *self)
 	 * @brief Removes all subviews from this View.
 	 * @param self The View.
 	 * @memberof View
 	 */
 	void (*removeAllSubviews)(View *self);
+
+	/**
+	 * @fn void View::removeConstraint(View *self, Constraint *constraint)
+	 * @brief Removes the given Constraint from this View.
+	 * @param self The View.
+	 * @param constraint The Constraint.
+	 * @memberof View
+	 */
+	void (*removeConstraint)(View *self, Constraint *constraint);
 
 	/**
 	 * @fn void View::removeFromSuperview(View *self)

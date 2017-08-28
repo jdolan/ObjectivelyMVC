@@ -63,7 +63,7 @@ static void awakeWithDictionary_tabs(const Array *array, ident obj, ident data) 
 		MakeInlet("view", InletTypeView, &tab->view, NULL)
 	);
 
-	$((View *) data, bind, obj, inlets);
+	$((View *) data, bind, inlets, obj);
 	$((TabView *) data, addTab, tab);
 
 	release(tab);
@@ -83,7 +83,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("tabSelectionView", InletTypeView, &this->tabSelectionView, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 
 	const Array *tabs = $(dictionary, objectForKeyPath, "tabs");
 	if (tabs) {

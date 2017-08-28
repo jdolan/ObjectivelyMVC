@@ -64,6 +64,8 @@ static void dealloc(Object *self) {
 
 	View *this = (View *) self;
 
+	release(this->constraints);
+
 	free(this->identifier);
 
 	$(this, removeFromSuperview);
@@ -84,6 +86,14 @@ static String *description(const Object *self) {
 }
 
 #pragma mark - View
+
+/**
+ * @fn void View::addConstraint(View *self, Constraint *constraint)
+ * @memberof View
+ */
+static void addConstraint(View *self, Constraint *constraint) {
+	$(self->constraints, addObject, constraint);
+}
 
 /**
  * @fn void View::addSubview(View *self, View *subview)
@@ -144,6 +154,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
 		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
 		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
+		MakeInlet("constraints", InletTypeConstraints, &self, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
@@ -151,7 +162,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("zIndex", InletTypeInteger, &self->zIndex, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 
 	if (self->identifier) {
 		for (Outlet *outlet = _outlets; outlet->identifier; outlet++) {
@@ -171,18 +182,13 @@ static void becomeFirstResponder(View *self) {
 }
 
 /**
- * @fn void View::bind(View *self, const Dictionary *dictionary, const Inlet *inlets)
+ * @fn void View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
  * @memberof View
  */
-static void _bind(View *self, const Dictionary *dictionary, const Inlet *inlets) {
+static void _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
 	if (inlets) {
-		for (const Inlet *inlet = inlets; inlet->name; inlet++) {
-			const ident obj = $(dictionary, objectForKeyPath, inlet->name);
-			if (obj) {
-				BindInlet(inlet, obj);
-			}
-		}
+		bindInlets(inlets, dictionary);
 	}
 
 	$(self, updateBindings);
@@ -379,6 +385,9 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 			self->frame = *frame;
 		}
 
+		self->constraints = $$(MutableArray, array);
+		assert(self->constraints);
+
 		self->subviews = $$(MutableArray, array);
 		assert(self->subviews);
 
@@ -529,6 +538,14 @@ static void layoutSubviews(View *self) {
 }
 
 /**
+ * @fn void View::removeAllConstraints(View *self)
+ * @memberof View
+ */
+static void removeAllConstraints(View *self) {
+	$(self->constraints, removeAllObjects);
+}
+
+/**
  * @brief ArrayEnumerator for removeAllSubviews.
  */
 static void removeAllSubviews_enumerate(const Array *array, ident obj, ident data) {
@@ -541,6 +558,14 @@ static void removeAllSubviews_enumerate(const Array *array, ident obj, ident dat
  */
 static void removeAllSubviews(View *self) {
 	$((Array *) self->subviews, enumerateObjects, removeAllSubviews_enumerate, self);
+}
+
+/**
+ * @fn void View::removeConstraint(View *self, Constraint *constraint)
+ * @memberof View
+ */
+static void removeConstraint(View *self, Constraint *constraint) {
+	$(self->constraints, removeObject, constraint);
 }
 
 /**
@@ -896,7 +921,6 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
  * @memberof View
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
-
 	static Once once;
 
 	do_once(&once, {
@@ -971,6 +995,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	((ObjectInterface *) clazz->def->interface)->description = description;
 
+	((ViewInterface *) clazz->def->interface)->addConstraint = addConstraint;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
@@ -991,7 +1016,9 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->isVisible = isVisible;
 	((ViewInterface *) clazz->def->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->removeAllConstraints = removeAllConstraints;
 	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
+	((ViewInterface *) clazz->def->interface)->removeConstraint = removeConstraint;
 	((ViewInterface *) clazz->def->interface)->removeFromSuperview = removeFromSuperview;
 	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
 	((ViewInterface *) clazz->def->interface)->render = render;

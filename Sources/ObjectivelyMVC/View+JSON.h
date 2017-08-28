@@ -52,6 +52,17 @@ typedef enum {
 	InletTypeColor,
 
 	/**
+	 * @remarks Inlet destination must be of type `Constraint **`.
+	 */
+	InletTypeConstraint,
+
+	/**
+	 * @remarks Inlet destination must be of type `View **`. The Constraints of the specified View
+	 * are populated from the bound array of Constraint definitions.
+	 */
+	InletTypeConstraints,
+
+	/**
 	 * @remarks Inlet destination must be of type `double *`.
 	 */
 	InletTypeDouble,
@@ -220,3 +231,8 @@ struct Outlet {
  * @brief Binds the Inlet to `obj` by invoking the appropriate InletBinding function.
  */
 #define BindInlet(inlet, obj) (inletBindings[(inlet)->type])(inlet, (ident) obj)
+
+/**
+ * @brief Binds each Inlet specified in `inlets` to the data provided in `dictionary`.
+ */
+OBJECTIVELYMVC_EXPORT void bindInlets(const Inlet *inlets, const Dictionary *dictionary);
