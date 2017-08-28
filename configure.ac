@@ -8,6 +8,8 @@ AC_CONFIG_SRCDIR([Sources/ObjectivelyMVC.h])
 
 AC_CANONICAL_HOST
 
+AC_GNU_SOURCE
+
 AC_PROG_CC
 AC_PROG_CC_STDC
 AC_PROG_LIBTOOL
@@ -32,14 +34,12 @@ case "$host" in
 		;;
 	*-mingw*)
 		HOST_NAME="MINGW"
-		HOST_CFLAGS="-D_GNU_SOURCE"
 		HOST_LDFLAGS="-no-undefined"
 		HOST_LIBS="-lopengl32"
 		AC_MSG_RESULT(mingw)
 		;;
 	*)
 		HOST_NAME="LINUX"
-		HOST_CFLAGS="-D_GNU_SOURCE"
 		HOST_LIBS="-lGL"
 		AC_MSG_RESULT(linux)
 		;;
