@@ -147,8 +147,10 @@ static Constraint *initWithDescriptor(Constraint *self, const char *descriptor) 
 
 			if (identifier->location != -1) {
 
-				self->identifier = strndup(string->chars + identifier->location, identifier->length);
+				self->identifier = calloc(identifier->length + 1, 1);
 				assert(self->identifier);
+
+				strncpy(self->identifier, string->chars + identifier->location, identifier->length);
 
 				self->source = constraintAttribute(string->chars + source->location);
 				assert(self->source);
