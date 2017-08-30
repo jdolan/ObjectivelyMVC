@@ -273,6 +273,14 @@ struct ViewInterface {
 	SDL_Rect (*bounds)(const View *self);
 
 	/**
+	 * @fn _Bool View::canBecomeFirstResponder(const View *self)
+	 * @param self The View.
+	 * @return True if this View can become the first responder, false otherwise.
+	 * @memberof View
+	 */
+	_Bool (*canBecomeFirstResponder)(const View *self);
+
+	/**
 	 * @fn SDL_Rect View::clippingFrame(const View *self)
 	 * @param self The View.
 	 * @return The visible portion of this View's frame, in window coordinates.
@@ -281,14 +289,6 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	SDL_Rect (*clippingFrame)(const View *self);
-
-	/**
-	 * @fn _Bool View::canBecomeFirstResponder(const View *self)
-	 * @param self The View.
-	 * @return True if this View can become the first responder, false otherwise.
-	 * @memberof View
-	 */
-	_Bool (*canBecomeFirstResponder)(const View *self);
 
 	/**
 	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)

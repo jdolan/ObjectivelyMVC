@@ -213,6 +213,27 @@ static SDL_Rect bounds(const View *self) {
 }
 
 /**
+ * @fn _Bool View::canBecomeFirstResponder(const View *self)
+ * @memberof View
+ */
+static _Bool canBecomeFirstResponder(const View *self) {
+
+	if (_firstResponder == NULL) {
+		return true;
+	}
+
+	const View *view = self;
+	while (view) {
+		if ($(view, isFirstResponder)) {
+			return true;
+		}
+		view = view->superview;
+	}
+
+	return false;
+}
+
+/**
  * @fn SDL_Rect View::clippingFrame(const View *self)
  * @memberof View
  */
@@ -253,27 +274,6 @@ static SDL_Rect clippingFrame(const View *self) {
 	}
 
 	return frame;
-}
-
-/**
- * @fn _Bool View::canBecomeFirstResponder(const View *self)
- * @memberof View
- */
-static _Bool canBecomeFirstResponder(const View *self) {
-
-	if (_firstResponder == NULL) {
-		return true;
-	}
-
-	const View *view = self;
-	while (view) {
-		if ($(view, isFirstResponder)) {
-			return true;
-		}
-		view = view->superview;
-	}
-
-	return false;
 }
 
 /**
