@@ -234,6 +234,15 @@ struct ViewInterface {
 	void (*addSubviewRelativeTo)(View *self, View *subview, View *other, ViewPosition position);
 
 	/**
+	 * @fn View::ancestorWithIdentifier(const View *self, const char *identifier)
+	 * @param self The View.
+	 * @param identifier The identifier.
+	 * @return The nearest ancestor View matching the given identifier.
+	 * @memberof View
+	 */
+	View *(*ancestorWithIdentifier)(const View *self, const char *identifier);
+
+	/**
 	 * @fn void View::applyConstraints(View *self)
 	 * @brief Applies all Constraints on this View before laying out its subviews.
 	 * @param self The View.
@@ -324,6 +333,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	int (*depth)(const View *self);
+
+	/**
+	 * @fn View::descendantWithIdentifier(const View *self, const char *identifier)
+	 * @param self The View.
+	 * @param identifier The identifier.
+	 * @return The nearest descendant View matching the given identifier.
+	 * @memberof View
+	 */
+	View *(*descendantWithIdentifier)(const View *self, const char *identifier);
 
 	/**
 	 * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
@@ -569,6 +587,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*sizeToFit)(View *self);
+
+	/**
+	 * @fn View::subviewWithIdentifier(const View *self, const char *identifier)
+	 * @param self The View.
+	 * @param identifier The identifier.
+	 * @return The first subview matching the given identifier.
+	 * @memberof View
+	 */
+	View *(*subviewWithIdentifier)(const View *self, const char *identifier);
 
 	/**
 	 * @fn void View::updateBindings(View *self)

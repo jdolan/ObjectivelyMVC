@@ -145,6 +145,27 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 }
 
 /**
+ * @fn View::ancestorWithIdentifier(const View *self, const char *identifier)
+ * @memberof View
+ */
+static View *ancestorWithIdentifier(const View *self, const char *identifier) {
+
+	assert(identifier);
+
+	View *view = self->superview;
+	while (view) {
+		if (view->identifier) {
+			if (strcmp(identifier, view->identifier) == 0) {
+				return view;
+			}
+		}
+		view = view->superview;
+	}
+
+	return NULL;
+}
+
+/**
  * @brief Comparator for applyConstraints sorting.
  */
 static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
@@ -334,6 +355,33 @@ static void createConstraint(View *self, const char *descriptor) {
  */
 static int depth(const View *self) {
 	return self->zIndex + (self->superview ? $(self->superview, depth) + 1 : 0);
+}
+
+/**
+ * @fn View::descendantWithIdentifier(const View *self, const char *identifier)
+ * @memberof View
+ */
+static View *descendantWithIdentifier(const View *self, const char *identifier) {
+
+	assert(identifier);
+
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+
+		View *view = $(subviews, objectAtIndex, i);
+		if (view->identifier) {
+			if (strcmp(identifier, view->identifier)) {
+				return view;
+			}
+		}
+
+		view = $(view, descendantWithIdentifier, identifier);
+		if (view) {
+			return view;
+		}
+	}
+
+	return NULL;
 }
 
 /**
@@ -912,6 +960,29 @@ static void sizeToFit(View *self) {
 }
 
 /**
+ * @fn View::subviewWithIdentifier(const View *self, const char *identifier)
+ * @memberof View
+ */
+static View *subviewWithIdentifier(const View *self, const char *identifier) {
+
+	assert(identifier);
+
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+
+		View *subview = $(subviews, objectAtIndex, i);
+		if (subview->identifier) {
+
+			if (strcmp(identifier, subview->identifier) == 0) {
+				return subview;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+/**
  * @brief ArrayEnumerator for updateBindings recursion.
  */
 static void updateBindings_recurse(const Array *array, ident obj, ident data) {
@@ -1050,6 +1121,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
 	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
+	((ViewInterface *) clazz->def->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
@@ -1059,6 +1131,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
 	((ViewInterface *) clazz->def->interface)->createConstraint = createConstraint;
 	((ViewInterface *) clazz->def->interface)->depth = depth;
+	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
 	((ViewInterface *) clazz->def->interface)->firstResponder = firstResponder;
@@ -1086,6 +1159,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->def->interface)->sizeToContain = sizeToContain;
 	((ViewInterface *) clazz->def->interface)->sizeToFit = sizeToFit;
+	((ViewInterface *) clazz->def->interface)->subviewWithIdentifier = subviewWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
 	((ViewInterface *) clazz->def->interface)->viewport = viewport;
 	((ViewInterface *) clazz->def->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
