@@ -193,7 +193,7 @@ static void initialize(Class *clazz) {
 	((ConstraintInterface *) clazz->def->interface)->apply = apply;
 	((ConstraintInterface *) clazz->def->interface)->initWithDescriptor = initWithDescriptor;
 
-	_regex = rex("^([whtrblc])([<=>]+)([a-z]+)?\\.?([whtrblc])?(\\*[0-9.]*)?([+|-]?[0-9.]+)?(\[[0-9.]+\\])?", REG_ICASE);
+	_regex = rex("^([whtrblc])([<=>]+)([a-z]+)?\\.?([whtrblc])?(\\*[0-9.]*)?([+|-]?[0-9.]+)?(\[[0-9.]+\\])?$", REG_ICASE);
 }
 
 /**
