@@ -757,11 +757,11 @@ static void resize_recurse(const Array *array, ident obj, ident data) {
 	SDL_Size size = $(subview, size);
 
 	if (subview->autoresizingMask & ViewAutoresizingWidth) {
-		size = MakeSize(0, size.h);
+		size.w = 0;
 	}
 
 	if (subview->autoresizingMask & ViewAutoresizingHeight) {
-		size = MakeSize(size.w, 0);
+		size.h = 0;
 	}
 
 	if (subview->autoresizingMask == ViewAutoresizingContain) {
