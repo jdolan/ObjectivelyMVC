@@ -89,6 +89,11 @@ struct Constraint {
 	ConstraintInterface *interface;
 
 	/**
+	 * @brief If false, this Constraint is not enforced.
+	 */
+	_Bool enabled;
+
+	/**
 	 * @brief The constant offset or limit.
 	 */
 	float constant;
