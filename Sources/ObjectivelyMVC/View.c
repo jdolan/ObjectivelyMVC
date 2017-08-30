@@ -92,7 +92,10 @@ static String *description(const Object *self) {
  * @memberof View
  */
 static void addConstraint(View *self, Constraint *constraint) {
+
 	$(self->constraints, addObject, constraint);
+
+	self->needsLayout = true;
 }
 
 /**
@@ -551,11 +554,18 @@ static void layoutSubviews(View *self) {
 }
 
 /**
+ * @brief ArrayEnumerator for removeAllConstraints.
+ */
+static void removeAllConstraints_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, removeConstraint, obj);
+}
+
+/**
  * @fn void View::removeAllConstraints(View *self)
  * @memberof View
  */
 static void removeAllConstraints(View *self) {
-	$(self->constraints, removeAllObjects);
+	$((Array *) self->constraints, enumerateObjects, removeAllConstraints_enumerate, self);
 }
 
 /**
@@ -578,7 +588,10 @@ static void removeAllSubviews(View *self) {
  * @memberof View
  */
 static void removeConstraint(View *self, Constraint *constraint) {
+
 	$(self->constraints, removeObject, constraint);
+
+	self->needsLayout = true;
 }
 
 /**
