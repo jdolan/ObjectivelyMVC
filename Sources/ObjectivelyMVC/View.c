@@ -900,6 +900,21 @@ static void updateBindings(View *self) {
 }
 
 /**
+ * @brief Comparator for updateConstraints sorting.
+ */
+static Order updateConstraints_comparator(const ident obj1, const ident obj2) {
+	return ((Constraint *) obj1)->priority - ((Constraint *) obj2)->priority;
+}
+
+/**
+ * @fn void View::updateConstraints(View *self)
+ * @memberof View
+ */
+static void updateConstraints(View *self) {
+	$(self->constraints, sort, updateConstraints_comparator);
+}
+
+/**
  * @fn SDL_Rect View::viewport(const View *self)
  * @memberof View
  */
@@ -1059,6 +1074,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->sizeToContain = sizeToContain;
 	((ViewInterface *) clazz->def->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
+	((ViewInterface *) clazz->def->interface)->updateConstraints = updateConstraints;
 	((ViewInterface *) clazz->def->interface)->viewport = viewport;
 	((ViewInterface *) clazz->def->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
 	((ViewInterface *) clazz->def->interface)->viewWithData = viewWithData;

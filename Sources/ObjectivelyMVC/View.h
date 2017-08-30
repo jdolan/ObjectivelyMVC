@@ -572,6 +572,15 @@ struct ViewInterface {
 	void (*updateBindings)(View *self);
 
 	/**
+	 * @fn void View::updateConstraints(View *self)
+	 * @brief Updates the Constraints on this View before they are applied during layout.
+	 * @param self The View.
+	 * @remarks The default implementation sorts this View's Constraints by priority.
+	 * @memberof View
+	 */
+	void (*updateConstraints)(View *self);
+
+	/**
 	 * @fn SDL_Rect View::viewport(const View *self)
 	 * @param self The View.
 	 * @return The OpenGL viewport for this View.
