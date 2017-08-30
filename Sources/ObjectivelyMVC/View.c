@@ -694,31 +694,29 @@ static void resignFirstResponder(View *self) {
 	}
 }
 
-///**
-// * @brief ArrayEnumerator for resize recursion.
-// */
-//static void resize_recurse(const Array *array, ident obj, ident data) {
-//
-//	View *subview = (View *) obj;
-//
-//	SDL_Size size = $(subview, size);
-//
-//	switch (subview->autoresizingMask) {
-//		case ViewAutoresizingWidth:
-//			size.w = 0;
-//			break;
-//		case ViewAutoresizingHeight:
-//			size.h = 0;
-//			break;
-//		case ViewAutoresizingContain:
-//			size.w = size.h = 0;
-//			break;
-//		default:
-//			break;
-//	}
-//
-//	$(subview, resize, &size);
-//}
+/**
+ * @brief ArrayEnumerator for resize recursion.
+ */
+static void resize_recurse(const Array *array, ident obj, ident data) {
+
+	View *subview = (View *) obj;
+
+	SDL_Size size = $(subview, size);
+
+	if (subview->autoresizingMask & ViewAutoresizingWidth) {
+		size = MakeSize(0, size.h);
+	}
+
+	if (subview->autoresizingMask & ViewAutoresizingHeight) {
+		size = MakeSize(size.w, 0);
+	}
+
+	if (subview->autoresizingMask == ViewAutoresizingContain) {
+		size = MakeSize(0, 0);
+	}
+
+	$(subview, resize, &size);
+}
 
 /**
  * @fn void View::resize(View *self, const SDL_Size *size)
@@ -733,7 +731,7 @@ static void resize(View *self, const SDL_Size *size) {
 
 		self->needsLayout = true;
 
-//		$((Array *) self->subviews, enumerateObjects, resize_recurse, NULL);
+		$((Array *) self->subviews, enumerateObjects, resize_recurse, NULL);
 	}
 }
 
