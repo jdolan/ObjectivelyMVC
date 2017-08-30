@@ -148,7 +148,7 @@ struct ConstraintInterface {
 	 * @fn void Constraint::apply(const Constraint *self, View *view)
 	 * @brief Applies this Constraint on the specified View.
 	 * @param self The Constraint.
-	 * @param source The source View.
+	 * @param view The View to constrain.
 	 * @remarks Any Views referenced in this Constraint's descriptor are resolved from the View's 
 	 * hierarchy. Ancestors and immediate siblings are supported.
 	 * @memberof Constraint

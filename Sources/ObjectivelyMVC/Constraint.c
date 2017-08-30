@@ -96,15 +96,67 @@ static void dealloc(Object *self) {
 
 #pragma mark - Constraint
 
-
-
 /**
  * @fn void Constraint::apply(const Constraint *self, View *view)
  * @memberof Constraint
  */
 static void apply(const Constraint *self, View *view) {
 
-	
+	int value = 0;
+
+	if (self->identifier) {
+		const View *source = $(view, ancestorWithIdentifier, self->identifier);
+		if (source == NULL) {
+			if (view->superview) {
+				source = $(view->superview, subviewWithIdentifier, self->identifier);
+			}
+		}
+		assert(source);
+
+		switch (self->source) {
+			case ConstraintAttributeNone:
+				break;
+			case ConstraintAttributeWidth:
+				value = source->frame.w;
+				break;
+			case ConstraintAttributeHeight:
+				value = source->frame.h;
+				break;
+			case ConstraintAttributeCenter:
+				break;
+			case ConstraintAttributeTop:
+				break;
+			case ConstraintAttributeRight:
+				break;
+			case ConstraintAttributeBottom:
+				break;
+			case ConstraintAttributeLeft:
+				break;
+		}
+	}
+
+	value = value * self->multiplier + self->constant;
+
+	switch (self->target) {
+		case ConstraintAttributeNone:
+			break;
+		case ConstraintAttributeWidth:
+			$(view, resize, &MakeSize(value, view->frame.h));
+			break;
+		case ConstraintAttributeHeight:
+			$(view, resize, &MakeSize(view->frame.w, value));
+			break;
+		case ConstraintAttributeCenter:
+			break;
+		case ConstraintAttributeTop:
+			break;
+		case ConstraintAttributeRight:
+			break;
+		case ConstraintAttributeBottom:
+			break;
+		case ConstraintAttributeLeft:
+			break;
+	}
 }
 
 static Regex *_regex;
