@@ -288,6 +288,19 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 }
 
 /**
+ * @fn void View::createConstraint(View *self, const char *descriptor)
+ * @memberof View
+ */
+static void createConstraint(View *self, const char *descriptor) {
+
+	Constraint *constraint = $(alloc(Constraint), initWithDescriptor, descriptor);
+
+	$(self, addConstraint, constraint);
+
+	release(constraint);
+}
+
+/**
  * @fn int View::depth(const View *self)
  * @memberof View
  */
@@ -1003,6 +1016,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
+	((ViewInterface *) clazz->def->interface)->createConstraint = createConstraint;
 	((ViewInterface *) clazz->def->interface)->depth = depth;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;

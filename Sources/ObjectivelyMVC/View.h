@@ -300,6 +300,15 @@ struct ViewInterface {
 	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
 
 	/**
+	 * @fn void View::createConstraint(View *self, const char *descriptor)
+	 * @brief Creates a new Constraint with the given descriptor on this View.
+	 * @param self The View.
+	 * @param descriptor The Constraint descriptor.
+	 * @memberof View
+	 */
+	void (*createConstraint)(View *self, const char *descriptor);
+
+	/**
 	 * @fn int View::depth(const View *self)
 	 * @param self The View.
 	 * @return The depth of this View (`ancestor depth + zIndex + 1`).
