@@ -119,6 +119,7 @@ static Constraint *initWithDescriptor(Constraint *self, const char *descriptor) 
 		self->descriptor = strdup(descriptor);
 		assert(self->descriptor);
 
+		self->enabled = true;
 		self->multiplier = 1.0f;
 		self->priority = DEFAULT_CONSTRAINT_PRIORITY;
 
