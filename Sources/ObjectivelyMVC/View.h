@@ -234,6 +234,14 @@ struct ViewInterface {
 	void (*addSubviewRelativeTo)(View *self, View *subview, View *other, ViewPosition position);
 
 	/**
+	 * @fn void View::applyConstraints(View *self)
+	 * @brief Applies all Constraints on this View before laying out its subviews.
+	 * @param self The View.
+	 * @memberof View
+	 */
+	void (*applyConstraints)(View *self);
+
+	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)
 	 * @brief Wakes this View with the specified Dictionary.
 	 * @param self The View.
@@ -570,15 +578,6 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*updateBindings)(View *self);
-
-	/**
-	 * @fn void View::updateConstraints(View *self)
-	 * @brief Updates the Constraints on this View before they are applied during layout.
-	 * @param self The View.
-	 * @remarks The default implementation sorts this View's Constraints by priority.
-	 * @memberof View
-	 */
-	void (*updateConstraints)(View *self);
 
 	/**
 	 * @fn SDL_Rect View::viewport(const View *self)

@@ -145,13 +145,15 @@ struct ConstraintInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 * @fn void Constraint::apply(const Constraint *self, View *source)
-	 * @brief Applies this Constraint on the source View.
+	 * @fn void Constraint::apply(const Constraint *self, View *view)
+	 * @brief Applies this Constraint on the specified View.
 	 * @param self The Constraint.
 	 * @param source The source View.
+	 * @remarks Any Views referenced in this Constraint's descriptor are resolved from the View's 
+	 * hierarchy. Ancestors and immediate siblings are supported.
 	 * @memberof Constraint
 	 */
-	void (*apply)(const Constraint *self, View *source);
+	void (*apply)(const Constraint *self, View *view);
 
 	/**
 	 * @fn Constraint *Constraint::initWithDescriptor(Constraint *self, const char *descriptor)

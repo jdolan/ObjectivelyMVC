@@ -145,6 +145,31 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 }
 
 /**
+ * @brief Comparator for applyConstraints sorting.
+ */
+static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
+	return ((Constraint *) obj1)->priority - ((Constraint *) obj2)->priority;
+}
+
+/**
+ * @fn void View::applyConstraints(View *self)
+ * @memberof View
+ */
+static void applyConstraints(View *self) {
+
+	$(self->constraints, sort, applyConstraints_comparator);
+
+	const Array *constraints = (Array *) self->constraints;
+	for (size_t i = 0; i < constraints->count; i++) {
+
+		const Constraint *constraint = $(constraints, objectAtIndex, i);
+		if (constraint->enabled) {
+			$(constraint, apply, self);
+		}
+	}
+}
+
+/**
  * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
  * @memberof View
  */
@@ -468,6 +493,8 @@ static void layoutIfNeeded(View *self) {
 
 	if (self->needsLayout) {
 		self->needsLayout = false;
+
+		$(self, applyConstraints);
 
 		$(self, layoutSubviews);
 	}
@@ -900,21 +927,6 @@ static void updateBindings(View *self) {
 }
 
 /**
- * @brief Comparator for updateConstraints sorting.
- */
-static Order updateConstraints_comparator(const ident obj1, const ident obj2) {
-	return ((Constraint *) obj1)->priority - ((Constraint *) obj2)->priority;
-}
-
-/**
- * @fn void View::updateConstraints(View *self)
- * @memberof View
- */
-static void updateConstraints(View *self) {
-	$(self->constraints, sort, updateConstraints_comparator);
-}
-
-/**
  * @fn SDL_Rect View::viewport(const View *self)
  * @memberof View
  */
@@ -1037,6 +1049,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->addConstraint = addConstraint;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
+	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
@@ -1074,7 +1087,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->sizeToContain = sizeToContain;
 	((ViewInterface *) clazz->def->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
-	((ViewInterface *) clazz->def->interface)->updateConstraints = updateConstraints;
 	((ViewInterface *) clazz->def->interface)->viewport = viewport;
 	((ViewInterface *) clazz->def->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
 	((ViewInterface *) clazz->def->interface)->viewWithData = viewWithData;

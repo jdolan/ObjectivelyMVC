@@ -27,6 +27,7 @@
 #include <Objectively/Regex.h>
 
 #include <ObjectivelyMVC/Constraint.h>
+#include <ObjectivelyMVC/View.h>
 
 /**
  * @return The ConstraintAttribute parsed from `s`.
@@ -98,11 +99,12 @@ static void dealloc(Object *self) {
 
 
 /**
- * @fn void Constraint::apply(const Constraint *self, View *source)
+ * @fn void Constraint::apply(const Constraint *self, View *view)
  * @memberof Constraint
  */
-static void apply(const Constraint *self, View *source) {
+static void apply(const Constraint *self, View *view) {
 
+	
 }
 
 static Regex *_regex;
