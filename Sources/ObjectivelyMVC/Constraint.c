@@ -185,8 +185,6 @@ static void apply(const Constraint *self, View *view) {
 			view->frame.x = value - view->frame.w;
 			break;
 	}
-
-	view->needsLayout = true;
 }
 
 static Regex *_regex;
