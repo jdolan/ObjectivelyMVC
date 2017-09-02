@@ -49,7 +49,7 @@ Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will re
 
 ### Full suite of Views and Controls
 
-ObjectivelyMVC provides a robust set of containers, views and form elements. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular or grid data with `TableView` and `CollectionView`. Bind `Actions` to `SDL_Event` types on each element, or use the specialized _delegate_ callbacks for convenience.
+ObjectivelyMVC provides a robust set of containers, views and controls. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular data or a thumbnail gallery with `TableView` and `CollectionView`. Bind `Actions` to `SDL_Event` types, or use the specialized _delegate_ callbacks for convenience.
 
 ```c
 $((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_data);
@@ -63,7 +63,7 @@ select->delegate.didSelectOption = my_callback;
 
 ### Programmatic or JSON-based layout options
 
-ObjectivelyMVC allows you to define your View hierarchy either programmatically, via JSON, or any combination of both. Programmatic layout gives you explicit control over the big picture, while JSON layout allows you to reduce boilerplate and avoid common pitfalls like memory leaks.
+ObjectivelyMVC allows you to define your View hierarchy programmatically, via JSON, or using any combination of both. Programmatic layout gives you explicit control over the big picture, while JSON layout allows you to reduce boilerplate and avoid common pitfalls like memory leaks.
 
 ```json
 {
