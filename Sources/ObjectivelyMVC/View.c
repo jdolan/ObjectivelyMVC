@@ -548,14 +548,18 @@ static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
  */
 static void layoutIfNeeded(View *self) {
 
-	if (self->needsLayout) {
-		self->needsLayout = false;
+	if (self->autoresizingMask & ViewAutoresizingContain) {
+		$(self, sizeToContain);
+	}
 
+	if (self->needsLayout) {
 		$(self, layoutSubviews);
 	}
 
 	const Array *subviews = (Array *) self->subviews;
 	$(subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
+
+	self->needsLayout = false;
 }
 
 /**
@@ -563,10 +567,6 @@ static void layoutIfNeeded(View *self) {
  * @memberof View
  */
 static void layoutSubviews(View *self) {
-
-	if (self->autoresizingMask & ViewAutoresizingContain) {
-		$(self, sizeToContain);
-	}
 
 	const SDL_Rect bounds = $(self, bounds);
 
