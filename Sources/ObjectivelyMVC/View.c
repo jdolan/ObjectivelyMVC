@@ -185,8 +185,6 @@ static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
  */
 static void applyConstraints(View *self) {
 
-	$((Array *) self->subviews, enumerateObjects, applyConstraints_recurse, NULL);
-
 	$(self->constraints, sort, applyConstraints_comparator);
 
 	const Array *constraints = (Array *) self->constraints;
@@ -197,6 +195,8 @@ static void applyConstraints(View *self) {
 			$(constraint, apply, self);
 		}
 	}
+
+	$((Array *) self->subviews, enumerateObjects, applyConstraints_recurse, NULL);
 }
 
 /**
