@@ -38,11 +38,12 @@ typedef enum {
 	ConstraintAttributeNone,
 	ConstraintAttributeWidth,
 	ConstraintAttributeHeight,
-	ConstraintAttributeCenter,
 	ConstraintAttributeTop,
-	ConstraintAttributeRight,
+	ConstraintAttributeMiddle,
 	ConstraintAttributeBottom,
-	ConstraintAttributeLeft
+	ConstraintAttributeLeft,
+	ConstraintAttributeCenter,
+	ConstraintAttributeRight
 } ConstraintAttribute;
 
 typedef enum {

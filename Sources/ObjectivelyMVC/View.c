@@ -166,6 +166,13 @@ static View *ancestorWithIdentifier(const View *self, const char *identifier) {
 }
 
 /**
+ * @brief ArrayEnumerator for applyConstraints recursion.
+ */
+static void applyConstraints_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, applyConstraints);
+}
+
+/**
  * @brief Comparator for applyConstraints sorting.
  */
 static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
@@ -177,6 +184,8 @@ static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
  * @memberof View
  */
 static void applyConstraints(View *self) {
+
+	$((Array *) self->subviews, enumerateObjects, applyConstraints_recurse, NULL);
 
 	$(self->constraints, sort, applyConstraints_comparator);
 
@@ -541,8 +550,6 @@ static void layoutIfNeeded(View *self) {
 
 	if (self->needsLayout) {
 		self->needsLayout = false;
-
-		$(self, applyConstraints);
 
 		$(self, layoutSubviews);
 	}

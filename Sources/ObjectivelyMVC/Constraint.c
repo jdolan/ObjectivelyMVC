@@ -105,32 +105,49 @@ static void apply(const Constraint *self, View *view) {
 	int value = 0;
 
 	if (self->identifier) {
-		const View *source = $(view, ancestorWithIdentifier, self->identifier);
-		if (source == NULL) {
-			if (view->superview) {
-				source = $(view->superview, subviewWithIdentifier, self->identifier);
+		const View *source;
+		if (strcmp(self->identifier, "superview") == 0) {
+			source = view->superview;
+		} else {
+			source = $(view, ancestorWithIdentifier, self->identifier);
+			if (source == NULL) {
+				if (view->superview) {
+					source = $(view->superview, subviewWithIdentifier, self->identifier);
+				}
 			}
 		}
+
 		assert(source);
 
 		switch (self->source) {
 			case ConstraintAttributeNone:
 				break;
+
 			case ConstraintAttributeWidth:
 				value = source->frame.w;
 				break;
 			case ConstraintAttributeHeight:
 				value = source->frame.h;
 				break;
-			case ConstraintAttributeCenter:
-				break;
+
 			case ConstraintAttributeTop:
+				value = source->frame.y;
 				break;
-			case ConstraintAttributeRight:
+			case ConstraintAttributeMiddle:
+				value = source->frame.y + source->frame.h * 0.5;
 				break;
 			case ConstraintAttributeBottom:
+				value = source->frame.y + source->frame.h;
 				break;
+
 			case ConstraintAttributeLeft:
+				value = source->frame.x;
+				break;
+			case ConstraintAttributeCenter:
+				value = source->frame.x + source->frame.w * 0.5;
+				break;
+			case ConstraintAttributeRight:
+				value = source->frame.x + source->frame.w;
 				break;
 		}
 	}
@@ -140,23 +157,36 @@ static void apply(const Constraint *self, View *view) {
 	switch (self->target) {
 		case ConstraintAttributeNone:
 			break;
+
 		case ConstraintAttributeWidth:
 			$(view, resize, &MakeSize(value, view->frame.h));
 			break;
 		case ConstraintAttributeHeight:
 			$(view, resize, &MakeSize(view->frame.w, value));
 			break;
-		case ConstraintAttributeCenter:
-			break;
+
 		case ConstraintAttributeTop:
+			view->frame.y = value;
 			break;
-		case ConstraintAttributeRight:
+		case ConstraintAttributeMiddle:
+			view->frame.y = value - view->frame.h * 0.5;
 			break;
 		case ConstraintAttributeBottom:
+			view->frame.y = value - view->frame.h;
 			break;
+
 		case ConstraintAttributeLeft:
+			view->frame.x = value;
+			break;
+		case ConstraintAttributeCenter:
+			view->frame.x = value - view->frame.w * 0.5;
+			break;
+		case ConstraintAttributeRight:
+			view->frame.x = value - view->frame.w;
 			break;
 	}
+
+	view->needsLayout = true;
 }
 
 static Regex *_regex;
@@ -174,7 +204,9 @@ static Constraint *initWithDescriptor(Constraint *self, const char *descriptor) 
 		assert(self->descriptor);
 
 		self->enabled = true;
+
 		self->multiplier = 1.0f;
+
 		self->priority = DEFAULT_CONSTRAINT_PRIORITY;
 
 		String *string = (String *) mstr(self->descriptor);
