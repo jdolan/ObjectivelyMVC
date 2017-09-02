@@ -31,7 +31,7 @@
 
 /**
  * @file
- * @brief Constraints define relationships between Views that should be satisfied at layout.
+ * @brief Constraints define relationships between Views that should be satisfied before layout.
  */
 
 typedef enum {
