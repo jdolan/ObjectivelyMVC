@@ -24,7 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/Text.h>
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/StackView.h>
 
 /**
  * @file
@@ -32,6 +32,7 @@
  */
 
 #define DEFAULT_BOX_PADDING 10
+#define DEFAULT_BOX_SPACING 4
 #define DEFAULT_BOX_LABEL_PADDING 4
 #define DEFAULT_BOX_LABEL_X 20
 
@@ -57,6 +58,11 @@ struct Box {
 	 * @protected
 	 */
 	BoxInterface *interface;
+
+	/**
+	 * @brief The internal container.
+	 */
+	StackView *contentView;
 
 	/**
 	 * @brief The label.

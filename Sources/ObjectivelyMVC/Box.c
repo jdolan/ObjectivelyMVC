@@ -36,6 +36,7 @@ static void dealloc(Object *self) {
 
 	Box *this = (Box *) self;
 
+	release(this->contentView);
 	release(this->label);
 
 	super(Object, self, dealloc);
@@ -53,6 +54,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	Box *this = (Box *) self;
 
 	const Inlet inlets[] = MakeInlets(
+		MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
 		MakeInlet("label", InletTypeView, &this->label, NULL)
 	);
 
@@ -93,7 +95,16 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 	self = (Box *) super(View, self, initWithFrame, frame);
 	if (self) {
 
+		self->contentView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->contentView);
+
+		self->contentView->spacing = DEFAULT_BOX_SPACING;
+		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
+
+		$((View *) self, addSubview, (View *) self->contentView);
+
 		Font *font = $$(Font, defaultFont, FontCategorySecondaryLabel);
+
 		self->label = $(alloc(Text), initWithText, NULL, font);
 		assert(self->label);
 
