@@ -198,3 +198,8 @@ OBJECTIVELYMVC_EXPORT const struct _Colors {
 	SDL_Color Yellow;
 	SDL_Color YellowGreen;
 } Colors;
+
+/**
+ * @brief Creates an SDL_Color with the given components.
+ */
+#define MakeColor(r, g, b, a) (SDL_Color) { (r), (g), (b), (a) }
