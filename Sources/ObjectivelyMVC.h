@@ -35,7 +35,7 @@
 #include <ObjectivelyMVC/CollectionItemView.h>
 #include <ObjectivelyMVC/CollectionView.h>
 #include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/ColorSelect.h>
+#include <ObjectivelyMVC/ColorPicker.h>
 #include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Input.h>

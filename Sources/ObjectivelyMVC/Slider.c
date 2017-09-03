@@ -163,7 +163,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				const double fraction = (event->motion.x - frame.x) / (double) frame.w;
 				double value = this->min + (this->max - this->min) * clamp(fraction, 0.0, 1.0);
 
-				if (this->snapToStep) {
+				if (this->snapToStep && this->step) {
 					value = clamp(round(value / this->step) * this->step, this->min, this->max);
 				}
 
@@ -187,7 +187,6 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 	self = (Slider *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-		self->delegate.self = self; // Make delegate's self myself by default
 
 		self->bar = $(alloc(View), initWithFrame, frame);
 		assert(self->bar);
@@ -221,8 +220,6 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
 			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;
 		}
-
-		self->value = 0.0; // Zero it; the parent should set this after allocation anyway for good measure
 
 		$(self, setLabelFormat, "%0.1f");
 	}

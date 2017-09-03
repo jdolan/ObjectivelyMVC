@@ -204,6 +204,15 @@ static void didModifySelection(CollectionView *collectionView, const Array *sele
 	release(string);
 }
 
+#pragma mark - ColorPickerDelegate
+
+/**
+ * @see ColorPickerDelegate::didPickColor
+ */
+static void didPickColor(ColorPicker *picker, SDL_Color *color) {
+	printf("%02x%02x%02x%02x\n", color->r, color->g, color->b, color->a);
+}
+
 #pragma mark - ViewController
 
 /**
@@ -224,7 +233,8 @@ static void loadView(ViewController *self) {
 		MakeOutlet("select", &this->select),
 		MakeOutlet("slider", &this->slider),
 		MakeOutlet("tableView", &this->tableView),
-		MakeOutlet("collectionView", &this->collectionView)
+		MakeOutlet("collectionView", &this->collectionView),
+		MakeOutlet("colorPicker", &this->colorPicker)
 	);
 
 	#ifndef EXAMPLES
@@ -265,6 +275,8 @@ static void loadView(ViewController *self) {
 	this->collectionView->delegate.didModifySelection = didModifySelection;
 
 	$(this->collectionView, reloadData);
+
+	this->colorPicker->delegate.didPickColor = didPickColor;
 }
 
 #pragma mark - Class lifecycle

@@ -121,8 +121,8 @@
 		CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E80001C84F25400F4C3D4 /* TableCellView.c */; };
 		CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E80011C84F25400F4C3D4 /* TableCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9305C41D9B27F900D62770 /* Config.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9305C31D9B27F900D62770 /* Config.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE9EB86F1EA50FD10087BD1D /* ColorSelect.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* ColorSelect.c */; };
-		CE9EB8701EA50FD10087BD1D /* ColorSelect.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* ColorSelect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE9EB86F1EA50FD10087BD1D /* ColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* ColorPicker.c */; };
+		CE9EB8701EA50FD10087BD1D /* ColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* ColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
@@ -287,8 +287,8 @@
 		CE8E80011C84F25400F4C3D4 /* TableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TableCellView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE9305C21D9B277E00D62770 /* Config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.h.in; sourceTree = "<group>"; };
 		CE9305C31D9B27F900D62770 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
-		CE9EB86D1EA50FD10087BD1D /* ColorSelect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ColorSelect.c; sourceTree = "<group>"; };
-		CE9EB86E1EA50FD10087BD1D /* ColorSelect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorSelect.h; sourceTree = "<group>"; };
+		CE9EB86D1EA50FD10087BD1D /* ColorPicker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ColorPicker.c; sourceTree = "<group>"; };
+		CE9EB86E1EA50FD10087BD1D /* ColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorPicker.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -370,8 +370,8 @@
 				CE562EBF1D6A08DD006DF143 /* CollectionView.h */,
 				CE12D4071C4C367100CD0B13 /* Colors.c */,
 				CE12D4081C4C367100CD0B13 /* Colors.h */,
-				CE9EB86D1EA50FD10087BD1D /* ColorSelect.c */,
-				CE9EB86E1EA50FD10087BD1D /* ColorSelect.h */,
+				CE9EB86D1EA50FD10087BD1D /* ColorPicker.c */,
+				CE9EB86E1EA50FD10087BD1D /* ColorPicker.h */,
 				CE9305C31D9B27F900D62770 /* Config.h */,
 				CE9305C21D9B277E00D62770 /* Config.h.in */,
 				CE3CB29F1F410D1900FAA016 /* Constraint.c */,
@@ -572,7 +572,7 @@
 				CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */,
 				CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */,
 				CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */,
-				CE9EB8701EA50FD10087BD1D /* ColorSelect.h in Headers */,
+				CE9EB8701EA50FD10087BD1D /* ColorPicker.h in Headers */,
 				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
 				CE9305C41D9B27F900D62770 /* Config.h in Headers */,
 				CE3CB2A21F410D1900FAA016 /* Constraint.h in Headers */,
@@ -748,7 +748,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
-				CE9EB86F1EA50FD10087BD1D /* ColorSelect.c in Sources */,
+				CE9EB86F1EA50FD10087BD1D /* ColorPicker.c in Sources */,
 				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,

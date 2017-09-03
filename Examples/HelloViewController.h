@@ -102,6 +102,11 @@ struct HelloViewController {
 	 * @brief A CollectionView.
 	 */
 	CollectionView *collectionView;
+
+	/**
+	 * @brief A ColorPicker.
+	 */
+	ColorPicker *colorPicker;
 };
 
 /**
