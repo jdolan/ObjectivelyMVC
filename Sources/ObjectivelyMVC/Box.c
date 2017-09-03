@@ -105,7 +105,7 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 
 		Font *font = $$(Font, defaultFont, FontCategorySecondaryLabel);
 
-		self->label = $(alloc(Text), initWithText, NULL, font);
+		self->label = $(alloc(Label), initWithText, NULL, font);
 		assert(self->label);
 
 		View *label = (View *) self->label;
