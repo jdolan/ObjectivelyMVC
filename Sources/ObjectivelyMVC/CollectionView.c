@@ -82,7 +82,9 @@ static void layoutSubviews(View *self) {
 
 	CollectionView *this = (CollectionView *) self;
 
-	const SDL_Rect bounds = $(self, bounds);
+	super(View, self, layoutSubviews);
+
+	const SDL_Rect bounds = $((View *) this->scrollView, bounds);
 
 	int x = bounds.x, y = bounds.y;
 
@@ -113,8 +115,6 @@ static void layoutSubviews(View *self) {
 				break;
 		}
 	}
-
-	super(View, self, layoutSubviews);
 }
 
 #pragma mark - Control
