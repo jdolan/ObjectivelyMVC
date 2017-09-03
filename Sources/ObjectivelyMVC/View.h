@@ -168,7 +168,12 @@ struct View {
 	char *identifier;
 
 	/**
-	 * @brief If true,
+	 * @brief If true, this View will apply Constraints before it is drawn.
+	 */
+	_Bool needsApplyConstraints;
+
+	/**
+	 * @brief If true, this View will layout its subviews before it is drawn.
 	 */
 	_Bool needsLayout;
 
@@ -249,6 +254,14 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*applyConstraints)(View *self);
+
+	/**
+	 * @fn void View::applyConstraintsIfNeeded(View *self)
+	 * @brief Recursively applies Constraints against this View and its subviews.
+	 * @param self The View.
+	 * @memberof View
+	 */
+	void (*applyConstraintsIfNeeded)(View *self);
 
 	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)

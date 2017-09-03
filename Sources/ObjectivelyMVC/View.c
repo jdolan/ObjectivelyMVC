@@ -95,7 +95,7 @@ static void addConstraint(View *self, Constraint *constraint) {
 
 	$(self->constraints, addObject, constraint);
 
-	self->needsLayout = true;
+	self->needsApplyConstraints = true;
 }
 
 /**
@@ -166,13 +166,6 @@ static View *ancestorWithIdentifier(const View *self, const char *identifier) {
 }
 
 /**
- * @brief ArrayEnumerator for applyConstraints recursion.
- */
-static void applyConstraints_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, applyConstraints);
-}
-
-/**
  * @brief Comparator for applyConstraints sorting.
  */
 static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
@@ -195,8 +188,28 @@ static void applyConstraints(View *self) {
 			$(constraint, apply, self);
 		}
 	}
+}
 
-	$((Array *) self->subviews, enumerateObjects, applyConstraints_recurse, NULL);
+/**
+ * @brief ArrayEnumerator for applyConstraints recursion.
+ */
+static void applyConstraintsIfNeeded_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, applyConstraintsIfNeeded);
+}
+
+/**
+ * @fn void View::applyConstraintsIfNeeded(View *self)
+ * @memberof View
+ */
+static void applyConstraintsIfNeeded(View *self) {
+
+	if (self->needsApplyConstraints) {
+		$(self, applyConstraints);
+	}
+
+	self->needsApplyConstraints = false;
+
+	$((Array *) self->subviews, enumerateObjects, applyConstraintsIfNeeded_recurse, NULL);
 }
 
 /**
@@ -673,7 +686,7 @@ static void removeConstraint(View *self, Constraint *constraint) {
 
 	$(self->constraints, removeObject, constraint);
 
-	self->needsLayout = true;
+	self->needsApplyConstraints = true;
 }
 
 /**
@@ -1128,6 +1141,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
 	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
+	((ViewInterface *) clazz->def->interface)->applyConstraintsIfNeeded = applyConstraintsIfNeeded;
 	((ViewInterface *) clazz->def->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;

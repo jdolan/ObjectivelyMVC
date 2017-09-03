@@ -80,7 +80,7 @@ static void drawView(ViewController *self, Renderer *renderer) {
 
 	assert(self->view);
 
-	$(self->view, applyConstraints);
+	$(self->view, applyConstraintsIfNeeded);
 
 	$(self->view, layoutIfNeeded);
 
