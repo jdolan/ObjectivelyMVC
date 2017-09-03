@@ -150,6 +150,7 @@ static ColorPicker *initWithFrame(ColorPicker *self, const SDL_Rect *frame) {
 		self->r->delegate.self = self;
 		self->r->delegate.didSetValue = didSetComponent;
 		self->r->max = 255.0;
+		$(self->r, setLabelFormat, "%.0f");
 
 		self->red = $(alloc(Input), initWithFrame, NULL);
 		assert(self->red);
@@ -163,6 +164,7 @@ static ColorPicker *initWithFrame(ColorPicker *self, const SDL_Rect *frame) {
 		self->g->delegate.self = self;
 		self->g->delegate.didSetValue = didSetComponent;
 		self->g->max = 255.0;
+		$(self->g, setLabelFormat, "%.0f");
 
 		self->green = $(alloc(Input), initWithFrame, NULL);
 		assert(self->green);
@@ -176,6 +178,7 @@ static ColorPicker *initWithFrame(ColorPicker *self, const SDL_Rect *frame) {
 		self->b->delegate.self = self;
 		self->b->delegate.didSetValue = didSetComponent;
 		self->b->max = 255.0;
+		$(self->b, setLabelFormat, "%.0f");
 
 		self->blue = $(alloc(Input), initWithFrame, NULL);
 		assert(self->blue);
@@ -189,6 +192,7 @@ static ColorPicker *initWithFrame(ColorPicker *self, const SDL_Rect *frame) {
 		self->a->delegate.self = self;
 		self->a->delegate.didSetValue = didSetComponent;
 		self->a->max = 255.0;
+		$(self->a, setLabelFormat, "%.0f");
 
 		self->alpha = $(alloc(Input), initWithFrame, NULL);
 		assert(self->alpha);
