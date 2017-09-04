@@ -65,7 +65,7 @@ struct Box {
 	StackView *contentView;
 
 	/**
-	 * @brief The label.
+	 * @brief The Label.
 	 */
 	Label *label;
 };
@@ -82,13 +82,24 @@ struct BoxInterface {
 
 	/**
 	 * @fn Box *Box::initWithFrame(Box *self, const SDL_Rect *frame)
-	 * @brief Initializes this Box.
+	 * @brief Initializes this Box with the given frame.
 	 * @param self The Box.
 	 * @param frame The frame.
 	 * @return The initialized Box, or `NULL` on error.
 	 * @memberof Box
 	 */
 	Box *(*initWithFrame)(Box *self, const SDL_Rect *frame);
+
+	/**
+	 * @fn Box *Box::initWithText(Box *self, const SDL_Rect *frame, const char *text)
+	 * @brief Initializes this Box with the given frame and label text.
+	 * @param self The Box.
+	 * @param frame The frame.
+	 * @param text The Label text.
+	 * @return The initialized Box, or `NULL` on error.
+	 * @memberof Box
+	 */
+	Box *(*initWithText)(Box *self, const SDL_Rect *frame, const char *text);
 };
 
 /**
