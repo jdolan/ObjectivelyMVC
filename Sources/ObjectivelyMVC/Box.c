@@ -132,21 +132,6 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 	return self;
 }
 
-/**
- * @fn Box *Box::initWithText(Box *self, const SDL_Rect *frame, const char *text)
- * @memberof Box
- */
-static Box *initWithText(Box *self, const SDL_Rect *frame, const char *text) {
-
-	self = $(self, initWithFrame, frame);
-	if (self) {
-		$(self->label->text, setText, text);
-	}
-	
-	return self;
-}
-
-
 #pragma mark - Class lifecycle
 
 /**
@@ -161,7 +146,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 
 	((BoxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((BoxInterface *) clazz->def->interface)->initWithText = initWithText;
 }
 
 /**
