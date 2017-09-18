@@ -16,6 +16,7 @@ pkginclude_HEADERS = \
 	Constraint.h \
 	Control.h \
 	Font.h \
+	HSVColorPicker.h \
 	Image.h \
 	ImageView.h \
 	Input.h \
@@ -62,6 +63,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Constraint.c \
 	Control.c \
 	Font.c \
+	HSVColorPicker.c \
 	Image.c \
 	ImageView.c \
 	Input.c \
