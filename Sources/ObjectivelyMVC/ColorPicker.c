@@ -41,13 +41,13 @@ static void didSetComponent(Slider *slider) {
 
 	const int c = round(slider->value);
 
-	if (slider == this->r) {
+	if (slider == this->redSlider) {
 		this->color.r = c;
-	} else if (slider == this->g) {
+	} else if (slider == this->greenSlider) {
 		this->color.g = c;
-	} else if (slider == this->b) {
+	} else if (slider == this->blueSlider) {
 		this->color.b = c;
-	} else if (slider == this->a) {
+	} else if (slider == this->alphaSlider) {
 		this->color.a = c;
 	} else {
 		assert(false);
@@ -71,21 +71,24 @@ static void dealloc(Object *self) {
 
 	release(this->colorView);
 
-	release(this->r);
-	release(this->g);
-	release(this->b);
-	release(this->a);
+	release(this->redSlider);
+	release(this->greenSlider);
+	release(this->blueSlider);
+	release(this->alphaSlider);
 
-	release(this->red);
-	release(this->green);
-	release(this->blue);
-	release(this->alpha);
+	release(this->redInput);
+	release(this->greenInput);
+	release(this->blueInput);
+	release(this->alphaInput);
 
 	super(Object, self, dealloc);
 }
 
 #pragma mark - View
 
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
@@ -95,14 +98,14 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("color", InletTypeColor, &this->color, NULL),
 		MakeInlet("colorView", InletTypeView, &this->colorView, NULL),
-		MakeInlet("r", InletTypeView, &this->r, NULL),
-		MakeInlet("g", InletTypeView, &this->g, NULL),
-		MakeInlet("b", InletTypeView, &this->b, NULL),
-		MakeInlet("a", InletTypeView, &this->a, NULL),
-		MakeInlet("red", InletTypeView, &this->red, NULL),
-		MakeInlet("green", InletTypeView, &this->green, NULL),
-		MakeInlet("blue", InletTypeView, &this->blue, NULL),
-		MakeInlet("alpha", InletTypeView, &this->alpha, NULL)
+		MakeInlet("redSlider", InletTypeView, &this->redSlider, NULL),
+		MakeInlet("greenSlider", InletTypeView, &this->greenSlider, NULL),
+		MakeInlet("blueSlider", InletTypeView, &this->blueSlider, NULL),
+		MakeInlet("alphaSlider", InletTypeView, &this->alphaSlider, NULL),
+		MakeInlet("redInput", InletTypeView, &this->redInput, NULL),
+		MakeInlet("greenInput", InletTypeView, &this->greenInput, NULL),
+		MakeInlet("blueInput", InletTypeView, &this->blueInput, NULL),
+		MakeInlet("alphaInput", InletTypeView, &this->alphaInput, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -124,10 +127,7 @@ static void updateBindings(View *self) {
 
 	ColorPicker *this = (ColorPicker *) self;
 
-	this->colorView->backgroundColor.r = this->color.r;
-	this->colorView->backgroundColor.g = this->color.g;
-	this->colorView->backgroundColor.b = this->color.b;
-	this->colorView->backgroundColor.a = this->color.a;
+	this->colorView->backgroundColor = this->color;
 }
 
 #pragma mark - ColorPicker
@@ -146,61 +146,69 @@ static ColorPicker *initWithFrame(ColorPicker *self, const SDL_Rect *frame) {
 
 		$((View *) self, addSubview, self->colorView);
 
-		self->r = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
-		self->r->delegate.self = self;
-		self->r->delegate.didSetValue = didSetComponent;
-		self->r->max = 255.0;
-		$(self->r, setLabelFormat, "%.0f");
+		self->redSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		assert(self->redSlider);
 
-		self->red = $(alloc(Input), initWithFrame, NULL);
-		assert(self->red);
+		self->redSlider->delegate.self = self;
+		self->redSlider->delegate.didSetValue = didSetComponent;
+		self->redSlider->max = 255.0;
+		$(self->redSlider, setLabelFormat, "%.0f");
 
-		$(self->red, setControl, (Control *) self->r);
-		$(self->red->label->text, setText, "R");
+		self->redInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->redInput);
 
-		$((View *) self, addSubview, (View *) self->red);
+		$(self->redInput, setControl, (Control *) self->redSlider);
+		$(self->redInput->label->text, setText, "R");
 
-		self->g = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
-		self->g->delegate.self = self;
-		self->g->delegate.didSetValue = didSetComponent;
-		self->g->max = 255.0;
-		$(self->g, setLabelFormat, "%.0f");
+		$((View *) self, addSubview, (View *) self->redInput);
 
-		self->green = $(alloc(Input), initWithFrame, NULL);
-		assert(self->green);
+		self->greenSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		assert(self->greenSlider);
 
-		$(self->green, setControl, (Control *) self->g);
-		$(self->green->label->text, setText, "G");
+		self->greenSlider->delegate.self = self;
+		self->greenSlider->delegate.didSetValue = didSetComponent;
+		self->greenSlider->max = 255.0;
+		$(self->greenSlider, setLabelFormat, "%.0f");
 
-		$((View *) self, addSubview, (View *) self->green);
+		self->greenInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->greenInput);
 
-		self->b = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
-		self->b->delegate.self = self;
-		self->b->delegate.didSetValue = didSetComponent;
-		self->b->max = 255.0;
-		$(self->b, setLabelFormat, "%.0f");
+		$(self->greenInput, setControl, (Control *) self->greenSlider);
+		$(self->greenInput->label->text, setText, "G");
 
-		self->blue = $(alloc(Input), initWithFrame, NULL);
-		assert(self->blue);
+		$((View *) self, addSubview, (View *) self->greenInput);
 
-		$(self->blue, setControl, (Control *) self->b);
-		$(self->blue->label->text, setText, "B");
+		self->blueSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		assert(self->blueSlider);
 
-		$((View *) self, addSubview, (View *) self->blue);
+		self->blueSlider->delegate.self = self;
+		self->blueSlider->delegate.didSetValue = didSetComponent;
+		self->blueSlider->max = 255.0;
+		$(self->blueSlider, setLabelFormat, "%.0f");
 
-		self->a = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
-		self->a->delegate.self = self;
-		self->a->delegate.didSetValue = didSetComponent;
-		self->a->max = 255.0;
-		$(self->a, setLabelFormat, "%.0f");
+		self->blueInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->blueInput);
 
-		self->alpha = $(alloc(Input), initWithFrame, NULL);
-		assert(self->alpha);
+		$(self->blueInput, setControl, (Control *) self->blueSlider);
+		$(self->blueInput->label->text, setText, "B");
 
-		$(self->alpha, setControl, (Control *) self->a);
-		$(self->alpha->label->text, setText, "A");
+		$((View *) self, addSubview, (View *) self->blueInput);
 
-		$((View *) self, addSubview, (View *) self->alpha);
+		self->alphaSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		assert(self->alphaSlider);
+
+		self->alphaSlider->delegate.self = self;
+		self->alphaSlider->delegate.didSetValue = didSetComponent;
+		self->alphaSlider->max = 255.0;
+		$(self->alphaSlider, setLabelFormat, "%.0f");
+
+		self->alphaInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->alphaInput);
+
+		$(self->alphaInput, setControl, (Control *) self->alphaSlider);
+		$(self->alphaInput->label->text, setText, "A");
+
+		$((View *) self, addSubview, (View *) self->alphaInput);
 
 		$(self, setColor, Colors.White);
 	}
@@ -214,10 +222,10 @@ static ColorPicker *initWithFrame(ColorPicker *self, const SDL_Rect *frame) {
  */
 static void setColor(ColorPicker *self, const SDL_Color color) {
 
-	$(self->r, setValue, color.r);
-	$(self->g, setValue, color.g);
-	$(self->b, setValue, color.b);
-	$(self->a, setValue, color.a);
+	$(self->redSlider, setValue, color.r);
+	$(self->greenSlider, setValue, color.g);
+	$(self->blueSlider, setValue, color.b);
+	$(self->alphaSlider, setValue, color.a);
 }
 
 #pragma mark - Class lifecycle

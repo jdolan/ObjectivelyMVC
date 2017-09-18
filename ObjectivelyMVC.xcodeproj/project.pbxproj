@@ -110,6 +110,8 @@
 		CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
 		CE6BC1821D837D550070FB2D /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6BC1801D837D550070FB2D /* Label.c */; };
 		CE6BC1831D837D550070FB2D /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6BC1811D837D550070FB2D /* Label.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE6EE37B1F6EA91900FBC830 /* HSVColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6EE3791F6EA91900FBC830 /* HSVColorPicker.c */; };
+		CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
@@ -273,6 +275,8 @@
 		CE6BC16E1D79B2920070FB2D /* HelloViewController.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = HelloViewController.json; sourceTree = "<group>"; };
 		CE6BC1801D837D550070FB2D /* Label.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Label.c; sourceTree = "<group>"; };
 		CE6BC1811D837D550070FB2D /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Label.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		CE6EE3791F6EA91900FBC830 /* HSVColorPicker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HSVColorPicker.c; sourceTree = "<group>"; };
+		CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSVColorPicker.h; sourceTree = "<group>"; };
 		CE76279C1D4A5A5800EEEE78 /* Renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Renderer.c; sourceTree = "<group>"; };
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
@@ -380,6 +384,8 @@
 				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
 				CE12D4091C4C367100CD0B13 /* Font.c */,
 				CE12D40A1C4C367100CD0B13 /* Font.h */,
+				CE6EE3791F6EA91900FBC830 /* HSVColorPicker.c */,
+				CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */,
 				CE12D4801C4F3A1600CD0B13 /* Image.c */,
 				CE12D4811C4F3A1600CD0B13 /* Image.h */,
 				CE12D40B1C4C367100CD0B13 /* ImageView.c */,
@@ -581,6 +587,7 @@
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
+				CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */,
 				CE6BC1831D837D550070FB2D /* Label.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
@@ -762,6 +769,7 @@
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE6BC1821D837D550070FB2D /* Label.c in Sources */,
+				CE6EE37B1F6EA91900FBC830 /* HSVColorPicker.c in Sources */,
 				CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */,
 				CE5604DD1EABA0FB00E42E53 /* TabView.c in Sources */,
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,

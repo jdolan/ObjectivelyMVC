@@ -54,6 +54,7 @@ struct ColorPickerDelegate {
 	 */
 	void (*didPickColor)(ColorPicker *colorPicker, SDL_Color *color);
 };
+
 /**
  * @brief RGBA color selector.
  * @extends StackView
@@ -91,12 +92,12 @@ struct ColorPicker {
 	/**
 	 * @brief The Sliders.
 	 */
-	Slider *r, *g, *b, *a;
+	Slider *redSlider, *greenSlider, *blueSlider, *alphaSlider;
 
 	/**
 	 * @brief The Inputs containing the Sliders.
 	 */
-	Input *red, *green, *blue, *alpha;
+	Input *redInput, *greenInput, *blueInput, *alphaInput;
 };
 
 /**
@@ -121,7 +122,7 @@ struct ColorPickerInterface {
 
 	/**
 	 * @fn void ColorPicker::setColor(ColorPicker *self, const SDL_Color color)
-	 * @brief Sets the current color of the ColorPicker
+	 * @brief Sets the color of the ColorPicker
 	 * @param self The ColorPicker.
 	 * @param color The color to change to
 	 * @memberof ColorPicker

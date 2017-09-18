@@ -40,6 +40,7 @@
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Input.h>
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/HSVColorPicker.h>
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Label.h>

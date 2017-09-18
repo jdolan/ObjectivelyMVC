@@ -119,20 +119,21 @@
             }
           },
           {
-            "identifier": "miscellaneous",
+            "identifier": "colors",
             "label": {
               "text": {
-                "text": "Miscellaneous"
+                "text": "Colors"
               }
             },
             "view": {
               "class": "StackView",
+			  "spacing": 10,
               "subviews": [
                 {
                   "class": "Box",
                   "label": {
                     "text": {
-                      "text": "Color Picker"
+                      "text": "RGB Color Picker"
                     }
                   },
                   "contentView": {
@@ -140,6 +141,22 @@
                       {
                         "class": "ColorPicker",
                         "identifier": "colorPicker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "class": "Box",
+                  "label": {
+                    "text": {
+                      "text": "HSV Color Picker"
+                    }
+                  },
+                  "contentView": {
+                    "subviews": [
+                      {
+                        "class": "HSVColorPicker",
+                        "identifier": "hsvColorPicker"
                       }
                     ]
                   }
