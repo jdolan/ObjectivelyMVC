@@ -29,18 +29,18 @@
 
 /**
  * @file
- * @brief RGBA color selector.
+ * @brief RGB(A) color picker.
  */
 
-typedef struct ColorPickerDelegate ColorPickerDelegate;
+typedef struct RGBColorPickerDelegate RGBColorPickerDelegate;
 
-typedef struct ColorPicker ColorPicker;
-typedef struct ColorPickerInterface ColorPickerInterface;
+typedef struct RGBColorPicker RGBColorPicker;
+typedef struct RGBColorPickerInterface RGBColorPickerInterface;
 
 /**
- * @brief The ColorPicker delegate protocol.
+ * @brief The RGBColorPicker delegate protocol.
  */
-struct ColorPickerDelegate {
+struct RGBColorPickerDelegate {
 
 	/**
 	 * @brief The delegate self-reference.
@@ -48,20 +48,19 @@ struct ColorPickerDelegate {
 	ident self;
 
 	/**
-	 * @brief Called by the ColorPicker when color selection changes.
-	 * @param colorPicker The ColorPicker.
+	 * @brief Called by the RGBColorPicker when color selection changes.
+	 * @param rgbColorPicker The RGBColorPicker.
 	 * @param color The Color.
 	 */
-	void (*didPickColor)(ColorPicker *colorPicker, SDL_Color *color);
+	void (*didPickColor)(RGBColorPicker *rgbColorPicker, SDL_Color *color);
 };
 
 /**
- * @brief RGBA color selector.
+ * @brief RGB(A) color picker.
  * @extends StackView
- * @ingroup Containers
- * @remarks ColorPickers are for selecting an RGB color and optionally alpha
+ * @ingroup ColorPickers
  */
-struct ColorPicker {
+struct RGBColorPicker {
 
 	/**
 	 * @brief The superclass.
@@ -72,12 +71,12 @@ struct ColorPicker {
 	 * @brief The interface.
 	 * @protected
 	 */
-	ColorPickerInterface *interface;
+	RGBColorPickerInterface *interface;
 
 	/**
 	 * @brief The delegate.
 	 */
-	ColorPickerDelegate delegate;
+	RGBColorPickerDelegate delegate;
 
 	/**
 	 * @brief The color.
@@ -101,9 +100,9 @@ struct ColorPicker {
 };
 
 /**
- * @brief The ColorPicker interface.
+ * @brief The RGBColorPicker interface.
  */
-struct ColorPickerInterface {
+struct RGBColorPickerInterface {
 
 	/**
 	 * @brief The superclass interface.
@@ -111,29 +110,29 @@ struct ColorPickerInterface {
 	StackViewInterface stackViewInterface;
 
 	/**
-	 * @fn ColorPicker *ColorPicker::initWithFrame(ColorPicker *self, const SDL_Rect *frame)
-	 * @brief Initializes this ColorPicker with the specified frame.
-	 * @param self The ColorPicker.
+	 * @fn RGBColorPicker *RGBColorPicker::initWithFrame(RGBColorPicker *self, const SDL_Rect *frame)
+	 * @brief Initializes this RGBColorPicker with the specified frame.
+	 * @param self The RGBColorPicker.
 	 * @param frame The frame.
-	 * @return The initialized ColorPicker, or `NULL` on error.
-	 * @memberof ColorPicker
+	 * @return The initialized RGBColorPicker, or `NULL` on error.
+	 * @memberof RGBColorPicker
 	 */
-	ColorPicker *(*initWithFrame)(ColorPicker *self, const SDL_Rect *frame);
+	RGBColorPicker *(*initWithFrame)(RGBColorPicker *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn void ColorPicker::setColor(ColorPicker *self, const SDL_Color color)
-	 * @brief Sets the color of the ColorPicker
-	 * @param self The ColorPicker.
+	 * @fn void RGBColorPicker::setColor(RGBColorPicker *self, const SDL_Color color)
+	 * @brief Sets the color of the RGBColorPicker
+	 * @param self The RGBColorPicker.
 	 * @param color The color to change to
-	 * @memberof ColorPicker
+	 * @memberof RGBColorPicker
 	 */
-	void (*setColor)(ColorPicker *self, const SDL_Color color);
+	void (*setColor)(RGBColorPicker *self, const SDL_Color color);
 };
 
 /**
- * @fn Class *ColorPicker::_ColorPicker(void)
- * @brief The ColorPicker archetype.
- * @return The ColorPicker Class.
- * @memberof ColorPicker
+ * @fn Class *RGBColorPicker::_RGBColorPicker(void)
+ * @brief The RGBColorPicker archetype.
+ * @return The RGBColorPicker Class.
+ * @memberof RGBColorPicker
  */
-OBJECTIVELYMVC_EXPORT Class *_ColorPicker(void);
+OBJECTIVELYMVC_EXPORT Class *_RGBColorPicker(void);

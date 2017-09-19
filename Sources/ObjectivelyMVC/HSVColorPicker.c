@@ -53,7 +53,6 @@ static void didSetComponent(Slider *slider) {
 	}
 }
 
-
 #pragma mark - Object
 
 /**
@@ -62,6 +61,8 @@ static void didSetComponent(Slider *slider) {
 static void dealloc(Object *self) {
 
 	HSVColorPicker *this = (HSVColorPicker *) self;
+
+	release(this->colorView);
 
 	release(this->hueSlider);
 	release(this->saturationSlider);
@@ -131,7 +132,7 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 	self = (HSVColorPicker *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 
-		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 96, 96));
+		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 150, 24));
 		assert(self->colorView);
 
 		$((View *) self, addSubview, self->colorView);

@@ -29,7 +29,7 @@
 
 /**
  * @file
- * @brief HSV color selector.
+ * @brief HSV color picker.
  */
 
 typedef struct HSVColorPickerDelegate HSVColorPickerDelegate;
@@ -60,6 +60,7 @@ struct HSVColorPickerDelegate {
 /**
  * @brief The HSVColorPicker type.
  * @extends StackView
+ * @ingroup ColorPickers
  */
 struct HSVColorPicker {
 
@@ -85,7 +86,7 @@ struct HSVColorPicker {
 	HSVColorPickerDelegate delegate;
 
 	/**
-	 * @brief The color.
+	 * @brief The color components.
 	 */
 	double hue, saturation, value;
 
@@ -114,7 +115,7 @@ struct HSVColorPickerInterface {
 	 * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame)
 	 * @brief Initializes this HSVColorPicker with the specified frame.
 	 * @param self The HSVColorPicker.
-	 * @param self The frame.
+	 * @param frame The frame.
 	 * @return The initialized HSVColorPicker, or `NULL` on error.
 	 * @memberof HSVColorPicker
 	 */

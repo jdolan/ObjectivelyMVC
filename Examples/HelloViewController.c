@@ -204,13 +204,27 @@ static void didModifySelection(CollectionView *collectionView, const Array *sele
 	release(string);
 }
 
-#pragma mark - ColorPickerDelegate
+#pragma mark - RGBColorPickerDelegate
 
 /**
- * @see ColorPickerDelegate::didPickColor
+ * @see RGBColorPickerDelegate::didPickColor
  */
-static void didPickColor(ColorPicker *picker, SDL_Color *color) {
+static void didPickRGBColor(RGBColorPicker *colorPicker, SDL_Color *color) {
 	printf("%02x%02x%02x%02x\n", color->r, color->g, color->b, color->a);
+}
+
+#pragma mark - HSVColorPickerDelegate
+
+static void didPickHSVColor(HSVColorPicker *colorPicker, double hue, double saturation, double value) {
+	const SDL_Color color = $(colorPicker, rgbColor);
+	printf("%02x%02x%02x\n", color.r, color.g, color.b);
+}
+
+#pragma mark - HueColorPickerDelegate
+
+static void didPickHueColor(HueColorPicker *colorPicker, double hue, double saturation, double value) {
+	const SDL_Color color = $(colorPicker, rgbColor);
+	printf("%02x%02x%02x\n", color.r, color.g, color.b);
 }
 
 #pragma mark - ViewController
@@ -234,7 +248,9 @@ static void loadView(ViewController *self) {
 		MakeOutlet("slider", &this->slider),
 		MakeOutlet("tableView", &this->tableView),
 		MakeOutlet("collectionView", &this->collectionView),
-		MakeOutlet("colorPicker", &this->colorPicker)
+		MakeOutlet("rgbColorPicker", &this->rgbColorPicker),
+		MakeOutlet("hsvColorPicker", &this->hsvColorPicker),
+		MakeOutlet("hueColorPicker", &this->hueColorPicker)
 	);
 
 	#ifndef EXAMPLES
@@ -276,7 +292,10 @@ static void loadView(ViewController *self) {
 
 	$(this->collectionView, reloadData);
 
-	this->colorPicker->delegate.didPickColor = didPickColor;
+	this->rgbColorPicker->delegate.didPickColor = didPickRGBColor;
+	this->hsvColorPicker->delegate.didPickColor = didPickHSVColor;
+	this->hueColorPicker->delegate.didPickColor = didPickHueColor;
+
 }
 
 #pragma mark - Class lifecycle

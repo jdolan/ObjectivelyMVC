@@ -23,12 +23,9 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/ColorPicker.h>
-#include <ObjectivelyMVC/Input.h>
-#include <ObjectivelyMVC/StackView.h>
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/RGBColorPicker.h>
 
-#define _Class _ColorPicker
+#define _Class _RGBColorPicker
 
 #pragma mark - Actions & delegates
 
@@ -37,7 +34,7 @@
  */
 static void didSetComponent(Slider *slider) {
 
-	ColorPicker *this = (ColorPicker *) slider->delegate.self;
+	RGBColorPicker *this = (RGBColorPicker *) slider->delegate.self;
 
 	const int c = round(slider->value);
 
@@ -67,7 +64,7 @@ static void didSetComponent(Slider *slider) {
  */
 static void dealloc(Object *self) {
 
-	ColorPicker *this = (ColorPicker *) self;
+	RGBColorPicker *this = (RGBColorPicker *) self;
 
 	release(this->colorView);
 
@@ -93,7 +90,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
 
-	ColorPicker *this = (ColorPicker *) self;
+	RGBColorPicker *this = (RGBColorPicker *) self;
 
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("color", InletTypeColor, &this->color, NULL),
@@ -115,7 +112,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((ColorPicker *) self, initWithFrame, NULL);
+	return (View *) $((RGBColorPicker *) self, initWithFrame, NULL);
 }
 
 /**
@@ -125,23 +122,23 @@ static void updateBindings(View *self) {
 
 	super(View, self, updateBindings);
 
-	ColorPicker *this = (ColorPicker *) self;
+	RGBColorPicker *this = (RGBColorPicker *) self;
 
 	this->colorView->backgroundColor = this->color;
 }
 
-#pragma mark - ColorPicker
+#pragma mark - RGBColorPicker
 
 /**
- * @fn ColorPicker *ColorPicker::initWithFrame(ColorPicker *self, const SDL_Rect *frame)
- * @memberof ColorPicker
+ * @fn RGBColorPicker *RGBColorPicker::initWithFrame(RGBColorPicker *self, const SDL_Rect *frame)
+ * @memberof RGBColorPicker
  */
-static ColorPicker *initWithFrame(ColorPicker *self, const SDL_Rect *frame) {
+static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame) {
 
-	self = (ColorPicker *) super(StackView, self, initWithFrame, frame);
+	self = (RGBColorPicker *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 
-		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 96, 96));
+		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 150, 24));
 		assert(self->colorView);
 
 		$((View *) self, addSubview, self->colorView);
@@ -217,10 +214,10 @@ static ColorPicker *initWithFrame(ColorPicker *self, const SDL_Rect *frame) {
 }
 
 /**
- * @fn void ColorPicker::setColor(ColorPicker *self, const SDL_Color color)
- * @memberof ColorPicker
+ * @fn void RGBColorPicker::setColor(RGBColorPicker *self, const SDL_Color color)
+ * @memberof RGBColorPicker
  */
-static void setColor(ColorPicker *self, const SDL_Color color) {
+static void setColor(RGBColorPicker *self, const SDL_Color color) {
 
 	$(self->redSlider, setValue, color.r);
 	$(self->greenSlider, setValue, color.g);
@@ -241,24 +238,24 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
 
-	((ColorPickerInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ColorPickerInterface *) clazz->def->interface)->setColor = setColor;
+	((RGBColorPickerInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((RGBColorPickerInterface *) clazz->def->interface)->setColor = setColor;
 }
 
 /**
- * @fn Class *ColorPicker::_ColorPicker(void)
- * @memberof ColorPicker
+ * @fn Class *RGBColorPicker::_RGBColorPicker(void)
+ * @memberof RGBColorPicker
  */
-Class *_ColorPicker(void) {
+Class *_RGBColorPicker(void) {
 	static Class clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "ColorPicker";
+		clazz.name = "RGBColorPicker";
 		clazz.superclass = _StackView();
-		clazz.instanceSize = sizeof(ColorPicker);
-		clazz.interfaceOffset = offsetof(ColorPicker, interface);
-		clazz.interfaceSize = sizeof(ColorPickerInterface);
+		clazz.instanceSize = sizeof(RGBColorPicker);
+		clazz.interfaceOffset = offsetof(RGBColorPicker, interface);
+		clazz.interfaceSize = sizeof(RGBColorPickerInterface);
 		clazz.initialize = initialize;
 	});
 

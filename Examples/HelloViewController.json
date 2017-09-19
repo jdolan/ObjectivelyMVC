@@ -127,7 +127,7 @@
             },
             "view": {
               "class": "StackView",
-			  "spacing": 10,
+              "spacing": 20,
               "subviews": [
                 {
                   "class": "Box",
@@ -139,8 +139,8 @@
                   "contentView": {
                     "subviews": [
                       {
-                        "class": "ColorPicker",
-                        "identifier": "colorPicker"
+                        "class": "RGBColorPicker",
+                        "identifier": "rgbColorPicker"
                       }
                     ]
                   }
@@ -157,6 +157,22 @@
                       {
                         "class": "HSVColorPicker",
                         "identifier": "hsvColorPicker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "class": "Box",
+                  "label": {
+                    "text": {
+                      "text": "Hue Color Picker"
+                    }
+                  },
+                  "contentView": {
+                    "subviews": [
+                      {
+                        "class": "HueColorPicker",
+                        "identifier": "hueColorPicker"
                       }
                     ]
                   }
