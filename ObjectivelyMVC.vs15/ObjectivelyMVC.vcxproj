@@ -27,9 +27,11 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionItemView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\ColorSelect.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Constraint.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Font.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\HSVColorPicker.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\HueColorPicker.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ImageView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Input.h" />
@@ -40,6 +42,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\PageView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h" />
@@ -69,9 +72,11 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionItemView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Colors.c" />
-    <ClCompile Include="..\Sources\ObjectivelyMVC\ColorSelect.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Constraint.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Control.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Font.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\HSVColorPicker.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\HueColorPicker.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Image.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ImageView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Input.c" />
@@ -81,6 +86,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\PageView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Slider.c" />

@@ -147,4 +147,4 @@ struct HSVColorPickerInterface {
  * @return The HSVColorPicker Class.
  * @memberof HSVColorPicker
  */
-OBJECTIVELY_EXPORT Class *_HSVColorPicker(void);
+OBJECTIVELYMVC_EXPORT Class *_HSVColorPicker(void);

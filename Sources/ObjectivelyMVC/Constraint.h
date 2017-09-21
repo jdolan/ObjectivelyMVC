@@ -173,4 +173,4 @@ struct ConstraintInterface {
  * @return The Constraint Class.
  * @memberof Constraint
  */
-OBJECTIVELY_EXPORT Class *_Constraint(void);
+OBJECTIVELYMVC_EXPORT Class *_Constraint(void);

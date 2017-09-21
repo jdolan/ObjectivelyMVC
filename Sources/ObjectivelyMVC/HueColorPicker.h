@@ -142,4 +142,4 @@ struct HueColorPickerInterface {
  * @return The HueColorPicker Class.
  * @memberof HueColorPicker
  */
-OBJECTIVELY_EXPORT Class *_HueColorPicker(void);
+OBJECTIVELYMVC_EXPORT Class *_HueColorPicker(void);
