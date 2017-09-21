@@ -1070,12 +1070,14 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(_Button());
 		_initialize(_Checkbox());
 		_initialize(_CollectionView());
-		_initialize(_ColorPicker());
+		_initialize(_HSVColorPicker());
+		_initialize(_HueColorPicker());
 		_initialize(_ImageView());
 		_initialize(_Input());
 		_initialize(_Label());
 		_initialize(_PageView());
 		_initialize(_Panel());
+		_initialize(_RGBColorPicker());
 		_initialize(_ScrollView());
 		_initialize(_Select());
 		_initialize(_Slider());

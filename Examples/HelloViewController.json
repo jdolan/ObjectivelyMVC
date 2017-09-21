@@ -119,27 +119,60 @@
             }
           },
           {
-            "identifier": "miscellaneous",
+            "identifier": "colors",
             "label": {
               "text": {
-                "text": "Miscellaneous"
+                "text": "Colors"
               }
             },
             "view": {
               "class": "StackView",
+              "spacing": 20,
               "subviews": [
                 {
                   "class": "Box",
                   "label": {
                     "text": {
-                      "text": "Color Picker"
+                      "text": "RGB Color Picker"
                     }
                   },
                   "contentView": {
                     "subviews": [
                       {
-                        "class": "ColorPicker",
-                        "identifier": "colorPicker"
+                        "class": "RGBColorPicker",
+                        "identifier": "rgbColorPicker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "class": "Box",
+                  "label": {
+                    "text": {
+                      "text": "HSV Color Picker"
+                    }
+                  },
+                  "contentView": {
+                    "subviews": [
+                      {
+                        "class": "HSVColorPicker",
+                        "identifier": "hsvColorPicker"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "class": "Box",
+                  "label": {
+                    "text": {
+                      "text": "Hue Color Picker"
+                    }
+                  },
+                  "contentView": {
+                    "subviews": [
+                      {
+                        "class": "HueColorPicker",
+                        "identifier": "hueColorPicker"
                       }
                     ]
                   }

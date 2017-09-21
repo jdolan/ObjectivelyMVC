@@ -35,11 +35,12 @@
 #include <ObjectivelyMVC/CollectionItemView.h>
 #include <ObjectivelyMVC/CollectionView.h>
 #include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/ColorPicker.h>
 #include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Input.h>
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/HSVColorPicker.h>
+#include <ObjectivelyMVC/HueColorPicker.h>
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Label.h>
@@ -49,6 +50,7 @@
 #include <ObjectivelyMVC/PageView.h>
 #include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/Renderer.h>
+#include <ObjectivelyMVC/RGBColorPicker.h>
 #include <ObjectivelyMVC/ScrollView.h>
 #include <ObjectivelyMVC/Select.h>
 #include <ObjectivelyMVC/Slider.h>

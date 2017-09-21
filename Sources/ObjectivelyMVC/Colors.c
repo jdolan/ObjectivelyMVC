@@ -180,3 +180,52 @@ const struct _Colors Colors = {
 	.Yellow = { 255, 255, 0, 255 },
 	.YellowGreen = { 154, 205, 50, 255 },
 };
+
+SDL_Color MVC_HSVToRGB(double hue, double saturation, double value) {
+
+	SDL_Color color = { .a = 255 };
+
+	const double h = hue / 60.0;
+	const int i = (int) h;
+	const double f = h - i;
+	const double v = value * 255;
+	const double p = v * (1.0 - saturation);
+	const double q = v * (1.0 - (saturation * f));
+	const double t = v * (1.0 - (saturation * (1.0 - f)));
+
+	switch (i) {
+		case 0:
+			color.r = v;
+			color.g = t;
+			color.b = p;
+			break;
+		case 1:
+			color.r = q;
+			color.g = v;
+			color.b = p;
+			break;
+		case 2:
+			color.r = p;
+			color.g = v;
+			color.b = t;
+			break;
+		case 3:
+			color.r = p;
+			color.g = q;
+			color.b = v;
+			break;
+		case 4:
+			color.r = t;
+			color.g = p;
+			color.b = v;
+			break;
+		default:
+			color.r = v;
+			color.g = p;
+			color.b = q;
+			break;
+	}
+
+	return color;
+}
+
