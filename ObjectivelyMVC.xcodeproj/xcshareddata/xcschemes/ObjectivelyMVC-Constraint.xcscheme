@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CED157CC1C4BF3AC00FBA2DE"
-               BuildableName = "libObjectivelyMVC.dylib"
-               BlueprintName = "ObjectivelyMVC"
+               BlueprintIdentifier = "CE423A2E1F53452D002767E7"
+               BuildableName = "ObjectivelyMVC-Constraint"
+               BlueprintName = "ObjectivelyMVC-Constraint"
                ReferencedContainer = "container:ObjectivelyMVC.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,6 +29,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "CE423A2E1F53452D002767E7"
+            BuildableName = "ObjectivelyMVC-Constraint"
+            BlueprintName = "ObjectivelyMVC-Constraint"
+            ReferencedContainer = "container:ObjectivelyMVC.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -42,15 +51,23 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CED157CC1C4BF3AC00FBA2DE"
-            BuildableName = "libObjectivelyMVC.dylib"
-            BlueprintName = "ObjectivelyMVC"
+            BlueprintIdentifier = "CE423A2E1F53452D002767E7"
+            BuildableName = "ObjectivelyMVC-Constraint"
+            BlueprintName = "ObjectivelyMVC-Constraint"
             ReferencedContainer = "container:ObjectivelyMVC.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "CK_FORK"
+            value = "no"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -60,15 +77,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CED157CC1C4BF3AC00FBA2DE"
-            BuildableName = "libObjectivelyMVC.dylib"
-            BlueprintName = "ObjectivelyMVC"
+            BlueprintIdentifier = "CE423A2E1F53452D002767E7"
+            BuildableName = "ObjectivelyMVC-Constraint"
+            BlueprintName = "ObjectivelyMVC-Constraint"
             ReferencedContainer = "container:ObjectivelyMVC.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

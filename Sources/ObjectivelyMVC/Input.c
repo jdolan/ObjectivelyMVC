@@ -66,7 +66,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("orientation", InletTypeEnum, &this->orientation, (ident) InputOrientationNames)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 
 	$(this, setOrientation, this->orientation);
 }

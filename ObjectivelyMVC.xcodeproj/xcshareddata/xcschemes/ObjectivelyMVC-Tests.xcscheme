@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CED157CC1C4BF3AC00FBA2DE"
-               BuildableName = "libObjectivelyMVC.dylib"
-               BlueprintName = "ObjectivelyMVC"
+               BlueprintIdentifier = "CE423A451F534657002767E7"
+               BuildableName = "ObjectivelyMVC-Tests"
+               BlueprintName = "ObjectivelyMVC-Tests"
                ReferencedContainer = "container:ObjectivelyMVC.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,9 +45,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CED157CC1C4BF3AC00FBA2DE"
-            BuildableName = "libObjectivelyMVC.dylib"
-            BlueprintName = "ObjectivelyMVC"
+            BlueprintIdentifier = "CE423A451F534657002767E7"
+            BuildableName = "ObjectivelyMVC-Tests"
+            BlueprintName = "ObjectivelyMVC-Tests"
             ReferencedContainer = "container:ObjectivelyMVC.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,9 +63,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CED157CC1C4BF3AC00FBA2DE"
-            BuildableName = "libObjectivelyMVC.dylib"
-            BlueprintName = "ObjectivelyMVC"
+            BlueprintIdentifier = "CE423A451F534657002767E7"
+            BuildableName = "ObjectivelyMVC-Tests"
+            BlueprintName = "ObjectivelyMVC-Tests"
             ReferencedContainer = "container:ObjectivelyMVC.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

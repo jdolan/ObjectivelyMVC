@@ -61,7 +61,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("font", InletTypeFont, &this->font, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 
 	$(self, sizeToFit);
 }

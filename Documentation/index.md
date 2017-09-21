@@ -4,18 +4,14 @@ ObjectivelyMVC Documentation {#index}
 Cross-platform object oriented MVC framework for OpenGL, SDL2 and GNU C
 ---
 
-ObjectivelyMVC is a user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by 
-Apple's [AppKit](https://developer.apple.com/reference/appkit). 
-It is geared towards building high-quality, modern looking user interfaces within [OpenGL](http://www.opengl.org/) 
-video games that are already using SDL2. It is written in [GNU C](http://www.gnu.org/software/gnu-c-manual/), and requires `gcc` or `clang`.
-
+ObjectivelyMVC is a cross-platform user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by Apple's [AppKit](https://developer.apple.com/reference/appkit). It is geared towards building high-quality, modern looking user interfaces within [OpenGL](http://www.opengl.org/) video games that are already using SDL2. It is built on [Objectively](https://github.com/jdolan/Objectively), written in [GNU C](http://www.gnu.org/software/gnu-c-manual/), and requires `gcc` or `clang`.
 
 Features
 ---
 
 ### Cross platform
 
-_Wait, `gcc` or `clang`? Is this a Linux-only framework?_ Not at all. ObjectivelyMVC supports Windows XP and later, Apple OS X, and Linux. Support for other Unix derivatives is likely there, but untested. To build ObjectivelyMVC for Windows, you can use either MinGW-w64 (cross-compile or native), or recent [Visual Studio 15](https://www.visualstudio.com/) Previews, which include Clang.
+_Wait, `gcc` or `clang`? Is this a Linux-only framework?_ Not at all. ObjectivelyMVC supports Windows XP and later, Apple OS X, and Linux. Support for other Unix derivatives is likely there, but untested. To build ObjectivelyMVC for Windows, you can use either MinGW-w64 (cross-compile or native), or recent [Visual Studio 15](https://www.visualstudio.com/), which includes Clang.
 
 ### Object-oriented Model-View-Controller implementation in C
 
@@ -49,7 +45,7 @@ Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will re
 
 ### Full suite of Views and Controls
 
-ObjectivelyMVC provides a robust set of containers, views and form elements. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Bind `Actions` to `SDL_Event` types on each element, or use the specialized _delegate_ callbacks for convenience.
+ObjectivelyMVC provides a robust set of containers, views and controls. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular data or a thumbnail gallery with `TableView` and `CollectionView`. Bind `Actions` to `SDL_Event` types, or use the specialized _delegate_ callbacks for convenience.
 
 ```c
 $((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_data);
@@ -59,6 +55,30 @@ $((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_
 Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
 ...
 select->delegate.didSelectOption = my_callback;
+```
+
+### Programmatic or JSON-based layout options
+
+ObjectivelyMVC allows you to define your View hierarchy programmatically, via JSON, or using any combination of both. Programmatic layout gives you explicit control over the big picture, while JSON layout allows you to reduce boilerplate and avoid common pitfalls like memory leaks.
+
+```json
+{
+	"class": "Panel",
+	"frame": [50, 50, 0, 0],
+	"autoresizingMask": "ViewAutoresizingWidth",
+	"contentView": {
+		"subviews": [{
+			"class": "Input",
+			"control": {
+				"class": "Checkbox",
+				"identifier": "checkbox"
+			},
+			"label": {
+				"text": "This is a checkbox:"
+			}
+		}]
+	}
+}
 ```
 
 Examples

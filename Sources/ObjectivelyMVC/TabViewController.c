@@ -50,6 +50,8 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 
+	self->view->autoresizingMask = ViewAutoresizingContain;
+
 	TabViewController *this = (TabViewController *) self;
 
 	this->tabView = $(alloc(TabView), initWithFrame, NULL);

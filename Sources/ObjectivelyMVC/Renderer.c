@@ -251,7 +251,7 @@ static Renderer *init(Renderer *self) {
 /**
  * @brief Comparator for sorting Views by depth (Painter's Algorithm).
  */
-static Order render_sort(const ident a, const ident b) {
+static Order render_comparator(const ident a, const ident b) {
 
 	const int depthA = $((const View *) a, depth);
 	const int depthB = $((const View *) b, depth);
@@ -283,7 +283,7 @@ static void render_renderView(const Array *array, ident obj, ident data) {
  */
 static void render(Renderer *self) {
 
-	$(self->views, sort, render_sort);
+	$(self->views, sort, render_comparator);
 
 	$((Array *) self->views, enumerateObjects, render_renderView, self);
 

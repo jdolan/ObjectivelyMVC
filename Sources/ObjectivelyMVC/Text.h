@@ -92,7 +92,7 @@ struct TextInterface {
 	 * @brief Initializes this Text with the given text and Font.
 	 * @param self The Text.
 	 * @param text The text.
-	 * @param font The Font.
+	 * @param font The Font (optional).
 	 * @return The initialized Text, or `NULL` on error.
 	 * @memberof Text
 	 */

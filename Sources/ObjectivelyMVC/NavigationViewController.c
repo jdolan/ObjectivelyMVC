@@ -41,17 +41,6 @@ static NavigationViewController *init(NavigationViewController *self) {
 }
 
 /**
- * @brief ArrayEnumerator for pushViewController.
- */
-static void pushViewController_enumerate(const Array *array, ident obj, ident data) {
-
-	ViewController *this = (ViewController *) data;
-	ViewController *that = (ViewController *) obj;
-
-	$(this->view, removeSubview, that->view);
-}
-
-/**
  * @fn void NavigationViewController::pushViewController(NavigationViewController *self, ViewController *viewController)
  * @memberof NavigationViewController
  */
@@ -59,9 +48,16 @@ static void pushViewController(NavigationViewController *self, ViewController *v
 
 	assert(viewController);
 
-	$((Array *) self->viewController.childViewControllers, enumerateObjects, pushViewController_enumerate, self);
+	ViewController *this = (ViewController *) self;
 
-	$(viewController, moveToParentViewController, (ViewController *) self);
+	ViewController *topViewController = $(self, topViewController);
+	if (topViewController) {
+
+		$(this->view, removeSubview, topViewController->view);
+		$(topViewController, viewWillDisappear);
+	}
+
+	$(this, addChildViewController, viewController);
 }
 
 /**
@@ -91,10 +87,6 @@ static void popToViewController(NavigationViewController *self, const ViewContro
 
 		$(self, popViewController);
 	}
-
-	if (topViewController) {
-		$(topViewController, viewWillAppear);
-	}
 }
 
 /**
@@ -103,9 +95,9 @@ static void popToViewController(NavigationViewController *self, const ViewContro
  */
 static void popViewController(NavigationViewController *self) {
 
-	ViewController *viewController = $(self, topViewController);
-	if (viewController) {
-		$(viewController, moveToParentViewController, NULL);
+	ViewController *topViewController = $(self, topViewController);
+	if (topViewController) {
+		$((ViewController *) self, removeChildViewController, topViewController);
 	}
 
 	ViewController *this = (ViewController *) self;

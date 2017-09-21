@@ -77,7 +77,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("image", InletTypeImage, &this->image, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 }
 
 /**
@@ -153,13 +153,7 @@ static ImageView *initWithImage(ImageView *self, Image *image) {
 
 	self = (ImageView *) $(self, initWithFrame, NULL);
 	if (self) {
-
 		$(self, setImage, image);
-
-		if (self->image) {
-			self->view.frame.w = image->surface->w;
-			self->view.frame.h = image->surface->h;
-		}
 	}
 
 	return self;
@@ -175,6 +169,13 @@ static void setImage(ImageView *self, Image *image) {
 
 	if (image) {
 		self->image = retain(image);
+
+		const SDL_Size size = $((View *) self, size);
+		const SDL_Size imageSize = $(image, size);
+
+		if (size.w == 0 && size.h == 0) {
+			$((View *) self, resize, &imageSize);
+		}
 	} else {
 		self->image = NULL;
 	}

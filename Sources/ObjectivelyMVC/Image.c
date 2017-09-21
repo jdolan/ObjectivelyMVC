@@ -118,6 +118,14 @@ Image *initWithSurface(Image *self, SDL_Surface *surface) {
 	return self;
 }
 
+/**
+ * @fn SDL_Size Image::size(const Image *self)
+ * @memberof Image
+ */
+SDL_Size size(const Image *self) {
+	return MakeSize(self->surface->w, self->surface->h);
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -132,6 +140,7 @@ static void initialize(Class *clazz) {
 	((ImageInterface *) clazz->def->interface)->initWithName = initWithName;
 	((ImageInterface *) clazz->def->interface)->initWithResource = initWithResource;
 	((ImageInterface *) clazz->def->interface)->initWithSurface = initWithSurface;
+	((ImageInterface *) clazz->def->interface)->size = size;
 
 	$$(Resource, addResourcePath, PKGDATADIR);
 

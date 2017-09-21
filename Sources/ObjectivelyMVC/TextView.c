@@ -63,7 +63,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("isEditable", InletTypeBool, &this->isEditable, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 }
 
 /**

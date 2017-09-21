@@ -102,6 +102,21 @@ struct HelloViewController {
 	 * @brief A CollectionView.
 	 */
 	CollectionView *collectionView;
+
+	/**
+	 * @brief An RGBColorPicker.
+	 */
+	RGBColorPicker *rgbColorPicker;
+
+	/**
+	 * @brief An HSVColorPicker.
+	 */
+	HSVColorPicker *hsvColorPicker;
+
+	/**
+	 * @brief A HueColorPicker.
+	 */
+	HueColorPicker *hueColorPicker;
 };
 
 /**

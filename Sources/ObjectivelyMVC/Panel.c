@@ -92,7 +92,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("isResiable", InletTypeBool, &this->isResizable, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 }
 
 /**

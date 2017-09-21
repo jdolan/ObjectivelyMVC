@@ -23,8 +23,8 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Text.h>
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/StackView.h>
 
 /**
  * @file
@@ -32,7 +32,8 @@
  */
 
 #define DEFAULT_BOX_PADDING 10
-#define DEFAULT_BOX_LABEL_PADDING 4
+#define DEFAULT_BOX_SPACING 4
+#define DEFAULT_BOX_LABEL_PADDING 8
 #define DEFAULT_BOX_LABEL_X 20
 
 typedef struct Box Box;
@@ -59,9 +60,14 @@ struct Box {
 	BoxInterface *interface;
 
 	/**
-	 * @brief The label.
+	 * @brief The internal container.
 	 */
-	Text *label;
+	StackView *contentView;
+
+	/**
+	 * @brief The Label.
+	 */
+	Label *label;
 };
 
 /**
@@ -76,7 +82,7 @@ struct BoxInterface {
 
 	/**
 	 * @fn Box *Box::initWithFrame(Box *self, const SDL_Rect *frame)
-	 * @brief Initializes this Box.
+	 * @brief Initializes this Box with the given frame.
 	 * @param self The Box.
 	 * @param frame The frame.
 	 * @return The initialized Box, or `NULL` on error.

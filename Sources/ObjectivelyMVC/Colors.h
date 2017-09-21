@@ -198,3 +198,18 @@ OBJECTIVELYMVC_EXPORT const struct _Colors {
 	SDL_Color Yellow;
 	SDL_Color YellowGreen;
 } Colors;
+
+/**
+ * @brief Creates an SDL_Color with the given components.
+ */
+#define MakeColor(r, g, b, a) (SDL_Color) { (r), (g), (b), (a) }
+
+/**
+ * @brief Converts the given HSV color values to an RGB color.
+ * @param hue The hue (0.0 - 360.0).
+ * @param saturation The saturation (0.0 - 1.0).
+ * @param value The brightness value (0.0 - 1.0).
+ * @return An SDL_Color containing the byte-clamped RGB value.
+ */
+OBJECTIVELYMVC_EXPORT SDL_Color MVC_HSVToRGB(double hue, double saturation, double value);
+

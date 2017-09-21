@@ -63,6 +63,39 @@ static void bindColor(const Inlet *inlet, ident obj) {
 }
 
 /**
+ * @brief InletBinding for InletTypeConstraint.
+ */
+static void bindConstraint(const Inlet *inlet, ident obj) {
+
+	String *descriptor = cast(String, obj);
+
+	*(Constraint **) inlet->dest = $(alloc(Constraint), initWithDescriptor, descriptor->chars);
+}
+
+/**
+ * @brief ArrayEnumerator for `bindConstraints`.
+ */
+static void bindConstraints_enumerate(const Array *array, ident obj, ident data) {
+
+	Constraint *constraint = NULL;
+
+	const Inlet inlet = MakeInlet(NULL, InletTypeConstraint, &constraint, NULL);
+
+	bindConstraint(&inlet, obj);
+
+	$(cast(View, data), addConstraint, constraint);
+
+	release(constraint);
+}
+
+/**
+ * @brief InletBinding for InletTypeConstraints.
+ */
+static void bindConstraints(const Inlet *inlet, ident obj) {
+	$(cast(Array, obj), enumerateObjects, bindConstraints_enumerate, *(View **) inlet->dest);
+}
+
+/**
  * @brief InletBinding for InletTypeDouble.
  */
 static void bindDouble(const Inlet *inlet, ident obj) {
@@ -141,7 +174,7 @@ static void bindSize(const Inlet *inlet, ident obj) {
  */
 static void bindView(const Inlet *inlet, ident obj) {
 
-	View *view = NULL, *original = *(View **) inlet->dest;
+	View *view = NULL, *source = *(View **) inlet->dest;
 
 	const Dictionary *dictionary = cast(Dictionary, obj);
 
@@ -149,7 +182,7 @@ static void bindView(const Inlet *inlet, ident obj) {
 	const String *includePath = $(dictionary, objectForKeyPath, "include");
 
 	if (clazzName == NULL && includePath == NULL) {
-		$(original, awakeWithDictionary, dictionary);
+		$(source, awakeWithDictionary, dictionary);
 	} else {
 		if (clazzName) {
 			Class *clazz = classForName(clazzName->chars);
@@ -172,11 +205,11 @@ static void bindView(const Inlet *inlet, ident obj) {
 
 		assert(view);
 
-		if (original) {
-			if (original->superview) {
-				$(original->superview, replaceSubview, original, view);
+		if (source) {
+			if (source->superview) {
+				$(source->superview, replaceSubview, source, view);
 			}
-			release(original);
+			release(source);
 		}
 
 		*(View **) inlet->dest = view;
@@ -223,6 +256,8 @@ const InletBinding inletBindings[] = {
 	bindBool,
 	bindCharacters,
 	bindColor,
+	bindConstraint,
+	bindConstraints,
 	bindDouble,
 	bindEnum,
 	bindFloat,
@@ -235,3 +270,16 @@ const InletBinding inletBindings[] = {
 	bindView,
 	bindApplicationDefined,
 };
+
+void bindInlets(const Inlet *inlets, const Dictionary *dictionary) {
+
+	assert(inlets);
+	assert(dictionary);
+
+	for (const Inlet *inlet = inlets; inlet->name; inlet++) {
+		const ident obj = $(dictionary, objectForKeyPath, inlet->name);
+		if (obj) {
+			BindInlet(inlet, obj);
+		}
+	}
+}

@@ -52,6 +52,8 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 
 	assert(childViewController);
 
+	ViewController *that = retain(childViewController);
+
 	$(childViewController, removeFromParentViewController);
 
 	$(self->childViewControllers, addObject, childViewController);
@@ -62,6 +64,8 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 
 	$(self->view, addSubview, childViewController->view);
 	$(childViewController, viewWillAppear);
+
+	release(that);
 }
 
 /**
@@ -75,6 +79,8 @@ static void drawView(ViewController *self, Renderer *renderer) {
 	$(self, loadViewIfNeeded);
 
 	assert(self->view);
+
+	$(self->view, applyConstraintsIfNeeded);
 
 	$(self->view, layoutIfNeeded);
 
@@ -106,14 +112,6 @@ static void loadView(ViewController *self) {
 	assert(self->view);
 
 	self->view->autoresizingMask = ViewAutoresizingFill;
-
-	SDL_Window *window = $(self->view, window);
-	assert(window);
-
-	SDL_Size size;
-	SDL_GetWindowSize(window, &size.w, &size.h);
-
-	$(self->view, resize, &size);
 }
 
 /**
@@ -135,13 +133,15 @@ static void loadViewIfNeeded(ViewController *self) {
  */
 static void moveToParentViewController(ViewController *self, ViewController *parentViewController) {
 
-	if (self->parentViewController) {
-		$(self->parentViewController, removeChildViewController, self);
-	}
+	ViewController *this = retain(self);
+
+	$(self, removeFromParentViewController);
 
 	if (parentViewController) {
 		$(parentViewController, addChildViewController, self);
 	}
+
+	release(this);
 }
 
 /**
@@ -151,15 +151,17 @@ static void moveToParentViewController(ViewController *self, ViewController *par
 static void removeChildViewController(ViewController *self, ViewController *childViewController) {
 
 	assert(childViewController);
+	assert(childViewController->parentViewController == self);
 
-	if (childViewController->parentViewController == self) {
+	ViewController *that = retain(childViewController);
 
-		$(self->childViewControllers, removeObject, childViewController);
-		childViewController->parentViewController = NULL;
+	$(self->childViewControllers, removeObject, childViewController);
+	childViewController->parentViewController = NULL;
 
-		$(self->view, removeSubview, childViewController->view);
-		$(childViewController, viewWillDisappear);
-	}
+	$(childViewController->view, removeFromSuperview);
+	$(childViewController, viewWillDisappear);
+
+	release(that);
 }
 
 /**

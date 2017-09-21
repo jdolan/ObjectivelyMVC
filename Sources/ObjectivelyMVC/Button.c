@@ -56,7 +56,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("title", InletTypeView, &this->title, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 }
 
 /**
@@ -144,6 +144,19 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 	return self;
 }
 
+/**
+ * @fn Button *Button::initWithFrame(Button *self, const char *title, ControlStyle style)
+ * @memberof Button
+ */
+static Button *initWithTitle(Button *self, const char *title, ControlStyle style) {
+
+	self = $(self, initWithFrame, NULL, style);
+	if (self) {
+		$(self->title, setText, title);
+	}
+	return self;
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -160,6 +173,7 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
 	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((ButtonInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
 }
 
 /**

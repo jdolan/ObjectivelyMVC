@@ -1,0 +1,265 @@
+/*
+ * ObjectivelyMVC: MVC framework for OpenGL and SDL2 in c.
+ * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
+ *
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ *
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ *
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software
+ * in a product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ *
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ *
+ * 3. This notice may not be removed or altered from any source distribution.
+ */
+
+#include <assert.h>
+
+#include <ObjectivelyMVC/RGBColorPicker.h>
+
+#define _Class _RGBColorPicker
+
+#pragma mark - Actions & delegates
+
+/**
+ * @brief SliderDelegate callback for color component modification.
+ */
+static void didSetComponent(Slider *slider) {
+
+	RGBColorPicker *this = (RGBColorPicker *) slider->delegate.self;
+
+	const int c = round(slider->value);
+
+	if (slider == this->redSlider) {
+		this->color.r = c;
+	} else if (slider == this->greenSlider) {
+		this->color.g = c;
+	} else if (slider == this->blueSlider) {
+		this->color.b = c;
+	} else if (slider == this->alphaSlider) {
+		this->color.a = c;
+	} else {
+		assert(false);
+	}
+
+	$((View *) this, updateBindings);
+
+	if (this->delegate.didPickColor) {
+		this->delegate.didPickColor(this, &this->color);
+	}
+}
+
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+	RGBColorPicker *this = (RGBColorPicker *) self;
+
+	release(this->colorView);
+
+	release(this->redSlider);
+	release(this->greenSlider);
+	release(this->blueSlider);
+	release(this->alphaSlider);
+
+	release(this->redInput);
+	release(this->greenInput);
+	release(this->blueInput);
+	release(this->alphaInput);
+
+	super(Object, self, dealloc);
+}
+
+#pragma mark - View
+
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+	super(View, self, awakeWithDictionary, dictionary);
+
+	RGBColorPicker *this = (RGBColorPicker *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("color", InletTypeColor, &this->color, NULL),
+		MakeInlet("colorView", InletTypeView, &this->colorView, NULL),
+		MakeInlet("redSlider", InletTypeView, &this->redSlider, NULL),
+		MakeInlet("greenSlider", InletTypeView, &this->greenSlider, NULL),
+		MakeInlet("blueSlider", InletTypeView, &this->blueSlider, NULL),
+		MakeInlet("alphaSlider", InletTypeView, &this->alphaSlider, NULL),
+		MakeInlet("redInput", InletTypeView, &this->redInput, NULL),
+		MakeInlet("greenInput", InletTypeView, &this->greenInput, NULL),
+		MakeInlet("blueInput", InletTypeView, &this->blueInput, NULL),
+		MakeInlet("alphaInput", InletTypeView, &this->alphaInput, NULL)
+	);
+
+	$(self, bind, inlets, dictionary);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+	return (View *) $((RGBColorPicker *) self, initWithFrame, NULL);
+}
+
+/**
+ * @see View::updateBindings(View *)
+ */
+static void updateBindings(View *self) {
+
+	super(View, self, updateBindings);
+
+	RGBColorPicker *this = (RGBColorPicker *) self;
+
+	this->colorView->backgroundColor = this->color;
+}
+
+#pragma mark - RGBColorPicker
+
+/**
+ * @fn RGBColorPicker *RGBColorPicker::initWithFrame(RGBColorPicker *self, const SDL_Rect *frame)
+ * @memberof RGBColorPicker
+ */
+static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame) {
+
+	self = (RGBColorPicker *) super(StackView, self, initWithFrame, frame);
+	if (self) {
+
+		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 150, 24));
+		assert(self->colorView);
+
+		$((View *) self, addSubview, self->colorView);
+
+		self->redSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		assert(self->redSlider);
+
+		self->redSlider->delegate.self = self;
+		self->redSlider->delegate.didSetValue = didSetComponent;
+		self->redSlider->max = 255.0;
+		$(self->redSlider, setLabelFormat, "%.0f");
+
+		self->redInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->redInput);
+
+		$(self->redInput, setControl, (Control *) self->redSlider);
+		$(self->redInput->label->text, setText, "R");
+
+		$((View *) self, addSubview, (View *) self->redInput);
+
+		self->greenSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		assert(self->greenSlider);
+
+		self->greenSlider->delegate.self = self;
+		self->greenSlider->delegate.didSetValue = didSetComponent;
+		self->greenSlider->max = 255.0;
+		$(self->greenSlider, setLabelFormat, "%.0f");
+
+		self->greenInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->greenInput);
+
+		$(self->greenInput, setControl, (Control *) self->greenSlider);
+		$(self->greenInput->label->text, setText, "G");
+
+		$((View *) self, addSubview, (View *) self->greenInput);
+
+		self->blueSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		assert(self->blueSlider);
+
+		self->blueSlider->delegate.self = self;
+		self->blueSlider->delegate.didSetValue = didSetComponent;
+		self->blueSlider->max = 255.0;
+		$(self->blueSlider, setLabelFormat, "%.0f");
+
+		self->blueInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->blueInput);
+
+		$(self->blueInput, setControl, (Control *) self->blueSlider);
+		$(self->blueInput->label->text, setText, "B");
+
+		$((View *) self, addSubview, (View *) self->blueInput);
+
+		self->alphaSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		assert(self->alphaSlider);
+
+		self->alphaSlider->delegate.self = self;
+		self->alphaSlider->delegate.didSetValue = didSetComponent;
+		self->alphaSlider->max = 255.0;
+		$(self->alphaSlider, setLabelFormat, "%.0f");
+
+		self->alphaInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->alphaInput);
+
+		$(self->alphaInput, setControl, (Control *) self->alphaSlider);
+		$(self->alphaInput->label->text, setText, "A");
+
+		$((View *) self, addSubview, (View *) self->alphaInput);
+
+		$(self, setColor, Colors.White);
+	}
+
+	return self;
+}
+
+/**
+ * @fn void RGBColorPicker::setColor(RGBColorPicker *self, const SDL_Color color)
+ * @memberof RGBColorPicker
+ */
+static void setColor(RGBColorPicker *self, const SDL_Color color) {
+
+	$(self->redSlider, setValue, color.r);
+	$(self->greenSlider, setValue, color.g);
+	$(self->blueSlider, setValue, color.b);
+	$(self->alphaSlider, setValue, color.a);
+}
+
+#pragma mark - Class lifecycle
+
+/**
+ * @see Class::initialize(Class *)
+ */
+static void initialize(Class *clazz) {
+
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+
+	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
+
+	((RGBColorPickerInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((RGBColorPickerInterface *) clazz->def->interface)->setColor = setColor;
+}
+
+/**
+ * @fn Class *RGBColorPicker::_RGBColorPicker(void)
+ * @memberof RGBColorPicker
+ */
+Class *_RGBColorPicker(void) {
+	static Class clazz;
+	static Once once;
+
+	do_once(&once, {
+		clazz.name = "RGBColorPicker";
+		clazz.superclass = _StackView();
+		clazz.instanceSize = sizeof(RGBColorPicker);
+		clazz.interfaceOffset = offsetof(RGBColorPicker, interface);
+		clazz.interfaceSize = sizeof(RGBColorPickerInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
+
+#undef _Class

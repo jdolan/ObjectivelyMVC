@@ -11,10 +11,12 @@ pkginclude_HEADERS = \
 	CollectionItemView.h \
 	CollectionView.h \
 	Colors.h \
-	ColorSelect.h \
 	Config.h \
+	Constraint.h \
 	Control.h \
 	Font.h \
+	HSVColorPicker.h \
+	HueColorPicker.h \
 	Image.h \
 	ImageView.h \
 	Input.h \
@@ -26,6 +28,7 @@ pkginclude_HEADERS = \
 	PageView.h \
 	Panel.h \
 	Renderer.h \
+	RGBColorPicker.h \
 	ScrollView.h \
 	Select.h \
 	Slider.h \
@@ -57,9 +60,11 @@ libObjectivelyMVC_la_SOURCES = \
 	CollectionItemView.c \
 	CollectionView.c \
 	Colors.c \
-	ColorSelect.c \
+	Constraint.c \
 	Control.c \
 	Font.c \
+	HSVColorPicker.c \
+	HueColorPicker.c \
 	Image.c \
 	ImageView.c \
 	Input.c \
@@ -69,6 +74,7 @@ libObjectivelyMVC_la_SOURCES = \
 	PageView.c \
 	Panel.c \
 	Renderer.c \
+	RGBColorPicker.c \
 	ScrollView.c \
 	Select.c \
 	Slider.c \

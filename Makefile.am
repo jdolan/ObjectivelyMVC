@@ -3,6 +3,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = \
 	Assets \
 	Sources \
+	Tests \
 	Examples
 
 html:

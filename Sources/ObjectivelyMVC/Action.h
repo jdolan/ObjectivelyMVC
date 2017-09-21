@@ -61,7 +61,7 @@ struct Action {
 	ActionInterface *interface;
 
 	/**
-	 * @brief The data.
+	 * @brief The user data.
 	 */
 	ident data;
 
@@ -98,7 +98,7 @@ struct ActionInterface {
 	 * @param eventType The event type.
 	 * @param function The ActionFunction.
 	 * @param sender The sender.
-	 * @param data The data.
+	 * @param data User data.
 	 * @return The initialized Action, or `NULL` on error.
 	 * @memberof Action
 	 */

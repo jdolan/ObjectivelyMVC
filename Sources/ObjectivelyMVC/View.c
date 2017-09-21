@@ -64,6 +64,8 @@ static void dealloc(Object *self) {
 
 	View *this = (View *) self;
 
+	release(this->constraints);
+
 	free(this->identifier);
 
 	$(this, removeFromSuperview);
@@ -86,6 +88,17 @@ static String *description(const Object *self) {
 #pragma mark - View
 
 /**
+ * @fn void View::addConstraint(View *self, Constraint *constraint)
+ * @memberof View
+ */
+static void addConstraint(View *self, Constraint *constraint) {
+
+	$(self->constraints, addObject, constraint);
+
+	self->needsApplyConstraints = true;
+}
+
+/**
  * @fn void View::addSubview(View *self, View *subview)
  * @memberof View
  */
@@ -100,6 +113,9 @@ static void addSubview(View *self, View *subview) {
 static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPosition position) {
 
 	assert(subview);
+	assert(subview != other);
+
+	retain(subview);
 
 	$(subview, removeFromSuperview);
 
@@ -121,9 +137,79 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 		$(self->subviews, addObject, subview);
 	}
 
+	release(subview);
+
 	subview->superview = self;
 
 	self->needsLayout = true;
+}
+
+/**
+ * @fn View::ancestorWithIdentifier(const View *self, const char *identifier)
+ * @memberof View
+ */
+static View *ancestorWithIdentifier(const View *self, const char *identifier) {
+
+	assert(identifier);
+
+	View *view = self->superview;
+	while (view) {
+		if (view->identifier) {
+			if (strcmp(identifier, view->identifier) == 0) {
+				return view;
+			}
+		}
+		view = view->superview;
+	}
+
+	return NULL;
+}
+
+/**
+ * @brief Comparator for applyConstraints sorting.
+ */
+static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
+	return ((Constraint *) obj1)->priority - ((Constraint *) obj2)->priority;
+}
+
+/**
+ * @fn void View::applyConstraints(View *self)
+ * @memberof View
+ */
+static void applyConstraints(View *self) {
+
+	$(self->constraints, sort, applyConstraints_comparator);
+
+	const Array *constraints = (Array *) self->constraints;
+	for (size_t i = 0; i < constraints->count; i++) {
+
+		const Constraint *constraint = $(constraints, objectAtIndex, i);
+		if (constraint->enabled) {
+			$(constraint, apply, self);
+		}
+	}
+}
+
+/**
+ * @brief ArrayEnumerator for applyConstraints recursion.
+ */
+static void applyConstraintsIfNeeded_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, applyConstraintsIfNeeded);
+}
+
+/**
+ * @fn void View::applyConstraintsIfNeeded(View *self)
+ * @memberof View
+ */
+static void applyConstraintsIfNeeded(View *self) {
+
+	if (self->needsApplyConstraints) {
+		$(self, applyConstraints);
+	}
+
+	self->needsApplyConstraints = false;
+
+	$((Array *) self->subviews, enumerateObjects, applyConstraintsIfNeeded_recurse, NULL);
 }
 
 /**
@@ -139,6 +225,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
 		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
 		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
+		MakeInlet("constraints", InletTypeConstraints, &self, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
@@ -146,7 +233,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("zIndex", InletTypeInteger, &self->zIndex, NULL)
 	);
 
-	$(self, bind, dictionary, inlets);
+	$(self, bind, inlets, dictionary);
 
 	if (self->identifier) {
 		for (Outlet *outlet = _outlets; outlet->identifier; outlet++) {
@@ -166,18 +253,13 @@ static void becomeFirstResponder(View *self) {
 }
 
 /**
- * @fn void View::bind(View *self, const Dictionary *dictionary, const Inlet *inlets)
+ * @fn void View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
  * @memberof View
  */
-static void _bind(View *self, const Dictionary *dictionary, const Inlet *inlets) {
+static void _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
 	if (inlets) {
-		for (const Inlet *inlet = inlets; inlet->name; inlet++) {
-			const ident obj = $(dictionary, objectForKeyPath, inlet->name);
-			if (obj) {
-				BindInlet(inlet, obj);
-			}
-		}
+		bindInlets(inlets, dictionary);
 	}
 
 	$(self, updateBindings);
@@ -199,6 +281,27 @@ static SDL_Rect bounds(const View *self) {
 	};
 
 	return bounds;
+}
+
+/**
+ * @fn _Bool View::canBecomeFirstResponder(const View *self)
+ * @memberof View
+ */
+static _Bool canBecomeFirstResponder(const View *self) {
+
+	if (_firstResponder == NULL) {
+		return true;
+	}
+
+	const View *view = self;
+	while (view) {
+		if ($(view, isFirstResponder)) {
+			return true;
+		}
+		view = view->superview;
+	}
+
+	return false;
 }
 
 /**
@@ -245,27 +348,6 @@ static SDL_Rect clippingFrame(const View *self) {
 }
 
 /**
- * @fn _Bool View::canBecomeFirstResponder(const View *self)
- * @memberof View
- */
-static _Bool canBecomeFirstResponder(const View *self) {
-
-	if (_firstResponder == NULL) {
-		return true;
-	}
-
-	const View *view = self;
-	while (view) {
-		if ($(view, isFirstResponder)) {
-			return true;
-		}
-		view = view->superview;
-	}
-
-	return false;
-}
-
-/**
  * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
  * @memberof View
  */
@@ -277,11 +359,51 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 }
 
 /**
+ * @fn void View::createConstraint(View *self, const char *descriptor)
+ * @memberof View
+ */
+static void createConstraint(View *self, const char *descriptor) {
+
+	Constraint *constraint = $(alloc(Constraint), initWithDescriptor, descriptor);
+
+	$(self, addConstraint, constraint);
+
+	release(constraint);
+}
+
+/**
  * @fn int View::depth(const View *self)
  * @memberof View
  */
 static int depth(const View *self) {
 	return self->zIndex + (self->superview ? $(self->superview, depth) + 1 : 0);
+}
+
+/**
+ * @fn View::descendantWithIdentifier(const View *self, const char *identifier)
+ * @memberof View
+ */
+static View *descendantWithIdentifier(const View *self, const char *identifier) {
+
+	assert(identifier);
+
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+
+		View *view = $(subviews, objectAtIndex, i);
+		if (view->identifier) {
+			if (strcmp(identifier, view->identifier)) {
+				return view;
+			}
+		}
+
+		view = $(view, descendantWithIdentifier, identifier);
+		if (view) {
+			return view;
+		}
+	}
+
+	return NULL;
 }
 
 /**
@@ -374,6 +496,9 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 			self->frame = *frame;
 		}
 
+		self->constraints = $$(MutableArray, array);
+		assert(self->constraints);
+
 		self->subviews = $$(MutableArray, array);
 		assert(self->subviews);
 
@@ -437,10 +562,10 @@ static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
 static void layoutIfNeeded(View *self) {
 
 	if (self->needsLayout) {
-		self->needsLayout = false;
-
 		$(self, layoutSubviews);
 	}
+
+	self->needsLayout = false;
 
 	const Array *subviews = (Array *) self->subviews;
 	$(subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
@@ -524,6 +649,21 @@ static void layoutSubviews(View *self) {
 }
 
 /**
+ * @brief ArrayEnumerator for removeAllConstraints.
+ */
+static void removeAllConstraints_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, removeConstraint, obj);
+}
+
+/**
+ * @fn void View::removeAllConstraints(View *self)
+ * @memberof View
+ */
+static void removeAllConstraints(View *self) {
+	$((Array *) self->constraints, enumerateObjects, removeAllConstraints_enumerate, self);
+}
+
+/**
  * @brief ArrayEnumerator for removeAllSubviews.
  */
 static void removeAllSubviews_enumerate(const Array *array, ident obj, ident data) {
@@ -536,6 +676,17 @@ static void removeAllSubviews_enumerate(const Array *array, ident obj, ident dat
  */
 static void removeAllSubviews(View *self) {
 	$((Array *) self->subviews, enumerateObjects, removeAllSubviews_enumerate, self);
+}
+
+/**
+ * @fn void View::removeConstraint(View *self, Constraint *constraint)
+ * @memberof View
+ */
+static void removeConstraint(View *self, Constraint *constraint) {
+
+	$(self->constraints, removeObject, constraint);
+
+	self->needsApplyConstraints = true;
 }
 
 /**
@@ -664,31 +815,29 @@ static void resignFirstResponder(View *self) {
 	}
 }
 
-///**
-// * @brief ArrayEnumerator for resize recursion.
-// */
-//static void resize_recurse(const Array *array, ident obj, ident data) {
-//
-//	View *subview = (View *) obj;
-//
-//	SDL_Size size = $(subview, size);
-//
-//	switch (subview->autoresizingMask) {
-//		case ViewAutoresizingWidth:
-//			size.w = 0;
-//			break;
-//		case ViewAutoresizingHeight:
-//			size.h = 0;
-//			break;
-//		case ViewAutoresizingContain:
-//			size.w = size.h = 0;
-//			break;
-//		default:
-//			break;
-//	}
-//
-//	$(subview, resize, &size);
-//}
+/**
+ * @brief ArrayEnumerator for resize recursion.
+ */
+static void resize_recurse(const Array *array, ident obj, ident data) {
+
+	View *subview = (View *) obj;
+
+	SDL_Size size = $(subview, size);
+
+	if (subview->autoresizingMask & ViewAutoresizingWidth) {
+		size.w = 0;
+	}
+
+	if (subview->autoresizingMask & ViewAutoresizingHeight) {
+		size.h = 0;
+	}
+
+	if (subview->autoresizingMask == ViewAutoresizingContain) {
+		size = MakeSize(0, 0);
+	}
+
+	$(subview, resize, &size);
+}
 
 /**
  * @fn void View::resize(View *self, const SDL_Size *size)
@@ -703,7 +852,7 @@ static void resize(View *self, const SDL_Size *size) {
 
 		self->needsLayout = true;
 
-//		$((Array *) self->subviews, enumerateObjects, resize_recurse, NULL);
+		$((Array *) self->subviews, enumerateObjects, resize_recurse, NULL);
 	}
 }
 
@@ -831,6 +980,29 @@ static void sizeToFit(View *self) {
 }
 
 /**
+ * @fn View::subviewWithIdentifier(const View *self, const char *identifier)
+ * @memberof View
+ */
+static View *subviewWithIdentifier(const View *self, const char *identifier) {
+
+	assert(identifier);
+
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+
+		View *subview = $(subviews, objectAtIndex, i);
+		if (subview->identifier) {
+
+			if (strcmp(identifier, subview->identifier) == 0) {
+				return subview;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+/**
  * @brief ArrayEnumerator for updateBindings recursion.
  */
 static void updateBindings_recurse(const Array *array, ident obj, ident data) {
@@ -891,7 +1063,6 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
  * @memberof View
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
-
 	static Once once;
 
 	do_once(&once, {
@@ -899,12 +1070,14 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(_Button());
 		_initialize(_Checkbox());
 		_initialize(_CollectionView());
-		_initialize(_ColorSelect());
+		_initialize(_HSVColorPicker());
+		_initialize(_HueColorPicker());
 		_initialize(_ImageView());
 		_initialize(_Input());
 		_initialize(_Label());
 		_initialize(_PageView());
 		_initialize(_Panel());
+		_initialize(_RGBColorPicker());
 		_initialize(_ScrollView());
 		_initialize(_Select());
 		_initialize(_Slider());
@@ -966,8 +1139,12 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	((ObjectInterface *) clazz->def->interface)->description = description;
 
+	((ViewInterface *) clazz->def->interface)->addConstraint = addConstraint;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
+	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
+	((ViewInterface *) clazz->def->interface)->applyConstraintsIfNeeded = applyConstraintsIfNeeded;
+	((ViewInterface *) clazz->def->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
@@ -975,7 +1152,9 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
+	((ViewInterface *) clazz->def->interface)->createConstraint = createConstraint;
 	((ViewInterface *) clazz->def->interface)->depth = depth;
+	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
 	((ViewInterface *) clazz->def->interface)->firstResponder = firstResponder;
@@ -986,7 +1165,9 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->isVisible = isVisible;
 	((ViewInterface *) clazz->def->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->removeAllConstraints = removeAllConstraints;
 	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
+	((ViewInterface *) clazz->def->interface)->removeConstraint = removeConstraint;
 	((ViewInterface *) clazz->def->interface)->removeFromSuperview = removeFromSuperview;
 	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
 	((ViewInterface *) clazz->def->interface)->render = render;
@@ -1001,6 +1182,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->def->interface)->sizeToContain = sizeToContain;
 	((ViewInterface *) clazz->def->interface)->sizeToFit = sizeToFit;
+	((ViewInterface *) clazz->def->interface)->subviewWithIdentifier = subviewWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
 	((ViewInterface *) clazz->def->interface)->viewport = viewport;
 	((ViewInterface *) clazz->def->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
