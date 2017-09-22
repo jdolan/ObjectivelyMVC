@@ -119,8 +119,10 @@ static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame
 
 		$((View *) self, addSubview, (View *) self->stackView);
 
-		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 150, 24));
+		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
 		assert(self->colorView);
+
+		self->colorView->autoresizingMask = ViewAutoresizingWidth;
 
 		$((View *) self->stackView, addSubview, self->colorView);
 
