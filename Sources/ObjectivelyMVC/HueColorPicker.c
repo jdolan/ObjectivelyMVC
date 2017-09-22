@@ -55,6 +55,7 @@ static void dealloc(Object *self) {
 
 	release(this->colorView);
 	release(this->hueSlider);
+	release(this->stackView);
 
 	super(Object, self, dealloc);
 }
@@ -75,7 +76,8 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("hue", InletTypeDouble, &this->hue, NULL),
 		MakeInlet("saturation", InletTypeDouble, &this->saturation, NULL),
 		MakeInlet("value", InletTypeDouble, &this->value, NULL),
-		MakeInlet("hueSlider", InletTypeView, &this->hueSlider, NULL)
+		MakeInlet("hueSlider", InletTypeView, &this->hueSlider, NULL),
+		MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
 	);
 	
 	$(self, bind, inlets, dictionary);
@@ -85,7 +87,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((HueColorPicker *) self, initWithFrame, NULL);
+	return (View *) $((HueColorPicker *) self, initWithFrame, NULL, ControlStyleDefault);
 }
 
 /**
@@ -103,20 +105,26 @@ static void updateBindings(View *self) {
 #pragma mark - HueColorPicker
 
 /**
- * @fn HueColorPicker *HueColorPicker::initWithFrame(HueColorPicker *self, const SDL_Rect *frame)
+ * @fn HueColorPicker *HueColorPicker::initWithFrame(HueColorPicker *self, const SDL_Rect *frame, ControlStyle style)
  * @memberof HueColorPicker
  */
-static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame) {
+static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame, ControlStyle style) {
 
-	self = (HueColorPicker *) super(StackView, self, initWithFrame, frame);
+	self = (HueColorPicker *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
+		self->control.view.autoresizingMask = ViewAutoresizingContain;
+
+		self->stackView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->stackView);
+
+		$((View *) self, addSubview, (View *) self->stackView);
 
 		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 150, 24));
 		assert(self->colorView);
 
-		$((View *) self, addSubview, self->colorView);
+		$((View *) self->stackView, addSubview, self->colorView);
 
-		self->hueSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		self->hueSlider = $(alloc(Slider), initWithFrame, NULL, style);
 		assert(self->hueSlider);
 
 		self->hueSlider->delegate.self = self;
@@ -124,7 +132,7 @@ static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame
 		self->hueSlider->max = 360.0;
 		$(self->hueSlider, setLabelFormat, "%.1f");
 
-		$((View *) self, addSubview, (View *) self->hueSlider);
+		$((View *) self->stackView, addSubview, (View *) self->hueSlider);
 
 		$(self, setColor, 0.0, 1.0, 1.0);
 	}
@@ -180,7 +188,7 @@ Class *_HueColorPicker(void) {
 
 	do_once(&once, {
 		clazz.name = "HueColorPicker";
-		clazz.superclass = _StackView();
+		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(HueColorPicker);
 		clazz.interfaceOffset = offsetof(HueColorPicker, interface);
 		clazz.interfaceSize = sizeof(HueColorPickerInterface);

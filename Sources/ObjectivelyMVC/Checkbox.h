@@ -80,7 +80,7 @@ struct CheckboxInterface {
 
 	/**
 	 * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame, ControlStyle style)
-	 * @brief Initializes this Checkbox.
+	 * @brief Initializes this Checkbox with the specified frame and style.
 	 * @param self The Checkbox.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.

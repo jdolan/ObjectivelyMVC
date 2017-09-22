@@ -58,15 +58,15 @@ struct HueColorPickerDelegate {
 
 /**
  * @brief The HueColorPicker type.
- * @extends StackView
- * @ingroup ColorPickers
+ * @extends Control
+ * @ingroup Controls
  */
 struct HueColorPicker {
 
 	/**
 	 * @brief The superclass.
 	 */
-	StackView stackView;
+	Control control;
 
 	/**
 	 * @brief The interface.
@@ -94,6 +94,11 @@ struct HueColorPicker {
 	 * @remarks Only `hue` is mutable via the interface.
 	 */
 	double hue, saturation, value;
+
+	/**
+	 * @brief The StackView.
+	 */
+	StackView *stackView;
 };
 
 /**
@@ -104,17 +109,18 @@ struct HueColorPickerInterface {
 	/**
 	 * @brief The superclass interface.
 	 */
-	StackViewInterface stackViewInterface;
+	ControlInterface controlInterface;
 
 	/**
-	 * @fn HueColorPicker *HueColorPicker::initWithFrame(HueColorPicker *self, const SDL_Rect *frame)
+	 * @fn HueColorPicker *HueColorPicker::initWithFrame(HueColorPicker *self, const SDL_Rect *frame, ControlStyle style)
 	 * @brief Initializes this HueColorPicker with the specified frame.
 	 * @param self The HueColorPicker.
 	 * @param frame The frame.
+	 * @param style The ControlStyle.
 	 * @return The initialized HueColorPicker, or `NULL` on error.
 	 * @memberof HueColorPicker
 	 */
-	HueColorPicker *(*initWithFrame)(HueColorPicker *self, const SDL_Rect *frame);
+	HueColorPicker *(*initWithFrame)(HueColorPicker *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
 	 * @fn SDL_Color HueColorPicker::rgbColor(const HueColorPicker *self);

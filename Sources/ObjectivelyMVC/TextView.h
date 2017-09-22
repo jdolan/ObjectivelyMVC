@@ -130,7 +130,7 @@ struct TextViewInterface {
 
 	/**
 	 * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style)
-	 * @brief Initializes this TextView with the specified frame.
+	 * @brief Initializes this TextView with the specified frame and style.
 	 * @param self The TextView.
 	 * @param frame The frame.
 	 * @param style The ControlStyle.

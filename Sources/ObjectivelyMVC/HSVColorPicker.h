@@ -59,15 +59,15 @@ struct HSVColorPickerDelegate {
 
 /**
  * @brief The HSVColorPicker type.
- * @extends StackView
- * @ingroup ColorPickers
+ * @extends Control
+ * @ingroup Controls
  */
 struct HSVColorPicker {
 
 	/**
 	 * @brief The superclass.
 	 */
-	StackView stackView;
+	Control control;
 
 	/**
 	 * @brief The interface.
@@ -99,6 +99,11 @@ struct HSVColorPicker {
 	 * @brief The Inputs containing the Sliders.
 	 */
 	Input *hueInput, *saturationInput, *valueInput;
+
+	/**
+	 * @brief The StackView.
+	 */
+	StackView *stackView;
 };
 
 /**
@@ -109,17 +114,18 @@ struct HSVColorPickerInterface {
 	/**
 	 * @brief The superclass interface.
 	 */
-	StackViewInterface stackViewInterface;
+	ControlInterface controlInterface;
 
 	/**
-	 * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame)
-	 * @brief Initializes this HSVColorPicker with the specified frame.
+	 * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame, ControlStyle style)
+	 * @brief Initializes this HSVColorPicker with the specified frame and style.
 	 * @param self The HSVColorPicker.
 	 * @param frame The frame.
+	 * @param style The ControlStyle.
 	 * @return The initialized HSVColorPicker, or `NULL` on error.
 	 * @memberof HSVColorPicker
 	 */
-	HSVColorPicker *(*initWithFrame)(HSVColorPicker *self, const SDL_Rect *frame);
+	HSVColorPicker *(*initWithFrame)(HSVColorPicker *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
 	 * @fn SDL_Color HSVColorPicker::rgbColor(const HSVColorPicker *self);

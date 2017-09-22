@@ -67,16 +67,15 @@ static void dealloc(Object *self) {
 	RGBColorPicker *this = (RGBColorPicker *) self;
 
 	release(this->colorView);
-
 	release(this->redSlider);
-	release(this->greenSlider);
-	release(this->blueSlider);
-	release(this->alphaSlider);
-
 	release(this->redInput);
+	release(this->greenSlider);
 	release(this->greenInput);
+	release(this->blueSlider);
 	release(this->blueInput);
+	release(this->alphaSlider);
 	release(this->alphaInput);
+	release(this->stackView);
 
 	super(Object, self, dealloc);
 }
@@ -96,13 +95,14 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("color", InletTypeColor, &this->color, NULL),
 		MakeInlet("colorView", InletTypeView, &this->colorView, NULL),
 		MakeInlet("redSlider", InletTypeView, &this->redSlider, NULL),
-		MakeInlet("greenSlider", InletTypeView, &this->greenSlider, NULL),
-		MakeInlet("blueSlider", InletTypeView, &this->blueSlider, NULL),
-		MakeInlet("alphaSlider", InletTypeView, &this->alphaSlider, NULL),
 		MakeInlet("redInput", InletTypeView, &this->redInput, NULL),
+		MakeInlet("greenSlider", InletTypeView, &this->greenSlider, NULL),
 		MakeInlet("greenInput", InletTypeView, &this->greenInput, NULL),
+		MakeInlet("blueSlider", InletTypeView, &this->blueSlider, NULL),
 		MakeInlet("blueInput", InletTypeView, &this->blueInput, NULL),
-		MakeInlet("alphaInput", InletTypeView, &this->alphaInput, NULL)
+		MakeInlet("alphaSlider", InletTypeView, &this->alphaSlider, NULL),
+		MakeInlet("alphaInput", InletTypeView, &this->alphaInput, NULL),
+		MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -112,7 +112,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((RGBColorPicker *) self, initWithFrame, NULL);
+	return (View *) $((RGBColorPicker *) self, initWithFrame, NULL, ControlStyleDefault);
 }
 
 /**
@@ -130,20 +130,27 @@ static void updateBindings(View *self) {
 #pragma mark - RGBColorPicker
 
 /**
- * @fn RGBColorPicker *RGBColorPicker::initWithFrame(RGBColorPicker *self, const SDL_Rect *frame)
+ * @fn RGBColorPicker *RGBColorPicker::initWithFrame(RGBColorPicker *self, const SDL_Rect *frame, ControlStyle style)
  * @memberof RGBColorPicker
  */
-static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame) {
+static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame, ControlStyle style) {
 
-	self = (RGBColorPicker *) super(StackView, self, initWithFrame, frame);
+	self = (RGBColorPicker *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
+
+		self->control.view.autoresizingMask = ViewAutoresizingContain;
+
+		self->stackView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->stackView);
+
+		$((View *) self, addSubview, (View *) self->stackView);
 
 		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 150, 24));
 		assert(self->colorView);
 
-		$((View *) self, addSubview, self->colorView);
+		$((View *) self->stackView, addSubview, self->colorView);
 
-		self->redSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		self->redSlider = $(alloc(Slider), initWithFrame, NULL, style);
 		assert(self->redSlider);
 
 		self->redSlider->delegate.self = self;
@@ -157,9 +164,9 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 		$(self->redInput, setControl, (Control *) self->redSlider);
 		$(self->redInput->label->text, setText, "R");
 
-		$((View *) self, addSubview, (View *) self->redInput);
+		$((View *) self->stackView, addSubview, (View *) self->redInput);
 
-		self->greenSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		self->greenSlider = $(alloc(Slider), initWithFrame, NULL, style);
 		assert(self->greenSlider);
 
 		self->greenSlider->delegate.self = self;
@@ -173,9 +180,9 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 		$(self->greenInput, setControl, (Control *) self->greenSlider);
 		$(self->greenInput->label->text, setText, "G");
 
-		$((View *) self, addSubview, (View *) self->greenInput);
+		$((View *) self->stackView, addSubview, (View *) self->greenInput);
 
-		self->blueSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		self->blueSlider = $(alloc(Slider), initWithFrame, NULL, style);
 		assert(self->blueSlider);
 
 		self->blueSlider->delegate.self = self;
@@ -189,9 +196,9 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 		$(self->blueInput, setControl, (Control *) self->blueSlider);
 		$(self->blueInput->label->text, setText, "B");
 
-		$((View *) self, addSubview, (View *) self->blueInput);
+		$((View *) self->stackView, addSubview, (View *) self->blueInput);
 
-		self->alphaSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		self->alphaSlider = $(alloc(Slider), initWithFrame, NULL, style);
 		assert(self->alphaSlider);
 
 		self->alphaSlider->delegate.self = self;
@@ -205,7 +212,7 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 		$(self->alphaInput, setControl, (Control *) self->alphaSlider);
 		$(self->alphaInput->label->text, setText, "A");
 
-		$((View *) self, addSubview, (View *) self->alphaInput);
+		$((View *) self->stackView, addSubview, (View *) self->alphaInput);
 
 		$(self, setColor, Colors.White);
 	}
@@ -252,7 +259,7 @@ Class *_RGBColorPicker(void) {
 
 	do_once(&once, {
 		clazz.name = "RGBColorPicker";
-		clazz.superclass = _StackView();
+		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(RGBColorPicker);
 		clazz.interfaceOffset = offsetof(RGBColorPicker, interface);
 		clazz.interfaceSize = sizeof(RGBColorPickerInterface);

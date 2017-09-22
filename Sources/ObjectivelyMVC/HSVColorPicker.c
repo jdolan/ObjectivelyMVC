@@ -63,14 +63,13 @@ static void dealloc(Object *self) {
 	HSVColorPicker *this = (HSVColorPicker *) self;
 
 	release(this->colorView);
-
 	release(this->hueSlider);
-	release(this->saturationSlider);
-	release(this->valueSlider);
-
 	release(this->hueInput);
+	release(this->saturationSlider);
 	release(this->saturationInput);
+	release(this->valueSlider);
 	release(this->valueInput);
+	release(this->stackView);
 
 	super(Object, self, dealloc);
 }
@@ -92,11 +91,12 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("saturation", InletTypeDouble, &this->saturation, NULL),
 		MakeInlet("value", InletTypeDouble, &this->value, NULL),
 		MakeInlet("hueSlider", InletTypeView, &this->hueSlider, NULL),
-		MakeInlet("saturationSlider", InletTypeView, &this->saturationSlider, NULL),
-		MakeInlet("valueSlider", InletTypeView, &this->valueSlider, NULL),
 		MakeInlet("hueInput", InletTypeView, &this->hueInput, NULL),
+		MakeInlet("saturationSlider", InletTypeView, &this->saturationSlider, NULL),
 		MakeInlet("saturationInput", InletTypeView, &this->saturationInput, NULL),
-		MakeInlet("valueInput", InletTypeView, &this->valueInput, NULL)
+		MakeInlet("valueSlider", InletTypeView, &this->valueSlider, NULL),
+		MakeInlet("valueInput", InletTypeView, &this->valueInput, NULL),
+		MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -106,7 +106,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((HSVColorPicker *) self, initWithFrame, NULL);
+	return (View *) $((HSVColorPicker *) self, initWithFrame, NULL, ControlStyleDefault);
 }
 
 /**
@@ -124,20 +124,26 @@ static void updateBindings(View *self) {
 #pragma mark - HSVColorPicker
 
 /**
- * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame)
+ * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame, ControlStyle style)
  * @memberof HSVColorPicker
  */
-static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame) {
+static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame, ControlStyle style) {
 
-	self = (HSVColorPicker *) super(StackView, self, initWithFrame, frame);
+	self = (HSVColorPicker *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
+		self->control.view.autoresizingMask = ViewAutoresizingContain;
+
+		self->stackView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->stackView);
+
+		$((View *) self, addSubview, (View *) self->stackView);
 
 		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 150, 24));
 		assert(self->colorView);
 
-		$((View *) self, addSubview, self->colorView);
+		$((View *) self->stackView, addSubview, self->colorView);
 
-		self->hueSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		self->hueSlider = $(alloc(Slider), initWithFrame, NULL, style);
 		assert(self->hueSlider);
 
 		self->hueSlider->delegate.self = self;
@@ -151,9 +157,9 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 		$(self->hueInput, setControl, (Control *) self->hueSlider);
 		$(self->hueInput->label->text, setText, "H");
 
-		$((View *) self, addSubview, (View *) self->hueInput);
+		$((View *) self->stackView, addSubview, (View *) self->hueInput);
 
-		self->saturationSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		self->saturationSlider = $(alloc(Slider), initWithFrame, NULL, style);
 		assert(self->saturationSlider);
 
 		self->saturationSlider->delegate.self = self;
@@ -167,9 +173,9 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 		$(self->saturationInput, setControl, (Control *) self->saturationSlider);
 		$(self->saturationInput->label->text, setText, "S");
 
-		$((View *) self, addSubview, (View *) self->saturationInput);
+		$((View *) self->stackView, addSubview, (View *) self->saturationInput);
 
-		self->valueSlider = $(alloc(Slider), initWithFrame, NULL, ControlStyleDefault);
+		self->valueSlider = $(alloc(Slider), initWithFrame, NULL, style);
 		assert(self->valueSlider);
 
 		self->valueSlider->delegate.self = self;
@@ -183,7 +189,7 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 		$(self->valueInput, setControl, (Control *) self->valueSlider);
 		$(self->valueInput->label->text, setText, "V");
 
-		$((View *) self, addSubview, (View *) self->valueInput);
+		$((View *) self->stackView, addSubview, (View *) self->valueInput);
 
 		$(self, setColor, 0.0, 1.0, 1.0);
 	}
@@ -238,7 +244,7 @@ Class *_HSVColorPicker(void) {
 
 	do_once(&once, {
 		clazz.name = "HSVColorPicker";
-		clazz.superclass = _StackView();
+		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(HSVColorPicker);
 		clazz.interfaceOffset = offsetof(HSVColorPicker, interface);
 		clazz.interfaceSize = sizeof(HSVColorPickerInterface);

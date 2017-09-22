@@ -57,15 +57,15 @@ struct RGBColorPickerDelegate {
 
 /**
  * @brief RGB(A) color picker.
- * @extends StackView
- * @ingroup ColorPickers
+ * @extends Control
+ * @ingroup Controls
  */
 struct RGBColorPicker {
 
 	/**
 	 * @brief The superclass.
 	 */
-	StackView stackView;
+	Control control;
 
 	/**
 	 * @brief The interface.
@@ -97,6 +97,11 @@ struct RGBColorPicker {
 	 * @brief The Inputs containing the Sliders.
 	 */
 	Input *redInput, *greenInput, *blueInput, *alphaInput;
+
+	/**
+	 * @brief The StackView.
+	 */
+	StackView *stackView;
 };
 
 /**
@@ -107,17 +112,18 @@ struct RGBColorPickerInterface {
 	/**
 	 * @brief The superclass interface.
 	 */
-	StackViewInterface stackViewInterface;
+	ControlInterface controlInterface;
 
 	/**
 	 * @fn RGBColorPicker *RGBColorPicker::initWithFrame(RGBColorPicker *self, const SDL_Rect *frame)
-	 * @brief Initializes this RGBColorPicker with the specified frame.
+	 * @brief Initializes this RGBColorPicker with the specified frame and style.
 	 * @param self The RGBColorPicker.
 	 * @param frame The frame.
+	 * @param style The ControlStyle.
 	 * @return The initialized RGBColorPicker, or `NULL` on error.
 	 * @memberof RGBColorPicker
 	 */
-	RGBColorPicker *(*initWithFrame)(RGBColorPicker *self, const SDL_Rect *frame);
+	RGBColorPicker *(*initWithFrame)(RGBColorPicker *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
 	 * @fn void RGBColorPicker::setColor(RGBColorPicker *self, const SDL_Color color)
