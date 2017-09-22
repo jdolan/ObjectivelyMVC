@@ -83,6 +83,8 @@
 		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE14A8D01C68CE3C00B576FB /* Option.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CE1C68CE3C00B576FB /* Option.c */; };
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE1A28271F74A036005F62A9 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
+		CE1A28281F74A057005F62A9 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */ = {isa = PBXBuildFile; fileRef = CE1CCDA21D9E859F00891F05 /* View+JSON.c */; };
 		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE3CB2A11F410D1900FAA016 /* Constraint.c in Sources */ = {isa = PBXBuildFile; fileRef = CE3CB29F1F410D1900FAA016 /* Constraint.c */; };
@@ -90,7 +92,6 @@
 		CE423A361F53452D002767E7 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE423A421F534543002767E7 /* Constraint.c in Sources */ = {isa = PBXBuildFile; fileRef = CE423A2D1F534179002767E7 /* Constraint.c */; };
 		CE423A441F53457D002767E7 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
-		CE423A4E1F53480A002767E7 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE5604D11EAB9F4B00E42E53 /* TabViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5604CF1EAB9F4B00E42E53 /* TabViewController.c */; };
 		CE5604D21EAB9F4B00E42E53 /* TabViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604D01EAB9F4B00E42E53 /* TabViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE5604D91EABA06E00E42E53 /* TabViewItem.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5604D71EABA06E00E42E53 /* TabViewItem.c */; };
@@ -133,7 +134,6 @@
 		CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
 		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
-		CEF1D8911D4270150099A857 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CEF1D8A01D440C7B0099A857 /* Box.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D89E1D440C7B0099A857 /* Box.c */; };
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
@@ -325,8 +325,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEF1D8911D4270150099A857 /* libObjectively.dylib in Frameworks */,
 				CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
+				CE1A28281F74A057005F62A9 /* libObjectively.dylib in Frameworks */,
 				CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */,
 				CE12D45C1C4C8F2400CD0B13 /* libfontconfig.1.dylib in Frameworks */,
 				CE12D45E1C4C8F2400CD0B13 /* libSDL2_image-2.0.0.dylib in Frameworks */,
@@ -340,7 +340,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE423A441F53457D002767E7 /* libcheck.0.dylib in Frameworks */,
-				CE423A4E1F53480A002767E7 /* libObjectively.dylib in Frameworks */,
+				CE1A28271F74A036005F62A9 /* libObjectively.dylib in Frameworks */,
 				CE423A361F53452D002767E7 /* libObjectivelyMVC.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
