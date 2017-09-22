@@ -115,7 +115,7 @@ struct RGBColorPickerInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn RGBColorPicker *RGBColorPicker::initWithFrame(RGBColorPicker *self, const SDL_Rect *frame)
+	 * @fn RGBColorPicker *RGBColorPicker::initWithFrame(RGBColorPicker *self, const SDL_Rect *frame, ControlStyle style)
 	 * @brief Initializes this RGBColorPicker with the specified frame and style.
 	 * @param self The RGBColorPicker.
 	 * @param frame The frame.
