@@ -173,6 +173,7 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 
 		self->tabSelectionView->axis = StackViewAxisHorizontal;
 		self->tabSelectionView->distribution = StackViewDistributionFillEqually;
+		self->tabSelectionView->spacing = DEFAULT_TAB_VIEW_ITEM_SPACING;
 
 		self->tabSelectionView->view.autoresizingMask |= ViewAutoresizingWidth;
 

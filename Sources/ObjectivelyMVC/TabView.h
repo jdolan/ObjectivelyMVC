@@ -34,6 +34,7 @@
  * @brief Tabbed pages within a single View.
  */
 
+#define DEFAULT_TAB_VIEW_ITEM_SPACING 4
 #define DEFAULT_TAB_VIEW_SPACING 4
 
 typedef struct TabViewDelegate TabViewDelegate;
