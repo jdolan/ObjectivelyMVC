@@ -86,6 +86,7 @@ static void render(View *self, Renderer *renderer) {
 
 		if (this->texture == 0) {
 			SDL_Surface *surface = $(this->font, renderCharacters, this->text, this->color);
+			assert(surface);
 
 			this->texture = $(renderer, createTexture, surface);
 

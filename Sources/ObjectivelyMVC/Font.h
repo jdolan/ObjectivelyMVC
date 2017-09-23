@@ -52,7 +52,9 @@ typedef enum {
 	FontCategoryPrimaryControl,
 	FontCategorySecondaryControl,
 	FontCategoryPrimaryResponder,
-	FontCategorySecondaryResponder
+	FontCategorySecondaryResponder,
+	FontCategoryUser,
+	FontCategoryMax = 16
 } FontCategory;
 
 typedef struct Font Font;
@@ -126,6 +128,30 @@ struct FontInterface {
 	Font *(*initWithAttributes)(Font *self, const char *family, int size, int style);
 
 	/**
+	 * @fn Font *Font::initWithData(Font *self, SDL_RWops *buffer, int size, int index)
+	 * @brief Initializes this Font with the given TTF Data.
+	 * @param self The Font.
+	 * @param buffer The buffer containing the TrueType font.
+	 * @param size The point size.
+	 * @param index The index of the desired font face within the font.
+	 * @return The initialized Font, or `NULL` on error.
+	 * @remarks The buffer will be freed by the Font when it is no longer needed.
+	 * @memberof Font
+	 */
+	Font *(*initWithBuffer)(Font *self, SDL_RWops *buffer, int size, int index);
+
+	/**
+	 * @fn Font *Font::initWithFont(Font *self, ident font)
+	 * @brief Initializes this Font with the given TrueType font.
+	 * @param self The Font.
+	 * @param font The TrueType font.
+	 * @return The initialized Font, or `NULL` on error.
+	 * @remarks Designated initializer.
+	 * @memberof Font
+	 */
+	Font *(*initWithFont)(Font *self, ident font);
+
+	/**
 	 * @fn Font *Font::initWithName(Font *self, const char *name)
 	 * @brief Initializes this Font with the given Fontconfig name.
 	 * @param self The Font.
@@ -164,6 +190,16 @@ struct FontInterface {
 	 * @memberof Font
 	 */
 	void (*renderDeviceDidReset)(Font *self);
+
+	/**
+	 * @static
+	 * @fn void Font::setDefaultFont(FontCategory category, Font *font)
+	 * @brief Sets the default Font for the given category.
+	 * @param category The FontCategory.
+	 * @param font The Font.
+	 * @memberof Font
+	 */
+	void (*setDefaultFont)(FontCategory category, Font *font);
 
 	/**
 	 * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
