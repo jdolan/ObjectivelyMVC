@@ -238,6 +238,7 @@ static void setValue(Slider *self, double value) {
 	const double delta = fabs(self->value - value);
 	if (delta > __DBL_EPSILON__) {
 		self->value = value;
+		self->control.view.needsLayout = true;
 
 		$(self, updateLabel);
 
@@ -266,10 +267,6 @@ static void setLabelFormat(Slider *self, const char *labelFormat) {
  * @memberof Slider
  */
 static void updateLabel(Slider *self) {
-
-	// Force a delta difference so the label updates
-
-	self->control.view.needsLayout = true;
 
 	char text[64];
 	snprintf(text, sizeof(text), self->labelFormat, self->value);

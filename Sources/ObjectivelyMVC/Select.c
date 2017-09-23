@@ -142,10 +142,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 				Option *option = $(options, objectAtIndex, i);
 				if ($((View *) option, didReceiveEvent, event)) {
-					this->selectedOption = option;
-					if (this->delegate.didSelectOption) {
-						this->delegate.didSelectOption(this, option);
-					}
+					$(this, selectOptionWithValue, option->value);
 					return true;
 				}
 			}
@@ -344,7 +341,14 @@ static void removeOptionWithValue(Select *self, ident value) {
  * @memberof Select
  */
 static void selectOptionWithValue(Select *self, ident value) {
+
 	self->selectedOption = $(self, optionWithValue, value);
+	if (self->selectedOption) {
+
+		if (self->delegate.didSelectOption) {
+			self->delegate.didSelectOption(self, self->selectedOption);
+		}
+	}
 }
 
 #pragma mark - Class lifecycle
