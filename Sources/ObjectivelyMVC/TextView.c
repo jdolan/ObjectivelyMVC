@@ -308,7 +308,8 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		if (self->control.style == ControlStyleDefault) {
 			self->control.bevel = ControlBevelTypeInset;
 
-			self->control.view.backgroundColor = Colors.DimGray;
+			self->control.view.backgroundColor = Colors.Charcoal;
+			self->control.view.backgroundColor.a = 48;
 
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_TEXTVIEW_WIDTH;
