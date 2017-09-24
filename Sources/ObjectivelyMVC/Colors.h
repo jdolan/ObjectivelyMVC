@@ -205,11 +205,26 @@ OBJECTIVELYMVC_EXPORT const struct _Colors {
 #define MakeColor(r, g, b, a) (SDL_Color) { (r), (g), (b), (a) }
 
 /**
- * @brief Converts the given HSV color values to an RGB color.
- * @param hue The hue (0.0 - 360.0).
- * @param saturation The saturation (0.0 - 1.0).
- * @param value The brightness value (0.0 - 1.0).
- * @return An SDL_Color containing the byte-clamped RGB value.
+ * @brief Converts the given hexadecimal color string to an RGBA color.
+ * @param hexString The hexadecimal color string (e.g. `deadbeef`).
+ * @return An SDL_Color containing the byte-clamped RGBA value.s
+ */
+OBJECTIVELYMVC_EXPORT SDL_Color MVC_HexToRGBA(const char *hexString);
+
+/**
+ * @brief Converts the given HSV components to an RGB color.
+ * @param hue The hue component (0.0 - 360.0).
+ * @param saturation The saturation component (0.0 - 1.0).
+ * @param value The value component (0.0 - 1.0).
+ * @return An SDL_Color containing the byte-clamped RGB values.
  */
 OBJECTIVELYMVC_EXPORT SDL_Color MVC_HSVToRGB(double hue, double saturation, double value);
 
+/**
+ * @brief Converts the given RGB color to HSV components.
+ * @param color The RGB color.
+ * @param *hue The hue component.
+ * @param saturation The saturation component.
+ * @param value The value component.
+ */
+OBJECTIVELYMVC_EXPORT void MVC_RGBToHSV(const SDL_Color *color, double *hue, double *saturation, double *value);

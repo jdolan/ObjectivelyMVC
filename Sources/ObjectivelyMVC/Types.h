@@ -26,6 +26,8 @@
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_pixels.h>
 
+#include <Objectively/Types.h>
+
 #undef interface
 
 #if defined(_MSC_VER)

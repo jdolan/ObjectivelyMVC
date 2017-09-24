@@ -16,6 +16,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <assert.h>
+
 #include <ObjectivelyMVC/Colors.h>
 
 const struct _Colors Colors = {
@@ -181,6 +183,25 @@ const struct _Colors Colors = {
 	.YellowGreen = { 154, 205, 50, 255 },
 };
 
+SDL_Color MVC_HexToRGBA(const char *hex) {
+
+	SDL_Color color;
+
+	const int c = sscanf(hex, "%02hhx%02hhx%02hhx%02hhx", &color.r, &color.g, &color.b, &color.a);
+	switch (c) {
+		case 3:
+			color.a = 255;
+			break;
+		case 4:
+			break;
+		default:
+			color = Colors.Black;
+			break;
+	}
+
+	return color;
+}
+
 SDL_Color MVC_HSVToRGB(double hue, double saturation, double value) {
 
 	SDL_Color color = { .a = 255 };
@@ -229,3 +250,57 @@ SDL_Color MVC_HSVToRGB(double hue, double saturation, double value) {
 	return color;
 }
 
+void MVC_RGBToHSV(const SDL_Color *color, double *hue, double *saturation, double *value) {
+
+	assert(color);
+
+	const double r = color->r / 255.0;
+	const double g = color->g / 255.0;
+	const double b = color->b / 255.0;
+
+	const double rgbMax = max(max(r, g), b);
+	const double rgbMin = min(min(r, g), b);
+	const double rgbDelta = rgbMax - rgbMin;
+
+	if (rgbDelta > 0.0) {
+
+		if (hue) {
+			if (rgbMax == r) {
+				*hue = 60.0 * fmod(((g - b) / rgbDelta), 6.0);
+			} else if (rgbMax == g) {
+				*hue = 60.0 * (((b - r) / rgbDelta) + 2.0);
+			} else if (rgbMax == b) {
+				*hue = 60.0 * (((r - g) / rgbDelta) + 4.0);
+			}
+
+			while (*hue < 0.0) {
+				*hue += 360.0;
+			}
+		}
+
+		if (saturation) {
+			if (rgbMax > 0.0) {
+				*saturation = rgbDelta / rgbMax;
+			} else {
+				*saturation = 0.0;
+			}
+		}
+
+		if (value) {
+			*value = rgbMax;
+		}
+
+	} else {
+		if (hue) {
+			*hue = 0.0;
+		}
+
+		if (saturation) {
+			*saturation = 0.0;
+		}
+
+		if (value) {
+			*value = rgbMax;
+		}
+	}
+}

@@ -223,6 +223,16 @@ static void setColor(HSVColorPicker *self, double hue, double saturation, double
 
 	$((View *) self, updateBindings);
 }
+
+/**
+ * @fn void HSVColorPicker::setRGBColor(HSVColorPicker *self, const SDL_Color *color)
+ * @memberof HSVColorPicker
+ */
+static void setRGBColor(HSVColorPicker *self, const SDL_Color *color) {
+
+	MVC_RGBToHSV(color, &self->hue, &self->saturation, &self->value);
+
+	$((View *) self, updateBindings);
 }
 
 #pragma mark - Class lifecycle
@@ -241,6 +251,7 @@ static void initialize(Class *clazz) {
 	((HSVColorPickerInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((HSVColorPickerInterface *) clazz->def->interface)->rgbColor = rgbColor;
 	((HSVColorPickerInterface *) clazz->def->interface)->setColor = setColor;
+	((HSVColorPickerInterface *) clazz->def->interface)->setRGBColor = setRGBColor;
 }
 
 /**

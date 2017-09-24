@@ -140,6 +140,15 @@ struct HueColorPickerInterface {
 	 * @memberof HueColorPicker
 	 */
 	void (*setColor)(HueColorPicker *self, double hue, double saturation, double value);
+
+	/**
+	 * @fn void HueColorPicker::setRGBColor(HueColorPicker *self, const SDL_Color *color)
+	 * @brief Sets the color of the HueColorPicker.
+	 * @param self The HueColorPicker.
+	 * @param color The RGB color.
+	 * @memberof HueColorPicker
+	 */
+	void (*setRGBColor)(HueColorPicker *self, const SDL_Color *color);
 };
 
 /**

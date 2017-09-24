@@ -145,6 +145,15 @@ struct HSVColorPickerInterface {
 	 * @memberof HSVColorPicker
 	 */
 	void (*setColor)(HSVColorPicker *self, double hue, double saturation, double value);
+
+	/**
+	 * @fn void HSVColorPicker::setRGBColor(HSVColorPicker *self, const SDL_Color *color)
+	 * @brief Sets the color of the HSVColorPicker.
+	 * @param self The HSVColorPicker.
+	 * @param color The RGB color.
+	 * @memberof HSVColorPicker
+	 */
+	void (*setRGBColor)(HSVColorPicker *self, const SDL_Color *color);
 };
 
 /**
