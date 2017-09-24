@@ -126,13 +126,13 @@ struct RGBColorPickerInterface {
 	RGBColorPicker *(*initWithFrame)(RGBColorPicker *self, const SDL_Rect *frame, ControlStyle style);
 
 	/**
-	 * @fn void RGBColorPicker::setColor(RGBColorPicker *self, const SDL_Color color)
+	 * @fn void RGBColorPicker::setColor(RGBColorPicker *self, const SDL_Color *color)
 	 * @brief Sets the color of the RGBColorPicker
 	 * @param self The RGBColorPicker.
-	 * @param color The color to change to
+	 * @param color The color.
 	 * @memberof RGBColorPicker
 	 */
-	void (*setColor)(RGBColorPicker *self, const SDL_Color color);
+	void (*setColor)(RGBColorPicker *self, const SDL_Color *color);
 };
 
 /**

@@ -99,6 +99,8 @@ static void updateBindings(View *self) {
 
 	HueColorPicker *this = (HueColorPicker *) self;
 
+	$(this->hueSlider, setValue, this->hue);
+
 	this->colorView->backgroundColor = $(this, rgbColor);
 }
 
@@ -132,7 +134,7 @@ static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame
 		self->hueSlider->delegate.self = self;
 		self->hueSlider->delegate.didSetValue = didSetHue;
 		self->hueSlider->max = 360.0;
-		$(self->hueSlider, setLabelFormat, "%.1f");
+		$(self->hueSlider, setLabelFormat, "%.0lf");
 
 		$((View *) self->stackView, addSubview, (View *) self->hueSlider);
 
@@ -156,10 +158,12 @@ static SDL_Color rgbColor(const HueColorPicker *self) {
  */
 static void setColor(HueColorPicker *self, double hue, double saturation, double value) {
 
+	self->hue = hue;
 	self->saturation = saturation;
 	self->value = value;
 
-	$(self->hueSlider, setValue, hue);
+	$((View *) self, updateBindings);
+}
 }
 
 #pragma mark - Class lifecycle

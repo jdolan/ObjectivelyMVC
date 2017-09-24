@@ -124,6 +124,11 @@ static void updateBindings(View *self) {
 
 	RGBColorPicker *this = (RGBColorPicker *) self;
 
+	$(this->redSlider, setValue, this->color.r);
+	$(this->greenSlider, setValue, this->color.g);
+	$(this->blueSlider, setValue, this->color.b);
+	$(this->alphaSlider, setValue, this->color.a);
+
 	this->colorView->backgroundColor = this->color;
 }
 
@@ -216,22 +221,23 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 
 		$((View *) self->stackView, addSubview, (View *) self->alphaInput);
 
-		$(self, setColor, Colors.White);
+		$(self, setColor, &Colors.White);
 	}
 
 	return self;
 }
 
 /**
- * @fn void RGBColorPicker::setColor(RGBColorPicker *self, const SDL_Color color)
+ * @fn void RGBColorPicker::setColor(RGBColorPicker *self, const SDL_Color *color)
  * @memberof RGBColorPicker
  */
-static void setColor(RGBColorPicker *self, const SDL_Color color) {
+static void setColor(RGBColorPicker *self, const SDL_Color *color) {
 
-	$(self->redSlider, setValue, color.r);
-	$(self->greenSlider, setValue, color.g);
-	$(self->blueSlider, setValue, color.b);
-	$(self->alphaSlider, setValue, color.a);
+	assert(color);
+
+	self->color = *color;
+
+	$((View *) self, updateBindings);
 }
 
 #pragma mark - Class lifecycle
