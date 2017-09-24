@@ -43,13 +43,9 @@ static void dealloc(Object *self) {
 
 	Font *this = (Font *) self;
 
-	if (this->font) {
-		TTF_CloseFont(this->font);
-	}
-
-	if (this->name) {
-		FcStrFree((FcChar8 *) this->name);
-	}
+	release(this->data);
+	
+	TTF_CloseFont(this->font);
 
 	super(Object, self, dealloc);
 }
@@ -137,61 +133,57 @@ static Font *defaultFont(FontCategory category) {
  * @memberof Font
  */
 static Font *initWithAttributes(Font *self, const char *family, int size, int style) {
+	FcResult result;
 
-	FcPattern *pattern = FcPatternCreate();
-	assert(pattern);
+	FcPattern *search = FcPatternCreate();
+	assert(search);
 
-	FcPatternAddString(pattern, FC_FAMILY, (FcChar8 *) family);
+	FcPatternAddString(search, FC_FONTFORMAT, (FcChar8 *) "TrueType");
+	FcPatternAddString(search, FC_FAMILY, (FcChar8 *) family);
+	FcPatternAddDouble(search, FC_SIZE, (double) size);
 
-	FcPatternAddDouble(pattern, FC_SIZE, (double) size);
-
-	if (style & TTF_STYLE_BOLD) {
-		if (style & TTF_STYLE_ITALIC) {
-			FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Bold Italic");
+	if (style & FontStyleBold) {
+		if (style & FontStyleItalic) {
+			FcPatternAddString(search, FC_STYLE, (FcChar8 *) "Bold Italic");
 		} else {
-			FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Bold");
+			FcPatternAddString(search, FC_STYLE, (FcChar8 *) "Bold");
 		}
-	} else if (style & TTF_STYLE_ITALIC) {
-		FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Italic");
+	} else if (style & FontStyleItalic) {
+		FcPatternAddString(search, FC_STYLE, (FcChar8 *) "Italic");
 	} else {
-		FcPatternAddString(pattern, FC_STYLE, (FcChar8 *) "Regular");
-	};
+		FcPatternAddString(search, FC_STYLE, (FcChar8 *) "Regular");
+	}
 
-	self = $(self, initWithPattern, pattern);
+	FcConfigSubstitute(NULL, search, FcMatchPattern);
+	FcDefaultSubstitute(search);
+
+	FcPattern *pattern = FcFontMatch(NULL, search, &result);
+	if (result == FcResultMatch) {
+		self = $(self, initWithPattern, pattern);
+	}
 
 	FcPatternDestroy(pattern);
+	FcPatternDestroy(search);
 
 	return self;
 }
 
 /**
- * @fn Font *Font::initWithBuffer(Font *self, SDL_RWops *buffer, int size, int index)
+ * @fn Font *Font::initWithData(Font *self, Data *data, int size, int index)
  * @memberof Font
  */
-static Font *initWithBuffer(Font *self, SDL_RWops *buffer, int size, int index) {
-
-	assert(buffer);
-
-	const double windowScale = MVC_WindowScale(NULL, NULL, NULL);
-
-	$(self, initWithFont, TTF_OpenFontIndexRW(buffer, 1, size * windowScale, index));
-
-	return self;
-}
-
-/**
- * @fn Font *Font::initWithFont(Font *self, ident font)
- * @memberof Font
- */
-static Font *initWithFont(Font *self, ident font) {
+static Font *initWithData(Font *self, Data *data, int size, int index) {
 
 	self = (Font *) super(Object, self, init);
 	if (self) {
 
-		self->font = font;
-		assert(self->font);
+		self->data = retain(data);
+		assert(self->data);
 
-		TTF_SetFontHinting(self->font, TTF_HINTING_LIGHT);
+		self->size = size;
+		self->index = index;
+
+		$(self, renderDeviceDidReset);
 	}
 
 	return self;
@@ -207,7 +199,6 @@ static Font *initWithName(Font *self, const char *name) {
 	if (pattern) {
 
 		self = $(self, initWithPattern, pattern);
-
 		FcPatternDestroy(pattern);
 	}
 
@@ -222,56 +213,22 @@ static Font *initWithPattern(Font *self, ident pattern) {
 
 	assert(pattern);
 
-	FcPattern *search = FcPatternDuplicate(pattern);
-	assert(search);
+	FcChar8 *file;
+	if (FcPatternGetString(pattern, FC_FILE, 0, &file) == FcResultMatch) {
 
-	FcPatternAddString(search, FC_FONTFORMAT, (FcChar8 *) "TrueType");
+		double size;
+		if (FcPatternGetDouble(pattern, FC_SIZE, 0, &size) == FcResultMatch) {
 
-	double requestedSize;
-	if (FcPatternGetDouble(search, FC_SIZE, 0, &requestedSize) == FcResultMatch) {
+			int index = 0;
+			if (FcPatternGetInteger(pattern, FC_INDEX, 0, &index) == FcResultMatch) {
 
-		FcPatternDel(search, FC_SIZE);
+				Data *data = $$(Data, dataWithContentsOfFile, (char *) file);
 
-		const double windowScale = MVC_WindowScale(NULL, NULL, NULL);
-		FcPatternAddDouble(search, FC_SIZE, requestedSize * windowScale);
-	}
+				self = $(self, initWithData, data, size, index);
 
-	FcConfigSubstitute(NULL, search, FcMatchFont);
-	FcDefaultSubstitute(search);
-
-	FcResult result;
-	FcPattern *match = FcFontMatch(NULL, search, &result);
-
-	if (result == FcResultMatch) {
-
-		FcChar8 *path;
-		if (FcPatternGetString(match, FC_FILE, 0, &path) == FcResultMatch) {
-
-			double size;
-			if (FcPatternGetDouble(match, FC_SIZE, 0, &size) == FcResultMatch) {
-
-				int index;
-				if (FcPatternGetInteger(match, FC_INDEX, 0, &index) == FcResultMatch) {
-
-					$(self, initWithFont, TTF_OpenFontIndex((char *) path, (int) size, index));
-
-					self->name = (char *) FcNameUnparse(pattern);
-					assert(self->name);
-				}
+				release(data);
 			}
 		}
-	}
-
-	FcPatternDestroy(search);
-	FcPatternDestroy(match);
-
-	if (self->font == NULL) {
-		FcChar8 *name = FcNameUnparse(pattern);
-		MVC_LogWarn("Failed to load font with pattern \"%s\"\n", name);
-
-		free(name);
-		release(self);
-		self = NULL;
 	}
 
 	return self;
@@ -298,16 +255,22 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
  */
 static void renderDeviceDidReset(Font *self) {
 
-	// FIXME: In order to respond to changes in resolution (e.g. High DPI),
-	// Fonts need to be able to re-initialize themselves. For FontConfig fonts
-	// this is handled below. For Fonts that are directly loaded by the user,
-	// this is not yet covered
-	
-	char *name = self->name;
-	if (name) {
-		$(self, initWithName, name);
+	const int renderSize = self->size * MVC_WindowScale(NULL, NULL, NULL);
+	if (renderSize != self->renderSize) {
 
-		FcStrFree((FcChar8 *) name);
+		self->renderSize = renderSize;
+
+		if (self->font) {
+			TTF_CloseFont(self->font);
+		}
+
+		SDL_RWops *buffer = SDL_RWFromConstMem(self->data->bytes, (int) self->data->length);
+		assert(buffer);
+
+		self->font = TTF_OpenFontIndexRW(buffer, 1, self->renderSize, self->index);
+		assert(self->font);
+
+		TTF_SetFontHinting(self->font, TTF_HINTING_NORMAL);
 	}
 }
 
@@ -357,8 +320,7 @@ static void initialize(Class *clazz) {
 	((FontInterface *) clazz->def->interface)->allFonts = allFonts;
 	((FontInterface *) clazz->def->interface)->defaultFont = defaultFont;
 	((FontInterface *) clazz->def->interface)->initWithAttributes = initWithAttributes;
-	((FontInterface *) clazz->def->interface)->initWithBuffer = initWithBuffer;
-	((FontInterface *) clazz->def->interface)->initWithFont = initWithFont;
+	((FontInterface *) clazz->def->interface)->initWithData = initWithData;
 	((FontInterface *) clazz->def->interface)->initWithName = initWithName;
 	((FontInterface *) clazz->def->interface)->initWithPattern = initWithPattern;
 	((FontInterface *) clazz->def->interface)->renderCharacters = renderCharacters;

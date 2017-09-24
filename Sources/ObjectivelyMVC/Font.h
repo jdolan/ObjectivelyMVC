@@ -26,6 +26,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <Objectively/Array.h>
+#include <Objectively/Data.h>
 
 #include <ObjectivelyMVC/Types.h>
 
@@ -41,6 +42,17 @@
  * @file
  * @brief TrueType fonts.
  */
+
+/**
+ * @brief Font styles.
+ */
+typedef enum {
+	FontStyleRegular = TTF_STYLE_NORMAL,
+	FontStyleBold = TTF_STYLE_BOLD,
+	FontStyleItalic = TTF_STYLE_ITALIC,
+	FontStyleUnderline = TTF_STYLE_UNDERLINE,
+	FontStyleStrikeThrough = TTF_STYLE_STRIKETHROUGH
+} FontStyle;
 
 /**
  * @brief Font categories.
@@ -78,14 +90,29 @@ struct Font {
 	FontInterface *interface;
 
 	/**
-	 * @brief The backing TTF_Font.
+	 * @brief The raw font data.
 	 */
-	TTF_Font *font;
+	Data *data;
 
 	/**
-	 * @brief The TrueType font name, according to Fontconfig.
+	 * @brief The backing font.
 	 */
-	char *name;
+	ident font;
+
+	/**
+	 * @brief The index in the backing font file.
+	 */
+	int index;
+
+	/**
+	 * @brief The render size, which is dependent on the display resolution.
+	 */
+	int renderSize;
+
+	/**
+	 * @brief The point size.
+	 */
+	int size;
 };
 
 /**
@@ -101,7 +128,7 @@ struct FontInterface {
 	/**
 	 * @static
 	 * @fn Array *Font::allFonts(void)
-	 * @return An Array of all available Font names.
+	 * @return An Array of all Font names known to Fontconfig.
 	 * @memberof Font
 	 */
 	Array *(*allFonts)(void);
@@ -117,39 +144,27 @@ struct FontInterface {
 
 	/**
 	 * @fn Font *Font::initWithAttributes(Font *self, const char *family, int size, int style)
-	 * @brief Initializes this Font with the given attributes.
+	 * @brief Initializes this Font with the given attributes via Fontconfig.
 	 * @param self The Font.
 	 * @param family The font family.
 	 * @param size The point size.
-	 * @param style The style (e.g. `TTF_STYLE_BOLD`).
+	 * @param style The style.
 	 * @return The initialized Font, or `NULL` on error.
 	 * @memberof Font
 	 */
 	Font *(*initWithAttributes)(Font *self, const char *family, int size, int style);
 
 	/**
-	 * @fn Font *Font::initWithData(Font *self, SDL_RWops *buffer, int size, int index)
-	 * @brief Initializes this Font with the given TTF Data.
+	 * @fn Font *Font::initWithData(Font *self, Data *data, int size, int index)
+	 * @brief Initializes this Font with the given TrueType font file.
 	 * @param self The Font.
-	 * @param buffer The buffer containing the TrueType font.
+	 * @param data The Data containing the TrueType font file.
 	 * @param size The point size.
-	 * @param index The index of the desired font face within the font.
+	 * @param index The index of the desired font face within the font file.
 	 * @return The initialized Font, or `NULL` on error.
-	 * @remarks The buffer will be freed by the Font when it is no longer needed.
 	 * @memberof Font
 	 */
-	Font *(*initWithBuffer)(Font *self, SDL_RWops *buffer, int size, int index);
-
-	/**
-	 * @fn Font *Font::initWithFont(Font *self, ident font)
-	 * @brief Initializes this Font with the given TrueType font.
-	 * @param self The Font.
-	 * @param font The TrueType font.
-	 * @return The initialized Font, or `NULL` on error.
-	 * @remarks Designated initializer.
-	 * @memberof Font
-	 */
-	Font *(*initWithFont)(Font *self, ident font);
+	Font *(*initWithData)(Font *self, Data *data, int size, int index);
 
 	/**
 	 * @fn Font *Font::initWithName(Font *self, const char *name)
