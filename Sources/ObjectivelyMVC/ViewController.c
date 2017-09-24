@@ -225,6 +225,7 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
  */
 static void viewWillAppear(ViewController *self) {
 
+	$(self->view, updateBindings);
 }
 
 /**
