@@ -203,6 +203,18 @@ SDL_Color MVC_HexToRGBA(const char *hex) {
 	return color;
 }
 
+char *MVC_RGBToHex(const SDL_Color *color) {
+	return MVC_RGBAToHex(&(const SDL_Color) { .r = color->r, .g = color->g, .b = color->b, .a = 255 });
+}
+
+char *MVC_RGBAToHex(const SDL_Color *color) {
+	static char hex[9];
+
+	snprintf(hex, sizeof(hex), "%02x%02x%02x%02x", color->r, color->g, color->b, color->a);
+
+	return hex;
+}
+
 SDL_Color MVC_HSVToRGB(double hue, double saturation, double value) {
 
 	SDL_Color color = { .a = 255 };

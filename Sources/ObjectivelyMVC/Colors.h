@@ -212,6 +212,20 @@ OBJECTIVELYMVC_EXPORT const struct _Colors {
 OBJECTIVELYMVC_EXPORT SDL_Color MVC_HexToRGBA(const char *hexString);
 
 /**
+ * @param color The RGB color.
+ * @return The hexadecimal color string (e.g. `deadbeef`).
+ * @remarks This function uses static memory and is not thread safe.
+ */
+OBJECTIVELYMVC_EXPORT char *MVC_RGBToHex(const SDL_Color *color);
+
+/**
+ * @param color The RGBA color.
+ * @return The hexadecimal color string (e.g. `deadbeef`).
+ * @remarks This function uses static memory and is not thread safe.
+ */
+OBJECTIVELYMVC_EXPORT char *MVC_RGBAToHex(const SDL_Color *color);
+
+/**
  * @brief Converts the given HSV components to an RGB color.
  * @param hue The hue component (0.0 - 360.0).
  * @param saturation The saturation component (0.0 - 1.0).
