@@ -256,18 +256,19 @@ static TableColumn *columnAtPoint(const TableView *self, const SDL_Point *point)
 	const SDL_Rect frame = $((View *) self, renderFrame);
 	if (SDL_PointInRect(point, &frame)) {
 
-		int x = frame.x + self->control.view.padding.left;
+		const Array *cells = (Array *) self->headerView->tableRowView.cells;
+		const Array *columns = (Array *) self->columns;
 
-		Array *columns = (Array *) self->columns;
-		for (size_t i = 0; i < columns->count; i++) {
+		assert(cells->count == columns->count);
 
-			TableColumn *column = $(columns, objectAtIndex, i);
+		for (size_t i = 0; i < cells->count; i++) {
 
-			if (x + column->width + self->cellSpacing >= point->x) {
-				return column;
+			const View *cell = $(cells, objectAtIndex, i);
+			const SDL_Rect renderFrame = $(cell, renderFrame);
+
+			if (renderFrame.x + renderFrame.w >= point->x) {
+				return $(columns, objectAtIndex, i);
 			}
-
-			x += column->width + self->cellSpacing;
 		}
 	}
 
