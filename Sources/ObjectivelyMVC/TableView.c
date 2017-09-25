@@ -62,8 +62,6 @@ static void awakeWithDictionary_columns(const Array *array, ident obj, ident dat
 
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("cellAlignment", InletTypeEnum, &column->cellAlignment, (ident) ViewAlignmentNames),
-		MakeInlet("maxWidth", InletTypeInteger, &column->maxWidth, NULL),
-		MakeInlet("minWidth", InletTypeInteger, &column->minWidth, NULL),
 		MakeInlet("width", InletTypeInteger, &column->width, NULL)
 	);
 

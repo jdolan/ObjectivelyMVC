@@ -71,22 +71,12 @@ struct TableColumn {
 	char *identifier;
 
 	/**
-	 * @brief The maximum width.
-	 */
-	int maxWidth;
-
-	/**
-	 * @brief The minimum width.
-	 */
-	int minWidth;
-
-	/**
 	 * @brief The sort order.
 	 */
 	Order order;
 
 	/**
-	 * @brief The width.
+	 * @brief The requested width.
 	 */
 	int width;
 };
