@@ -220,12 +220,25 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
 }
 
 /**
+ * @brief ArrayEnumerator for viewWillAppear recursion.
+ */
+static void viewWillAppear_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, viewWillAppear);
+}
+
+/**
  * @fn void ViewController::viewWillAppear(ViewController *self)
  * @memberof ViewController
  */
 static void viewWillAppear(ViewController *self) {
+	$((Array *) self->childViewControllers, enumerateObjects, viewWillAppear_recurse, NULL);
+}
 
-	$(self->view, updateBindings);
+/**
+ * @brief ArrayEnumerator for viewWillDisappear recursion.
+ */
+static void viewWillDisappear_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, viewWillDisappear);
 }
 
 /**
@@ -233,7 +246,7 @@ static void viewWillAppear(ViewController *self) {
  * @memberof ViewController
  */
 static void viewWillDisappear(ViewController *self) {
-
+	$((Array *) self->childViewControllers, enumerateObjects, viewWillDisappear_recurse, NULL);
 }
 
 #pragma mark - Class lifecycle
