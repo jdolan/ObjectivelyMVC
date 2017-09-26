@@ -122,6 +122,7 @@ static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
 		assert(self->label);
 
 		self->label->view.alignment = ViewAlignmentMiddleCenter;
+		self->label->view.zIndex = 1;
 
 		$((View *) self, addSubview, (View *) self->label);
 
