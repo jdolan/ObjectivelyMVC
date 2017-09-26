@@ -170,4 +170,4 @@ struct ProgressBarInterface {
  * @return The ProgressBar Class.
  * @memberof ProgressBar
  */
-OBJECTIVELY_EXPORT Class *_ProgressBar(void);
+OBJECTIVELYMVC_EXPORT Class *_ProgressBar(void);
