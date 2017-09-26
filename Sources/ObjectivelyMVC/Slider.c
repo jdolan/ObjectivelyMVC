@@ -48,6 +48,9 @@ static void dealloc(Object *self) {
 
 #pragma mark - View
 
+/**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
@@ -180,6 +183,18 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 #pragma mark - Slider
 
 /**
+ * @fn void Slider::formatLabel(Slider *self)
+ * @memberof Slider
+ */
+static void formatLabel(Slider *self) {
+
+	char text[64];
+	snprintf(text, sizeof(text), self->labelFormat, self->value);
+
+	$(self->label, setText, text);
+}
+
+/**
  * @fn Slider *Slider::init(Slider *self)
  * @memberof Slider
  */
@@ -228,6 +243,20 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 }
 
 /**
+ * @fn void Slider::setLabelFormat(Slider *self, const char *labelFormat)
+ * @memberof Slider
+ */
+static void setLabelFormat(Slider *self, const char *labelFormat) {
+
+	if (self->labelFormat) {
+		free(self->labelFormat);
+	}
+
+	self->labelFormat = strdup(labelFormat);
+	$(self, formatLabel);
+}
+
+/**
  * @fn void Slider::setValue(Slider *self, double value)
  * @memberof Slider
  */
@@ -240,38 +269,12 @@ static void setValue(Slider *self, double value) {
 		self->value = value;
 		self->control.view.needsLayout = true;
 
-		$(self, updateLabel);
+		$(self, formatLabel);
 
 		if (self->delegate.didSetValue) {
 			self->delegate.didSetValue(self);
 		}
 	}
-}
-
-/**
- * @fn void Slider::setLabelFormat(Slider *self, const char *labelFormat)
- * @memberof Slider
- */
-static void setLabelFormat(Slider *self, const char *labelFormat) {
-
-	if (self->labelFormat) {
-		free(self->labelFormat);
-	}
-
-	self->labelFormat = strdup(labelFormat);
-	$(self, updateLabel);
-}
-
-/**
- * @fn void Slider::updateLabel(Slider *self)
- * @memberof Slider
- */
-static void updateLabel(Slider *self) {
-
-	char text[64];
-	snprintf(text, sizeof(text), self->labelFormat, self->value);
-
-	$((Text *) self->label, setText, text);
 }
 
 #pragma mark - Class lifecycle
@@ -290,10 +293,10 @@ static void initialize(Class *clazz) {
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
+	((SliderInterface *) clazz->def->interface)->formatLabel = formatLabel;
 	((SliderInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((SliderInterface *) clazz->def->interface)->setValue = setValue;
 	((SliderInterface *) clazz->def->interface)->setLabelFormat = setLabelFormat;
-	((SliderInterface *) clazz->def->interface)->updateLabel = updateLabel;
 }
 
 /**

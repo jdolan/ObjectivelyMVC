@@ -117,6 +117,8 @@
 		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */ = {isa = PBXBuildFile; fileRef = CE862AD71F79FB82005C3B10 /* ProgressBar.c */; };
+		CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */ = {isa = PBXBuildFile; fileRef = CE862AD81F79FB82005C3B10 /* ProgressBar.h */; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
 		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF81C84E36100F4C3D4 /* TableView.c */; };
@@ -285,6 +287,8 @@
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 		CE7EA4CD1D479A9000BD37A3 /* quetoo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = quetoo.jpg; sourceTree = "<group>"; };
+		CE862AD71F79FB82005C3B10 /* ProgressBar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ProgressBar.c; sourceTree = "<group>"; };
+		CE862AD81F79FB82005C3B10 /* ProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressBar.h; sourceTree = "<group>"; };
 		CE8E7FF41C7FAD9100F4C3D4 /* Input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = Input.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		CE8E7FF51C7FAD9100F4C3D4 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Input.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE8E7FF81C84E36100F4C3D4 /* TableView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableView.c; sourceTree = "<group>"; };
@@ -407,6 +411,8 @@
 				CE5604E01EADBE9400E42E53 /* PageView.h */,
 				CEF1D88B1D4265A70099A857 /* Panel.c */,
 				CEF1D88C1D4265A70099A857 /* Panel.h */,
+				CE862AD71F79FB82005C3B10 /* ProgressBar.c */,
+				CE862AD81F79FB82005C3B10 /* ProgressBar.h */,
 				CE76279C1D4A5A5800EEEE78 /* Renderer.c */,
 				CE76279D1D4A5A5800EEEE78 /* Renderer.h */,
 				CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */,
@@ -602,6 +608,7 @@
 				CE5604E21EADBE9400E42E53 /* PageView.h in Headers */,
 				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
 				CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */,
+				CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */,
 				CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */,
 				CE14A8CD1C66D89900B576FB /* Select.h in Headers */,
 				CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */,
@@ -773,6 +780,7 @@
 				CE3CB2A11F410D1900FAA016 /* Constraint.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
+				CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */,
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,

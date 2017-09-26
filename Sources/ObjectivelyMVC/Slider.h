@@ -93,7 +93,7 @@ struct Slider {
 	Control *handle;
 
 	/**
-	 * @brief The label displaying the current value.
+	 * @brief The Text displaying the current value.
 	 */
 	Text *label;
 
@@ -134,6 +134,14 @@ struct SliderInterface {
 	ControlInterface controlInterface;
 
 	/**
+	 * @fn void Slider::formatLabel(Slider *self)
+	 * @brief Forces an update on this Slider's label.
+	 * @param self The Slider.
+	 * @memberof Slider
+	 */
+	void (*formatLabel)(Slider *self);
+
+	/**
 	 * @fn Slider *Slider::init(Slider *self)
 	 * @brief Initializes this Slider.
 	 * @param self The Slider.
@@ -141,15 +149,6 @@ struct SliderInterface {
 	 * @memberof Slider
 	 */
 	Slider *(*initWithFrame)(Slider *self, const SDL_Rect *frame, ControlStyle style);
-
-	/**
-	 * @fn void Slider::setValue(Slider *self, double value)
-	 * @brief Sets this Slider's value, invalidating its layout and notifying the delegate.
-	 * @param self The Slider.
-	 * @param value The value.
-	 * @memberof Slider
-	 */
-	void (*setValue)(Slider *self, double value);
 
 	/**
 	 * @fn void Slider::setLabelFormat(Slider *self, const char *labelFormat)
@@ -161,12 +160,13 @@ struct SliderInterface {
 	void (*setLabelFormat)(Slider *self, const char *labelFormat);
 
 	/**
-	 * @fn void Slider::updateLabel(Slider *self)
-	 * @brief Forces an update on this Slider's label.
+	 * @fn void Slider::setValue(Slider *self, double value)
+	 * @brief Sets this Slider's value, invalidating its layout and notifying the delegate.
 	 * @param self The Slider.
+	 * @param value The value.
 	 * @memberof Slider
 	 */
-	void (*updateLabel)(Slider *self);
+	void (*setValue)(Slider *self, double value);
 };
 
 /**

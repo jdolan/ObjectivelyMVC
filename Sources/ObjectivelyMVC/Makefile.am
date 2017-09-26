@@ -27,6 +27,7 @@ pkginclude_HEADERS = \
 	Option.h \
 	PageView.h \
 	Panel.h \
+	ProgressBar.h \
 	Renderer.h \
 	RGBColorPicker.h \
 	ScrollView.h \
@@ -73,6 +74,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Option.c \
 	PageView.c \
 	Panel.c \
+	ProgressBar.c \
 	Renderer.c \
 	RGBColorPicker.c \
 	ScrollView.c \
