@@ -20,6 +20,7 @@
 #include <math.h>
 
 #include <ObjectivelyMVC/Colors.h>
+#include <SDL2/SDL_endian.h>
 
 const struct _Colors Colors = {
 
