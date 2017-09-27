@@ -229,21 +229,11 @@ char *MVC_RGBAToHex(const SDL_Color *color) {
 	return hex;
 }
 
-static double MVC_ConstrainAngle(double x) {
-
-	x = fmod(x,360);
-	
-	if (x < 0)
-		x += 360;
-    
-	return x;
-}
-
 SDL_Color MVC_HSVToRGB(double hue, double saturation, double value) {
 
 	SDL_Color color = { .a = 255 };
 
-	const double h = MVC_ConstrainAngle(hue) / 60.0;
+	const double h = fabs(fmod(hue, 360.0)) / 60.0;
 	const int i = (int) h;
 	const double f = h - i;
 	const double v = value * 255;
