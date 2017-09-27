@@ -62,8 +62,8 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 	$(self, loadViewIfNeeded);
 	$(childViewController, loadViewIfNeeded);
 
-	$(self->view, addSubview, childViewController->view);
 	$(childViewController, viewWillAppear);
+	$(self->view, addSubview, childViewController->view);
 
 	release(that);
 }
@@ -158,8 +158,8 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 	$(self->childViewControllers, removeObject, childViewController);
 	childViewController->parentViewController = NULL;
 
-	$(childViewController->view, removeFromSuperview);
 	$(childViewController, viewWillDisappear);
+	$(childViewController->view, removeFromSuperview);
 
 	release(that);
 }
