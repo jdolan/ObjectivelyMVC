@@ -210,7 +210,10 @@ SDL_Color MVC_HexToRGBA(const char *hex) {
 		return color.c;
 	}
 
-	color.u = SDL_SwapBE32(color.u);
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+	color.u = (((color.u & 0xff000000) >> 24) | ((color.u & 0x00ff0000) >> 8) | ((color.u & 0x0000ff00) << 8) | ((color.u & 0x000000ff) << 24));
+#endif
+
 	return color.c;
 }
 
