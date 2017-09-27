@@ -186,32 +186,31 @@ const struct _Colors Colors = {
 };
 
 SDL_Color MVC_HexToRGBA(const char *hex) {
-	static char buffer[9]; // buffer to hold temp hex string
-	const size_t s_len = strlen(hex);
+	static char buffer[9];
+
 	union {
 		SDL_Color c;
-		uint32_t u32;
+		unsigned int u;
 	} color;
 
-	color.u32 = 0;
+	color.u = 0;
 
-	// rrggbb or rrggbbaa
-	if (s_len < 6 || s_len > 8) {
+	const size_t length = strlen(hex);
+	if (length != 6 && length != 8) {
 		return color.c;
 	}
 
 	strcpy(buffer, hex);
 
-	if (s_len < 8) {
+	if (length == 6) {
 		strcat(buffer, "ff");
 	}
 
-	if (sscanf(buffer, "%x", &color.u32) != 1) {
+	if (sscanf(buffer, "%x", &color.u) != 1) {
 		return color.c;
 	}
 
-	color.u32 = SDL_SwapLE32(color.u32);
-
+	color.u = SDL_SwapLE32(color.u);
 	return color.c;
 }
 
