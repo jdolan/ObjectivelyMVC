@@ -210,7 +210,7 @@ SDL_Color MVC_HexToRGBA(const char *hex) {
 		return color.c;
 	}
 
-	color.u = SDL_SwapLE32(color.u);
+	color.u = SDL_SwapBE32(color.u);
 	return color.c;
 }
 
