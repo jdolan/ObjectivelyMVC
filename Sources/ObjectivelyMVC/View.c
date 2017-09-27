@@ -874,6 +874,7 @@ static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
 static void respondToEvent(View *self, const SDL_Event *event) {
 
 	assert(event);
+	assert(self->window);
 
 	if (self->superview == NULL) {
 		if (event->type == SDL_WINDOWEVENT) {
@@ -883,7 +884,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 				if (self->autoresizingMask & ViewAutoresizingFill) {
 
 					SDL_Size size;
-					SDL_GetWindowSize($(self, window), &size.w, &size.h);
+					SDL_GetWindowSize(self->window, &size.w, &size.h);
 
 					$(self, resize, &size);
 				}
@@ -902,14 +903,14 @@ static void setWindow_recurse(const Array *array, ident obj, ident data) {
 }
 
 /**
- * @fn void View::setWindow(View *self, const SDL_Window *window)
+ * @fn void View::setWindow(View *self, SDL_Window *window)
  * @memberof View
  */
-static void setWindow(View *self, const SDL_Window *window) {
+static void setWindow(View *self, SDL_Window *window) {
 
 	self->window = window;
 
-	$((Array *) self->subviews, enumerateObjects, setWindow_recurse, (ident) window);
+	$((Array *) self->subviews, enumerateObjects, setWindow_recurse, window);
 }
 
 /**
@@ -1045,9 +1046,11 @@ static void updateBindings(View *self) {
  */
 static SDL_Rect viewport(const View *self) {
 
+	assert(self->window);
+
 	const SDL_Rect frame =  $(self, renderFrame);
 
-	return MVC_TransformToWindow($(self, window), &frame);
+	return MVC_TransformToWindow(self->window, &frame);
 }
 
 /**
@@ -1143,14 +1146,6 @@ static Array *visibleSubviews(const View *self) {
 	return $((Array *) self->subviews, filteredArray, visibleSubviews_filter, NULL);
 }
 
-/**
- * @fn SDL_Window *View::window(const View *self)
- * @memberof View
- */
-static SDL_Window *window(const View *self) {
-	return SDL_GL_GetCurrentWindow();
-}
-
 #pragma mark - View class methods
 
 /**
@@ -1212,7 +1207,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->viewWithData = viewWithData;
 	((ViewInterface *) clazz->def->interface)->viewWithDictionary = viewWithDictionary;
 	((ViewInterface *) clazz->def->interface)->visibleSubviews = visibleSubviews;
-	((ViewInterface *) clazz->def->interface)->window = window;
 }
 
 /**
