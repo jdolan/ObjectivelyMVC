@@ -141,6 +141,8 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
 	subview->superview = self;
 
+	$(subview, setWindow, self->window);
+
 	self->needsLayout = true;
 }
 
@@ -714,6 +716,8 @@ static void removeSubview(View *self, View *subview) {
 
 		subview->superview = NULL;
 
+		$(subview, setWindow, NULL);
+
 		self->needsLayout = true;
 	}
 }
@@ -888,6 +892,24 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	}
 
 	$((Array *) self->subviews, enumerateObjects, respondToEvent_recurse, (ident) event);
+}
+
+/**
+ * @brief ArrayEnumerator for setWindow recursion.
+ */
+static void setWindow_recurse(const Array *array, ident obj, ident data) {
+	$((View *) obj, setWindow, data);
+}
+
+/**
+ * @fn void View::setWindow(View *self, const SDL_Window *window)
+ * @memberof View
+ */
+static void setWindow(View *self, const SDL_Window *window) {
+
+	self->window = window;
+
+	$((Array *) self->subviews, enumerateObjects, setWindow_recurse, (ident) window);
 }
 
 /**
@@ -1177,6 +1199,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->resignFirstResponder = resignFirstResponder;
 	((ViewInterface *) clazz->def->interface)->resize = resize;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->def->interface)->setWindow = setWindow;
 	((ViewInterface *) clazz->def->interface)->size = size;
 	((ViewInterface *) clazz->def->interface)->sizeThatContains = sizeThatContains;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;

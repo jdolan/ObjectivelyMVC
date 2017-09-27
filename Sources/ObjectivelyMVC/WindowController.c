@@ -94,6 +94,7 @@ static void setViewController(WindowController *self, ViewController *viewContro
 	if (self->viewController != viewController) {
 
 		if (self->viewController) {
+			$(self->viewController->view, setWindow, NULL);
 			$(self->viewController, viewWillDisappear);
 		}
 
@@ -107,6 +108,7 @@ static void setViewController(WindowController *self, ViewController *viewContro
 
 		if (self->viewController) {
 			$(self->viewController, loadViewIfNeeded);
+			$(self->viewController->view, setWindow, self->window);
 			$(self->viewController, viewWillAppear);
 		}
 	}

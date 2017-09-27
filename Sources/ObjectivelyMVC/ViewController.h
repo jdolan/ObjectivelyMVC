@@ -63,6 +63,11 @@ struct ViewController {
 	ViewControllerInterface *interface;
 
 	/**
+	 * @brief The child view controllers.
+	 */
+	MutableArray *childViewControllers;
+
+	/**
 	 * @brief The main view.
 	 */
 	View *view;
@@ -71,11 +76,6 @@ struct ViewController {
 	 * @brief The parent view controller.
 	 */
 	ViewController *parentViewController;
-
-	/**
-	 * @brief The child view controllers.
-	 */
-	MutableArray *childViewControllers;
 };
 
 /**

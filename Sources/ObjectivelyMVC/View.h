@@ -193,6 +193,12 @@ struct View {
 	View *superview;
 
 	/**
+	 * @brief The window.
+	 * @remarks This is `NULL` until the View has been added to a WindowController.
+	 */
+	const SDL_Window *window;
+
+	/**
 	 * @brief The z-index.
 	 */
 	int zIndex;
@@ -555,6 +561,16 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*respondToEvent)(View *self, const SDL_Event *event);
+
+	/**
+	 * @fn void View::setWindow(View *self, const SDL_Window *window)
+	 * @brief Sets the window associated with this View.
+	 * @param self The View.
+	 * @param window The window.
+	 * @remarks This is called as Views are added to and removed from the View hierarchy.
+	 * @memberof View
+	 */
+	void (*setWindow)(View *self, const SDL_Window *window);
 
 	/**
 	 * @fn SDL_Size View::size(const View *self)
