@@ -185,22 +185,33 @@ const struct _Colors Colors = {
 };
 
 SDL_Color MVC_HexToRGBA(const char *hex) {
+	static char buffer[9]; // buffer to hold temp hex string
+	const size_t s_len = strlen(hex);
+	union {
+		SDL_Color c;
+		uint32_t u32;
+	} color;
 
-	SDL_Color color;
+	color.u32 = 0;
 
-	const int c = sscanf(hex, "%02hhx%02hhx%02hhx%02hhx", &color.r, &color.g, &color.b, &color.a);
-	switch (c) {
-		case 3:
-			color.a = 255;
-			break;
-		case 4:
-			break;
-		default:
-			color = Colors.Black;
-			break;
+	// rrggbb or rrggbbaa
+	if (s_len < 6 || s_len > 8) {
+		return color.c;
 	}
 
-	return color;
+	strcpy(buffer, hex);
+
+	if (s_len < 8) {
+		strcat(buffer, "ff");
+	}
+
+	if (sscanf(buffer, "%x", &color.u32) != 1) {
+		return color.c;
+	}
+
+	color.u32 = SDL_SwapLE32(color.u32);
+
+	return color.c;
 }
 
 char *MVC_RGBToHex(const SDL_Color *color) {
@@ -215,11 +226,21 @@ char *MVC_RGBAToHex(const SDL_Color *color) {
 	return hex;
 }
 
+static double MVC_ConstrainAngle(double x) {
+
+	x = fmod(x,360);
+	
+	if (x < 0)
+		x += 360;
+    
+	return x;
+}
+
 SDL_Color MVC_HSVToRGB(double hue, double saturation, double value) {
 
 	SDL_Color color = { .a = 255 };
 
-	const double h = hue / 60.0;
+	const double h = MVC_ConstrainAngle(hue) / 60.0;
 	const int i = (int) h;
 	const double f = h - i;
 	const double v = value * 255;
