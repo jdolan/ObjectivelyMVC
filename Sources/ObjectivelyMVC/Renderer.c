@@ -250,13 +250,28 @@ static Renderer *init(Renderer *self) {
 
 /**
  * @brief Comparator for sorting Views by depth (Painter's Algorithm).
+ * @remarks For siblings with the same depth, their natural ordering is the tie breaker.
  */
 static Order render_comparator(const ident a, const ident b) {
 
-	const int depthA = $((const View *) a, depth);
-	const int depthB = $((const View *) b, depth);
+	const View *aView = a, *bView = b;
 
-	return (Order) depthA - depthB;
+	const int aDepth = $(aView, depth);
+	const int bDepth = $(bView, depth);
+
+	if (aDepth == bDepth) {
+		const View *superview = aView->superview;
+		if (superview) {
+			if (superview == bView->superview) {
+				const int aIndex = (int) $((const Array *) superview->subviews, indexOfObject, a);
+				const int bIndex = (int) $((const Array *) superview->subviews, indexOfObject, b);
+				
+				return (Order) aIndex - bIndex;
+			}
+		}
+	}
+
+	return (Order) aDepth - bDepth;
 }
 
 /**
