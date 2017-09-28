@@ -43,6 +43,11 @@
  * @brief ObjectivelyMVC base types.
  */
 
+/**
+ * @brief The SDL_Window data key for first responder.
+ */
+#define MVC_FIRST_RESPONDER "firstResponder"
+
 typedef struct View View;
 
 typedef struct SDL_Size SDL_Size;

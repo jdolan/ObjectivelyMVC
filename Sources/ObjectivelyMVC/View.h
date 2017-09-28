@@ -215,6 +215,14 @@ struct ViewInterface {
 	ObjectInterface parentInterface;
 
 	/**
+	 * @fn _Bool View::acceptsFirstResponder(const View *self)
+	 * @param self The View.
+	 * @return True if this View can become the first responder, false otherwise.
+	 * @memberof View
+	 */
+	_Bool (*acceptsFirstResponder)(const View *self);
+
+	/**
 	 * @fn void View::addConstraint(View *self, Constraint *constraint)
 	 * @brief Adds a Constraint on this View.
 	 * @param self The View.
@@ -307,14 +315,6 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	SDL_Rect (*bounds)(const View *self);
-
-	/**
-	 * @fn _Bool View::canBecomeFirstResponder(const View *self)
-	 * @param self The View.
-	 * @return True if this View can become the first responder, false otherwise.
-	 * @memberof View
-	 */
-	_Bool (*canBecomeFirstResponder)(const View *self);
 
 	/**
 	 * @fn SDL_Rect View::clippingFrame(const View *self)
@@ -688,6 +688,19 @@ struct ViewInterface {
 };
 
 OBJECTIVELYMVC_EXPORT Class *_View(void);
+
+/**
+ * @brief Sets the specified View as the first responder for the given window.
+ * @param window The window.
+ * @param view The View, or `NULL`.
+ */
+OBJECTIVELYMVC_EXPORT void MVC_MakeFirstResponder(SDL_Window *window, View *view);
+
+/**
+ * @param window The window.
+ * @return The first responder for the given window, or `NULL` if none.
+ */
+OBJECTIVELYMVC_EXPORT View *MVC_FirstResponder(SDL_Window *window);
 
 /**
  * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
