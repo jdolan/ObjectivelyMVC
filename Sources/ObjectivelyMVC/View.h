@@ -384,14 +384,6 @@ struct ViewInterface {
 	void (*draw)(View *self, Renderer *renderer);
 
 	/**
-	 * @static
-	 * @fn View *View::firstResponder(void)
-	 * @return The first responder, or `NULL`.
-	 * @memberof View
-	 */
-	View *(*firstResponder)(void);
-
-	/**
 	 * @fn View *View::init(View *self)
 	 * @brief Initializes this View.
 	 * @param self The View.
