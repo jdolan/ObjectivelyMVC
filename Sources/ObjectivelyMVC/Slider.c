@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <string.h>
 
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Slider.h>

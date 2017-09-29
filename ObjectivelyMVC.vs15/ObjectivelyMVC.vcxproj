@@ -64,6 +64,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\View.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ViewController.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\WindowController.h" />
+    <ClInclude Include="Sources\WindowlyMVC.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c" />
@@ -195,6 +196,8 @@
       <CLanguageStandard>gnu99</CLanguageStandard>
       <PreprocessorDefinitions>BUILDING_OBJECTIVELYMVC;PTW32_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <ShowIncludes>
+      </ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -215,6 +218,8 @@
       <PreprocessorDefinitions>BUILDING_OBJECTIVELYMVC;PTW32_STATIC_LIB;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>-ferror-limit=0 %(AdditionalOptions)</AdditionalOptions>
       <TreatWarningAsError>true</TreatWarningAsError>
+      <ShowIncludes>
+      </ShowIncludes>
     </ClCompile>
     <Link>
       <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -233,6 +238,8 @@
       <SDLCheck>true</SDLCheck>
       <CLanguageStandard>gnu99</CLanguageStandard>
       <AdditionalOptions>-ferror-limit=0 %(AdditionalOptions)</AdditionalOptions>
+      <ShowIncludes>
+      </ShowIncludes>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -256,6 +263,8 @@
       <DisableSpecificWarnings>4068;4996;4115;4706;4204;4244;4245;4100;4267;4305;4267;4018;4702;4311</DisableSpecificWarnings>
       <CLanguageStandard>gnu99</CLanguageStandard>
       <AdditionalOptions>-ferror-limit=0 %(AdditionalOptions)</AdditionalOptions>
+      <ShowIncludes>
+      </ShowIncludes>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
