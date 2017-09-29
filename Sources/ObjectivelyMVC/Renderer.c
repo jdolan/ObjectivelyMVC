@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <SDL2/SDL_opengl.h>
 
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Renderer.h>

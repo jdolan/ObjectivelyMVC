@@ -18,6 +18,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <string.h>
 
 #include <ObjectivelyMVC/Colors.h>
 #include <SDL2/SDL_endian.h>
