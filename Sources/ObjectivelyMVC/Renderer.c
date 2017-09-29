@@ -302,7 +302,7 @@ static void render(Renderer *self) {
 
 	$((Array *) self->views, enumerateObjects, render_renderView, self);
 
-	$(self->views, removeAllObjects);
+	//$(self->views, removeAllObjects);
 }
 
 /**

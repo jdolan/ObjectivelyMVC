@@ -848,13 +848,6 @@ static void resize(View *self, const SDL_Size *size) {
 }
 
 /**
- * @brief ArrayEnumerator for respondToEvent recursion.
- */
-static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, respondToEvent, (const SDL_Event *) data);
-}
-
-/**
  * @fn void View::respondToEvent(View *self, const SDL_Event *event)
  * @memberof View
  */
@@ -877,9 +870,9 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 				}
 			}
 		}
+	} else {
+		$(self->superview, respondToEvent, event);
 	}
-
-	$((Array *) self->subviews, enumerateObjects, respondToEvent_recurse, (ident) event);
 }
 
 /**
@@ -1223,7 +1216,6 @@ void MVC_MakeFirstResponder(SDL_Window *window, View *view) {
 
 	if (view) {
 		assert(window == view->window);
-
 		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, view);
 	} else {
 		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, NULL);
@@ -1233,7 +1225,7 @@ void MVC_MakeFirstResponder(SDL_Window *window, View *view) {
 View *MVC_FirstResponder(SDL_Window *window) {
 
 	assert(window);
-
+	
 	return SDL_GetWindowData(window, MVC_FIRST_RESPONDER);
 }
 
