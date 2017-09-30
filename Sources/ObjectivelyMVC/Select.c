@@ -133,7 +133,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	Select *this = (Select *) self;
 
-	if (event->type == SDL_MOUSEBUTTONUP) {
+	if (event->type == SDL_MOUSEBUTTONUP || event->type == SDL_FINGERUP) {
 		if (self->state == ControlStateHighlighted) {
 			self->state &= ~ControlStateHighlighted;
 
@@ -152,7 +152,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 	}
 
-	else if (event->type == SDL_MOUSEMOTION) {
+	else if (event->type == SDL_MOUSEMOTION || event->type == SDL_FINGERMOTION) {
 		if (this->control.state == ControlStateHighlighted) {
 
 			const Array *options = (Array *) this->options;
@@ -166,6 +166,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				}
 			}
 		}
+		return true;
 	}
 
 	return super(Control, self, captureEvent, event);

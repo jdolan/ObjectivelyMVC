@@ -77,6 +77,13 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::acceptsFirstResponder(const View *)
+ */
+static _Bool acceptsFirstResponder(const View *self) {
+	return ((const Panel *) self)->isDraggable ;
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -124,56 +131,11 @@ static void layoutSubviews(View *self) {
 }
 
 /**
- * @return True if a descendant Control received the given event, false otherwise.
- */
-static _Bool controlReceivedEvent(const View *view, const SDL_Event *event) {
-
-	_Bool received = false;
-	Array *subviews = $(view, visibleSubviews);
-
-	for (size_t i = 0; i < subviews->count; i++) {
-
-		View *subview = $(subviews, objectAtIndex, i);
-		if (controlReceivedEvent(subview, event)) {
-			received = true;
-			break;
-		}
-
-		if ($((Object *) subview, isKindOfClass, _Control())) {
-			if ($(subview, didReceiveEvent, event)) {
-				received = true;
-				break;
-			}
-		}
-	}
-
-	release(subviews);
-	return received;
-}
-
-/**
  * @see View::respondToEvent(View *, const SDL_Event *)
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
-	super(View, self, respondToEvent, event);
-
-	switch (event->type) {
-		case SDL_MOUSEBUTTONDOWN:
-		case SDL_MOUSEBUTTONUP:
-		case SDL_MOUSEMOTION:
-			break;
-		default:
-			return;
-	}
-
 	Panel *this = (Panel *) self;
-
-	if (this->isDragging == false && this->isResizing == false) {
-		if (controlReceivedEvent(self, event)) {
-			return;
-		}
-	}
 
 	if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == 1) {
 		if (this->isResizable && $((View *) this->resizeHandle, didReceiveEvent, event)) {
@@ -202,6 +164,8 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 			self->frame.y += event->motion.yrel;
 		}
 	}
+
+	super(View, self, respondToEvent, event);
 }
 
 #pragma mark - Panel
@@ -292,6 +256,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;

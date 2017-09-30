@@ -46,6 +46,39 @@ static void dealloc(Object *self) {
 #pragma mark - WindowController
 
 /**
+ * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
+ * @memberof WindowController
+ */
+static View *firstResponder(const WindowController *self, const SDL_Event *event) {
+
+	View *firstResponder = MVC_FirstResponder(self->window);
+	if (firstResponder == NULL) {
+
+		switch (event->type) {
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
+			case SDL_MOUSEWHEEL:
+			case SDL_FINGERDOWN:
+			case SDL_FINGERUP: {
+				const Array *views = (Array *) self->renderer->views;
+				for (size_t i = 0; i < views->count; i++) {
+					View *view = $(views, objectAtIndex, views->count - i - 1);
+					if ($(view, didReceiveEvent, event)) {
+						firstResponder = view;
+						break;
+					}
+				}
+			}
+				break;
+			default:
+				break;
+		}
+	}
+
+	return firstResponder;
+}
+
+/**
  * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
  * @memberof WindowController
  */
@@ -65,6 +98,57 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 	}
 
 	return self;
+}
+
+/**
+ * @fn void WindowController::render(WindowController *self)
+ * @memberof WindowController
+ */
+static void render(WindowController *self) {
+
+	assert(self->renderer);
+
+	$(self->renderer->views, removeAllObjects);
+
+	$(self->renderer, beginFrame);
+
+	if (self->viewController) {
+		$(self->viewController, drawView, self->renderer);
+		$(self->renderer, render);
+	} else {
+		MVC_LogWarn("viewController is NULL\n");
+	}
+
+	$(self->renderer, endFrame);
+}
+
+/**
+ * @fn void WindowController:respondToEvent(WindowController *self, const SDL_Event *event)
+ * @memberof WindowController
+ */
+static void respondToEvent(WindowController *self, const SDL_Event *event) {
+
+	if (event->type == SDL_WINDOWEVENT) {
+		if (event->window.event == SDL_WINDOWEVENT_SHOWN) {
+
+			if (self->renderer) {
+				$(self->renderer, renderDeviceDidReset);
+			}
+
+			if (self->viewController) {
+				$(self->viewController, renderDeviceDidReset);
+			}
+		}
+	}
+
+	View *firstResponder = $(self, firstResponder, event);
+	if (firstResponder) {
+		$(firstResponder, respondToEvent, event);
+	} else if (self->viewController) {
+		$(self->viewController, respondToEvent, event);
+	} else {
+		MVC_LogDebug("firstResponder for %d is NULL\n", event->type);
+	}
 }
 
 /**
@@ -114,50 +198,6 @@ static void setViewController(WindowController *self, ViewController *viewContro
 	}
 }
 
-/**
- * @fn void WindowController::render(WindowController *self)
- * @memberof WindowController
- */
-static void render(WindowController *self) {
-
-	assert(self->renderer);
-
-	$(self->renderer, beginFrame);
-
-	if (self->viewController) {
-		$(self->viewController, drawView, self->renderer);
-		$(self->renderer, render);
-	} else {
-		MVC_LogWarn("viewController is NULL\n");
-	}
-
-	$(self->renderer, endFrame);
-}
-
-/**
- * @fn void WindowController:respondToEvent(WindowController *self, const SDL_Event *event)
- * @memberof WindowController
- */
-static void respondToEvent(WindowController *self, const SDL_Event *event) {
-
-	if (event->type == SDL_WINDOWEVENT) {
-		if (event->window.event == SDL_WINDOWEVENT_SHOWN) {
-
-			if (self->renderer) {
-				$(self->renderer, renderDeviceDidReset);
-			}
-
-			if (self->viewController) {
-				$(self->viewController, renderDeviceDidReset);
-			}
-		}
-	}
-
-	if (self->viewController) {
-		$(self->viewController, respondToEvent, event);
-	}
-}
-
 #pragma mark - Class lifecycle
 
 /**
@@ -167,6 +207,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((WindowControllerInterface *) clazz->def->interface)->firstResponder = firstResponder;
 	((WindowControllerInterface *) clazz->def->interface)->initWithWindow = initWithWindow;
 	((WindowControllerInterface *) clazz->def->interface)->render = render;
 	((WindowControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;

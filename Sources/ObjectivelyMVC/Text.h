@@ -74,7 +74,7 @@ struct Text {
 	 * @brief The rendered texture.
 	 * @protected
 	 */
-	GLuint texture;
+	unsigned int texture;
 };
 
 /**

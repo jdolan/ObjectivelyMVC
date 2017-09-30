@@ -68,6 +68,13 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::acceptsFirstResponder(const View *)
+ */
+static _Bool acceptsFirstResponder(const View *self) {
+	return true;
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -177,25 +184,26 @@ static void render(View *self, Renderer *renderer) {
  * @see View::respondToEvent(View *, const SDL_Event *)
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
-	static SDL_Event _capturedEvent;
 
 	Control *this = (Control *) self;
 
 	const ControlState state = this->state;
 
-	if (memcmp(&_capturedEvent, event, sizeof(*event))) {
-		if ($(this, captureEvent, event)) {
-			_capturedEvent = *event;
+	const _Bool didCaptureEvent = $(this, captureEvent, event);
+	if (didCaptureEvent) {
 
-			Action *action = $(this, actionForEvent, event);
-			if (action) {
-				action->function(this, event, action->sender, action->data);
-			}
+		Action *action = $(this, actionForEvent, event);
+		if (action) {
+			action->function(this, event, action->sender, action->data);
 		}
 	}
 
 	if (this->state != state) {
 		$(this, stateDidChange);
+	}
+
+	if (didCaptureEvent) {
+		return;
 	}
 
 	super(View, self, respondToEvent, event);
@@ -325,6 +333,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->render = render;

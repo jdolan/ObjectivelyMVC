@@ -80,6 +80,15 @@ struct WindowControllerInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
+	 * @param self The WindowController.
+	 * @param event The event.
+	 * @return The first responder for the given event.
+	 * @memberof WindowController
+	 */
+	View *(*firstResponder)(const WindowController *self, const SDL_Event *event);
+
+	/**
 	 * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
 	 * @brief Initializes this WindowController with the given window.
 	 * @param self The WindowController.

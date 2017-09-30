@@ -42,6 +42,13 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::acceptsFirstResponder(const View *)
+ */
+static _Bool acceptsFirstResponder(const View *self) {
+	return true;
+}
+
+/**
  * @see View::sizeThatFits(View *)
  */
 static SDL_Size sizeThatFits(const View *self) {
@@ -105,6 +112,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((OptionInterface *) clazz->def->interface)->initWithTitle = initWithTitle;

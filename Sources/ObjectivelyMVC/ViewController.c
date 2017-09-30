@@ -203,13 +203,6 @@ static void renderDeviceDidReset(ViewController *self) {
 }
 
 /**
- * @brief ArrayEnumerator for respondToEvent recursion.
- */
-static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, respondToEvent, data);
-}
-
-/**
  * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
  * @memberof ViewController
  */
@@ -220,8 +213,6 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
 			$(self->view, respondToEvent, event);
 		}
 	}
-
-	$((Array *) self->childViewControllers, enumerateObjects, respondToEvent_recurse, (ident) event);
 }
 
 /**

@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <SDL2/SDL_opengl.h>
 
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Renderer.h>
@@ -302,7 +303,7 @@ static void render(Renderer *self) {
 
 	$((Array *) self->views, enumerateObjects, render_renderView, self);
 
-	$(self->views, removeAllObjects);
+	//$(self->views, removeAllObjects);
 }
 
 /**

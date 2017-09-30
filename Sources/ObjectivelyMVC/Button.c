@@ -89,27 +89,33 @@ static SDL_Size sizeThatFits(const View *self) {
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
-	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_FINGERDOWN) {
+		self->state |= ControlStateHighlighted;
+		return true;
+	}
 
-		if (event->type == SDL_MOUSEBUTTONUP) {
-			self->state &= ~ControlStateHighlighted;
-			if (self->style == ControlStyleDefault) {
-				self->bevel = ControlBevelTypeOutset;
-			}
-		}
-
-		if ($((View *) self, didReceiveEvent, event)) {
-			if (event->type == SDL_MOUSEBUTTONDOWN) {
-				self->state |= ControlStateHighlighted;
-				if (self->style == ControlStyleDefault) {
-					self->bevel = ControlBevelTypeInset;
-				}
-			}
-			return true;
-		}
+	if (event->type == SDL_MOUSEBUTTONUP || event->type == SDL_FINGERUP) {
+		self->state &= ~ControlStateHighlighted;
+		return true;
 	}
 
 	return super(Control, self, captureEvent, event);
+}
+
+/**
+ * @see Control::stateDidChange(Control *)
+ */
+static void stateDidChange(Control *self) {
+
+	super(Control, self, stateDidChange);
+
+	if (self->style == ControlStyleDefault) {
+		if (self->state & ControlStateHighlighted) {
+			self->bevel = ControlBevelTypeInset;
+		} else {
+			self->bevel = ControlBevelTypeOutset;
+		}
+	}
 }
 
 #pragma mark - Button
@@ -171,6 +177,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 
 	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((ButtonInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
