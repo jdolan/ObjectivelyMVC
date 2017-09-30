@@ -57,7 +57,7 @@ struct ImageView {
 	 * @brief The blend function.
 	 */
 	struct {
-		unsigned int src, dst;
+		GLuint src, dst;
 	} blend;
 
 	/**
@@ -73,7 +73,7 @@ struct ImageView {
 	/**
 	 * @brief The texture.
 	 */
-	unsigned int texture;
+	GLuint texture;
 };
 
 /**
