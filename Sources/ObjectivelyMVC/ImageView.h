@@ -57,7 +57,7 @@ struct ImageView {
 	 * @brief The blend function.
 	 */
 	struct {
-		GLuint src, dst;
+		GLenum src, dst;
 	} blend;
 
 	/**
