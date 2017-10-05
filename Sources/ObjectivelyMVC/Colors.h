@@ -207,7 +207,7 @@ OBJECTIVELYMVC_EXPORT const struct _Colors {
 /**
  * @brief Converts the given hexadecimal color string to an RGBA color.
  * @param hexString The hexadecimal color string (e.g. `deadbeef`).
- * @return An SDL_Color containing the byte-clamped RGBA value.s
+ * @return An SDL_Color containing the byte-clamped RGBA values.
  */
 OBJECTIVELYMVC_EXPORT SDL_Color MVC_HexToRGBA(const char *hexString);
 
