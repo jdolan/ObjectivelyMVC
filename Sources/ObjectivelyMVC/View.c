@@ -453,16 +453,6 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 }
 
 /**
- * @brief ArrayEnumerator for draw recursion.
- */
-static void draw_recurse(const Array *array, ident obj, ident data) {
-
-	if (((View *) obj)->hidden == false) {
-		$((MutableArray *) data, addObject, obj);
-	}
-}
-
-/**
  * @fn Array *View::draw(View *self)
  * @memberof View
  */
@@ -476,7 +466,24 @@ static Array *draw(View *self) {
 		size_t i = 0;
 		while (i < ((Array *) views)->count) {
 			View *view = $((Array *) views, objectAtIndex, i++);
-			$((Array *) view->subviews, enumerateObjects, draw_recurse, views);
+			View *deferred = NULL;
+
+			const Array *subviews = (Array *) view->subviews;
+			for (size_t j = 0; j < subviews->count; j++) {
+
+				View *subview = $(subviews, objectAtIndex, j);
+				if (subview->hidden == false) {
+					if ($(subview, isFirstResponder)) {
+						deferred = subview;
+					} else {
+						$(views, addObject, subview);
+					}
+				}
+			}
+
+			if (deferred) {
+				$(views, addObject, deferred);
+			}
 		}
 	}
 
