@@ -61,7 +61,7 @@ static View *firstResponder(const WindowController *self, const SDL_Event *event
 			case SDL_MOUSEBUTTONUP:
 			case SDL_MOUSEWHEEL:
 			case SDL_FINGERDOWN:
-			case SDL_FINGERUP: {
+			case SDL_FINGERUP:
 				for (size_t i = 0; i < responderChain->count; i++) {
 					View *view = $(responderChain, objectAtIndex, responderChain->count - i - 1);
 					if ($(view, didReceiveEvent, event)) {
@@ -69,7 +69,6 @@ static View *firstResponder(const WindowController *self, const SDL_Event *event
 						break;
 					}
 				}
-			}
 				break;
 			default:
 				break;
