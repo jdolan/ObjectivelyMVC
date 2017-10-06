@@ -40,7 +40,9 @@ static void dealloc(Object *self) {
 
 	free(this->text);
 
-	glDeleteTextures(1, &this->texture);
+	if (this->texture) {
+		glDeleteTextures(1, &this->texture);
+	}
 
 	super(Object, self, dealloc);
 }
