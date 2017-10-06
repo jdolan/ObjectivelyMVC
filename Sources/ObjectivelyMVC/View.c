@@ -294,6 +294,23 @@ static SDL_Rect bounds(const View *self) {
 }
 
 /**
+ * @fn void View::bringSubviewToFront(View *self, View *subview)
+ * @memberof View
+ */
+static void bringSubviewToFront(View *self, View *subview) {
+
+	assert(subview);
+
+	if (subview->superview == self) {
+
+		View *last = $((Array *) self->subviews, lastObject);
+		if (last != subview) {
+			$(self, addSubviewRelativeTo, subview, last, ViewPositionAfter);
+		}
+	}
+}
+
+/**
  * @fn SDL_Rect View::clippingFrame(const View *self)
  * @memberof View
  */
@@ -1152,6 +1169,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
 	((ViewInterface *) clazz->def->interface)->bounds = bounds;
+	((ViewInterface *) clazz->def->interface)->bringSubviewToFront = bringSubviewToFront;
 	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;

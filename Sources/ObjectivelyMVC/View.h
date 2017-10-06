@@ -312,6 +312,15 @@ struct ViewInterface {
 	SDL_Rect (*bounds)(const View *self);
 
 	/**
+	 * @fn void View::bringSubviewToFront(View *self, View *subview)
+	 * @brief Brings the specified subview to the front.
+	 * @param self The View.
+	 * @param subview The subview.
+	 * @memberof View
+	 */
+	void (*bringSubviewToFront)(View *self, View *subview);
+
+	/**
 	 * @fn SDL_Rect View::clippingFrame(const View *self)
 	 * @param self The View.
 	 * @return The visible portion of this View's frame, in window coordinates.
