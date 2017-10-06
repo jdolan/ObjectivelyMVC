@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <string.h>
 
 #include <Objectively/MutableString.h>
 #include <Objectively/Regex.h>

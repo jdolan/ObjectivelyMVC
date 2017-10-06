@@ -144,6 +144,9 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\ProgressBar.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\WindowlyMVC.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c">
