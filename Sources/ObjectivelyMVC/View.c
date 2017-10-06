@@ -463,7 +463,7 @@ static void draw_recurse(const Array *array, ident obj, ident data) {
 }
 
 /**
- * @fn void View::draw(View *self)
+ * @fn Array *View::draw(View *self)
  * @memberof View
  */
 static Array *draw(View *self) {
