@@ -463,10 +463,11 @@ static Array *draw(View *self) {
 	if (self->hidden == false) {
 		$(views, addObject, self);
 
+		View *firstResponder = NULL;
+
 		size_t i = 0;
 		while (i < ((Array *) views)->count) {
 			View *view = $((Array *) views, objectAtIndex, i++);
-			View *deferred = NULL;
 
 			const Array *subviews = (Array *) view->subviews;
 			for (size_t j = 0; j < subviews->count; j++) {
@@ -474,16 +475,18 @@ static Array *draw(View *self) {
 				View *subview = $(subviews, objectAtIndex, j);
 				if (subview->hidden == false) {
 					if ($(subview, isFirstResponder)) {
-						deferred = subview;
+						firstResponder = subview;
 					} else {
 						$(views, addObject, subview);
 					}
 				}
 			}
+		}
 
-			if (deferred) {
-				$(views, addObject, deferred);
-			}
+		if (firstResponder) {
+			Array *deferred = $(firstResponder, draw);
+			$(views, addObjectsFromArray, deferred);
+			release(deferred);
 		}
 	}
 
