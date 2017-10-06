@@ -38,6 +38,7 @@ static void dealloc(Object *self) {
 	WindowController *this = (WindowController *) self;
 
 	release(this->renderer);
+	release(this->responderChain);
 	release(this->viewController);
 
 	super(Object, self, dealloc);
@@ -54,15 +55,15 @@ static View *firstResponder(const WindowController *self, const SDL_Event *event
 	View *firstResponder = MVC_FirstResponder(self->window);
 	if (firstResponder == NULL) {
 
+		const Array *responderChain = (Array *) self->responderChain;
 		switch (event->type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
 			case SDL_MOUSEWHEEL:
 			case SDL_FINGERDOWN:
 			case SDL_FINGERUP: {
-				const Array *views = (Array *) self->renderer->views;
-				for (size_t i = 0; i < views->count; i++) {
-					View *view = $(views, objectAtIndex, views->count - i - 1);
+				for (size_t i = 0; i < responderChain->count; i++) {
+					View *view = $(responderChain, objectAtIndex, responderChain->count - i - 1);
 					if ($(view, didReceiveEvent, event)) {
 						firstResponder = view;
 						break;
@@ -95,9 +96,23 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
+
+		self->responderChain = $$(MutableArray, array);
+		assert(self->responderChain);
 	}
 
 	return self;
+}
+
+/**
+ * @brief ArrayEnumerator for View rendering.
+ */
+static void render_enumerate(const Array *array, ident obj, ident data) {
+
+	WindowController *this = data;
+
+	$(this->renderer, drawView, obj);
+	$(this->responderChain, addObject, obj);
 }
 
 /**
@@ -108,13 +123,14 @@ static void render(WindowController *self) {
 
 	assert(self->renderer);
 
-	$(self->renderer->views, removeAllObjects);
-
 	$(self->renderer, beginFrame);
 
+	$(self->responderChain, removeAllObjects);
+
 	if (self->viewController) {
-		$(self->viewController, drawView, self->renderer);
-		$(self->renderer, render);
+		Array *views = $(self->viewController, drawView);
+			$(views, enumerateObjects, render_enumerate, self);
+		release(views);
 	} else {
 		MVC_LogWarn("viewController is NULL\n");
 	}

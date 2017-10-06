@@ -197,11 +197,6 @@ struct View {
 	 * @remarks This is `NULL` until the View has been added to a WindowController.
 	 */
 	SDL_Window *window;
-
-	/**
-	 * @brief The z-index.
-	 */
-	int zIndex;
 };
 
 /**
@@ -347,8 +342,7 @@ struct ViewInterface {
 	/**
 	 * @fn int View::depth(const View *self)
 	 * @param self The View.
-	 * @return The depth of this View (`ancestor depth + zIndex + 1`).
-	 * @remarks This method is called by Renderer::render to sort Views and enforce draw order.
+	 * @return The depth of this View (`ancestor depth + 1`).
 	 * @memberof View
 	 */
 	int (*depth)(const View *self);
@@ -372,16 +366,15 @@ struct ViewInterface {
 	_Bool (*didReceiveEvent)(const View *self, const SDL_Event *event);
 
 	/**
-	 * @fn void View::draw(View *self, Renderer *renderer)
+	 * @fn void View::draw(View *self)
 	 * @brief Draws this View.
 	 * @param self The View.
-	 * @param renderer The Renderer with which to draw.
-	 * @remarks The default implementation of this method adds the View to the Renderer for the
-	 * current frame, and recurses its subviews. Rasterization is performed in View::render.
+	 * @remarks This method returns the depth-sorted View hierarchy relative to the receiver.
+	 * Rasterization is performed in View::render.
 	 * @see View::render(View *, Renderer *)
 	 * @memberof View
 	 */
-	void (*draw)(View *self, Renderer *renderer);
+	Array *(*draw)(View *self);
 
 	/**
 	 * @fn View *View::init(View *self)

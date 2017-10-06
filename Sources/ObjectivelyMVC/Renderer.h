@@ -59,11 +59,6 @@ struct Renderer {
 	 * @protected
 	 */
 	RendererInterface *interface;
-
-	/**
-	 * @brief The Views to be drawn each frame.
-	 */
-	MutableArray *views;
 };
 
 /**
@@ -75,15 +70,6 @@ struct RendererInterface {
 	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
-
-	/**
-	 * @fn void Renderer::addView(Renderer *self, View *view)
-	 * @brief Adds the View to the Renderer for the current frame.
-	 * @param self The Renderer.
-	 * @param view The View.
-	 * @memberof Renderer
-	 */
-	void (*addView)(Renderer *self, View *view);
 
 	/**
 	 * @fn void Renderer::beginFrame(Renderer *self)
@@ -144,13 +130,22 @@ struct RendererInterface {
 
 	/**
 	 * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
-	 * @brief Draws textured `GL_QUAD` in the given rectangle.
+	 * @brief Draws a textured `GL_QUAD` in the given rectangle.
 	 * @param self The Renderer.
 	 * @param texture The texture.
 	 * @param dest The destination in screen coordinates.
 	 * @memberof Renderer
 	 */
 	void (*drawTexture)(const Renderer *self, GLuint texture, const SDL_Rect *dest);
+
+	/**
+	 * @fn void Renderer::drawView(Renderer *self, View *view)
+	 * @brief Draws the given View, setting the clipping frame and invoking View::render.
+	 * @param self The Renderer.
+	 * @param view The View.
+	 * @memberof Renderer
+	 */
+	void (*drawView)(Renderer *self, View *view);
 
 	/**
 	 * @fn void Renderer::endFrame(const Renderer *self)
@@ -171,14 +166,6 @@ struct RendererInterface {
 	 * @memberof Renderer
 	 */
 	Renderer *(*init)(Renderer *self);
-
-	/**
-	 * @fn void Renderer::render(Renderer *self)
-	 * @brief Renders all Views added for the current frame, sorted by depth.
-	 * @param self The Renderer.
-	 * @memberof Renderer
-	 */
-	void (*render)(Renderer *self);
 
 	/**
 	 * @fn void Renderer::renderDeviceDidReset(Renderer *self)

@@ -237,8 +237,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
-		MakeInlet("subviews", InletTypeSubviews, &self, NULL),
-		MakeInlet("zIndex", InletTypeInteger, &self->zIndex, NULL)
+		MakeInlet("subviews", InletTypeSubviews, &self, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -366,7 +365,7 @@ static void createConstraint(View *self, const char *descriptor) {
  * @memberof View
  */
 static int depth(const View *self) {
-	return self->zIndex + (self->superview ? $(self->superview, depth) + 1 : 0);
+	return (self->superview ? $(self->superview, depth) + 1 : 0);
 }
 
 /**
@@ -440,23 +439,31 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
  * @brief ArrayEnumerator for draw recursion.
  */
 static void draw_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, draw, (Renderer *) data);
+
+	if (((View *) obj)->hidden == false) {
+		$((MutableArray *) data, addObject, obj);
+	}
 }
 
 /**
- * @fn void View::draw(View *self, Renderer *renderer)
+ * @fn void View::draw(View *self)
  * @memberof View
  */
-static void draw(View *self, Renderer *renderer) {
+static Array *draw(View *self) {
 
-	assert(renderer);
+	MutableArray *views = $$(MutableArray, array);
 
 	if (self->hidden == false) {
+		$(views, addObject, self);
 
-		$(renderer, addView, self);
-
-		$((Array *) self->subviews, enumerateObjects, draw_recurse, renderer);
+		size_t i = 0;
+		while (i < ((Array *) views)->count) {
+			View *view = $((Array *) views, objectAtIndex, i++);
+			$((Array *) view->subviews, enumerateObjects, draw_recurse, views);
+		}
 	}
+
+	return (Array *) views;
 }
 
 /**
@@ -556,8 +563,7 @@ static void layoutIfNeeded(View *self) {
 
 	self->needsLayout = false;
 
-	const Array *subviews = (Array *) self->subviews;
-	$(subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
+	$((Array *) self->subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
 }
 
 /**
