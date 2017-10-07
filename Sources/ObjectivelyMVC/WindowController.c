@@ -183,8 +183,9 @@ static void setViewController(WindowController *self, ViewController *viewContro
 	if (self->viewController != viewController) {
 
 		if (self->viewController) {
-			$(self->viewController->view, setWindow, NULL);
 			$(self->viewController, viewWillDisappear);
+			$(self->viewController->view, setWindow, NULL);
+			$(self->viewController, viewDidDisappear);
 		}
 
 		release(self->viewController);
@@ -197,8 +198,10 @@ static void setViewController(WindowController *self, ViewController *viewContro
 
 		if (self->viewController) {
 			$(self->viewController, loadViewIfNeeded);
-			$(self->viewController->view, setWindow, self->window);
+
 			$(self->viewController, viewWillAppear);
+			$(self->viewController->view, setWindow, self->window);
+			$(self->viewController, viewDidAppear);
 		}
 	}
 }

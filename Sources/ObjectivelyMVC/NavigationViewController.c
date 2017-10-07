@@ -55,6 +55,7 @@ static void pushViewController(NavigationViewController *self, ViewController *v
 
 		$(topViewController, viewWillDisappear);
 		$(this->view, removeSubview, topViewController->view);
+		$(topViewController, viewDidDisappear);
 	}
 
 	$(this, addChildViewController, viewController);
@@ -106,6 +107,7 @@ static void popViewController(NavigationViewController *self) {
 	if (that) {
 		$(that, viewWillAppear);
 		$(this->view, addSubview, that->view);
+		$(that, viewDidAppear);
 	}
 }
 

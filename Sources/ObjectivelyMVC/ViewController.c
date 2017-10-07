@@ -63,12 +63,14 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 	$(childViewController, loadViewIfNeeded);
 
 	if (self->view->window) {
-		if (childViewController->view->window == NULL) {
-			$(childViewController, viewWillAppear);
-		}
+		$(childViewController, viewWillAppear);
 	}
 
 	$(self->view, addSubview, childViewController->view);
+
+	if (self->view->window) {
+		$(childViewController, viewDidAppear);
+	}
 
 	release(that);
 }
@@ -160,6 +162,7 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 
 	$(childViewController, viewWillDisappear);
 	$(childViewController->view, removeFromSuperview);
+	$(childViewController, viewDidDisappear);
 
 	release(that);
 }
@@ -220,6 +223,36 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
 }
 
 /**
+ * @brief ArrayEnumerator for viewDidAppear recursion.
+ */
+static void viewDidAppear_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, viewDidAppear);
+}
+
+/**
+ * @fn void ViewController::viewDidAppear(ViewController *self)
+ * @memberof ViewController
+ */
+static void viewDidAppear(ViewController *self) {
+	$((Array *) self->childViewControllers, enumerateObjects, viewDidAppear_recurse, NULL);
+}
+
+/**
+ * @brief ArrayEnumerator for viewDidDisappear recursion.
+ */
+static void viewDidDisappear_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, viewDidAppear);
+}
+
+/**
+ * @fn void ViewController::viewDidDisappear(ViewController *self)
+ * @memberof ViewController
+ */
+static void viewDidDisappear(ViewController *self) {
+	$((Array *) self->childViewControllers, enumerateObjects, viewDidDisappear_recurse, NULL);
+}
+
+/**
  * @brief ArrayEnumerator for viewWillAppear recursion.
  */
 static void viewWillAppear_recurse(const Array *array, ident obj, ident data) {
@@ -268,6 +301,8 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->removeFromParentViewController = removeFromParentViewController;
 	((ViewControllerInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewControllerInterface *) clazz->def->interface)->viewDidAppear = viewDidAppear;
+	((ViewControllerInterface *) clazz->def->interface)->viewDidDisappear = viewDidDisappear;
 	((ViewControllerInterface *) clazz->def->interface)->viewWillAppear = viewWillAppear;
 	((ViewControllerInterface *) clazz->def->interface)->viewWillDisappear = viewWillDisappear;
 }
