@@ -260,6 +260,8 @@ static void becomeFirstResponder(View *self) {
 
 	if (self->window) {
 		MVC_MakeFirstResponder(self->window, self);
+	} else {
+		MVC_LogWarn("%s: window is NULL\n", (self->identifier ?: self->object.clazz->name));
 	}
 }
 
@@ -737,6 +739,8 @@ static void removeSubview(View *self, View *subview) {
  */
 static void render(View *self, Renderer *renderer) {
 
+	assert(self->window);
+	
 	if (self->backgroundColor.a) {
 
 		$(renderer, setDrawColor, &self->backgroundColor);
@@ -1240,8 +1244,10 @@ void MVC_MakeFirstResponder(SDL_Window *window, View *view) {
 	if (view) {
 		assert(window == view->window);
 		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, view);
+		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, view->identifier ?: view->object.clazz->name);
 	} else {
 		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, NULL);
+		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
 	}
 }
 
