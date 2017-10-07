@@ -77,13 +77,6 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::acceptsFirstResponder(const View *)
- */
-static _Bool acceptsFirstResponder(const View *self) {
-	return ((const Panel *) self)->isDraggable ;
-}
-
-/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -96,7 +89,8 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("accessoryView", InletTypeView, &this->accessoryView, NULL),
 		MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
 		MakeInlet("isDraggable", InletTypeBool, &this->isDraggable, NULL),
-		MakeInlet("isResiable", InletTypeBool, &this->isResizable, NULL)
+		MakeInlet("isResiable", InletTypeBool, &this->isResizable, NULL),
+	    MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -106,7 +100,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Panel *) self, initWithFrame, NULL);
+	return (View *) $((Panel *) self, initWithFrame, NULL, ControlStyleDefault);
 }
 
 /**
@@ -130,42 +124,49 @@ static void layoutSubviews(View *self) {
 	resizeHandle->hidden = !this->isResizable;
 }
 
+#pragma mark - Control
+
 /**
- * @see View::respondToEvent(View *, const SDL_Event *)
+ * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static void respondToEvent(View *self, const SDL_Event *event) {
+static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	Panel *this = (Panel *) self;
 
-	if (event->type == SDL_MOUSEBUTTONDOWN && event->button.button == 1) {
-		if (this->isResizable && $((View *) this->resizeHandle, didReceiveEvent, event)) {
-			this->isResizing = true;
-		} else if (this->isDraggable && $(self, didReceiveEvent, event)) {
-			this->isDragging = true;
-		}
-	} else if (event->type == SDL_MOUSEBUTTONUP && event->button.button == 1) {
-		if (this->isResizing) {
-			this->isResizing = false;
-		} else if (this->isDragging) {
-			this->isDragging = false;
-		}
-	} else if (event->type == SDL_MOUSEMOTION) {
-		if (this->isResizing) {
+	if (event->type == SDL_MOUSEMOTION && (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON_LMASK)) {
 
-			SDL_Size size = $(self, size);
+		if ((self->state & ControlStateHighlighted) == 0) {
+			if ($((View *) this->resizeHandle, didReceiveEvent, event)) {
+				self->state |= ControlStateHighlighted;
+				this->isResizing = true;
+			} else if (this->isDraggable) {
+				self->state |= ControlStateHighlighted;
+				this->isDragging = true;
+			}
+		}
+
+		if (this->isResizing) {
+			SDL_Size size = $((View *) self, size);
 
 			size.w = clamp(size.w + event->motion.xrel, this->minSize.w, this->maxSize.w);
 			size.h = clamp(size.h + event->motion.yrel, this->minSize.h, this->maxSize.h);
 
-			$(self, resize, &size);
-
+			$((View *) self, resize, &size);
 		} else if (this->isDragging) {
-			self->frame.x += event->motion.xrel;
-			self->frame.y += event->motion.yrel;
+			self->view.frame.x += event->motion.xrel;
+			self->view.frame.y += event->motion.yrel;
 		}
+
+		return true;
 	}
 
-	super(View, self, respondToEvent, event);
+	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
+		self->state &= ~ControlStateHighlighted;
+		this->isResizing = this->isDragging = false;
+		return true;
+	}
+
+	return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - Panel
@@ -183,21 +184,20 @@ static SDL_Size contentSize(const Panel *self) {
 
 	if (accessoryView->hidden == false) {
 		const SDL_Size accessorySize = $(accessoryView, sizeThatContains);
-		size.h -= accessorySize.h + self->stackView.spacing;
+		size.h -= accessorySize.h + self->stackView->spacing;
 	}
 
 	return size;
 }
 
 /**
- * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
+ * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle style)
  * @memberof Panel
  */
-static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
+static Panel *initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle style) {
 
-	self = (Panel *) super(StackView, self, initWithFrame, frame);
+	self = (Panel *) super(Control, self, initWithFrame, frame, style);
 	if (self) {
-
 		View *this = (View *) self;
 
 		self->isDraggable = true;
@@ -205,7 +205,12 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
 
-		self->stackView.spacing = DEFAULT_PANEL_SPACING;
+		self->stackView = $(alloc(StackView), initWithFrame, NULL);
+		assert(self->stackView);
+
+		self->stackView->spacing = DEFAULT_PANEL_SPACING;
+
+		$(this, addSubview, (View *) self->stackView);
 
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
@@ -213,7 +218,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->contentView->spacing = DEFAULT_PANEL_SPACING;
 		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
 
-		$(this, addSubview, (View *) self->contentView);
+		$((View *) self->stackView, addSubview, (View *) self->contentView);
 
 		self->accessoryView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->accessoryView);
@@ -224,7 +229,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		self->accessoryView->view.hidden = true;
 
-		$(this, addSubview, (View *) self->accessoryView);
+		$((View *) self->stackView, addSubview, (View *) self->accessoryView);
 
 		self->resizeHandle = $(alloc(ImageView), initWithImage, _resize);
 		assert(self->resizeHandle);
@@ -234,7 +239,9 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->resizeHandle->view.frame.w = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 		self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 
-		$(this, addSubview, (View *) self->resizeHandle);
+		$((View *) self, addSubview, (View *) self->resizeHandle);
+
+		this->autoresizingMask = ViewAutoresizingContain;
 
 		this->backgroundColor = Colors.DefaultColor;
 		this->borderColor = Colors.DarkGray;
@@ -256,11 +263,11 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+
+	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
 	((PanelInterface *) clazz->def->interface)->contentSize = contentSize;
 	((PanelInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
@@ -286,7 +293,7 @@ Class *_Panel(void) {
 
 	do_once(&once, {
 		clazz.name = "Panel";
-		clazz.superclass = _StackView();
+		clazz.superclass = _Control();
 		clazz.instanceSize = sizeof(Panel);
 		clazz.interfaceOffset = offsetof(Panel, interface);
 		clazz.interfaceSize = sizeof(PanelInterface);
