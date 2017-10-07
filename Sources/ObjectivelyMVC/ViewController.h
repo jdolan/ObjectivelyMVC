@@ -98,13 +98,14 @@ struct ViewControllerInterface {
 	void (*addChildViewController)(ViewController *self, ViewController *childViewController);
 
 	/**
-	 * @fn void ViewController::draw(ViewController *self)
+	 * @fn void ViewController::draw(ViewController *self, Renderer *renderer)
 	 * @brief Draws this ViewController's View hierarchy.
 	 * @param self The ViewController.
+	 * @param renderer The Renderer.
 	 * @remarks This method is called from WindowController::render to draw the View hierarchy.
 	 * @memberof ViewController
 	 */
-	Array *(*drawView)(ViewController *self);
+	void (*drawView)(ViewController *self, Renderer *renderer);
 
 	/**
 	 * @fn ViewController *ViewController::init(ViewController *self)

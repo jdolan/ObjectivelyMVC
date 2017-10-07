@@ -79,14 +79,14 @@ static void addChildViewController(ViewController *self, ViewController *childVi
  * @fn void ViewController::drawView(ViewController *self, Renderer *renderer)
  * @memberof ViewController
  */
-static Array *drawView(ViewController *self) {
+static void drawView(ViewController *self, Renderer *renderer) {
 
 	$(self, loadViewIfNeeded);
 
 	$(self->view, applyConstraintsIfNeeded);
 	$(self->view, layoutIfNeeded);
 
-	return $(self->view, draw);
+	return $(self->view, draw, renderer);
 }
 
 /**

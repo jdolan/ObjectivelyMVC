@@ -375,15 +375,26 @@ struct ViewInterface {
 	_Bool (*didReceiveEvent)(const View *self, const SDL_Event *event);
 
 	/**
-	 * @fn void View::draw(View *self)
+	 * @fn void View::draw(View *self, Renderer *renderer)
 	 * @brief Draws this View.
 	 * @param self The View.
-	 * @remarks This method returns the depth-sorted View hierarchy relative to the receiver.
-	 * Rasterization is performed in View::render.
+	 * @param renderer The Renderer.
+	 * @remarks This method determines if the View is visible and dispatches Renderer::drawView
+	 * before recursing down the View hierarchy. Rasterization is performed in View::render.
 	 * @see View::render(View *, Renderer *)
 	 * @memberof View
 	 */
-	Array *(*draw)(View *self);
+	void (*draw)(View *self, Renderer *renderer);
+
+	/**
+	 * @fn View *View::hitTest(const View *self, const SDL_Point *point)
+	 * @brief Performs a hit test against this View and its descendants for the given point.
+	 * @param self The View.
+	 * @param point The point to test.
+	 * @return The furthest descendant View that contains the given point.
+	 * @memberof View
+	 */
+	View *(*hitTest)(const View *self, const SDL_Point *point);
 
 	/**
 	 * @fn View *View::init(View *self)

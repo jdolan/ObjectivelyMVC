@@ -59,11 +59,6 @@ struct WindowController {
 	Renderer *renderer;
 
 	/**
-	 * @brief The responder chain.
-	 */
-	MutableArray *responderChain;
-
-	/**
 	 * @brief The ViewController.
 	 */
 	ViewController *viewController;

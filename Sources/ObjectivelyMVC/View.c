@@ -79,9 +79,11 @@ static void dealloc(Object *self) {
  */
 static String *description(const Object *self) {
 
-	const SDL_Rect *f = &((View *) self)->frame;
+	View *this = (View *) self;
 
-	return str("%s@%p (%d,%d) %dx%d", self->clazz->name, self, f->x, f->y, f->w, f->h);
+	const SDL_Rect *f = &this->frame;
+
+	return str("%s@%p (%d,%d) %dx%d", this->identifier ?: self->clazz->name, self, f->x, f->y, f->w, f->h);
 }
 
 #pragma mark - View
@@ -423,21 +425,19 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 
 	if ($(self, isVisible)) {
 
+		SDL_Point point;
+
 		if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-			if ($(self, containsPoint, &MakePoint(event->button.x, event->button.y))) {
-				return true;
-			}
+			point = MakePoint(event->button.x, event->button.y);
 		} else if (event->type == SDL_MOUSEMOTION) {
-			if ($(self, containsPoint, &MakePoint(event->motion.x, event->motion.y))) {
-				return true;
-			}
+			point = MakePoint(event->motion.x, event->motion.y);
 		} else if (event->type == SDL_MOUSEWHEEL) {
-			SDL_Point point;
 			SDL_GetMouseState(&point.x, &point.y);
-			if ($(self, containsPoint, &point)) {
-				return true;
-			}
+		} else {
+			return false;
 		}
+
+		return $(self, containsPoint, &point);
 	}
 
 	return false;
@@ -447,41 +447,56 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
  * @fn Array *View::draw(View *self)
  * @memberof View
  */
-static Array *draw(View *self) {
+static void draw(View *self, Renderer *renderer) {
 
-	MutableArray *views = $$(MutableArray, array);
+	assert(self->window);
 
 	if (self->hidden == false) {
-		$(views, addObject, self);
+		$(renderer, drawView, self);
 
 		View *firstResponder = NULL;
 
-		size_t i = 0;
-		while (i < ((Array *) views)->count) {
-			View *view = $((Array *) views, objectAtIndex, i++);
-
-			const Array *subviews = (Array *) view->subviews;
-			for (size_t j = 0; j < subviews->count; j++) {
-
-				View *subview = $(subviews, objectAtIndex, j);
-				if (subview->hidden == false) {
-					if ($(subview, isFirstResponder)) {
-						firstResponder = subview;
-					} else {
-						$(views, addObject, subview);
-					}
-				}
+		const Array *subviews = (Array *) self->subviews;
+		for (size_t i = 0; i < subviews->count; i++) {
+			View *subview = $(subviews, objectAtIndex, i);
+			if ($(subview, isFirstResponder)) {
+				firstResponder = subview;
+			} else {
+				$(subview, draw, renderer);
 			}
 		}
 
 		if (firstResponder) {
-			Array *deferred = $(firstResponder, draw);
-			$(views, addObjectsFromArray, deferred);
-			release(deferred);
+			$(firstResponder, draw, renderer);
+		}
+	}
+}
+
+/**
+ * @fn View *View::hitTest(const View *self, const SDL_Point *point)
+ * @memberof View
+ */
+static View *hitTest(const View *self, const SDL_Point *point) {
+
+	if (self->hidden == false) {
+
+		if ($(self, containsPoint, point)) {
+
+			const Array *subviews = (Array *) self->subviews;
+			for (size_t i = subviews->count; i > 0; i--) {
+
+				const View *subview = $(subviews, objectAtIndex, i - 1);
+				const View *view = $(subview, hitTest, point);
+				if (view) {
+					return (View *) view;
+				}
+			}
+
+			return (View *) self;
 		}
 	}
 
-	return (Array *) views;
+	return NULL;
 }
 
 /**
@@ -1181,6 +1196,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
+	((ViewInterface *) clazz->def->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((ViewInterface *) clazz->def->interface)->isDescendantOfView = isDescendantOfView;

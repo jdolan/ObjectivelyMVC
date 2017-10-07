@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include <Objectively/String.h>
+
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/WindowController.h>
 
@@ -38,7 +40,6 @@ static void dealloc(Object *self) {
 	WindowController *this = (WindowController *) self;
 
 	release(this->renderer);
-	release(this->responderChain);
 	release(this->viewController);
 
 	super(Object, self, dealloc);
@@ -55,14 +56,19 @@ static View *firstResponder(const WindowController *self, const SDL_Event *event
 	View *firstResponder = MVC_FirstResponder(self->window);
 	if (firstResponder == NULL) {
 
-		const Array *responderChain = (Array *) self->responderChain;
-		for (size_t i = 0; i < responderChain->count; i++) {
-			View *view = $(responderChain, objectAtIndex, responderChain->count - i - 1);
-			if ($(view, didReceiveEvent, event)) {
-				firstResponder = view;
-				break;
-			}
+		SDL_Point point;
+
+		if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+			point = MakePoint(event->button.x, event->button.y);
+		} else if (event->type == SDL_MOUSEMOTION) {
+			point = MakePoint(event->motion.x, event->motion.y);
+		} else if (event->type == SDL_MOUSEWHEEL) {
+			SDL_GetMouseState(&point.x, &point.y);
+		} else {
+			return firstResponder;
 		}
+
+		firstResponder = $(self->viewController->view, hitTest, &point);
 	}
 
 	return firstResponder;
@@ -85,9 +91,6 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
-
-		self->responderChain = $$(MutableArray, array);
-		assert(self->responderChain);
 	}
 
 	return self;
@@ -103,19 +106,8 @@ static void render(WindowController *self) {
 
 	$(self->renderer, beginFrame);
 
-	$(self->responderChain, removeAllObjects);
-
 	if (self->viewController) {
-		Array *views = $(self->viewController, drawView);
-
-		for (size_t i = 0; i < views->count; i++) {
-			View *view = $(views, objectAtIndex, i);
-
-			$(self->renderer, drawView, view);
-			$(self->responderChain, addObject, view);
-		}
-
-		release(views);
+		$(self->viewController, drawView, self->renderer);
 	} else {
 		MVC_LogWarn("viewController is NULL\n");
 	}
@@ -144,6 +136,13 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
 	View *firstResponder = $(self, firstResponder, event);
 	if (firstResponder) {
+
+		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+			String *desc = $((Object *) firstResponder, description);
+			MVC_LogDebug("Event %d -> %s\n", event->type, desc->chars);
+			release(desc);
+		}
+
 		$(firstResponder, respondToEvent, event);
 	} else if (self->viewController) {
 		$(self->viewController, respondToEvent, event);
