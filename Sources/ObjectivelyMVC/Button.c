@@ -89,12 +89,12 @@ static SDL_Size sizeThatFits(const View *self) {
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
-	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_FINGERDOWN) {
+	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		self->state |= ControlStateHighlighted;
 		return true;
 	}
 
-	if (event->type == SDL_MOUSEBUTTONUP || event->type == SDL_FINGERUP) {
+	if (event->type == SDL_MOUSEBUTTONUP) {
 		self->state &= ~ControlStateHighlighted;
 		return true;
 	}

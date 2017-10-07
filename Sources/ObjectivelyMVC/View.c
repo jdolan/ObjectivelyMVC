@@ -422,30 +422,18 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 	if ($(self, isVisible)) {
 
 		if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-			const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-			if ($(self, containsPoint, &point)) {
+			if ($(self, containsPoint, &MakePoint(event->button.x, event->button.y))) {
 				return true;
 			}
-		} else if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
-			const SDL_Point point = { .x = event->tfinger.x, .y = event->tfinger.y };
-			if ($(self, containsPoint, &point)) {
+		} else if (event->type == SDL_MOUSEMOTION) {
+			if ($(self, containsPoint, &MakePoint(event->motion.x, event->motion.y))) {
 				return true;
 			}
-		}
-
-		if ($(self, acceptsFirstResponder)) {
-
-			if (event->type == SDL_MOUSEMOTION) {
-				const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
-				if ($(self, containsPoint, &point)) {
-					return true;
-				}
-			} else if (event->type == SDL_MOUSEWHEEL) {
-				SDL_Point point;
-				SDL_GetMouseState(&point.x, &point.y);
-				if ($(self, containsPoint, &point)) {
-					return true;
-				}
+		} else if (event->type == SDL_MOUSEWHEEL) {
+			SDL_Point point;
+			SDL_GetMouseState(&point.x, &point.y);
+			if ($(self, containsPoint, &point)) {
+				return true;
 			}
 		}
 	}

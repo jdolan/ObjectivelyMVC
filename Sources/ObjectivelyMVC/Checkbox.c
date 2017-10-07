@@ -132,13 +132,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	const View *box = (View *) ((Checkbox *) self)->box;
 	
-	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_FINGERDOWN) {
+	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		if ($(box, didReceiveEvent, event)) {
 			self->state |= ControlStateHighlighted;
 			return true;
 		}
 	}
-	if (event->type == SDL_MOUSEBUTTONUP || event->type == SDL_FINGERUP) {
+	if (event->type == SDL_MOUSEBUTTONUP) {
 		if ($(box, didReceiveEvent, event)) {
 			self->state ^= ControlStateSelected;
 			self->state &= ~ControlStateHighlighted;

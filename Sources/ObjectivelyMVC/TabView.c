@@ -104,7 +104,7 @@ static View *init(View *self) {
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
-	if (event->type == SDL_MOUSEBUTTONUP || event->type == SDL_FINGERUP) {
+	if (event->type == SDL_MOUSEBUTTONUP) {
 
 		TabView *this = (TabView *) self;
 
