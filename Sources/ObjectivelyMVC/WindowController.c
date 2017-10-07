@@ -56,22 +56,12 @@ static View *firstResponder(const WindowController *self, const SDL_Event *event
 	if (firstResponder == NULL) {
 
 		const Array *responderChain = (Array *) self->responderChain;
-		switch (event->type) {
-			case SDL_MOUSEBUTTONDOWN:
-			case SDL_MOUSEBUTTONUP:
-			case SDL_MOUSEWHEEL:
-			case SDL_FINGERDOWN:
-			case SDL_FINGERUP:
-				for (size_t i = 0; i < responderChain->count; i++) {
-					View *view = $(responderChain, objectAtIndex, responderChain->count - i - 1);
-					if ($(view, didReceiveEvent, event)) {
-						firstResponder = view;
-						break;
-					}
-				}
+		for (size_t i = 0; i < responderChain->count; i++) {
+			View *view = $(responderChain, objectAtIndex, responderChain->count - i - 1);
+			if ($(view, didReceiveEvent, event)) {
+				firstResponder = view;
 				break;
-			default:
-				break;
+			}
 		}
 	}
 
