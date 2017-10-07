@@ -94,17 +94,6 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 }
 
 /**
- * @brief ArrayEnumerator for View rendering.
- */
-static void render_enumerate(const Array *array, ident obj, ident data) {
-
-	WindowController *this = data;
-
-	$(this->renderer, drawView, obj);
-	$(this->responderChain, addObject, obj);
-}
-
-/**
  * @fn void WindowController::render(WindowController *self)
  * @memberof WindowController
  */
@@ -118,7 +107,14 @@ static void render(WindowController *self) {
 
 	if (self->viewController) {
 		Array *views = $(self->viewController, drawView);
-			$(views, enumerateObjects, render_enumerate, self);
+
+		for (size_t i = 0; i < views->count; i++) {
+			View *view = $(views, objectAtIndex, i);
+
+			$(self->renderer, drawView, view);
+			$(self->responderChain, addObject, view);
+		}
+
 		release(views);
 	} else {
 		MVC_LogWarn("viewController is NULL\n");
