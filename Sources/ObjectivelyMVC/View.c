@@ -911,23 +911,8 @@ static void resize(View *self, const SDL_Size *size) {
 static void respondToEvent(View *self, const SDL_Event *event) {
 
 	assert(event);
-	assert(self->window);
 
-	if (self->superview == NULL) {
-		if (event->type == SDL_WINDOWEVENT) {
-			if (event->window.event == SDL_WINDOWEVENT_SHOWN
-				|| event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-
-				if (self->autoresizingMask & ViewAutoresizingFill) {
-
-					SDL_Size size;
-					SDL_GetWindowSize(self->window, &size.w, &size.h);
-
-					$(self, resize, &size);
-				}
-			}
-		}
-	} else {
+	if (self->superview ) {
 		$(self->superview, respondToEvent, event);
 	}
 }
@@ -948,6 +933,16 @@ static void setWindow(View *self, SDL_Window *window) {
 	$(self, resignFirstResponder);
 
 	self->window = window;
+
+	if (self->window && self->superview == NULL) {
+		if (self->autoresizingMask & ViewAutoresizingFill) {
+
+			SDL_Size size;
+			SDL_GetWindowSize(self->window, &size.w, &size.h);
+
+			$(self, resize, &size);
+		}
+	}
 
 	$((Array *) self->subviews, enumerateObjects, setWindow_recurse, window);
 }
