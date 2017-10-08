@@ -496,7 +496,7 @@ static View *hitTest(const View *self, const SDL_Point *point) {
 		if ($(self, containsPoint, point)) {
 
 			const Array *subviews = (Array *) self->subviews;
-			for (size_t i = subviews->count; i > 0; i--) {
+			for (size_t i = subviews->count; i; i--) {
 
 				const View *subview = $(subviews, objectAtIndex, i - 1);
 				const View *view = $(subview, hitTest, point);
