@@ -193,6 +193,12 @@ struct View {
 	View *superview;
 
 	/**
+	 * @brief The ViewController.
+	 * @remarks This is `NULL` unless the View is the immediate `view` of a ViewController.
+	 */
+	ViewController *viewController;
+
+	/**
 	 * @brief The window.
 	 * @remarks This is `NULL` until the View has been added to a WindowController.
 	 */

@@ -126,10 +126,21 @@ struct WindowControllerInterface {
 	void (*render)(WindowController *self);
 
 	/**
-	 * @fn void WindowController:respondToEvent(WindowController *self, const SDL_Event *event)
+	 * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
 	 * @brief Responds to the given event.
 	 * @param self The WindowController.
-	 * @param event The SDL_Event.
+	 * @param event The event.
+	 * @remarks Your application should call this method for each event that the View hierarchy is
+	 * expected to respond to. The event will be dispatched to WindowController::firstResponder,
+	 * which is the first of:
+	 *  * The View that has claimed first responder status for the window via
+	 *    View::becomeFirstResponder
+	 *  * The inner-most descendant in the View hierarchy that received the event, according to
+	 *    View::hitTest
+	 *  * This WindowController's ViewController
+	 * @remarks By default, the event is passed up the View hierarchy by View::respondToEvent.
+	 * Subclasses of View, such as Control, may stop event propagation if an event has been
+	 * adequately responded to.
 	 * @memberof WindowController
 	 */
 	void (*respondToEvent)(WindowController * self, const SDL_Event *event);

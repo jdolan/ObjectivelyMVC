@@ -65,7 +65,7 @@ static View *firstResponder(const WindowController *self, const SDL_Event *event
 		} else if (event->type == SDL_MOUSEWHEEL) {
 			SDL_GetMouseState(&point.x, &point.y);
 		} else {
-			return firstResponder;
+			return NULL;
 		}
 
 		firstResponder = $(self->viewController->view, hitTest, &point);
@@ -116,7 +116,7 @@ static void render(WindowController *self) {
 }
 
 /**
- * @fn void WindowController:respondToEvent(WindowController *self, const SDL_Event *event)
+ * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
  * @memberof WindowController
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
@@ -142,23 +142,32 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 				$(self->viewController, renderDeviceDidReset);
 			}
 		}
-	}
+	} else if (event->type == MVC_NOTIFICATION_EVENT) {
 
-	View *firstResponder = $(self, firstResponder, event);
-	if (firstResponder) {
-
-		const int priority = event->type == SDL_MOUSEMOTION ? SDL_LOG_PRIORITY_VERBOSE : SDL_LOG_PRIORITY_DEBUG;
-		if (MVC_LogEnabled(priority)) {
-			String *desc = $((Object *) firstResponder, description);
-			MVC_LogMessage(priority, "Event type %d -> %s\n", event->type, desc->chars);
-			release(desc);
+		if (self->viewController) {
+			$(self->viewController, handleNotification, &(const Notification) {
+				.name = event->user.code,
+				.sender = event->user.data1,
+				.data = event->user.data2
+			});
 		}
-
-		$(firstResponder, respondToEvent, event);
-	} else if (self->viewController) {
-		$(self->viewController, respondToEvent, event);
 	} else {
-		MVC_LogDebug("firstResponder for event type %d is NULL\n", event->type);
+		View *firstResponder = $(self, firstResponder, event);
+		if (firstResponder) {
+
+			const int priority = event->type == SDL_MOUSEMOTION ? SDL_LOG_PRIORITY_VERBOSE : SDL_LOG_PRIORITY_DEBUG;
+			if (MVC_LogEnabled(priority)) {
+				String *desc = $((Object *) firstResponder, description);
+				MVC_LogMessage(priority, "Event type %d -> %s\n", event->type, desc->chars);
+				release(desc);
+			}
+
+			$(firstResponder, respondToEvent, event);
+		} else if (self->viewController) {
+			$(self->viewController, respondToEvent, event);
+		} else {
+			MVC_LogDebug("firstResponder for event type %d is NULL\n", event->type);
+		}
 	}
 }
 

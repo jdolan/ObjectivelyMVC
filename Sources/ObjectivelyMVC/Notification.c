@@ -21,51 +21,27 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#pragma once
+#include <assert.h>
+#include <Objectively/Once.h>
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_pixels.h>
+#include <ObjectivelyMVC/Notification.h>
 
-#include <Objectively/Types.h>
+int MVC_NOTIFICATION_EVENT;
 
-#undef interface
+void MVC_PostNotification(const Notification *notification) {
+	static Once once;
 
-#if defined(_MSC_VER)
- #include "WindowlyMVC.h"
-#endif
+	do_once(&once, {
+		MVC_NOTIFICATION_EVENT = SDL_RegisterEvents(1);
+		assert(MVC_NOTIFICATION_EVENT != -1);
+	});
 
-#ifndef OBJECTIVELYMVC_EXPORT
- #define OBJECTIVELYMVC_EXPORT extern
-#endif
+	assert(notification);
 
-/**
- * @file
- * @brief ObjectivelyMVC base types.
- */
-
-typedef struct View View;
-typedef struct ViewController ViewController;
-
-typedef struct SDL_Size SDL_Size;
-
-/**
- * @brief The SDL_Size type.
- */
-struct SDL_Size {
-	int w, h;
-};
-
-/**
- * @brief Creates an SDL_Point with the given coordinates.
- */
-#define MakePoint(x, y) (SDL_Point) { (x), (y) }
-
-/**
- * @brief Creates an SDL_Rect with the given origin and size.
- */
-#define MakeRect(x, y, w, h) (SDL_Rect) { (x), (y), (w), (h) }
-
-/**
- * @brief Creates an SDL_Size with the given dimensions.
- */
-#define MakeSize(w, h) (SDL_Size) { (w), (h) }
+	SDL_PushEvent(&(SDL_Event) {
+		.user.type = MVC_NOTIFICATION_EVENT,
+		.user.code = notification->name,
+		.user.data1 = notification->sender,
+		.user.data2 = notification->data
+	});
+}

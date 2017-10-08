@@ -46,6 +46,7 @@
 #include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/NavigationViewController.h>
+#include <ObjectivelyMVC/Notification.h>
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/PageView.h>
 #include <ObjectivelyMVC/Panel.h>

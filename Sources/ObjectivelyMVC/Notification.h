@@ -23,49 +23,35 @@
 
 #pragma once
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_pixels.h>
+#include <ObjectivelyMVC/Types.h>
 
-#include <Objectively/Types.h>
-
-#undef interface
-
-#if defined(_MSC_VER)
- #include "WindowlyMVC.h"
-#endif
-
-#ifndef OBJECTIVELYMVC_EXPORT
- #define OBJECTIVELYMVC_EXPORT extern
-#endif
+typedef struct Notification Notification;
 
 /**
- * @file
- * @brief ObjectivelyMVC base types.
+ * @brief The Notification type.
  */
+struct Notification {
 
-typedef struct View View;
-typedef struct ViewController ViewController;
+	/**
+	 * @brief The notification name.
+	 */
+	int name;
 
-typedef struct SDL_Size SDL_Size;
+	/**
+	 * @brief The sender.
+	 */
+	ident sender;
 
-/**
- * @brief The SDL_Size type.
- */
-struct SDL_Size {
-	int w, h;
+	/**
+	 * @brief The data.
+	 */
+	ident data;
 };
 
 /**
- * @brief Creates an SDL_Point with the given coordinates.
+ * @brief The custom event type for notifications.
  */
-#define MakePoint(x, y) (SDL_Point) { (x), (y) }
+OBJECTIVELYMVC_EXPORT int MVC_NOTIFICATION_EVENT;
 
-/**
- * @brief Creates an SDL_Rect with the given origin and size.
- */
-#define MakeRect(x, y, w, h) (SDL_Rect) { (x), (y), (w), (h) }
+OBJECTIVELYMVC_EXPORT void MVC_PostNotification(const Notification *notification);
 
-/**
- * @brief Creates an SDL_Size with the given dimensions.
- */
-#define MakeSize(w, h) (SDL_Size) { (w), (h) }

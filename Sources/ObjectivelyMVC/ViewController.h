@@ -25,6 +25,7 @@
 
 #include <Objectively/MutableArray.h>
 
+#include <ObjectivelyMVC/Notification.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -42,7 +43,6 @@
  * ViewController::moveToParentViewController on the child.
  */
 
-typedef struct ViewController ViewController;
 typedef struct ViewControllerInterface ViewControllerInterface;
 
 /**
@@ -98,7 +98,7 @@ struct ViewControllerInterface {
 	void (*addChildViewController)(ViewController *self, ViewController *childViewController);
 
 	/**
-	 * @fn void ViewController::draw(ViewController *self, Renderer *renderer)
+	 * @fn void ViewController::drawView(ViewController *self, Renderer *renderer)
 	 * @brief Draws this ViewController's View hierarchy.
 	 * @param self The ViewController.
 	 * @param renderer The Renderer.
@@ -106,6 +106,16 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*drawView)(ViewController *self, Renderer *renderer);
+
+	/**
+	 * @fn void ViewController::handleNotification(ViewController *self, const Notification *notification)
+	 * @brief Handles a broadcast notification.
+	 * @param self The ViewController.
+	 * @param notification The Notification.
+	 * @memberof ViewController
+	 * @see MVC_PostNotification
+	 */
+	void (*handleNotification)(ViewController *self, const Notification *notification);
 
 	/**
 	 * @fn ViewController *ViewController::init(ViewController *self)
@@ -134,7 +144,7 @@ struct ViewControllerInterface {
 	void (*loadViewIfNeeded)(ViewController *self);
 
 	/**
-	 * @fn void ViewController::moveToParent(ViewController *self, ViewController *parentViewController)
+	 * @fn void ViewController::moveToParentViewController(ViewController *self, ViewController *parentViewController)
 	 * @brief Moves this ViewController to the specified parent.
 	 * @param self The ViewController.
 	 * @param parentViewController The parent ViewController, or `NULL`.
@@ -170,13 +180,22 @@ struct ViewControllerInterface {
 	void (*renderDeviceDidReset)(ViewController *self);
 
 	/**
-	 * @fn void ViewController:respondToEvent(ViewController *self, const SDL_Event *event)
+	 * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
 	 * @brief Responds to the given event.
 	 * @param self The ViewController.
-	 * @param event The SDL_Event.
+	 * @param event The event.
 	 * @memberof ViewController
 	 */
 	void (*respondToEvent)(ViewController *self, const SDL_Event *event);
+
+	/**
+	 * @fn void ViewController::setView(ViewController *self, View *view)
+	 * @brief Sets this ViewController's View.
+	 * @param self The ViewController.
+	 * @param view The View.
+	 * @memberof ViewController
+	 */
+	void (*setView)(ViewController *self, View *view);
 
 	/**
 	 * @fn void ViewController::viewDidAppear(ViewController *self)

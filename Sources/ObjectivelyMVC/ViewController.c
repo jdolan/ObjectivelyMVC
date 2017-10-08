@@ -89,6 +89,21 @@ static void drawView(ViewController *self, Renderer *renderer) {
 }
 
 /**
+ * @brief ArrayEnumerator for handleNotification recursion.
+ */
+static void handleNotification_recurse(const Array *array, ident obj, ident data) {
+	$((ViewController *) obj, handleNotification, data);
+}
+
+/**
+ * @fn void ViewController::handleNotification(ViewController *self, const Notification *notification)
+ * @memberof ViewController
+ */
+static void handleNotification(ViewController *self, const Notification *notification) {
+	$((Array *) self->childViewControllers, enumerateObjects, handleNotification_recurse, (ident) notification);
+}
+
+/**
  * @fn ViewController *ViewController::init(ViewController *self)
  * @memberof ViewController
  */
@@ -104,15 +119,17 @@ static ViewController *init(ViewController *self) {
 }
 
 /**
- * @fn void ViewController:loadView(ViewController *self)
+ * @fn void ViewController::loadView(ViewController *self)
  * @memberof ViewController
  */
 static void loadView(ViewController *self) {
 
-	self->view = $(alloc(View), initWithFrame, NULL);
-	assert(self->view);
+	View *view = $(alloc(View), initWithFrame, NULL);
+	assert(view);
 
-	self->view->autoresizingMask = ViewAutoresizingFill;
+	view->autoresizingMask = ViewAutoresizingFill;
+
+	$(self, setView, view);
 }
 
 /**
@@ -200,25 +217,31 @@ static void renderDeviceDidReset(ViewController *self) {
 }
 
 /**
- * @brief ArrayEnumerator for respondToEvent recursion.
- */
-static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, respondToEvent, data);
-}
-
-/**
  * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
  * @memberof ViewController
  */
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
 
-	if (self->parentViewController == NULL) {
+}
+
+/**
+ * @fn void ViewController::setView(ViewController *self, View *view)
+ * @memberof ViewController
+ */
+static void setView(ViewController *self, View *view) {
+
+	if (view != self->view) {
+
 		if (self->view) {
-			$(self->view, respondToEvent, event);
+			self->view->viewController = NULL;
+			release(self->view);
+		}
+
+		self->view = view;
+		if (self->view) {
+			self->view->viewController = self;
 		}
 	}
-
-	$((Array *) self->childViewControllers, enumerateObjects, respondToEvent_recurse, (ident) event);
 }
 
 /**
@@ -292,6 +315,7 @@ static void initialize(Class *clazz) {
 
 	((ViewControllerInterface *) clazz->def->interface)->addChildViewController = addChildViewController;
 	((ViewControllerInterface *) clazz->def->interface)->drawView = drawView;
+	((ViewControllerInterface *) clazz->def->interface)->handleNotification = handleNotification;
 	((ViewControllerInterface *) clazz->def->interface)->init = init;
 	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
 	((ViewControllerInterface *) clazz->def->interface)->loadViewIfNeeded = loadViewIfNeeded;
@@ -300,6 +324,7 @@ static void initialize(Class *clazz) {
 	((ViewControllerInterface *) clazz->def->interface)->removeFromParentViewController = removeFromParentViewController;
 	((ViewControllerInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewControllerInterface *) clazz->def->interface)->setView = setView;
 	((ViewControllerInterface *) clazz->def->interface)->viewDidAppear = viewDidAppear;
 	((ViewControllerInterface *) clazz->def->interface)->viewDidDisappear = viewDidDisappear;
 	((ViewControllerInterface *) clazz->def->interface)->viewWillAppear = viewWillAppear;

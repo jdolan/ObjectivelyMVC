@@ -914,7 +914,11 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 	assert(event);
 
-	if (self->superview ) {
+	if (self->viewController) {
+		$(self->viewController, respondToEvent, event);
+	}
+
+	if (self->superview) {
 		$(self->superview, respondToEvent, event);
 	}
 }
