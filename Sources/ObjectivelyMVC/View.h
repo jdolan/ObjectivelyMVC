@@ -227,6 +227,15 @@ struct ViewInterface {
 	void (*addConstraint)(View *self, Constraint *constraint);
 
 	/**
+	 * @fn void View::addConstraintWithDescriptor(View *self, const char *descriptor)
+	 * @brief Adds a Constraint on this View.
+	 * @param self The View.
+	 * @param descriptor The Constraint descriptor.
+	 * @memberof View
+	 */
+	void (*addConstraintWithDescriptor)(View *self, const char *descriptor);
+
+	/**
 	 * @fn void View::addSubview(View *self, View *subview)
 	 * @brief Adds a subview to this view, to be drawn above its siblings.
 	 * @param self The View.

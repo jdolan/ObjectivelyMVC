@@ -108,6 +108,19 @@ static void addConstraint(View *self, Constraint *constraint) {
 }
 
 /**
+ * @fn void View::addConstraintWithDescriptor(View *self, const char *descriptor)
+ * @memberof View
+ */
+static void addConstraintWithDescriptor(View *self, const char *descriptor) {
+
+	Constraint *constraint = $(alloc(Constraint), initWithDescriptor, descriptor);
+	assert(constraint);
+
+	$(self, addConstraint, constraint);
+	release(constraint);
+}
+
+/**
  * @fn void View::addSubview(View *self, View *subview)
  * @memberof View
  */
@@ -1178,6 +1191,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->description = description;
 
 	((ViewInterface *) clazz->def->interface)->addConstraint = addConstraint;
+	((ViewInterface *) clazz->def->interface)->addConstraintWithDescriptor = addConstraintWithDescriptor;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
 	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
