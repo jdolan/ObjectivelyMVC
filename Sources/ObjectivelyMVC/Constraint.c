@@ -28,6 +28,7 @@
 #include <Objectively/Regex.h>
 
 #include <ObjectivelyMVC/Constraint.h>
+#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -154,6 +155,8 @@ static void apply(const Constraint *self, View *view) {
 	}
 
 	value = value * self->multiplier + self->constant;
+
+	MVC_LogDebug("[%s] = %d\n", self->descriptor, value);
 
 	switch (self->target) {
 		case ConstraintAttributeNone:
