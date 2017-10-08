@@ -137,9 +137,10 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 	View *firstResponder = $(self, firstResponder, event);
 	if (firstResponder) {
 
-		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+		const int priority = event->type == SDL_MOUSEMOTION ? SDL_LOG_PRIORITY_VERBOSE : SDL_LOG_PRIORITY_DEBUG;
+		if (MVC_LogEnabled(priority)) {
 			String *desc = $((Object *) firstResponder, description);
-			MVC_LogDebug("Event %d -> %s\n", event->type, desc->chars);
+			MVC_LogMessage(priority, "Event %d -> %s\n", event->type, desc->chars);
 			release(desc);
 		}
 

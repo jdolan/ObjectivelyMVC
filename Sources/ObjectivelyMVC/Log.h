@@ -37,6 +37,9 @@
 #define MVC_LogEnabled(priority) \
 	(SDL_LogGetPriority(LOG_CATEGORY_MVC) <= priority)
 
+#define MVC_LogMessage(priority, fmt, ...) \
+	SDL_LogMessage(LOG_CATEGORY_MVC, priority, "%s:%s "fmt, _Class()->name, __func__, ## __VA_ARGS__)
+
 #define MVC_LogVerbose(fmt, ...) \
 	SDL_LogVerbose(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->name, __func__, ## __VA_ARGS__)
 

@@ -1277,7 +1277,11 @@ void MVC_MakeFirstResponder(SDL_Window *window, View *view) {
 	if (view) {
 		assert(window == view->window);
 		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, view);
-		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, view->identifier ?: view->object.clazz->name);
+		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+			String *desc = $((Object *) view, description);
+			SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, desc->chars);
+			release(desc);
+		}
 	} else {
 		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, NULL);
 		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
