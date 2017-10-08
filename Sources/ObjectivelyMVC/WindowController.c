@@ -138,8 +138,8 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 			}
 
 			if (self->viewController) {
-				$(self->viewController, renderDeviceDidReset);
 				$(self->viewController->view, setWindow, self->window);
+				$(self->viewController, renderDeviceDidReset);
 			}
 		}
 	}
