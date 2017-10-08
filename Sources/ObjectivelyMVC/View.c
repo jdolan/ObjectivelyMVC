@@ -945,6 +945,8 @@ static void setWindow_recurse(const Array *array, ident obj, ident data) {
  */
 static void setWindow(View *self, SDL_Window *window) {
 
+	$(self, resignFirstResponder);
+
 	self->window = window;
 
 	$((Array *) self->subviews, enumerateObjects, setWindow_recurse, window);
