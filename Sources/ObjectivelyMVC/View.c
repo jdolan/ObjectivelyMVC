@@ -104,6 +104,7 @@ static void addConstraint(View *self, Constraint *constraint) {
 
 	$(self->constraints, addObject, constraint);
 
+	self->needsLayout = true;
 	self->needsApplyConstraints = true;
 }
 
@@ -608,6 +609,8 @@ static void layoutIfNeeded(View *self) {
 	}
 
 	self->needsLayout = false;
+
+	$(self, applyConstraintsIfNeeded);
 
 	$((Array *) self->subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
 }
