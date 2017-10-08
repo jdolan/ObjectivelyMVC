@@ -105,9 +105,9 @@ static void dealloc(Object *self) {
 static void apply(const Constraint *self, View *view) {
 
 	int value = 0;
+	View *source = view;
 
 	if (self->identifier) {
-		const View *source;
 		if (strcmp(self->identifier, "superview") == 0) {
 			source = view->superview;
 		} else {
@@ -120,38 +120,38 @@ static void apply(const Constraint *self, View *view) {
 		}
 
 		assert(source);
+	}
 
-		switch (self->source) {
-			case ConstraintAttributeNone:
-				break;
+	switch (self->source) {
+		case ConstraintAttributeNone:
+			break;
 
-			case ConstraintAttributeWidth:
-				value = source->frame.w;
-				break;
-			case ConstraintAttributeHeight:
-				value = source->frame.h;
-				break;
+		case ConstraintAttributeWidth:
+			value = source->frame.w;
+			break;
+		case ConstraintAttributeHeight:
+			value = source->frame.h;
+			break;
 
-			case ConstraintAttributeTop:
-				value = source->frame.y;
-				break;
-			case ConstraintAttributeMiddle:
-				value = source->frame.y + source->frame.h * 0.5;
-				break;
-			case ConstraintAttributeBottom:
-				value = source->frame.y + source->frame.h;
-				break;
+		case ConstraintAttributeTop:
+			value = source->frame.y;
+			break;
+		case ConstraintAttributeMiddle:
+			value = source->frame.y + source->frame.h * 0.5;
+			break;
+		case ConstraintAttributeBottom:
+			value = source->frame.y + source->frame.h;
+			break;
 
-			case ConstraintAttributeLeft:
-				value = source->frame.x;
-				break;
-			case ConstraintAttributeCenter:
-				value = source->frame.x + source->frame.w * 0.5;
-				break;
-			case ConstraintAttributeRight:
-				value = source->frame.x + source->frame.w;
-				break;
-		}
+		case ConstraintAttributeLeft:
+			value = source->frame.x;
+			break;
+		case ConstraintAttributeCenter:
+			value = source->frame.x + source->frame.w * 0.5;
+			break;
+		case ConstraintAttributeRight:
+			value = source->frame.x + source->frame.w;
+			break;
 	}
 
 	value = value * self->multiplier + self->constant;
