@@ -122,10 +122,16 @@ static void render(WindowController *self) {
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
 	if (event->type == SDL_WINDOWEVENT) {
-		if (event->window.event == SDL_WINDOWEVENT_SHOWN) {
 
-			self->window = SDL_GL_GetCurrentWindow();
-			assert(self->window);
+		SDL_Window *window = SDL_GL_GetCurrentWindow();
+		assert(window);
+
+		if (window != self->window) {
+			self->window = window;
+
+			int w, h;
+			SDL_GetWindowSize(self->window, &w, &h);
+			MVC_LogInfo("Detected new window (%dx%d)", w, h);
 
 			if (self->renderer) {
 				$(self->renderer, renderDeviceDidReset);
