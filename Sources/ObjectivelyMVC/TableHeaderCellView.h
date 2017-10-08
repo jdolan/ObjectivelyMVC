@@ -34,7 +34,7 @@ typedef struct TableHeaderCellView TableHeaderCellView;
 typedef struct TableHeaderCellViewInterface TableHeaderCellViewInterface;
 
 /**
- * @brief Header cells for TableViews.
+ * @brief Header cells provide clickable sort handles for TableView instances.
  * @extends TableCellView
  * @ingroup Tables
  */

@@ -29,6 +29,7 @@ typedef struct Notification Notification;
 
 /**
  * @brief The Notification type.
+ * @details Notifications provide broadcast communication to all ViewControllers in a given window.
  */
 struct Notification {
 
@@ -53,5 +54,10 @@ struct Notification {
  */
 OBJECTIVELYMVC_EXPORT int MVC_NOTIFICATION_EVENT;
 
+/**
+ * @brief Posts the Notification to all ViewControllers in the current window.
+ * @param notification The Notification.
+ * @see ViewController::handleNotification
+ */
 OBJECTIVELYMVC_EXPORT void MVC_PostNotification(const Notification *notification);
 
