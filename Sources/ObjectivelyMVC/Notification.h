@@ -60,4 +60,3 @@ OBJECTIVELYMVC_EXPORT int MVC_NOTIFICATION_EVENT;
  * @see ViewController::handleNotification
  */
 OBJECTIVELYMVC_EXPORT void MVC_PostNotification(const Notification *notification);
-
