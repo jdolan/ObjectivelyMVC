@@ -45,6 +45,21 @@ START_TEST(constraint)
 
 	release(constraint);
 
+	constraint = $(alloc(Constraint), initWithDescriptor, "h = w * 2 + 40");
+	ck_assert(constraint != NULL);
+	ck_assert_ptr_eq(_Constraint(), classof(constraint));
+
+	ck_assert_str_eq("h = w * 2 + 40", constraint->descriptor);
+	ck_assert(constraint->identifier == NULL);
+	ck_assert_int_eq(ConstraintAttributeHeight, constraint->target);
+	ck_assert_int_eq(ConstraintRelationEqual, constraint->relation);
+	ck_assert_int_eq(ConstraintAttributeWidth, constraint->source);
+	ck_assert_int_eq(2, constraint->multiplier);
+	ck_assert_int_eq(40, constraint->constant);
+	ck_assert_int_eq(DEFAULT_CONSTRAINT_PRIORITY, constraint->priority);
+
+	release(constraint);
+
 	constraint = $(alloc(Constraint), initWithDescriptor, "h = foo.h - 20");
 	ck_assert(constraint != NULL);
 

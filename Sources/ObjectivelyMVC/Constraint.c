@@ -235,19 +235,20 @@ static Constraint *initWithDescriptor(Constraint *self, const char *descriptor) 
 			assert(self->relation);
 
 			if (identifier->location != -1) {
-
-				self->identifier = calloc(identifier->length + 1, 1);
+				self->identifier = calloc(identifier->length, 1);
 				assert(self->identifier);
 
-				strncpy(self->identifier, string->chars + identifier->location, identifier->length);
+				strncpy(self->identifier, string->chars + identifier->location, identifier->length - 1);
+			}
 
+			if (source->location != -1) {
 				self->source = constraintAttribute(string->chars + source->location);
 				assert(self->source);
+			}
 
-				if (multiplier->location != -1) {
-					self->multiplier = strtof(string->chars + multiplier->location + 1, NULL);
-					assert(self->multiplier);
-				}
+			if (multiplier->location != -1) {
+				self->multiplier = strtof(string->chars + multiplier->location + 1, NULL);
+				assert(self->multiplier);
 			}
 
 			if (constant->location != -1) {
@@ -282,7 +283,7 @@ static void initialize(Class *clazz) {
 	((ConstraintInterface *) clazz->def->interface)->apply = apply;
 	((ConstraintInterface *) clazz->def->interface)->initWithDescriptor = initWithDescriptor;
 
-	_regex = rex("^([whtrblc])([<=>]+)([a-z]+)?\\.?([whtrblc])?(\\*[0-9.]*)?([+|-]?[0-9.]+)?(\[[0-9.]+\\])?$", REG_ICASE);
+	_regex = rex("^([whtrblc])([<=>]+)([a-z]+\\.)?([whtrblc])?(\\*[0-9.]*)?([+|-]?[0-9.]+)?(\[[0-9.]+\\])?$", REG_ICASE);
 }
 
 /**
