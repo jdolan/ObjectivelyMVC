@@ -48,6 +48,7 @@ pkginclude_HEADERS = \
 	View.h \
 	View+JSON.h \
 	ViewController.h \
+	Window.h \
 	WindowController.h
 
 lib_LTLIBRARIES = \
@@ -95,6 +96,7 @@ libObjectivelyMVC_la_SOURCES = \
 	View.c \
 	View+JSON.c \
 	ViewController.c \
+	Window.c \
 	WindowController.c
 
 libObjectivelyMVC_la_CFLAGS = \

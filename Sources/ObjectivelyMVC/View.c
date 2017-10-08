@@ -28,6 +28,8 @@
 
 #include <ObjectivelyMVC.h>
 
+#define MVC_FIRST_RESPONDER "firstResponder"
+
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
 	MakeEnumName(ViewAlignmentNone),
 	MakeEnumName(ViewAlignmentTopLeft),
@@ -1267,6 +1269,8 @@ Class *_View(void) {
 
 #undef _Class
 
+#pragma mark - Utilities
+
 void MVC_MakeFirstResponder(SDL_Window *window, View *view) {
 
 	assert(window);
@@ -1290,52 +1294,4 @@ View *MVC_FirstResponder(SDL_Window *window) {
 	assert(window);
 	
 	return SDL_GetWindowData(window, MVC_FIRST_RESPONDER);
-}
-
-SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
-
-	assert(rect);
-
-	SDL_Rect transformed = *rect;
-
-	int dh = 0;
-	const double scale = MVC_WindowScale(window, NULL, &dh);
-
-	transformed.x *= scale;
-	transformed.y *= scale;
-	transformed.w *= scale;
-	transformed.h *= scale;
-
-	transformed.y = dh - transformed.h - transformed.y;
-
-	return transformed;
-}
-
-double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight) {
-
-	window = window ?: SDL_GL_GetCurrentWindow();
-	assert(window);
-
-	int h;
-	SDL_GetWindowSize(window, NULL, &h);
-
-	if (height) {
-		*height = h;
-	}
-
-	if (h) {
-
-		int dh;
-		SDL_GL_GetDrawableSize(window, NULL, &dh);
-
-		if (drawableHeight) {
-			*drawableHeight = dh;
-		}
-
-		if (dh) {
-			return dh / (double) h;
-		}
-	}
-
-	return 1.0;
 }

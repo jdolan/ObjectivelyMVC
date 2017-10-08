@@ -21,50 +21,54 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#pragma once
+#include <assert.h>
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_pixels.h>
+#include <ObjectivelyMVC/Window.h>
 
-#include <Objectively/Types.h>
+SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
-#undef interface
+	assert(rect);
 
-#if defined(_MSC_VER)
- #include "WindowlyMVC.h"
-#endif
+	SDL_Rect transformed = *rect;
 
-#ifndef OBJECTIVELYMVC_EXPORT
- #define OBJECTIVELYMVC_EXPORT extern
-#endif
+	int dh = 0;
+	const double scale = MVC_WindowScale(window, NULL, &dh);
 
-/**
- * @file
- * @brief ObjectivelyMVC base types.
- */
+	transformed.x *= scale;
+	transformed.y *= scale;
+	transformed.w *= scale;
+	transformed.h *= scale;
 
-typedef struct View View;
+	transformed.y = dh - transformed.h - transformed.y;
 
-typedef struct SDL_Size SDL_Size;
+	return transformed;
+}
 
-/**
- * @brief The SDL_Size type.
- */
-struct SDL_Size {
-	int w, h;
-};
+double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight) {
 
-/**
- * @brief Creates an SDL_Point with the given coordinates.
- */
-#define MakePoint(x, y) (SDL_Point) { (x), (y) }
+	window = window ?: SDL_GL_GetCurrentWindow();
+	assert(window);
 
-/**
- * @brief Creates an SDL_Rect with the given origin and size.
- */
-#define MakeRect(x, y, w, h) (SDL_Rect) { (x), (y), (w), (h) }
+	int h;
+	SDL_GetWindowSize(window, NULL, &h);
 
-/**
- * @brief Creates an SDL_Size with the given dimensions.
- */
-#define MakeSize(w, h) (SDL_Size) { (w), (h) }
+	if (height) {
+		*height = h;
+	}
+
+	if (h) {
+
+		int dh;
+		SDL_GL_GetDrawableSize(window, NULL, &dh);
+
+		if (drawableHeight) {
+			*drawableHeight = dh;
+		}
+
+		if (dh) {
+			return dh / (double) h;
+		}
+	}
+
+	return 1.0;
+}

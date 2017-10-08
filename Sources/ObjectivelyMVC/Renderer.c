@@ -26,6 +26,7 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/Window.h>
 
 #define _Class _Renderer
 

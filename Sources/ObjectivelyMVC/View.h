@@ -571,7 +571,7 @@ struct ViewInterface {
 	 * @fn void View::respondToEvent(View *self, const SDL_Event *event)
 	 * @brief Responds to the specified event.
 	 * @param self The View.
-	 * @param event The SDL_Event.
+	 * @param event The event.
 	 * @memberof View
 	 */
 	void (*respondToEvent)(View *self, const SDL_Event *event);
@@ -715,23 +715,3 @@ OBJECTIVELYMVC_EXPORT void MVC_MakeFirstResponder(SDL_Window *window, View *view
  * @return The first responder for the given window, or `NULL` if none.
  */
 OBJECTIVELYMVC_EXPORT View *MVC_FirstResponder(SDL_Window *window);
-
-/**
- * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
- * @param window The window.
- * @param rect A rectangle defined in object space.
- * @return The transformed rectangle.
- */
-OBJECTIVELYMVC_EXPORT SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
-
-/**
- * @brief Resolves the scale factor of the specified window for High-DPI support.
- * @param window The window, or `NULL` for the current OpenGL window.
- * @param height An optional output parameter to retrieve the window height.
- * @param drawableHeight AN optional output parameter to retrieve the window drawable height.
- * @return The scale factor of the specified window.
- * @remarks Views and other classes should invoke this method to alter their rendering behavior for
- * High-DPI displays. This is particularly relevant for Views that render textures.
- */
-OBJECTIVELYMVC_EXPORT double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
-

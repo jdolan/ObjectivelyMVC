@@ -32,6 +32,7 @@
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/Window.h>
 
 #define _Class _Font
 
