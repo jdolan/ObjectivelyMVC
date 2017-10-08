@@ -85,7 +85,12 @@ static void drawView(ViewController *self, Renderer *renderer) {
 
 	$(self->view, layoutIfNeeded);
 
-	return $(self->view, draw, renderer);
+	$(self->view, draw, renderer);
+
+	View *firstResponder = MVC_FirstResponder(self->view->window);
+	if (firstResponder) {
+		$(firstResponder, draw, renderer);
+	}
 }
 
 /**

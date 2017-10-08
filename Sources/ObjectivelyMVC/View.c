@@ -470,20 +470,12 @@ static void draw(View *self, Renderer *renderer) {
 	if (self->hidden == false) {
 		$(renderer, drawView, self);
 
-		View *firstResponder = NULL;
-
 		const Array *subviews = (Array *) self->subviews;
 		for (size_t i = 0; i < subviews->count; i++) {
 			View *subview = $(subviews, objectAtIndex, i);
-			if ($(subview, isFirstResponder)) {
-				firstResponder = subview;
-			} else {
+			if ($(subview, isFirstResponder) == false) {
 				$(subview, draw, renderer);
 			}
-		}
-
-		if (firstResponder) {
-			$(firstResponder, draw, renderer);
 		}
 	}
 }
