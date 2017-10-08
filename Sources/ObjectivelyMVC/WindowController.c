@@ -124,12 +124,15 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 	if (event->type == SDL_WINDOWEVENT) {
 		if (event->window.event == SDL_WINDOWEVENT_SHOWN) {
 
+			self->window = SDL_GL_GetCurrentWindow();
+
 			if (self->renderer) {
 				$(self->renderer, renderDeviceDidReset);
 			}
 
 			if (self->viewController) {
 				$(self->viewController, renderDeviceDidReset);
+				$(self->viewController->view, setWindow, self->window);
 			}
 		}
 	}
