@@ -40,7 +40,7 @@ $(windowController, render);
 ObjectivelyMVC uses [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) and [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) to discover and render the TrueType fonts that are available on your system. It also automatically detects High-DPI (Retina, 4K) displays, and scales fonts accordingly. The result is crisp, beautiful vector-based fonts that look native, because they are.
 
 ```c
-Array *fonts = $$(Font, allFonts);
+Array *fonts = $$(Font, allFonts); // an array of available font names
 ...
 release(fonts);
 ...
@@ -49,10 +49,10 @@ Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will re
 
 ### Full suite of Views and Controls
 
-ObjectivelyMVC provides a robust set of containers, views and controls. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular data or a thumbnail gallery with `TableView` and `CollectionView`. Bind `Actions` to `SDL_Event` types, or use the specialized _delegate_ callbacks for convenience.
+ObjectivelyMVC provides a robust set of containers, views and controls. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular data or a thumbnail gallery with `TableView` and `CollectionView`. Split complex interfaces into multiple tabs with `TabView` and `TabViewController`. Bind `Actions` to `SDL_Event` types, or use the specialized _delegate_ callbacks for convenience.
 
 ```c
-$((Control *) button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_data);
+$(button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_data);
 ```
 
 ```c
