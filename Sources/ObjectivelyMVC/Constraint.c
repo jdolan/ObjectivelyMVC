@@ -28,6 +28,7 @@
 #include <Objectively/Regex.h>
 
 #include <ObjectivelyMVC/Constraint.h>
+#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -104,9 +105,9 @@ static void dealloc(Object *self) {
 static void apply(const Constraint *self, View *view) {
 
 	int value = 0;
+	View *source = view;
 
 	if (self->identifier) {
-		const View *source;
 		if (strcmp(self->identifier, "superview") == 0) {
 			source = view->superview;
 		} else {
@@ -119,41 +120,43 @@ static void apply(const Constraint *self, View *view) {
 		}
 
 		assert(source);
+	}
 
-		switch (self->source) {
-			case ConstraintAttributeNone:
-				break;
+	switch (self->source) {
+		case ConstraintAttributeNone:
+			break;
 
-			case ConstraintAttributeWidth:
-				value = source->frame.w;
-				break;
-			case ConstraintAttributeHeight:
-				value = source->frame.h;
-				break;
+		case ConstraintAttributeWidth:
+			value = source->frame.w;
+			break;
+		case ConstraintAttributeHeight:
+			value = source->frame.h;
+			break;
 
-			case ConstraintAttributeTop:
-				value = source->frame.y;
-				break;
-			case ConstraintAttributeMiddle:
-				value = source->frame.y + source->frame.h * 0.5;
-				break;
-			case ConstraintAttributeBottom:
-				value = source->frame.y + source->frame.h;
-				break;
+		case ConstraintAttributeTop:
+			value = source->frame.y;
+			break;
+		case ConstraintAttributeMiddle:
+			value = source->frame.y + source->frame.h * 0.5;
+			break;
+		case ConstraintAttributeBottom:
+			value = source->frame.y + source->frame.h;
+			break;
 
-			case ConstraintAttributeLeft:
-				value = source->frame.x;
-				break;
-			case ConstraintAttributeCenter:
-				value = source->frame.x + source->frame.w * 0.5;
-				break;
-			case ConstraintAttributeRight:
-				value = source->frame.x + source->frame.w;
-				break;
-		}
+		case ConstraintAttributeLeft:
+			value = source->frame.x;
+			break;
+		case ConstraintAttributeCenter:
+			value = source->frame.x + source->frame.w * 0.5;
+			break;
+		case ConstraintAttributeRight:
+			value = source->frame.x + source->frame.w;
+			break;
 	}
 
 	value = value * self->multiplier + self->constant;
+
+	MVC_LogDebug("[%s] = %d\n", self->descriptor, value);
 
 	switch (self->target) {
 		case ConstraintAttributeNone:
@@ -232,19 +235,20 @@ static Constraint *initWithDescriptor(Constraint *self, const char *descriptor) 
 			assert(self->relation);
 
 			if (identifier->location != -1) {
-
-				self->identifier = calloc(identifier->length + 1, 1);
+				self->identifier = calloc(identifier->length, 1);
 				assert(self->identifier);
 
-				strncpy(self->identifier, string->chars + identifier->location, identifier->length);
+				strncpy(self->identifier, string->chars + identifier->location, identifier->length - 1);
+			}
 
+			if (source->location != -1) {
 				self->source = constraintAttribute(string->chars + source->location);
 				assert(self->source);
+			}
 
-				if (multiplier->location != -1) {
-					self->multiplier = strtof(string->chars + multiplier->location + 1, NULL);
-					assert(self->multiplier);
-				}
+			if (multiplier->location != -1) {
+				self->multiplier = strtof(string->chars + multiplier->location + 1, NULL);
+				assert(self->multiplier);
 			}
 
 			if (constant->location != -1) {
@@ -279,7 +283,7 @@ static void initialize(Class *clazz) {
 	((ConstraintInterface *) clazz->def->interface)->apply = apply;
 	((ConstraintInterface *) clazz->def->interface)->initWithDescriptor = initWithDescriptor;
 
-	_regex = rex("^([whtrblc])([<=>]+)([a-z]+)?\\.?([whtrblc])?(\\*[0-9.]*)?([+|-]?[0-9.]+)?(\[[0-9.]+\\])?$", REG_ICASE);
+	_regex = rex("^([whtrblc])([<=>]+)([a-z]+\\.)?([whtrblc])?(\\*[0-9.]*)?([+|-]?[0-9.]+)?(\[[0-9.]+\\])?$", REG_ICASE);
 }
 
 /**

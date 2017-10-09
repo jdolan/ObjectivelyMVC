@@ -27,7 +27,7 @@
 
 /**
  * @file
- * @brief Cells for TableViews.
+ * @brief Each row in a TableView is comprised of TableCellViews.
  */
 
 #define DEFAULT_TABLE_CELL_VIEW_PADDING 2
@@ -36,7 +36,7 @@ typedef struct TableCellView TableCellView;
 typedef struct TableCellViewInterface TableCellViewInterface;
 
 /**
- * @brief Cells for TableViews.
+ * @brief Each row in a TableView is comprised of TableCellViews.
  * @extends View
  * @ingroup Tables
  */

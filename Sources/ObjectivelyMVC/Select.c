@@ -166,6 +166,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				}
 			}
 		}
+		return true;
 	}
 
 	return super(Control, self, captureEvent, event);
@@ -176,16 +177,10 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
  * @memberof Control
  */
 static void stateDidChange(Control *self) {
+	
+	super(Control, self, stateDidChange);
 
 	((View *) self)->needsLayout = true;
-
-	if (self->state & ControlStateHighlighted) {
-		self->view.zIndex = 4;
-	} else {
-		self->view.zIndex = 0;
-	}
-
-	super(Control, self, stateDidChange);
 }
 
 #pragma mark - Select

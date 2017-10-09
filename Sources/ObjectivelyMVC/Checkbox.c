@@ -117,22 +117,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 }
 
 /**
- * @see View::draw(View *self, Renderer *renderer)
- */
-static void draw(View *self, Renderer *renderer) {
-
-	Checkbox *this = (Checkbox *) self;
-
-	if (this->control.state & ControlStateSelected) {
-		this->check->view.hidden = false;
-	} else {
-		this->check->view.hidden = true;
-	}
-
-	super(View, self, draw, renderer);
-}
-
-/**
  * @see View::init(View *)
  */
 static View *init(View *self) {
@@ -146,17 +130,39 @@ static View *init(View *self) {
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
+	const View *box = (View *) ((Checkbox *) self)->box;
+	
+	if (event->type == SDL_MOUSEBUTTONDOWN) {
+		if ($(box, didReceiveEvent, event)) {
+			self->state |= ControlStateHighlighted;
+			return true;
+		}
+	}
 	if (event->type == SDL_MOUSEBUTTONUP) {
-
-		Checkbox *this = (Checkbox *) self;
-
-		if ($((View *) this->box, didReceiveEvent, event)) {
+		if ($(box, didReceiveEvent, event)) {
 			self->state ^= ControlStateSelected;
+			self->state &= ~ControlStateHighlighted;
 			return true;
 		}
 	}
 
 	return super(Control, self, captureEvent, event);
+}
+
+/**
+ * @see Control::stateDidChange(Control *)
+ */
+static void stateDidChange(Control *self) {
+
+	super(Control, self, stateDidChange);
+
+	Checkbox *this = (Checkbox *) self;
+
+	if (self->state & ControlStateSelected) {
+		this->check->view.hidden = false;
+	} else {
+		this->check->view.hidden = true;
+	}
 }
 
 #pragma mark - Checkbox
@@ -181,6 +187,7 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 		assert(self->check);
 
 		self->check->view.autoresizingMask = ViewAutoresizingFill;
+		self->check->view.hidden = true;
 
 		$((View *) self->box, addSubview, (View *) self->check);
 		$((View *) self, addSubview, (View *) self->box);
@@ -213,11 +220,11 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->draw = draw;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 
 	((CheckboxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 

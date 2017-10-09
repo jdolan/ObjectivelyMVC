@@ -28,6 +28,8 @@
 
 #include <ObjectivelyMVC.h>
 
+#define MVC_FIRST_RESPONDER "firstResponder"
+
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
 	MakeEnumName(ViewAlignmentNone),
 	MakeEnumName(ViewAlignmentTopLeft),
@@ -49,8 +51,6 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 	MakeEnumName(ViewAutoresizingFill),
 	MakeEnumName(ViewAutoresizingContain)
 );
-
-static View *_firstResponder;
 
 static __thread Outlet *_outlets;
 
@@ -81,12 +81,22 @@ static void dealloc(Object *self) {
  */
 static String *description(const Object *self) {
 
-	const SDL_Rect *f = &((View *) self)->frame;
+	View *this = (View *) self;
 
-	return str("%s@%p (%d,%d) %dx%d", self->clazz->name, self, f->x, f->y, f->w, f->h);
+	const SDL_Rect *f = &this->frame;
+
+	return str("%s@%p (%d,%d) %dx%d", this->identifier ?: self->clazz->name, self, f->x, f->y, f->w, f->h);
 }
 
 #pragma mark - View
+
+/**
+ * @fn _Bool View::acceptsFirstResponder(const View *self)
+ * @memberof View
+ */
+static _Bool acceptsFirstResponder(const View *self) {
+	return false;
+}
 
 /**
  * @fn void View::addConstraint(View *self, Constraint *constraint)
@@ -96,7 +106,21 @@ static void addConstraint(View *self, Constraint *constraint) {
 
 	$(self->constraints, addObject, constraint);
 
+	self->needsLayout = true;
 	self->needsApplyConstraints = true;
+}
+
+/**
+ * @fn void View::addConstraintWithDescriptor(View *self, const char *descriptor)
+ * @memberof View
+ */
+static void addConstraintWithDescriptor(View *self, const char *descriptor) {
+
+	Constraint *constraint = $(alloc(Constraint), initWithDescriptor, descriptor);
+	assert(constraint);
+
+	$(self, addConstraint, constraint);
+	release(constraint);
 }
 
 /**
@@ -232,8 +256,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
-		MakeInlet("subviews", InletTypeSubviews, &self, NULL),
-		MakeInlet("zIndex", InletTypeInteger, &self->zIndex, NULL)
+		MakeInlet("subviews", InletTypeSubviews, &self, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -252,7 +275,12 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @memberof View
  */
 static void becomeFirstResponder(View *self) {
-	_firstResponder = self;
+
+	if (self->window) {
+		MVC_MakeFirstResponder(self->window, self);
+	} else {
+		MVC_LogWarn("%s: window is NULL\n", (self->identifier ?: self->object.clazz->name));
+	}
 }
 
 /**
@@ -287,24 +315,20 @@ static SDL_Rect bounds(const View *self) {
 }
 
 /**
- * @fn _Bool View::canBecomeFirstResponder(const View *self)
+ * @fn void View::bringSubviewToFront(View *self, View *subview)
  * @memberof View
  */
-static _Bool canBecomeFirstResponder(const View *self) {
+static void bringSubviewToFront(View *self, View *subview) {
 
-	if (_firstResponder == NULL) {
-		return true;
-	}
+	assert(subview);
 
-	const View *view = self;
-	while (view) {
-		if ($(view, isFirstResponder)) {
-			return true;
+	if (subview->superview == self) {
+
+		View *last = $((Array *) self->subviews, lastObject);
+		if (last != subview) {
+			$(self, addSubviewRelativeTo, subview, last, ViewPositionAfter);
 		}
-		view = view->superview;
 	}
-
-	return false;
 }
 
 /**
@@ -379,7 +403,7 @@ static void createConstraint(View *self, const char *descriptor) {
  * @memberof View
  */
 static int depth(const View *self) {
-	return self->zIndex + (self->superview ? $(self->superview, depth) + 1 : 0);
+	return (self->superview ? $(self->superview, depth) + 1 : 0);
 }
 
 /**
@@ -417,65 +441,70 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 
 	if ($(self, isVisible)) {
 
-		if ($(self, canBecomeFirstResponder)) {
+		SDL_Point point;
 
-			if (event->type == SDL_MOUSEMOTION) {
-				const SDL_Point point = { .x = event->motion.x, .y = event->motion.y };
-				if ($(self, containsPoint, &point)) {
-					return true;
-				}
-			} else if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-				const SDL_Point point = { .x = event->button.x, .y = event->button.y };
-				if ($(self, containsPoint, &point)) {
-					return true;
-				}
-			} else if (event->type == SDL_MOUSEWHEEL) {
-				SDL_Point point;
-				SDL_GetMouseState(&point.x, &point.y);
-				if ($(self, containsPoint, &point)) {
-					return true;
-				}
-			} else if (event->type == SDL_FINGERDOWN || event->type == SDL_FINGERUP) {
-				const SDL_Point point = { .x = event->tfinger.x, .y = event->tfinger.y };
-				if ($(self, containsPoint, &point)) {
-					return true;
-				}
-			}
+		if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+			point = MakePoint(event->button.x, event->button.y);
+		} else if (event->type == SDL_MOUSEMOTION) {
+			point = MakePoint(event->motion.x, event->motion.y);
+		} else if (event->type == SDL_MOUSEWHEEL) {
+			SDL_GetMouseState(&point.x, &point.y);
+		} else {
+			return false;
 		}
+
+		return $(self, containsPoint, &point);
 	}
 
 	return false;
 }
 
 /**
- * @brief ArrayEnumerator for draw recursion.
- */
-static void draw_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, draw, (Renderer *) data);
-}
-
-/**
- * @fn void View::draw(View *self, Renderer *renderer)
+ * @fn Array *View::draw(View *self)
  * @memberof View
  */
 static void draw(View *self, Renderer *renderer) {
 
-	assert(renderer);
+	assert(self->window);
 
 	if (self->hidden == false) {
+		$(renderer, drawView, self);
 
-		$(renderer, addView, self);
-
-		$((Array *) self->subviews, enumerateObjects, draw_recurse, renderer);
+		const Array *subviews = (Array *) self->subviews;
+		for (size_t i = 0; i < subviews->count; i++) {
+			View *subview = $(subviews, objectAtIndex, i);
+			if ($(subview, isFirstResponder) == false) {
+				$(subview, draw, renderer);
+			}
+		}
 	}
 }
 
 /**
- * @fn View *View::firstResponder(void)
+ * @fn View *View::hitTest(const View *self, const SDL_Point *point)
  * @memberof View
  */
-static View *firstResponder(void) {
-	return _firstResponder;
+static View *hitTest(const View *self, const SDL_Point *point) {
+
+	if (self->hidden == false) {
+
+		if ($(self, containsPoint, point)) {
+
+			const Array *subviews = (Array *) self->subviews;
+			for (size_t i = subviews->count; i; i--) {
+
+				const View *subview = $(subviews, objectAtIndex, i - 1);
+				const View *view = $(subview, hitTest, point);
+				if (view) {
+					return (View *) view;
+				}
+			}
+
+			return (View *) self;
+		}
+	}
+
+	return NULL;
 }
 
 /**
@@ -533,7 +562,12 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
  * @memberof View
  */
 static _Bool isFirstResponder(const View *self) {
-	return _firstResponder == self;
+
+	if (self->window) {
+		return MVC_FirstResponder(self->window) == self;
+	} else {
+		return false;
+	}
 }
 
 /**
@@ -570,8 +604,9 @@ static void layoutIfNeeded(View *self) {
 
 	self->needsLayout = false;
 
-	const Array *subviews = (Array *) self->subviews;
-	$(subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
+	$(self, applyConstraintsIfNeeded);
+
+	$((Array *) self->subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
 }
 
 /**
@@ -729,6 +764,8 @@ static void removeSubview(View *self, View *subview) {
  */
 static void render(View *self, Renderer *renderer) {
 
+	assert(self->window);
+	
 	if (self->backgroundColor.a) {
 
 		$(renderer, setDrawColor, &self->backgroundColor);
@@ -816,7 +853,7 @@ static void replaceSubview(View *self, View *subview, View *replacement) {
 static void resignFirstResponder(View *self) {
 
 	if ($(self, isFirstResponder)) {
-		_firstResponder = NULL;
+		MVC_MakeFirstResponder(self->window, NULL);
 	}
 }
 
@@ -862,38 +899,20 @@ static void resize(View *self, const SDL_Size *size) {
 }
 
 /**
- * @brief ArrayEnumerator for respondToEvent recursion.
- */
-static void respondToEvent_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, respondToEvent, (const SDL_Event *) data);
-}
-
-/**
  * @fn void View::respondToEvent(View *self, const SDL_Event *event)
  * @memberof View
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
 	assert(event);
-	assert(self->window);
 
-	if (self->superview == NULL) {
-		if (event->type == SDL_WINDOWEVENT) {
-			if (event->window.event == SDL_WINDOWEVENT_SHOWN
-				|| event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-
-				if (self->autoresizingMask & ViewAutoresizingFill) {
-
-					SDL_Size size;
-					SDL_GetWindowSize(self->window, &size.w, &size.h);
-
-					$(self, resize, &size);
-				}
-			}
-		}
+	if (self->viewController) {
+		$(self->viewController, respondToEvent, event);
 	}
 
-	$((Array *) self->subviews, enumerateObjects, respondToEvent_recurse, (ident) event);
+	if (self->superview) {
+		$(self->superview, respondToEvent, event);
+	}
 }
 
 /**
@@ -909,7 +928,19 @@ static void setWindow_recurse(const Array *array, ident obj, ident data) {
  */
 static void setWindow(View *self, SDL_Window *window) {
 
+	$(self, resignFirstResponder);
+
 	self->window = window;
+
+	if (self->window && self->superview == NULL) {
+		if (self->autoresizingMask & ViewAutoresizingFill) {
+
+			SDL_Size size;
+			SDL_GetWindowSize(self->window, &size.w, &size.h);
+
+			$(self, resize, &size);
+		}
+	}
 
 	$((Array *) self->subviews, enumerateObjects, setWindow_recurse, window);
 }
@@ -1158,6 +1189,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->description = description;
 
 	((ViewInterface *) clazz->def->interface)->addConstraint = addConstraint;
+	((ViewInterface *) clazz->def->interface)->addConstraintWithDescriptor = addConstraintWithDescriptor;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
 	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
@@ -1167,7 +1199,8 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
 	((ViewInterface *) clazz->def->interface)->bounds = bounds;
-	((ViewInterface *) clazz->def->interface)->canBecomeFirstResponder = canBecomeFirstResponder;
+	((ViewInterface *) clazz->def->interface)->bringSubviewToFront = bringSubviewToFront;
+	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
 	((ViewInterface *) clazz->def->interface)->createConstraint = createConstraint;
@@ -1175,7 +1208,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
-	((ViewInterface *) clazz->def->interface)->firstResponder = firstResponder;
+	((ViewInterface *) clazz->def->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((ViewInterface *) clazz->def->interface)->isDescendantOfView = isDescendantOfView;
@@ -1232,50 +1265,29 @@ Class *_View(void) {
 
 #undef _Class
 
-SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
+#pragma mark - Utilities
 
-	assert(rect);
+void MVC_MakeFirstResponder(SDL_Window *window, View *view) {
 
-	SDL_Rect transformed = *rect;
-
-	int dh = 0;
-	const double scale = MVC_WindowScale(window, NULL, &dh);
-
-	transformed.x *= scale;
-	transformed.y *= scale;
-	transformed.w *= scale;
-	transformed.h *= scale;
-
-	transformed.y = dh - transformed.h - transformed.y;
-
-	return transformed;
-}
-
-double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight) {
-
-	window = window ?: SDL_GL_GetCurrentWindow();
 	assert(window);
 
-	int h;
-	SDL_GetWindowSize(window, NULL, &h);
-
-	if (height) {
-		*height = h;
-	}
-
-	if (h) {
-
-		int dh;
-		SDL_GL_GetDrawableSize(window, NULL, &dh);
-
-		if (drawableHeight) {
-			*drawableHeight = dh;
+	if (view) {
+		assert(window == view->window);
+		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, view);
+		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+			String *desc = $((Object *) view, description);
+			SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, desc->chars);
+			release(desc);
 		}
-
-		if (dh) {
-			return dh / (double) h;
-		}
+	} else {
+		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, NULL);
+		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
 	}
+}
 
-	return 1.0;
+View *MVC_FirstResponder(SDL_Window *window) {
+
+	assert(window);
+	
+	return SDL_GetWindowData(window, MVC_FIRST_RESPONDER);
 }

@@ -37,15 +37,16 @@
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Control.h>
-#include <ObjectivelyMVC/Input.h>
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/HSVColorPicker.h>
 #include <ObjectivelyMVC/HueColorPicker.h>
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/ImageView.h>
+#include <ObjectivelyMVC/Input.h>
 #include <ObjectivelyMVC/Label.h>
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/NavigationViewController.h>
+#include <ObjectivelyMVC/Notification.h>
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/PageView.h>
 #include <ObjectivelyMVC/Panel.h>
@@ -71,4 +72,5 @@
 #include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/View+JSON.h>
 #include <ObjectivelyMVC/ViewController.h>
+#include <ObjectivelyMVC/Window.h>
 #include <ObjectivelyMVC/WindowController.h>

@@ -39,6 +39,11 @@
  * @brief TableViews provide sortable, tabular presentations of data.
  */
 
+/**
+ * @defgroup Tables Tables
+ * @brief Tables provide sortable, tabular presentations of data.
+ */
+
 typedef struct TableViewDataSource TableViewDataSource;
 typedef struct TableViewDelegate TableViewDelegate;
 
@@ -46,6 +51,7 @@ typedef struct TableViewInterface TableViewInterface;
 
 /**
  * @brief The TableView data source protocol.
+ * @ingroup Tables
  */
 struct TableViewDataSource {
 
@@ -72,6 +78,7 @@ struct TableViewDataSource {
 
 /**
  * @brief The TableView delegate protocol.
+ * @ingroup Tables
  */
 struct TableViewDelegate {
 
@@ -114,7 +121,7 @@ struct TableViewDelegate {
 /**
  * @brief TableViews provide sortable, tabular presentations of data.
  * @extends Control
- * @ingroup Tables
+ * @ingroup Containers Controls Tables
  */
 struct TableView {
 

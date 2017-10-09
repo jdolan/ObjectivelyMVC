@@ -104,27 +104,22 @@ static View *init(View *self) {
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
-	super(View, self, respondToEvent, event);
+	if (event->type == SDL_MOUSEBUTTONUP) {
 
-	switch (event->type) {
-		case SDL_MOUSEBUTTONUP:
-		case SDL_FINGERUP:
-			break;
-		default:
-			return;
-	}
+		TabView *this = (TabView *) self;
 
-	TabView *this = (TabView *) self;
+		const Array *tabs = (Array *) this->tabs;
+		for (size_t i = 0; i < tabs->count; i++) {
 
-	const Array *tabs = (Array *) this->tabs;
-	for (size_t i = 0; i < tabs->count; i++) {
+			TabViewItem *tab = $(tabs, objectAtIndex, i);
 
-		TabViewItem *tab = $(tabs, objectAtIndex, i);
-
-		if ($((View *) tab->label, didReceiveEvent, event)) {
-			$(this, selectTab, tab);
+			if ($((View *) tab->label, didReceiveEvent, event)) {
+				$(this, selectTab, tab);
+			}
 		}
 	}
+
+	super(View, self, respondToEvent, event);
 }
 
 #pragma mark - TabView

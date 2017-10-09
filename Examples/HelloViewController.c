@@ -271,6 +271,7 @@ static void loadView(ViewController *self) {
 	$(this->select, addOption, "This is a select", (ident) 1);
 	$(this->select, addOption, "This is an option", (ident) 2);
 	$(this->select, addOption, "This is another", (ident) 3);
+	$(this->select, addOption, "This is yet another", (ident) 4);
 	this->select->delegate.didSelectOption = didSelectOption;
 	$((View *) this->select, sizeToFit);
 

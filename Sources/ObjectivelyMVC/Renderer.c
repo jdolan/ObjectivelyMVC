@@ -26,32 +26,11 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/Window.h>
 
 #define _Class _Renderer
 
-#pragma mark - Object
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-
-	Renderer *this = (Renderer *) self;
-
-	release(this->views);
-
-	super(Object, self, dealloc);
-}
-
 #pragma mark - Renderer
-
-/**
- * @fn void Renderer::addView(Renderer *self, View *view)
- * @memberof Renderer
- */
-static void addView(Renderer *self, View *view) {
-	$(self->views, addObject, view);
-}
 
 /**
  * @fn void Renderer::beginFrame(Renderer *self)
@@ -210,6 +189,23 @@ static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *re
 }
 
 /**
+ * @fn void Renderer::drawView(Renderer *self, View *view)
+ * @memberof Renderer
+ */
+static void drawView(Renderer *self, View *view) {
+
+	assert(view);
+
+	const SDL_Rect clippingFrame = $(view, clippingFrame);
+	if (clippingFrame.w && clippingFrame.h) {
+
+		$(self, setClippingFrame, &clippingFrame);
+
+		$(view, render, self);
+	}
+}
+
+/**
  * @fn void Renderer::endFrame(Renderer *self)
  * @memberof Renderer
  */
@@ -238,71 +234,7 @@ static void endFrame(Renderer *self) {
  * @memberof Renderer
  */
 static Renderer *init(Renderer *self) {
-
-	self = (Renderer *) super(Object, self, init);
-	if (self) {
-		self->views = $$(MutableArray, array);
-		assert(self->views);
-	}
-
-	return self;
-}
-
-/**
- * @brief Comparator for sorting Views by depth (Painter's Algorithm).
- * @remarks For siblings with the same depth, their natural ordering is the tie breaker.
- */
-static Order render_comparator(const ident a, const ident b) {
-
-	const View *aView = a, *bView = b;
-
-	const int aDepth = $(aView, depth);
-	const int bDepth = $(bView, depth);
-
-	if (aDepth == bDepth) {
-		const View *superview = aView->superview;
-		if (superview) {
-			if (superview == bView->superview) {
-				const int aIndex = (int) $((const Array *) superview->subviews, indexOfObject, a);
-				const int bIndex = (int) $((const Array *) superview->subviews, indexOfObject, b);
-				
-				return (Order) aIndex - bIndex;
-			}
-		}
-	}
-
-	return (Order) aDepth - bDepth;
-}
-
-/**
- * @brief ArrayEnumerator for rendering Views.
- */
-static void render_renderView(const Array *array, ident obj, ident data) {
-
-	View *view = (View *) obj;
-
-	Renderer *renderer = (Renderer *) data;
-
-	const SDL_Rect clippingFrame = $(view, clippingFrame);
-	if (clippingFrame.w && clippingFrame.h) {
-
-		$(renderer, setClippingFrame, &clippingFrame);
-
-		$(view, render, renderer);
-	}
-}
-
-/**
- * @fn void Renderer::drawViews(Renderer *self)
- * @memberof Renderer
- */
-static void render(Renderer *self) {
-
-	$(self->views, sort, render_comparator);
-
-	$((Array *) self->views, enumerateObjects, render_renderView, self);
-
-	$(self->views, removeAllObjects);
+	return (Renderer *) super(Object, self, init);
 }
 
 /**
@@ -348,10 +280,7 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-
-	((RendererInterface *) clazz->def->interface)->addView = addView;
+	
 	((RendererInterface *) clazz->def->interface)->beginFrame = beginFrame;
 	((RendererInterface *) clazz->def->interface)->createTexture = createTexture;
 	((RendererInterface *) clazz->def->interface)->drawLine = drawLine;
@@ -359,9 +288,9 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->drawRect = drawRect;
 	((RendererInterface *) clazz->def->interface)->drawRectFilled = drawRectFilled;
 	((RendererInterface *) clazz->def->interface)->drawTexture = drawTexture;
+	((RendererInterface *) clazz->def->interface)->drawView = drawView;
 	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
 	((RendererInterface *) clazz->def->interface)->init = init;
-	((RendererInterface *) clazz->def->interface)->render = render;
 	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
 	((RendererInterface *) clazz->def->interface)->setClippingFrame = setClippingFrame;
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;

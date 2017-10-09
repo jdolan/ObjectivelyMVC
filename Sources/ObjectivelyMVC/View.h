@@ -193,15 +193,16 @@ struct View {
 	View *superview;
 
 	/**
+	 * @brief The ViewController.
+	 * @remarks This is `NULL` unless the View is the immediate `view` of a ViewController.
+	 */
+	ViewController *viewController;
+
+	/**
 	 * @brief The window.
 	 * @remarks This is `NULL` until the View has been added to a WindowController.
 	 */
 	SDL_Window *window;
-
-	/**
-	 * @brief The z-index.
-	 */
-	int zIndex;
 };
 
 /**
@@ -215,6 +216,14 @@ struct ViewInterface {
 	ObjectInterface parentInterface;
 
 	/**
+	 * @fn _Bool View::acceptsFirstResponder(const View *self)
+	 * @param self The View.
+	 * @return True if this View can become the first responder, false otherwise.
+	 * @memberof View
+	 */
+	_Bool (*acceptsFirstResponder)(const View *self);
+
+	/**
 	 * @fn void View::addConstraint(View *self, Constraint *constraint)
 	 * @brief Adds a Constraint on this View.
 	 * @param self The View.
@@ -222,6 +231,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*addConstraint)(View *self, Constraint *constraint);
+
+	/**
+	 * @fn void View::addConstraintWithDescriptor(View *self, const char *descriptor)
+	 * @brief Adds a Constraint on this View.
+	 * @param self The View.
+	 * @param descriptor The Constraint descriptor.
+	 * @memberof View
+	 */
+	void (*addConstraintWithDescriptor)(View *self, const char *descriptor);
 
 	/**
 	 * @fn void View::addSubview(View *self, View *subview)
@@ -309,12 +327,13 @@ struct ViewInterface {
 	SDL_Rect (*bounds)(const View *self);
 
 	/**
-	 * @fn _Bool View::canBecomeFirstResponder(const View *self)
+	 * @fn void View::bringSubviewToFront(View *self, View *subview)
+	 * @brief Brings the specified subview to the front.
 	 * @param self The View.
-	 * @return True if this View can become the first responder, false otherwise.
+	 * @param subview The subview.
 	 * @memberof View
 	 */
-	_Bool (*canBecomeFirstResponder)(const View *self);
+	void (*bringSubviewToFront)(View *self, View *subview);
 
 	/**
 	 * @fn SDL_Rect View::clippingFrame(const View *self)
@@ -347,8 +366,7 @@ struct ViewInterface {
 	/**
 	 * @fn int View::depth(const View *self)
 	 * @param self The View.
-	 * @return The depth of this View (`ancestor depth + zIndex + 1`).
-	 * @remarks This method is called by Renderer::render to sort Views and enforce draw order.
+	 * @return The depth of this View (`ancestor depth + 1`).
 	 * @memberof View
 	 */
 	int (*depth)(const View *self);
@@ -375,21 +393,23 @@ struct ViewInterface {
 	 * @fn void View::draw(View *self, Renderer *renderer)
 	 * @brief Draws this View.
 	 * @param self The View.
-	 * @param renderer The Renderer with which to draw.
-	 * @remarks The default implementation of this method adds the View to the Renderer for the
-	 * current frame, and recurses its subviews. Rasterization is performed in View::render.
+	 * @param renderer The Renderer.
+	 * @remarks This method determines if the View is visible and dispatches Renderer::drawView
+	 * before recursing down the View hierarchy. Rasterization is performed in View::render.
 	 * @see View::render(View *, Renderer *)
 	 * @memberof View
 	 */
 	void (*draw)(View *self, Renderer *renderer);
 
 	/**
-	 * @static
-	 * @fn View *View::firstResponder(void)
-	 * @return The first responder, or `NULL`.
+	 * @fn View *View::hitTest(const View *self, const SDL_Point *point)
+	 * @brief Performs a hit test against this View and its descendants for the given point.
+	 * @param self The View.
+	 * @param point The point to test.
+	 * @return The furthest descendant View that contains the given point.
 	 * @memberof View
 	 */
-	View *(*firstResponder)(void);
+	View *(*hitTest)(const View *self, const SDL_Point *point);
 
 	/**
 	 * @fn View *View::init(View *self)
@@ -557,7 +577,7 @@ struct ViewInterface {
 	 * @fn void View::respondToEvent(View *self, const SDL_Event *event)
 	 * @brief Responds to the specified event.
 	 * @param self The View.
-	 * @param event The SDL_Event.
+	 * @param event The event.
 	 * @memberof View
 	 */
 	void (*respondToEvent)(View *self, const SDL_Event *event);
@@ -690,21 +710,14 @@ struct ViewInterface {
 OBJECTIVELYMVC_EXPORT Class *_View(void);
 
 /**
- * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
+ * @brief Sets the specified View as the first responder for the given window.
  * @param window The window.
- * @param rect A rectangle defined in object space.
- * @return The transformed rectangle.
+ * @param view The View, or `NULL`.
  */
-OBJECTIVELYMVC_EXPORT SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
+OBJECTIVELYMVC_EXPORT void MVC_MakeFirstResponder(SDL_Window *window, View *view);
 
 /**
- * @brief Resolves the scale factor of the specified window for High-DPI support.
- * @param window The window, or `NULL` for the current OpenGL window.
- * @param height An optional output parameter to retrieve the window height.
- * @param drawableHeight AN optional output parameter to retrieve the window drawable height.
- * @return The scale factor of the specified window.
- * @remarks Views and other classes should invoke this method to alter their rendering behavior for
- * High-DPI displays. This is particularly relevant for Views that render textures.
+ * @param window The window.
+ * @return The first responder for the given window, or `NULL` if none.
  */
-OBJECTIVELYMVC_EXPORT double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);
-
+OBJECTIVELYMVC_EXPORT View *MVC_FirstResponder(SDL_Window *window);

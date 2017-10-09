@@ -23,49 +23,23 @@
 
 #pragma once
 
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_pixels.h>
-
-#include <Objectively/Types.h>
-
-#undef interface
-
-#if defined(_MSC_VER)
- #include "WindowlyMVC.h"
-#endif
-
-#ifndef OBJECTIVELYMVC_EXPORT
- #define OBJECTIVELYMVC_EXPORT extern
-#endif
+#include <ObjectivelyMVC/Types.h>
 
 /**
- * @file
- * @brief ObjectivelyMVC base types.
+ * @brief Transforms the specified rectangle to normalized device coordinates in `window`.
+ * @param window The window.
+ * @param rect A rectangle defined in object space.
+ * @return The transformed rectangle.
  */
-
-typedef struct View View;
-typedef struct ViewController ViewController;
-
-typedef struct SDL_Size SDL_Size;
+OBJECTIVELYMVC_EXPORT SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect);
 
 /**
- * @brief The SDL_Size type.
+ * @brief Resolves the scale factor of the specified window for High-DPI support.
+ * @param window The window, or `NULL` for the current OpenGL window.
+ * @param height An optional output parameter to retrieve the window height.
+ * @param drawableHeight AN optional output parameter to retrieve the window drawable height.
+ * @return The scale factor of the specified window.
+ * @remarks Views and other classes should invoke this method to alter their rendering behavior for
+ * High-DPI displays. This is particularly relevant for Views that render textures.
  */
-struct SDL_Size {
-	int w, h;
-};
-
-/**
- * @brief Creates an SDL_Point with the given coordinates.
- */
-#define MakePoint(x, y) (SDL_Point) { (x), (y) }
-
-/**
- * @brief Creates an SDL_Rect with the given origin and size.
- */
-#define MakeRect(x, y, w, h) (SDL_Rect) { (x), (y), (w), (h) }
-
-/**
- * @brief Creates an SDL_Size with the given dimensions.
- */
-#define MakeSize(w, h) (SDL_Size) { (w), (h) }
+OBJECTIVELYMVC_EXPORT double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight);

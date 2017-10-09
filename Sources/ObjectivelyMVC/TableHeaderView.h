@@ -36,7 +36,7 @@ typedef struct TableHeaderView TableHeaderView;
 typedef struct TableHeaderViewInterface TableHeaderViewInterface;
 
 /**
- * @brief Header rows for TableViews.
+ * @brief The header row is a specialized TableRow depicting the TableColumn handles.
  * @extends TableRowView
  * @ingroup Tables
  */

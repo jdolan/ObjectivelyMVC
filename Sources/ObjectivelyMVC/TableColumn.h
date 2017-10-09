@@ -38,7 +38,7 @@ typedef struct TableColumn TableColumn;
 typedef struct TableColumnInterface TableColumnInterface;
 
 /**
- * @brief Columns for TableViews.
+ * @brief Columns provide alignment, spacing and sorting hints for TableView instances.
  * @extends Object
  * @ingroup Tables
  */
