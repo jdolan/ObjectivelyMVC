@@ -136,7 +136,7 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 	self = (Text *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
-		self->color = Colors.White;
+		self->color = Colors.white;
 
 		$(self, setFont, font);
 		$(self, setText, text);

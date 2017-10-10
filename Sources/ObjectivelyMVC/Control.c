@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/Theme.h>
 
 const EnumName ControlBevelTypeNames[] = MakeEnumNames(
 	MakeEnumName(ControlBevelTypeNone),
@@ -111,7 +112,7 @@ static void render(View *self, Renderer *renderer) {
 
 	if (this->bevel == ControlBevelTypeInset) {
 
-		$(renderer, setDrawColor, &Colors.Silver);
+		$(renderer, setDrawColor, &Theme.lightBorderColor);
 
 		SDL_Point points[3];
 
@@ -126,7 +127,7 @@ static void render(View *self, Renderer *renderer) {
 
 		$(renderer, drawLines, points, lengthof(points));
 
-		$(renderer, setDrawColor, &Colors.Charcoal);
+		$(renderer, setDrawColor, &Theme.darkBorderColor);
 
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 1;
@@ -141,7 +142,7 @@ static void render(View *self, Renderer *renderer) {
 
 	} else if (this->bevel == ControlBevelTypeOutset) {
 
-		$(renderer, setDrawColor, &Colors.Charcoal);
+		$(renderer, setDrawColor, &Theme.darkBorderColor);
 
 		SDL_Point points[3];
 
@@ -156,7 +157,7 @@ static void render(View *self, Renderer *renderer) {
 
 		$(renderer, drawLines, points, lengthof(points));
 
-		$(renderer, setDrawColor, &Colors.Silver);
+		$(renderer, setDrawColor, &Theme.lightBorderColor);
 
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 1;
@@ -172,12 +173,12 @@ static void render(View *self, Renderer *renderer) {
 
 	if (this->state & ControlStateFocused) {
 
-		$(renderer, setDrawColor, &Colors.Black);
+		$(renderer, setDrawColor, &Theme.darkBorderColor);
 
 		$(renderer, drawRect, &frame);
 	}
 
-	$(renderer, setDrawColor, &Colors.White);
+	$(renderer, setDrawColor, &Colors.white);
 }
 
 /**

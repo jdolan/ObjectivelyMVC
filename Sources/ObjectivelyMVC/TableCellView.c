@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/TableCellView.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _TableCellView
 

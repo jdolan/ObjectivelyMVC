@@ -64,6 +64,11 @@ struct CollectionItemView {
 	_Bool isSelected;
 
 	/**
+	 * @brief The View drawn over this item when it is selected.
+	 */
+	View *selectionOverlay;
+
+	/**
 	 * @brief The text.
 	 */
 	Text *text;

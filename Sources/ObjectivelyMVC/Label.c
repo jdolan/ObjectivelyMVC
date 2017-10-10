@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Label.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Label
 

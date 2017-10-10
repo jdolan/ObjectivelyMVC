@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/RGBColorPicker.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _RGBColorPicker
 
@@ -221,7 +222,7 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 
 		$((View *) self->stackView, addSubview, (View *) self->alphaInput);
 
-		$(self, setColor, &Colors.White);
+		$(self, setColor, &Colors.white);
 	}
 
 	return self;

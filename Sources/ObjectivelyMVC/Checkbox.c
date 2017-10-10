@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Checkbox.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Checkbox
 
@@ -195,8 +196,7 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 		if (self->control.style == ControlStyleDefault) {
 			self->box->bevel = ControlBevelTypeInset;
 
-			self->box->view.backgroundColor = Colors.Charcoal;
-			self->box->view.backgroundColor.a = 48;
+			self->box->view.backgroundColor = Theme.darkBackgroundColor;
 
 			self->box->view.frame.w = DEFAULT_CHECKBOX_SIZE;
 			self->box->view.frame.h = DEFAULT_CHECKBOX_SIZE;

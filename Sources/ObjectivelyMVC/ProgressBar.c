@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include <ObjectivelyMVC/ProgressBar.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _ProgressBar
 
@@ -108,7 +109,7 @@ static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
 		assert(self->background);
 
 		self->background->view.autoresizingMask = ViewAutoresizingFill;
-		self->background->view.backgroundColor = Colors.DefaultColor;
+		self->background->view.backgroundColor = Theme.backgroundColor;
 
 		$((View *) self, addSubview, (View *) self->background);
 

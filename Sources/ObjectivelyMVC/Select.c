@@ -25,8 +25,9 @@
 
 #include <Objectively/Array.h>
 
-#include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/Select.h>
+#include <ObjectivelyMVC/Text.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Select
 
@@ -76,12 +77,12 @@ static void layoutSubviews(View *self) {
 
 			if (this->control.state == ControlStateHighlighted) {
 				if ((Option *) option == this->selectedOption) {
-					option->backgroundColor = Colors.SelectedColor;
+					option->backgroundColor = Theme.selectedBackgroundColor;
 				} else {
-					option->backgroundColor = Colors.HighlightedColor;
+					option->backgroundColor = Theme.focusedBackgroundColor;
 				}
 			} else {
-				option->backgroundColor = Colors.Clear;
+				option->backgroundColor = Colors.transparent;
 			}
 		}
 	}
@@ -160,9 +161,9 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 				View *option = $(options, objectAtIndex, i);
 				if ($(option, didReceiveEvent, event)) {
-					option->backgroundColor = Colors.SelectedColor;
+					option->backgroundColor = Theme.selectedBackgroundColor;
 				} else {
-					option->backgroundColor = Colors.HighlightedColor;
+					option->backgroundColor = Theme.focusedBackgroundColor;
 				}
 			}
 		}
@@ -257,7 +258,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;
 			}
 
-			self->stackView->view.borderColor = Colors.Silver;
+			self->stackView->view.borderColor = Theme.lightBorderColor;
 		}
 	}
 

@@ -27,6 +27,7 @@
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/TableView.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _TableView
 
@@ -124,7 +125,7 @@ static void layoutSubviews(View *self) {
 		if (this->usesAlternateBackgroundColor && (i & 1)) {
 			row->assignedBackgroundColor = this->alternateBackgroundColor;
 		} else {
-			row->assignedBackgroundColor = Colors.Clear;
+			row->assignedBackgroundColor = Colors.transparent;
 		}
 
 		row->stackView.view.backgroundColor = row->assignedBackgroundColor;
@@ -373,13 +374,13 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 
 		if (self->control.style == ControlStyleDefault) {
 
-			self->alternateBackgroundColor = Colors.AlternateColor;
+			self->alternateBackgroundColor = Theme.alternateBackgroundColor;
 			self->usesAlternateBackgroundColor = true;
 
 			self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
 			self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
 
-			self->control.view.backgroundColor = Colors.DefaultColor;
+			self->control.view.backgroundColor = Theme.backgroundColor;
 
 			self->control.view.padding.top = 0;
 			self->control.view.padding.right = 0;

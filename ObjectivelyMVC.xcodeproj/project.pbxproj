@@ -123,6 +123,8 @@
 		CE8819671F8AAC00000D5AB7 /* Notification.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819651F8AAC00000D5AB7 /* Notification.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE88196A1F8AAC25000D5AB7 /* Window.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819681F8AAC25000D5AB7 /* Window.c */; };
 		CE88196B1F8AAC25000D5AB7 /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819691F8AAC25000D5AB7 /* Window.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE8819721F8BA1DD000D5AB7 /* Theme.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819701F8BA1DD000D5AB7 /* Theme.c */; };
+		CE8819731F8BA1DD000D5AB7 /* Theme.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819711F8BA1DD000D5AB7 /* Theme.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
 		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF81C84E36100F4C3D4 /* TableView.c */; };
@@ -297,6 +299,8 @@
 		CE8819651F8AAC00000D5AB7 /* Notification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Notification.h; sourceTree = "<group>"; };
 		CE8819681F8AAC25000D5AB7 /* Window.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Window.c; sourceTree = "<group>"; };
 		CE8819691F8AAC25000D5AB7 /* Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
+		CE8819701F8BA1DD000D5AB7 /* Theme.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Theme.c; sourceTree = "<group>"; };
+		CE8819711F8BA1DD000D5AB7 /* Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Theme.h; sourceTree = "<group>"; };
 		CE8E7FF41C7FAD9100F4C3D4 /* Input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = Input.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		CE8E7FF51C7FAD9100F4C3D4 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Input.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE8E7FF81C84E36100F4C3D4 /* TableView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableView.c; sourceTree = "<group>"; };

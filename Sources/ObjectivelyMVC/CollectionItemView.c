@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/CollectionItemView.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _CollectionItemView
 
@@ -37,6 +38,7 @@ static void dealloc(Object *self) {
 	CollectionItemView *this = (CollectionItemView *) self;
 
 	release(this->imageView);
+	release(this->selectionOverlay);
 	release(this->text);
 
 	super(Object, self, dealloc);
@@ -66,10 +68,17 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 
 		$((View *) self, addSubview, (View *) self->text);
 
-		self->view.backgroundColor = Colors.Black;
-		self->view.backgroundColor.a = 48;
+		self->selectionOverlay = $(alloc(View), initWithFrame, NULL);
+		assert(self->selectionOverlay);
 
-		self->view.borderColor = Colors.SelectedColor;
+		self->selectionOverlay->autoresizingMask = ViewAutoresizingFill;
+		self->selectionOverlay->backgroundColor = Theme.selectionBackgroundColor;
+		self->selectionOverlay->hidden = true;
+
+		$((View *) self, addSubview, self->selectionOverlay);
+
+		self->view.backgroundColor = Theme.darkBackgroundColor;
+		self->view.borderColor = Theme.borderColor;
 
 		self->view.clipsSubviews = true;
 	}
@@ -85,8 +94,10 @@ static void setSelected(CollectionItemView *self, _Bool selected) {
 
 	self->isSelected = selected;
 	if (self->isSelected) {
-		self->view.borderWidth = 2;
+		self->selectionOverlay->hidden = false;
+		self->view.borderWidth = 1;
 	} else {
+		self->selectionOverlay->hidden = true;
 		self->view.borderWidth = 0;
 	}
 }

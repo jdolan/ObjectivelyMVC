@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/CollectionView.h>
+#include <ObjectivelyMVC/Theme.h>
 
 const EnumName CollectionViewAxisNames[] = MakeEnumNames(
 	MakeEnumName(CollectionViewAxisHorizontal),
@@ -318,8 +319,7 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 			self->itemSpacing.w = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
 			self->itemSpacing.h = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
 
-			self->control.view.backgroundColor = Colors.Black;
-			self->control.view.backgroundColor.a = 48;
+			self->control.view.backgroundColor = Theme.lightBackgroundColor;
 
 			self->control.view.padding.top = 0;
 			self->control.view.padding.right = 0;

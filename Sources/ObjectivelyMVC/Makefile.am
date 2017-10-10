@@ -45,6 +45,7 @@ pkginclude_HEADERS = \
 	TabViewController.h \
 	TabViewItem.h \
 	TextView.h \
+	Theme.h \
 	Types.h \
 	View.h \
 	View+JSON.h \
@@ -95,6 +96,7 @@ libObjectivelyMVC_la_SOURCES = \
 	TabViewItem.c \
 	Text.c \
 	TextView.c \
+	Theme.c \
 	View.c \
 	View+JSON.c \
 	ViewController.c \

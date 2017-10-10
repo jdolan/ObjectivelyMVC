@@ -107,7 +107,7 @@
                   "identifier": "collectionView",
                   "constraints": [
                     "w >= 300",
-                    "h >= 260"
+                    "h >= 300"
                   ],
                   "selection": "ControlSelectionMultiple",
                   "itemSize": [

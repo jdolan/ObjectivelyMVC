@@ -534,8 +534,8 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->subviews = $$(MutableArray, array);
 		assert(self->subviews);
 
-		self->backgroundColor = Colors.Clear;
-		self->borderColor = Colors.White;
+		self->backgroundColor = Colors.transparent;
+		self->borderColor = Theme.borderColor;
 	}
 
 	return self;
@@ -788,7 +788,7 @@ static void render(View *self, Renderer *renderer) {
 		}
 	}
 
-	$(renderer, setDrawColor, &Colors.White);
+	$(renderer, setDrawColor, &Colors.white);
 }
 
 /**

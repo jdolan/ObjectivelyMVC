@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include <ObjectivelyMVC/TabViewItem.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _TabViewItem
 
@@ -103,9 +104,9 @@ static void setState(TabViewItem *self, int state) {
 	self->state = state;
 
 	if (self->state & TabStateSelected) {
-		self->label->view.backgroundColor = Colors.DarkGray;
+		self->label->view.backgroundColor = Theme.lightBackgroundColor;
 	} else {
-		self->label->view.backgroundColor = Colors.Clear;
+		self->label->view.backgroundColor = Colors.transparent;
 	}
 }
 

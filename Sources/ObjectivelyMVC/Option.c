@@ -25,11 +25,15 @@
 
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/Select.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Option
 
 #pragma mark - Object
 
+/**
+ * @see Object::dealloc(Object *)
+ */
 static void dealloc(Object *self) {
 
 	Option *this = (Option *) self;

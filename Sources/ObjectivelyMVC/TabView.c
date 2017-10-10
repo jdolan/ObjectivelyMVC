@@ -27,6 +27,7 @@
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/TabView.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _TabView
 
@@ -158,7 +159,7 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 		self->tabPageView = $(alloc(PageView), initWithFrame, NULL);
 		assert(self->tabPageView);
 
-		self->tabPageView->view.borderColor = Colors.DarkGray;
+		self->tabPageView->view.borderColor = Theme.borderColor;
 		self->tabPageView->view.borderWidth = 1;
 
 		self->tabs = $$(MutableArray, array);

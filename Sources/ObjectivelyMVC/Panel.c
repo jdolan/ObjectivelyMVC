@@ -25,6 +25,7 @@
 
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Panel.h>
+#include <ObjectivelyMVC/Theme.h>
 
 static Image *_resize;
 static const unsigned char _resizeData[] = {
@@ -243,8 +244,8 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle sty
 
 		this->autoresizingMask = ViewAutoresizingContain;
 
-		this->backgroundColor = Colors.DefaultColor;
-		this->borderColor = Colors.DarkGray;
+		this->backgroundColor = Theme.backgroundColor;
+		this->borderColor = Theme.borderColor;
 		this->borderWidth = 1;
 
 		this->padding.top = this->padding.bottom = DEFAULT_PANEL_PADDING;

@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/TableHeaderView.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _TableHeaderView
 
@@ -50,7 +51,7 @@ static void render(View *self, Renderer *renderer) {
 
 	$(renderer, drawLine, points);
 
-	$(renderer, setDrawColor, &Colors.White);
+	$(renderer, setDrawColor, &Colors.white);
 }
 
 /**
@@ -76,7 +77,7 @@ static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tabl
 	self = (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
 	if (self) {
 
-		((View *) self)->backgroundColor = Colors.DimGray;
+		((View *) self)->backgroundColor = Theme.darkBackgroundColor;
 
 		if (((View *) self)->frame.h == 0) {
 			((View *) self)->frame.h = DEFAULT_TABLE_HEADER_VIEW_HEIGHT;

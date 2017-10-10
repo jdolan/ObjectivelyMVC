@@ -68,6 +68,7 @@
 #include <ObjectivelyMVC/TabViewItem.h>
 #include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>
+#include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/Types.h>
 #include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/View+JSON.h>

@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Box.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Box
 
@@ -110,7 +111,7 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		View *label = (View *) self->label;
 
 		label->alignment = ViewAlignmentInternal;
-		label->backgroundColor = Colors.DarkGray;
+		label->backgroundColor = Theme.lightBackgroundColor;
 		label->frame.x = DEFAULT_BOX_LABEL_X;
 		label->padding.right = DEFAULT_BOX_LABEL_PADDING;
 		label->padding.left = DEFAULT_BOX_LABEL_PADDING;
@@ -118,7 +119,7 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		$((View *) self, addSubview, (View *) self->label);
 
 		self->view.autoresizingMask = ViewAutoresizingContain;
-		self->view.borderColor = Colors.DarkGray;
+		self->view.borderColor = Theme.borderColor;
 		self->view.borderWidth = 1;
 		self->view.padding.top = DEFAULT_BOX_PADDING;
 		self->view.padding.right = DEFAULT_BOX_PADDING;

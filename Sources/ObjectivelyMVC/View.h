@@ -86,6 +86,12 @@ typedef struct {
 } ViewPadding;
 
 /**
+ * @brief Creates a ViewPadding with the given dimensions.
+ */
+#define MakePadding(top, right, bottom, left) \
+	(ViewPadding) { (top), (right), (bottom), (left) }
+
+/**
  * @brief Relative positioning of subviews within their superview.
  */
 typedef enum {

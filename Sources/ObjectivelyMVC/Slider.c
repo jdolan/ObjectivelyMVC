@@ -26,6 +26,7 @@
 
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Slider.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Slider
 
@@ -232,7 +233,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 			}
 
 			self->handle->bevel = ControlBevelTypeOutset;
-			self->handle->view.backgroundColor = Colors.FocusedColor;
+			self->handle->view.backgroundColor = Theme.focusedBackgroundColor;
 			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
 			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;
 		}

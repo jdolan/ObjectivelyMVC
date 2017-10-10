@@ -25,6 +25,7 @@
 
 #include <ObjectivelyMVC/TableRowView.h>
 #include <ObjectivelyMVC/TableView.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _TableRowView
 
@@ -170,7 +171,7 @@ static void setSelected(TableRowView *self, _Bool selected) {
 
 	self->isSelected = selected;
 	if (self->isSelected) {
-		self->stackView.view.backgroundColor = Colors.SelectedColor;
+		self->stackView.view.backgroundColor = Theme.selectedBackgroundColor;
 	} else {
 		self->stackView.view.backgroundColor = self->assignedBackgroundColor;
 	}
