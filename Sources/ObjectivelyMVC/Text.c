@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include <ObjectivelyMVC/Text.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Text
 
@@ -136,7 +137,7 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 	self = (Text *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
-		self->color = Colors.white;
+		self->color = Theme.foregroundColor;
 
 		$(self, setFont, font);
 		$(self, setText, text);
