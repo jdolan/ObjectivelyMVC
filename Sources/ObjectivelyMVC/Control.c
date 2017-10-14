@@ -26,10 +26,10 @@
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Theme.h>
 
-const EnumName ControlBevelTypeNames[] = MakeEnumNames(
-	MakeEnumName(ControlBevelTypeNone),
-	MakeEnumName(ControlBevelTypeInset),
-	MakeEnumName(ControlBevelTypeOutset)
+const EnumName ControlBevelNames[] = MakeEnumNames(
+	MakeEnumName(ControlBevelNone),
+	MakeEnumName(ControlBevelInset),
+	MakeEnumName(ControlBevelOutset)
 );
 
 const EnumName ControlSelectionNames[] = MakeEnumNames(
@@ -85,6 +85,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	Control *this = (Control *) self;
 
 	const Inlet inlets[] = MakeInlets(
+	    MakeInlet("bevel", InletTypeEnum, &this->bevel, (ident) (ControlBevelNames)),
 		MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames),
 		MakeInlet("style", InletTypeEnum, &this->style, (ident) ControlStyleNames)
 	);
@@ -110,9 +111,9 @@ static void render(View *self, Renderer *renderer) {
 
 	const SDL_Rect frame = $(self, renderFrame);
 
-	if (this->bevel == ControlBevelTypeInset) {
+	if (this->bevel == ControlBevelInset) {
 
-		$(renderer, setDrawColor, &Theme.lightBorderColor);
+		$(renderer, setDrawColor, &Colors.Silver);
 
 		SDL_Point points[3];
 
@@ -127,7 +128,7 @@ static void render(View *self, Renderer *renderer) {
 
 		$(renderer, drawLines, points, lengthof(points));
 
-		$(renderer, setDrawColor, &Theme.darkBorderColor);
+		$(renderer, setDrawColor, &Colors.Charcoal);
 
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 1;
@@ -140,9 +141,9 @@ static void render(View *self, Renderer *renderer) {
 
 		$(renderer, drawLines, points, lengthof(points));
 
-	} else if (this->bevel == ControlBevelTypeOutset) {
+	} else if (this->bevel == ControlBevelOutset) {
 
-		$(renderer, setDrawColor, &Theme.darkBorderColor);
+		$(renderer, setDrawColor, &Colors.Charcoal);
 
 		SDL_Point points[3];
 
@@ -157,7 +158,7 @@ static void render(View *self, Renderer *renderer) {
 
 		$(renderer, drawLines, points, lengthof(points));
 
-		$(renderer, setDrawColor, &Theme.lightBorderColor);
+		$(renderer, setDrawColor, &Colors.Silver);
 
 		points[0].x = frame.x + 1;
 		points[0].y = frame.y + frame.h - 1;
@@ -173,12 +174,12 @@ static void render(View *self, Renderer *renderer) {
 
 	if (this->state & ControlStateFocused) {
 
-		$(renderer, setDrawColor, &Theme.darkBorderColor);
+		$(renderer, setDrawColor, &Colors.Charcoal);
 
 		$(renderer, drawRect, &frame);
 	}
 
-	$(renderer, setDrawColor, &Colors.white);
+	$(renderer, setDrawColor, &Colors.White);
 }
 
 /**

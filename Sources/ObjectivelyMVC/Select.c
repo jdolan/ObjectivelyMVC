@@ -77,12 +77,12 @@ static void layoutSubviews(View *self) {
 
 			if (this->control.state == ControlStateHighlighted) {
 				if ((Option *) option == this->selectedOption) {
-					option->backgroundColor = Theme.selectedBackgroundColor;
+					option->backgroundColor = Colors.DimGray;
 				} else {
-					option->backgroundColor = Theme.focusedBackgroundColor;
+					option->backgroundColor = Colors.Charcoal;
 				}
 			} else {
-				option->backgroundColor = Colors.transparent;
+				option->backgroundColor = Colors.Transparent;
 			}
 		}
 	}
@@ -161,9 +161,9 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 				View *option = $(options, objectAtIndex, i);
 				if ($(option, didReceiveEvent, event)) {
-					option->backgroundColor = Theme.selectedBackgroundColor;
+					option->backgroundColor = Colors.DimGray;
 				} else {
-					option->backgroundColor = Theme.focusedBackgroundColor;
+					option->backgroundColor = Colors.Gainsboro;
 				}
 			}
 		}
@@ -252,13 +252,13 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 		self->control.selection = ControlSelectionSingle;
 
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = ControlBevelTypeOutset;
+			self->control.bevel = ControlBevelOutset;
 
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;
 			}
 
-			self->stackView->view.borderColor = Theme.lightBorderColor;
+			self->stackView->view.borderColor = Colors.GhostWhite;
 		}
 	}
 

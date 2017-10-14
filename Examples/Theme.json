@@ -1,0 +1,23 @@
+{
+  "*": {
+    "font": "Coda"
+  },
+  "Control": {
+    "backgroundColor": "#A9A9A9F0"
+  },
+  "Control:highlighted": {
+    "backgroundColor": "#CDCDCDFF"
+  },
+  "Control:disabled": {
+    "color": "#DDDDDDFF"
+  },
+  "Control:selected": {
+    "backgroundColor": "#484848FF"
+  },
+  "Control:focused": {
+    "backgroundColor": "#848484FF"
+  },
+  "Panel": {
+    "backgroundColor": "#A9A9A9FF"
+  }
+}

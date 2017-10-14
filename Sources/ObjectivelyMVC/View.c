@@ -534,8 +534,8 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->subviews = $$(MutableArray, array);
 		assert(self->subviews);
 
-		self->backgroundColor = Colors.transparent;
-		self->borderColor = Theme.borderColor;
+		self->backgroundColor = Colors.Transparent;
+		self->borderColor = Colors.GhostWhite;
 	}
 
 	return self;
@@ -788,7 +788,7 @@ static void render(View *self, Renderer *renderer) {
 		}
 	}
 
-	$(renderer, setDrawColor, &Colors.white);
+	$(renderer, setDrawColor, &Colors.White);
 }
 
 /**
@@ -1127,6 +1127,7 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(_Button());
 		_initialize(_Checkbox());
 		_initialize(_CollectionView());
+		_initialize(_Control());
 		_initialize(_HSVColorPicker());
 		_initialize(_HueColorPicker());
 		_initialize(_ImageView());
@@ -1134,6 +1135,7 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 		_initialize(_Label());
 		_initialize(_PageView());
 		_initialize(_Panel());
+		_initialize(_ProgressBar());
 		_initialize(_RGBColorPicker());
 		_initialize(_ScrollView());
 		_initialize(_Select());

@@ -112,9 +112,9 @@ static void stateDidChange(Control *self) {
 
 	if (self->style == ControlStyleDefault) {
 		if (self->state & ControlStateHighlighted) {
-			self->bevel = ControlBevelTypeInset;
+			self->bevel = ControlBevelInset;
 		} else {
-			self->bevel = ControlBevelTypeOutset;
+			self->bevel = ControlBevelOutset;
 		}
 	}
 }
@@ -140,7 +140,7 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 		self->control.view.clipsSubviews = true;
 
 		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = ControlBevelTypeOutset;
+			self->control.bevel = ControlBevelOutset;
 
 			if (self->control.view.frame.w == 0) {
 				self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;

@@ -159,7 +159,7 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 		self->tabPageView = $(alloc(PageView), initWithFrame, NULL);
 		assert(self->tabPageView);
 
-		self->tabPageView->view.borderColor = Theme.borderColor;
+		self->tabPageView->view.borderColor = Colors.Silver;
 		self->tabPageView->view.borderWidth = 1;
 
 		self->tabs = $$(MutableArray, array);

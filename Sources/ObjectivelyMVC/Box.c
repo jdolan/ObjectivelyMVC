@@ -111,7 +111,7 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		View *label = (View *) self->label;
 
 		label->alignment = ViewAlignmentInternal;
-		label->backgroundColor = Theme.lightBackgroundColor;
+		label->backgroundColor = Colors.DarkGray;
 		label->frame.x = DEFAULT_BOX_LABEL_X;
 		label->padding.right = DEFAULT_BOX_LABEL_PADDING;
 		label->padding.left = DEFAULT_BOX_LABEL_PADDING;
@@ -119,7 +119,7 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		$((View *) self, addSubview, (View *) self->label);
 
 		self->view.autoresizingMask = ViewAutoresizingContain;
-		self->view.borderColor = Theme.borderColor;
+		self->view.borderColor = Colors.Silver;
 		self->view.borderWidth = 1;
 		self->view.padding.top = DEFAULT_BOX_PADDING;
 		self->view.padding.right = DEFAULT_BOX_PADDING;

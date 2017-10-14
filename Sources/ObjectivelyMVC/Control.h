@@ -39,15 +39,15 @@
  */
 
 /**
- * @brief Bevel types.
+ * @brief Control bevel styles, for drawing depressed or raised bevels.
  */
 typedef enum {
-	ControlBevelTypeNone,
-	ControlBevelTypeInset,
-	ControlBevelTypeOutset
-} ControlBevelType;
+	ControlBevelNone,
+	ControlBevelInset,
+	ControlBevelOutset
+} ControlBevel;
 
-OBJECTIVELYMVC_EXPORT const EnumName ControlBevelTypeNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ControlBevelNames[];
 
 /**
  * @brief Control selection styles, for Controls that support user selection.
@@ -111,9 +111,9 @@ struct Control {
 	MutableArray *actions;
 
 	/**
-	 * @brief The ControlBevelType.
+	 * @brief The ControlBevel.
 	 */
-	ControlBevelType bevel;
+	ControlBevel bevel;
 
 	/**
 	 * @brief The bit mask of ControlState.

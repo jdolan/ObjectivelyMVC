@@ -96,6 +96,11 @@ typedef enum {
 	InletTypeInteger,
 
 	/**
+	 * @remarks Inlet destination must be of type `SDL_Point *`.
+	 */
+	InletTypePoint,
+
+	/**
 	 * @remarks Inlet destination must be of type `SDL_Rect *`.
 	 */
 	InletTypeRectangle,

@@ -104,9 +104,9 @@ static void setState(TabViewItem *self, int state) {
 	self->state = state;
 
 	if (self->state & TabStateSelected) {
-		self->label->view.backgroundColor = Theme.lightBackgroundColor;
+		self->label->view.backgroundColor = Colors.DarkGray;
 	} else {
-		self->label->view.backgroundColor = Colors.transparent;
+		self->label->view.backgroundColor = Colors.Transparent;
 	}
 }
 

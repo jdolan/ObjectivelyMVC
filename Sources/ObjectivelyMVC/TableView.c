@@ -125,7 +125,7 @@ static void layoutSubviews(View *self) {
 		if (this->usesAlternateBackgroundColor && (i & 1)) {
 			row->assignedBackgroundColor = this->alternateBackgroundColor;
 		} else {
-			row->assignedBackgroundColor = Colors.transparent;
+			row->assignedBackgroundColor = Colors.Transparent;
 		}
 
 		row->stackView.view.backgroundColor = row->assignedBackgroundColor;
@@ -374,13 +374,13 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 
 		if (self->control.style == ControlStyleDefault) {
 
-			self->alternateBackgroundColor = Theme.alternateBackgroundColor;
+			self->alternateBackgroundColor = Colors.DarkGray;
 			self->usesAlternateBackgroundColor = true;
 
 			self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
 			self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
 
-			self->control.view.backgroundColor = Theme.backgroundColor;
+			self->control.view.backgroundColor = Colors.Gray;
 
 			self->control.view.padding.top = 0;
 			self->control.view.padding.right = 0;

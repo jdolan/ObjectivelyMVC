@@ -222,7 +222,7 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 
 		$((View *) self->stackView, addSubview, (View *) self->alphaInput);
 
-		$(self, setColor, &Colors.white);
+		$(self, setColor, &Colors.White);
 	}
 
 	return self;

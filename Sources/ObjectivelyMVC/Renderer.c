@@ -46,7 +46,7 @@ static void beginFrame(Renderer *self) {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	$(self, setDrawColor, &Colors.white);
+	$(self, setDrawColor, &Colors.White);
 }
 
 /**
@@ -211,7 +211,7 @@ static void drawView(Renderer *self, View *view) {
  */
 static void endFrame(Renderer *self) {
 
-	$(self, setDrawColor, &Colors.white);
+	$(self, setDrawColor, &Colors.White);
 
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);

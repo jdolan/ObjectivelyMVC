@@ -244,8 +244,9 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle sty
 
 		this->autoresizingMask = ViewAutoresizingContain;
 
-		this->backgroundColor = Theme.backgroundColor;
-		this->borderColor = Theme.borderColor;
+		this->backgroundColor = Colors.Gray;
+		this->backgroundColor.a = 224;
+		this->borderColor = Colors.Silver;
 		this->borderWidth = 1;
 
 		this->padding.top = this->padding.bottom = DEFAULT_PANEL_PADDING;

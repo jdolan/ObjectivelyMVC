@@ -6,7 +6,8 @@ DEFAULT_INCLUDES = \
 	$(top_srcdir)/Sources
 
 TESTS = \
-	Constraint
+	Constraint \
+	Style
 
 CFLAGS += \
 	-I$(top_srcdir)/Sources \

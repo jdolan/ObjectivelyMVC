@@ -171,7 +171,7 @@ static void setSelected(TableRowView *self, _Bool selected) {
 
 	self->isSelected = selected;
 	if (self->isSelected) {
-		self->stackView.view.backgroundColor = Theme.selectedBackgroundColor;
+		self->stackView.view.backgroundColor = Colors.DimGray;
 	} else {
 		self->stackView.view.backgroundColor = self->assignedBackgroundColor;
 	}

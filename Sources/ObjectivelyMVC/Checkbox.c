@@ -194,9 +194,9 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 		$((View *) self, addSubview, (View *) self->box);
 
 		if (self->control.style == ControlStyleDefault) {
-			self->box->bevel = ControlBevelTypeInset;
+			self->box->bevel = ControlBevelInset;
 
-			self->box->view.backgroundColor = Theme.darkBackgroundColor;
+			self->box->view.backgroundColor = Colors.DimGray;
 
 			self->box->view.frame.w = DEFAULT_CHECKBOX_SIZE;
 			self->box->view.frame.h = DEFAULT_CHECKBOX_SIZE;

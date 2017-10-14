@@ -51,7 +51,7 @@ static void render(View *self, Renderer *renderer) {
 
 	$(renderer, drawLine, points);
 
-	$(renderer, setDrawColor, &Colors.white);
+	$(renderer, setDrawColor, &Colors.White);
 }
 
 /**
@@ -77,7 +77,7 @@ static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tabl
 	self = (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
 	if (self) {
 
-		((View *) self)->backgroundColor = Theme.darkBackgroundColor;
+		((View *) self)->backgroundColor = Colors.DimGray;
 
 		if (((View *) self)->frame.h == 0) {
 			((View *) self)->frame.h = DEFAULT_TABLE_HEADER_VIEW_HEIGHT;

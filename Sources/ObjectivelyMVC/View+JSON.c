@@ -42,23 +42,39 @@ static void bindCharacters(const Inlet *inlet, ident obj) {
  */
 static void bindColor(const Inlet *inlet, ident obj) {
 
-	const Array *array = cast(Array, obj);
+	SDL_Color color = Colors.Black;
 
-	assert(array->count == 4);
+	if ($((Object *) obj, isKindOfClass, _String())) {
 
-	const Number *r = $(array, objectAtIndex, 0);
-	const Number *g = $(array, objectAtIndex, 1);
-	const Number *b = $(array, objectAtIndex, 2);
-	const Number *a = $(array, objectAtIndex, 3);
+		String *string = cast(String, obj);
+		if (string->length) {
 
-	#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
+			if (string->chars[0] == '#') {
+				color = MVC_HexToRGBA(string->chars);
+			} else {
+				color = MVC_ColorForName(string->chars);
+			}
+		}
 
-	SDL_Color color = {
-		ScaleColor(r->value),
-		ScaleColor(g->value),
-		ScaleColor(b->value),
-		ScaleColor(a->value)
-	};
+	} else {
+		const Array *array = cast(Array, obj);
+
+		assert(array->count == 4);
+
+		const Number *r = $(array, objectAtIndex, 0);
+		const Number *g = $(array, objectAtIndex, 1);
+		const Number *b = $(array, objectAtIndex, 2);
+		const Number *a = $(array, objectAtIndex, 3);
+
+		#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
+
+		color = MakeColor(
+			ScaleColor(r->value),
+			ScaleColor(g->value),
+			ScaleColor(b->value),
+			ScaleColor(a->value)
+		);
+	}
 
 	*((SDL_Color *) inlet->dest) = color;
 }
@@ -136,6 +152,21 @@ static void bindImage(const Inlet *inlet, ident obj) {
  */
 static void bindInteger(const Inlet *inlet, ident obj) {
 	*((int *) inlet->dest) = cast(Number, obj)->value;
+}
+
+/**
+ * @brief InletBinding for InletTypePoint.
+ */
+static void bindPoint(const Inlet *inlet, ident obj) {
+
+	const Array *array = cast(Array, obj);
+
+	assert(array->count == 2);
+
+	const Number *x = $(array, objectAtIndex, 0);
+	const Number *y = $(array, objectAtIndex, 1);
+
+	*((SDL_Point *) inlet->dest) = MakePoint(x->value, y->value);
 }
 
 /**
@@ -265,6 +296,7 @@ const InletBinding inletBindings[] = {
 	bindFont,
 	bindImage,
 	bindInteger,
+	bindPoint,
 	bindRectangle,
 	bindSize,
 	bindSubviews,

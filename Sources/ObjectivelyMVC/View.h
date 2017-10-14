@@ -644,7 +644,7 @@ struct ViewInterface {
 	void (*sizeToFit)(View *self);
 
 	/**
-	 * @fn View::subviewWithIdentifier(const View *self, const char *identifier)
+	 * @fn View *View::subviewWithIdentifier(const View *self, const char *identifier)
 	 * @param self The View.
 	 * @param identifier The identifier.
 	 * @return The first subview matching the given identifier.

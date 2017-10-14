@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <ObjectivelyMVC/Style.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -30,57 +31,129 @@
  * @brief The Theme type.
  */
 
+typedef struct Theme Theme;
+typedef struct ThemeInterface ThemeInterface;
+
 /**
- * @brief The Theme provides color, font and spacing hints for Views.
+ * @brief A Theme consists of one or more Styles, defined in one or more JSON stylesheets.
+ * @extends Object
  */
-OBJECTIVELYMVC_EXPORT struct _Theme {
+struct Theme {
 
-	SDL_Color alternateBackgroundColor;
+	/**
+	 * @brief The superclass.
+	 */
+	Object object;
 
-	SDL_Color backgroundColor;
+	/**
+	 * @brief The interface.
+	 * @protected
+	 */
+	ThemeInterface *interface;
 
-	SDL_Color borderColor;
+	/**
+	 * @brief The styles.
+	 */
+	MutableDictionary *styles;
+};
 
-	ViewPadding containerPadding;
+/**
+ * @brief The Theme interface.
+ */
+struct ThemeInterface {
 
-	int containerSpacing;
+	/**
+	 * @brief The superclass interface.
+	 */
+	ObjectInterface objectInterface;
 
-	int controlHeight;
+	/**
+	 * @fn void Theme::addStyle(Theme *self, Style *style)
+	 * @brief Adds the given Style to this Theme.
+	 * @param self The Theme.
+	 * @param style The Style
+	 * @memberof Theme
+	 */
+	void (*addStyle)(Theme *self, Style *style);
 
-	ViewPadding controlPadding;
+	/**
+	 * @fn void Theme::addStylesheet(Theme *self, const Dictionary *stylesheet)
+	 * @brief Adds all Styles from the parsed JSON stylesheet to this Theme.
+	 * @param self The Theme.
+	 * @param stylesheet The parsed JSON stylesheet.
+	 * @memberof Theme
+	 */
+	void (*addStylesheet)(Theme *self, const Dictionary *stylesheet);
 
-	SDL_Color darkBackgroundColor;
+	/**
+	 * @static
+	 * @fn Theme *Theme::currentTheme(void)
+	 * @return The current Theme.
+	 * @memberof Theme
+	 */
+	Theme *(*currentTheme)(void);
 
-	SDL_Color darkBorderColor;
+	/**
+	 * @static
+	 * @fn Theme *Theme::defaultTheme(void)
+	 * @return The default Theme.
+	 * @memberof Theme
+	 */
+	Theme *(*defaultTheme)(void);
 
-	SDL_Color darkForegroundColor;
+	/**
+	 * @fn Theme *Theme::init(Theme *self)
+	 * @brief Initializes this Theme.
+	 * @param theme The Theme.
+	 * @return The initialized Theme, or `NULL` on error.
+	 * @memberof Theme
+	 */
+	Theme *(*init)(Theme *self);
 
-	SDL_Color disabledbackgroundColor;
+	/**
+	 * @static
+	 * @fn void Theme::setCurrentTheme(Theme *theme)
+	 * @brief Sets the current Theme.
+	 * @param theme The Theme.
+	 * @memberof Theme
+	 */
+	void (*setCurrentTheme)(Theme *theme);
 
-	SDL_Color disabledForegroundColor;
+	/**
+	 * @static
+	 * @fn Theme *Theme::themeWithContentsOfFile(const char *path)
+	 * @brief Instantiates a Theme initialized with the contents of the JSON file at `path`.
+	 * @param path A path to a JSON stylesheet.
+	 * @return The initialized Theme, or `NULL` on error.
+	 * @memberof Theme
+	 */
+	Theme *(*themeWithContentsOfFile)(const char *path);
 
-	SDL_Color focusedBackgroundColor;
+	/**
+	 * @static
+	 * @fn Theme *Theme::themeWithData(const Data *data)
+	 * @brief Instantiates a Theme initialized with the contents of `data`.
+	 * @param data A Data containing a JSON stylesheet.
+	 * @return The initialized Theme, or `NULL` on error.
+	 * @memberof Theme
+	 */
+	Theme *(*themeWithData)(const Data *data);
 
-	SDL_Color focusedForegroundColor;
+	/**
+	 * @static
+	 * @fn Theme *Theme::themeWithDictionary(const Dictionary *dictionary)
+	 * @brief Instantiates a Theme initialized with the parsed JSON stylesheet.
+	 * @param dictionary A parsed JSON stylesheet.
+	 * @return The initialized Theme, or `NULL` on error.
+	 * @memberof Theme
+	 */
+	Theme *(*themeWithDictionary)(const Dictionary *dictionary);
+};
 
-	SDL_Color foregroundColor;
-
-	SDL_Color highlightedBackgroundColor;
-
-	SDL_Color highlightedForegroundColor;
-
-	SDL_Color lightBackgroundColor;
-
-	SDL_Color lightBorderColor;
-
-	SDL_Color lightForegroundColor;
-
-	SDL_Color selectedBackgroundColor;
-
-	SDL_Color selectedForegroundColor;
-
-	SDL_Color selectionBackgroundColor;
-
-	SDL_Color selectionForegroundColor;
-
-} Theme;
+/**
+ * @fn Class *Theme::_Theme(void)
+ * @brief The Theme archetype.
+ * @return The Theme Class.
+ * @memberof Theme
+ */
+OBJECTIVELY_EXPORT Class *_Theme(void);

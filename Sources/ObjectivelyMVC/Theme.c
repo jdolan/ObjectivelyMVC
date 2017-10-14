@@ -23,31 +23,205 @@
 
 #include <assert.h>
 
+#include <Objectively/JSONSerialization.h>
+
 #include <ObjectivelyMVC/Theme.h>
 
-struct _Theme Theme = {
-	.alternateBackgroundColor = MakeColor(80, 80, 80, 240),
-	.backgroundColor = MakeColor(64, 64, 64, 240),
-	.borderColor = MakeColor(152, 152, 152, 96),
-	.containerPadding = MakePadding(10, 10, 10, 10),
-	.containerSpacing = 10,
-	.controlHeight = 32,
-	.controlPadding = MakePadding(4, 10, 4, 10),
-	.darkBackgroundColor = MakeColor(48, 48, 48, 240),
-	.darkBorderColor = MakeColor(32, 32, 32, 224),
-	.darkForegroundColor = MakeColor(128, 128, 128, 255),
-	.disabledbackgroundColor = MakeColor(128, 128, 128, 128),
-	.disabledForegroundColor = MakeColor(96, 96, 96, 255),
-	.focusedBackgroundColor = MakeColor(72, 72, 72, 255),
-	.focusedForegroundColor = MakeColor(255, 255, 255, 255),
-	.foregroundColor = MakeColor(255, 255, 255, 255),
-	.highlightedBackgroundColor = MakeColor(105, 105, 105, 255),
-	.highlightedForegroundColor = MakeColor(255, 255, 255, 255),
-	.lightBackgroundColor = MakeColor(96, 96, 96, 240),
-	.lightBorderColor = MakeColor(192, 192, 192, 224),
-	.lightForegroundColor = MakeColor(192, 192, 192, 255),
-	.selectedBackgroundColor = MakeColor(96, 96, 96, 240),
-	.selectedForegroundColor = MakeColor(255, 255, 255, 255),
-	.selectionBackgroundColor = MakeColor(224, 224, 224, 16),
-	.selectionForegroundColor = MakeColor(64, 64, 64, 255),
-};
+#define _Class _Theme
+
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+	Theme *this = (Theme *) self;
+
+	release(this->styles);
+
+	super(Object, self, dealloc);
+}
+
+#pragma mark - Theme
+
+/**
+ * @fn void Theme::addStyle(Theme *self, Style *style)
+ * @memberof Theme
+ */
+static void addStyle(Theme *self, Style *style) {
+
+	assert(style);
+
+	$(self->styles, setObjectForKey, style, style->selector);
+}
+
+/**
+ * @brief DictionaryEnumerator for addStylesheet.
+ */
+static void addStylesheet_enumerator(const Dictionary *dictionary, ident obj, ident key, ident data) {
+
+	const char *selector = cast(String, key)->chars;
+	const Dictionary *attributes = cast(Dictionary, obj);
+
+	Style *style = $(alloc(Style), initWithSelector, selector, attributes);
+	assert(style);
+
+	$((Theme *) data, addStyle, style);
+
+	release(style);
+}
+
+/**
+ * @fn void Theme::addStylesheet(Theme *self, const Dictionary *stylesheet)
+ * @memberof Theme
+ */
+static void addStylesheet(Theme *self, const Dictionary *stylesheet) {
+
+	if (stylesheet) {
+		$(stylesheet, enumerateObjectsAndKeys, addStylesheet_enumerator, self);
+	}
+}
+
+static Theme *_currentTheme;
+
+/**
+ * @fn Theme *Theme::currentTheme(void)
+ * @memberof Theme
+ */
+static Theme *currentTheme(void) {
+
+	if (_currentTheme == NULL) {
+		_currentTheme = $$(Theme, defaultTheme);
+	}
+
+	return _currentTheme;
+}
+
+/**
+ * @fn Theme *Theme::defaultTheme(void)
+ * @memberof Theme
+ */
+static Theme *defaultTheme(void) {
+	return $(alloc(Theme), init);
+}
+
+
+/**
+ * @fn Theme *Theme::init(Theme *self)
+ * @memberof Theme
+ */
+static Theme *init(Theme *self) {
+
+	self = (Theme *) super(Object, self, init);
+	if (self) {
+		self->styles = $$(MutableDictionary, dictionary);
+		assert(self->styles);
+	}
+
+	return self;
+}
+
+/**
+ * @fn void Theme::setCurrentTheme(Theme *theme)
+ * @memberof Theme
+ */
+static void setCurrentTheme(Theme *theme) {
+
+	if (theme != _currentTheme) {
+		release(_currentTheme);
+
+		if (theme) {
+			_currentTheme = retain(theme);
+		} else {
+			_currentTheme = NULL;
+		}
+	}
+}
+
+/**
+ * @fn Theme *Theme::themeWithContentsOfFile(const char *path)
+ * @memberof Theme
+ */
+static Theme *themeWithContentsOfFile(const char *path) {
+
+	Data *data = $$(Data, dataWithContentsOfFile, path);
+
+	Theme *theme = $$(Theme, themeWithData, data);
+
+	release(data);
+
+	return theme;
+}
+
+/**
+ * @fn Theme *Theme::themeWithData(const Data *data)
+ * @memberof Theme
+ */
+static Theme *themeWithData(const Data *data) {
+
+	Dictionary *dictionary = $$(JSONSerialization, objectFromData, data, 0);
+
+	Theme *theme = $$(Theme, themeWithDictionary, dictionary);
+
+	release(dictionary);
+
+	return theme;
+}
+
+/**
+ * @fn Theme *Theme::themeWithDictionary(const Dictionary *dictionary)
+ * @memberof Theme
+ */
+static Theme *themeWithDictionary(const Dictionary *dictionary) {
+
+	Theme *theme = $(alloc(Theme), init);
+
+	if (theme) {
+		$(theme, addStylesheet, dictionary);
+	}
+
+	return theme;
+}
+
+#pragma mark - Class lifecycle
+
+/**
+ * @see Class::initialize(Class *)
+ */
+static void initialize(Class *clazz) {
+
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+
+	((ThemeInterface *) clazz->def->interface)->addStyle = addStyle;
+	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
+	((ThemeInterface *) clazz->def->interface)->currentTheme = currentTheme;
+	((ThemeInterface *) clazz->def->interface)->defaultTheme = defaultTheme;
+	((ThemeInterface *) clazz->def->interface)->init = init;
+	((ThemeInterface *) clazz->def->interface)->setCurrentTheme = setCurrentTheme;
+	((ThemeInterface *) clazz->def->interface)->themeWithContentsOfFile = themeWithContentsOfFile;
+	((ThemeInterface *) clazz->def->interface)->themeWithData = themeWithData;
+	((ThemeInterface *) clazz->def->interface)->themeWithDictionary = themeWithDictionary;
+}
+
+/**
+ * @fn Class *Theme::_Theme(void)
+ * @memberof Theme
+ */
+Class *_Theme(void) {
+	static Class clazz;
+	static Once once;
+
+	do_once(&once, {
+		clazz.name = "Theme";
+		clazz.superclass = _Object();
+		clazz.instanceSize = sizeof(Theme);
+		clazz.interfaceOffset = offsetof(Theme, interface);
+		clazz.interfaceSize = sizeof(ThemeInterface);
+		clazz.initialize = initialize;
+	});
+
+	return &clazz;
+}
+
+#undef _Class
