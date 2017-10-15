@@ -31,12 +31,21 @@
  * @brief The Theme type.
  */
 
+/**
+ * @defgroup Theme Theming
+ * @brief Themes provides aggregation, management and application of Styles.
+ * @details Theming is a core part of the layout process. A Theme manages a collection
+ * of Styles. Prior to layout, the Styles of the current Theme are matched against and
+ * applied to the View hierarchy.
+ */
+
 typedef struct Theme Theme;
 typedef struct ThemeInterface ThemeInterface;
 
 /**
- * @brief A Theme consists of one or more Styles, defined in one or more JSON stylesheets.
+ * @brief The Theme type.
  * @extends Object
+ * @ingroup Theme
  */
 struct Theme {
 
@@ -86,6 +95,15 @@ struct ThemeInterface {
 	void (*addStylesheet)(Theme *self, const Dictionary *stylesheet);
 
 	/**
+	 * @fn void Theme::apply(const Theme *self, View *view)
+	 * @brief Applies this Theme to the given View.
+	 * @param self The Theme.
+	 * @param view The View.
+	 * @memberof Theme
+	 */
+	void (*apply)(const Theme *self, View *view);
+
+	/**
 	 * @static
 	 * @fn Theme *Theme::currentTheme(void)
 	 * @return The current Theme.
@@ -109,6 +127,15 @@ struct ThemeInterface {
 	 * @memberof Theme
 	 */
 	Theme *(*init)(Theme *self);
+
+	/**
+	 * @fn void Theme::removeStyle(Theme *self, Style *style)
+	 * @brief Removes the given Style from this Theme.
+	 * @param self The Theme.
+	 * @param style The Style.
+	 * @memberof Theme
+	 */
+	void (*removeStyle)(Theme *self, Style *style);
 
 	/**
 	 * @static

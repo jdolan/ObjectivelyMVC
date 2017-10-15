@@ -46,6 +46,16 @@ static void dealloc(Object *self) {
 #pragma mark - Theme
 
 /**
+ * @brief ArrayEnumerator for addStyle.
+ */
+static void addStyle_enumerate(const Array *array, ident obj, ident data) {
+
+	Selector *selector = obj;
+
+	$(((Theme *) data)->styles, setObjectForKeyPath, selector, selector->rule);
+}
+
+/**
  * @fn void Theme::addStyle(Theme *self, Style *style)
  * @memberof Theme
  */
@@ -53,7 +63,7 @@ static void addStyle(Theme *self, Style *style) {
 
 	assert(style);
 
-	$(self->styles, setObjectForKey, style, style->selector);
+	$((Array *) style->selectors, enumerateObjects, addStyle_enumerate, self);
 }
 
 /**
@@ -61,11 +71,13 @@ static void addStyle(Theme *self, Style *style) {
  */
 static void addStylesheet_enumerator(const Dictionary *dictionary, ident obj, ident key, ident data) {
 
-	const char *selector = cast(String, key)->chars;
+	const String *rules = cast(String, key);
 	const Dictionary *attributes = cast(Dictionary, obj);
 
-	Style *style = $(alloc(Style), initWithSelector, selector, attributes);
+	Style *style = $(alloc(Style), initWithRules, rules->chars);
 	assert(style);
+
+	$(style, addAttributes, attributes);
 
 	$((Theme *) data, addStyle, style);
 
@@ -81,6 +93,18 @@ static void addStylesheet(Theme *self, const Dictionary *stylesheet) {
 	if (stylesheet) {
 		$(stylesheet, enumerateObjectsAndKeys, addStylesheet_enumerator, self);
 	}
+}
+
+/**
+ * @fn void Theme::apply(const Theme *self, View *view)
+ * @memberof Theme
+ */
+static void apply(const Theme *self, View *view) {
+
+	assert(view);
+
+
+
 }
 
 static Theme *_currentTheme;
@@ -120,6 +144,24 @@ static Theme *init(Theme *self) {
 	}
 
 	return self;
+}
+
+/**
+ * @brief ArrayEnumerator for removeStyle.
+ */
+static void removeStyle_enumerate(const Array *array, ident obj, ident data) {
+	$((((Theme *) data)->styles), removeObjectForKeyPath, ((Selector *) obj)->rule);
+}
+
+/**
+ * @fn void Theme::removeStyle(Theme *self, Style *style)
+ * @memberof Theme
+ */
+static void removeStyle(Theme *self, Style *style) {
+
+	assert(style);
+
+	$((Array *) style->selectors, enumerateObjects, removeStyle_enumerate, self);
 }
 
 /**
@@ -195,9 +237,11 @@ static void initialize(Class *clazz) {
 
 	((ThemeInterface *) clazz->def->interface)->addStyle = addStyle;
 	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
+	((ThemeInterface *) clazz->def->interface)->apply = apply;
 	((ThemeInterface *) clazz->def->interface)->currentTheme = currentTheme;
 	((ThemeInterface *) clazz->def->interface)->defaultTheme = defaultTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
+	((ThemeInterface *) clazz->def->interface)->removeStyle = removeStyle;
 	((ThemeInterface *) clazz->def->interface)->setCurrentTheme = setCurrentTheme;
 	((ThemeInterface *) clazz->def->interface)->themeWithContentsOfFile = themeWithContentsOfFile;
 	((ThemeInterface *) clazz->def->interface)->themeWithData = themeWithData;

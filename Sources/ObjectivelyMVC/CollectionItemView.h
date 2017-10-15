@@ -38,7 +38,7 @@ typedef struct CollectionItemViewInterface CollectionItemViewInterface;
 /**
  * @brief CollectionViewItems are a visual representation of an item within a CollectionView.
  * @extends View
- * @ingroup CollectionViews
+ * @ingroup CollectionView
  */
 struct CollectionItemView {
 

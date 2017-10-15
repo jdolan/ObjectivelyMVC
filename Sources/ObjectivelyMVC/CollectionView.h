@@ -35,13 +35,13 @@
  */
 
 /**
- * @defgroup CollectionViews
+ * @defgroup CollectionView Collection Views
  * @brief CollectionViews provide grid and gallery presentations of data.
  */
 
 /**
  * @brief Axis constants for specifying a CollectionView's primary layout direction.
- * @ingroup CollectionViews
+ * @ingroup CollectionView
  */
 typedef enum {
 	CollectionViewAxisVertical,
@@ -58,7 +58,7 @@ typedef struct CollectionViewInterface CollectionViewInterface;
 
 /**
  * @brief The CollectionView data source protocol.
- * @ingroup CollectionViews
+ * @ingroup CollectionView
  */
 struct CollectionViewDataSource {
 
@@ -84,7 +84,7 @@ struct CollectionViewDataSource {
 
 /**
  * @brief The CollectionView delegate protocol.
- * @ingroup CollectionViews
+ * @ingroup CollectionView
  */
 struct CollectionViewDelegate {
 
@@ -118,7 +118,7 @@ struct CollectionViewDelegate {
 /**
  * @brief CollectionViews display items in a grid.
  * @extends Control
- * @ingroup CollectionViews Containers Controls
+ * @ingroup CollectionView Containers Controls
  */
 struct CollectionView {
 

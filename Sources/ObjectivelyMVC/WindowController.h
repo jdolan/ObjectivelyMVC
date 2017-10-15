@@ -25,6 +25,7 @@
 
 #include <Objectively/Object.h>
 
+#include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/ViewController.h>
 
 /**
@@ -57,6 +58,11 @@ struct WindowController {
 	 * @brief The Renderer.
 	 */
 	Renderer *renderer;
+
+	/**
+	 * @brief The Theme.
+	 */
+	Theme *theme;
 
 	/**
 	 * @brief The ViewController.
@@ -106,6 +112,15 @@ struct WindowControllerInterface {
 	 * @memberof WindowController
 	 */
 	void (*setRenderer)(WindowController *self, Renderer *renderer);
+
+	/**
+	 * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
+	 * @brief Sets this WindowController's Theme.
+	 * @param self The WindowController.
+	 * @param theme The Theme.
+	 * @memberof WindowController
+	 */
+	void (*setTheme)(WindowController *self, Theme *theme);
 
 	/**
 	 * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)

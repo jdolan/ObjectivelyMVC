@@ -27,6 +27,7 @@
 
 #include <Objectively.h>
 
+#include <ObjectivelyMVC/Selector.h>
 #include <ObjectivelyMVC/Style.h>
 
 #define _Class _Style
@@ -40,8 +41,8 @@ static void dealloc(Object *self) {
 
 	Style *this = (Style *) self;
 
-	release(this->selector);
 	release(this->attributes);
+	release(this->selectors);
 
 	super(Object, self, dealloc);
 }
@@ -58,6 +59,17 @@ static void addAttribute(Style *self, const char *attribute, ident value) {
 	assert(value);
 
 	$(self->attributes, setObjectForKeyPath, value, attribute);
+}
+
+/**
+ * @fn void Style::addAttributes(Style *self, const Dictionary *attributes)
+ * @memberof Style
+ */
+static void addAttributes(Style *self, const Dictionary *attributes) {
+
+	assert(attributes);
+
+	$(self->attributes, addEntriesFromDictionary, attributes);
 }
 
 /**
@@ -212,22 +224,25 @@ static ident attributeValue(const Style *self, const char *attr) {
 }
 
 /**
- * @fn Style *Style::initWithSelector(Style *self, const char *selector, const Dictionary *attributes)
+ * @fn Style *Style::initWithRules(Style *self, const char *selectors)
  * @memberof Style
  */
-static Style *initWithSelector(Style *self, const char *selector, const Dictionary *attributes) {
+static Style *initWithRules(Style *self, const char *selectors) {
 
 	self = (Style *) super(Object, self, init);
 	if (self) {
-		self->selector = $$(String, stringWithCharacters, selector);
-		assert(self->selector);
+
+		self->selectors = $$(MutableArray, array);
+		assert(self->selectors);
+
+		Array *array = $$(Selector, parse, selectors);
+		$(self->selectors, addObjectsFromArray, array);
+		release(array);
+
+		assert(self->selectors->array.count);
 
 		self->attributes = $$(MutableDictionary, dictionary);
 		assert(self->attributes);
-
-		if (attributes) {
-			$(self->attributes, addEntriesFromDictionary, attributes);
-		}
 	}
 
 	return self;
@@ -251,6 +266,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((StyleInterface *) clazz->def->interface)->addAttribute = addAttribute;
+	((StyleInterface *) clazz->def->interface)->addAttributes = addAttributes;
 	((StyleInterface *) clazz->def->interface)->addBoolAttribute = addBoolAttribute;
 	((StyleInterface *) clazz->def->interface)->addCharactersAttribute = addCharactersAttribute;
 	((StyleInterface *) clazz->def->interface)->addColorAttribute = addColorAttribute;
@@ -262,7 +278,7 @@ static void initialize(Class *clazz) {
 	((StyleInterface *) clazz->def->interface)->addRectangleAttribute = addRectangleAttribute;
 	((StyleInterface *) clazz->def->interface)->addSizeAttribute = addSizeAttribute;
 	((StyleInterface *) clazz->def->interface)->attributeValue = attributeValue;
-	((StyleInterface *) clazz->def->interface)->initWithSelector = initWithSelector;
+	((StyleInterface *) clazz->def->interface)->initWithRules = initWithRules;
 	((StyleInterface *) clazz->def->interface)->removeAttribute = removeAttribute;
 }
 

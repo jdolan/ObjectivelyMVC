@@ -28,6 +28,7 @@
 
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/Image.h>
+#include <ObjectivelyMVC/Selector.h>
 #include <ObjectivelyMVC/Types.h>
 
 /**
@@ -41,6 +42,7 @@ typedef struct StyleInterface StyleInterface;
 /**
  * @brief The Style type.
  * @extends Object
+ * @ingroup Theme
  */
 struct Style {
 
@@ -62,9 +64,9 @@ struct Style {
 	MutableDictionary *attributes;
 
 	/**
-	 * @brief The selector, e.g. `"Control:highlighted"`.
+	 * @brief The Selectors.
 	 */
-	String *selector;
+	MutableArray *selectors;
 };
 
 /**
@@ -87,6 +89,15 @@ struct StyleInterface {
 	 * @memberof Style
 	 */
 	void (*addAttribute)(Style *self, const char *attr, ident value);
+
+	/**
+	 * @fn void Style::addAttributes(Style *self, const Dictionary *attributes)
+	 * @brief Adds or replaces the attribtues in `attributes` to this Style.
+	 * @param self The Style.
+	 * @param attributes The attributes.
+	 * @memberof Style
+	 */
+	void (*addAttributes)(Style *self, const Dictionary *attributes);
 
 	/**
 	 * @fn void Style::addBoolAttribute(Style *self, const char *attr, _Bool value)
@@ -199,15 +210,15 @@ struct StyleInterface {
 	ident (*attributeValue)(const Style *self, const char *attr);
 
 	/**
-	 * @fn Style *Style::initWithSelector(Style *self, const char *selector, const Dictionary *attributes)
-	 * @brief Initializes this Style with the given selector and attributes.
+	 * @fn Style *Style::initWithRules(Style *self, const char *rules)
+	 * @brief Initializes this Style with the given CSS selector rules.
 	 * @param self The Style.
-	 * @param selector The selector.
-	 * @param attributes The attributes, or `NULL` to create an empty Style.
+	 * @param rules A null-terminated C string of one or more Selector rules.
 	 * @return The initialized Style, or `NULL` on error.
+	 * @see Selector::parse(const char *)
 	 * @memberof Style
 	 */
-	Style *(*initWithSelector)(Style *self, const char *selector, const Dictionary *attributes);
+	Style *(*initWithRules)(Style *self, const char *rules);
 
 	/**
 	 * @fn void Style::removeAttribute(Style *self, const char *attr)

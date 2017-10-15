@@ -536,6 +536,8 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 
 		self->backgroundColor = Colors.Transparent;
 		self->borderColor = Colors.GhostWhite;
+
+		self->needsLayout = true;
 	}
 
 	return self;
@@ -599,6 +601,12 @@ static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
 static void layoutIfNeeded(View *self) {
 
 	if (self->needsLayout) {
+
+		Theme *theme = $$(Theme, currentTheme);
+		assert(theme);
+
+		$(theme, apply, self);
+		
 		$(self, layoutSubviews);
 	}
 

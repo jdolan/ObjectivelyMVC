@@ -107,7 +107,15 @@ static void render(WindowController *self) {
 	$(self->renderer, beginFrame);
 
 	if (self->viewController) {
-		$(self->viewController, drawView, self->renderer);
+
+		$(self->viewController->view, layoutIfNeeded);
+
+		$(self->viewController->view, draw, self->renderer);
+
+		View *firstResponder = MVC_FirstResponder(self->window);
+		if (firstResponder) {
+			$(firstResponder, draw, self->renderer);
+		}
 	} else {
 		MVC_LogWarn("viewController is NULL\n");
 	}
@@ -139,7 +147,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
 			if (self->viewController) {
 				$(self->viewController->view, setWindow, self->window);
-				$(self->viewController, renderDeviceDidReset);
+				$(self->viewController->view, renderDeviceDidReset);
 			}
 		}
 	} else if (event->type == MVC_NOTIFICATION_EVENT) {
@@ -190,6 +198,24 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 }
 
 /**
+ * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
+ * @memberof WindowController
+ */
+static void setTheme(WindowController *self, Theme *theme) {
+
+	if (self->theme != theme) {
+
+		release(self->theme);
+
+		if (theme) {
+			self->theme = retain(theme);
+		} else {
+			self->theme = NULL;
+		}
+	}
+}
+
+/**
  * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
  * @memberof WindowController
  */
@@ -235,6 +261,7 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->def->interface)->render = render;
 	((WindowControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 	((WindowControllerInterface *) clazz->def->interface)->setRenderer = setRenderer;
+	((WindowControllerInterface *) clazz->def->interface)->setTheme = setTheme;
 	((WindowControllerInterface *) clazz->def->interface)->setViewController = setViewController;
 }
 
