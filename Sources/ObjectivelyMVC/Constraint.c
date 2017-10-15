@@ -25,7 +25,7 @@
 #include <string.h>
 
 #include <Objectively/MutableString.h>
-#include <Objectively/Regex.h>
+#include <Objectively/Regexp.h>
 
 #include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Log.h>

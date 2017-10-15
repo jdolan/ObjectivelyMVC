@@ -162,28 +162,28 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
