@@ -191,7 +191,7 @@ static void apply(const Constraint *self, View *view) {
 	}
 }
 
-static Regex *_regex;
+static Regexp *_re;
 
 /**
  * @fn Constraint *Constraint::initWithTarget(Constraint *self, const char *descriptor)
@@ -215,7 +215,7 @@ static Constraint *initWithDescriptor(Constraint *self, const char *descriptor) 
 		$((MutableString *) string, replaceOccurrencesOfCharacters, " ", "");
 
 		Range *ranges;
-		if ($(_regex, matchesString, string, 0, &ranges)) {
+		if ($(_re, matchesString, string, 0, &ranges)) {
 
 			const Range *target = &ranges[1];
 			const Range *relation = &ranges[2];
@@ -283,14 +283,14 @@ static void initialize(Class *clazz) {
 	((ConstraintInterface *) clazz->def->interface)->apply = apply;
 	((ConstraintInterface *) clazz->def->interface)->initWithDescriptor = initWithDescriptor;
 
-	_regex = rex("^([whtrblc])([<=>]+)([a-z]+\\.)?([whtrblc])?(\\*[0-9.]*)?([+|-]?[0-9.]+)?(\\[[0-9.]+\\])?$", REG_ICASE);
+	_re = re("^([whtrblc])([<=>]+)([a-z]+\\.)?([whtrblc])?(\\*[0-9.]*)?([+|-]?[0-9.]+)?(\\[[0-9.]+\\])?$", REG_ICASE);
 }
 
 /**
  * @see Class::destroy(Class *)
  */
 static void destroy(Class *clazz) {
-	release(_regex);
+	release(_re);
 }
 
 /**
