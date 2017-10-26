@@ -4,6 +4,6 @@ If (!(Test-Path tmp1.zip)) {
 }
 
 Write-Output "Extracting SDL_image..."
-7z e tmp.zip -aoa "SDL2_image-2.0.2\include\*.h"
-7z e tmp.zip -aoa "SDL2_image-2.0.2\lib\x86\*" -o"..\lib\Win32\"
-7z e tmp.zip -aoa "SDL2_image-2.0.2\lib\x64\*" -o"..\lib\x64\"
+7z e tmp1.zip -aoa "SDL2_image-2.0.2\include\*.h"
+7z e tmp1.zip -aoa "SDL2_image-2.0.2\lib\x86\*" -o"..\lib\Win32\"
+7z e tmp1.zip -aoa "SDL2_image-2.0.2\lib\x64\*" -o"..\lib\x64\"
