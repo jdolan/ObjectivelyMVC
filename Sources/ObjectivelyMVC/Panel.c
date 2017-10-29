@@ -244,7 +244,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle sty
 
 		this->backgroundColor = Colors.Gray;
 		this->backgroundColor.a = 224;
-		this->borderColor = Colors.Silver;
+		this->borderColor = Colors.DarkGray;
 		this->borderWidth = 1;
 
 		this->padding.top = this->padding.bottom = DEFAULT_PANEL_PADDING;

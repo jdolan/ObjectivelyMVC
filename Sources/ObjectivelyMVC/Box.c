@@ -118,7 +118,7 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		$((View *) self, addSubview, (View *) self->label);
 
 		self->view.autoresizingMask = ViewAutoresizingContain;
-		self->view.borderColor = Colors.Silver;
+		self->view.borderColor = Colors.DarkGray;
 		self->view.borderWidth = 1;
 		self->view.padding.top = DEFAULT_BOX_PADDING;
 		self->view.padding.right = DEFAULT_BOX_PADDING;
