@@ -65,12 +65,12 @@ static void dealloc(Object *self) {
 
 	View *this = (View *) self;
 
-	release(this->constraints);
+	$(this, removeFromSuperview);
 
 	free(this->identifier);
 
-	$(this, removeFromSuperview);
-
+	release(this->classNames);
+	release(this->constraints);
 	release(this->subviews);
 
 	super(Object, self, dealloc);
@@ -96,6 +96,23 @@ static String *description(const Object *self) {
  */
 static _Bool acceptsFirstResponder(const View *self) {
 	return false;
+}
+
+/**
+ * @fn void View::addClassName(View *self, const char *className)
+ * @memberof View
+ */
+static void addClassName(View *self, const char *className) {
+
+	if (className) {
+		String *string = $$(String, stringWithCharacters, className);
+		assert(string);
+
+		$(self->classNames, addObject, string);
+
+		release(string);
+		self->needsLayout = true;
+	}
 }
 
 /**
@@ -272,11 +289,11 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
 		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
 		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
+		MakeInlet("classNames", InletTypeClassNames, &self, NULL),
 		MakeInlet("constraints", InletTypeConstraints, &self, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
-		MakeInlet("styles", InletTypeCharacters, &self->styles, NULL),
 		MakeInlet("subviews", InletTypeSubviews, &self, NULL)
 	);
 
@@ -502,6 +519,26 @@ static void draw(View *self, Renderer *renderer) {
 }
 
 /**
+ * @brief Predicate for hasClassName.
+ */
+static _Bool hasClassName_predicate(const ident obj, ident data) {
+	return strcmp(((String *) obj)->chars, (const char *) data) == 0;
+}
+
+/**
+ * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
+ * @memberof View
+ */
+static _Bool hasClassName(const View *self, const char *className) {
+
+	if (className) {
+		return $((Array *) self->classNames, findObject, hasClassName_predicate, (ident) className);
+	}
+
+	return false;
+}
+
+/**
  * @fn View *View::hitTest(const View *self, const SDL_Point *point)
  * @memberof View
  */
@@ -548,6 +585,9 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		if (frame) {
 			self->frame = *frame;
 		}
+
+		self->classNames = $$(MutableArray, array);
+		assert(self->classNames);
 
 		self->constraints = $$(MutableArray, array);
 		assert(self->constraints);
@@ -716,6 +756,62 @@ static void layoutSubviews(View *self) {
 }
 
 /**
+ * @fn _Bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
+ * @memberof View
+ */
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+
+	assert(simpleSelector);
+
+	const char *pattern = simpleSelector->pattern;
+
+	switch (simpleSelector->type) {
+		case SimpleSelectorTypeNone:
+			return false;
+
+		case SimpleSelectorTypeUniversal:
+			return true;
+
+		case SimpleSelectorTypeType:
+			return $((Object *) self, isKindOfClass, classForName(pattern));
+
+		case SimpleSelectorTypeClass:
+			return $(self, hasClassName, pattern);
+
+		case SimpleSelectorTypeId:
+			if (self->identifier) {
+				return strcmp(self->identifier, pattern) == 0;
+			} else {
+				return false;
+			}
+
+		case SimpleSelectorTypePseudo:
+			if (strcmp("first-child", pattern) == 0) {
+				if (self->superview) {
+					return $((Array *) self->superview->subviews, firstObject) == self;
+				}
+			} else if (strcmp("last-child", pattern) == 0) {
+				if (self->superview) {
+					return $((Array *) self->superview->subviews, lastObject) == self;
+				}
+			}
+	}
+
+	return false;
+}
+
+/**
+ * @fn void View::removeAllClassNames(View *self)
+ * @memberof View
+ */
+static void removeAllClassNames(View *self) {
+
+	$(self->classNames, removeAllObjects);
+
+	self->needsLayout = true;
+}
+
+/**
  * @brief ArrayEnumerator for removeAllConstraints.
  */
 static void removeAllConstraints_enumerate(const Array *array, ident obj, ident data) {
@@ -743,6 +839,23 @@ static void removeAllSubviews_enumerate(const Array *array, ident obj, ident dat
  */
 static void removeAllSubviews(View *self) {
 	$((Array *) self->subviews, enumerateObjects, removeAllSubviews_enumerate, self);
+}
+
+/**
+ * @fn void View::removeClassName(View *self, const char *className)
+ * @memberof View
+ */
+static void removeClassName(View *self, const char *className) {
+
+	if (className) {
+		String *string = $$(String, stringWithCharacters, className);
+		assert(string);
+
+		$(self->classNames, removeObject, string);
+
+		release(string);
+		self->needsLayout = true;
+	}
 }
 
 /**
@@ -1219,6 +1332,8 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	((ObjectInterface *) clazz->def->interface)->description = description;
 
+	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
+	((ViewInterface *) clazz->def->interface)->addClassName = addClassName;
 	((ViewInterface *) clazz->def->interface)->addConstraint = addConstraint;
 	((ViewInterface *) clazz->def->interface)->addConstraintWithDescriptor = addConstraintWithDescriptor;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
@@ -1232,7 +1347,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
 	((ViewInterface *) clazz->def->interface)->bounds = bounds;
 	((ViewInterface *) clazz->def->interface)->bringSubviewToFront = bringSubviewToFront;
-	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
 	((ViewInterface *) clazz->def->interface)->createConstraint = createConstraint;
@@ -1240,6 +1354,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
+	((ViewInterface *) clazz->def->interface)->hasClassName = hasClassName;
 	((ViewInterface *) clazz->def->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
@@ -1248,8 +1363,11 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->isVisible = isVisible;
 	((ViewInterface *) clazz->def->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
+	((ViewInterface *) clazz->def->interface)->removeAllClassNames = removeAllClassNames;
 	((ViewInterface *) clazz->def->interface)->removeAllConstraints = removeAllConstraints;
 	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
+	((ViewInterface *) clazz->def->interface)->removeClassName = removeClassName;
 	((ViewInterface *) clazz->def->interface)->removeConstraint = removeConstraint;
 	((ViewInterface *) clazz->def->interface)->removeFromSuperview = removeFromSuperview;
 	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;

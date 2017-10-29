@@ -149,6 +149,11 @@ struct View {
 	int borderWidth;
 
 	/**
+	 * @brief The class names.
+	 */
+	MutableArray *classNames;
+
+	/**
 	 * @brief If true, subviews will be clipped to this View's frame.
 	 */
 	_Bool clipsSubviews;
@@ -190,11 +195,6 @@ struct View {
 	ViewPadding padding;
 
 	/**
-	 * @brief The style names.
-	 */
-	char *styles;
-
-	/**
 	 * @brief The immediate subviews.
 	 */
 	MutableArray *subviews;
@@ -234,6 +234,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*acceptsFirstResponder)(const View *self);
+
+	/**
+	 * @fn void View::addClassName(View *self, const char *className)
+	 * @brief Adds the given class name to this View.
+	 * @param self The View.
+	 * @param className The class name.
+	 * @memberof View
+	 */
+	void (*addClassName)(View *self, const char *className);
 
 	/**
 	 * @fn void View::addConstraint(View *self, Constraint *constraint)
@@ -423,6 +432,15 @@ struct ViewInterface {
 	void (*draw)(View *self, Renderer *renderer);
 
 	/**
+	 * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
+	 * @param self The View
+	 * @param className The class name.
+	 * @return True if this View has the given class name, false otherwise.
+	 * @memberof View
+	 */
+	_Bool (*hasClassName)(const View *self, const char *className);
+
+	/**
 	 * @fn View *View::hitTest(const View *self, const SDL_Point *point)
 	 * @brief Performs a hit test against this View and its descendants for the given point.
 	 * @param self The View.
@@ -497,6 +515,23 @@ struct ViewInterface {
 	void (*layoutSubviews)(View *self);
 
 	/**
+	 * @fn _Bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
+	 * @param self The View.
+	 * @param simpleSelector The SimpleSelector.
+	 * @return True if this View matches the SimpleSelector, false otherwise.
+	 * @memberof View
+	 */
+	_Bool (*matchesSelector)(const View *self, const SimpleSelector *simpleSelector);
+
+	/**
+	 * @fn void View::removeAllClassNames(View *self)
+	 * @brief Removes all class names from this View.
+	 * @param self The View.
+	 * @memberof View
+	 */
+	void (*removeAllClassNames)(View *self);
+
+	/**
 	 * @fn void View::removeAllConstraints(View *self)
 	 * @brief Removes all Constraints on this View.
 	 * @param self The View.
@@ -511,6 +546,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*removeAllSubviews)(View *self);
+
+	/**
+	 * @fn void View::removeClassName(View *self, const char *className)
+	 * @brief Removes the given class name to this View.
+	 * @param self The View.
+	 * @param className The class name.
+	 * @memberof View
+	 */
+	void (*removeClassName)(View *self, const char *className);
 
 	/**
 	 * @fn void View::removeConstraint(View *self, Constraint *constraint)

@@ -38,6 +38,20 @@ static void bindCharacters(const Inlet *inlet, ident obj) {
 }
 
 /**
+ * @brief ArrayEnumerator for bindClassNames.
+ */
+static void bindClassNames_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, addClassName, cast(String, obj)->chars);
+}
+
+/**
+ * @brief InletBinding for InletTypeClassNames.
+ */
+static void bindClassNames(const Inlet *inlet, ident obj) {
+	$(cast(Array, obj), enumerateObjects, bindClassNames_enumerate, *(View **) inlet->dest);
+}
+
+/**
  * @brief InletBinding for InletTypeColor.
  */
 static void bindColor(const Inlet *inlet, ident obj) {
@@ -287,6 +301,7 @@ static void bindApplicationDefined(const Inlet *inlet, ident obj) {
 const InletBinding inletBindings[] = {
 	bindBool,
 	bindCharacters,
+	bindClassNames,
 	bindColor,
 	bindConstraint,
 	bindConstraints,

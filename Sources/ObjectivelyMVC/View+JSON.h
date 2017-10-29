@@ -47,6 +47,11 @@ typedef enum {
 	InletTypeCharacters,
 
 	/**
+	 * @remarks Inlet destination must be of type `View **`.
+	 */
+	InletTypeClassNames,
+
+	/**
 	 * @remarks Inlet destination must be of type `SDL_Color *`.
 	 */
 	InletTypeColor,
