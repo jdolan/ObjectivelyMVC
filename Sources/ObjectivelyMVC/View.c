@@ -801,14 +801,18 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 }
 
 /**
+ * @brief ArrayEnumerator for removeAllClassNames.
+ */
+static void removeAllClassNames_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, removeClassName, ((String *) obj)->chars);
+}
+
+/**
  * @fn void View::removeAllClassNames(View *self)
  * @memberof View
  */
 static void removeAllClassNames(View *self) {
-
-	$(self->classNames, removeAllObjects);
-
-	self->needsLayout = true;
+	$((Array *) self->classNames, enumerateObjects, removeAllClassNames_enumerate, self);
 }
 
 /**
