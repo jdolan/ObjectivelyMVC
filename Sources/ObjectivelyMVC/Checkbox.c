@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Checkbox.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Checkbox
 

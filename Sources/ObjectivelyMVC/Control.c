@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Control.h>
-#include <ObjectivelyMVC/Theme.h>
 
 const EnumName ControlBevelNames[] = MakeEnumNames(
 	MakeEnumName(ControlBevelNone),

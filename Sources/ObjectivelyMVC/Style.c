@@ -224,22 +224,16 @@ static ident attributeValue(const Style *self, const char *attr) {
 }
 
 /**
- * @fn Style *Style::initWithRules(Style *self, const char *selectors)
+ * @fn Style *Style::initWithRules(Style *self, const char *rules)
  * @memberof Style
  */
-static Style *initWithRules(Style *self, const char *selectors) {
+static Style *initWithRules(Style *self, const char *rules) {
 
 	self = (Style *) super(Object, self, init);
 	if (self) {
 
-		self->selectors = $$(MutableArray, array);
-		assert(self->selectors);
-
-		Array *array = $$(Selector, parse, selectors);
-		$(self->selectors, addObjectsFromArray, array);
-		release(array);
-
-		assert(self->selectors->array.count);
+		self->selectors = $$(Selector, parse, rules);
+		assert(self->selectors->count);
 
 		self->attributes = $$(MutableDictionary, dictionary);
 		assert(self->attributes);

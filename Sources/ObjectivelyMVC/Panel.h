@@ -23,9 +23,9 @@
 
 #pragma once
 
+#include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/StackView.h>
-#include <ObjectivelyMVC/View.h>
 
 /**
  * @file

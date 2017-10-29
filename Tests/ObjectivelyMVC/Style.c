@@ -36,13 +36,6 @@ START_TEST(style)
 	ck_assert(style != NULL);
 	ck_assert_ptr_eq(_Style(), classof(style));
 
-	const Array *selectors = (Array *) style->selectors;
-	ck_assert_int_eq(2, selectors->count);
-	const Selector *selector = $(selectors, objectAtIndex, 0);
-	ck_assert_str_eq("Control:highlighted", selector->rule);
-	selector = $(selectors, objectAtIndex, 1);
-	ck_assert_str_eq("Control:focused", selector->rule);
-
 	Object *object = $(alloc(Object), init);
 	$(style, addAttribute, "object", object);
 	ck_assert_ptr_eq(object, $(style, attributeValue, "object"));

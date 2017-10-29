@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <Objectively/Hash.h>
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Selector.h>
@@ -40,12 +41,40 @@ static void dealloc(Object *self) {
 
 	Selector *this = (Selector *) self;
 
-	free(this->attribute);
-	free(this->identifier);
+	release(this->sequences);
 	free(this->rule);
-	free(this->type);
 
 	super(Object, self, dealloc);
+}
+
+/**
+ * @see Object::hash(const Object *)
+ */
+static int hash(const Object *self) {
+
+	Selector *this = (Selector *) self;
+
+	return $((Object *) this->rule, hash);
+}
+
+/**
+ * @see Object::isEqual(const Object *, const Object *)
+ */
+static _Bool isEqual(const Object *self, const Object *other) {
+
+	if (super(Object, self, isEqual, other)) {
+		return true;
+	}
+
+	if (other && $(other, isKindOfClass, _Selector())) {
+
+		const Selector *this = (Selector *) self;
+		const Selector *that = (Selector *) other;
+
+		return $((Object *) this->rule, isEqual, (Object *) that->rule);
+	}
+
+	return false;
 }
 
 #pragma mark - Selector
@@ -53,15 +82,17 @@ static void dealloc(Object *self) {
 /**
  * @fn Selector *Selector::initWithRule(Selector *self, const char *rule)
  * @memberof Selector
+ * Control:focused
  */
 static Selector *initWithRule(Selector *self, const char *rule) {
-
-	assert(rule);
 
 	self = (Selector *) super(Object, self, init);
 	if (self) {
 		self->rule = strdup(rule);
 		assert(self->rule);
+
+		self->sequences = $$(SelectorSequence, parse, rule);
+		assert(self->sequences->count);
 	}
 
 	return self;
@@ -78,9 +109,11 @@ static Array *parse(const char *rules) {
 
 	const char *c = rules;
 	while (*c) {
-		const size_t size = strcspn(c, ", ");
+		const size_t size = strcspn(c, ",");
 		if (size) {
 			char *s = calloc(1, size + 1);
+			assert(s);
+
 			strncpy(s, c, size);
 
 			Selector *selector = $(alloc(Selector), initWithRule, s);
@@ -106,6 +139,8 @@ static Array *parse(const char *rules) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->hash = hash;
+	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
 
 	((SelectorInterface *) clazz->def->interface)->initWithRule = initWithRule;
 	((SelectorInterface *) clazz->def->interface)->parse = parse;

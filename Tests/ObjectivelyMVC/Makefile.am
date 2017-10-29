@@ -7,6 +7,7 @@ DEFAULT_INCLUDES = \
 
 TESTS = \
 	Constraint \
+	Selector \
 	Style
 
 CFLAGS += \

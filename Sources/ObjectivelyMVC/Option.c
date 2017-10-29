@@ -25,7 +25,6 @@
 
 #include <ObjectivelyMVC/Option.h>
 #include <ObjectivelyMVC/Select.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Option
 

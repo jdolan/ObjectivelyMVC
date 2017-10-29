@@ -33,8 +33,12 @@ pkginclude_HEADERS = \
 	RGBColorPicker.h \
 	ScrollView.h \
 	Select.h \
+	Selector.h \
+	SelectorSequence.h \
+	SimpleSelector.h \
 	Slider.h \
 	StackView.h \
+	Style.h \
 	TableCellView.h \
 	TableColumn.h \
 	TableHeaderCellView.h \
@@ -83,8 +87,12 @@ libObjectivelyMVC_la_SOURCES = \
 	RGBColorPicker.c \
 	ScrollView.c \
 	Select.c \
+	Selector.c \
+	SelectorSequence.c \
+	SimpleSelector.c \
 	Slider.c \
 	StackView.c \
+	Style.c \
 	TableCellView.c \
 	TableColumn.c \
 	TableHeaderCellView.c \

@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/HSVColorPicker.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _HSVColorPicker
 

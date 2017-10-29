@@ -240,6 +240,26 @@ static void applyConstraintsIfNeeded(View *self) {
 }
 
 /**
+ * @fn void View::applyStyle(View *self, const Style *style)
+ * @memberof View
+ */
+static void applyStyle(View *self, const Style *style) {
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
+		MakeInlet("autoresizingMask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
+		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
+		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
+		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
+		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
+		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
+		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL)
+	);
+
+	$(self, bind, inlets, (Dictionary *) style->attributes);
+}
+
+/**
  * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
  * @memberof View
  */
@@ -256,6 +276,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
+		MakeInlet("styles", InletTypeCharacters, &self->styles, NULL),
 		MakeInlet("subviews", InletTypeSubviews, &self, NULL)
 	);
 
@@ -603,10 +624,10 @@ static void layoutIfNeeded(View *self) {
 	if (self->needsLayout) {
 
 		Theme *theme = $$(Theme, currentTheme);
-		assert(theme);
+		if (theme) {
+			$(theme, apply, self);
+		}
 
-		$(theme, apply, self);
-		
 		$(self, layoutSubviews);
 	}
 
@@ -1202,9 +1223,10 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->addConstraintWithDescriptor = addConstraintWithDescriptor;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
+	((ViewInterface *) clazz->def->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
 	((ViewInterface *) clazz->def->interface)->applyConstraintsIfNeeded = applyConstraintsIfNeeded;
-	((ViewInterface *) clazz->def->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;

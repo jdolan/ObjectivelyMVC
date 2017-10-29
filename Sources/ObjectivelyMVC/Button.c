@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Button.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Button
 

@@ -197,6 +197,15 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 	}
 }
 
+static void setTheme_recurse(const Array *array, ident obj, ident data) {
+
+	View *view = (View *) obj;
+
+	view->needsLayout = true;
+
+	$((Array *) view->subviews, enumerateObjects, setTheme_recurse, NULL);
+}
+
 /**
  * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
  * @memberof WindowController
@@ -211,6 +220,10 @@ static void setTheme(WindowController *self, Theme *theme) {
 			self->theme = retain(theme);
 		} else {
 			self->theme = NULL;
+		}
+
+		if (self->viewController) {
+			setTheme_recurse(NULL, self->viewController->view, NULL);
 		}
 	}
 }

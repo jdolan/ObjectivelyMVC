@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/CollectionView.h>
-#include <ObjectivelyMVC/Theme.h>
 
 const EnumName CollectionViewAxisNames[] = MakeEnumNames(
 	MakeEnumName(CollectionViewAxisHorizontal),

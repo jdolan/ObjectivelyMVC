@@ -25,7 +25,6 @@
 #include <string.h>
 
 #include <ObjectivelyMVC/ProgressBar.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _ProgressBar
 

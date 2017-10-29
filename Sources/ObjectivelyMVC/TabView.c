@@ -27,7 +27,6 @@
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/TabView.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _TabView
 

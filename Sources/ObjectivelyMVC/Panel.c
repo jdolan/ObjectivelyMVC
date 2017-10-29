@@ -23,9 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Panel.h>
-#include <ObjectivelyMVC/Theme.h>
 
 static Image *_resize;
 static const unsigned char _resizeData[] = {

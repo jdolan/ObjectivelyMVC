@@ -24,6 +24,9 @@
 #pragma once
 
 #include <Objectively/Array.h>
+#include <Objectively/String.h>
+
+#include <ObjectivelyMVC/SelectorSequence.h>
 
 /**
  * @file
@@ -34,7 +37,7 @@ typedef struct Selector Selector;
 typedef struct SelectorInterface SelectorInterface;
 
 /**
- * @brief The Selector type.
+ * @brief Selectors are comprised of one or more SelectorSequences.
  * @extends Object
  * @ingroup Theme
  */
@@ -52,27 +55,22 @@ struct Selector {
 	SelectorInterface *interface;
 
 	/**
-	 * @brief The attribute component.
+	 * @brief The sequences.
 	 */
-	char *attribute;
+	Array *sequences;
 
 	/**
-	 * @brief The identifier component.
-	 */
-	char *identifier;
-
-	/**
-	 * @brief The rule.
+	 * @brief The rule, as provided by the user.
 	 */
 	char *rule;
 
 	/**
-	 * @brief The type component.
+	 * @brief The specificity.
 	 */
-	char *type;
+	int specificity;
 };
 
-/**®
+/**
  * @brief The Selector interface.
  */
 struct SelectorInterface {
@@ -81,6 +79,16 @@ struct SelectorInterface {
 	 * @brief The superclass interface.
 	 */
 	ObjectInterface objectInterface;
+
+	/**
+	 * @fn Order Selector::compareTo(const Selector *self, const Selector *other)
+	 * @brief Compares this Selector to `other`, ordering by specificity.
+	 * @param self The Selector.
+	 * @param other The Selector to compare.
+	 * @return The comparison result.
+	 * @memberof Selector
+	 */
+	Order (*compareTo)(const Selector *self, const Selector *other);
 
 	/**
 	 * @fn Selector *Selector::initWithRule(Selector *self, const char *rule)
@@ -101,6 +109,15 @@ struct SelectorInterface {
 	 * @memberof Selector
 	 */
 	Array *(*parse)(const char *rules);
+
+	/**
+	 * @fn _Bool Selector::matches(const Selector *selector, const View *view)
+	 * @param self The Selector.
+	 * @param view The View.
+	 * @return True if this Selector matches `view`, false otherwise.
+	 * @memberof Selector
+	 */
+	_Bool (*matches)(const Selector *self, const View *view);
 };
 
 /**

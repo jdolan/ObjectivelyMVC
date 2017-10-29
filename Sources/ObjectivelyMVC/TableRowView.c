@@ -25,7 +25,6 @@
 
 #include <ObjectivelyMVC/TableRowView.h>
 #include <ObjectivelyMVC/TableView.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _TableRowView
 

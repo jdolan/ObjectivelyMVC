@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/ScrollView.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _ScrollView
 

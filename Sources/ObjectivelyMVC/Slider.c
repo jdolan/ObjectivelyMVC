@@ -26,7 +26,6 @@
 
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Slider.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Slider
 

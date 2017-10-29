@@ -26,10 +26,7 @@
 #include <Objectively/Enum.h>
 #include <Objectively/MutableDictionary.h>
 
-#include <ObjectivelyMVC/Font.h>
-#include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Selector.h>
-#include <ObjectivelyMVC/Types.h>
 
 /**
  * @file
@@ -66,7 +63,7 @@ struct Style {
 	/**
 	 * @brief The Selectors.
 	 */
-	MutableArray *selectors;
+	Array *selectors;
 };
 
 /**

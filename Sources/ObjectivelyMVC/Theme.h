@@ -24,7 +24,6 @@
 #pragma once
 
 #include <ObjectivelyMVC/Style.h>
-#include <ObjectivelyMVC/View.h>
 
 /**
  * @file
@@ -61,7 +60,12 @@ struct Theme {
 	ThemeInterface *interface;
 
 	/**
-	 * @brief The styles.
+	 * @brief The Selectors, ordered by specificity.
+	 */
+	MutableArray *selectors;
+
+	/**
+	 * @brief The Styles, keyed by Selector.
 	 */
 	MutableDictionary *styles;
 };

@@ -55,6 +55,9 @@
 #include <ObjectivelyMVC/RGBColorPicker.h>
 #include <ObjectivelyMVC/ScrollView.h>
 #include <ObjectivelyMVC/Select.h>
+#include <ObjectivelyMVC/Selector.h>
+#include <ObjectivelyMVC/SelectorSequence.h>
+#include <ObjectivelyMVC/SimpleSelector.h>
 #include <ObjectivelyMVC/Slider.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/Style.h>

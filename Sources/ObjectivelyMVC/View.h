@@ -31,6 +31,7 @@
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Renderer.h>
+#include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/View+JSON.h>
 
 /**
@@ -189,6 +190,11 @@ struct View {
 	ViewPadding padding;
 
 	/**
+	 * @brief The style names.
+	 */
+	char *styles;
+
+	/**
 	 * @brief The immediate subviews.
 	 */
 	MutableArray *subviews;
@@ -292,6 +298,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*applyConstraintsIfNeeded)(View *self);
+
+	/**
+	 * @fn void View::applyStyle(View *self, const Style *style)
+	 * @brief Applies the given Style to this View.
+	 * @param self The View.
+	 * @param style The Style.
+	 * @memberof View
+	 */
+	void (*applyStyle)(View *self, const Style *style);
 
 	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)

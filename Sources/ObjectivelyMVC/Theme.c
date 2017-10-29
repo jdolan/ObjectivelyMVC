@@ -25,7 +25,7 @@
 
 #include <Objectively/JSONSerialization.h>
 
-#include <ObjectivelyMVC/Theme.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _Theme
 
@@ -38,6 +38,7 @@ static void dealloc(Object *self) {
 
 	Theme *this = (Theme *) self;
 
+	release(this->selectors);
 	release(this->styles);
 
 	super(Object, self, dealloc);
@@ -46,13 +47,10 @@ static void dealloc(Object *self) {
 #pragma mark - Theme
 
 /**
- * @brief ArrayEnumerator for addStyle.
+ * @brief Comparator for Selector sorting.
  */
-static void addStyle_enumerate(const Array *array, ident obj, ident data) {
-
-	Selector *selector = obj;
-
-	$(((Theme *) data)->styles, setObjectForKeyPath, selector, selector->rule);
+static Order addStyle_selectorsComparator(const ident a, const ident b) {
+	return $((Selector *) a, compareTo, (Selector *) b);
 }
 
 /**
@@ -63,7 +61,16 @@ static void addStyle(Theme *self, Style *style) {
 
 	assert(style);
 
-	$((Array *) style->selectors, enumerateObjects, addStyle_enumerate, self);
+	const Array *selectors = (Array *) style->selectors;
+	for (size_t i = 0; i < selectors->count; i++) {
+
+		Selector *selector = $(selectors, objectAtIndex, i);
+
+		$(self->selectors, addObject, selector);
+		$(self->styles, setObjectForKey, style, selector);
+	}
+
+	$(self->selectors, sort, addStyle_selectorsComparator);
 }
 
 /**
@@ -96,6 +103,13 @@ static void addStylesheet(Theme *self, const Dictionary *stylesheet) {
 }
 
 /**
+ * @brief ArrayEnumerator for apply recursion.
+ */
+static void apply_recurse(const Array *array, ident obj, ident data) {
+	$((Theme *) data, apply, (View *) obj);
+}
+
+/**
  * @fn void Theme::apply(const Theme *self, View *view)
  * @memberof Theme
  */
@@ -103,8 +117,23 @@ static void apply(const Theme *self, View *view) {
 
 	assert(view);
 
+	if (view->needsLayout) {
 
+		const Array *selectors = (Array *) self->selectors;
+		for (size_t i = 0; i < selectors->count; i++) {
 
+			const Selector *selector = $(selectors, objectAtIndex, i);
+			if ($(selector, matches, view)) {
+
+				const Style *style = $((Dictionary *) self->styles, objectForKey, (ident) selector);
+				assert(style);
+
+				$(view, applyStyle, style);
+			}
+		}
+	}
+
+	$((Array *) view->subviews, enumerateObjects, apply_recurse, (ident) self);
 }
 
 static Theme *_currentTheme;
@@ -139,18 +168,14 @@ static Theme *init(Theme *self) {
 
 	self = (Theme *) super(Object, self, init);
 	if (self) {
+		self->selectors = $$(MutableArray, array);
+		assert(self->selectors);
+
 		self->styles = $$(MutableDictionary, dictionary);
 		assert(self->styles);
 	}
 
 	return self;
-}
-
-/**
- * @brief ArrayEnumerator for removeStyle.
- */
-static void removeStyle_enumerate(const Array *array, ident obj, ident data) {
-	$((((Theme *) data)->styles), removeObjectForKeyPath, ((Selector *) obj)->rule);
 }
 
 /**
@@ -161,7 +186,14 @@ static void removeStyle(Theme *self, Style *style) {
 
 	assert(style);
 
-	$((Array *) style->selectors, enumerateObjects, removeStyle_enumerate, self);
+	const Array *selectors = (Array *) style->selectors;
+	for (size_t i = 0; i < selectors->count; i++) {
+
+		Selector *selector = $(selectors, objectAtIndex, i);
+
+		$(self->selectors, removeObject, selector);
+		$(self->styles, removeObjectForKey, selector);
+	}
 }
 
 /**

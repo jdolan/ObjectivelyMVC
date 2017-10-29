@@ -26,8 +26,6 @@
 #include <Objectively/Array.h>
 
 #include <ObjectivelyMVC/Select.h>
-#include <ObjectivelyMVC/Text.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Select
 

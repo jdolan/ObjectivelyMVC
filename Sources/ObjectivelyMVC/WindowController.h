@@ -25,7 +25,6 @@
 
 #include <Objectively/Object.h>
 
-#include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/ViewController.h>
 
 /**

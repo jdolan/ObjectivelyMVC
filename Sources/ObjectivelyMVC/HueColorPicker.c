@@ -23,7 +23,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/HueColorPicker.h>
-#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _HueColorPicker
 

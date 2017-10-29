@@ -93,6 +93,12 @@
 		CE423A361F53452D002767E7 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE423A421F534543002767E7 /* Constraint.c in Sources */ = {isa = PBXBuildFile; fileRef = CE423A2D1F534179002767E7 /* Constraint.c */; };
 		CE423A441F53457D002767E7 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
+		CE55C1C21F944C6D00D5A326 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
+		CE55C1C31F944C6D00D5A326 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
+		CE55C1C41F944C6D00D5A326 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
+		CE55C1CA1F944C7E00D5A326 /* Selector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55C1BB1F944C1B00D5A326 /* Selector.c */; };
+		CE55C1CD1F94CFB200D5A326 /* SimpleSelector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55C1CB1F94CFB200D5A326 /* SimpleSelector.c */; };
+		CE55C1CE1F94CFB200D5A326 /* SimpleSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE55C1CC1F94CFB200D5A326 /* SimpleSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE5604D11EAB9F4B00E42E53 /* TabViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5604CF1EAB9F4B00E42E53 /* TabViewController.c */; };
 		CE5604D21EAB9F4B00E42E53 /* TabViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604D01EAB9F4B00E42E53 /* TabViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE5604D91EABA06E00E42E53 /* TabViewItem.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5604D71EABA06E00E42E53 /* TabViewItem.c */; };
@@ -133,7 +139,7 @@
 		CE8819921F91B0BE000D5AB7 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE8819981F91B0CE000D5AB7 /* Style.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819891F91B094000D5AB7 /* Style.c */; };
 		CE88199D1F9231AF000D5AB7 /* Selector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE88199B1F9231AE000D5AB7 /* Selector.c */; };
-		CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE88199C1F9231AF000D5AB7 /* Selector.h */; };
+		CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE88199C1F9231AF000D5AB7 /* Selector.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
 		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF81C84E36100F4C3D4 /* TableView.c */; };
@@ -143,6 +149,8 @@
 		CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E80001C84F25400F4C3D4 /* TableCellView.c */; };
 		CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E80011C84F25400F4C3D4 /* TableCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9305C41D9B27F900D62770 /* Config.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9305C31D9B27F900D62770 /* Config.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE9351681F9B6ED000B46882 /* SelectorSequence.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9351661F9B6ED000B46882 /* SelectorSequence.c */; };
+		CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9351671F9B6ED000B46882 /* SelectorSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */; };
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
@@ -186,6 +194,13 @@
 			remoteGlobalIDString = CE423A2E1F53452D002767E7;
 			remoteInfo = "ObjectivelyMVC-Constraint";
 		};
+		CE55C1BE1F944C6D00D5A326 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = "ObjectivelyMVC-Xcode";
+		};
 		CE88198C1F91B0BE000D5AB7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
@@ -214,6 +229,15 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CE423A3C1F53452D002767E7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE55C1C51F944C6D00D5A326 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = "";
@@ -297,6 +321,10 @@
 		CE423A411F53452D002767E7 /* ObjectivelyMVC-Constraint */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Constraint"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE423A431F53457D002767E7 /* libcheck.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcheck.0.dylib; path = ../../../../opt/local/lib/libcheck.0.dylib; sourceTree = "<group>"; };
 		CE423A4F1F53BA44002767E7 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		CE55C1BB1F944C1B00D5A326 /* Selector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Selector.c; sourceTree = "<group>"; };
+		CE55C1C91F944C6D00D5A326 /* ObjectivelyMVC-Selector */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Selector"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE55C1CB1F94CFB200D5A326 /* SimpleSelector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SimpleSelector.c; sourceTree = "<group>"; };
+		CE55C1CC1F94CFB200D5A326 /* SimpleSelector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SimpleSelector.h; sourceTree = "<group>"; };
 		CE5604CF1EAB9F4B00E42E53 /* TabViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TabViewController.c; sourceTree = "<group>"; };
 		CE5604D01EAB9F4B00E42E53 /* TabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabViewController.h; sourceTree = "<group>"; };
 		CE5604D71EABA06E00E42E53 /* TabViewItem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TabViewItem.c; sourceTree = "<group>"; };
@@ -350,6 +378,8 @@
 		CE8E80011C84F25400F4C3D4 /* TableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TableCellView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE9305C21D9B277E00D62770 /* Config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.h.in; sourceTree = "<group>"; };
 		CE9305C31D9B27F900D62770 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
+		CE9351661F9B6ED000B46882 /* SelectorSequence.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SelectorSequence.c; sourceTree = "<group>"; };
+		CE9351671F9B6ED000B46882 /* SelectorSequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectorSequence.h; sourceTree = "<group>"; };
 		CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RGBColorPicker.c; sourceTree = "<group>"; };
 		CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGBColorPicker.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
@@ -397,6 +427,16 @@
 				CE423A441F53457D002767E7 /* libcheck.0.dylib in Frameworks */,
 				CE1A28271F74A036005F62A9 /* libObjectively.dylib in Frameworks */,
 				CE423A361F53452D002767E7 /* libObjectivelyMVC.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CE55C1C11F944C6D00D5A326 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE55C1C21F944C6D00D5A326 /* libcheck.0.dylib in Frameworks */,
+				CE55C1C31F944C6D00D5A326 /* libObjectively.dylib in Frameworks */,
+				CE55C1C41F944C6D00D5A326 /* libObjectivelyMVC.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +526,10 @@
 				CE14A8CB1C66D89900B576FB /* Select.h */,
 				CE88199B1F9231AE000D5AB7 /* Selector.c */,
 				CE88199C1F9231AF000D5AB7 /* Selector.h */,
+				CE9351661F9B6ED000B46882 /* SelectorSequence.c */,
+				CE9351671F9B6ED000B46882 /* SelectorSequence.h */,
+				CE55C1CB1F94CFB200D5A326 /* SimpleSelector.c */,
+				CE55C1CC1F94CFB200D5A326 /* SimpleSelector.h */,
 				CE0AD0981C77AF73003E3CF7 /* Slider.c */,
 				CE0AD0991C77AF73003E3CF7 /* Slider.h */,
 				CE12D4931C547BDD00CD0B13 /* StackView.c */,
@@ -545,6 +589,7 @@
 			isa = PBXGroup;
 			children = (
 				CE423A2D1F534179002767E7 /* Constraint.c */,
+				CE55C1BB1F944C1B00D5A326 /* Selector.c */,
 				CE8819891F91B094000D5AB7 /* Style.c */,
 				CE423A2C1F534127002767E7 /* Makefile.am */,
 			);
@@ -635,6 +680,7 @@
 				CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 				CE423A411F53452D002767E7 /* ObjectivelyMVC-Constraint */,
 				CE8819971F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
+				CE55C1C91F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -685,9 +731,11 @@
 				CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */,
 				CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */,
 				CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */,
-				CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */,
 				CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */,
 				CE14A8CD1C66D89900B576FB /* Select.h in Headers */,
+				CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */,
+				CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */,
+				CE55C1CE1F94CFB200D5A326 /* SimpleSelector.h in Headers */,
 				CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */,
 				CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */,
 				CE8819871F8DAC96000D5AB7 /* Style.h in Headers */,
@@ -748,6 +796,24 @@
 			name = "ObjectivelyMVC-Constraint";
 			productName = HelloMVC;
 			productReference = CE423A411F53452D002767E7 /* ObjectivelyMVC-Constraint */;
+			productType = "com.apple.product-type.tool";
+		};
+		CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE55C1C61F944C6D00D5A326 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Selector" */;
+			buildPhases = (
+				CE55C1BF1F944C6D00D5A326 /* Sources */,
+				CE55C1C11F944C6D00D5A326 /* Frameworks */,
+				CE55C1C51F944C6D00D5A326 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE55C1BD1F944C6D00D5A326 /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-Selector";
+			productName = HelloMVC;
+			productReference = CE55C1C91F944C6D00D5A326 /* ObjectivelyMVC-Selector */;
 			productType = "com.apple.product-type.tool";
 		};
 		CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */ = {
@@ -820,6 +886,7 @@
 			targets = (
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
 				CE423A2E1F53452D002767E7 /* ObjectivelyMVC-Constraint */,
+				CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
 				CE423A451F534657002767E7 /* ObjectivelyMVC-Tests */,
 				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
@@ -862,6 +929,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CE55C1BF1F944C6D00D5A326 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE55C1CA1F944C7E00D5A326 /* Selector.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE88198D1F91B0BE000D5AB7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -895,12 +970,14 @@
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,
 				CE5604E11EADBE9400E42E53 /* PageView.c in Sources */,
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
-				CE88199D1F9231AF000D5AB7 /* Selector.c in Sources */,
 				CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */,
 				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
 				CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
+				CE88199D1F9231AF000D5AB7 /* Selector.c in Sources */,
+				CE9351681F9B6ED000B46882 /* SelectorSequence.c in Sources */,
+				CE55C1CD1F94CFB200D5A326 /* SimpleSelector.c in Sources */,
 				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
 				CE8819861F8DAC96000D5AB7 /* Style.c in Sources */,
@@ -946,6 +1023,11 @@
 			isa = PBXTargetDependency;
 			target = CE423A2E1F53452D002767E7 /* ObjectivelyMVC-Constraint */;
 			targetProxy = CE423A4B1F534662002767E7 /* PBXContainerItemProxy */;
+		};
+		CE55C1BD1F944C6D00D5A326 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = CE55C1BE1F944C6D00D5A326 /* PBXContainerItemProxy */;
 		};
 		CE88198B1F91B0BE000D5AB7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1034,6 +1116,31 @@
 		CE423A4A1F534657002767E7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		CE55C1C71F944C6D00D5A326 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CE55C1C81F944C6D00D5A326 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1228,6 +1335,15 @@
 			buildConfigurations = (
 				CE423A491F534657002767E7 /* Debug */,
 				CE423A4A1F534657002767E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE55C1C61F944C6D00D5A326 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Selector" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE55C1C71F944C6D00D5A326 /* Debug */,
+				CE55C1C81F944C6D00D5A326 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
