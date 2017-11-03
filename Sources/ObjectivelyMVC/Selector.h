@@ -104,7 +104,7 @@ struct SelectorInterface {
 	 * @static
 	 * @fn Array *Selector::parse(const char *rules)
 	 * @brief Parses the null-terminated C string of Selector rules into an Array of Selectors.
-	 * @param chars A null-terminated C string of Selector rules.
+	 * @param rules A null-terminated C string of Selector rules.
 	 * @return An Array of Selectors.
 	 * @memberof Selector
 	 */

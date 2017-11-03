@@ -126,7 +126,7 @@ struct ThemeInterface {
 	/**
 	 * @fn Theme *Theme::init(Theme *self)
 	 * @brief Initializes this Theme.
-	 * @param theme The Theme.
+	 * @param self The Theme.
 	 * @return The initialized Theme, or `NULL` on error.
 	 * @memberof Theme
 	 */

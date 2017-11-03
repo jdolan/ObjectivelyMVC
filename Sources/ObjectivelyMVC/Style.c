@@ -216,7 +216,7 @@ static void addSizeAttribute(Style *self, const char *attr, const SDL_Size *valu
 }
 
 /**
- * @fn ident Style::attributeValue(const Style *self, const char *attribute)
+ * @fn ident Style::attributeValue(const Style *self, const char *attr)
  * @memberof Style
  */
 static ident attributeValue(const Style *self, const char *attr) {

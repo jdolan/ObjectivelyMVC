@@ -113,7 +113,7 @@ struct SelectorSequenceInterface {
 	/**
 	 * @static
 	 * @fn Array *SelectorSequence::parse(const char *rule)
-	 * @param sequence A C-string specifying a Selector rule.
+	 * @param rule A C-string specifying a Selector rule.
 	 * @return The parsed SelectorSequences.
 	 * @memberof SelectorSequence
 	 */
