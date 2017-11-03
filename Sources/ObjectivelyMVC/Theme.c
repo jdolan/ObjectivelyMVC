@@ -119,18 +119,18 @@ static void apply(const Theme *self, View *view) {
 
 	if (view->needsLayout) {
 
-		const Array *selectors = (Array *) self->selectors;
-		for (size_t i = 0; i < selectors->count; i++) {
-
-			const Selector *selector = $(selectors, objectAtIndex, i);
-			if ($(selector, matches, view)) {
-
-				const Style *style = $((Dictionary *) self->styles, objectForKey, (ident) selector);
-				assert(style);
-
-				$(view, applyStyle, style);
-			}
-		}
+//		const Array *selectors = (Array *) self->selectors;
+//		for (size_t i = 0; i < selectors->count; i++) {
+//
+//			const Selector *selector = $(selectors, objectAtIndex, i);
+//			if ($(selector, matches, view)) {
+//
+//				const Style *style = $((Dictionary *) self->styles, objectForKey, (ident) selector);
+//				assert(style);
+//
+//				$(view, applyStyle, style);
+//			}
+//		}
 	}
 
 	$((Array *) view->subviews, enumerateObjects, apply_recurse, (ident) self);
