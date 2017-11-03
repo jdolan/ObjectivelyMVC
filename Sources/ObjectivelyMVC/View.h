@@ -100,6 +100,13 @@ typedef enum {
 	ViewPositionAfter = 1
 } ViewPosition;
 
+/**
+ * @brief A function type for View enumeration
+ * @param view The View.
+ * @param data User data.
+ */
+typedef void (*ViewEnumerator)(View *view, ident data);
+
 typedef struct ViewInterface ViewInterface;
 
 /**
@@ -430,6 +437,36 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*draw)(View *self, Renderer *renderer);
+
+	/**
+	 * @fn void View::enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all descendants of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateDescendants)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateSiblings(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all siblings of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateSiblings)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateSubviews(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all subviews of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateSubviews)(const View *self, ViewEnumerator enumerator, ident data);
 
 	/**
 	 * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
