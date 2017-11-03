@@ -104,7 +104,7 @@ static Array *parse(const char *rule) {
 			SelectorSequence *selectorSequence = $(alloc(SelectorSequence), initWithSequence, s);
 			assert(selectorSequence);
 
-			selectorSequence->combinator = sequenceCombinator(*(c + size + 1));
+			selectorSequence->combinator = sequenceCombinator(*(c + size));
 			assert(selectorSequence->combinator);
 
 			$(selectorSequences, addObject, selectorSequence);
