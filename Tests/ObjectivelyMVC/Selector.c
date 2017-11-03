@@ -110,7 +110,7 @@ START_TEST(_select)
 int main(int argc, char **argv) {
 
 	TCase *tcase = tcase_create("selector");
-	//tcase_add_test(tcase, selector);
+	tcase_add_test(tcase, selector);
 	tcase_add_test(tcase, _select);
 
 	Suite *suite = suite_create("selector");
