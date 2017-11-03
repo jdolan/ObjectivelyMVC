@@ -179,7 +179,7 @@ static Array *_select(View *view, const Context *context) {
 				break;
 
 			case SequenceCombinatorAdjacent:
-				$(view, enumerateSiblings, (ViewEnumerator) _select, &(Context) {
+				$(view, enumerateAdjacent, (ViewEnumerator) _select, &(Context) {
 					.selector = context->selector,
 					.sequence = context->sequence + 1,
 					.selection = context->selection

@@ -439,6 +439,16 @@ struct ViewInterface {
 	void (*draw)(View *self, Renderer *renderer);
 
 	/**
+	 * @fn void View::enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates adjacent siblings of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateAdjacent)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
 	 * @fn void View::enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data)
 	 * @brief Enumerates all descendants of this View, applying `enumerator` to each.
 	 * @param self The View.

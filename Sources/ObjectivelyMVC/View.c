@@ -518,6 +518,22 @@ static void draw(View *self, Renderer *renderer) {
 	}
 }
 
+static void enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	if (self->superview) {
+		const Array *siblings = (Array *) self->superview->subviews;
+		const ssize_t index = $(siblings, indexOfObject, (const ident) self);
+		if (index > 0) {
+			enumerator($(siblings, objectAtIndex, index - 1), data);
+		}
+		if (index < siblings->count - 1) {
+			enumerator($(siblings, objectAtIndex, index + 1), data);
+		}
+	}
+}
+
 /**
  * @fn void View::enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data)
  * @memberof View
@@ -548,7 +564,6 @@ static void enumerateSiblings(const View *self, ViewEnumerator enumerator, ident
 
 		const Array *siblings = (Array *) self->superview->subviews;
 		for (size_t i = 0; i < siblings->count; i++) {
-
 			View *sibling = $(siblings, objectAtIndex, i);
 			if (self != sibling) {
 				enumerator(sibling, data);
@@ -1407,6 +1422,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
+	((ViewInterface *) clazz->def->interface)->enumerateAdjacent = enumerateAdjacent;
 	((ViewInterface *) clazz->def->interface)->enumerateDescendants = enumerateDescendants;
 	((ViewInterface *) clazz->def->interface)->enumerateSiblings = enumerateSiblings;
 	((ViewInterface *) clazz->def->interface)->enumerateSubviews = enumerateSubviews;
