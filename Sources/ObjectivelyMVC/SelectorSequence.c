@@ -27,6 +27,7 @@
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/SelectorSequence.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _SelectorSequence
 
@@ -63,6 +64,22 @@ static SelectorSequence *initWithSequence(SelectorSequence *self, const char *se
 	}
 
 	return self;
+}
+
+/**
+ * @fn _Bool SelectorSequence::matchesView(const SelectorSequence *self, const View *view)
+ * @memberof SelectorSequence
+ */
+static _Bool matchesView(const SelectorSequence *self, const View *view) {
+
+	for (size_t i = 0; i < self->simpleSelectors->count; i++) {
+		const SimpleSelector *simpleSelector = $(self->simpleSelectors, objectAtIndex, i);
+		if ($(view, matchesSelector, simpleSelector) == false) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 /**
@@ -130,6 +147,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((SelectorSequenceInterface *) clazz->def->interface)->initWithSequence = initWithSequence;
+	((SelectorSequenceInterface *) clazz->def->interface)->matchesView = matchesView;
 	((SelectorSequenceInterface *) clazz->def->interface)->parse = parse;
 }
 

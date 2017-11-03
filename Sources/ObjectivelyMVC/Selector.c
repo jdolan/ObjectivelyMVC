@@ -29,6 +29,7 @@
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Selector.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _Selector
 
@@ -131,6 +132,84 @@ static Array *parse(const char *rules) {
 	return (Array *) selectors;
 }
 
+/**
+ * @brief A context for View selection state.
+ */
+typedef struct {
+	const Selector *selector;
+	const SelectorSequence **sequence;
+	MutableArray *selection;
+} Context;
+
+/**
+ * @brief Recursively selects Views by iterating the SelectorSequences in the given Context.
+ */
+static Array *_select(View *view, const Context *context) {
+
+	const SelectorSequence *sequence = *context->sequence;
+
+	if ($(sequence, matchesView, view)) {
+
+		switch (sequence->combinator) {
+			case SequenceCombinatorNone:
+				break;
+
+			case SequenceCombinatorDescendent:
+				$(view, enumerateDescendants, (ViewEnumerator) _select, &(Context) {
+					.selector = context->selector,
+					.sequence = context->sequence + 1,
+					.selection = context->selection
+				});
+				break;
+
+			case SequenceCombinatorChild:
+				$(view, enumerateSubviews, (ViewEnumerator) _select, &(Context) {
+					.selector = context->selector,
+					.sequence = context->sequence + 1,
+					.selection = context->selection
+				});
+				break;
+
+			case SequenceCombinatorSibling:
+				$(view, enumerateSiblings, (ViewEnumerator) _select, &(Context) {
+					.selector = context->selector,
+					.sequence = context->sequence + 1,
+					.selection = context->selection
+				});
+				break;
+
+			case SequenceCombinatorAdjacent:
+				$(view, enumerateSiblings, (ViewEnumerator) _select, &(Context) {
+					.selector = context->selector,
+					.sequence = context->sequence + 1,
+					.selection = context->selection
+				});
+				break;
+
+			case SequenceCombinatorTerminal:
+				$(context->selection, addObject, view);
+				break;
+		}
+	}
+
+	return (Array *) context->selection;
+}
+
+/**
+ * @fn Array *Selector::select(const Selector *self, View *view)
+ * @memberof Selector
+ */
+static Array *select(const Selector *self, View *view) {
+
+	assert(view);
+
+	return _select(view, &(Context) {
+		.selector = self,
+		.sequence = (const SelectorSequence **) self->sequences->elements,
+		.selection = $$(MutableArray, array)
+	});
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -144,6 +223,8 @@ static void initialize(Class *clazz) {
 
 	((SelectorInterface *) clazz->def->interface)->initWithRule = initWithRule;
 	((SelectorInterface *) clazz->def->interface)->parse = parse;
+	((SelectorInterface *) clazz->def->interface)->select = select;
+
 }
 
 /**

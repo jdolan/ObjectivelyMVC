@@ -72,13 +72,46 @@ START_TEST(selector)
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 1);
 	ck_assert_int_eq(SimpleSelectorTypePseudo, simpleSelector->type);
 	ck_assert_str_eq("highlighted", simpleSelector->pattern);
-	
-}END_TEST
+
+	release(selector);
+
+} END_TEST
+
+START_TEST(_select)
+{
+	View *root = $(alloc(View), initWithFrame, NULL);
+	root->identifier = strdup("root");
+
+	View *container = $(alloc(View), initWithFrame, NULL);
+	$(container, addClassName, "container");
+
+	$(root, addSubview, container);
+
+	Panel *panel = $(alloc(Panel), initWithFrame, NULL, ControlStyleDefault);
+	$(container, addSubview, (View *) panel);
+
+	Selector *selector = $(alloc(Selector), initWithRule, "#root .container Panel");
+	ck_assert(selector);
+
+	Array *selection = $(selector, select, root);
+	ck_assert(selection);
+
+	ck_assert_int_eq(1, selection->count);
+	ck_assert_ptr_eq(panel, $(selection, firstObject));
+
+	release(selection);
+	release(selector);
+	release(panel);
+	release(container);
+	release(root);
+
+} END_TEST
 
 int main(int argc, char **argv) {
 
 	TCase *tcase = tcase_create("selector");
-	tcase_add_test(tcase, selector);
+	//tcase_add_test(tcase, selector);
+	tcase_add_test(tcase, _select);
 
 	Suite *suite = suite_create("selector");
 	suite_add_tcase(suite, tcase);

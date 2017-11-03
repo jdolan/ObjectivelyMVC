@@ -111,13 +111,13 @@ struct SelectorInterface {
 	Array *(*parse)(const char *rules);
 
 	/**
-	 * @fn _Bool Selector::matches(const Selector *selector, const View *view)
+	 * @fn Array *Selector::select(const Selector *self, View *view)
 	 * @param self The Selector.
 	 * @param view The View.
-	 * @return True if this Selector matches `view`, false otherwise.
+	 * @return The subset of `view`'s descendants that match this Selector.
 	 * @memberof Selector
 	 */
-	_Bool (*matches)(const Selector *self, const View *view);
+	Array *(*select)(const Selector *self, View *view);
 };
 
 /**
