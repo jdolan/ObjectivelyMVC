@@ -147,6 +147,12 @@
     <ClInclude Include="Sources\WindowlyMVC.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Notification.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Window.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c">
@@ -273,6 +279,12 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\ProgressBar.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Notification.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Window.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
   </ItemGroup>
