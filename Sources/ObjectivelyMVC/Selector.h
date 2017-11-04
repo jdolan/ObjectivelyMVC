@@ -38,6 +38,8 @@ typedef struct SelectorInterface SelectorInterface;
 
 /**
  * @brief Selectors are comprised of one or more SelectorSequences.
+ * @remarks This implementation of Selectors is based on the W3's specification for CSS3.
+ * @see https://www.w3.org/TR/2011/REC-css3-selectors-20110929/
  * @extends Object
  * @ingroup Theme
  */
@@ -66,6 +68,7 @@ struct Selector {
 
 	/**
 	 * @brief The specificity.
+	 * @see https://www.w3.org/TR/2011/REC-css3-selectors-20110929/#specificity
 	 */
 	int specificity;
 };

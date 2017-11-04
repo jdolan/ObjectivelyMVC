@@ -81,6 +81,56 @@ static _Bool isEqual(const Object *self, const Object *other) {
 #pragma mark - Selector
 
 /**
+ * @returbn The specificity of the given Selector.
+ */
+static int specificity(const Selector *selector) {
+
+	int specificity = 0;
+
+	for (size_t i = 0; i < selector->sequences->count; i++) {
+		SelectorSequence *sequence = $(selector->sequences, objectAtIndex, i);
+
+		for (size_t j = 0; j < sequence->simpleSelectors->count; j++) {
+			SimpleSelector *simpleSelector = $(sequence->simpleSelectors, objectAtIndex, j);
+
+			switch (simpleSelector->type) {
+				case SimpleSelectorTypeId:
+					specificity += 100;
+					break;
+				case SimpleSelectorTypeClass:
+				case SimpleSelectorTypePseudo:
+					specificity += 10;
+					break;
+				case SimpleSelectorTypeType:
+					specificity += 1;
+					break;
+				default:
+					break;
+			}
+		}
+	}
+
+	return specificity;
+}
+
+/**
+ * @fn Order Selector::compareTo(const Selector *self, const Selector *other)
+ * @memberof Selector
+ */
+static Order compareTo(const Selector *self, const Selector *other) {
+
+	assert(other);
+
+	if (self->specificity > other->specificity) {
+		return OrderDescending;
+	} else if (self->specificity < other->specificity) {
+		return OrderAscending;
+	}
+
+	return OrderSame;
+}
+
+/**
  * @fn Selector *Selector::initWithRule(Selector *self, const char *rule)
  * @memberof Selector
  * Control:focused
@@ -94,6 +144,8 @@ static Selector *initWithRule(Selector *self, const char *rule) {
 
 		self->sequences = $$(SelectorSequence, parse, rule);
 		assert(self->sequences->count);
+
+		self->specificity = specificity(self);
 	}
 
 	return self;
@@ -221,6 +273,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->hash = hash;
 	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
 
+	((SelectorInterface *) clazz->def->interface)->compareTo = compareTo;
 	((SelectorInterface *) clazz->def->interface)->initWithRule = initWithRule;
 	((SelectorInterface *) clazz->def->interface)->parse = parse;
 	((SelectorInterface *) clazz->def->interface)->select = select;
