@@ -108,6 +108,8 @@ static void render(WindowController *self) {
 
 	if (self->viewController) {
 
+		$(self->theme, apply, self->viewController->view);
+
 		$(self->viewController->view, layoutIfNeeded);
 
 		$(self->viewController->view, draw, self->renderer);
@@ -162,14 +164,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 	} else {
 		View *firstResponder = $(self, firstResponder, event);
 		if (firstResponder) {
-
-			const int priority = event->type == SDL_MOUSEMOTION ? SDL_LOG_PRIORITY_VERBOSE : SDL_LOG_PRIORITY_DEBUG;
-			if (MVC_LogEnabled(priority)) {
-				String *desc = $((Object *) firstResponder, description);
-				MVC_LogMessage(priority, "Event type %d -> %s\n", event->type, desc->chars);
-				release(desc);
-			}
-
 			$(firstResponder, respondToEvent, event);
 		} else if (self->viewController) {
 			$(self->viewController, respondToEvent, event);
@@ -197,15 +191,6 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 	}
 }
 
-static void setTheme_recurse(const Array *array, ident obj, ident data) {
-
-	View *view = (View *) obj;
-
-	view->needsLayout = true;
-
-	$((Array *) view->subviews, enumerateObjects, setTheme_recurse, NULL);
-}
-
 /**
  * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
  * @memberof WindowController
@@ -220,10 +205,6 @@ static void setTheme(WindowController *self, Theme *theme) {
 			self->theme = retain(theme);
 		} else {
 			self->theme = NULL;
-		}
-
-		if (self->viewController) {
-			setTheme_recurse(NULL, self->viewController->view, NULL);
 		}
 	}
 }

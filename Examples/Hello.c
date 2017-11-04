@@ -57,6 +57,10 @@ int main(int argc, char *argv[]) {
 
 	$(windowController, setViewController, viewController);
 
+	Theme *theme = $$(Theme, themeWithContentsOfFile, EXAMPLES"/Theme.json");
+
+	$(windowController, setTheme, theme);
+
 	while (true) {
 		SDL_Event event;
 
@@ -78,6 +82,7 @@ int main(int argc, char *argv[]) {
 		SDL_GL_SwapWindow(window);
 	}
 
+	release(theme);
 	release(viewController);
 	release(windowController);
 

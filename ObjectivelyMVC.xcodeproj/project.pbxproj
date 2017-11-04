@@ -153,6 +153,7 @@
 		CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9351671F9B6ED000B46882 /* SelectorSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */; };
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CEA8FC1B1FAD4D02002CCB08 /* Theme.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE8819881F8F9EED000D5AB7 /* Theme.json */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
@@ -225,6 +226,7 @@
 			dstSubfolderSpec = 7;
 			files = (
 				CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */,
+				CEA8FC1B1FAD4D02002CCB08 /* Theme.json in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

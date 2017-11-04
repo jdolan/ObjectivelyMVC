@@ -108,22 +108,6 @@ struct ThemeInterface {
 	void (*apply)(const Theme *self, View *view);
 
 	/**
-	 * @static
-	 * @fn Theme *Theme::currentTheme(void)
-	 * @return The current Theme.
-	 * @memberof Theme
-	 */
-	Theme *(*currentTheme)(void);
-
-	/**
-	 * @static
-	 * @fn Theme *Theme::defaultTheme(void)
-	 * @return The default Theme.
-	 * @memberof Theme
-	 */
-	Theme *(*defaultTheme)(void);
-
-	/**
 	 * @fn Theme *Theme::init(Theme *self)
 	 * @brief Initializes this Theme.
 	 * @param self The Theme.
@@ -140,15 +124,6 @@ struct ThemeInterface {
 	 * @memberof Theme
 	 */
 	void (*removeStyle)(Theme *self, Style *style);
-
-	/**
-	 * @static
-	 * @fn void Theme::setCurrentTheme(Theme *theme)
-	 * @brief Sets the current Theme.
-	 * @param theme The Theme.
-	 * @memberof Theme
-	 */
-	void (*setCurrentTheme)(Theme *theme);
 
 	/**
 	 * @static

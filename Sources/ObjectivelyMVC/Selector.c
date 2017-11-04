@@ -55,7 +55,7 @@ static int hash(const Object *self) {
 
 	Selector *this = (Selector *) self;
 
-	return $((Object *) this->rule, hash);
+	return HashForCString(HASH_SEED, this->rule);
 }
 
 /**
@@ -72,7 +72,7 @@ static _Bool isEqual(const Object *self, const Object *other) {
 		const Selector *this = (Selector *) self;
 		const Selector *that = (Selector *) other;
 
-		return $((Object *) this->rule, isEqual, (Object *) that->rule);
+		return strcmp(this->rule, that->rule);
 	}
 
 	return false;

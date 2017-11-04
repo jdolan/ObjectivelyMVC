@@ -70,7 +70,7 @@ static void addStyle(Theme *self, Style *style) {
 		$(self->styles, setObjectForKey, style, selector);
 	}
 
-	$(self->selectors, sort, addStyle_selectorsComparator);
+	//$(self->selectors, sort, addStyle_selectorsComparator);
 }
 
 /**
@@ -103,10 +103,18 @@ static void addStylesheet(Theme *self, const Dictionary *stylesheet) {
 }
 
 /**
- * @brief ArrayEnumerator for apply recursion.
+ * @brief DictionaryEnumerator for apply.
  */
-static void apply_recurse(const Array *array, ident obj, ident data) {
-	$((Theme *) data, apply, (View *) obj);
+static void select(const Dictionary *array, ident obj, ident key, ident data) {
+
+	Array *selection = $((Selector *) key, select, data);
+
+	for (size_t i = 0; i < selection->count; i++) {
+		View *view = $(selection, objectAtIndex, i);
+		$(view, applyStyle, obj);
+	}
+
+	release(selection);
 }
 
 /**
@@ -114,51 +122,8 @@ static void apply_recurse(const Array *array, ident obj, ident data) {
  * @memberof Theme
  */
 static void apply(const Theme *self, View *view) {
-
-	assert(view);
-
-	if (view->needsLayout) {
-
-//		const Array *selectors = (Array *) self->selectors;
-//		for (size_t i = 0; i < selectors->count; i++) {
-//
-//			const Selector *selector = $(selectors, objectAtIndex, i);
-//			if ($(selector, matches, view)) {
-//
-//				const Style *style = $((Dictionary *) self->styles, objectForKey, (ident) selector);
-//				assert(style);
-//
-//				$(view, applyStyle, style);
-//			}
-//		}
-	}
-
-	$((Array *) view->subviews, enumerateObjects, apply_recurse, (ident) self);
+	$((Dictionary *) self->styles, enumerateObjectsAndKeys, select, view);
 }
-
-static Theme *_currentTheme;
-
-/**
- * @fn Theme *Theme::currentTheme(void)
- * @memberof Theme
- */
-static Theme *currentTheme(void) {
-
-	if (_currentTheme == NULL) {
-		_currentTheme = $$(Theme, defaultTheme);
-	}
-
-	return _currentTheme;
-}
-
-/**
- * @fn Theme *Theme::defaultTheme(void)
- * @memberof Theme
- */
-static Theme *defaultTheme(void) {
-	return $(alloc(Theme), init);
-}
-
 
 /**
  * @fn Theme *Theme::init(Theme *self)
@@ -193,23 +158,6 @@ static void removeStyle(Theme *self, Style *style) {
 
 		$(self->selectors, removeObject, selector);
 		$(self->styles, removeObjectForKey, selector);
-	}
-}
-
-/**
- * @fn void Theme::setCurrentTheme(Theme *theme)
- * @memberof Theme
- */
-static void setCurrentTheme(Theme *theme) {
-
-	if (theme != _currentTheme) {
-		release(_currentTheme);
-
-		if (theme) {
-			_currentTheme = retain(theme);
-		} else {
-			_currentTheme = NULL;
-		}
 	}
 }
 
@@ -250,11 +198,9 @@ static Theme *themeWithData(const Data *data) {
 static Theme *themeWithDictionary(const Dictionary *dictionary) {
 
 	Theme *theme = $(alloc(Theme), init);
+	assert(theme);
 
-	if (theme) {
-		$(theme, addStylesheet, dictionary);
-	}
-
+	$(theme, addStylesheet, dictionary);
 	return theme;
 }
 
@@ -270,11 +216,8 @@ static void initialize(Class *clazz) {
 	((ThemeInterface *) clazz->def->interface)->addStyle = addStyle;
 	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
 	((ThemeInterface *) clazz->def->interface)->apply = apply;
-	((ThemeInterface *) clazz->def->interface)->currentTheme = currentTheme;
-	((ThemeInterface *) clazz->def->interface)->defaultTheme = defaultTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
 	((ThemeInterface *) clazz->def->interface)->removeStyle = removeStyle;
-	((ThemeInterface *) clazz->def->interface)->setCurrentTheme = setCurrentTheme;
 	((ThemeInterface *) clazz->def->interface)->themeWithContentsOfFile = themeWithContentsOfFile;
 	((ThemeInterface *) clazz->def->interface)->themeWithData = themeWithData;
 	((ThemeInterface *) clazz->def->interface)->themeWithDictionary = themeWithDictionary;

@@ -157,6 +157,7 @@ struct View {
 
 	/**
 	 * @brief The class names.
+	 * @see Style
 	 */
 	MutableArray *classNames;
 

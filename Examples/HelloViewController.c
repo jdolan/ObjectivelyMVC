@@ -253,11 +253,8 @@ static void loadView(ViewController *self) {
 		MakeOutlet("hueColorPicker", &this->hueColorPicker)
 	);
 
-	#ifndef EXAMPLES
-	# define EXAMPLES "."
-	#endif
-
-	this->panel = (Panel *) $$(View, viewWithContentsOfFile, EXAMPLES"/HelloViewController.json", outlets);
+	const char *path = EXAMPLES"/HelloViewController.json";
+	this->panel = (Panel *) $$(View, viewWithContentsOfFile, path, outlets);
 
 	$(self->view, addSubview, (View *) this->panel);
 
@@ -296,7 +293,6 @@ static void loadView(ViewController *self) {
 	this->rgbColorPicker->delegate.didPickColor = didPickRGBColor;
 	this->hsvColorPicker->delegate.didPickColor = didPickHSVColor;
 	this->hueColorPicker->delegate.didPickColor = didPickHueColor;
-
 }
 
 #pragma mark - Class lifecycle

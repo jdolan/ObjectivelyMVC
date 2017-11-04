@@ -1,15 +1,16 @@
 {
   "*": {
-    "font": "Coda"
+    "font": "Coda",
+    "backgroundColor": "AliceBlue"
   },
   "Control": {
-    "backgroundColor": "#A9A9A9F0"
+    "backgroundColor": "Red"
   },
   "Control:highlighted": {
-    "backgroundColor": "#CDCDCDFF"
+    "backgroundColor": "GreenYellow"
   },
   "Control:disabled": {
-    "color": "#DDDDDDFF"
+    "color": "SkyBlue"
   },
   "Control:selected": {
     "backgroundColor": "#484848FF"

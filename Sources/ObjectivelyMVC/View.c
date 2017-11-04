@@ -726,12 +726,6 @@ static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
 static void layoutIfNeeded(View *self) {
 
 	if (self->needsLayout) {
-
-		Theme *theme = $$(Theme, currentTheme);
-		if (theme) {
-			$(theme, apply, self);
-		}
-
 		$(self, layoutSubviews);
 	}
 

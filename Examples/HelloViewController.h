@@ -25,6 +25,10 @@
 
 #include <ObjectivelyMVC/ViewController.h>
 
+#ifndef EXAMPLES
+# define EXAMPLES "."
+#endif
+
 /**
  * @file
  *

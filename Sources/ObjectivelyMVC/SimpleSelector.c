@@ -95,7 +95,7 @@ static Array *parse(const char *sequence) {
 	const char *delim = sequence;
 	while (*c) {
 		const size_t size = strcspn(c, "*.#:");
-		if (size) {
+		//if (size) {
 			char *s = calloc(1, size + 1);
 			assert(s);
 
@@ -113,7 +113,7 @@ static Array *parse(const char *sequence) {
 
 			release(simpleSelector);
 			free(s);
-		}
+		//}
 
 		c += size;
 		c += strspn(c, "*.#:");
