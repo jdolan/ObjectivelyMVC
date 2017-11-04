@@ -100,13 +100,6 @@ typedef enum {
 	ViewPositionAfter = 1
 } ViewPosition;
 
-/**
- * @brief A function type for View enumeration
- * @param view The View.
- * @param data User data.
- */
-typedef void (*ViewEnumerator)(View *view, ident data);
-
 typedef struct ViewInterface ViewInterface;
 
 /**

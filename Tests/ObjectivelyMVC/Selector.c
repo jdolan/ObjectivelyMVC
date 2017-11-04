@@ -34,6 +34,7 @@ START_TEST(selector)
 	ck_assert_ptr_ne(NULL, selector);
 	ck_assert_ptr_eq(_Selector(), classof(selector));
 	ck_assert_int_eq(3, selector->sequences->count);
+	ck_assert_int_eq(122, selector->specificity);
 
 	SelectorSequence *selectorSequence;
 	SimpleSelector *simpleSelector;
@@ -77,6 +78,20 @@ START_TEST(selector)
 
 } END_TEST
 
+START_TEST(compareTo)
+{
+	Selector *a = $(alloc(Selector), initWithRule, "#id Type .class");
+	ck_assert(a);
+	ck_assert_int_eq(111, a->specificity);
+
+	Selector *b = $(alloc(Selector), initWithRule, "Type .class:pseudo");
+	ck_assert(b);
+	ck_assert_int_eq(21, b->specificity);
+
+	ck_assert_int_eq(OrderDescending, $(a, compareTo, b));
+
+} END_TEST
+
 START_TEST(_select)
 {
 	View *root = $(alloc(View), initWithFrame, NULL);
@@ -111,6 +126,7 @@ int main(int argc, char **argv) {
 
 	TCase *tcase = tcase_create("selector");
 	tcase_add_test(tcase, selector);
+	tcase_add_test(tcase, compareTo);
 	tcase_add_test(tcase, _select);
 
 	Suite *suite = suite_create("selector");

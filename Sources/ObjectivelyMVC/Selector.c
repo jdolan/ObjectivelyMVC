@@ -121,13 +121,31 @@ static Order compareTo(const Selector *self, const Selector *other) {
 
 	assert(other);
 
-	if (self->specificity > other->specificity) {
-		return OrderDescending;
-	} else if (self->specificity < other->specificity) {
+	if (self->specificity < other->specificity) {
 		return OrderAscending;
+	} else if (self->specificity > other->specificity) {
+		return OrderDescending;
 	}
 
 	return OrderSame;
+}
+
+/**
+ * @fn void Selector::enumerateSelection(const Selector *self, View *view, ViewEnumerator enumerator, ident data)
+ * @memberof Selector
+ */
+static void enumerateSelection(const Selector *self, View *view, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	Array *selection = $(self, select, view);
+	assert(selection);
+
+	for (size_t i = 0; i < selection->count; i++) {
+		enumerator($(selection, objectAtIndex, i), data);
+	}
+	
+	release(selection);
 }
 
 /**
@@ -273,6 +291,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->hash = hash;
 	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
 
+	((SelectorInterface *) clazz->def->interface)->enumerateSelection = enumerateSelection;
 	((SelectorInterface *) clazz->def->interface)->compareTo = compareTo;
 	((SelectorInterface *) clazz->def->interface)->initWithRule = initWithRule;
 	((SelectorInterface *) clazz->def->interface)->parse = parse;

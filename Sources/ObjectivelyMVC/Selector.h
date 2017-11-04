@@ -94,6 +94,17 @@ struct SelectorInterface {
 	Order (*compareTo)(const Selector *self, const Selector *other);
 
 	/**
+	 * @fn void Selector::enumerateSelection(const Selector *self, View *view, ViewEnumerator enumerator, ident data)
+	 * @brief Selects from `view` and applies the given ViewEnumerator to all matched Views.
+	 * @param self The Selector.
+	 * @param view The View to `select` from.
+	 * @param enumerator The ViewEnumerator to apply to matched Views.
+	 * @param data User data.
+	 * @memberof Selector
+	 */
+	void (*enumerateSelection)(const Selector *self, View *view, ViewEnumerator enumerator, ident data);
+
+	/**
 	 * @fn Selector *Selector::initWithRule(Selector *self, const char *rule)
 	 * @brief Initializes this Selector with the given rule.
 	 * @param self The Selector.

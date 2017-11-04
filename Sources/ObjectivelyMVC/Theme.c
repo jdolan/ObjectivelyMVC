@@ -70,7 +70,7 @@ static void addStyle(Theme *self, Style *style) {
 		$(self->styles, setObjectForKey, style, selector);
 	}
 
-	//$(self->selectors, sort, addStyle_selectorsComparator);
+	$(self->selectors, sort, addStyle_selectorsComparator);
 }
 
 /**
@@ -103,18 +103,10 @@ static void addStylesheet(Theme *self, const Dictionary *stylesheet) {
 }
 
 /**
- * @brief DictionaryEnumerator for apply.
+ * @brief ViewEnumerator for apply.
  */
-static void select(const Dictionary *array, ident obj, ident key, ident data) {
-
-	Array *selection = $((Selector *) key, select, data);
-
-	for (size_t i = 0; i < selection->count; i++) {
-		View *view = $(selection, objectAtIndex, i);
-		$(view, applyStyle, obj);
-	}
-
-	release(selection);
+static void apply_enumerateSelection(View *view, ident data) {
+	$(view, applyStyle, data);
 }
 
 /**
@@ -122,7 +114,17 @@ static void select(const Dictionary *array, ident obj, ident key, ident data) {
  * @memberof Theme
  */
 static void apply(const Theme *self, View *view) {
-	$((Dictionary *) self->styles, enumerateObjectsAndKeys, select, view);
+
+	const Array *selectors = (Array *) self->selectors;
+	const Dictionary *styles = (Dictionary *) self->styles;
+
+	for (size_t i = 0; i < selectors->count; i++) {
+
+		const Selector *selector = $(selectors, objectAtIndex, i);
+		const Style *style = $(styles, objectForKey, (ident) selector);
+
+		$(selector, enumerateSelection, view, apply_enumerateSelection, (ident) style);
+	}
 }
 
 /**
