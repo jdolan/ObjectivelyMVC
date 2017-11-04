@@ -106,8 +106,8 @@ static Array *parse(const char *sequence) {
 
 			simpleSelector->type = simpleSelectorType(*delim);
 			assert(simpleSelector->type);
-			
-			delim += size;
+
+			delim = c + size;
 
 			$(simpleSelectors, addObject, simpleSelector);
 
