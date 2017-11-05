@@ -727,6 +727,27 @@ static void layoutIfNeeded(View *self) {
 
 	if (self->needsLayout) {
 		$(self, layoutSubviews);
+
+		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+
+			if (self->superview) {
+
+				const SDL_Rect bounds = $(self, bounds);
+				const SDL_Rect superviewBounds = $(self->superview, bounds);
+
+				if (bounds.x + bounds.w > superviewBounds.w ||
+					bounds.y + bounds.h > superviewBounds.h) {
+
+					String *this = $((Object *) self, description);
+					String *that = $((Object *) self->superview, description);
+
+					MVC_LogDebug("%s exceeds superview bounds %s\n", this->chars, that->chars);
+
+					release(this);
+					release(that);
+				}
+			}
+		}
 	}
 
 	self->needsLayout = false;
