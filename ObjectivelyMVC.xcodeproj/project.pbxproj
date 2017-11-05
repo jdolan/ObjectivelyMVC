@@ -153,7 +153,6 @@
 		CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9351671F9B6ED000B46882 /* SelectorSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */; };
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEA8FC1B1FAD4D02002CCB08 /* Theme.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE8819881F8F9EED000D5AB7 /* Theme.json */; };
 		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
@@ -226,7 +225,6 @@
 			dstSubfolderSpec = 7;
 			files = (
 				CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */,
-				CEA8FC1B1FAD4D02002CCB08 /* Theme.json in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,7 +363,6 @@
 		CE8819811F8CFD60000D5AB7 /* Theme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Theme.h; sourceTree = "<group>"; };
 		CE8819841F8DAC96000D5AB7 /* Style.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Style.c; sourceTree = "<group>"; };
 		CE8819851F8DAC96000D5AB7 /* Style.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Style.h; sourceTree = "<group>"; };
-		CE8819881F8F9EED000D5AB7 /* Theme.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Theme.json; sourceTree = "<group>"; };
 		CE8819891F91B094000D5AB7 /* Style.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Style.c; sourceTree = "<group>"; };
 		CE8819971F91B0BE000D5AB7 /* ObjectivelyMVC-Style */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Style"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE88199B1F9231AE000D5AB7 /* Selector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Selector.c; sourceTree = "<group>"; };
@@ -605,7 +602,6 @@
 				CE6BC16E1D79B2920070FB2D /* HelloViewController.json */,
 				CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */,
 				CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */,
-				CE8819881F8F9EED000D5AB7 /* Theme.json */,
 				CE12D42D1C4C383D00CD0B13 /* Makefile.am */,
 			);
 			path = Examples;

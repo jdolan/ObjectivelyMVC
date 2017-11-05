@@ -270,7 +270,11 @@ static void applyStyle(View *self, const Style *style) {
 		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
-		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL)
+		MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
+		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
+		MakeInlet("width", InletTypeInteger, &self->frame.w, NULL),
+		MakeInlet("x", InletTypeInteger, &self->frame.x, NULL),
+		MakeInlet("y", InletTypeInteger, &self->frame.y, NULL)
 	);
 
 	$(self, bind, inlets, (Dictionary *) style->attributes);

@@ -25,6 +25,7 @@
 
 #include <Objectively/JSONSerialization.h>
 
+#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/View.h>
 
 #define _Class _Theme
@@ -106,6 +107,18 @@ static void addStylesheet(Theme *self, const Dictionary *stylesheet) {
  * @brief ViewEnumerator for apply.
  */
 static void apply_enumerateSelection(View *view, ident data) {
+
+	if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
+
+		String *this = $((Object *) view, description);
+		String *that = $((Object *) data, description);
+
+		MVC_LogVerbose("%s -> %s\n", that->chars, this->chars);
+
+		release(this);
+		release(that);
+	}
+
 	$(view, applyStyle, data);
 }
 
@@ -125,6 +138,55 @@ static void apply(const Theme *self, View *view) {
 
 		$(selector, enumerateSelection, view, apply_enumerateSelection, (ident) style);
 	}
+}
+
+static Theme *_defaultTheme;
+
+/**
+ * @fn Theme *Theme::defaultTheme(void)
+ * @memberof Theme
+ */
+static Theme *defaultTheme(void) {
+	static Once once;
+
+	do_once(&once, {
+
+		const char *stylesheet = "{ \
+			\"Box\": { \
+				\"borderColor\": \"#dededeaa\", \
+				\"borderWidth\": 1, \
+				\"padding\": [ 10, 10, 10, 10 ] \
+			}, \
+			\"Box > Label\": { \
+				\"backgroundColor\": \"#88888844\", \
+				\"padding\": [ 0, 8, 0, 8 ], \
+				\"x\": 20, \
+			}, \
+			\"Button\": { \
+				\"backgroundColor\": \"#88888822\", \
+				\"padding\": [ 8, 8, 8, 8 ] \
+			}, \
+			\"Panel\": { \
+				\"backgroundColor\": \"#444444aa\", \
+				\"borderColor\": \"#dedede\", \
+				\"borderWidth\": 1, \
+				\"padding\": [ 12, 12, 12, 12 ] \
+			}, \
+			\"Slider\": { \
+				\"height\": 32, \
+				\"padding\": [ 8, 8, 8, 8 ] \
+			} \
+		}";
+
+		Data *data = $$(Data, dataWithBytes, (uint8_t *) stylesheet, strlen(stylesheet));
+		assert(data);
+
+		_defaultTheme = $$(Theme, themeWithData, data);
+		
+		release(data);
+	});
+
+	return _defaultTheme;
 }
 
 /**
@@ -218,11 +280,19 @@ static void initialize(Class *clazz) {
 	((ThemeInterface *) clazz->def->interface)->addStyle = addStyle;
 	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
 	((ThemeInterface *) clazz->def->interface)->apply = apply;
+	((ThemeInterface *) clazz->def->interface)->defaultTheme = defaultTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
 	((ThemeInterface *) clazz->def->interface)->removeStyle = removeStyle;
 	((ThemeInterface *) clazz->def->interface)->themeWithContentsOfFile = themeWithContentsOfFile;
 	((ThemeInterface *) clazz->def->interface)->themeWithData = themeWithData;
 	((ThemeInterface *) clazz->def->interface)->themeWithDictionary = themeWithDictionary;
+}
+
+/**
+ * @see Class::destroy(Class *)
+ */
+static void destroy(Class *clazz) {
+	release(_defaultTheme);
 }
 
 /**
@@ -240,6 +310,7 @@ Class *_Theme(void) {
 		clazz.interfaceOffset = offsetof(Theme, interface);
 		clazz.interfaceSize = sizeof(ThemeInterface);
 		clazz.initialize = initialize;
+		clazz.destroy = destroy;
 	});
 
 	return &clazz;

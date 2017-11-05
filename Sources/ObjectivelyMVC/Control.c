@@ -317,17 +317,6 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle
 		assert(self->actions);
 
 		self->style = style;
-		if (self->style == ControlStyleDefault) {
-
-			if (self->view.frame.h == 0) {
-				self->view.frame.h = DEFAULT_CONTROL_HEIGHT;
-			}
-
-			self->view.padding.top = DEFAULT_CONTROL_PADDING;
-			self->view.padding.right = DEFAULT_CONTROL_PADDING;
-			self->view.padding.bottom = DEFAULT_CONTROL_PADDING;
-			self->view.padding.left = DEFAULT_CONTROL_PADDING;
-		}
 	}
 
 	return self;

@@ -64,7 +64,7 @@ static void bindColor(const Inlet *inlet, ident obj) {
 		if (string->length) {
 
 			if (string->chars[0] == '#') {
-				color = MVC_HexToRGBA(string->chars);
+				color = MVC_HexToRGBA(string->chars + 1);
 			} else {
 				color = MVC_ColorForName(string->chars);
 			}

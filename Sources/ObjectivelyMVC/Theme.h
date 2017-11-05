@@ -108,6 +108,14 @@ struct ThemeInterface {
 	void (*apply)(const Theme *self, View *view);
 
 	/**
+	 * @static
+	 * @fn Theme *Theme::defaultTheme(void)
+	 * @return The default Theme.
+	 * @memberof Theme
+	 */
+	Theme *(*defaultTheme)(void);
+
+	/**
 	 * @fn Theme *Theme::init(Theme *self)
 	 * @brief Initializes this Theme.
 	 * @param self The Theme.

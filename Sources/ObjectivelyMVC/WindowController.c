@@ -91,6 +91,9 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
+
+		self->theme = $$(Theme, defaultTheme);
+		assert(self->theme);
 	}
 
 	return self;
@@ -111,9 +114,7 @@ static void render(WindowController *self) {
 		View *view = self->viewController->view;
 		assert(view);
 
-		if (self->theme) {
-			$(self->theme, apply, view);
-		}
+		$(self->theme, apply, view);
 
 		$(view, layoutIfNeeded);
 

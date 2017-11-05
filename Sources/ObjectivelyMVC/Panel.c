@@ -241,14 +241,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle sty
 		$((View *) self, addSubview, (View *) self->resizeHandle);
 
 		this->autoresizingMask = ViewAutoresizingContain;
-
-		this->backgroundColor = Colors.Gray;
-		this->backgroundColor.a = 224;
-		this->borderColor = Colors.DarkGray;
-		this->borderWidth = 1;
-
-		this->padding.top = this->padding.bottom = DEFAULT_PANEL_PADDING;
-		this->padding.left = this->padding.right = DEFAULT_PANEL_PADDING;
 	}
 
 	return self;

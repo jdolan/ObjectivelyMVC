@@ -210,10 +210,14 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 		self->bar->alignment = ViewAlignmentMiddleLeft;
 		self->bar->autoresizingMask = ViewAutoresizingFill;
 
+		$(self->bar, addClassName, "bar");
+
 		$((View *) self, addSubview, self->bar);
 
 		self->handle = $(alloc(Control), initWithFrame, NULL, style);
 		assert(self->handle);
+
+		$((View *) self->handle, addClassName, "handle");
 
 		$(self->bar, addSubview, (View *) self->handle);
 
