@@ -169,6 +169,14 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 	} else {
 		View *firstResponder = $(self, firstResponder, event);
 		if (firstResponder) {
+
+			const int priority = event->type == SDL_MOUSEMOTION ? SDL_LOG_PRIORITY_VERBOSE : SDL_LOG_PRIORITY_DEBUG;
+			if (MVC_LogEnabled(priority)) {
+				String *desc = $((Object *) firstResponder, description);
+				MVC_LogMessage(priority, "Event type %d -> %s\n", event->type, desc->chars);
+				release(desc);
+			}
+
 			$(firstResponder, respondToEvent, event);
 		} else if (self->viewController) {
 			$(self->viewController, respondToEvent, event);
