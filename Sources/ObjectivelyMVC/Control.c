@@ -100,6 +100,35 @@ static View *init(View *self) {
 }
 
 /**
+ * @see View::matchesSelector(Const View *, const SimpleSelector *)
+ */
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+
+	assert(simpleSelector);
+
+	const Control *this = (Control *) self;
+	const char *pattern = simpleSelector->pattern;
+
+	switch (simpleSelector->type) {
+		case SimpleSelectorTypePseudo:
+			if (strcmp("highlighted", pattern) == 0) {
+				return $(this, highlighted);
+			} else if (strcmp("disabled", pattern) == 0) {
+				return $(this, disabled);
+			} else if (strcmp("selected", pattern) == 0) {
+				return $(this, selected);
+			} else if (strcmp("focused", pattern) == 0) {
+				return $(this, focused);
+			}
+			break;
+		default:
+			break;
+	}
+
+	return super(View, self, matchesSelector, simpleSelector);
+}
+
+/**
  * @see View::render(View *, Renderer *)
  */
 static void render(View *self, Renderer *renderer) {
@@ -252,11 +281,11 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 }
 
 /**
- * @fn _Bool Control::enabled(const Control *self)
+ * @fn _Bool Control::disabled(const Control *self)
  * @memberof Control
  */
-static _Bool enabled(const Control *self) {
-	return (self->state & ControlStateDisabled) == 0;
+static _Bool disabled(const Control *self) {
+	return (self->state & ControlStateDisabled) == ControlStateDisabled;
 }
 
 /**
@@ -337,13 +366,14 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 
 	((ControlInterface *) clazz->def->interface)->actionForEvent = actionForEvent;
 	((ControlInterface *) clazz->def->interface)->addActionForEventType = addActionForEventType;
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->def->interface)->enabled = enabled;
+	((ControlInterface *) clazz->def->interface)->disabled = disabled;
 	((ControlInterface *) clazz->def->interface)->focused = focused;
 	((ControlInterface *) clazz->def->interface)->highlighted = highlighted;
 	((ControlInterface *) clazz->def->interface)->initWithFrame = initWithFrame;

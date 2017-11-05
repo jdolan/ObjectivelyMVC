@@ -173,12 +173,12 @@ struct ControlInterface {
 	_Bool (*captureEvent)(Control *self, const SDL_Event *event);
 
 	/**
-	 * @fn _Bool Control::enabled(const Control *self)
+	 * @fn _Bool Control::disabled(const Control *self)
 	 * @param self The Control.
-	 * @return True if this Control is enabled, false otherwise.
+	 * @return True if this Control is disabled, false otherwise.
 	 * @memberof Control
 	 */
-	_Bool (*enabled)(const Control *self);
+	_Bool (*disabled)(const Control *self);
 
 	/**
 	 * @fn _Bool Control::focused(const Control *self)
