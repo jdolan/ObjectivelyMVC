@@ -1118,6 +1118,7 @@ static void resize(View *self, const SDL_Size *size) {
 		self->frame.h = size->h;
 
 		self->needsLayout = true;
+		self->needsApplyConstraints = true;
 
 		$((Array *) self->subviews, enumerateObjects, resize_recurse, NULL);
 	}
