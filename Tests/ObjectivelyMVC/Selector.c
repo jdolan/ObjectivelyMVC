@@ -105,17 +105,48 @@ START_TEST(_select)
 	Panel *panel = $(alloc(Panel), initWithFrame, NULL, ControlStyleDefault);
 	$(container, addSubview, (View *) panel);
 
-	Selector *selector = $(alloc(Selector), initWithRule, "#root .container Panel");
-	ck_assert(selector);
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, "#root .container Panel");
+		ck_assert(selector);
 
-	Array *selection = $(selector, select, root);
-	ck_assert(selection);
+		Array *selection = $(selector, select, root);
+		ck_assert(selection);
 
-	ck_assert_int_eq(1, selection->count);
-	ck_assert_ptr_eq(panel, $(selection, firstObject));
+		ck_assert_int_eq(1, selection->count);
+		ck_assert_ptr_eq(panel, $(selection, firstObject));
 
-	release(selection);
-	release(selector);
+		release(selection);
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, ".container Panel");
+		ck_assert(selector);
+
+		Array *selection = $(selector, select, root);
+		ck_assert(selection);
+
+		ck_assert_int_eq(1, selection->count);
+		ck_assert_ptr_eq(panel, $(selection, firstObject));
+
+		release(selection);
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, "Panel");
+		ck_assert(selector);
+
+		Array *selection = $(selector, select, root);
+		ck_assert(selection);
+
+		ck_assert_int_eq(1, selection->count);
+		ck_assert_ptr_eq(panel, $(selection, firstObject));
+
+		release(selection);
+		release(selector);
+	}
+
 	release(panel);
 	release(container);
 	release(root);
