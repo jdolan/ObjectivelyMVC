@@ -49,6 +49,16 @@ static void dealloc(Object *self) {
 }
 
 /**
+ * @see Object::description(const Object *)
+ */
+static String *description(const Object *self) {
+
+	const Selector *this = (Selector *) self;
+
+	return str(this->rule);
+}
+
+/**
  * @see Object::hash(const Object *)
  */
 static int hash(const Object *self) {
@@ -290,6 +300,7 @@ static Array *select(const Selector *self, View *view) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->description = description;
 	((ObjectInterface *) clazz->def->interface)->hash = hash;
 	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
 

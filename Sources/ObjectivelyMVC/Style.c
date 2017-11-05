@@ -47,6 +47,16 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
+/**
+ * @see Object::description(const Object *)
+ */
+static String *description(const Object *self) {
+
+	const Style *this = (Style *) self;
+
+	return $(this->selectors, componentsJoinedByCharacters, ", ");
+}
+
 #pragma mark - Style
 
 /**
@@ -258,6 +268,7 @@ static void removeAttribute(Style *self, const char *attr) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->description = description;
 
 	((StyleInterface *) clazz->def->interface)->addAttribute = addAttribute;
 	((StyleInterface *) clazz->def->interface)->addAttributes = addAttributes;

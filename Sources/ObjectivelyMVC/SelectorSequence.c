@@ -46,6 +46,16 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
+/**
+ * @see Object::description(const Object *)
+ */
+static String *description(const Object *self) {
+
+	const SelectorSequence *this = (SelectorSequence *) self;
+
+	return str(this->sequence);
+}
+
 #pragma mark - SelectorSequence
 
 /**
@@ -145,6 +155,7 @@ static Array *parse(const char *rule) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->description = description;
 
 	((SelectorSequenceInterface *) clazz->def->interface)->initWithSequence = initWithSequence;
 	((SelectorSequenceInterface *) clazz->def->interface)->matchesView = matchesView;

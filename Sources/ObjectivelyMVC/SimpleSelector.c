@@ -47,6 +47,16 @@ static void dealloc(Object *self) {
 }
 
 /**
+ * @see Object::description(const Object *)
+ */
+static String *description(const Object *self) {
+
+	const SimpleSelector *this = (SimpleSelector *) self;
+
+	return str(this->pattern);
+}
+
+/**
  * @see Object::hash(const Object *)
  */
 static int hash(const Object *self) {
@@ -161,6 +171,7 @@ static Array *parse(const char *sequence) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->description = description;
 	((ObjectInterface *) clazz->def->interface)->hash = hash;
 	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
 
