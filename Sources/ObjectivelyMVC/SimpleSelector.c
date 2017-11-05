@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <Objectively/Hash.h>
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/SimpleSelector.h>
@@ -43,6 +44,36 @@ static void dealloc(Object *self) {
 	free(this->pattern);
 
 	super(Object, self, dealloc);
+}
+
+/**
+ * @see Object::hash(const Object *)
+ */
+static int hash(const Object *self) {
+
+	SimpleSelector *this = (SimpleSelector *) self;
+
+	return HashForCString(HASH_SEED, this->pattern);
+}
+
+/**
+ * @see Object::isEqual(const Object *, const Object *)
+ */
+static _Bool isEqual(const Object *self, const Object *other) {
+
+	if (super(Object, self, isEqual, other)) {
+		return true;
+	}
+
+	if (other && $(other, isKindOfClass, _SimpleSelector())) {
+
+		const SimpleSelector *this = (SimpleSelector *) self;
+		const SimpleSelector *that = (SimpleSelector *) other;
+
+		return strcmp(this->pattern, that->pattern) == 0;
+	}
+
+	return false;
 }
 
 #pragma mark - SimpleSelector
@@ -130,6 +161,8 @@ static Array *parse(const char *sequence) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->hash = hash;
+	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
 
 	((SimpleSelectorInterface *) clazz->def->interface)->initWithPattern = initWithPattern;
 	((SimpleSelectorInterface *) clazz->def->interface)->parse = parse;
