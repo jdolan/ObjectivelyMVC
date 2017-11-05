@@ -144,7 +144,7 @@ static void enumerateSelection(const Selector *self, View *view, ViewEnumerator 
 	for (size_t i = 0; i < selection->count; i++) {
 		enumerator($(selection, objectAtIndex, i), data);
 	}
-	
+
 	release(selection);
 }
 
@@ -260,6 +260,8 @@ static Array *_select(View *view, const Context *context) {
 				$(context->selection, addObject, view);
 				break;
 		}
+	} else {
+		$(view, enumerateSubviews, (ViewEnumerator) _select, (ident) context);
 	}
 
 	return (Array *) context->selection;
