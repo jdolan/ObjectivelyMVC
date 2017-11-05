@@ -24,6 +24,7 @@
 #pragma once
 
 #include <Objectively/Array.h>
+#include <Objectively/Set.h>
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/SelectorSequence.h>
@@ -125,13 +126,13 @@ struct SelectorInterface {
 	Array *(*parse)(const char *rules);
 
 	/**
-	 * @fn Array *Selector::select(const Selector *self, View *view)
+	 * @fn Set *Selector::select(const Selector *self, View *view)
 	 * @param self The Selector.
 	 * @param view The View.
-	 * @return The subset of `view`'s descendants that match this Selector.
+	 * @return The Set of `view`'s descendants that match this Selector.
 	 * @memberof Selector
 	 */
-	Array *(*select)(const Selector *self, View *view);
+	Set *(*select)(const Selector *self, View *view);
 };
 
 /**

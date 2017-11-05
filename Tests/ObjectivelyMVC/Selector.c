@@ -109,11 +109,11 @@ START_TEST(_select)
 		Selector *selector = $(alloc(Selector), initWithRule, "#root .container Panel");
 		ck_assert(selector);
 
-		Array *selection = $(selector, select, root);
+		Set *selection = $(selector, select, root);
 		ck_assert(selection);
 
 		ck_assert_int_eq(1, selection->count);
-		ck_assert_ptr_eq(panel, $(selection, firstObject));
+		ck_assert($(selection, containsObject, panel));
 
 		release(selection);
 		release(selector);
@@ -123,12 +123,11 @@ START_TEST(_select)
 		Selector *selector = $(alloc(Selector), initWithRule, ".container Panel");
 		ck_assert(selector);
 
-		Array *selection = $(selector, select, root);
+		Set *selection = $(selector, select, root);
 		ck_assert(selection);
 
 		ck_assert_int_eq(1, selection->count);
-		ck_assert_ptr_eq(panel, $(selection, firstObject));
-
+		ck_assert($(selection, containsObject, panel));
 		release(selection);
 		release(selector);
 	}
@@ -137,11 +136,41 @@ START_TEST(_select)
 		Selector *selector = $(alloc(Selector), initWithRule, "Panel");
 		ck_assert(selector);
 
-		Array *selection = $(selector, select, root);
+		Set *selection = $(selector, select, root);
 		ck_assert(selection);
 
 		ck_assert_int_eq(1, selection->count);
-		ck_assert_ptr_eq(panel, $(selection, firstObject));
+		ck_assert($(selection, containsObject, panel));
+
+		release(selection);
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, ".container");
+		ck_assert(selector);
+
+		Set *selection = $(selector, select, root);
+		ck_assert(selection);
+
+		ck_assert_int_eq(1, selection->count);
+		ck_assert($(selection, containsObject, container));
+
+		release(selection);
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, "*");
+		ck_assert(selector);
+
+		Set *selection = $(selector, select, root);
+		ck_assert(selection);
+
+		ck_assert_int_le(3, selection->count);
+		ck_assert($(selection, containsObject, root));
+		ck_assert($(selection, containsObject, container));
+		ck_assert($(selection, containsObject, panel));
 
 		release(selection);
 		release(selector);

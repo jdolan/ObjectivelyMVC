@@ -27,6 +27,7 @@
 
 #include <Objectively/Hash.h>
 #include <Objectively/MutableArray.h>
+#include <Objectively/MutableSet.h>
 
 #include <ObjectivelyMVC/Selector.h>
 #include <ObjectivelyMVC/View.h>
@@ -148,13 +149,17 @@ static void enumerateSelection(const Selector *self, View *view, ViewEnumerator 
 
 	assert(enumerator);
 
-	Array *selection = $(self, select, view);
+	Set *selection = $(self, select, view);
 	assert(selection);
 
-	for (size_t i = 0; i < selection->count; i++) {
-		enumerator($(selection, objectAtIndex, i), data);
+	Array *array = $(selection, allObjects);
+	assert(array);
+
+	for (size_t i = 0; i < array->count; i++) {
+		enumerator($(array, objectAtIndex, i), data);
 	}
 
+	release(array);
 	release(selection);
 }
 
@@ -218,13 +223,13 @@ static Array *parse(const char *rules) {
 typedef struct {
 	const Selector *selector;
 	const SelectorSequence **sequence;
-	MutableArray *selection;
+	MutableSet *selection;
 } Context;
 
 /**
  * @brief Recursively selects Views by iterating the SelectorSequences in the given Context.
  */
-static Array *_select(View *view, const Context *context) {
+static Set *_select(View *view, const Context *context) {
 
 	const SelectorSequence *sequence = *context->sequence;
 
@@ -270,25 +275,25 @@ static Array *_select(View *view, const Context *context) {
 				$(context->selection, addObject, view);
 				break;
 		}
-	} else {
-		$(view, enumerateSubviews, (ViewEnumerator) _select, (ident) context);
 	}
 
-	return (Array *) context->selection;
+	$(view, enumerateSubviews, (ViewEnumerator) _select, (ident) context);
+
+	return (Set *) context->selection;
 }
 
 /**
  * @fn Array *Selector::select(const Selector *self, View *view)
  * @memberof Selector
  */
-static Array *select(const Selector *self, View *view) {
+static Set *select(const Selector *self, View *view) {
 
 	assert(view);
 
 	return _select(view, &(Context) {
 		.selector = self,
 		.sequence = (const SelectorSequence **) self->sequences->elements,
-		.selection = $$(MutableArray, array)
+		.selection = $$(MutableSet, set)
 	});
 }
 
@@ -309,7 +314,6 @@ static void initialize(Class *clazz) {
 	((SelectorInterface *) clazz->def->interface)->initWithRule = initWithRule;
 	((SelectorInterface *) clazz->def->interface)->parse = parse;
 	((SelectorInterface *) clazz->def->interface)->select = select;
-
 }
 
 /**
