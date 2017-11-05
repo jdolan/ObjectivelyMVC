@@ -72,7 +72,7 @@ static _Bool isEqual(const Object *self, const Object *other) {
 		const Selector *this = (Selector *) self;
 		const Selector *that = (Selector *) other;
 
-		return strcmp(this->rule, that->rule);
+		return strcmp(this->rule, that->rule) == 0;
 	}
 
 	return false;
