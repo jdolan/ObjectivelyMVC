@@ -111,8 +111,12 @@ static void render(WindowController *self) {
 		View *view = self->viewController->view;
 		assert(view);
 
-		$(self->theme, apply, view);
+		if (self->theme) {
+			$(self->theme, apply, view);
+		}
+
 		$(view, layoutIfNeeded);
+
 		$(view, draw, self->renderer);
 
 		View *firstResponder = MVC_FirstResponder(self->window);
