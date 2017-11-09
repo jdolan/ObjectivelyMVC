@@ -56,7 +56,6 @@ struct Style {
 
 	/**
 	 * The attributes.
-	 * @see View+JSON.h
 	 */
 	MutableDictionary *attributes;
 
@@ -216,6 +215,16 @@ struct StyleInterface {
 	 * @memberof Style
 	 */
 	Style *(*initWithRules)(Style *self, const char *rules);
+
+	/**
+	 * @static
+	 * @fn Array *Style::parse(const char *css)
+	 * @brief Parses the null-terminated C string of CSS definitions into an Array of Styles.
+	 * @param css The CSS definitions.
+	 * @return An Array of Styles.
+	 * @memberof Style
+	 */
+	Array *(*parse)(const char *css);
 
 	/**
 	 * @fn void Style::removeAttribute(Style *self, const char *attr)

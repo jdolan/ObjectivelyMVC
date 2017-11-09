@@ -24,7 +24,6 @@
 #pragma once
 
 #include <Objectively/Array.h>
-#include <Objectively/String.h>
 
 #include <ObjectivelyMVC/Types.h>
 

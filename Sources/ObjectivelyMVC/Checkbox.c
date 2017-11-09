@@ -177,7 +177,7 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 	if (self) {
 
 		self->control.view.autoresizingMask = ViewAutoresizingContain;
-
+ 
 		self->box = $(alloc(Control), initWithFrame, frame, style);
 		assert(self->box);
 
@@ -194,17 +194,6 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 
 		if (self->control.style == ControlStyleDefault) {
 			self->box->bevel = ControlBevelInset;
-
-			self->box->view.backgroundColor = Colors.Charcoal;
-			self->box->view.backgroundColor.a = 48;
-
-			self->box->view.frame.w = DEFAULT_CHECKBOX_SIZE;
-			self->box->view.frame.h = DEFAULT_CHECKBOX_SIZE;
-
-			self->box->view.padding.top = DEFAULT_CHECKBOX_PADDING;
-			self->box->view.padding.right = DEFAULT_CHECKBOX_PADDING;
-			self->box->view.padding.bottom = DEFAULT_CHECKBOX_PADDING;
-			self->box->view.padding.left = DEFAULT_CHECKBOX_PADDING;
 		}
 	}
 

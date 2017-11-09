@@ -89,6 +89,7 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 		const Uint32 flags = SDL_GetWindowFlags(self->window);
 		assert(flags & SDL_WINDOW_OPENGL);
 
+
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
 
@@ -218,7 +219,7 @@ static void setTheme(WindowController *self, Theme *theme) {
 		if (theme) {
 			self->theme = retain(theme);
 		} else {
-			self->theme = NULL;
+			self->theme = $$(Theme, defaultTheme);
 		}
 	}
 }

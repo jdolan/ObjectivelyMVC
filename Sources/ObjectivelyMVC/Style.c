@@ -63,12 +63,17 @@ static String *description(const Object *self) {
  * @fn void Style::addAttribute(Style *self, const char *attr, ident value)
  * @memberof Style
  */
-static void addAttribute(Style *self, const char *attribute, ident value) {
+static void addAttribute(Style *self, const char *attr, ident value) {
 
-	assert(attribute);
+	assert(attr);
 	assert(value);
 
-	$(self->attributes, setObjectForKeyPath, value, attribute);
+	char *key = strtrim(attr);
+	assert(key);
+
+	$(self->attributes, setObjectForKeyPath, value, key);
+
+	free(key);
 }
 
 /**
@@ -253,6 +258,119 @@ static Style *initWithRules(Style *self, const char *rules) {
 }
 
 /**
+ *
+ */
+static ident parseValue(String *string) {
+
+	ident value = NULL;
+
+	StringReader *reader = $(alloc(StringReader), initWithString, string);
+	assert(reader);
+
+	const Unicode *charset = L", \n\t";
+	Unicode stop;
+
+	String *token = $(reader, readToken, charset, &stop);
+	if (token) {
+		if (stop == -1) {
+
+			NumberFormatter *formatter = $(alloc(NumberFormatter), initWithFormat, NULL);
+			assert(formatter);
+
+			Number *number = $(formatter, numberFromString, token);
+			if (number) {
+				value = number;
+			} else if (strcmp("true", token->chars) == 0) {
+				value = $$(Boole, True);
+			} else if (strcmp("false", token->chars) == 0) {
+				value = $$(Boole, False);
+			} else {
+				value = $((Object *) token, copy);
+			}
+
+			release(formatter);
+
+		} else {
+			value = $$(MutableArray, array);
+
+			while (token) {
+
+				$((MutableArray *) value, addObject, parseValue(token));
+				release(token);
+
+				token = $(reader, readToken, charset, NULL);
+			}
+		}
+	}
+
+	release(token);
+	release(reader);
+
+	return value;
+}
+
+/**
+ * @fn Array *Style::parse(const char *css)
+ * @memberof Style
+ */
+static Array *parse(const char *css) {
+
+	MutableArray *styles = $$(MutableArray, array);
+	assert(styles);
+
+	StringReader *reader = $(alloc(StringReader), initWithCharacters, css);
+	assert(reader);
+
+	Style *style = NULL;
+	String *attr = NULL;
+	while (true) {
+
+		Unicode stop;
+		String *token = $(reader, readToken, L"{:;}", &stop);
+		if (token) {
+			switch (stop) {
+				case '{':
+					style = $(alloc(Style), initWithRules, token->chars);
+					assert(style);
+					break;
+				case ':':
+					if (style) {
+						attr = retain(token);
+					}
+					break;
+				case ';':
+					if (style && attr) {
+						ident value = parseValue(token);
+
+						$(style, addAttribute, attr->chars, value);
+
+						release(attr);
+						release(value);
+					}
+					attr = NULL;
+
+					break;
+				case '}':
+					if (style) {
+						$(styles, addObject, style);
+
+						release(style);
+					}
+					style = NULL;
+
+					break;
+			}
+
+			release(token);
+		} else {
+			break;
+		}
+	}
+
+	return (Array *) styles;
+}
+
+/**
  * @fn void Style::removeAttribute(Style *self, const char *attr)
  * @memberof Style
  */
@@ -284,6 +402,7 @@ static void initialize(Class *clazz) {
 	((StyleInterface *) clazz->def->interface)->addSizeAttribute = addSizeAttribute;
 	((StyleInterface *) clazz->def->interface)->attributeValue = attributeValue;
 	((StyleInterface *) clazz->def->interface)->initWithRules = initWithRules;
+	((StyleInterface *) clazz->def->interface)->parse = parse;
 	((StyleInterface *) clazz->def->interface)->removeAttribute = removeAttribute;
 }
 

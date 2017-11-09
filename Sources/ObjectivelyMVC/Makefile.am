@@ -39,6 +39,7 @@ pkginclude_HEADERS = \
 	Slider.h \
 	StackView.h \
 	Style.h \
+	Stylesheet.h \
 	TableCellView.h \
 	TableColumn.h \
 	TableHeaderCellView.h \
@@ -93,6 +94,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Slider.c \
 	StackView.c \
 	Style.c \
+	Stylesheet.c \
 	TableCellView.c \
 	TableColumn.c \
 	TableHeaderCellView.c \

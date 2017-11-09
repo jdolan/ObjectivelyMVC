@@ -97,7 +97,8 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
-		self->contentView->spacing = DEFAULT_BOX_SPACING;
+		$((View *) self->contentView, addClassName, "content");
+
 		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
 
 		$((View *) self, addSubview, (View *) self->contentView);

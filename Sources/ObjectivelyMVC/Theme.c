@@ -25,8 +25,7 @@
 
 #include <Objectively/JSONSerialization.h>
 
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/Theme.h>
 
 #define _Class _Theme
 
@@ -39,8 +38,7 @@ static void dealloc(Object *self) {
 
 	Theme *this = (Theme *) self;
 
-	release(this->selectors);
-	release(this->styles);
+	release(this->stylesheets);
 
 	super(Object, self, dealloc);
 }
@@ -48,78 +46,18 @@ static void dealloc(Object *self) {
 #pragma mark - Theme
 
 /**
- * @brief Comparator for Selector sorting.
- */
-static Order addStyle_selectorsComparator(const ident a, const ident b) {
-	return $((Selector *) a, compareTo, (Selector *) b);
-}
-
-/**
- * @fn void Theme::addStyle(Theme *self, Style *style)
+ * @fn void Theme::addStylesheet(Theme *self, Stylesheet *stylesheet)
  * @memberof Theme
  */
-static void addStyle(Theme *self, Style *style) {
-
-	assert(style);
-
-	const Array *selectors = (Array *) style->selectors;
-	for (size_t i = 0; i < selectors->count; i++) {
-
-		Selector *selector = $(selectors, objectAtIndex, i);
-
-		$(self->selectors, addObject, selector);
-		$(self->styles, setObjectForKey, style, selector);
-	}
-
-	$(self->selectors, sort, addStyle_selectorsComparator);
+static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
+	$(self->stylesheets, addObject, stylesheet);
 }
 
 /**
- * @brief DictionaryEnumerator for addStylesheet.
+ * @brief ArrayEnumerator for apply.
  */
-static void addStylesheet_enumerator(const Dictionary *dictionary, ident obj, ident key, ident data) {
-
-	const String *rules = cast(String, key);
-	const Dictionary *attributes = cast(Dictionary, obj);
-
-	Style *style = $(alloc(Style), initWithRules, rules->chars);
-	assert(style);
-
-	$(style, addAttributes, attributes);
-
-	$((Theme *) data, addStyle, style);
-
-	release(style);
-}
-
-/**
- * @fn void Theme::addStylesheet(Theme *self, const Dictionary *stylesheet)
- * @memberof Theme
- */
-static void addStylesheet(Theme *self, const Dictionary *stylesheet) {
-
-	if (stylesheet) {
-		$(stylesheet, enumerateObjectsAndKeys, addStylesheet_enumerator, self);
-	}
-}
-
-/**
- * @brief ViewEnumerator for apply.
- */
-static void apply_enumerateSelection(View *view, ident data) {
-
-	if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
-
-		String *this = $((Object *) view, description);
-		String *that = $((Object *) data, description);
-
-		MVC_LogVerbose("%s -> %s\n", that->chars, this->chars);
-
-		release(this);
-		release(that);
-	}
-
-	$(view, applyStyle, data);
+static void apply_enumerate(const Array *array, ident obj, ident data) {
+	$((Stylesheet *) obj, apply, data);
 }
 
 /**
@@ -127,17 +65,7 @@ static void apply_enumerateSelection(View *view, ident data) {
  * @memberof Theme
  */
 static void apply(const Theme *self, View *view) {
-
-	const Array *selectors = (Array *) self->selectors;
-	const Dictionary *styles = (Dictionary *) self->styles;
-
-	for (size_t i = 0; i < selectors->count; i++) {
-
-		const Selector *selector = $(selectors, objectAtIndex, i);
-		const Style *style = $(styles, objectForKey, (ident) selector);
-
-		$(selector, enumerateSelection, view, apply_enumerateSelection, (ident) style);
-	}
+	$((Array *) self->stylesheets, enumerateObjects, apply_enumerate, view);
 }
 
 static Theme *_defaultTheme;
@@ -151,39 +79,63 @@ static Theme *defaultTheme(void) {
 
 	do_once(&once, {
 
-		const char *stylesheet = "{ \
-			\"Box\": { \
-				\"borderColor\": \"#dededeaa\", \
-				\"borderWidth\": 1, \
-				\"padding\": [ 10, 10, 10, 10 ] \
-			}, \
-			\"Box > Label\": { \
-				\"backgroundColor\": \"#88888844\", \
-				\"padding\": [ 0, 8, 0, 8 ], \
-				\"x\": 20, \
-			}, \
-			\"Button\": { \
-				\"backgroundColor\": \"#88888822\", \
-				\"padding\": [ 8, 8, 8, 8 ] \
-			}, \
-			\"Panel\": { \
-				\"backgroundColor\": \"#444444aa\", \
-				\"borderColor\": \"#dedede\", \
-				\"borderWidth\": 1, \
-				\"padding\": [ 12, 12, 12, 12 ] \
-			}, \
-			\"Slider\": { \
-				\"height\": 32, \
-				\"padding\": [ 8, 8, 8, 8 ] \
+		_defaultTheme = $(alloc(Theme), init);
+		assert(_defaultTheme);
+
+		Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters, "\
+			Box: { \
+				borderColor: #dededeaa; \
+				borderWidth: 1; \
+				padding: [ 10, 10, 10, 10 ]; \
 			} \
-		}";
+			Box > Label: { \
+				backgroundColor: #88888844; \
+				padding: [ 0, 8, 0, 8 ]; \
+				x: 20; \
+			} \
+			Box .content: { \
+				spacing: 4; \
+			} \
+			Button: { \
+				backgroundColor: #88888822; \
+				padding: [ 8, 8, 8, 8 ]; \
+			} \
+			Checkbox > Control: { \
+				backgroundColor: #22222266; \
+				frame: [ 0, 0, 18, 18 ]; \
+				padding: [ 4, 4, 4, 4 ]; \
+			} \
+			CollectionItemView: { \
+				backgroundColor: #22222266; \
+				borderColor: #999999aa; \
+			} \
+			CollectionItemView > .selectionOverlay: { \
+				backgroundColor: #ffffff22; \
+			} \
+			CollectionView: { \
+				backgroundColor: #22222266; \
+				itemSize: [ 48, 48 ]; \
+				itemSpacing: [ 10, 10 ],; \
+			} \
+			CollectionView .content: { \
+				padding: [ 10, 10, 10, 10 ]; \
+			} \
+			Panel: { \
+				backgroundColor: #444444aa; \
+				borderColor: #dedede; \
+				borderWidth: 1; \
+				padding: [ 12, 12, 12, 12 ]; \
+			} \
+			Slider: { \
+				height: 32; \
+				padding: [ 8, 8, 8, 8 ]; \
+			} \
+		}");
 
-		Data *data = $$(Data, dataWithBytes, (uint8_t *) stylesheet, strlen(stylesheet));
-		assert(data);
+		assert(stylesheet);
 
-		_defaultTheme = $$(Theme, themeWithData, data);
-		
-		release(data);
+		$(_defaultTheme, addStylesheet, stylesheet);
+		release(stylesheet);
 	});
 
 	return _defaultTheme;
@@ -197,75 +149,11 @@ static Theme *init(Theme *self) {
 
 	self = (Theme *) super(Object, self, init);
 	if (self) {
-		self->selectors = $$(MutableArray, array);
-		assert(self->selectors);
-
-		self->styles = $$(MutableDictionary, dictionary);
-		assert(self->styles);
+		self->stylesheets = $$(MutableArray, array);
+		assert(self->stylesheets);
 	}
 
 	return self;
-}
-
-/**
- * @fn void Theme::removeStyle(Theme *self, Style *style)
- * @memberof Theme
- */
-static void removeStyle(Theme *self, Style *style) {
-
-	assert(style);
-
-	const Array *selectors = (Array *) style->selectors;
-	for (size_t i = 0; i < selectors->count; i++) {
-
-		Selector *selector = $(selectors, objectAtIndex, i);
-
-		$(self->selectors, removeObject, selector);
-		$(self->styles, removeObjectForKey, selector);
-	}
-}
-
-/**
- * @fn Theme *Theme::themeWithContentsOfFile(const char *path)
- * @memberof Theme
- */
-static Theme *themeWithContentsOfFile(const char *path) {
-
-	Data *data = $$(Data, dataWithContentsOfFile, path);
-
-	Theme *theme = $$(Theme, themeWithData, data);
-
-	release(data);
-
-	return theme;
-}
-
-/**
- * @fn Theme *Theme::themeWithData(const Data *data)
- * @memberof Theme
- */
-static Theme *themeWithData(const Data *data) {
-
-	Dictionary *dictionary = $$(JSONSerialization, objectFromData, data, 0);
-
-	Theme *theme = $$(Theme, themeWithDictionary, dictionary);
-
-	release(dictionary);
-
-	return theme;
-}
-
-/**
- * @fn Theme *Theme::themeWithDictionary(const Dictionary *dictionary)
- * @memberof Theme
- */
-static Theme *themeWithDictionary(const Dictionary *dictionary) {
-
-	Theme *theme = $(alloc(Theme), init);
-	assert(theme);
-
-	$(theme, addStylesheet, dictionary);
-	return theme;
 }
 
 #pragma mark - Class lifecycle
@@ -277,15 +165,10 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ThemeInterface *) clazz->def->interface)->addStyle = addStyle;
 	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
 	((ThemeInterface *) clazz->def->interface)->apply = apply;
 	((ThemeInterface *) clazz->def->interface)->defaultTheme = defaultTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
-	((ThemeInterface *) clazz->def->interface)->removeStyle = removeStyle;
-	((ThemeInterface *) clazz->def->interface)->themeWithContentsOfFile = themeWithContentsOfFile;
-	((ThemeInterface *) clazz->def->interface)->themeWithData = themeWithData;
-	((ThemeInterface *) clazz->def->interface)->themeWithDictionary = themeWithDictionary;
 }
 
 /**

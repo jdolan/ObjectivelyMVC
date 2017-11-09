@@ -23,7 +23,9 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Style.h>
+#include <Objectively/MutableArray.h>
+
+#include <ObjectivelyMVC/Stylesheet.h>
 
 /**
  * @file
@@ -60,14 +62,9 @@ struct Theme {
 	ThemeInterface *interface;
 
 	/**
-	 * @brief The Selectors, ordered by specificity.
+	 * @brief The Stylesheets, in order of priority.
 	 */
-	MutableArray *selectors;
-
-	/**
-	 * @brief The Styles, keyed by Selector.
-	 */
-	MutableDictionary *styles;
+	MutableArray *stylesheets;
 };
 
 /**
@@ -81,22 +78,13 @@ struct ThemeInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 * @fn void Theme::addStyle(Theme *self, Style *style)
-	 * @brief Adds the given Style to this Theme.
+	 * @fn void Theme::addStylesheet(Theme *self, Stylesheet *stylesheet)
+	 * @brief Adds the specified Stylesheet to this Theme.
 	 * @param self The Theme.
-	 * @param style The Style
+	 * @param stylesheet The Stylesheet.
 	 * @memberof Theme
 	 */
-	void (*addStyle)(Theme *self, Style *style);
-
-	/**
-	 * @fn void Theme::addStylesheet(Theme *self, const Dictionary *stylesheet)
-	 * @brief Adds all Styles from the parsed JSON stylesheet to this Theme.
-	 * @param self The Theme.
-	 * @param stylesheet The parsed JSON stylesheet.
-	 * @memberof Theme
-	 */
-	void (*addStylesheet)(Theme *self, const Dictionary *stylesheet);
+	void (*addStylesheet)(Theme *self, Stylesheet *stylesheet);
 
 	/**
 	 * @fn void Theme::apply(const Theme *self, View *view)
@@ -125,43 +113,13 @@ struct ThemeInterface {
 	Theme *(*init)(Theme *self);
 
 	/**
-	 * @fn void Theme::removeStyle(Theme *self, Style *style)
-	 * @brief Removes the given Style from this Theme.
+	 * @fn void Theme::removeStylesheet(Theme *self, Stylesheet *stylesheet)
+	 * @brief Removes the given Stylesheet from this Theme.
 	 * @param self The Theme.
-	 * @param style The Style.
+	 * @param stylesheet The Stylesheet.
 	 * @memberof Theme
 	 */
-	void (*removeStyle)(Theme *self, Style *style);
-
-	/**
-	 * @static
-	 * @fn Theme *Theme::themeWithContentsOfFile(const char *path)
-	 * @brief Instantiates a Theme initialized with the contents of the JSON file at `path`.
-	 * @param path A path to a JSON stylesheet.
-	 * @return The initialized Theme, or `NULL` on error.
-	 * @memberof Theme
-	 */
-	Theme *(*themeWithContentsOfFile)(const char *path);
-
-	/**
-	 * @static
-	 * @fn Theme *Theme::themeWithData(const Data *data)
-	 * @brief Instantiates a Theme initialized with the contents of `data`.
-	 * @param data A Data containing a JSON stylesheet.
-	 * @return The initialized Theme, or `NULL` on error.
-	 * @memberof Theme
-	 */
-	Theme *(*themeWithData)(const Data *data);
-
-	/**
-	 * @static
-	 * @fn Theme *Theme::themeWithDictionary(const Dictionary *dictionary)
-	 * @brief Instantiates a Theme initialized with the parsed JSON stylesheet.
-	 * @param dictionary A parsed JSON stylesheet.
-	 * @return The initialized Theme, or `NULL` on error.
-	 * @memberof Theme
-	 */
-	Theme *(*themeWithDictionary)(const Dictionary *dictionary);
+	void (*removeStylesheet)(Theme *self, Stylesheet *stylesheet);
 };
 
 /**

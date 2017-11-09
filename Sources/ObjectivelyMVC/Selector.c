@@ -20,9 +20,8 @@
  *
  * 3. This notice may not be removed or altered from any source distribution.
  */
-
+ 
 #include <assert.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include <Objectively/Hash.h>
@@ -92,7 +91,7 @@ static _Bool isEqual(const Object *self, const Object *other) {
 #pragma mark - Selector
 
 /**
- * @returbn The specificity of the given Selector.
+ * @return The specificity of the given Selector.
  */
 static int specificity(const Selector *selector) {
 
@@ -166,13 +165,13 @@ static void enumerateSelection(const Selector *self, View *view, ViewEnumerator 
 /**
  * @fn Selector *Selector::initWithRule(Selector *self, const char *rule)
  * @memberof Selector
- * Control:focused
  */
 static Selector *initWithRule(Selector *self, const char *rule) {
 
 	self = (Selector *) super(Object, self, init);
 	if (self) {
-		self->rule = strdup(rule);
+
+		self->rule = strtrim(rule);
 		assert(self->rule);
 
 		self->sequences = $$(SelectorSequence, parse, rule);

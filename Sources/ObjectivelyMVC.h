@@ -61,6 +61,7 @@
 #include <ObjectivelyMVC/Slider.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/Style.h>
+#include <ObjectivelyMVC/Stylesheet.h>
 #include <ObjectivelyMVC/TableCellView.h>
 #include <ObjectivelyMVC/TableColumn.h>
 #include <ObjectivelyMVC/TableHeaderCellView.h>

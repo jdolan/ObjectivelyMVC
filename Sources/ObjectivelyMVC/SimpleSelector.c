@@ -27,6 +27,7 @@
 
 #include <Objectively/Hash.h>
 #include <Objectively/MutableArray.h>
+#include <Objectively/String.h>
 
 #include <ObjectivelyMVC/SimpleSelector.h>
 
@@ -96,8 +97,11 @@ static SimpleSelector *initWithPattern(SimpleSelector *self, const char *pattern
 
 	self = (SimpleSelector *) super(Object, self, init);
 	if (self) {
-		self->pattern = strdup(pattern);
+
+		self->pattern = strtrim(pattern);
 		assert(self->pattern);
+
+		assert(strlen(self->pattern));
 	}
 
 	return self;

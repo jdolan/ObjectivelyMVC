@@ -110,11 +110,6 @@ struct CollectionViewDelegate {
 	CollectionItemView *(*itemForObjectAtIndexPath)(const CollectionView *collectionView, const IndexPath *indexPath);
 };
 
-#define DEAFULT_COLLECTION_VIEW_PADDING 10
-#define DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING 10
-#define DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING 10
-#define DEFAULT_COLLECTION_VIEW_ITEM_SIZE 48
-
 /**
  * @brief CollectionViews display items in a grid.
  * @extends Control

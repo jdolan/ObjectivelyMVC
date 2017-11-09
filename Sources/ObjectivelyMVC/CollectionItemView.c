@@ -70,15 +70,12 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 		self->selectionOverlay = $(alloc(View), initWithFrame, NULL);
 		assert(self->selectionOverlay);
 
+		$(self->selectionOverlay, addClassName, "selectionOverlay");
+
 		self->selectionOverlay->autoresizingMask = ViewAutoresizingFill;
-		self->selectionOverlay->backgroundColor = Colors.Silver;
-		self->selectionOverlay->backgroundColor.a = 32;
 		self->selectionOverlay->hidden = true;
 
 		$((View *) self, addSubview, self->selectionOverlay);
-
-		self->view.backgroundColor = Colors.DimGray;
-		self->view.borderColor = Colors.Silver;
 
 		self->view.clipsSubviews = true;
 	}

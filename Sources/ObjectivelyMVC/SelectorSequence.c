@@ -66,10 +66,13 @@ static SelectorSequence *initWithSequence(SelectorSequence *self, const char *se
 
 	self = (SelectorSequence *) super(Object, self, init);
 	if (self) {
-		self->sequence = strdup(sequence);
+
+		self->sequence = strtrim(sequence);
 		assert(self->sequence);
 
-		self->simpleSelectors = $$(SimpleSelector, parse, sequence);
+		assert(strlen(self->sequence));
+
+		self->simpleSelectors = $$(SimpleSelector, parse, self->sequence);
 		assert(self->simpleSelectors->count);
 	}
 

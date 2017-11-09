@@ -23,7 +23,7 @@
 #include <ObjectivelyMVC/Colors.h>
 #include <SDL2/SDL_endian.h>
 
-const struct _Colors Colors = {
+const struct Colors Colors = {
 	.AliceBlue = { 240, 248, 255, 255 },
 	.AntiqueWhite = { 250, 235, 215, 255 },
 	.Aqua = { 0, 255, 255, 255 },

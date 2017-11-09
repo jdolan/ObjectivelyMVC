@@ -51,6 +51,24 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::applyStyle(View *, const Style *)
+ */
+static void applyStyle(View *self, const Style *style) {
+
+	super(View, self, applyStyle, style);
+
+	CollectionView *this = (CollectionView *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) CollectionViewAxisNames),
+		MakeInlet("itemSize", InletTypeSize, &this->itemSize, NULL),
+		MakeInlet("itemSpacing", InletTypeSize, &this->itemSpacing, NULL)
+	);
+
+	$(self, bind, inlets, (Dictionary *) style->attributes);
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -301,6 +319,8 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 		self->contentView->autoresizingMask = ViewAutoresizingContain;
 
+		$(self->contentView, addClassName, "content");
+
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL, style);
 		assert(self->scrollView);
 
@@ -309,27 +329,6 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 		$(self->scrollView, setContentView, self->contentView);
 
 		$((View *) self, addSubview, (View *) self->scrollView);
-
-		if (self->control.style == ControlStyleDefault) {
-
-			self->itemSize.w = DEFAULT_COLLECTION_VIEW_ITEM_SIZE;
-			self->itemSize.h = DEFAULT_COLLECTION_VIEW_ITEM_SIZE;
-
-			self->itemSpacing.w = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
-			self->itemSpacing.h = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
-
-			self->control.view.backgroundColor = Colors.Gray;
-
-			self->control.view.padding.top = 0;
-			self->control.view.padding.right = 0;
-			self->control.view.padding.bottom = 0;
-			self->control.view.padding.left = 0;
-
-			self->contentView->padding.top = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
-			self->contentView->padding.right = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
-			self->contentView->padding.bottom = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
-			self->contentView->padding.left = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
-		}
 	}
 
 	return self;
@@ -470,6 +469,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;

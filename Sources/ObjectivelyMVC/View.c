@@ -268,6 +268,7 @@ static void applyStyle(View *self, const Style *style) {
 		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
 		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
 		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
+		MakeInlet("clipsSubviews", InletTypeBool, &self->clipsSubviews, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
@@ -294,6 +295,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
 		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
 		MakeInlet("classNames", InletTypeClassNames, &self, NULL),
+		MakeInlet("clipsSubviews", InletTypeBool, &self->clipsSubviews, NULL),
 		MakeInlet("constraints", InletTypeConstraints, &self, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
@@ -855,8 +857,12 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 		case SimpleSelectorTypeUniversal:
 			return true;
 
-		case SimpleSelectorTypeType:
-			return $((Object *) self, isKindOfClass, classForName(pattern));
+		case SimpleSelectorTypeType: {
+			const Class *clazz = classForName(pattern);
+			if (clazz) {
+				return $((Object *) self, isKindOfClass, clazz);
+			}
+		}
 
 		case SimpleSelectorTypeClass:
 			return $(self, hasClassName, pattern);

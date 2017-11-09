@@ -41,6 +41,24 @@ const EnumName StackViewDistributionNames[] = MakeEnumNames(
 #pragma mark - View
 
 /**
+ * @see View::applyStyle(View *, const Style *)
+ */
+static void applyStyle(View *self, const Style *style) {
+
+	super(View, self, applyStyle, style);
+
+	StackView *this = (StackView *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) StackViewAxisNames),
+		MakeInlet("distribution", InletTypeEnum, &this->distribution, (ident) StackViewDistributionNames),
+		MakeInlet("spacing", InletTypeInteger, &this->spacing, NULL)
+	);
+
+	$(self, bind, inlets, (Dictionary *) style->attributes);
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -246,6 +264,7 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 

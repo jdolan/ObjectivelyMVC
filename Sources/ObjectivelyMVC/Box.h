@@ -31,8 +31,6 @@
  * @brief A container View with a positioned Label.
  */
 
-#define DEFAULT_BOX_SPACING 4
-
 typedef struct Box Box;
 typedef struct BoxInterface BoxInterface;
 
