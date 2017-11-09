@@ -36,7 +36,7 @@ START_TEST(stylesheet)
 			charactersAttribute: hello-world; \
 			colorAttribute: #aabbccdd; \
 			doubleAttribute: 1.0; \
-			enumAttribute: ViewAlignmentTopRight; \
+			enumAttribute: SomeEnumValue; \
 			floatAttribute: 1.0; \
 			integerAttribute: 1; \
 			pointAttribute: 320 240; \
@@ -58,17 +58,56 @@ START_TEST(stylesheet)
 	Style *style = $(stylesheet->styles, objectForKey, selectorOne);
 	ck_assert(style);
 
-	Boole *boole = cast(Boole, $(style, attributeValue, "boolAttribute"));
-	ck_assert_ptr_eq($$(Boole, True), boole);
+	Boole *booleAttribute = cast(Boole, $(style, attributeValue, "boolAttribute"));
+	ck_assert_ptr_eq($$(Boole, True), booleAttribute);
 
-	String *characters = cast(String, $(style, attributeValue, "charactersAttribute"));
-	ck_assert_str_eq("hello-world", characters->chars);
+	String *charactersAttribute = cast(String, $(style, attributeValue, "charactersAttribute"));
+	ck_assert_str_eq("hello-world", charactersAttribute->chars);
 
-	String *color = cast(String, $(style, attributeValue, "colorAttribute"));
-	ck_assert_str_eq("#aabbccdd", color->chars);
+	String *colorAttribute = cast(String, $(style, attributeValue, "colorAttribute"));
+	ck_assert_str_eq("#aabbccdd", colorAttribute->chars);
 
-	Number *number = cast(Number, $(style, attributeValue, "doubleAttribute"));
-	ck_assert(number->value == 1.0);
+	Number *doubleNumber = cast(Number, $(style, attributeValue, "doubleAttribute"));
+	ck_assert_int_eq(1, doubleNumber->value);
+
+	String *enumAttribute = cast(String, $(style, attributeValue, "enumAttribute"));
+	ck_assert_str_eq("SomeEnumValue", enumAttribute->chars);
+
+	Number *floatAttribute = cast(Number, $(style, attributeValue, "floatAttribute"));
+	ck_assert_int_eq(1, floatAttribute->value);
+
+	Number *integerAttribute = cast(Number, $(style, attributeValue, "integerAttribute"));
+	ck_assert_int_eq(1, integerAttribute->value);
+
+	Array *pointAttribute = cast(Array, $(style, attributeValue, "pointAttribute"));
+	ck_assert_int_eq(2, pointAttribute->count);
+
+	Number *pointX = $(pointAttribute, objectAtIndex, 0);
+	Number *pointY = $(pointAttribute, objectAtIndex, 1);
+	ck_assert_int_eq(320, pointX->value);
+	ck_assert_int_eq(240, pointY->value);
+
+	Array *rectangleAttribute = cast(Array, $(style, attributeValue, "rectangleAttribute"));
+	ck_assert_int_eq(4, rectangleAttribute->count);
+
+	Number *rectX = $(rectangleAttribute, objectAtIndex, 0);
+	Number *rectY = $(rectangleAttribute, objectAtIndex, 1);
+	Number *rectW = $(rectangleAttribute, objectAtIndex, 2);
+	Number *rectH = $(rectangleAttribute, objectAtIndex, 3);
+	ck_assert_int_eq(50, rectX->value);
+	ck_assert_int_eq(50, rectY->value);
+	ck_assert_int_eq(400, rectW->value);
+	ck_assert_int_eq(300, rectH->value);
+
+	Array *sizeAttribute = cast(Array, $(style, attributeValue, "sizeAttribute"));
+	ck_assert_int_eq(2, sizeAttribute->count);
+
+	Number *sizeW = $(sizeAttribute, objectAtIndex, 0);
+	Number *sizeH = $(sizeAttribute, objectAtIndex, 1);
+	ck_assert_int_eq(640, sizeW->value);
+	ck_assert_int_eq(480, sizeH->value);
+
+	release(stylesheet);
 
 }END_TEST
 
