@@ -141,10 +141,17 @@ static Array *parse(const char *sequence) {
 	while (*c) {
 		const size_t size = strcspn(c, "*.#:");
 		if (size || *c == '*') {
-			char *s = calloc(1, size + 1);
-			assert(s);
 
-			strncpy(s, c, size);
+			char *s;
+			if (*c == '*') {
+				s = strdup("*");
+				assert(s);
+			} else {
+				s = calloc(1, size + 1);
+				assert(s);
+
+				strncpy(s, c, size);
+			}
 
 			SimpleSelector *simpleSelector = $(alloc(SimpleSelector), initWithPattern, s);
 			assert(simpleSelector);
