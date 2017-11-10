@@ -174,7 +174,7 @@ static Selector *initWithRule(Selector *self, const char *rule) {
 		self->rule = strtrim(rule);
 		assert(self->rule);
 
-		self->sequences = $$(SelectorSequence, parse, rule);
+		self->sequences = $$(SelectorSequence, parse, self->rule);
 		assert(self->sequences->count);
 
 		self->specificity = specificity(self);
