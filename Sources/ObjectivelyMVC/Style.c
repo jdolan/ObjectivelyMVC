@@ -272,12 +272,14 @@ static ident parseValue(String *string) {
 
 	String *token = $(reader, readToken, charset, &stop);
 	if (token) {
+
+		NumberFormatter *formatter = $(alloc(NumberFormatter), initWithFormat, NULL);
+		assert(formatter);
+
+		Number *number = $(formatter, numberFromString, token);
+
 		if (stop == -1) {
 
-			NumberFormatter *formatter = $(alloc(NumberFormatter), initWithFormat, NULL);
-			assert(formatter);
-
-			Number *number = $(formatter, numberFromString, token);
 			if (number) {
 				value = number;
 			} else if (strcmp("true", token->chars) == 0) {
@@ -288,9 +290,7 @@ static ident parseValue(String *string) {
 				value = $((Object *) token, copy);
 			}
 
-			release(formatter);
-
-		} else {
+		} else if (number) {
 			value = $$(MutableArray, array);
 
 			while (token) {
@@ -300,12 +300,15 @@ static ident parseValue(String *string) {
 
 				token = $(reader, readToken, charset, NULL);
 			}
+		} else {
+			value = $(string, trimmedString);
 		}
+
+		release(formatter);
+		release(token);
 	}
 
-	release(token);
 	release(reader);
-
 	return value;
 }
 
@@ -341,23 +344,18 @@ static Array *parse(const char *css) {
 				case ';':
 					if (style && attr) {
 						ident value = parseValue(token);
-
 						$(style, addAttribute, attr->chars, value);
-
 						release(attr);
 						release(value);
 					}
 					attr = NULL;
-
 					break;
 				case '}':
 					if (style) {
 						$(styles, addObject, style);
-
 						release(style);
 					}
 					style = NULL;
-
 					break;
 			}
 

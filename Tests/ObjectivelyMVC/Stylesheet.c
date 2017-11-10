@@ -36,7 +36,7 @@ START_TEST(stylesheet)
 			charactersAttribute: hello-world; \
 			colorAttribute: #aabbccdd; \
 			doubleAttribute: 1.0; \
-			enumAttribute: SomeEnumValue; \
+			enumAttribute: Foo | Bar; \
 			floatAttribute: 1.0; \
 			integerAttribute: 1; \
 			pointAttribute: 320 240; \
@@ -71,7 +71,7 @@ START_TEST(stylesheet)
 	ck_assert_int_eq(1, doubleNumber->value);
 
 	String *enumAttribute = cast(String, $(style, attributeValue, "enumAttribute"));
-	ck_assert_str_eq("SomeEnumValue", enumAttribute->chars);
+	ck_assert_str_eq("Foo | Bar", enumAttribute->chars);
 
 	Number *floatAttribute = cast(Number, $(style, attributeValue, "floatAttribute"));
 	ck_assert_int_eq(1, floatAttribute->value);
