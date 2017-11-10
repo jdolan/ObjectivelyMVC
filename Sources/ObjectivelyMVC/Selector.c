@@ -210,7 +210,7 @@ static Array *parse(const char *rules) {
 			free(s);
 		}
 		c += size;
-		c += strspn(c, ", ");
+		c += strspn(c, ", \t\n");
 	}
 
 	return (Array *) selectors;
