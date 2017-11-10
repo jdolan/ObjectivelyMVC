@@ -83,52 +83,52 @@ static Theme *defaultTheme(void) {
 		assert(_defaultTheme);
 
 		Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters, "\
-			Box: { \
+			Box { \
 				borderColor: #dededeaa; \
 				borderWidth: 1; \
-				padding: [ 10, 10, 10, 10 ]; \
+				padding: 10 10 10 10; \
 			} \
-			Box > Label: { \
+			Box > Label { \
 				backgroundColor: #88888844; \
-				padding: [ 0, 8, 0, 8 ]; \
+				padding: 0 8 0 8; \
 				x: 20; \
 			} \
-			Box .content: { \
+			Box .content { \
 				spacing: 4; \
 			} \
-			Button: { \
+			Button { \
 				backgroundColor: #88888822; \
-				padding: [ 8, 8, 8, 8 ]; \
+				padding: 8 8 8 8; \
 			} \
-			Checkbox > Control: { \
+			Checkbox > Control { \
 				backgroundColor: #22222266; \
-				frame: [ 0, 0, 18, 18 ]; \
-				padding: [ 4, 4, 4, 4 ]; \
+				frame: 0 0 18 18; \
+				padding: 4 4 4 4; \
 			} \
-			CollectionItemView: { \
+			CollectionItemView { \
 				backgroundColor: #22222266; \
 				borderColor: #999999aa; \
 			} \
-			CollectionItemView > .selectionOverlay: { \
+			CollectionItemView > .selectionOverlay { \
 				backgroundColor: #ffffff22; \
 			} \
-			CollectionView: { \
+			CollectionView { \
 				backgroundColor: #22222266; \
-				itemSize: [ 48, 48 ]; \
-				itemSpacing: [ 10, 10 ],; \
+				itemSize: 48 48; \
+				itemSpacing: 10 10; \
 			} \
-			CollectionView .content: { \
-				padding: [ 10, 10, 10, 10 ]; \
+			CollectionView .content { \
+				padding: 10 10 10 10; \
 			} \
-			Panel: { \
+			Panel { \
 				backgroundColor: #444444aa; \
 				borderColor: #dedede; \
 				borderWidth: 1; \
-				padding: [ 12, 12, 12, 12 ]; \
+				padding: 12 12 12 12; \
 			} \
-			Slider: { \
+			Slider { \
 				height: 32; \
-				padding: [ 8, 8, 8, 8 ]; \
+				padding: 8 8 8 8; \
 			} \
 		}");
 
