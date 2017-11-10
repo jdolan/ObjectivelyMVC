@@ -43,6 +43,7 @@ START_TEST(selector)
 
 	selectorSequence = $(selector->sequences, objectAtIndex, 0);
 	ck_assert_int_eq(2, selectorSequence->simpleSelectors->count);
+	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->combinator);
 
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 0);
 	ck_assert_int_eq(SimpleSelectorTypeType, simpleSelector->type);
@@ -56,6 +57,7 @@ START_TEST(selector)
 
 	selectorSequence = $(selector->sequences, objectAtIndex, 1);
 	ck_assert_int_eq(1, selectorSequence->simpleSelectors->count);
+	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->combinator);
 
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 0);
 	ck_assert_int_eq(SimpleSelectorTypeClass, simpleSelector->type);
@@ -65,6 +67,7 @@ START_TEST(selector)
 
 	selectorSequence = $(selector->sequences, objectAtIndex, 2);
 	ck_assert_int_eq(2, selectorSequence->simpleSelectors->count);
+	ck_assert_int_eq(SequenceCombinatorTerminal, selectorSequence->combinator);
 
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 0);
 	ck_assert_int_eq(SimpleSelectorTypeType, simpleSelector->type);
