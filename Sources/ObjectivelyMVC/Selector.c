@@ -196,18 +196,18 @@ static Array *parse(const char *rules) {
 	while (*c) {
 		const size_t size = strcspn(c, ",");
 		if (size) {
-			char *s = calloc(1, size + 1);
-			assert(s);
+			char *rule = calloc(1, size + 1);
+			assert(rule);
 
-			strncpy(s, c, size);
+			strncpy(rule, c, size);
 
-			Selector *selector = $(alloc(Selector), initWithRule, s);
+			Selector *selector = $(alloc(Selector), initWithRule, rule);
 			assert(selector);
 
 			$(selectors, addObject, selector);
 
 			release(selector);
-			free(s);
+			free(rule);
 		}
 		c += size;
 		c += strspn(c, ", \t\n");

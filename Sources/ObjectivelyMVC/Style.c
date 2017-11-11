@@ -258,7 +258,7 @@ static Style *initWithRules(Style *self, const char *rules) {
 }
 
 /**
- *
+ * @return The value Object parsed from the given String.
  */
 static ident parseValue(String *string) {
 
