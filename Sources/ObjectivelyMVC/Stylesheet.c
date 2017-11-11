@@ -79,8 +79,76 @@ static void apply(const Stylesheet *self, View *view) {
 		const Selector *selector = $(self->selectors, objectAtIndex, i);
 		const Style *style = $(self->styles, objectForKey, (ident) selector);
 
+		assert(style);
+
 		$(selector, enumerateSelection, view, apply_enumerateSelection, (ident) style);
 	}
+}
+
+static Stylesheet *_defaultStylesheet;
+
+/**
+ * @fn Stylesheet *Stylesheet::defaultStylesheet(void)
+ * @memberof Stylesheet
+ */
+static Stylesheet *defaultStylesheet(void) {
+	static Once once;
+
+	do_once(&once, {
+		_defaultStylesheet = $$(Stylesheet, stylesheetWithCharacters, "\
+				Box { \
+					borderColor: #dededeaa; \
+					borderWidth: 1; \
+					padding: 10 10 10 10; \
+				} \
+				Box > Label { \
+					backgroundColor: #88888844; \
+					padding: 0 8 0 8; \
+					x: 20; \
+				} \
+				Box .content { \
+					spacing: 4; \
+				} \
+				Button { \
+					backgroundColor: #88888822; \
+					padding: 8 8 8 8; \
+				} \
+				Checkbox > Control { \
+					backgroundColor: #22222266; \
+					frame: 0 0 18 18; \
+					padding: 4 4 4 4; \
+				} \
+				CollectionItemView { \
+					backgroundColor: #22222266; \
+					borderColor: #999999aa; \
+				} \
+				CollectionItemView > .selectionOverlay { \
+					backgroundColor: #ffffff22; \
+				} \
+				CollectionView { \
+					backgroundColor: #22222266; \
+					itemSize: 48 48; \
+					itemSpacing: 10 10; \
+				} \
+				CollectionView .content { \
+					padding: 10 10 10 10; \
+				} \
+				Panel { \
+					backgroundColor: #444444aa; \
+					borderColor: #dedede; \
+					borderWidth: 1; \
+					padding: 12 12 12 12; \
+				} \
+				Slider { \
+					height: 32; \
+					padding: 8 8 8 8; \
+				} \
+		");
+
+		assert(_defaultStylesheet);
+	});
+
+	return _defaultStylesheet;
 }
 
 /**
@@ -135,13 +203,24 @@ static Stylesheet *initWithContentsOfFile(Stylesheet *self, const char *path, St
 
 	String *string = $$(String, stringWithContentsOfFile, path, encoding);
 	if (string) {
-		self = $(self, initWithCharacters, string->chars);
+		self = $(self, initWithString, string);
 	} else {
-		self = $(self, initWithCharacters, NULL);
+		release(self); self = NULL;
 	}
 	release(string);
 
 	return self;
+}
+
+/**
+ * @fn Stylesheet *Stylesheet::initWithString(Stylsheet *self, const String *string)
+ * @memberof Stylesheet
+ */
+static Stylesheet *initWithString(Stylesheet *self, const String *string) {
+
+	assert(string);
+
+	return $(self, initWithCharacters, string->chars);
 }
 
 /**
@@ -160,6 +239,14 @@ static Stylesheet *stylesheetWithContentsOfFile(const char *path, StringEncoding
 	return $(alloc(Stylesheet), initWithContentsOfFile, path, encoding);
 }
 
+/**
+ * @fn Stylesheet *Stylesheet::stylesheetWithString(const String *string)
+ * @memberof Stylesheet
+ */
+static Stylesheet *stylesheetWithString(const String *string) {
+	return $(alloc(Stylesheet), initWithString, string);
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -170,11 +257,20 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((StylesheetInterface *) clazz->def->interface)->apply = apply;
+	((StylesheetInterface *) clazz->def->interface)->defaultStylesheet = defaultStylesheet;
 	((StylesheetInterface *) clazz->def->interface)->initWithCharacters = initWithCharacters;
 	((StylesheetInterface *) clazz->def->interface)->initWithContentsOfFile = initWithContentsOfFile;
+	((StylesheetInterface *) clazz->def->interface)->initWithString = initWithString;
 	((StylesheetInterface *) clazz->def->interface)->stylesheetWithCharacters = stylesheetWithCharacters;
 	((StylesheetInterface *) clazz->def->interface)->stylesheetWithContentsOfFile = stylesheetWithContentsOfFile;
+	((StylesheetInterface *) clazz->def->interface)->stylesheetWithString = stylesheetWithString;
+}
 
+/**
+ * @see Class::destroy(Class *)
+ */
+static void destroy(Class *clazz) {
+	release(_defaultStylesheet);
 }
 
 /**
@@ -192,6 +288,7 @@ Class *_Stylesheet(void) {
 		clazz.interfaceOffset = offsetof(Stylesheet, interface);
 		clazz.interfaceSize = sizeof(StylesheetInterface);
 		clazz.initialize = initialize;
+		clazz.destroy = destroy;
 	});
 
 	return &clazz;

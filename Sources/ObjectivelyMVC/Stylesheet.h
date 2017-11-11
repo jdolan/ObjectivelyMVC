@@ -76,9 +76,21 @@ struct StylesheetInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 *
+	 * @fn void Stylesheet::apply(const Stylesheet *self, View *view)
+	 * @brief Applies this Stylesheet to the given View.
+	 * @param self The Stylesheet.
+	 * @param view The View
+	 * @memberof Stylesheet
 	 */
 	void (*apply)(const Stylesheet *self, View *view);
+
+	/**
+	 * @static
+	 * @fn Stylesheet *Stylesheet::defaultStylesheet(void)
+	 * @return The default Stylesheet.
+	 * @memberof Stylesheet
+	 */
+	Stylesheet *(*defaultStylesheet)(void);
 
 	/**
 	 * @fn Stylesheet *Stylesheet::initWithCharacters(Stylesheet *self, const char *chars)
@@ -102,6 +114,16 @@ struct StylesheetInterface {
 	Stylesheet *(*initWithContentsOfFile)(Stylesheet *self, const char *path, StringEncoding encoding);
 
 	/**
+	 * @fn Stylesheet *Stylesheet::initWithString(Stylsheet *self, const String *string)
+	 * @brief Initializes this Stylsheet with the given CSS definitions.
+	 * @param self The Stylesheet.
+	 * @param string The String of CSS definitions.
+	 * @return The initialized Stylesheet, or `NULL` on error.
+	 * @memberof Stylesheet
+	 */
+	Stylesheet *(*initWithString)(Stylesheet *self, const String *string);
+
+	/**
 	 * @static
 	 * @fn Stylesheet *Stylesheet::stylesheetWithCharacters(const char *chars)
 	 * @brief Instantiates a new Stylesheet with the given CSS definitions.
@@ -121,6 +143,16 @@ struct StylesheetInterface {
 	 * @memberof Stylesheet
 	 */
 	Stylesheet *(*stylesheetWithContentsOfFile)(const char *path, StringEncoding encoding);
+
+	/**
+	 * @static
+	 * @fn Stylesheet *Stylesheet::stylesheetWithString(const String *string)
+	 * @brief Instantiates a new Stylesheet with the given CSS definitions.
+	 * @param string The String of CSS definitions.
+	 * @return The new Stylesheet, or `NULL` on error.
+	 * @memberof Stylesheet
+	 */
+	Stylesheet *(*stylesheetWithString)(const String *string);
 };
 
 /**

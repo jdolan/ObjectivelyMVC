@@ -78,64 +78,8 @@ static Theme *defaultTheme(void) {
 	static Once once;
 
 	do_once(&once, {
-
 		_defaultTheme = $(alloc(Theme), init);
 		assert(_defaultTheme);
-
-		Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters, "\
-			Box { \
-				borderColor: #dededeaa; \
-				borderWidth: 1; \
-				padding: 10 10 10 10; \
-			} \
-			Box > Label { \
-				backgroundColor: #88888844; \
-				padding: 0 8 0 8; \
-				x: 20; \
-			} \
-			Box .content { \
-				spacing: 4; \
-			} \
-			Button { \
-				backgroundColor: #88888822; \
-				padding: 8 8 8 8; \
-			} \
-			Checkbox > Control { \
-				backgroundColor: #22222266; \
-				frame: 0 0 18 18; \
-				padding: 4 4 4 4; \
-			} \
-			CollectionItemView { \
-				backgroundColor: #22222266; \
-				borderColor: #999999aa; \
-			} \
-			CollectionItemView > .selectionOverlay { \
-				backgroundColor: #ffffff22; \
-			} \
-			CollectionView { \
-				backgroundColor: #22222266; \
-				itemSize: 48 48; \
-				itemSpacing: 10 10; \
-			} \
-			CollectionView .content { \
-				padding: 10 10 10 10; \
-			} \
-			Panel { \
-				backgroundColor: #444444aa; \
-				borderColor: #dedede; \
-				borderWidth: 1; \
-				padding: 12 12 12 12; \
-			} \
-			Slider { \
-				height: 32; \
-				padding: 8 8 8 8; \
-			} \
-		}");
-
-		assert(stylesheet);
-
-		$(_defaultTheme, addStylesheet, stylesheet);
-		release(stylesheet);
 	});
 
 	return _defaultTheme;
@@ -151,6 +95,8 @@ static Theme *init(Theme *self) {
 	if (self) {
 		self->stylesheets = $$(MutableArray, array);
 		assert(self->stylesheets);
+
+		$(self, addStylesheet, $$(Stylesheet, defaultStylesheet));
 	}
 
 	return self;
