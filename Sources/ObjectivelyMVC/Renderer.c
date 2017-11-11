@@ -263,7 +263,7 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
 
 	const SDL_Rect scissor = MVC_TransformToWindow(window, &rect);
 
-	glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 1, scissor.h + 1);
+	glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 2, scissor.h + 2);
 }
 
 /**
