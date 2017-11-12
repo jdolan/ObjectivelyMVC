@@ -170,7 +170,6 @@ START_TEST(_select)
 		Set *selection = $(selector, select, root);
 		ck_assert(selection);
 
-		ck_assert_int_le(3, selection->count);
 		ck_assert($(selection, containsObject, root));
 		ck_assert($(selection, containsObject, container));
 		ck_assert($(selection, containsObject, panel));
