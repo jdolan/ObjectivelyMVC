@@ -142,18 +142,18 @@ static Array *parse(const char *sequence) {
 		const size_t size = strcspn(c, "*.#:");
 		if (size || *c == '*') {
 
-			char *s;
+			char *pattern;
 			if (*c == '*') {
-				s = strdup("*");
-				assert(s);
+				pattern = strdup("*");
+				assert(pattern);
 			} else {
-				s = calloc(1, size + 1);
-				assert(s);
+				pattern = calloc(1, size + 1);
+				assert(pattern);
 
-				strncpy(s, c, size);
+				strncpy(pattern, c, size);
 			}
 
-			SimpleSelector *simpleSelector = $(alloc(SimpleSelector), initWithPattern, s);
+			SimpleSelector *simpleSelector = $(alloc(SimpleSelector), initWithPattern, pattern);
 			assert(simpleSelector);
 
 			simpleSelector->type = simpleSelectorType(*delim);
@@ -164,7 +164,7 @@ static Array *parse(const char *sequence) {
 			$(simpleSelectors, addObject, simpleSelector);
 
 			release(simpleSelector);
-			free(s);
+			free(pattern);
 		}
 
 		c += size;

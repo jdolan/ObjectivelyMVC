@@ -126,12 +126,12 @@ static Array *parse(const char *rule) {
 	while (*c) {
 		const size_t size = strcspn(c, " \n\t>+~");
 		if (size) {
-			char *s = calloc(1, size + 1);
-			assert(s);
+			char *sequence = calloc(1, size + 1);
+			assert(sequence);
 
-			strncpy(s, c, size);
+			strncpy(sequence, c, size);
 
-			SelectorSequence *selectorSequence = $(alloc(SelectorSequence), initWithSequence, s);
+			SelectorSequence *selectorSequence = $(alloc(SelectorSequence), initWithSequence, sequence);
 			assert(selectorSequence);
 
 			selectorSequence->combinator = sequenceCombinator(*(c + size));
@@ -140,7 +140,7 @@ static Array *parse(const char *rule) {
 			$(selectorSequences, addObject, selectorSequence);
 
 			release(selectorSequence);
-			free(s);
+			free(sequence);
 		}
 
 		c += size;
