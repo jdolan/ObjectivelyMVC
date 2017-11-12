@@ -81,6 +81,10 @@ static void apply(const Stylesheet *self, View *view) {
 
 		assert(style);
 
+		if ($(style, attributeValue, "debug")) {
+			SDL_TriggerBreakpoint();
+		}
+
 		$(selector, enumerateSelection, view, apply_enumerateSelection, (ident) style);
 	}
 }

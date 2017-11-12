@@ -1002,6 +1002,10 @@ static void removeSubview(View *self, View *subview) {
 static void render(View *self, Renderer *renderer) {
 
 	assert(self->window);
+
+	if ($(self, hasClassName, "debug")) {
+		SDL_TriggerBreakpoint();
+	}
 	
 	if (self->backgroundColor.a) {
 
