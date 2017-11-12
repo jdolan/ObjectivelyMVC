@@ -23,6 +23,8 @@
 
 #include <ObjectivelyMVC.h>
 
+#define _Class _View
+
 /**
  * @brief InletBinding for InletTypeBool.
  */
@@ -228,7 +230,11 @@ static void bindView(const Inlet *inlet, ident obj) {
 	const String *includePath = $(dictionary, objectForKeyPath, "include");
 
 	if (clazzName == NULL && includePath == NULL) {
-		$(source, awakeWithDictionary, dictionary);
+		if (source) {
+			$(source, awakeWithDictionary, dictionary);
+		} else {
+			MVC_LogWarn("Inlet %s has NULL destination\n", inlet->name);
+		}
 	} else {
 		if (clazzName) {
 			Class *clazz = classForName(clazzName->chars);
@@ -331,3 +337,5 @@ void bindInlets(const Inlet *inlets, const Dictionary *dictionary) {
 		}
 	}
 }
+
+#undef _Class
