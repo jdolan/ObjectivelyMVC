@@ -261,8 +261,7 @@ static Constraint *initWithDescriptor(Constraint *self, const char *descriptor) 
 				assert(self->priority);
 			}
 		} else {
-			release(self);
-			self = NULL;
+			self = release(self);
 		}
 		
 		release(string);

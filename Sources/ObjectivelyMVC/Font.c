@@ -284,8 +284,7 @@ void setDefaultFont(FontCategory category, Font *font) {
 
 	if (_defaultFonts[category] != font) {
 
-		release(_defaultFonts[category]);
-		_defaultFonts[category] = NULL;
+		_defaultFonts[category] = release(_defaultFonts[category]);
 
 		if (font) {
 			_defaultFonts[category] = retain(font);

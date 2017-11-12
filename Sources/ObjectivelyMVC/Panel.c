@@ -271,7 +271,6 @@ static void initialize(Class *clazz) {
  * @see Class::destroy(Class *)
  */
 static void destroy(Class *clazz) {
-
 	release(_resize);
 }
 
