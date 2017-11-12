@@ -98,19 +98,29 @@ static _Bool matchesView(const SelectorSequence *self, const View *view) {
 /**
  * @return The SequenceCombinator for the given character.
  */
-static SequenceCombinator sequenceCombinator(const char c) {
-	switch (c) {
-		case '\0':
-			return SequenceCombinatorTerminal;
-		case '+':
-			return SequenceCombinatorAdjacent;
-		case '~':
-			return SequenceCombinatorSibling;
-		default:
-			return SequenceCombinatorDescendent;
+static SequenceCombinator sequenceCombinator(const char *c) {
+
+	SequenceCombinator combinator = SequenceCombinatorNone;
+
+	while (isspace(*c)) {
+		combinator = SequenceCombinatorDescendent;
+		c++;
 	}
 
-	return SequenceCombinatorNone;
+	switch (*c) {
+		case '>':
+			return SequenceCombinatorChild;
+		case '~':
+			return SequenceCombinatorSibling;
+		case '+':
+			return SequenceCombinatorAdjacent;
+		case '\0':
+			return SequenceCombinatorTerminal;
+		default:
+			break;
+	}
+
+	return combinator;
 }
 
 /**
@@ -134,7 +144,7 @@ static Array *parse(const char *rule) {
 			SelectorSequence *selectorSequence = $(alloc(SelectorSequence), initWithSequence, sequence);
 			assert(selectorSequence);
 
-			selectorSequence->combinator = sequenceCombinator(*(c + size));
+			selectorSequence->combinator = sequenceCombinator(c + size);
 			assert(selectorSequence->combinator);
 
 			$(selectorSequences, addObject, selectorSequence);
