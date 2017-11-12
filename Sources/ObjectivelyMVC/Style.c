@@ -264,7 +264,12 @@ static ident parseValue(String *string) {
 
 	ident value = NULL;
 
-	StringReader *reader = $(alloc(StringReader), initWithString, string);
+	assert(string);
+
+	String *trimmed = $(string, trimmedString);
+	assert(trimmed);
+
+	StringReader *reader = $(alloc(StringReader), initWithString, trimmed);
 	assert(reader);
 
 	const Unicode *charset = L", \n\t";
@@ -301,7 +306,7 @@ static ident parseValue(String *string) {
 				token = $(reader, readToken, charset, NULL);
 			}
 		} else {
-			value = $(string, trimmedString);
+			value = retain(trimmed);
 		}
 
 		release(formatter);
@@ -309,6 +314,8 @@ static ident parseValue(String *string) {
 	}
 
 	release(reader);
+	release(trimmed);
+
 	return value;
 }
 
