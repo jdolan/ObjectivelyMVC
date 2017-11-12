@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <SDL2/SDL_assert.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_pixels.h>
 
