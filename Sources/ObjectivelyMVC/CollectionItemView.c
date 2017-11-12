@@ -43,6 +43,31 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
+#pragma mark - View
+
+/**
+ * @see View::matchesSelector(Const View *, const SimpleSelector *)
+ */
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+
+	assert(simpleSelector);
+
+	const CollectionItemView *this = (CollectionItemView *) self;
+	const char *pattern = simpleSelector->pattern;
+
+	switch (simpleSelector->type) {
+		case SimpleSelectorTypePseudo:
+			if (strcmp("selected", pattern) == 0) {
+				return this->isSelected;
+			}
+			break;
+		default:
+			break;
+	}
+
+	return super(View, self, matchesSelector, simpleSelector);
+}
+
 #pragma mark - CollectionItemView
 
 /**
@@ -73,7 +98,6 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 		$(self->selectionOverlay, addClassName, "selectionOverlay");
 
 		self->selectionOverlay->autoresizingMask = ViewAutoresizingFill;
-		self->selectionOverlay->hidden = true;
 
 		$((View *) self, addSubview, self->selectionOverlay);
 
@@ -90,13 +114,6 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 static void setSelected(CollectionItemView *self, _Bool selected) {
 
 	self->isSelected = selected;
-	if (self->isSelected) {
-		self->selectionOverlay->hidden = false;
-		self->view.borderWidth = 1;
-	} else {
-		self->selectionOverlay->hidden = true;
-		self->view.borderWidth = 0;
-	}
 }
 
 #pragma mark - Class lifecycle
@@ -108,6 +125,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
+	
 	((CollectionItemViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((CollectionItemViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }

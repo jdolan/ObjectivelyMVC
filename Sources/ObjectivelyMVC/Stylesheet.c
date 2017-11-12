@@ -128,17 +128,21 @@ static Stylesheet *defaultStylesheet(void) {
 				} \
 				CollectionItemView > .selectionOverlay { \
 					backgroundColor: #ffffff22; \
+					hidden: true; \
+				} \
+				CollectionItemView:selected > .selectionOverlay { \
+					hidden: false; \
 				} \
 				CollectionView { \
 					backgroundColor: #22222266; \
-					itemSize: 48 48; \
+					itemSize: 64 64; \
 					itemSpacing: 10 10; \
 				} \
 				CollectionView .content { \
 					padding: 10 10 10 10; \
 				} \
 				Panel { \
-					backgroundColor: #444444aa; \
+					backgroundColor: #444444dd; \
 					borderColor: #dedede; \
 					borderWidth: 1; \
 					padding: 12 12 12 12; \
@@ -209,7 +213,7 @@ static Stylesheet *initWithContentsOfFile(Stylesheet *self, const char *path, St
 	if (string) {
 		self = $(self, initWithString, string);
 	} else {
-		release(self); self = NULL;
+		self = release(self);
 	}
 	release(string);
 
