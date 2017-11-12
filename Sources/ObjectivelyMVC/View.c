@@ -863,6 +863,7 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 				return $((Object *) self, isKindOfClass, clazz);
 			}
 		}
+			break;
 
 		case SimpleSelectorTypeClass:
 			return $(self, hasClassName, pattern);
@@ -884,6 +885,7 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 					return $((Array *) self->superview->subviews, lastObject) == self;
 				}
 			}
+			break;
 	}
 
 	return false;
