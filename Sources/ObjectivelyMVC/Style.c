@@ -325,11 +325,13 @@ static Array *parse(const char *css) {
 	assert(reader);
 
 	Style *style = NULL;
-	String *attr = NULL;
+	char *attr = NULL;
 	while (true) {
 
+		const Unicode *charset = style ? L"{:;}" : L"{}";
 		Unicode stop;
-		String *token = $(reader, readToken, L"{:;}", &stop);
+
+		String *token = $(reader, readToken, charset, &stop);
 		if (token) {
 			switch (stop) {
 				case '{':
@@ -338,24 +340,27 @@ static Array *parse(const char *css) {
 					break;
 				case ':':
 					if (style) {
-						attr = retain(token);
+						attr = strtrim(token->chars);
+						assert(attr);
 					}
 					break;
 				case ';':
 					if (style && attr) {
+
 						ident value = parseValue(token);
-						$(style, addAttribute, attr->chars, value);
-						release(attr);
+						$(style, addAttribute, attr, value);
+
+						free(attr);
+						attr = NULL;
+
 						release(value);
 					}
-					attr = NULL;
 					break;
 				case '}':
 					if (style) {
 						$(styles, addObject, style);
-						release(style);
+						style = release(style);
 					}
-					style = NULL;
 					break;
 			}
 
