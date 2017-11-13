@@ -141,4 +141,4 @@ struct SelectorInterface {
  * @return The Selector Class.
  * @memberof Selector
  */
-OBJECTIVELY_EXPORT Class *_Selector(void);
+OBJECTIVELYMVC_EXPORT Class *_Selector(void);

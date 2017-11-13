@@ -12,6 +12,9 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC.h">
       <Filter>Sources</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\WindowlyMVC.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Action.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
@@ -19,63 +22,6 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Button.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Constraint.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\HSVColorPicker.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\HueColorPicker.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Text.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\View.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\View+JSON.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TableColumn.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TableView.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\ViewController.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewItem.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewController.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TabView.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\PageView.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Checkbox.h">
@@ -87,7 +33,25 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionView.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Constraint.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Font.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\HSVColorPicker.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\HueColorPicker.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\ImageView.h">
@@ -105,22 +69,58 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\NavigationViewController.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Notification.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Option.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\PageView.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ProgressBar.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Selector.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\SelectorSequence.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\SimpleSelector.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\StackView.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Style.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Stylesheet.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableCellView.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TableColumn.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableHeaderCellView.h">
@@ -132,29 +132,50 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableRowView.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TableView.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabView.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewController.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewItem.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Text.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\TextView.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Theme.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Types.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\WindowController.h">
+    <ClInclude Include="..\Sources\ObjectivelyMVC\View.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\ProgressBar.h">
+    <ClInclude Include="..\Sources\ObjectivelyMVC\View+JSON.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\WindowlyMVC.h">
-      <Filter>Sources</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Notification.h">
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ViewController.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Window.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\WindowController.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
@@ -162,6 +183,9 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Checkbox.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionItemView.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionView.c">
@@ -200,7 +224,19 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\NavigationViewController.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Notification.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Option.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\PageView.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ProgressBar.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c">
@@ -209,58 +245,31 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Selector.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\SelectorSequence.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\SimpleSelector.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Slider.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\StackView.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\TableView.c">
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Style.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\TabView.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewController.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Text.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\TextView.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\View.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\View+JSON.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\ViewController.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\WindowController.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewItem.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\PageView.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionItemView.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Option.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c">
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Stylesheet.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableCellView.c">
@@ -278,13 +287,40 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableRowView.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\ProgressBar.c">
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TableView.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Notification.c">
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabView.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewController.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewItem.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Text.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\TextView.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Theme.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\View.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\View+JSON.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ViewController.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Window.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\WindowController.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
   </ItemGroup>

@@ -242,4 +242,4 @@ struct StyleInterface {
  * @return The Style Class.
  * @memberof Style
  */
-OBJECTIVELY_EXPORT Class *_Style(void);
+OBJECTIVELYMVC_EXPORT Class *_Style(void);

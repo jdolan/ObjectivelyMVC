@@ -112,4 +112,4 @@ struct SimpleSelectorInterface {
  * @return The SimpleSelector Class.
  * @memberof SimpleSelector
  */
-OBJECTIVELY_EXPORT Class *_SimpleSelector(void);
+OBJECTIVELYMVC_EXPORT Class *_SimpleSelector(void);
