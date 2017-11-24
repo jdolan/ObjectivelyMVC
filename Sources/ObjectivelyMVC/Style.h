@@ -238,6 +238,14 @@ struct StyleInterface {
 	Array *(*parse)(const char *css);
 
 	/**
+	 * @fn void Style::removeAllAttributes(Style *self)
+	 * @brief Removes all attributes from this Style.
+	 * @param self The Style.
+	 * @memberof Style
+	 */
+	void (*removeAllAttributes)(Style *self);
+
+	/**
 	 * @fn void Style::removeAttribute(Style *self, const char *attr)
 	 * @brief Removes the attribute with the given name.
 	 * @param self The Style.

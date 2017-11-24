@@ -230,6 +230,8 @@ static void addSizeAttribute(Style *self, const char *attr, const SDL_Size *valu
 	release(h);
 }
 
+
+
 /**
  * @fn ident Style::attributeValue(const Style *self, const char *attr)
  * @memberof Style
@@ -244,9 +246,11 @@ static ident attributeValue(const Style *self, const char *attr) {
  */
 static Style *initWithAttributes(Style *self, const Dictionary *attributes) {
 
-	self = $(self, initWithRules, "View");
+	self = $(self, initWithRules, NULL);
 	if (self) {
-		$(self->attributes, addEntriesFromDictionary, attributes);
+		if (attributes) {
+			$(self->attributes, addEntriesFromDictionary, attributes);
+		}
 	}
 
 	return self;
@@ -262,7 +266,7 @@ static Style *initWithRules(Style *self, const char *rules) {
 	if (self) {
 
 		self->selectors = $$(Selector, parse, rules);
-		assert(self->selectors->count);
+		assert(self->selectors);
 
 		self->attributes = $$(MutableDictionary, dictionary);
 		assert(self->attributes);
@@ -342,52 +346,56 @@ static Array *parse(const char *css) {
 	MutableArray *styles = $$(MutableArray, array);
 	assert(styles);
 
-	StringReader *reader = $(alloc(StringReader), initWithCharacters, css);
-	assert(reader);
+	if (css) {
 
-	Style *style = NULL;
-	char *attr = NULL;
-	while (true) {
+		StringReader *reader = $(alloc(StringReader), initWithCharacters, css);
+		assert(reader);
 
-		const Unicode *charset = style ? L"{:;}" : L"{}";
-		Unicode stop;
+		Style *style = NULL;
+		char *attr = NULL;
 
-		String *token = $(reader, readToken, charset, &stop);
-		if (token) {
-			switch (stop) {
-				case '{':
-					style = $(alloc(Style), initWithRules, token->chars);
-					assert(style);
-					break;
-				case ':':
-					if (style) {
-						attr = strtrim(token->chars);
-						assert(attr);
-					}
-					break;
-				case ';':
-					if (style && attr) {
+		while (true) {
 
-						ident value = parseValue(token);
-						$(style, addAttribute, attr, value);
+			const Unicode *charset = style ? L"{:;}" : L"{}";
+			Unicode stop;
 
-						free(attr);
-						attr = NULL;
+			String *token = $(reader, readToken, charset, &stop);
+			if (token) {
+				switch (stop) {
+					case '{':
+						style = $(alloc(Style), initWithRules, token->chars);
+						assert(style);
+						break;
+					case ':':
+						if (style) {
+							attr = strtrim(token->chars);
+							assert(attr);
+						}
+						break;
+					case ';':
+						if (style && attr) {
 
-						release(value);
-					}
-					break;
-				case '}':
-					if (style) {
-						$(styles, addObject, style);
-						style = release(style);
-					}
-					break;
+							ident value = parseValue(token);
+							$(style, addAttribute, attr, value);
+
+							free(attr);
+							attr = NULL;
+
+							release(value);
+						}
+						break;
+					case '}':
+						if (style) {
+							$(styles, addObject, style);
+							style = release(style);
+						}
+						break;
+				}
+
+				release(token);
+			} else {
+				break;
 			}
-
-			release(token);
-		} else {
-			break;
 		}
 	}
 
@@ -400,6 +408,14 @@ static Array *parse(const char *css) {
  */
 static void removeAttribute(Style *self, const char *attr) {
 	$(self->attributes, removeObjectForKeyPath, attr);
+}
+
+/**
+ * @fn void Style::removeAllAttributes(Style *self)
+ * @memberof Style
+ */
+static void removeAllAttributes(Style *self) {
+	$(self->attributes, removeAllObjects);
 }
 
 #pragma mark - Class lifecycle
@@ -428,6 +444,7 @@ static void initialize(Class *clazz) {
 	((StyleInterface *) clazz->def->interface)->initWithAttributes = initWithAttributes;
 	((StyleInterface *) clazz->def->interface)->initWithRules = initWithRules;
 	((StyleInterface *) clazz->def->interface)->parse = parse;
+	((StyleInterface *) clazz->def->interface)->removeAllAttributes = removeAllAttributes;
 	((StyleInterface *) clazz->def->interface)->removeAttribute = removeAttribute;
 }
 
