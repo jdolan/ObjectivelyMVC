@@ -136,39 +136,42 @@ static Array *parse(const char *sequence) {
 	MutableArray *simpleSelectors = $$(MutableArray, array);
 	assert(simpleSelectors);
 
-	const char *c = sequence;
-	const char *delim = sequence;
-	while (*c) {
-		const size_t size = strcspn(c, "*.#:");
-		if (size || *c == '*') {
+	if (sequence) {
 
-			char *pattern;
-			if (*c == '*') {
-				pattern = strdup("*");
-				assert(pattern);
-			} else {
-				pattern = calloc(1, size + 1);
-				assert(pattern);
+		const char *c = sequence;
+		const char *delim = sequence;
+		while (*c) {
+			const size_t size = strcspn(c, "*.#:");
+			if (size || *c == '*') {
 
-				strncpy(pattern, c, size);
+				char *pattern;
+				if (*c == '*') {
+					pattern = strdup("*");
+					assert(pattern);
+				} else {
+					pattern = calloc(1, size + 1);
+					assert(pattern);
+
+					strncpy(pattern, c, size);
+				}
+
+				SimpleSelector *simpleSelector = $(alloc(SimpleSelector), initWithPattern, pattern);
+				assert(simpleSelector);
+
+				simpleSelector->type = simpleSelectorType(*delim);
+				assert(simpleSelector->type);
+
+				delim = c + size;
+
+				$(simpleSelectors, addObject, simpleSelector);
+
+				release(simpleSelector);
+				free(pattern);
 			}
 
-			SimpleSelector *simpleSelector = $(alloc(SimpleSelector), initWithPattern, pattern);
-			assert(simpleSelector);
-
-			simpleSelector->type = simpleSelectorType(*delim);
-			assert(simpleSelector->type);
-
-			delim = c + size;
-
-			$(simpleSelectors, addObject, simpleSelector);
-
-			release(simpleSelector);
-			free(pattern);
+			c += size;
+			c += strspn(c, "*.#:");
 		}
-
-		c += size;
-		c += strspn(c, "*.#:");
 	}
 
 	return (Array *) simpleSelectors;
