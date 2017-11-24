@@ -161,4 +161,4 @@ struct StylesheetInterface {
  * @return The Stylesheet Class.
  * @memberof Stylesheet
  */
-OBJECTIVELY_EXPORT Class *_Stylesheet(void);
+OBJECTIVELYMVC_EXPORT Class *_Stylesheet(void);

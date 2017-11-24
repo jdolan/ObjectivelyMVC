@@ -47,8 +47,13 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Selector.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\SelectorSequence.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\SimpleSelector.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\StackView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Style.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Stylesheet.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableCellView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableColumn.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TableHeaderCellView.h" />
@@ -60,6 +65,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewItem.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Text.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\TextView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Theme.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Types.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\View+JSON.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\View.h" />
@@ -95,8 +101,13 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Selector.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\SelectorSequence.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\SimpleSelector.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Slider.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\StackView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Style.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Stylesheet.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableCellView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableColumn.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TableHeaderCellView.c" />
@@ -108,6 +119,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\TabViewItem.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Text.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\TextView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Theme.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\View+JSON.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\View.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ViewController.c" />

@@ -297,7 +297,7 @@ static ident parseValue(String *string) {
 
 		Number *number = $(formatter, numberFromString, token);
 
-		if (stop == -1) {
+		if (stop == READER_EOF) {
 
 			if (number) {
 				value = number;

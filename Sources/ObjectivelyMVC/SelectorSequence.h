@@ -126,4 +126,4 @@ struct SelectorSequenceInterface {
  * @return The SelectorSequence Class.
  * @memberof SelectorSequence
  */
-OBJECTIVELY_EXPORT Class *_SelectorSequence(void);
+OBJECTIVELYMVC_EXPORT Class *_SelectorSequence(void);
