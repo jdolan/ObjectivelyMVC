@@ -26,6 +26,7 @@
 #include <Objectively/JSONSerialization.h>
 
 #include <ObjectivelyMVC/Theme.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _Theme
 
@@ -56,8 +57,17 @@ static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
 /**
  * @brief ArrayEnumerator for apply.
  */
-static void apply_enumerate(const Array *array, ident obj, ident data) {
+static void apply_enumerateStylesheets(const Array *array, ident obj, ident data) {
 	$((Stylesheet *) obj, apply, data);
+}
+
+/**
+ * @brief ViewEnumerator for apply.
+ */
+static void apply_enumerateViews(View *view, ident data) {
+	if (view->style) {
+		$(view, applyStyle, view->style);
+	}
 }
 
 /**
@@ -65,7 +75,14 @@ static void apply_enumerate(const Array *array, ident obj, ident data) {
  * @memberof Theme
  */
 static void apply(const Theme *self, View *view) {
-	$((Array *) self->stylesheets, enumerateObjects, apply_enumerate, view);
+
+	$((Array *) self->stylesheets, enumerateObjects, apply_enumerateStylesheets, view);
+
+	if (view->style) {
+		$(view, applyStyle, view->style);
+	}
+
+	$(view, enumerateDescendants, apply_enumerateViews, NULL);
 }
 
 static Theme *_defaultTheme;

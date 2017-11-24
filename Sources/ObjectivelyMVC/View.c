@@ -71,6 +71,7 @@ static void dealloc(Object *self) {
 
 	release(this->classNames);
 	release(this->constraints);
+	release(this->style);
 	release(this->subviews);
 
 	super(Object, self, dealloc);
@@ -262,6 +263,8 @@ static void applyConstraintsIfNeeded(View *self) {
  */
 static void applyStyle(View *self, const Style *style) {
 
+	assert(style);
+
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
 		MakeInlet("autoresizingMask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
@@ -287,19 +290,12 @@ static void applyStyle(View *self, const Style *style) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
+	assert(dictionary);
+
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("identifier", InletTypeCharacters, &self->identifier, NULL),
-		MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
-		MakeInlet("autoresizingMask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
-		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
-		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
-		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
 		MakeInlet("classNames", InletTypeClassNames, &self, NULL),
-		MakeInlet("clipsSubviews", InletTypeBool, &self->clipsSubviews, NULL),
 		MakeInlet("constraints", InletTypeConstraints, &self, NULL),
-		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
-		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
-		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
 		MakeInlet("subviews", InletTypeSubviews, &self, NULL)
 	);
 
@@ -312,6 +308,11 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 			}
 		}
 	}
+
+	release(self->style);
+
+	self->style = $(alloc(Style), initWithAttributes, dictionary);
+	assert(self->style);
 }
 
 /**
@@ -333,11 +334,25 @@ static void becomeFirstResponder(View *self) {
  */
 static void _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
-	if (inlets) {
-		bindInlets(inlets, dictionary);
+	const size_t size = ((Object *) self)->clazz->instanceSize;
+
+	ident this = calloc(1, size);
+	assert(this);
+
+	memcpy(this, self, size);
+
+	bindInlets(inlets, dictionary);
+
+	String *desc = $((Object *) self, description);
+
+	if (memcmp(this, self, size)) {
+		self->needsLayout = true;
+		$(self, updateBindings);
 	}
 
-	$(self, updateBindings);
+	release(desc);
+
+	free(this);
 }
 
 /**
@@ -571,7 +586,7 @@ static void enumerateSiblings(const View *self, ViewEnumerator enumerator, ident
 		const Array *siblings = (Array *) self->superview->subviews;
 		for (size_t i = 0; i < siblings->count; i++) {
 			View *sibling = $(siblings, objectAtIndex, i);
-			if (self != sibling) {
+			if (sibling != self) {
 				enumerator(sibling, data);
 			}
 		}

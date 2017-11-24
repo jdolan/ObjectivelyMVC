@@ -196,6 +196,12 @@ struct View {
 	ViewPadding padding;
 
 	/**
+	 * @brief The Style.
+	 * @remarks This Style contains View-level attributes, such as those provided via JSON binding.
+	 */
+	Style *style;
+
+	/**
 	 * @brief The immediate subviews.
 	 */
 	MutableArray *subviews;
