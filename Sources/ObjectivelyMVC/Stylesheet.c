@@ -63,7 +63,7 @@ static void apply_enumerateSelection(View *view, ident data) {
 		release(that);
 	}
 
-	$(view, applyStyle, data);
+	$(view->style, addAttributes, (Dictionary *) ((Style *) data)->attributes);
 }
 
 /**
@@ -78,8 +78,6 @@ static void apply(const Stylesheet *self, View *view) {
 
 		const Selector *selector = $(self->selectors, objectAtIndex, i);
 		const Style *style = $(self->styles, objectForKey, (ident) selector);
-
-		assert(style);
 
 		if ($(style, attributeValue, "debug")) {
 			SDL_TriggerBreakpoint();
