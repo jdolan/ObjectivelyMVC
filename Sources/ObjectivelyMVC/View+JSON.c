@@ -249,6 +249,8 @@ static void bindView(const Inlet *inlet, ident obj) {
 				assert(c);
 
 				view = $((View *) _alloc(clazz), init);
+				assert(view);
+				
 				$(view, awakeWithDictionary, dictionary);
 			}
 		} else if (includePath) {
