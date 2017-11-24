@@ -239,6 +239,20 @@ static ident attributeValue(const Style *self, const char *attr) {
 }
 
 /**
+ * @fn Style *Style::initWithAttributes(Style *self, const Dictionary *attributes)
+ * @memberof Style
+ */
+static Style *initWithAttributes(Style *self, const Dictionary *attributes) {
+
+	self = $(self, initWithRules, "View");
+	if (self) {
+		$(self->attributes, addEntriesFromDictionary, attributes);
+	}
+
+	return self;
+}
+
+/**
  * @fn Style *Style::initWithRules(Style *self, const char *rules)
  * @memberof Style
  */
@@ -411,6 +425,7 @@ static void initialize(Class *clazz) {
 	((StyleInterface *) clazz->def->interface)->addRectangleAttribute = addRectangleAttribute;
 	((StyleInterface *) clazz->def->interface)->addSizeAttribute = addSizeAttribute;
 	((StyleInterface *) clazz->def->interface)->attributeValue = attributeValue;
+	((StyleInterface *) clazz->def->interface)->initWithAttributes = initWithAttributes;
 	((StyleInterface *) clazz->def->interface)->initWithRules = initWithRules;
 	((StyleInterface *) clazz->def->interface)->parse = parse;
 	((StyleInterface *) clazz->def->interface)->removeAttribute = removeAttribute;

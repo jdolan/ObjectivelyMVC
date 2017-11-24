@@ -206,6 +206,17 @@ struct StyleInterface {
 	ident (*attributeValue)(const Style *self, const char *attr);
 
 	/**
+	 * @fn Style *Style::initWithAttributes(Style *self, const Dictionary *attributes)
+	 * @brief Initializes this Style with the given attributes.
+	 * @param self The Style.
+	 * @param attributes The attributes.
+	 * @return The initialized Style, or `NULL` on error.
+	 * @see View::awakeWithDictionary(View *, const Dictionary *)
+	 * @memberof Style
+	 */
+	Style *(*initWithAttributes)(Style *self, const Dictionary *attributes);
+
+	/**
 	 * @fn Style *Style::initWithRules(Style *self, const char *rules)
 	 * @brief Initializes this Style with the given CSS selector rules.
 	 * @param self The Style.
