@@ -192,25 +192,28 @@ static Array *parse(const char *rules) {
 	MutableArray *selectors = $$(MutableArray, array);
 	assert(selectors);
 
-	const char *c = rules;
-	while (*c) {
-		const size_t size = strcspn(c, ",");
-		if (size) {
-			char *rule = calloc(1, size + 1);
-			assert(rule);
+	if (rules) {
 
-			strncpy(rule, c, size);
+		const char *c = rules;
+		while (*c) {
+			const size_t size = strcspn(c, ",");
+			if (size) {
+				char *rule = calloc(1, size + 1);
+				assert(rule);
 
-			Selector *selector = $(alloc(Selector), initWithRule, rule);
-			assert(selector);
+				strncpy(rule, c, size);
 
-			$(selectors, addObject, selector);
+				Selector *selector = $(alloc(Selector), initWithRule, rule);
+				assert(selector);
 
-			release(selector);
-			free(rule);
+				$(selectors, addObject, selector);
+
+				release(selector);
+				free(rule);
+			}
+			c += size;
+			c += strspn(c, ", \t\n");
 		}
-		c += size;
-		c += strspn(c, ", \t\n");
 	}
 
 	return (Array *) selectors;
