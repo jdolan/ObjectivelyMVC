@@ -69,6 +69,7 @@ static void dealloc(Object *self) {
 
 	free(this->identifier);
 
+	release(this->attributes);
 	release(this->classNames);
 	release(this->constraints);
 	release(this->style);
@@ -292,6 +293,9 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	assert(dictionary);
 
+	$(self->attributes, removeAllObjects);
+	$(self->attributes, addEntriesFromDictionary, dictionary);
+
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("identifier", InletTypeCharacters, &self->identifier, NULL),
 		MakeInlet("classNames", InletTypeClassNames, &self, NULL),
@@ -308,11 +312,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 			}
 		}
 	}
-
-	release(self->style);
-
-	self->style = $(alloc(Style), initWithAttributes, dictionary);
-	assert(self->style);
 }
 
 /**
@@ -334,25 +333,11 @@ static void becomeFirstResponder(View *self) {
  */
 static void _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
-	const size_t size = ((Object *) self)->clazz->instanceSize;
-
-	ident this = calloc(1, size);
-	assert(this);
-
-	memcpy(this, self, size);
-
-	bindInlets(inlets, dictionary);
-
-	String *desc = $((Object *) self, description);
-
-	if (memcmp(this, self, size)) {
-		self->needsLayout = true;
-		$(self, updateBindings);
+	if (inlets) {
+		bindInlets(inlets, dictionary);
 	}
 
-	release(desc);
-
-	free(this);
+	$(self, updateBindings);
 }
 
 /**
@@ -688,6 +673,9 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 			self->frame = *frame;
 		}
 
+		self->attributes = $$(MutableDictionary, dictionary);
+		assert(self->attributes);
+
 		self->classNames = $$(MutableArray, array);
 		assert(self->classNames);
 
@@ -696,6 +684,9 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 
 		self->subviews = $$(MutableArray, array);
 		assert(self->subviews);
+
+		self->style = $(alloc(Style), initWithAttributes, NULL);
+		assert(self->style);
 
 		self->backgroundColor = Colors.Transparent;
 		self->borderColor = Colors.GhostWhite;

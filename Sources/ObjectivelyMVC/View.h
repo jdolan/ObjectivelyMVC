@@ -25,7 +25,7 @@
 
 #include <Objectively/Data.h>
 #include <Objectively/Enum.h>
-#include <Objectively/Dictionary.h>
+#include <Objectively/MutableDictionary.h>
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Colors.h>
@@ -134,6 +134,11 @@ struct View {
 	int autoresizingMask;
 
 	/**
+	 * @brief The Dictionary this View was awakened with.
+	 */
+	MutableDictionary *attributes;
+
+	/**
 	 * @brief The background color.
 	 */
 	SDL_Color backgroundColor;
@@ -196,8 +201,7 @@ struct View {
 	ViewPadding padding;
 
 	/**
-	 * @brief The Style.
-	 * @remarks This Style contains View-level attributes, such as those provided via JSON binding.
+	 * @brief The computed Style.
 	 */
 	Style *style;
 
@@ -208,6 +212,7 @@ struct View {
 
 	/**
 	 * @brief The super View.
+	 * @remarks This reference is not retained.
 	 */
 	View *superview;
 
