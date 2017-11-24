@@ -539,6 +539,23 @@ static void draw(View *self, Renderer *renderer) {
 	}
 }
 
+/**
+ * @fn void View::enumerate(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerate(View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	enumerator(self, data);
+
+	$(self, enumerateDescendants, enumerator, data);
+}
+
+/**
+ * @fn void View::enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
 static void enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident data) {
 
 	assert(enumerator);
@@ -1469,6 +1486,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
+	((ViewInterface *) clazz->def->interface)->enumerate = enumerate;
 	((ViewInterface *) clazz->def->interface)->enumerateAdjacent = enumerateAdjacent;
 	((ViewInterface *) clazz->def->interface)->enumerateDescendants = enumerateDescendants;
 	((ViewInterface *) clazz->def->interface)->enumerateSiblings = enumerateSiblings;
