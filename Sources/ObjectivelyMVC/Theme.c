@@ -51,7 +51,7 @@ static void dealloc(Object *self) {
  * @memberof Theme
  */
 static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
-	$(self->stylesheets, addObject, stylesheet);
+	$((MutableArray *) self->stylesheets, addObject, stylesheet);
 }
 
 /**
@@ -110,13 +110,21 @@ static Theme *init(Theme *self) {
 
 	self = (Theme *) super(Object, self, init);
 	if (self) {
-		self->stylesheets = $$(MutableArray, array);
+		self->stylesheets = (Array *) $$(MutableArray, array);
 		assert(self->stylesheets);
 
 		$(self, addStylesheet, $$(Stylesheet, defaultStylesheet));
 	}
 
 	return self;
+}
+
+/**
+ * @fn void Theme::removeStylesheet(Theme *self, Stylesheet *stylesheet)
+ * @memberof Theme
+ */
+static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
+	$((MutableArray *) self->stylesheets, removeObject, stylesheet);
 }
 
 #pragma mark - Class lifecycle
@@ -132,6 +140,7 @@ static void initialize(Class *clazz) {
 	((ThemeInterface *) clazz->def->interface)->apply = apply;
 	((ThemeInterface *) clazz->def->interface)->defaultTheme = defaultTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
+	((ThemeInterface *) clazz->def->interface)->removeStylesheet = removeStylesheet;
 }
 
 /**

@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <Objectively/MutableArray.h>
+#include <Objectively/Array.h>
 
 #include <ObjectivelyMVC/Stylesheet.h>
 
@@ -64,7 +64,7 @@ struct Theme {
 	/**
 	 * @brief The Stylesheets, in order of priority.
 	 */
-	MutableArray *stylesheets;
+	Array *stylesheets;
 };
 
 /**
