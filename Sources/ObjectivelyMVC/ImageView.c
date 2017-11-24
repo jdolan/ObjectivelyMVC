@@ -45,7 +45,7 @@ const EnumName GLBlendNames[] = MakeEnumNames(
 #pragma mark - Object
 
 /**
- * @see ObjectInterface::dealloc(Object *)
+ * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
 

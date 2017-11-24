@@ -41,6 +41,19 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
+/**
+ * @see Object::description(const Object *)
+ */
+static String *description(const Object *self) {
+
+	View *this = (View *) self;
+
+	const SDL_Rect *f = &this->frame;
+
+	return str("%s@%p \"%s\"(%d,%d) %dx%d", this->identifier ?: self->clazz->name, self,
+			   ((Label *) self)->text->text, f->x, f->y, f->w, f->h);
+}
+
 #pragma mark - View
 
 /**
@@ -100,6 +113,7 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->description = description;
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
