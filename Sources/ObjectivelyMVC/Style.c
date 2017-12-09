@@ -230,7 +230,13 @@ static void addSizeAttribute(Style *self, const char *attr, const SDL_Size *valu
 	release(h);
 }
 
-
+/**
+ * @fn Dictionary *Style::attributes(const Style *self)
+ * @memberof Style
+ */
+static Dictionary *attributes(const Style *self) {
+	return $$(Dictionary, dictionaryWithDictionary, (Dictionary *) self->attributes);
+}
 
 /**
  * @fn ident Style::attributeValue(const Style *self, const char *attr)
@@ -440,6 +446,7 @@ static void initialize(Class *clazz) {
 	((StyleInterface *) clazz->def->interface)->addPointAttribute = addPointAttribute;
 	((StyleInterface *) clazz->def->interface)->addRectangleAttribute = addRectangleAttribute;
 	((StyleInterface *) clazz->def->interface)->addSizeAttribute = addSizeAttribute;
+	((StyleInterface *) clazz->def->interface)->attributes = attributes;
 	((StyleInterface *) clazz->def->interface)->attributeValue = attributeValue;
 	((StyleInterface *) clazz->def->interface)->initWithAttributes = initWithAttributes;
 	((StyleInterface *) clazz->def->interface)->initWithRules = initWithRules;

@@ -197,6 +197,14 @@ struct StyleInterface {
 	void (*addSizeAttribute)(Style *self, const char *attr, const SDL_Size *value);
 
 	/**
+	 * @fn Dictionary *Style::attributes(const Style *self)
+	 * @param self The Style.
+	 * @return A copy of this Styles attributes.
+	 * @memberof Style
+	 */
+	Dictionary *(*attributes)(const Style *self);
+
+	/**
 	 * @fn ident Style::attributeValue(const Style *self, const char *attr)
 	 * @param self The Style.
 	 * @param attr The attribute name.
