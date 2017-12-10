@@ -55,38 +55,10 @@ static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
 }
 
 /**
- * @brief ViewEnumerator for removing all computed Style attributes.
- */
-static void apply_removeAllAttributes(View *view, ident data) {
-	$(view->style, removeAllAttributes);
-}
-
-/**
  * @brief ArrayEnumerator for applying Stylesheets.
  */
-static void apply_applyStylesheet(const Array *array, ident obj, ident data) {
+static void apply_enumerate(const Array *array, ident obj, ident data) {
 	$((Stylesheet *) obj, apply, data);
-}
-
-/**
- * @brief ViewEnumerator for applying each View's Style.
- */
-static void apply_applyStyle(View *view, ident data) {
-
-	const size_t size = ((Object *) view)->clazz->instanceSize;
-
-	ident that = calloc(1, size);
-	assert(that);
-
-	memcpy(that, view, size);
-
-	$(view->style, addAttributes, (Dictionary *) view->attributes);
-
-	$(view, applyStyle, view->style);
-
-	view->needsLayout = !memcmp(that, view, size);
-
-	free(that);
 }
 
 /**
@@ -95,11 +67,9 @@ static void apply_applyStyle(View *view, ident data) {
  */
 static void apply(const Theme *self, View *view) {
 
-	$(view, enumerate, apply_removeAllAttributes, NULL);
+	assert(view);
 
-	$(self->stylesheets, enumerateObjects, apply_applyStylesheet, view);
-
-	$(view, enumerate, apply_applyStyle, NULL);
+	$(self->stylesheets, enumerateObjects, apply_enumerate, view);
 }
 
 static Theme *_defaultTheme;

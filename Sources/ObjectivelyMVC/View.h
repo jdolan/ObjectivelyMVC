@@ -330,6 +330,15 @@ struct ViewInterface {
 	void (*applyStyle)(View *self, const Style *style);
 
 	/**
+	 * @fn void View::applyTheme(View *self, const Theme *theme)
+	 * @brief Applies the given Theme to this View.
+	 * @param self The View.
+	 * @param style The Theme.
+	 * @memberof View
+	 */
+	void (*applyTheme)(View *self, const Theme *theme);
+
+	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)
 	 * @brief Wakes this View with the specified Dictionary.
 	 * @param self The View.

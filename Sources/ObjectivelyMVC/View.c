@@ -283,6 +283,35 @@ static void applyStyle(View *self, const Style *style) {
 	);
 
 	$(self, bind, inlets, (Dictionary *) style->attributes);
+
+	self->needsLayout = true;
+}
+
+/**
+ * @fn void View::applyTheme(View *self, const Theme *theme)
+ * @memberof View
+ */
+static void applyTheme(View *self, const Theme *theme) {
+
+	assert(theme);
+
+	Dictionary *attributes = $(self->style, attributes);
+
+	$(self->style, removeAllAttributes);
+
+	$(theme, apply, self);
+
+	$(self->style, addAttributes, (Dictionary *) self->attributes);
+
+	if ($((Object *) attributes, isEqual, (Object *) self->style->attributes) == false) {
+		$(self, applyStyle, self->style);
+	}
+
+	release(attributes);
+
+	if (self->hidden == false) {
+		$(self, enumerateSubviews, (ViewEnumerator) applyTheme, (ident) theme);
+	}
 }
 
 /**
@@ -1495,6 +1524,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
 	((ViewInterface *) clazz->def->interface)->applyConstraintsIfNeeded = applyConstraintsIfNeeded;
 	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
+	((ViewInterface *) clazz->def->interface)->applyTheme = applyTheme;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;

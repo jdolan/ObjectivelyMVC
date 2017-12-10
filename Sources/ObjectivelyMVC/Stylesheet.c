@@ -24,7 +24,6 @@
 #include <assert.h>
 #include <string.h>
 
-#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Stylesheet.h>
 #include <ObjectivelyMVC/View.h>
 
@@ -48,25 +47,6 @@ static void dealloc(Object *self) {
 #pragma mark - Stylesheet
 
 /**
- * @brief ViewEnumerator for apply.
- */
-static void apply_enumerateSelection(View *view, ident data) {
-
-	if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
-
-		String *this = $((Object *) view, description);
-		String *that = $((Object *) data, description);
-
-		MVC_LogVerbose("%s -> %s\n", that->chars, this->chars);
-
-		release(this);
-		release(that);
-	}
-
-	$(view->style, addAttributes, (Dictionary *) ((Style *) data)->attributes);
-}
-
-/**
  * @fn void Stylesheet::apply(const Stylesheet *self, View *view)
  * @memberof Stylesheet
  */
@@ -77,13 +57,11 @@ static void apply(const Stylesheet *self, View *view) {
 	for (size_t i = 0; i < self->selectors->count; i++) {
 
 		const Selector *selector = $(self->selectors, objectAtIndex, i);
-		const Style *style = $(self->styles, objectForKey, (ident) selector);
+		if ($(selector, matchesView, view)) {
 
-		if ($(style, attributeValue, "debug")) {
-			SDL_TriggerBreakpoint();
+			const Style *style = $(self->styles, objectForKey, (ident) selector);
+			$(style, apply, view);
 		}
-
-		$(selector, enumerateSelection, view, apply_enumerateSelection, (ident) style);
 	}
 }
 

@@ -27,8 +27,9 @@
 
 #include <Objectively.h>
 
-#include <ObjectivelyMVC/Selector.h>
+#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Style.h>
+#include <ObjectivelyMVC/View.h>
 
 #define _Class _Style
 
@@ -228,6 +229,30 @@ static void addSizeAttribute(Style *self, const char *attr, const SDL_Size *valu
 	release(array);
 	release(w);
 	release(h);
+}
+
+/**
+ * @fn void Style::apply(const Style *self, View *view)
+ * @memberof Style
+ */
+static void apply(const Style *self, View *view) {
+
+	if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
+
+		String *this = $((Object *) self, description);
+		String *that = $((Object *) view, description);
+
+		MVC_LogVerbose("%s -> %s\n", this->chars, that->chars);
+
+		release(this);
+		release(that);
+	}
+
+	if ($(self, attributeValue, "debug")) {
+		SDL_TriggerBreakpoint();
+	}
+
+	$(view->style, addAttributes, (Dictionary *) self->attributes);
 }
 
 /**
@@ -446,6 +471,7 @@ static void initialize(Class *clazz) {
 	((StyleInterface *) clazz->def->interface)->addPointAttribute = addPointAttribute;
 	((StyleInterface *) clazz->def->interface)->addRectangleAttribute = addRectangleAttribute;
 	((StyleInterface *) clazz->def->interface)->addSizeAttribute = addSizeAttribute;
+	((StyleInterface *) clazz->def->interface)->apply = apply;
 	((StyleInterface *) clazz->def->interface)->attributes = attributes;
 	((StyleInterface *) clazz->def->interface)->attributeValue = attributeValue;
 	((StyleInterface *) clazz->def->interface)->initWithAttributes = initWithAttributes;

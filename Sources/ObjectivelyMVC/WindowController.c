@@ -115,7 +115,7 @@ static void render(WindowController *self) {
 		View *view = self->viewController->view;
 		assert(view);
 
-		$(self->theme, apply, view);
+		$(view, applyTheme, self->theme);
 
 		$(view, layoutIfNeeded);
 
