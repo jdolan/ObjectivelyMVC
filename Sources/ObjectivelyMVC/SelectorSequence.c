@@ -129,8 +129,12 @@ static SequenceCombinator sequenceCombinator(const char *c) {
  */
 static Array *parse(const char *rule) {
 
+	assert(rule);
+
 	MutableArray *selectorSequences = $$(MutableArray, array);
 	assert(selectorSequences);
+
+	SequenceCombinator left = SequenceCombinatorNone;
 
 	const char *c = rule;
 	while (*c) {
@@ -144,8 +148,11 @@ static Array *parse(const char *rule) {
 			SelectorSequence *selectorSequence = $(alloc(SelectorSequence), initWithSequence, sequence);
 			assert(selectorSequence);
 
-			selectorSequence->combinator = sequenceCombinator(c + size);
-			assert(selectorSequence->combinator);
+			selectorSequence->right = sequenceCombinator(c + size);
+			assert(selectorSequence->right);
+
+			selectorSequence->left = left;
+			left = selectorSequence->right;
 
 			$(selectorSequences, addObject, selectorSequence);
 

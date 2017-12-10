@@ -40,7 +40,8 @@ START_TEST(selector)
 
 	selectorSequence = $(selector->sequences, objectAtIndex, 0);
 	ck_assert_int_eq(2, selectorSequence->simpleSelectors->count);
-	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->combinator);
+	ck_assert_int_eq(SequenceCombinatorNone, selectorSequence->left);
+	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->right);
 
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 0);
 	ck_assert_int_eq(SimpleSelectorTypeType, simpleSelector->type);
@@ -54,7 +55,8 @@ START_TEST(selector)
 
 	selectorSequence = $(selector->sequences, objectAtIndex, 1);
 	ck_assert_int_eq(1, selectorSequence->simpleSelectors->count);
-	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->combinator);
+	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->left);
+	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->right);
 
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 0);
 	ck_assert_int_eq(SimpleSelectorTypeClass, simpleSelector->type);
@@ -64,7 +66,8 @@ START_TEST(selector)
 
 	selectorSequence = $(selector->sequences, objectAtIndex, 2);
 	ck_assert_int_eq(2, selectorSequence->simpleSelectors->count);
-	ck_assert_int_eq(SequenceCombinatorTerminal, selectorSequence->combinator);
+	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->left);
+	ck_assert_int_eq(SequenceCombinatorTerminal, selectorSequence->right);
 
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 0);
 	ck_assert_int_eq(SimpleSelectorTypeType, simpleSelector->type);
@@ -89,6 +92,69 @@ START_TEST(compareTo)
 	ck_assert_int_eq(21, b->specificity);
 
 	ck_assert_int_eq(OrderDescending, $(a, compareTo, b));
+
+} END_TEST
+
+START_TEST(matchesView)
+{
+	View *root = $(alloc(View), initWithFrame, NULL);
+	root->identifier = strdup("root");
+
+	View *container = $(alloc(View), initWithFrame, NULL);
+	$(container, addClassName, "container");
+
+	$(root, addSubview, container);
+
+	Panel *panel = $(alloc(Panel), initWithFrame, NULL, ControlStyleDefault);
+	$(container, addSubview, (View *) panel);
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, "*");
+		ck_assert(selector);
+
+		ck_assert_int_eq(1, $(selector, matchesView, (View *) panel));
+		ck_assert_int_eq(1, $(selector, matchesView, container));
+		ck_assert_int_eq(1, $(selector, matchesView, root));
+
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, "Panel");
+		ck_assert(selector);
+
+		ck_assert_int_eq(1, $(selector, matchesView, (View *) panel));
+		ck_assert_int_eq(0, $(selector, matchesView, container));
+		ck_assert_int_eq(0, $(selector, matchesView, root));
+
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, ".container Panel");
+		ck_assert(selector);
+
+		ck_assert_int_eq(1, $(selector, matchesView, (View *) panel));
+		ck_assert_int_eq(0, $(selector, matchesView, container));
+		ck_assert_int_eq(0, $(selector, matchesView, root));
+
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, "#root .container Panel");
+		ck_assert(selector);
+
+		ck_assert_int_eq(1, $(selector, matchesView, (View *) panel));
+		ck_assert_int_eq(0, $(selector, matchesView, container));
+		ck_assert_int_eq(0, $(selector, matchesView, root));
+
+		release(selector);
+	}
+
+	release(panel);
+	release(container);
+	release(root);
 
 } END_TEST
 
@@ -186,6 +252,7 @@ int main(int argc, char **argv) {
 	TCase *tcase = tcase_create("selector");
 	tcase_add_test(tcase, selector);
 	tcase_add_test(tcase, compareTo);
+	tcase_add_test(tcase, matchesView);
 	tcase_add_test(tcase, _select);
 
 	Suite *suite = suite_create("selector");

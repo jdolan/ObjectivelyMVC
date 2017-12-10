@@ -184,6 +184,71 @@ static Selector *initWithRule(Selector *self, const char *rule) {
 }
 
 /**
+ * @brief A context for View matching.
+ */
+typedef struct {
+	const Array *sequences;
+	size_t sequence;
+	_Bool match;
+} Match;
+
+/**
+ * @brief ViewEnumerator for matchesView.
+ */
+static _Bool _matchesView(const View *view, Match *match) {
+
+	const SelectorSequence *sequence = $(match->sequences, objectAtIndex, match->sequence);
+
+	if ($(sequence, matchesView, view)) {
+
+		switch (sequence->left) {
+			case SequenceCombinatorNone:
+				match->match = true;
+				break;
+
+			case SequenceCombinatorDescendent:
+				match->sequence--;
+				$(view, enumerateAncestors, (ViewEnumerator) _matchesView, match);
+				break;
+
+			case SequenceCombinatorChild:
+				match->sequence--;
+				$(view, enumerateSuperview, (ViewEnumerator) _matchesView, match);
+				break;
+
+			case SequenceCombinatorSibling:
+				match->sequence--;
+				$(view, enumerateSiblings, (ViewEnumerator) _matchesView, match);
+				break;
+
+			case SequenceCombinatorAdjacent:
+				match->sequence--;
+				$(view, enumerateAdjacent, (ViewEnumerator) _matchesView, match);
+				break;
+
+			case SequenceCombinatorTerminal:
+				break;
+		}
+	}
+
+	return match->match;
+}
+
+/**
+ * @fn _Bool Selector::matchesView(const Selector *self, View *view)
+ * @memberof Selector
+ */
+static _Bool matchesView(const Selector *self, const View *view) {
+
+	assert(view);
+
+	return _matchesView(view, &(Match) {
+		.sequences = self->sequences,
+		.sequence = self->sequences->count - 1
+	});
+}
+
+/**
  * @fn Array *Selector::parse(const char *rules)
  * @memberof Selector
  */
@@ -220,68 +285,56 @@ static Array *parse(const char *rules) {
 }
 
 /**
- * @brief A context for View selection state.
+ * @brief A context for View selection.
  */
 typedef struct {
-	const Selector *selector;
-	const SelectorSequence **sequence;
+	const Array *sequences;
+	size_t sequence;
 	MutableSet *selection;
-} Context;
+} Selection;
 
 /**
- * @brief Recursively selects Views by iterating the SelectorSequences in the given Context.
+ * @brief Recursively selects Views by iterating the SelectorSequences in the given Selection.
  */
-static Set *_select(View *view, const Context *context) {
+static Set *_select(View *view, Selection *selection) {
 
-	const SelectorSequence *sequence = *context->sequence;
-
+	const SelectorSequence *sequence = $(selection->sequences, objectAtIndex, selection->sequence);
+	
 	if ($(sequence, matchesView, view)) {
 
-		switch (sequence->combinator) {
+		switch (sequence->right) {
 			case SequenceCombinatorNone:
 				break;
 
 			case SequenceCombinatorDescendent:
-				$(view, enumerateDescendants, (ViewEnumerator) _select, &(Context) {
-					.selector = context->selector,
-					.sequence = context->sequence + 1,
-					.selection = context->selection
-				});
+				selection->sequence++;
+				$(view, enumerateDescendants, (ViewEnumerator) _select, selection);
 				break;
 
 			case SequenceCombinatorChild:
-				$(view, enumerateSubviews, (ViewEnumerator) _select, &(Context) {
-					.selector = context->selector,
-					.sequence = context->sequence + 1,
-					.selection = context->selection
-				});
+				selection->sequence++;
+				$(view, enumerateSubviews, (ViewEnumerator) _select, selection);
 				break;
 
 			case SequenceCombinatorSibling:
-				$(view, enumerateSiblings, (ViewEnumerator) _select, &(Context) {
-					.selector = context->selector,
-					.sequence = context->sequence + 1,
-					.selection = context->selection
-				});
+				selection->sequence++;
+				$(view, enumerateSiblings, (ViewEnumerator) _select, selection);
 				break;
 
 			case SequenceCombinatorAdjacent:
-				$(view, enumerateAdjacent, (ViewEnumerator) _select, &(Context) {
-					.selector = context->selector,
-					.sequence = context->sequence + 1,
-					.selection = context->selection
-				});
+				selection->sequence++;
+				$(view, enumerateAdjacent, (ViewEnumerator) _select, selection);
 				break;
 
 			case SequenceCombinatorTerminal:
-				$(context->selection, addObject, view);
+				$(selection->selection, addObject, view);
 				break;
 		}
 	}
 
-	$(view, enumerateSubviews, (ViewEnumerator) _select, (ident) context);
+	$(view, enumerateSubviews, (ViewEnumerator) _select, selection);
 
-	return (Set *) context->selection;
+	return (Set *) selection->selection;
 }
 
 /**
@@ -292,9 +345,8 @@ static Set *select(const Selector *self, View *view) {
 
 	assert(view);
 
-	return _select(view, &(Context) {
-		.selector = self,
-		.sequence = (const SelectorSequence **) self->sequences->elements,
+	return _select(view, &(Selection) {
+		.sequences = self->sequences,
 		.selection = $$(MutableSet, set)
 	});
 }
@@ -314,6 +366,7 @@ static void initialize(Class *clazz) {
 	((SelectorInterface *) clazz->def->interface)->enumerateSelection = enumerateSelection;
 	((SelectorInterface *) clazz->def->interface)->compareTo = compareTo;
 	((SelectorInterface *) clazz->def->interface)->initWithRule = initWithRule;
+	((SelectorInterface *) clazz->def->interface)->matchesView = matchesView;
 	((SelectorInterface *) clazz->def->interface)->parse = parse;
 	((SelectorInterface *) clazz->def->interface)->select = select;
 }

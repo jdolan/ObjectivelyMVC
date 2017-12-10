@@ -66,9 +66,9 @@ struct SelectorSequence {
 	SelectorSequenceInterface *interface;
 
 	/**
-	 * @brief The combinator.
+	 * @brief The combinators.
 	 */
-	SequenceCombinator combinator;
+	SequenceCombinator left, right;
 
 	/**
 	 * @brief The SimpleSelectors comprising this SelectorSequence.
