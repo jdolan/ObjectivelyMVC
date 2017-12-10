@@ -299,7 +299,7 @@ static Style *initWithRules(Style *self, const char *rules) {
 		self->selectors = $$(Selector, parse, rules);
 		assert(self->selectors);
 
-		self->attributes = $$(MutableDictionary, dictionary);
+		self->attributes = $$(MutableDictionary, dictionaryWithCapacity, 4);
 		assert(self->attributes);
 	}
 
@@ -345,7 +345,7 @@ static ident parseValue(String *string) {
 			}
 
 		} else if (number) {
-			value = $$(MutableArray, array);
+			value = $$(MutableArray, arrayWithCapacity, 4);
 
 			while (token) {
 

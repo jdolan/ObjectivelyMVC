@@ -133,7 +133,7 @@ static SimpleSelectorType simpleSelectorType(const char c) {
  */
 static Array *parse(const char *sequence) {
 
-	MutableArray *simpleSelectors = $$(MutableArray, array);
+	MutableArray *simpleSelectors = $$(MutableArray, arrayWithCapacity, 4);
 	assert(simpleSelectors);
 
 	if (sequence) {

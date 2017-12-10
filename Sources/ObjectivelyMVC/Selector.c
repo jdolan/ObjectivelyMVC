@@ -254,7 +254,7 @@ static _Bool matchesView(const Selector *self, const View *view) {
  */
 static Array *parse(const char *rules) {
 
-	MutableArray *selectors = $$(MutableArray, array);
+	MutableArray *selectors = $$(MutableArray, arrayWithCapacity, 4);
 	assert(selectors);
 
 	if (rules) {

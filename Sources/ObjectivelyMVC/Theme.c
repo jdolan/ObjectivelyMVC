@@ -97,7 +97,7 @@ static Theme *init(Theme *self) {
 
 	self = (Theme *) super(Object, self, init);
 	if (self) {
-		self->stylesheets = (Array *) $$(MutableArray, array);
+		self->stylesheets = (Array *) $$(MutableArray, arrayWithCapacity, 8);
 		assert(self->stylesheets);
 
 		$(self, addStylesheet, $$(Stylesheet, defaultStylesheet));

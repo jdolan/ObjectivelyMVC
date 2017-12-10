@@ -131,7 +131,7 @@ static Array *parse(const char *rule) {
 
 	assert(rule);
 
-	MutableArray *selectorSequences = $$(MutableArray, array);
+	MutableArray *selectorSequences = $$(MutableArray, arrayWithCapacity, 8);
 	assert(selectorSequences);
 
 	SequenceCombinator left = SequenceCombinatorNone;

@@ -115,7 +115,9 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 	self = (TableRowView *) super(StackView, self, initWithFrame, NULL);
 	if (self) {
 
-		self->cells = $$(MutableArray, array);
+		const Array *columns = (Array *) tableView->columns;
+		
+		self->cells = $$(MutableArray, arrayWithCapacity, columns->count);
 		assert(self->cells);
 
 		self->tableView = tableView;

@@ -313,7 +313,7 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle
 	self = (Control *) super(View, self, initWithFrame, frame);
 	if (self) {
 
-		self->actions = $$(MutableArray, array);
+		self->actions = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->actions);
 
 		self->style = style;

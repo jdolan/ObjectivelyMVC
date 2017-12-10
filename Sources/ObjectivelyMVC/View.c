@@ -732,16 +732,16 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 			self->frame = *frame;
 		}
 
-		self->attributes = $$(MutableDictionary, dictionary);
+		self->attributes = $$(MutableDictionary, dictionaryWithCapacity, 0);
 		assert(self->attributes);
 
-		self->classNames = $$(MutableArray, array);
+		self->classNames = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->classNames);
 
-		self->constraints = $$(MutableArray, array);
+		self->constraints = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->constraints);
 
-		self->subviews = $$(MutableArray, array);
+		self->subviews = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->subviews);
 
 		self->style = $(alloc(Style), initWithAttributes, NULL);
