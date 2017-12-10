@@ -558,6 +558,19 @@ static void enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident
 }
 
 /**
+ * @fn void View::enumerateAncestors(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateAncestors(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	for (View *view = self->superview; view; view = view->superview) {
+		enumerator(view, data);
+	}
+}
+
+/**
  * @fn void View::enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data)
  * @memberof View
  */
@@ -595,6 +608,10 @@ static void enumerateSiblings(const View *self, ViewEnumerator enumerator, ident
 	}
 }
 
+/**
+ * @fn void View::enumerateSubviews(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
 static void enumerateSubviews(const View *self, ViewEnumerator enumerator, ident data) {
 
 	assert(enumerator);
@@ -602,6 +619,19 @@ static void enumerateSubviews(const View *self, ViewEnumerator enumerator, ident
 	const Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
 		enumerator($(subviews, objectAtIndex, i), data);
+	}
+}
+
+/**
+ * @fn void View::enumerateSuperview(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateSuperview(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	if (self->superview) {
+		enumerator(self->superview, data);
 	}
 }
 
@@ -1479,9 +1509,11 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->draw = draw;
 	((ViewInterface *) clazz->def->interface)->enumerate = enumerate;
 	((ViewInterface *) clazz->def->interface)->enumerateAdjacent = enumerateAdjacent;
+	((ViewInterface *) clazz->def->interface)->enumerateAncestors = enumerateAncestors;
 	((ViewInterface *) clazz->def->interface)->enumerateDescendants = enumerateDescendants;
 	((ViewInterface *) clazz->def->interface)->enumerateSiblings = enumerateSiblings;
 	((ViewInterface *) clazz->def->interface)->enumerateSubviews = enumerateSubviews;
+	((ViewInterface *) clazz->def->interface)->enumerateSuperview = enumerateSuperview;
 	((ViewInterface *) clazz->def->interface)->hasClassName = hasClassName;
 	((ViewInterface *) clazz->def->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->def->interface)->init = init;

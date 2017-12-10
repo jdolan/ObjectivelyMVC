@@ -464,6 +464,16 @@ struct ViewInterface {
 	void (*enumerateAdjacent)(const View *self, ViewEnumerator enumerator, ident data);
 
 	/**
+	 * @fn void View::enumerateAncestors(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all ancestors of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateAncestors)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
 	 * @fn void View::enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data)
 	 * @brief Enumerates all descendants of this View, applying `enumerator` to each.
 	 * @param self The View.
@@ -492,6 +502,16 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*enumerateSubviews)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateSuperview(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates the superview of this View, if any, applying `enumerator` to it.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateSuperview)(const View *self, ViewEnumerator enumerator, ident data);
 
 	/**
 	 * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
