@@ -144,57 +144,57 @@ static void render(View *self, Renderer *renderer) {
 
 		SDL_Point points[3];
 
-		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 1;
+		points[0].x = frame.x;
+		points[0].y = frame.y + frame.h;
 
-		points[1].x = frame.x + frame.w - 1;
-		points[1].y = frame.y + frame.h - 1;
+		points[1].x = frame.x + frame.w;
+		points[1].y = frame.y + frame.h;
 
-		points[2].x = frame.x + frame.w - 1;
-		points[2].y = frame.y + 1;
+		points[2].x = frame.x + frame.w;
+		points[2].y = frame.y;
 
 		$(renderer, drawLines, points, lengthof(points));
 
-		$(renderer, setDrawColor, &Colors.Charcoal);
+		$(renderer, setDrawColor, &Colors.Black);
 
-		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 1;
+		points[0].x = frame.x;
+		points[0].y = frame.y + frame.h;
 
-		points[1].x = frame.x + 1;
-		points[1].y = frame.y + 1;
+		points[1].x = frame.x;
+		points[1].y = frame.y;
 
-		points[2].x = frame.x + frame.w - 1;
-		points[2].y = frame.y + 1;
+		points[2].x = frame.x + frame.w;
+		points[2].y = frame.y;
 
 		$(renderer, drawLines, points, lengthof(points));
 
 	} else if (this->bevel == ControlBevelOutset) {
 
-		$(renderer, setDrawColor, &Colors.Charcoal);
+		$(renderer, setDrawColor, &Colors.Black);
 
 		SDL_Point points[3];
 
-		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 1;
+		points[0].x = frame.x;
+		points[0].y = frame.y + frame.h;
 
-		points[1].x = frame.x + frame.w - 1;
-		points[1].y = frame.y + frame.h - 1;
+		points[1].x = frame.x + frame.w;
+		points[1].y = frame.y + frame.h;
 
-		points[2].x = frame.x + frame.w - 1;
-		points[2].y = frame.y + 1;
+		points[2].x = frame.x + frame.w;
+		points[2].y = frame.y;
 
 		$(renderer, drawLines, points, lengthof(points));
 
 		$(renderer, setDrawColor, &Colors.Silver);
 
-		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 1;
+		points[0].x = frame.x;
+		points[0].y = frame.y + frame.h;
 
-		points[1].x = frame.x + 1;
-		points[1].y = frame.y + 1;
+		points[1].x = frame.x;
+		points[1].y = frame.y;
 
-		points[2].x = frame.x + frame.w - 1;
-		points[2].y = frame.y + 1;
+		points[2].x = frame.x + frame.w;
+		points[2].y = frame.y;
 
 		$(renderer, drawLines, points, lengthof(points));
 	}
