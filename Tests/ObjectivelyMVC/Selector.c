@@ -27,7 +27,7 @@
 
 START_TEST(selector)
 {
-	Selector *selector = $(alloc(Selector), initWithRule, "Panel#main .foo Control:highlighted");
+	Selector *selector = $(alloc(Selector), initWithRule, "Panel#main .foo > Control:highlighted");
 	ck_assert_ptr_ne(NULL, selector);
 	ck_assert_ptr_eq(_Selector(), classof(selector));
 	ck_assert_int_eq(3, selector->sequences->count);
@@ -56,7 +56,7 @@ START_TEST(selector)
 	selectorSequence = $(selector->sequences, objectAtIndex, 1);
 	ck_assert_int_eq(1, selectorSequence->simpleSelectors->count);
 	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->left);
-	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->right);
+	ck_assert_int_eq(SequenceCombinatorChild, selectorSequence->right);
 
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 0);
 	ck_assert_int_eq(SimpleSelectorTypeClass, simpleSelector->type);
@@ -66,7 +66,7 @@ START_TEST(selector)
 
 	selectorSequence = $(selector->sequences, objectAtIndex, 2);
 	ck_assert_int_eq(2, selectorSequence->simpleSelectors->count);
-	ck_assert_int_eq(SequenceCombinatorDescendent, selectorSequence->left);
+	ck_assert_int_eq(SequenceCombinatorChild, selectorSequence->left);
 	ck_assert_int_eq(SequenceCombinatorTerminal, selectorSequence->right);
 
 	simpleSelector = $(selectorSequence->simpleSelectors, objectAtIndex, 0);
@@ -107,6 +107,12 @@ START_TEST(matchesView)
 
 	Panel *panel = $(alloc(Panel), initWithFrame, NULL, ControlStyleDefault);
 	$(container, addSubview, (View *) panel);
+
+	View *view = $(alloc(View), initWithFrame, NULL);
+	$((View *) panel->contentView, addSubview, view);
+
+	View *subview = $(alloc(View), initWithFrame, NULL);
+	$(view, addSubview, subview);
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, "*");
@@ -152,6 +158,18 @@ START_TEST(matchesView)
 		release(selector);
 	}
 
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, ".contentView > View");
+		ck_assert(selector);
+
+		ck_assert_int_eq(1, $(selector, matchesView, view));
+		ck_assert_int_eq(0, $(selector, matchesView, subview));
+
+		release(selector);
+	}
+
+	release(subview);
+	release(view);
 	release(panel);
 	release(container);
 	release(root);
