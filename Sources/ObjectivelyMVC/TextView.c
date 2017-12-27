@@ -75,11 +75,9 @@ static View *init(View *self) {
 }
 
 /**
- * @see View::render(View *, Renderer *)
+ * @see View::layoutSubviews(View *)
  */
-static void render(View *self, Renderer *renderer) {
-
-	super(View, self, render, renderer);
+static void layoutSubviews(View *self) {
 
 	TextView *this = (TextView *) self;
 
@@ -103,8 +101,20 @@ static void render(View *self, Renderer *renderer) {
 		}
 	}
 
+	super(View, self, layoutSubviews);
+}
+
+/**
+ * @see View::render(View *, Renderer *)
+ */
+static void render(View *self, Renderer *renderer) {
+
+	super(View, self, render, renderer);
+
+	TextView *this = (TextView *) self;
+
 	if ($((Control *) this, focused)) {
-		text = text ?: "";
+		const char *text = this->text->text ?: "";
 
 		int w, h;
 		if (this->position == this->attributedText->string.length) {
@@ -305,16 +315,6 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		$((View *) self, addSubview, (View *) self->text);
 
 		self->control.view.clipsSubviews = true;
-
-		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = ControlBevelInset;
-
-			self->control.view.backgroundColor = Colors.DimGray;
-
-			if (self->control.view.frame.w == 0) {
-				self->control.view.frame.w = DEFAULT_TEXTVIEW_WIDTH;
-			}
-		}
 	}
 
 	return self;
@@ -331,6 +331,7 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->render = render;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;

@@ -32,9 +32,6 @@
  * @brief A Control for presenting and capturing user-provied Text.
  */
 
-#define DEFAULT_TEXTVIEW_PADDING 10
-#define DEFAULT_TEXTVIEW_WIDTH 150
-
 typedef struct TextViewDelegate TextViewDelegate;
 
 typedef struct TextView TextView;
