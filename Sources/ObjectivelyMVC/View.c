@@ -747,9 +747,6 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->style = $(alloc(Style), initWithAttributes, NULL);
 		assert(self->style);
 
-		self->backgroundColor = Colors.Transparent;
-		self->borderColor = Colors.GhostWhite;
-
 		self->needsLayout = true;
 	}
 
@@ -966,6 +963,10 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 				if (self->superview) {
 					return $((Array *) self->superview->subviews, lastObject) == self;
 				}
+			} else if (strcmp("hover", pattern) == 0) {
+				SDL_Point point;
+				SDL_GetMouseState(&point.x, &point.y);
+				return $(self, containsPoint, &point);
 			}
 			break;
 	}
