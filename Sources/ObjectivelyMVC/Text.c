@@ -64,6 +64,22 @@ static String *description(const Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::applyStyle(View *, const Style *)
+ */
+static void applyStyle(View *self, const Style *style) {
+
+	super(View, self, applyStyle, style);
+
+	Text *this = (Text *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("color", InletTypeColor, &this->color, NULL)
+	);
+
+	$(self, bind, inlets, (Dictionary *) style->attributes);
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -78,8 +94,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	);
 
 	$(self, bind, inlets, dictionary);
-
-	$(self, sizeToFit);
 }
 
 /**
@@ -148,8 +162,6 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 
 	self = (Text *) super(View, self, initWithFrame, NULL);
 	if (self) {
-
-		self->color = Colors.GhostWhite;
 
 		$(self, setFont, font);
 		$(self, setText, text);
@@ -227,6 +239,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	((ObjectInterface *) clazz->def->interface)->description = description;
 
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->render = render;
