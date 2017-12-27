@@ -75,21 +75,21 @@ static _Bool acceptsFirstResponder(const View *self) {
 }
 
 /**
- * @see View::awakeWithDictionary(View *, const Dictionary *)
+ * @see View::applyStyle(View *, const Style *)
  */
-static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+static void applyStyle(View *self, const Style *style) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+	super(View, self, applyStyle, style);
 
 	Control *this = (Control *) self;
 
 	const Inlet inlets[] = MakeInlets(
-	    MakeInlet("bevel", InletTypeEnum, &this->bevel, (ident) (ControlBevelNames)),
+		MakeInlet("bevel", InletTypeEnum, &this->bevel, (ident) (ControlBevelNames)),
 		MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames),
 		MakeInlet("style", InletTypeEnum, &this->style, (ident) ControlStyleNames)
 	);
 
-	$(self, bind, inlets, dictionary);
+	$(self, bind, inlets, (Dictionary *) style->attributes);
 }
 
 /**
@@ -107,17 +107,16 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 	assert(simpleSelector);
 
 	const Control *this = (Control *) self;
-	const char *pattern = simpleSelector->pattern;
 
 	switch (simpleSelector->type) {
 		case SimpleSelectorTypePseudo:
-			if (strcmp("highlighted", pattern) == 0) {
+			if (strcmp("highlighted", simpleSelector->pattern) == 0) {
 				return $(this, highlighted);
-			} else if (strcmp("disabled", pattern) == 0) {
+			} else if (strcmp("disabled", simpleSelector->pattern) == 0) {
 				return $(this, disabled);
-			} else if (strcmp("selected", pattern) == 0) {
+			} else if (strcmp("selected", simpleSelector->pattern) == 0) {
 				return $(this, selected);
-			} else if (strcmp("focused", pattern) == 0) {
+			} else if (strcmp("focused", simpleSelector->pattern) == 0) {
 				return $(this, focused);
 			}
 			break;
@@ -353,7 +352,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
 	((ViewInterface *) clazz->def->interface)->render = render;
