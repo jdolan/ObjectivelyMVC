@@ -115,6 +115,7 @@ libObjectivelyMVC_la_SOURCES = \
 
 libObjectivelyMVC_la_CFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/Assets \
 	-I$(top_srcdir)/Sources \
 	-DPKGDATADIR=\"$(pkgdatadir)\" \
 	@HOST_CFLAGS@ \

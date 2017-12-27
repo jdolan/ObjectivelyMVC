@@ -1,0 +1,135 @@
+
+Box {
+	borderColor: #dededeaa;
+	borderWidth: 1;
+	padding: 10 10 10 10;
+}
+
+Box > Label {
+	backgroundColor: #88888844;
+	padding: 0 8 0 8;
+	x: 20;
+}
+
+Box .content {
+	spacing: 4;
+}
+
+Button {
+	backgroundColor: #88888822;
+	padding: 8 8 8 8;
+}
+
+Checkbox > Control {
+	backgroundColor: #22222266;
+	width: 18;
+	height: 18;
+	padding: 4 4 4 4;
+}
+
+CollectionItemView {
+	backgroundColor: #22222266;
+	borderColor: #999999aa;
+}
+
+CollectionItemView > .selectionOverlay {
+	backgroundColor: #ffffff22;
+	hidden: true;
+}
+
+CollectionItemView:selected > .selectionOverlay {
+	hidden: false;
+}
+
+CollectionView {
+	backgroundColor: #22222266;
+	itemSize: 64 64;
+	itemSpacing: 10 10;
+}
+
+CollectionView .content {
+	padding: 10 10 10 10;
+}
+
+Control {
+	height: 32;
+	selection: ControlSelectionSingle;
+}
+
+Option {
+	autoresizingMask: ViewAutoresizingContain | ViewAutoresizingWidth;
+	hidden: true;
+	padding: 2 2 2 2;
+}
+
+Option:selected {
+	hidden: false;
+}
+
+Option > Text {
+	alignment: ViewAlignmentMiddleLeft;
+}
+
+Panel {
+	backgroundColor: #444444dd;
+	borderColor: #dedede;
+	borderWidth: 1;
+	padding: 12 12 12 12;
+}
+
+Select {
+	bevel: ControlBevelOutset;
+}
+
+Select > StackView {
+	alignment: ViewAlignmentMiddleLeft;
+	borderWidth: 0;
+}
+
+Select:highlighted > StackView {
+	borderColor: #dededeaa;
+	borderWidth: 1;
+}
+
+Select:highlighted > StackView > Option {
+	backgroundColor: charcoal;
+	hidden: false;
+}
+
+Select:highlighted > StackView > Option:hover {
+	backgroundColor: red;
+}
+
+Slider {
+	width: 140;
+}
+
+Slider > .bar > .handle {
+	backgroundColor: #444444dd;
+	bevel: ControlBevelOutset;
+	width: 8;
+	height: 18;
+}
+
+Slider > .label {
+	alignment: ViewAlignmentMiddleRight;
+	padding: 0 0 0 18;
+}
+
+TextView {
+	backgroundColor: #22222266;
+	bevel: ControlBevelInset;
+	padding: 4 4 4 4;
+	width: 160;
+}
+
+TextView > Text {
+	alignment: ViewAlignmentMiddleLeft;
+}
+
+Text {
+	color: ghostwhite;
+}
+
+
+

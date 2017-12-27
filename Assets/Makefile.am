@@ -1,5 +1,7 @@
-assetsdir = $(datadir)/ObjectivelyMVC
+%.h: %
+	xxd -i $^ $@
 
-assets_DATA = \
-	check.png \
-	resize.png
+BUILT_SOURCES = \
+	check.png.h \
+	resize.png.h \
+	stylesheet.css.h

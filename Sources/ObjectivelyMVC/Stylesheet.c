@@ -27,6 +27,8 @@
 #include <ObjectivelyMVC/Stylesheet.h>
 #include <ObjectivelyMVC/View.h>
 
+#include <stylesheet.css.h>
+
 #define _Class _Stylesheet
 
 #pragma mark - Object
@@ -75,60 +77,7 @@ static Stylesheet *defaultStylesheet(void) {
 	static Once once;
 
 	do_once(&once, {
-		_defaultStylesheet = $$(Stylesheet, stylesheetWithCharacters, "\
-				Box { \
-					borderColor: #dededeaa; \
-					borderWidth: 1; \
-					padding: 10 10 10 10; \
-				} \
-				Box > Label { \
-					backgroundColor: #88888844; \
-					padding: 0 8 0 8; \
-					x: 20; \
-				} \
-				Box .content { \
-					spacing: 4; \
-				} \
-				Button { \
-					backgroundColor: #88888822; \
-					padding: 8 8 8 8; \
-				} \
-				Checkbox > Control { \
-					backgroundColor: #22222266; \
-					frame: 0 0 18 18; \
-					padding: 4 4 4 4; \
-				} \
-				CollectionItemView { \
-					backgroundColor: #22222266; \
-					borderColor: #999999aa; \
-				} \
-				CollectionItemView > .selectionOverlay { \
-					backgroundColor: #ffffff22; \
-					hidden: true; \
-				} \
-				CollectionItemView:selected > .selectionOverlay { \
-					hidden: false; \
-				} \
-				CollectionView { \
-					backgroundColor: #22222266; \
-					itemSize: 64 64; \
-					itemSpacing: 10 10; \
-				} \
-				CollectionView .content { \
-					padding: 10 10 10 10; \
-				} \
-				Panel { \
-					backgroundColor: #444444dd; \
-					borderColor: #dedede; \
-					borderWidth: 1; \
-					padding: 12 12 12 12; \
-				} \
-				Slider { \
-					height: 32; \
-					padding: 8 8 8 8; \
-				} \
-		");
-
+		_defaultStylesheet = $$(Stylesheet, stylesheetWithCharacters, (char *) stylesheet_css);
 		assert(_defaultStylesheet);
 	});
 

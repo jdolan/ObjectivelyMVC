@@ -415,6 +415,10 @@
 		CE8E7FFD1C84E8DA00F4C3D4 /* TableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableHeaderView.h; sourceTree = "<group>"; };
 		CE8E80001C84F25400F4C3D4 /* TableCellView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableCellView.c; sourceTree = "<group>"; };
 		CE8E80011C84F25400F4C3D4 /* TableCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = TableCellView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		CE92C5141FE01F6300FDB0DF /* stylesheet.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = stylesheet.css; sourceTree = "<group>"; };
+		CE92C5151FE029BF00FDB0DF /* stylesheet.css.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stylesheet.css.h; sourceTree = "<group>"; };
+		CE92C5161FE029BF00FDB0DF /* check.png.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = check.png.h; sourceTree = "<group>"; };
+		CE92C5171FE029C000FDB0DF /* resize.png.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = resize.png.h; sourceTree = "<group>"; };
 		CE9305C21D9B277E00D62770 /* Config.h.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Config.h.in; sourceTree = "<group>"; };
 		CE9305C31D9B27F900D62770 /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		CE9351661F9B6ED000B46882 /* SelectorSequence.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SelectorSequence.c; sourceTree = "<group>"; };
@@ -666,7 +670,11 @@
 			isa = PBXGroup;
 			children = (
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
+				CE92C5161FE029BF00FDB0DF /* check.png.h */,
 				CEF1D8921D429F7A0099A857 /* resize.png */,
+				CE92C5171FE029C000FDB0DF /* resize.png.h */,
+				CE92C5141FE01F6300FDB0DF /* stylesheet.css */,
+				CE92C5151FE029BF00FDB0DF /* stylesheet.css.h */,
 				CEF1D8941D42ABCA0099A857 /* Makefile.am */,
 			);
 			path = Assets;
@@ -911,6 +919,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CED157CF1C4BF3AC00FBA2DE /* Build configuration list for PBXNativeTarget "ObjectivelyMVC" */;
 			buildPhases = (
+				CE92C5181FE02B5C00FDB0DF /* ShellScript */,
 				CED157C91C4BF3AC00FBA2DE /* Sources */,
 				CED157CA1C4BF3AC00FBA2DE /* Frameworks */,
 				CED157CB1C4BF3AC00FBA2DE /* Headers */,
@@ -982,6 +991,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Constraint &&\n$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Selector &&\n$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Style &&\n$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Stylesheet\n";
+		};
+		CE92C5181FE02B5C00FDB0DF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/Assets/check.png",
+				"$(SRCROOT)/Assets/resize.png",
+				"$(SRCROOT)/Assets/stylesheet.css",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1344,7 +1369,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-I$(SRCROOT)/Sources";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Sources";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Assets $(SRCROOT)/Sources";
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
@@ -1396,7 +1421,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_CFLAGS = "-I$(SRCROOT)/Sources";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Sources";
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Assets $(SRCROOT)/Sources";
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
