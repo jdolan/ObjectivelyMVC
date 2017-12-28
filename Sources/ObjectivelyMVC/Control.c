@@ -340,6 +340,8 @@ static void stateDidChange(Control *self) {
 	} else {
 		$((View *) self, resignFirstResponder);
 	}
+
+	self->view.needsLayout = true;
 }
 
 #pragma mark - Class lifecycle
