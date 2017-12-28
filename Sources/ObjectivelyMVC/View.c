@@ -32,6 +32,12 @@
 
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
 	MakeEnumName(ViewAlignmentNone),
+	MakeEnumName(ViewAlignmentTop),
+	MakeEnumName(ViewAlignmentMiddle),
+	MakeEnumName(ViewAlignmentBottom),
+	MakeEnumName(ViewAlignmentLeft),
+	MakeEnumName(ViewAlignmentCenter),
+	MakeEnumName(ViewAlignmentRight),
 	MakeEnumName(ViewAlignmentTopLeft),
 	MakeEnumName(ViewAlignmentTopCenter),
 	MakeEnumName(ViewAlignmentTopRight),
@@ -871,48 +877,26 @@ static void layoutSubviews(View *self) {
 
 		$(subview, resize, &subviewSize);
 
-		switch (subview->alignment) {
-
-			case ViewAlignmentNone:
-			case ViewAlignmentInternal:
-				break;
-
-			case ViewAlignmentTopLeft:
+		switch (subview->alignment & ViewAlignmentMaskHorizontal) {
+			case ViewAlignmentLeft:
 				subview->frame.x = 0;
-				subview->frame.y = 0;
 				break;
-			case ViewAlignmentTopCenter:
+			case ViewAlignmentCenter:
 				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
-				subview->frame.y = 0;
 				break;
-			case ViewAlignmentTopRight:
+			case ViewAlignmentRight:
 				subview->frame.x = bounds.w - subview->frame.w;
+				break;
+		}
+
+		switch (subview->alignment & ViewAlignmentMaskVertical) {
+			case ViewAlignmentMaskTop:
 				subview->frame.y = 0;
 				break;
-
-			case ViewAlignmentMiddleLeft:
-				subview->frame.x = 0;
+			case ViewAlignmentMaskMiddle:
 				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
 				break;
-			case ViewAlignmentMiddleCenter:
-				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
-				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
-				break;
-			case ViewAlignmentMiddleRight:
-				subview->frame.x = bounds.w -subview->frame.w;
-				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
-				break;
-
-			case ViewAlignmentBottomLeft:
-				subview->frame.x = 0;
-				subview->frame.y = bounds.h - subview->frame.h;
-				break;
-			case ViewAlignmentBottomCenter:
-				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
-				subview->frame.y = bounds.h - subview->frame.h;
-				break;
-			case ViewAlignmentBottomRight:
-				subview->frame.x = bounds.w - subview->frame.w;
+			case ViewAlignmentMaskBottom:
 				subview->frame.y = bounds.h - subview->frame.h;
 				break;
 		}

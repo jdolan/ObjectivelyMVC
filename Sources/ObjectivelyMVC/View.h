@@ -47,11 +47,23 @@
 #define ViewAlignmentMaskRight    0x20
 #define ViewAlignmentMaskInternal 0x100
 
+#define ViewAlignmentMaskVertical \
+	(ViewAlignmentMaskTop | ViewAlignmentMaskMiddle | ViewAlignmentMaskBottom)
+
+#define ViewAlignmentMaskHorizontal \
+	(ViewAlignmentMaskLeft | ViewAlignmentMaskCenter | ViewAlignmentMaskRight)
+
 /**
  * @brief Alignment constants, used to align a View within its superview.
  */
 typedef enum {
 	ViewAlignmentNone,
+	ViewAlignmentTop = ViewAlignmentMaskTop,
+	ViewAlignmentMiddle = ViewAlignmentMaskMiddle,
+	ViewAlignmentBottom = ViewAlignmentMaskBottom,
+	ViewAlignmentLeft = ViewAlignmentMaskLeft,
+	ViewAlignmentCenter = ViewAlignmentMaskCenter,
+	ViewAlignmentRight = ViewAlignmentMaskRight,
 	ViewAlignmentTopLeft = (ViewAlignmentMaskTop | ViewAlignmentMaskLeft),
 	ViewAlignmentTopCenter = (ViewAlignmentMaskTop | ViewAlignmentMaskCenter),
 	ViewAlignmentTopRight = (ViewAlignmentMaskTop | ViewAlignmentMaskRight),
