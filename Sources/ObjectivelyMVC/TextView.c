@@ -166,6 +166,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 					if (this->delegate.didEndEditing) {
 						this->delegate.didEndEditing(this);
 					}
+					didCaptureEvent = true;
 				}
 			}
 		} else if (event->type == SDL_TEXTINPUT) {
@@ -285,13 +286,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 
 		if (didEdit) {
-
-			if ($(self, focused) || this->attributedText->string.length) {
-				$(this->text, setText, this->attributedText->string.chars);
-			} else {
-				$(this->text, setText, this->defaultText);
-			}
-
+			self->view.needsLayout = true;
 			if (this->delegate.didEdit) {
 				this->delegate.didEdit(this);
 			}
