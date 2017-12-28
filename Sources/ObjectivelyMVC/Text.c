@@ -178,8 +178,8 @@ static SDL_Size naturalSize(const Text *self) {
 
 	SDL_Size size = MakeSize(0, 0);
 
-	if (self->font && self->text) {
-		$(self->font, sizeCharacters, self->text, &size.w, &size.h);
+	if (self->font) {
+		$(self->font, sizeCharacters, self->text ?: "", &size.w, &size.h);
 	}
 
 	return size;
