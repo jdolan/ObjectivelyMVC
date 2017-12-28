@@ -117,7 +117,7 @@ static void render(View *self, Renderer *renderer) {
 		const char *text = this->text->text ?: "";
 
 		int w, h;
-		if (this->position == this->attributedText->string.length) {
+		if (this->position == strlen(text)) {
 			$(this->text->font, sizeCharacters, text, &w, &h);
 		} else {
 			char *chars = calloc(this->position + 1, sizeof(char));
@@ -285,6 +285,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 
 		if (didEdit) {
+
+			if ($(self, focused) || this->attributedText->string.length) {
+				$(this->text, setText, this->attributedText->string.chars);
+			} else {
+				$(this->text, setText, this->defaultText);
+			}
+
 			if (this->delegate.didEdit) {
 				this->delegate.didEdit(this);
 			}
