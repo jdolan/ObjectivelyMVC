@@ -207,9 +207,6 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 		self->bar = $(alloc(View), initWithFrame, frame);
 		assert(self->bar);
 
-		self->bar->alignment = ViewAlignmentMiddleLeft;
-		self->bar->autoresizingMask = ViewAutoresizingFill;
-
 		$(self->bar, addClassName, "bar");
 
 		$((View *) self, addSubview, self->bar);
@@ -224,22 +221,9 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 		self->label = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->label);
 
-		self->label->view.alignment = ViewAlignmentMiddleRight;
-		self->label->view.padding.left = DEFAULT_SLIDER_LABEL_PADDING;
+		$((View *) self->label, addClassName, "label");
 
 		$((View *) self, addSubview, (View *) self->label);
-
-		if (self->control.style == ControlStyleDefault) {
-
-			if (self->control.view.frame.w == 0) {
-				self->control.view.frame.w = DEFAULT_SLIDER_WIDTH;
-			}
-
-			self->handle->bevel = ControlBevelOutset;
-			self->handle->view.backgroundColor = Colors.Gray;
-			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
-			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;
-		}
 
 		$(self, setLabelFormat, "%0.1f");
 	}

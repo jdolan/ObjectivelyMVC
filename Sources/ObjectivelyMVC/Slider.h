@@ -31,11 +31,6 @@
  * @brief A Control allowing users to drag a handle to select a numeric value.
  */
 
-#define DEFAULT_SLIDER_HANDLE_WIDTH 10
-#define DEFAULT_SLIDER_HANDLE_HEIGHT 18
-#define DEFAULT_SLIDER_LABEL_PADDING 18
-#define DEFAULT_SLIDER_WIDTH 140
-
 typedef struct SliderDelegate SliderDelegate;
 
 typedef struct Slider Slider;

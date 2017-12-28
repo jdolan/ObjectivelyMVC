@@ -104,11 +104,17 @@ Slider {
 	width: 140;
 }
 
+Slider > .bar {
+	alignment: ViewAlignmentMiddleLeft;
+	autoresizingMask: ViewAutoresizingFill;
+}
+
 Slider > .bar > .handle {
+	alignment: ViewAlignmentMiddle;
 	backgroundColor: #444444dd;
 	bevel: ControlBevelOutset;
 	width: 8;
-	height: 18;
+	height: 16;
 }
 
 Slider > .label {
