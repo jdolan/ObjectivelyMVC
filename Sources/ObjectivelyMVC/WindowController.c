@@ -89,7 +89,6 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 		const Uint32 flags = SDL_GetWindowFlags(self->window);
 		assert(flags & SDL_WINDOW_OPENGL);
 
-
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
 

@@ -34,10 +34,10 @@
 
 /**
  * @defgroup Theme Theming
- * @brief Themes provides aggregation, management and application of Styles.
- * @details Theming is a core part of the layout process. A Theme manages a collection
- * of Styles. Prior to layout, the Styles of the current Theme are matched against and
- * applied to the View hierarchy.
+ * @brief A Theme is a collection of one or more Stylesheets, ordered by priority.
+ * @details Theming is a core part of the layout process, managed automatically by the
+ * WindowController. In general, applications should not call the Theme API directly. Instead,
+ * custom theming can be achieved by adding a Stylesheet to any Theme instance.
  */
 
 typedef struct Theme Theme;

@@ -38,7 +38,7 @@ typedef struct Stylesheet Stylesheet;
 typedef struct StylesheetInterface StylesheetInterface;
 
 /**
- * @brief The Stylesheet type.
+ * @brief Stylesheets are comprised of Selectors and Styles.
  * @extends Object
  */
 struct Stylesheet {

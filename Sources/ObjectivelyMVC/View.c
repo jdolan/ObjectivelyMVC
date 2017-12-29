@@ -26,7 +26,10 @@
 
 #include <Objectively.h>
 
-#include <ObjectivelyMVC.h>
+#include <ObjectivelyMVC/Log.h>
+#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/ViewController.h>
+#include <ObjectivelyMVC/Window.h>
 
 #define MVC_FIRST_RESPONDER "firstResponder"
 
@@ -1429,32 +1432,6 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
  * @memberof View
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
-	static Once once;
-
-	do_once(&once, {
-		_initialize(_Box());
-		_initialize(_Button());
-		_initialize(_Checkbox());
-		_initialize(_CollectionView());
-		_initialize(_Control());
-		_initialize(_HSVColorPicker());
-		_initialize(_HueColorPicker());
-		_initialize(_ImageView());
-		_initialize(_Input());
-		_initialize(_Label());
-		_initialize(_PageView());
-		_initialize(_Panel());
-		_initialize(_ProgressBar());
-		_initialize(_RGBColorPicker());
-		_initialize(_ScrollView());
-		_initialize(_Select());
-		_initialize(_Slider());
-		_initialize(_StackView());
-		_initialize(_TableView());
-		_initialize(_TabView());
-		_initialize(_Text());
-		_initialize(_TextView());
-	});
 
 	_outlets = outlets;
 

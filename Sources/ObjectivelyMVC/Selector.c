@@ -28,6 +28,7 @@
 #include <Objectively/MutableArray.h>
 #include <Objectively/MutableSet.h>
 
+#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Selector.h>
 #include <ObjectivelyMVC/View.h>
 
@@ -113,6 +114,24 @@ static int specificity(const Selector *selector) {
 					break;
 				case SimpleSelectorTypeType:
 					specificity += 1;
+					Class *clazz = classForName(simpleSelector->pattern);
+					if (clazz) {
+						while (clazz) {
+							if (clazz == _View()) {
+								break;
+							}
+							specificity += 1;
+							clazz = clazz->superclass;
+						}
+						if (clazz != _View()) {
+							MVC_LogError("Class `%s` in Selector `%s` does not extend View\n",
+										 simpleSelector->pattern, selector->rule);
+						}
+					} else {
+						MVC_LogWarn("Class `%s` in Selector `%s` has not been initialized\n",
+									simpleSelector->pattern, selector->rule);
+					}
+
 					break;
 				default:
 					break;

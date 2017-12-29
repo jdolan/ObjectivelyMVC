@@ -24,8 +24,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include <ObjectivelyMVC/Stylesheet.h>
-#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC.h>
 
 #include <stylesheet.css.h>
 
@@ -77,6 +76,31 @@ static Stylesheet *defaultStylesheet(void) {
 	static Once once;
 
 	do_once(&once, {
+		_initialize(_Box());
+		_initialize(_Button());
+		_initialize(_Checkbox());
+		_initialize(_CollectionView());
+		_initialize(_CollectionItemView());
+		_initialize(_Control());
+		_initialize(_HSVColorPicker());
+		_initialize(_HueColorPicker());
+		_initialize(_ImageView());
+		_initialize(_Input());
+		_initialize(_Label());
+		_initialize(_Option());
+		_initialize(_PageView());
+		_initialize(_Panel());
+		_initialize(_ProgressBar());
+		_initialize(_RGBColorPicker());
+		_initialize(_ScrollView());
+		_initialize(_Select());
+		_initialize(_Slider());
+		_initialize(_StackView());
+		_initialize(_TableView());
+		_initialize(_TabView());
+		_initialize(_Text());
+		_initialize(_TextView());
+
 		_defaultStylesheet = $$(Stylesheet, stylesheetWithCharacters, (char *) stylesheet_css);
 		assert(_defaultStylesheet);
 	});
