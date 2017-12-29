@@ -118,6 +118,10 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 				return $(this, selected);
 			} else if (strcmp("focused", simpleSelector->pattern) == 0) {
 				return $(this, focused);
+			} else if (strcmp("single", simpleSelector->pattern) == 0) {
+				return this->selection == ControlSelectionSingle;
+			} else if (strcmp("multiple", simpleSelector->pattern) == 0) {
+				return this->selection == ControlSelectionMultiple;
 			}
 			break;
 		default:
