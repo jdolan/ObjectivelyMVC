@@ -92,11 +92,6 @@ struct Select {
 	MutableArray *options;
 
 	/**
-	 * @brief The selected Option, or `NULL`.
-	 */
-	Option *selectedOption;
-
-	/**
 	 * @brief The StackView for rendering all Options.
 	 * @private
 	 */
@@ -170,6 +165,15 @@ struct SelectInterface {
 	void (*removeOptionWithValue)(Select *self, ident value);
 
 	/**
+	 * @fn void Select::selectOption(Select *self, Option *option)
+	 * @brief Selects the given Option.
+	 * @param self The Select.
+	 * @param option The Option to select.
+	 * @memberof Select
+	 */
+	void (*selectOption)(Select *self, Option *option);
+
+	/**
 	 * @fn void Select::selectOptionWithValue(Select *self, ident value)
 	 * @brief Selects the first Option with the given value.
 	 * @param self The Select.
@@ -181,10 +185,20 @@ struct SelectInterface {
 	/**
 	 * @fn Option *Select::selectedOption(const Select *self)
 	 * @param self The Select.
-	 * @return The selected Option, or `NULL`.
+	 * @return The first selected Option, or `NULL`.
+	 * @remarks This is a convenience method for ControlSelectionSingle. For
+	 * ControlSelectionMultiple, use Select::selectedOptions.
 	 * @memberof Select
 	 */
 	Option *(*selectedOption)(const Select *self);
+
+	/**
+	 * @fn Array *Select::selectedOptions(const Select *self)
+	 * @param self The Select.
+	 * @return An Array containing the selected Options.
+	 * @memberof Select
+	 */
+	Array *(*selectedOptions)(const Select *self);
 };
 
 /**

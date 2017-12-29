@@ -52,22 +52,25 @@ static _Bool acceptsFirstResponder(const View *self) {
 }
 
 /**
- * @see View::sizeThatFits(View *)
+ * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
-static SDL_Size sizeThatFits(const View *self) {
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+
+	assert(simpleSelector);
 
 	const Option *this = (Option *) self;
 
-	SDL_Size size = super(View, self, sizeThatFits);
-	SDL_Size titleSize = $((View *) this->title, sizeThatFits);
+	switch (simpleSelector->type) {
+		case SimpleSelectorTypePseudo:
+			if (strcmp("selected", simpleSelector->pattern) == 0) {
+				return this->isSelected;
+			}
+			break;
+		default:
+			break;
+	}
 
-	titleSize.w += self->padding.left + self->padding.right;
-	titleSize.h += self->padding.top + self->padding.bottom;
-
-	size.w = max(size.w, titleSize.w);
-	size.h = max(size.h, titleSize.h);
-
-	return size;
+	return super(View, self, matchesSelector, simpleSelector);
 }
 
 #pragma mark - Option
@@ -90,20 +93,22 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
 
 		self->title->view.alignment = ViewAlignmentMiddleLeft;
 		$((View *) self, addSubview, (View *) self->title);
-
-		self->view.autoresizingMask = ViewAutoresizingWidth;
-
-		self->view.frame.h = DEFAULT_OPTION_HEIGHT;
-
-		self->view.padding.top = DEFAULT_OPTION_PADDING;
-		self->view.padding.right = DEFAULT_OPTION_PADDING;
-		self->view.padding.bottom = DEFAULT_OPTION_PADDING;
-		self->view.padding.left = DEFAULT_OPTION_PADDING;
-
-		$((View *) self, sizeToFit);
 	}
 
 	return self;
+}
+
+/**
+ * @fn void Option::setSelected(Option *self, _Bool isSelected)
+ * @memberof Option
+ */
+static void setSelected(Option *self, _Bool isSelected) {
+
+	if (self->isSelected != isSelected) {
+		self->isSelected = isSelected;
+
+		self->view.needsLayout = true;
+	}
 }
 
 #pragma mark - Class lifecycle
@@ -116,9 +121,11 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
 
 	((OptionInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
+	((OptionInterface *) clazz->def->interface)->setSelected = setSelected;
+
 }
 
 /**

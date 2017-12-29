@@ -58,12 +58,8 @@ Control {
 
 Option {
 	autoresizingMask: ViewAutoresizingContain | ViewAutoresizingWidth;
-	hidden: true;
+	backgroundColor: transparent;
 	padding: 2 2 2 2;
-}
-
-Option:selected {
-	hidden: false;
 }
 
 Option > Text {
@@ -79,25 +75,29 @@ Panel {
 
 Select {
 	bevel: ControlBevelOutset;
+	padding: 2 2 2 2;
 }
 
 Select > StackView {
 	alignment: ViewAlignmentMiddleLeft;
+	borderColor: #dededeaa;
 	borderWidth: 0;
 }
 
 Select:highlighted > StackView {
-	borderColor: #dededeaa;
 	borderWidth: 1;
 }
 
-Select:highlighted > StackView > Option {
+Select:highlighted Option {
 	backgroundColor: charcoal;
-	hidden: false;
 }
 
-Select:highlighted > StackView > Option:hover {
-	backgroundColor: red;
+Select:highlighted Option:hover {
+	backgroundColor: darkgray;
+}
+
+Select:highlighted Option:selected {
+	backgroundColor: backgroundColor: dimgray;
 }
 
 Slider {
