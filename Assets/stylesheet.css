@@ -1,3 +1,7 @@
+* {
+	backgroundColor: transparent;
+	borderWidth: 0;
+}
 
 Box {
 	borderColor: #dededeaa;
@@ -58,7 +62,6 @@ Control {
 
 Option {
 	autoresizingMask: ViewAutoresizingContain | ViewAutoresizingWidth;
-	backgroundColor: transparent;
 	padding: 2 2 2 2;
 }
 
@@ -81,7 +84,6 @@ Select {
 Select > StackView {
 	alignment: ViewAlignmentMiddleLeft;
 	borderColor: #dededeaa;
-	borderWidth: 0;
 }
 
 Select:highlighted > StackView {
@@ -136,6 +138,3 @@ TextView > Text {
 Text {
 	color: ghostwhite;
 }
-
-
-
