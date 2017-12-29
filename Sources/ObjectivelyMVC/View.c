@@ -246,10 +246,10 @@ static void applyConstraints(View *self) {
 }
 
 /**
- * @brief ArrayEnumerator for applyConstraints recursion.
+ * @brief ViewEnumerator for applyConstraints recursion.
  */
-static void applyConstraintsIfNeeded_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, applyConstraintsIfNeeded);
+static void applyConstraintsIfNeeded_recurse(View *subview, ident data) {
+	$(subview, applyConstraintsIfNeeded);
 }
 
 /**
@@ -264,7 +264,7 @@ static void applyConstraintsIfNeeded(View *self) {
 
 	self->needsApplyConstraints = false;
 
-	$((Array *) self->subviews, enumerateObjects, applyConstraintsIfNeeded_recurse, NULL);
+	$(self, enumerateSubviews, applyConstraintsIfNeeded_recurse, NULL);
 }
 
 /**
@@ -656,7 +656,7 @@ static void enumerateSubviews(const View *self, ViewEnumerator enumerator, ident
 
 	const Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
-		enumerator($(subviews, objectAtIndex, i), data);
+		enumerator((View *) subviews->elements[i], data);
 	}
 }
 
@@ -807,10 +807,10 @@ static _Bool isVisible(const View *self) {
 }
 
 /**
- * @brief ArrayEnumerator for layoutIfNeeded recursion.
+ * @brief ViewEnumerator for layoutIfNeeded recursion.
  */
-static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, layoutIfNeeded);
+static void layoutIfNeeded_recurse(View *subview, ident data) {
+	$(subview, layoutIfNeeded);
 }
 
 /**
@@ -848,7 +848,7 @@ static void layoutIfNeeded(View *self) {
 
 	$(self, applyConstraintsIfNeeded);
 
-	$((Array *) self->subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
+	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
 }
 
 /**
@@ -1103,10 +1103,10 @@ static void render(View *self, Renderer *renderer) {
 }
 
 /**
- * @brief ArrayEnumerator for renderDeviceDidReset recursion.
+ * @brief ViewEnumerator for renderDeviceDidReset recursion.
  */
-static void renderDeviceDidReset_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, renderDeviceDidReset);
+static void renderDeviceDidReset_recurse(View *subview, ident data) {
+	$(subview, renderDeviceDidReset);
 }
 
 /**
@@ -1114,7 +1114,7 @@ static void renderDeviceDidReset_recurse(const Array *array, ident obj, ident da
  * @memberof View
  */
 static void renderDeviceDidReset(View *self) {
-	$((Array *) self->subviews, enumerateObjects, renderDeviceDidReset_recurse, NULL);
+	$(self, enumerateSubviews, renderDeviceDidReset_recurse, NULL);
 }
 
 /**
@@ -1169,11 +1169,9 @@ static void resignFirstResponder(View *self) {
 }
 
 /**
- * @brief ArrayEnumerator for resize recursion.
+ * @brief ViewEnumerator for resize recursion.
  */
-static void resize_recurse(const Array *array, ident obj, ident data) {
-
-	View *subview = (View *) obj;
+static void resize_recurse(View *subview, ident data) {
 
 	SDL_Size size = $(subview, size);
 
@@ -1206,7 +1204,7 @@ static void resize(View *self, const SDL_Size *size) {
 		self->needsLayout = true;
 		self->needsApplyConstraints = true;
 
-		$((Array *) self->subviews, enumerateObjects, resize_recurse, NULL);
+		$(self, enumerateSubviews, resize_recurse, NULL);
 	}
 }
 
@@ -1228,10 +1226,10 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 }
 
 /**
- * @brief ArrayEnumerator for setWindow recursion.
+ * @brief ViewEnumerator for setWindow recursion.
  */
-static void setWindow_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, setWindow, data);
+static void setWindow_recurse(View *subview, ident data) {
+	$(subview, setWindow, data);
 }
 
 /**
@@ -1254,7 +1252,7 @@ static void setWindow(View *self, SDL_Window *window) {
 		}
 	}
 
-	$((Array *) self->subviews, enumerateObjects, setWindow_recurse, window);
+	$(self, enumerateSubviews, setWindow_recurse, window);
 }
 
 /**
@@ -1370,10 +1368,10 @@ static View *subviewWithIdentifier(const View *self, const char *identifier) {
 }
 
 /**
- * @brief ArrayEnumerator for updateBindings recursion.
+ * @brief ViewEnumerator for updateBindings recursion.
  */
-static void updateBindings_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, updateBindings);
+static void updateBindings_recurse(View *subview, ident data) {
+	$(subview, updateBindings);
 }
 
 /**
@@ -1381,7 +1379,7 @@ static void updateBindings_recurse(const Array *array, ident obj, ident data) {
  * @memberof View
  */
 static void updateBindings(View *self) {
-	$((Array *) self->subviews, enumerateObjects, updateBindings_recurse, NULL);
+	$(self, enumerateSubviews, updateBindings_recurse, NULL);
 }
 
 /**
