@@ -884,16 +884,16 @@ struct ViewInterface {
 OBJECTIVELYMVC_EXPORT Class *_View(void);
 
 /**
- * @brief Sets the specified View as the first responder for the given window.
- * @param window The window.
- * @param view The View, or `NULL`.
- * @relates View
- */
-OBJECTIVELYMVC_EXPORT void MVC_MakeFirstResponder(SDL_Window *window, View *view);
-
-/**
  * @param window The window.
  * @return The first responder for the given window, or `NULL` if none.
  * @relates View
  */
 OBJECTIVELYMVC_EXPORT View *MVC_FirstResponder(SDL_Window *window);
+
+/**
+ * @brief Sets the specified View as the first responder for the given window.
+ * @param window The window.
+ * @param view The View, or `NULL`.
+ * @relates View
+ */
+OBJECTIVELYMVC_EXPORT void MVC_SetFirstResponder(SDL_Window *window, View *view);

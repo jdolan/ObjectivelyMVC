@@ -359,7 +359,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 static void becomeFirstResponder(View *self) {
 
 	if (self->window) {
-		MVC_MakeFirstResponder(self->window, self);
+		MVC_SetFirstResponder(self->window, self);
 	} else {
 		MVC_LogWarn("%s: window is NULL\n", (self->identifier ?: self->object.clazz->name));
 	}
@@ -1164,7 +1164,7 @@ static void replaceSubview(View *self, View *subview, View *replacement) {
 static void resignFirstResponder(View *self) {
 
 	if ($(self, isFirstResponder)) {
-		MVC_MakeFirstResponder(self->window, NULL);
+		MVC_SetFirstResponder(self->window, NULL);
 	}
 }
 
@@ -1567,7 +1567,7 @@ Class *_View(void) {
 
 #pragma mark - Utilities
 
-void MVC_MakeFirstResponder(SDL_Window *window, View *view) {
+void MVC_SetFirstResponder(SDL_Window *window, View *view) {
 
 	assert(window);
 
