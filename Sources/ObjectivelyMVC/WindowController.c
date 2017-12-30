@@ -48,30 +48,32 @@ static void dealloc(Object *self) {
 #pragma mark - WindowController
 
 /**
+ * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
+ * @memberof WindowController
+ */
+static View *eventTarget(const WindowController *self, const SDL_Event *event) {
+
+	SDL_Point point;
+
+	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+		point = MakePoint(event->button.x, event->button.y);
+	} else if (event->type == SDL_MOUSEMOTION) {
+		point = MakePoint(event->motion.x, event->motion.y);
+	} else if (event->type == SDL_MOUSEWHEEL) {
+		SDL_GetMouseState(&point.x, &point.y);
+	} else {
+		return NULL;
+	}
+
+	return $(self->viewController->view, hitTest, &point);
+}
+
+/**
  * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
  * @memberof WindowController
  */
 static View *firstResponder(const WindowController *self, const SDL_Event *event) {
-
-	View *firstResponder = MVC_FirstResponder(self->window);
-	if (firstResponder == NULL) {
-
-		SDL_Point point;
-
-		if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-			point = MakePoint(event->button.x, event->button.y);
-		} else if (event->type == SDL_MOUSEMOTION) {
-			point = MakePoint(event->motion.x, event->motion.y);
-		} else if (event->type == SDL_MOUSEWHEEL) {
-			SDL_GetMouseState(&point.x, &point.y);
-		} else {
-			return NULL;
-		}
-
-		firstResponder = $(self->viewController->view, hitTest, &point);
-	}
-
-	return firstResponder;
+	return MVC_FirstResponder(self->window) ?: $(self, eventTarget, event);
 }
 
 /**
@@ -264,6 +266,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((WindowControllerInterface *) clazz->def->interface)->eventTarget = eventTarget;
 	((WindowControllerInterface *) clazz->def->interface)->firstResponder = firstResponder;
 	((WindowControllerInterface *) clazz->def->interface)->initWithWindow = initWithWindow;
 	((WindowControllerInterface *) clazz->def->interface)->render = render;

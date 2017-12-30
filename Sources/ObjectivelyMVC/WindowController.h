@@ -85,10 +85,21 @@ struct WindowControllerInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
+	 * @param self The WindowController.
+	 * @param event The event.
+	 * @return The View that was targeted by the given event.
+	 * @see View::hitTest(const View *, const SDL_Point *)
+	 * @memberof WindowController
+	 */
+	View *(*eventTarget)(const WindowController *self, const SDL_Event *event);
+
+	/**
 	 * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
 	 * @param self The WindowController.
 	 * @param event The event.
 	 * @return The first responder for the given event.
+	 * @see MVC_FirstResponder(SDL_Window *)
 	 * @memberof WindowController
 	 */
 	View *(*firstResponder)(const WindowController *self, const SDL_Event *event);
