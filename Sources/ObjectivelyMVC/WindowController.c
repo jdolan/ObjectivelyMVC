@@ -116,7 +116,7 @@ static void render(WindowController *self) {
 		View *view = self->viewController->view;
 		assert(view);
 
-		$(view, applyTheme, self->theme);
+		$(view, applyThemeIfNeeded, self->theme);
 
 		$(view, layoutIfNeeded);
 
@@ -170,6 +170,29 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 			});
 		}
 	} else {
+
+		if (event->type == SDL_MOUSEMOTION) {
+
+			if (self->viewController) {
+				const SDL_Point a = MakePoint(event->motion.x - event->motion.xrel, event->motion.y - event->motion.yrel);
+				const SDL_Point b = MakePoint(event->motion.x, event->motion.y);
+
+				View *previous = $(self->viewController->view, hitTest, &a);
+				View *current = $(self->viewController->view, hitTest, &b);
+
+				if (current != previous) {
+					while (previous) {
+						previous->needsApplyTheme = true;
+						previous = previous->superview;
+					}
+					while (current) {
+						current->needsApplyTheme = true;
+						current = current->superview;
+					}
+				}
+			}
+		}
+
 		View *firstResponder = $(self, firstResponder, event);
 		if (firstResponder) {
 

@@ -203,7 +203,14 @@ struct View {
 	_Bool needsApplyConstraints;
 
 	/**
+	 * @brief If true, this View will apply the Theme before it is drawn.
+	 * @remarks If Theme application results in changes to this View's Style, layout will applied.
+	 */
+	_Bool needsApplyTheme;
+
+	/**
 	 * @brief If true, this View will layout its subviews before it is drawn.
+	 * @remarks If layout results in changes to this View's size, constraints will be applied.
 	 */
 	_Bool needsLayout;
 
@@ -345,10 +352,19 @@ struct ViewInterface {
 	 * @fn void View::applyTheme(View *self, const Theme *theme)
 	 * @brief Applies the given Theme to this View.
 	 * @param self The View.
-	 * @param style The Theme.
+	 * @param theme The Theme.
 	 * @memberof View
 	 */
 	void (*applyTheme)(View *self, const Theme *theme);
+
+	/**
+	 * @fn void View::applyThemeIfNeeded(View *self, const Theme *theme)
+	 * @brief Recursively applies the Theme to this View and its subviews.
+	 * @param self The View.
+	 * @param theme The Theme.
+	 * @memberof View
+	 */
+	void (*applyThemeIfNeeded)(View *self, const Theme *theme);
 
 	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)

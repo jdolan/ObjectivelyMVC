@@ -318,9 +318,26 @@ static void applyTheme(View *self, const Theme *theme) {
 
 	release(attributes);
 
-	if (self->hidden == false) {
-		$(self, enumerateSubviews, (ViewEnumerator) applyTheme, (ident) theme);
+	$(self, enumerateSubviews, (ViewEnumerator) applyTheme, (ident) theme);
+
+	self->needsApplyTheme = false;
+}
+
+/**
+ * @fn void View::applyThemeIfNeeded(View *self, const Theme *theme)
+ * @memberof View
+ */
+static void applyThemeIfNeeded(View *self, const Theme *theme) {
+
+	assert(theme);
+
+	if (self->needsApplyTheme) {
+		$(self, applyTheme, theme);
+	} else {
+		$(self, enumerateSubviews, (ViewEnumerator) applyThemeIfNeeded, (ident) theme);
 	}
+
+	self->needsApplyTheme = false;
 }
 
 /**
@@ -756,6 +773,8 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->style = $(alloc(Style), initWithAttributes, NULL);
 		assert(self->style);
 
+		self->needsApplyConstraints = true;
+		self->needsApplyTheme = true;
 		self->needsLayout = true;
 	}
 
@@ -1485,6 +1504,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->applyConstraintsIfNeeded = applyConstraintsIfNeeded;
 	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->applyTheme = applyTheme;
+	((ViewInterface *) clazz->def->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
