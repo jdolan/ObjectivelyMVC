@@ -56,6 +56,42 @@ static String *description(const Object *self) {
 	const Style *this = (Style *) self;
 
 	return $(this->selectors, componentsJoinedByCharacters, ", ");
+
+/**
+ * @see Object::hash(const Object *)
+ */
+static int hash(const Object *self) {
+
+	Style *this = (Style *) self;
+
+	int hash = HASH_SEED;
+
+	hash = HashForObject(hash, this->attributes);
+	hash = HashForObject(hash, this->selectors);
+
+	return hash;
+}
+
+/**
+ * @see Object::isEqual(const Object *, const Object *)
+ */
+static _Bool isEqual(const Object *self, const Object *other) {
+
+	if (super(Object, self, isEqual, other)) {
+		return true;
+	}
+
+	if (other && $(other, isKindOfClass, _Style())) {
+
+		const Style *this = (Style *) self;
+		const Style *that = (Style *) other;
+
+		if ($((Object *) this->selectors, isEqual, (Object *) that->selectors)) {
+			return $((Object *) this->attributes, isEqual, (Object *) that->attributes);
+		}
+	}
+
+	return false;
 }
 
 #pragma mark - Style
@@ -458,6 +494,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	((ObjectInterface *) clazz->def->interface)->description = description;
+	((ObjectInterface *) clazz->def->interface)->hash = hash;
+	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
 
 	((StyleInterface *) clazz->def->interface)->addAttribute = addAttribute;
 	((StyleInterface *) clazz->def->interface)->addAttributes = addAttributes;
