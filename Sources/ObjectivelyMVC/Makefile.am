@@ -3,6 +3,9 @@ AUTOMAKE_OPTIONS = nostdinc
 pkgdatadir = $(datadir)/ObjectivelyMVC
 pkgincludedir = $(includedir)/ObjectivelyMVC
 
+noinst_HEADERS = \
+	Config.h
+
 pkginclude_HEADERS = \
 	Action.h \
 	Box.h \
@@ -11,7 +14,6 @@ pkginclude_HEADERS = \
 	CollectionItemView.h \
 	CollectionView.h \
 	Colors.h \
-	Config.h \
 	Constraint.h \
 	Control.h \
 	Font.h \
