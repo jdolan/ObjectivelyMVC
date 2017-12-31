@@ -24,7 +24,7 @@
 #pragma once
 
 #include <Objectively/Enum.h>
-#include <Objectively/MutableDictionary.h>
+#include <Objectively/Dictionary.h>
 
 #include <ObjectivelyMVC/Selector.h>
 
@@ -57,7 +57,7 @@ struct Style {
 	/**
 	 * The attributes.
 	 */
-	MutableDictionary *attributes;
+	Dictionary *attributes;
 
 	/**
 	 * @brief The Selectors.
@@ -187,6 +187,15 @@ struct StyleInterface {
 	void (*addRectangleAttribute)(Style *self, const char *attr, const SDL_Rect *value);
 
 	/**
+	 * @fn void Style::addSelector(Style *self, Selector *selector)
+	 * @brief Adds the given Selector to this Style.
+	 * @param self The Style.
+	 * @param selector The Selector.
+	 * @memberof Style
+	 */
+	void (*addSelector)(Style *self, Selector *selector);
+
+	/**
 	 * @fn void Style::addSizeAttribute(Style *self, const char *attr, const SDL_Size *value)
 	 * @brief Adds or replaces the given attribute with `value`.
 	 * @param self The Style.
@@ -195,23 +204,6 @@ struct StyleInterface {
 	 * @memberof Style
 	 */
 	void (*addSizeAttribute)(Style *self, const char *attr, const SDL_Size *value);
-
-	/**
-	 * @fn void Style::apply(const Style *self, View *view)
-	 * @brief Applies this Style to the given View.
-	 * @param self The Style.
-	 * @param view The View.
-	 * @memberof Style
-	 */
-	void (*apply)(const Style *self, View *view);
-
-	/**
-	 * @fn Dictionary *Style::attributes(const Style *self)
-	 * @param self The Style.
-	 * @return A copy of this Styles attributes.
-	 * @memberof Style
-	 */
-	Dictionary *(*attributes)(const Style *self);
 
 	/**
 	 * @fn ident Style::attributeValue(const Style *self, const char *attr)
@@ -243,6 +235,18 @@ struct StyleInterface {
 	 * @memberof Style
 	 */
 	Style *(*initWithRules)(Style *self, const char *rules);
+
+	/**
+	 * @fn _Bool Style::isComputedEqual(const Style *self, const Style *other)
+	 * @brief Performs a fast, rule-based comparison of this Style to the given Style.
+	 * @param self The Style.
+	 * @param other The Style to test for computed equality.
+	 * @return True if the given Style is deemed equal, false otherwise.
+	 * @remarks This method is optimized to quickly determine if two computed Styles should contain
+	 * the same attributes based on their Selector rules. For true equality, use `isEqual`.
+	 * @memberof Style
+	 */
+	_Bool (*isComputedEqual)(const Style *self, const Style *other);
 
 	/**
 	 * @static

@@ -339,13 +339,17 @@ static _Bool selected(const Control *self) {
  */
 static void stateDidChange(Control *self) {
 
+	View *this = (View *) self;
+
 	if (self->state & (ControlStateHighlighted | ControlStateFocused)) {
-		$((View *) self, becomeFirstResponder);
+		$(this, becomeFirstResponder);
 	} else {
-		$((View *) self, resignFirstResponder);
+		$(this, resignFirstResponder);
 	}
 
-	self->view.needsLayout = true;
+	$(this, invalidateStyle);
+
+	this->needsLayout = true;
 }
 
 #pragma mark - Class lifecycle

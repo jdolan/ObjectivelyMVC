@@ -24,6 +24,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include <Objectively/Hash.h>
+
 #include <ObjectivelyMVC.h>
 
 #include <stylesheet.css.h>
@@ -45,26 +47,44 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
-#pragma mark - Stylesheet
+/**
+ * @see Object::hash(const Object *)
+ */
+static int hash(const Object *self) {
+
+	Stylesheet *this = (Stylesheet *) self;
+
+	int hash = HASH_SEED;
+
+	hash = HashForObject(hash, this->selectors);
+	hash = HashForObject(hash, this->styles);
+
+	return hash;
+}
 
 /**
- * @fn void Stylesheet::apply(const Stylesheet *self, View *view)
- * @memberof Stylesheet
+ * @see Object::isEqual(const Object *, const Object *)
  */
-static void apply(const Stylesheet *self, View *view) {
+static _Bool isEqual(const Object *self, const Object *other) {
 
-	assert(view);
+	if (super(Object, self, isEqual, other)) {
+		return true;
+	}
 
-	for (size_t i = 0; i < self->selectors->count; i++) {
+	if (other && $(other, isKindOfClass, _Stylesheet())) {
 
-		const Selector *selector = $(self->selectors, objectAtIndex, i);
-		if ($(selector, matchesView, view)) {
+		const Stylesheet *this = (Stylesheet *) self;
+		const Stylesheet *that = (Stylesheet *) other;
 
-			const Style *style = $(self->styles, objectForKey, (ident) selector);
-			$(style, apply, view);
+		if ($((Object *) this->selectors, isEqual, (Object *) that->selectors)) {
+			return $((Object *) this->styles, isEqual, (Object *) that->styles);
 		}
 	}
+
+	return false;
 }
+
+#pragma mark - Stylesheet
 
 static Stylesheet *_defaultStylesheet;
 
@@ -212,8 +232,9 @@ static Stylesheet *stylesheetWithString(const String *string) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->hash = hash;
+	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
 
-	((StylesheetInterface *) clazz->def->interface)->apply = apply;
 	((StylesheetInterface *) clazz->def->interface)->defaultStylesheet = defaultStylesheet;
 	((StylesheetInterface *) clazz->def->interface)->initWithCharacters = initWithCharacters;
 	((StylesheetInterface *) clazz->def->interface)->initWithContentsOfFile = initWithContentsOfFile;

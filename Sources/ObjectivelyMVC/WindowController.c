@@ -181,13 +181,28 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 				View *current = $(self->viewController->view, hitTest, &b);
 
 				if (current != previous) {
-					while (previous) {
-						previous->needsApplyTheme = true;
-						previous = previous->superview;
-					}
-					while (current) {
-						current->needsApplyTheme = true;
-						current = current->superview;
+
+					String *this = current ? $((Object *) current, description) : str("");
+					String *that = previous ? $((Object *) previous, description) : str("");
+
+					printf("%s -> %s\n", that->chars, this->chars);
+
+					release(this);
+					release(that);
+
+					if (current && previous) {
+						if ($(current, isDescendantOfView, previous)) {
+							$(current, invalidateStyle);
+						} else if ($(previous, isDescendantOfView, current)) {
+							$(previous, invalidateStyle);
+						}
+					} else {
+						if (current) {
+							$(current, invalidateStyle);
+						}
+						if (previous) {
+							$(previous, invalidateStyle);
+						}
 					}
 				}
 			}

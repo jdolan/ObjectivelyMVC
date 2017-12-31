@@ -93,7 +93,7 @@ struct ThemeInterface {
 	 * @param view The View.
 	 * @memberof Theme
 	 */
-	void (*apply)(const Theme *self, View *view);
+	Style *(*computeStyle)(const Theme *self, View *view);
 
 	/**
 	 * @static

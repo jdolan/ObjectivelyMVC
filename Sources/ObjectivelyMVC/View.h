@@ -593,6 +593,14 @@ struct ViewInterface {
 	View *(*initWithFrame)(View *self, const SDL_Rect *frame);
 
 	/**
+	 * @fn void View::invalidateStyle(View *self)
+	 * @brief Invalidates the computed Style for this View and its descendants.
+	 * @param self The View.
+	 * @memberof View
+	 */
+	void (*invalidateStyle)(View *self);
+
+	/**
 	 * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
 	 * @param self The View.
 	 * @param view The View to test against this View's hierarchy.

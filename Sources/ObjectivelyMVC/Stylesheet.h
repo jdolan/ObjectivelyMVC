@@ -76,15 +76,6 @@ struct StylesheetInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 * @fn void Stylesheet::apply(const Stylesheet *self, View *view)
-	 * @brief Applies this Stylesheet to the given View.
-	 * @param self The Stylesheet.
-	 * @param view The View
-	 * @memberof Stylesheet
-	 */
-	void (*apply)(const Stylesheet *self, View *view);
-
-	/**
 	 * @static
 	 * @fn Stylesheet *Stylesheet::defaultStylesheet(void)
 	 * @return The default Stylesheet.

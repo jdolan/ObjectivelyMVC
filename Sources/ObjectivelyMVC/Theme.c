@@ -25,6 +25,7 @@
 
 #include <Objectively/JSONSerialization.h>
 
+#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/View.h>
 
@@ -55,21 +56,54 @@ static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
 }
 
 /**
- * @brief ArrayEnumerator for applying Stylesheets.
+ * @brief Reducer for computeStyle.
  */
-static void apply_enumerate(const Array *array, ident obj, ident data) {
-	$((Stylesheet *) obj, apply, data);
+static ident computeStyle_reduce(const ident obj, ident accumulator, ident data) {
+
+	const Stylesheet *stylesheet = obj;
+
+	for (size_t i = 0; i < stylesheet->selectors->count; i++) {
+
+		Selector *selector = $(stylesheet->selectors, objectAtIndex, i);
+		if ($(selector, matchesView, (View *) data)) {
+
+			const Style *style = $(stylesheet->styles, objectForKey, selector);
+
+			if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
+
+				String *this = $((Object *) selector, description);
+				String *that = $((Object *) data, description);
+
+				MVC_LogVerbose("%s -> %s\n", this->chars, that->chars);
+
+				release(this);
+				release(that);
+			}
+
+			if ($(style, attributeValue, "debug")) {
+				SDL_TriggerBreakpoint();
+			}
+
+			$((Style *) accumulator, addSelector, selector);
+			$((Style *) accumulator, addAttributes, style->attributes);
+		}
+	}
+
+	return accumulator;
 }
 
 /**
- * @fn void Theme::apply(const Theme *self, View *view)
+ * @fn Style *Theme::computeStyle(const Theme *self, View *view)
  * @memberof Theme
  */
-static void apply(const Theme *self, View *view) {
+static Style *computeStyle(const Theme *self, View *view) {
 
 	assert(view);
 
-	$(self->stylesheets, enumerateObjects, apply_enumerate, view);
+	Style *style = $(alloc(Style), initWithAttributes, NULL);
+	assert(style);
+
+	return $(self->stylesheets, reduce, computeStyle_reduce, style, view);
 }
 
 static Theme *_defaultTheme;
@@ -125,7 +159,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
-	((ThemeInterface *) clazz->def->interface)->apply = apply;
+	((ThemeInterface *) clazz->def->interface)->computeStyle = computeStyle;
 	((ThemeInterface *) clazz->def->interface)->defaultTheme = defaultTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
 	((ThemeInterface *) clazz->def->interface)->removeStylesheet = removeStylesheet;

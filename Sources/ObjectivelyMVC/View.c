@@ -291,7 +291,7 @@ static void applyStyle(View *self, const Style *style) {
 		MakeInlet("y", InletTypeInteger, &self->frame.y, NULL)
 	);
 
-	$(self, bind, inlets, (Dictionary *) style->attributes);
+	$(self, bind, inlets, style->attributes);
 
 	self->needsLayout = true;
 }
@@ -304,23 +304,20 @@ static void applyTheme(View *self, const Theme *theme) {
 
 	assert(theme);
 
-	Dictionary *attributes = $(self->style, attributes);
+	Style *computedStyle = $(theme, computeStyle, self);
+	assert(computedStyle);
 
-	$(self->style, removeAllAttributes);
+	if (!$(self->style, isComputedEqual, computedStyle)) {
 
-	$(theme, apply, self);
+		release(self->style);
+		self->style = retain(computedStyle);
 
-	$(self->style, addAttributes, (Dictionary *) self->attributes);
+		$(self->style, addAttributes, (Dictionary *) self->attributes);
 
-	if ($((Object *) attributes, isEqual, (Object *) self->style->attributes) == false) {
 		$(self, applyStyle, self->style);
 	}
 
-	release(attributes);
-
-	$(self, enumerateSubviews, (ViewEnumerator) applyTheme, (ident) theme);
-
-	self->needsApplyTheme = false;
+	release(computedStyle);
 }
 
 /**
@@ -333,11 +330,11 @@ static void applyThemeIfNeeded(View *self, const Theme *theme) {
 
 	if (self->needsApplyTheme) {
 		$(self, applyTheme, theme);
-	} else {
-		$(self, enumerateSubviews, (ViewEnumerator) applyThemeIfNeeded, (ident) theme);
 	}
 
 	self->needsApplyTheme = false;
+
+	$(self, enumerateSubviews, (ViewEnumerator) applyThemeIfNeeded, (ident) theme);
 }
 
 /**
@@ -348,7 +345,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	assert(dictionary);
 
-	$(self->attributes, removeAllObjects);
 	$(self->attributes, addEntriesFromDictionary, dictionary);
 
 	const Inlet inlets[] = MakeInlets(
@@ -782,10 +778,27 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 }
 
 /**
+ * @brief ViewEnumerator for invalidateStyle.
+ */
+static void invalidateStyle_enumerate(View *view, ident data) {
+	view->needsApplyTheme = true;
+}
+
+/**
+ * @fn void View::invalidateStyle(View *self)
+ * @memberof View
+ */
+static void invalidateStyle(View *self) {
+	$(self, enumerate, invalidateStyle_enumerate, NULL);
+}
+
+/**
  * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
  * @memberof View
  */
 static _Bool isDescendantOfView(const View *self, const View *view) {
+
+	assert(view);
 
 	while (self) {
 		if (self == view) {
@@ -1528,6 +1541,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((ViewInterface *) clazz->def->interface)->invalidateStyle = invalidateStyle;
 	((ViewInterface *) clazz->def->interface)->isDescendantOfView = isDescendantOfView;
 	((ViewInterface *) clazz->def->interface)->isFirstResponder = isFirstResponder;
 	((ViewInterface *) clazz->def->interface)->isVisible = isVisible;

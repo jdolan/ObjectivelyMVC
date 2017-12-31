@@ -27,9 +27,7 @@
 
 #include <Objectively.h>
 
-#include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Style.h>
-#include <ObjectivelyMVC/View.h>
 
 #define _Class _Style
 
@@ -55,7 +53,8 @@ static String *description(const Object *self) {
 
 	const Style *this = (Style *) self;
 
-	return $(this->selectors, componentsJoinedByCharacters, ", ");
+	return $((Array *) this->selectors, componentsJoinedByCharacters, ", ");
+}
 
 /**
  * @see Object::hash(const Object *)
@@ -108,7 +107,7 @@ static void addAttribute(Style *self, const char *attr, ident value) {
 	char *key = strtrim(attr);
 	assert(key);
 
-	$(self->attributes, setObjectForKeyPath, value, key);
+	$((MutableDictionary *) self->attributes, setObjectForKeyPath, value, key);
 
 	free(key);
 }
@@ -121,7 +120,7 @@ static void addAttributes(Style *self, const Dictionary *attributes) {
 
 	assert(attributes);
 
-	$(self->attributes, addEntriesFromDictionary, attributes);
+	$((MutableDictionary *) self->attributes, addEntriesFromDictionary, attributes);
 }
 
 /**
@@ -250,6 +249,17 @@ static void addRectangleAttribute(Style *self, const char *attr, const SDL_Rect 
 }
 
 /**
+ * @fn void Style::addSelector(Style *self, Selector *selector)
+ * @memberof Style
+ */
+static void addSelector(Style *self, Selector *selector) {
+
+	assert(selector);
+
+	$((MutableArray *) self->selectors, addObject, selector);
+}
+
+/**
  * @fn void Style::addSizeAttribute(Style *self, const char *attr, const SDL_Size *value)
  * @memberof Style
  */
@@ -265,38 +275,6 @@ static void addSizeAttribute(Style *self, const char *attr, const SDL_Size *valu
 	release(array);
 	release(w);
 	release(h);
-}
-
-/**
- * @fn void Style::apply(const Style *self, View *view)
- * @memberof Style
- */
-static void apply(const Style *self, View *view) {
-
-	if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
-
-		String *this = $((Object *) self, description);
-		String *that = $((Object *) view, description);
-
-		MVC_LogVerbose("%s -> %s\n", this->chars, that->chars);
-
-		release(this);
-		release(that);
-	}
-
-	if ($(self, attributeValue, "debug")) {
-		SDL_TriggerBreakpoint();
-	}
-
-	$(view->style, addAttributes, (Dictionary *) self->attributes);
-}
-
-/**
- * @fn Dictionary *Style::attributes(const Style *self)
- * @memberof Style
- */
-static Dictionary *attributes(const Style *self) {
-	return $$(Dictionary, dictionaryWithDictionary, (Dictionary *) self->attributes);
 }
 
 /**
@@ -316,7 +294,7 @@ static Style *initWithAttributes(Style *self, const Dictionary *attributes) {
 	self = $(self, initWithRules, NULL);
 	if (self) {
 		if (attributes) {
-			$(self->attributes, addEntriesFromDictionary, attributes);
+			$(self, addAttributes, attributes);
 		}
 	}
 
@@ -335,11 +313,37 @@ static Style *initWithRules(Style *self, const char *rules) {
 		self->selectors = $$(Selector, parse, rules);
 		assert(self->selectors);
 
-		self->attributes = $$(MutableDictionary, dictionaryWithCapacity, 4);
+		self->attributes = (Dictionary *) $$(MutableDictionary, dictionaryWithCapacity, 4);
 		assert(self->attributes);
 	}
 
 	return self;
+}
+
+/**
+ * @fn _Bool Style::isComputedEqual(const Style *self, const Style *other)
+ * @memberof Style
+ */
+static _Bool isComputedEqual(const Style *self, const Style *other) {
+
+	assert(other);
+
+	if (self->selectors->count == other->selectors->count) {
+
+		for (size_t i = 0; i < self->selectors->count; i++) {
+
+			const Selector *this = $(self->selectors, objectAtIndex, i);
+			const Selector *that = $(other->selectors, objectAtIndex, i);
+
+			if (strcmp(this->rule, that->rule)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 /**
@@ -474,7 +478,7 @@ static Array *parse(const char *css) {
  * @memberof Style
  */
 static void removeAttribute(Style *self, const char *attr) {
-	$(self->attributes, removeObjectForKeyPath, attr);
+	$((MutableDictionary *) self->attributes, removeObjectForKeyPath, attr);
 }
 
 /**
@@ -482,7 +486,7 @@ static void removeAttribute(Style *self, const char *attr) {
  * @memberof Style
  */
 static void removeAllAttributes(Style *self) {
-	$(self->attributes, removeAllObjects);
+	$((MutableDictionary *) self->attributes, removeAllObjects);
 }
 
 #pragma mark - Class lifecycle
@@ -508,12 +512,12 @@ static void initialize(Class *clazz) {
 	((StyleInterface *) clazz->def->interface)->addIntegerAttribute = addIntegerAttribute;
 	((StyleInterface *) clazz->def->interface)->addPointAttribute = addPointAttribute;
 	((StyleInterface *) clazz->def->interface)->addRectangleAttribute = addRectangleAttribute;
+	((StyleInterface *) clazz->def->interface)->addSelector = addSelector;
 	((StyleInterface *) clazz->def->interface)->addSizeAttribute = addSizeAttribute;
-	((StyleInterface *) clazz->def->interface)->apply = apply;
-	((StyleInterface *) clazz->def->interface)->attributes = attributes;
 	((StyleInterface *) clazz->def->interface)->attributeValue = attributeValue;
 	((StyleInterface *) clazz->def->interface)->initWithAttributes = initWithAttributes;
 	((StyleInterface *) clazz->def->interface)->initWithRules = initWithRules;
+	((StyleInterface *) clazz->def->interface)->isComputedEqual = isComputedEqual;
 	((StyleInterface *) clazz->def->interface)->parse = parse;
 	((StyleInterface *) clazz->def->interface)->removeAllAttributes = removeAllAttributes;
 	((StyleInterface *) clazz->def->interface)->removeAttribute = removeAttribute;
