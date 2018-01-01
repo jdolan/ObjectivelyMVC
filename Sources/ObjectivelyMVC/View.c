@@ -120,9 +120,9 @@ static void addClassName(View *self, const char *className) {
 		assert(string);
 
 		$(self->classNames, addObject, string);
-
 		release(string);
-		self->needsLayout = true;
+
+		$(self, invalidateStyle);
 	}
 }
 
@@ -1051,9 +1051,9 @@ static void removeClassName(View *self, const char *className) {
 		assert(string);
 
 		$(self->classNames, removeObject, string);
-
 		release(string);
-		self->needsLayout = true;
+
+		$(self, invalidateStyle);
 	}
 }
 
