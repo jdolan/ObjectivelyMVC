@@ -1254,7 +1254,9 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		$(self->viewController, respondToEvent, event);
 	}
 
-	if (self->superview) {
+	if (self->nextResponder) {
+		$(self->nextResponder, respondToEvent, event);
+	} else if (self->superview) {
 		$(self->superview, respondToEvent, event);
 	}
 }

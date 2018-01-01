@@ -215,6 +215,13 @@ struct View {
 	_Bool needsLayout;
 
 	/**
+	 * @brief The next responder, or event handler, in the chain.
+	 * @remarks By default, Views propagate events to their superview. If this member is not `NULL`,
+	 * events will instead be propagated to this View,.
+	 */
+	View *nextResponder;
+
+	/**
 	 * @brief The padding.
 	 */
 	ViewPadding padding;
