@@ -42,6 +42,19 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
+/**
+ * @see Object::description(const Object *)
+ */
+static String *description(const Object *self) {
+
+	Option *this = (Option *) self;
+
+	const SDL_Rect *f = &this->view.frame;
+
+	return str("%s@%p \"%s:%p\"(%d,%d) %dx%d", this->view.identifier ?: self->clazz->name, self,
+			   this->title->text, this->value, f->x, f->y, f->w, f->h);
+}
+
 #pragma mark - View
 
 /**
@@ -119,6 +132,7 @@ static void setSelected(Option *self, _Bool isSelected) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->description = description;
 
 	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
