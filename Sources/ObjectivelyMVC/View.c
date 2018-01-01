@@ -557,7 +557,7 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 }
 
 /**
- * @fn Array *View::draw(View *self)
+ * @fn void *View::draw(View *self, Renderer *renderer)
  * @memberof View
  */
 static void draw(View *self, Renderer *renderer) {
