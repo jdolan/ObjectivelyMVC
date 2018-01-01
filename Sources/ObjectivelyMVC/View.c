@@ -196,6 +196,8 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
 	$(subview, setWindow, self->window);
 
+	$(subview, invalidateStyle);
+
 	self->needsLayout = true;
 }
 
