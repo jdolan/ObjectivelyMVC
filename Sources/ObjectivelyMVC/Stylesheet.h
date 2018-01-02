@@ -126,7 +126,7 @@ struct StylesheetInterface {
 
 	/**
 	 * @static
-	 * @fn Stylesheet *Stylesheet::stylesheetWithContentsOfFile(const char *path)
+	 * @fn Stylesheet *Stylesheet::stylesheetWithContentsOfFile(const char *path, StringEncoding encoding)
 	 * @brief Instantiates a new Stylesheet with the contents of the FILE at `path`.
 	 * @param path The path name to a FILE containing CSS definitions.
 	 * @param encoding The StringEncoding.
