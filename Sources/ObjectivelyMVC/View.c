@@ -279,11 +279,11 @@ static void applyStyle(View *self, const Style *style) {
 
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
-		MakeInlet("autoresizingMask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
-		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
-		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
-		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
-		MakeInlet("clipsSubviews", InletTypeBool, &self->clipsSubviews, NULL),
+		MakeInlet("autoresizing", InletTypeEnum, &self->autoresizing, (ident) ViewAutoresizingNames),
+		MakeInlet("background-color", InletTypeColor, &self->backgroundColor, NULL),
+		MakeInlet("border-color", InletTypeColor, &self->borderColor, NULL),
+		MakeInlet("border-width", InletTypeInteger, &self->borderWidth, NULL),
+		MakeInlet("clips-subviews", InletTypeBool, &self->clipsSubviews, NULL),
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
@@ -884,7 +884,7 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	if (self->autoresizingMask & ViewAutoresizingContain) {
+	if (self->autoresizing & ViewAutoresizingContain) {
 		$(self, sizeToContain);
 	}
 
@@ -897,11 +897,11 @@ static void layoutSubviews(View *self) {
 
 		SDL_Size subviewSize = $(subview, sizeThatContains);
 
-		if (subview->autoresizingMask & ViewAutoresizingWidth) {
+		if (subview->autoresizing & ViewAutoresizingWidth) {
 			subviewSize.w = bounds.w;
 		}
 
-		if (subview->autoresizingMask & ViewAutoresizingHeight) {
+		if (subview->autoresizing & ViewAutoresizingHeight) {
 			subviewSize.h = bounds.h;
 		}
 
@@ -1202,15 +1202,15 @@ static void resize_recurse(View *subview, ident data) {
 
 	SDL_Size size = $(subview, size);
 
-	if (subview->autoresizingMask & ViewAutoresizingWidth) {
+	if (subview->autoresizing & ViewAutoresizingWidth) {
 		size.w = 0;
 	}
 
-	if (subview->autoresizingMask & ViewAutoresizingHeight) {
+	if (subview->autoresizing & ViewAutoresizingHeight) {
 		size.h = 0;
 	}
 
-	if (subview->autoresizingMask == ViewAutoresizingContain) {
+	if (subview->autoresizing == ViewAutoresizingContain) {
 		size = MakeSize(0, 0);
 	}
 
@@ -1272,7 +1272,7 @@ static void setWindow(View *self, SDL_Window *window) {
 	self->window = window;
 
 	if (self->window && self->superview == NULL) {
-		if (self->autoresizingMask & ViewAutoresizingFill) {
+		if (self->autoresizing & ViewAutoresizingFill) {
 
 			SDL_Size size;
 			SDL_GetWindowSize(self->window, &size.w, &size.h);
@@ -1312,15 +1312,15 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	SDL_Size size = $(self, size);
 
-	if (self->autoresizingMask & ViewAutoresizingWidth) {
+	if (self->autoresizing & ViewAutoresizingWidth) {
 		size.w = 0;
 	}
 
-	if (self->autoresizingMask & ViewAutoresizingHeight) {
+	if (self->autoresizing & ViewAutoresizingHeight) {
 		size.h = 0;
 	}
 
-	if (self->autoresizingMask & ViewAutoresizingContain) {
+	if (self->autoresizing & ViewAutoresizingContain) {
 		size = MakeSize(0, 0);
 
 		Array *subviews = $(self, visibleSubviews);

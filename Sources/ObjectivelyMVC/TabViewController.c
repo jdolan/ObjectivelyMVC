@@ -50,7 +50,7 @@ static void loadView(ViewController *self) {
 
 	super(ViewController, self, loadView);
 
-	self->view->autoresizingMask = ViewAutoresizingContain;
+	self->view->autoresizing = ViewAutoresizingContain;
 
 	TabViewController *this = (TabViewController *) self;
 

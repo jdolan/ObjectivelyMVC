@@ -127,12 +127,6 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame) {
 		assert(self->title);
 
 		$((View *) self, addSubview, (View *) self->title);
-		self->title->view.alignment = ViewAlignmentMiddleCenter;
-
-		self->control.view.autoresizingMask = ViewAutoresizingContain;
-		self->control.view.clipsSubviews = true;
-
-		self->control.bevel = ControlBevelOutset;
 
 		if (self->control.view.frame.w == 0) {
 			self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;

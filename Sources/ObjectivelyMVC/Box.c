@@ -99,8 +99,6 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 
 		$((View *) self->contentView, addClassName, "content");
 
-		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
-
 		$((View *) self, addSubview, (View *) self->contentView);
 
 		Font *font = $$(Font, defaultFont, FontCategorySecondaryLabel);
@@ -113,8 +111,6 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		label->alignment = ViewAlignmentInternal;
 
 		$((View *) self, addSubview, (View *) self->label);
-
-		self->view.autoresizingMask = ViewAutoresizingContain;
 	}
 
 	return self;

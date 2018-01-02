@@ -58,7 +58,7 @@ static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) 
 
 		$((View *) self, addSubview, (View *) self->text);
 
-		self->view.autoresizingMask = ViewAutoresizingHeight;
+		self->view.autoresizing = ViewAutoresizingHeight;
 
 		self->view.padding.top = DEFAULT_TABLE_CELL_VIEW_PADDING;
 		self->view.padding.left = DEFAULT_TABLE_CELL_VIEW_PADDING;

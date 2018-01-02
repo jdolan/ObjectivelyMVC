@@ -195,7 +195,7 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	SDL_Size size = super(View, self, sizeThatFits);
 
-	if (self->autoresizingMask & ViewAutoresizingContain) {
+	if (self->autoresizing & ViewAutoresizingContain) {
 
 		const StackView *this = (StackView *) self;
 
@@ -251,7 +251,7 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
 
 	self = (StackView *) super(View, self, initWithFrame, frame);
 	if (self) {
-		self->view.autoresizingMask = ViewAutoresizingContain;
+		self->view.autoresizing = ViewAutoresizingContain;
 	}
 
 	return self;

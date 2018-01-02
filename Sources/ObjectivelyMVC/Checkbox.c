@@ -124,7 +124,7 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
 	self = (Checkbox *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
-		self->control.view.autoresizingMask = ViewAutoresizingContain;
+		self->control.view.autoresizing = ViewAutoresizingContain;
  
 		self->box = $(alloc(Control), initWithFrame, frame);
 		assert(self->box);
@@ -134,7 +134,7 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
 		self->check = $(alloc(ImageView), initWithImage, _check);
 		assert(self->check);
 
-		self->check->view.autoresizingMask = ViewAutoresizingFill;
+		self->check->view.autoresizing = ViewAutoresizingFill;
 		self->check->view.hidden = true;
 
 		$((View *) self->box, addSubview, (View *) self->check);

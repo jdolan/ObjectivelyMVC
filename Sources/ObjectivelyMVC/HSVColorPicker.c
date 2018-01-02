@@ -135,7 +135,7 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 
 	self = (HSVColorPicker *) super(Control, self, initWithFrame, frame);
 	if (self) {
-		self->control.view.autoresizingMask = ViewAutoresizingContain;
+		self->control.view.autoresizing = ViewAutoresizingContain;
 
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
@@ -145,7 +145,7 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
 		assert(self->colorView);
 
-		self->colorView->autoresizingMask = ViewAutoresizingWidth;
+		self->colorView->autoresizing = ViewAutoresizingWidth;
 
 		$((View *) self->stackView, addSubview, self->colorView);
 
