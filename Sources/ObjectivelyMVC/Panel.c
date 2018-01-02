@@ -73,7 +73,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Panel *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Panel *) self, initWithFrame, NULL);
 }
 
 /**
@@ -164,12 +164,12 @@ static SDL_Size contentSize(const Panel *self) {
 }
 
 /**
- * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
  * @memberof Panel
  */
-static Panel *initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle style) {
+static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
-	self = (Panel *) super(Control, self, initWithFrame, frame, style);
+	self = (Panel *) super(Control, self, initWithFrame, frame);
 	if (self) {
 		View *this = (View *) self;
 

@@ -117,15 +117,14 @@ struct HSVColorPickerInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame)
 	 * @brief Initializes this HSVColorPicker with the specified frame and style.
 	 * @param self The HSVColorPicker.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized HSVColorPicker, or `NULL` on error.
 	 * @memberof HSVColorPicker
 	 */
-	HSVColorPicker *(*initWithFrame)(HSVColorPicker *self, const SDL_Rect *frame, ControlStyle style);
+	HSVColorPicker *(*initWithFrame)(HSVColorPicker *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn SDL_Color HSVColorPicker::rgbColor(const HSVColorPicker *self);

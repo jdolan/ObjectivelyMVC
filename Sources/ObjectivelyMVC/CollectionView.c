@@ -90,7 +90,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((CollectionView *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((CollectionView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -304,12 +304,12 @@ static IndexPath *indexPathForItem(const CollectionView *self, const CollectionI
 }
 
 /**
- * @fn CollectionView *CollectionView::initWithFrame(CollectionView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn CollectionView *CollectionView::initWithFrame(CollectionView *self, const SDL_Rect *frame)
  * @memberof CollectionView
  */
-static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame, ControlStyle style) {
+static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame) {
 
-	self = (CollectionView *) super(Control, self, initWithFrame, frame, style);
+	self = (CollectionView *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
 		self->items = $$(MutableArray, array);
@@ -321,7 +321,7 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 		$(self->contentView, addClassName, "content");
 
-		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL, style);
+		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
 
 		self->scrollView->control.view.autoresizingMask = ViewAutoresizingFill;

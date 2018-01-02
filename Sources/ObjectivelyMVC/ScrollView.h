@@ -99,15 +99,14 @@ struct ScrollViewInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame)
 	 * @brief Initializes this ScrollView with the specified frame and style.
 	 * @param self The ScrollView.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized ScrollView, or `NULL` on error.
 	 * @memberof ScrollView
 	 */
-	ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame, ControlStyle style);
+	ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn void ScrollView::scrollToOffset(ScrollView *self, const SDL_Point offset);

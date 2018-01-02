@@ -115,15 +115,14 @@ struct SelectInterface {
 	void (*addOption)(Select *self, const char *title, ident value);
 
 	/**
-	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame)
 	 * @brief Initializes this Select with the specified frame and style.
 	 * @param self The Select.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized Select, or `NULL` on error.
 	 * @memberof Select
 	 */
-	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame, ControlStyle style);
+	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn Option *Select::optionWithValue(const Select *self, ident value)

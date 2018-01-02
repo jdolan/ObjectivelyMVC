@@ -44,11 +44,6 @@ const EnumName ControlStateNames[] = MakeEnumNames(
 	MakeEnumName(ControlStateFocused)
 );
 
-const EnumName ControlStyleNames[] = MakeEnumNames(
-	MakeEnumName(ControlStyleDefault),
-	MakeEnumName(ControlStyleCustom)
-);
-
 #define _Class _Control
 
 #pragma mark - Object
@@ -85,8 +80,7 @@ static void applyStyle(View *self, const Style *style) {
 
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("bevel", InletTypeEnum, &this->bevel, (ident) (ControlBevelNames)),
-		MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames),
-		MakeInlet("style", InletTypeEnum, &this->style, (ident) ControlStyleNames)
+		MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames)
 	);
 
 	$(self, bind, inlets, (Dictionary *) style->attributes);
@@ -96,7 +90,7 @@ static void applyStyle(View *self, const Style *style) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Control *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Control *) self, initWithFrame, NULL);
 }
 
 /**
@@ -308,18 +302,16 @@ static _Bool highlighted(const Control *self) {
 }
 
 /**
- * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
  * @memberof Control
  */
-static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style) {
+static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
 
 	self = (Control *) super(View, self, initWithFrame, frame);
 	if (self) {
 
 		self->actions = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->actions);
-
-		self->style = style;
 	}
 
 	return self;

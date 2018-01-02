@@ -105,7 +105,7 @@ START_TEST(matchesView)
 
 	$(root, addSubview, container);
 
-	Panel *panel = $(alloc(Panel), initWithFrame, NULL, ControlStyleDefault);
+	Panel *panel = $(alloc(Panel), initWithFrame, NULL);
 	$(container, addSubview, (View *) panel);
 
 	View *view = $(alloc(View), initWithFrame, NULL);
@@ -186,7 +186,7 @@ START_TEST(_select)
 
 	$(root, addSubview, container);
 
-	Panel *panel = $(alloc(Panel), initWithFrame, NULL, ControlStyleDefault);
+	Panel *panel = $(alloc(Panel), initWithFrame, NULL);
 	$(container, addSubview, (View *) panel);
 
 	{

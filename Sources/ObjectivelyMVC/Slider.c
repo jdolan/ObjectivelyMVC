@@ -80,7 +80,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Slider *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Slider *) self, initWithFrame, NULL);
 }
 
 /**
@@ -199,9 +199,9 @@ static void formatLabel(Slider *self) {
  * @fn Slider *Slider::init(Slider *self)
  * @memberof Slider
  */
-static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle style) {
+static Slider *initWithFrame(Slider *self, const SDL_Rect *frame) {
 
-	self = (Slider *) super(Control, self, initWithFrame, frame, style);
+	self = (Slider *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
 		self->bar = $(alloc(View), initWithFrame, frame);
@@ -211,7 +211,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle s
 
 		$((View *) self, addSubview, self->bar);
 
-		self->handle = $(alloc(Control), initWithFrame, NULL, style);
+		self->handle = $(alloc(Control), initWithFrame, NULL);
 		assert(self->handle);
 
 		$((View *) self->handle, addClassName, "handle");

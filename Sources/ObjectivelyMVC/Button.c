@@ -63,7 +63,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Button *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Button *) self, initWithFrame, NULL);
 }
 
 /**
@@ -73,11 +73,7 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	SDL_Size size = super(View, self, sizeThatFits);
 
-	const Button *this = (Button *) self;
-
-	if (this->control.style == ControlStyleDefault) {
-		size.w = max(size.w, DEFAULT_BUTTON_MIN_WIDTH);
-	}
+	size.w = max(size.w, DEFAULT_BUTTON_MIN_WIDTH);
 
 	return size;
 }
@@ -109,24 +105,22 @@ static void stateDidChange(Control *self) {
 
 	super(Control, self, stateDidChange);
 
-	if (self->style == ControlStyleDefault) {
-		if (self->state & ControlStateHighlighted) {
-			self->bevel = ControlBevelInset;
-		} else {
-			self->bevel = ControlBevelOutset;
-		}
+	if (self->state & ControlStateHighlighted) {
+		self->bevel = ControlBevelInset;
+	} else {
+		self->bevel = ControlBevelOutset;
 	}
 }
 
 #pragma mark - Button
 
 /**
- * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
  * @memberof Button
  */
-static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style) {
+static Button *initWithFrame(Button *self, const SDL_Rect *frame) {
 
-	self = (Button *) super(Control, self, initWithFrame, frame, style);
+	self = (Button *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
 		self->title = $(alloc(Text), initWithText, NULL, NULL);
@@ -138,12 +132,10 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 		self->control.view.autoresizingMask = ViewAutoresizingContain;
 		self->control.view.clipsSubviews = true;
 
-		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = ControlBevelOutset;
+		self->control.bevel = ControlBevelOutset;
 
-			if (self->control.view.frame.w == 0) {
-				self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;
-			}
+		if (self->control.view.frame.w == 0) {
+			self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;
 		}
 	}
 
@@ -151,12 +143,12 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle s
 }
 
 /**
- * @fn Button *Button::initWithFrame(Button *self, const char *title, ControlStyle style)
+ * @fn Button *Button::initWithFrame(Button *self, const char *title)
  * @memberof Button
  */
-static Button *initWithTitle(Button *self, const char *title, ControlStyle style) {
+static Button *initWithTitle(Button *self, const char *title) {
 
-	self = $(self, initWithFrame, NULL, style);
+	self = $(self, initWithFrame, NULL);
 	if (self) {
 		$(self->title, setText, title);
 	}

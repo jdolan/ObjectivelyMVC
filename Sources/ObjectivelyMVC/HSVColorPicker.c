@@ -106,7 +106,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((HSVColorPicker *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((HSVColorPicker *) self, initWithFrame, NULL);
 }
 
 /**
@@ -128,12 +128,12 @@ static void updateBindings(View *self) {
 #pragma mark - HSVColorPicker
 
 /**
- * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame)
  * @memberof HSVColorPicker
  */
-static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame, ControlStyle style) {
+static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame) {
 
-	self = (HSVColorPicker *) super(Control, self, initWithFrame, frame, style);
+	self = (HSVColorPicker *) super(Control, self, initWithFrame, frame);
 	if (self) {
 		self->control.view.autoresizingMask = ViewAutoresizingContain;
 
@@ -149,7 +149,7 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 
 		$((View *) self->stackView, addSubview, self->colorView);
 
-		self->hueSlider = $(alloc(Slider), initWithFrame, NULL, style);
+		self->hueSlider = $(alloc(Slider), initWithFrame, NULL);
 		assert(self->hueSlider);
 
 		self->hueSlider->delegate.self = self;
@@ -165,7 +165,7 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 
 		$((View *) self->stackView, addSubview, (View *) self->hueInput);
 
-		self->saturationSlider = $(alloc(Slider), initWithFrame, NULL, style);
+		self->saturationSlider = $(alloc(Slider), initWithFrame, NULL);
 		assert(self->saturationSlider);
 
 		self->saturationSlider->delegate.self = self;
@@ -181,7 +181,7 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
 
 		$((View *) self->stackView, addSubview, (View *) self->saturationInput);
 
-		self->valueSlider = $(alloc(Slider), initWithFrame, NULL, style);
+		self->valueSlider = $(alloc(Slider), initWithFrame, NULL);
 		assert(self->valueSlider);
 
 		self->valueSlider->delegate.self = self;

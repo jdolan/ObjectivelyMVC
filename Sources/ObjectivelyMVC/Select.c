@@ -50,7 +50,7 @@ static void dealloc(Object *self) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Select *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Select *) self, initWithFrame, NULL);
 }
 
 /**
@@ -226,12 +226,12 @@ static void addOption(Select *self, const char *title, ident value) {
 }
 
 /**
- * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame)
  * @memberof Select
  */
-static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style) {
+static Select *initWithFrame(Select *self, const SDL_Rect *frame) {
 
-	self = (Select *) super(Control, self, initWithFrame, frame, style);
+	self = (Select *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
 		self->control.selection = ControlSelectionSingle;

@@ -143,7 +143,7 @@ struct SliderInterface {
 	 * @return The initialized Slider, or `NULL` on error.
 	 * @memberof Slider
 	 */
-	Slider *(*initWithFrame)(Slider *self, const SDL_Rect *frame, ControlStyle style);
+	Slider *(*initWithFrame)(Slider *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn void Slider::setLabelFormat(Slider *self, const char *labelFormat)

@@ -261,15 +261,14 @@ struct TableViewInterface {
 	void (*deselectRowsAtIndexes)(TableView *self, const IndexSet *indexSet);
 
 	/**
-	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame)
 	 * @brief Initializes this TableView with the specified frame and style.
 	 * @param self The TableView.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized TableView, or `NULL` on error.
 	 * @memberof TableView
 	 */
-	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame, ControlStyle style);
+	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn void TableView::reloadData(TableView *self)

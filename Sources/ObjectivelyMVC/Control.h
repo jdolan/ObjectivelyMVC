@@ -73,14 +73,6 @@ typedef enum {
 
 OBJECTIVELYMVC_EXPORT const EnumName ControlStateNames[];
 
-/**
- * @brief Control styles.
- */
-typedef enum {
-	ControlStyleDefault,
-	ControlStyleCustom,
-} ControlStyle;
-
 typedef struct ControlInterface ControlInterface;
 
 /**
@@ -121,11 +113,6 @@ struct Control {
 	 * @brief The ControlSelection.
 	 */
 	ControlSelection selection;
-
-	/**
-	 * @brief The ControlStyle.
-	 */
-	ControlStyle style;
 };
 
 /**
@@ -194,15 +181,14 @@ struct ControlInterface {
 	_Bool (*highlighted)(const Control *self);
 
 	/**
-	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
 	 * @brief Initializes this Control with the specified frame and style.
 	 * @param self The Control.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The intialized Control, or `NULL` on error.
 	 * @memberof Control
 	 */
-	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame, ControlStyle style);
+	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn _Bool Control::selected(const Control *self)

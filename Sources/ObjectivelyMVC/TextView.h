@@ -126,15 +126,14 @@ struct TextViewInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
 	 * @brief Initializes this TextView with the specified frame and style.
 	 * @param self The TextView.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized TextView, or `NULL` on error.
 	 * @memberof TextView
 	 */
-	TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame, ControlStyle style);
+	TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame);
 };
 
 /**

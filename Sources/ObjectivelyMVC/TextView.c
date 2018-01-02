@@ -71,7 +71,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((TextView *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((TextView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -299,12 +299,12 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 #pragma mark - TextView
 
 /**
- * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
  * @memberof TextView
  */
-static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style) {
+static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
 
-	self = (TextView *) super(Control, self, initWithFrame, frame, style);
+	self = (TextView *) super(Control, self, initWithFrame, frame);
 	if (self) {
 		self->attributedText = $$(MutableString, string);
 		assert(self->attributedText);

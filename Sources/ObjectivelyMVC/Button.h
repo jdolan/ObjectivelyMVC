@@ -70,26 +70,24 @@ struct ButtonInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
 	 * @brief Initializes this Button with the specified frame and style.
 	 * @param self The Button.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized Button, or `NULL` on error.
 	 * @memberof Button
 	 */
-	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame, ControlStyle style);
+	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn Button *Button::initWithTitle(Button *self, const char *title, ControlStyle style)
+	 * @fn Button *Button::initWithTitle(Button *self, const char *title)
 	 * @brief Initializes this Button with the specified title and style.
 	 * @param self The Button.
 	 * @param title The title text.
-	 * @param style The ControlStyle.
 	 * @return The initialized Button, or `NULL` on error.
 	 * @memberof Button
 	 */
-	Button *(*initWithTitle)(Button *self, const char *title, ControlStyle style);
+	Button *(*initWithTitle)(Button *self, const char *title);
 };
 
 /**

@@ -52,7 +52,7 @@ $(button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_d
 ```
 
 ```c
-Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
+Select *select = $(alloc(Select), initWithFrame, NULL);
 ...
 select->delegate.didSelectOption = my_callback;
 ```

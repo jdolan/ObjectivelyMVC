@@ -100,7 +100,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((TableView *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((TableView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -339,12 +339,12 @@ static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
 }
 
 /**
- * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame)
  * @memberof TableView
  */
-static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style) {
+static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
-	self = (TableView *) super(Control, self, initWithFrame, frame, style);
+	self = (TableView *) super(Control, self, initWithFrame, frame);
 	if (self) {
 		self->columns = $$(MutableArray, array);
 		assert(self->columns);
@@ -362,7 +362,7 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 
 		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
 
-		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL, style);
+		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
 
 		self->scrollView->control.view.autoresizingMask |= ViewAutoresizingWidth;
@@ -371,21 +371,18 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 
 		$((View *) self, addSubview, (View *) self->scrollView);
 
-		if (self->control.style == ControlStyleDefault) {
+		self->alternateBackgroundColor = Colors.DarkGray;
+		self->usesAlternateBackgroundColor = true;
 
-			self->alternateBackgroundColor = Colors.DarkGray;
-			self->usesAlternateBackgroundColor = true;
+		self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
+		self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
 
-			self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
-			self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
+		self->control.view.backgroundColor = Colors.Gray;
 
-			self->control.view.backgroundColor = Colors.Gray;
-
-			self->control.view.padding.top = 0;
-			self->control.view.padding.right = 0;
-			self->control.view.padding.bottom = 0;
-			self->control.view.padding.left = 0;
-		}
+		self->control.view.padding.top = 0;
+		self->control.view.padding.right = 0;
+		self->control.view.padding.bottom = 0;
+		self->control.view.padding.left = 0;
 	}
 
 	return self;

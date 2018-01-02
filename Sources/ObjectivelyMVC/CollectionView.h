@@ -206,15 +206,14 @@ struct CollectionViewInterface {
 	void (*deselectItemsAtIndexPaths)(CollectionView *self, const Array *indexPaths);
 
 	/**
-	 * @fn CollectionView *CollectionView::init(CollectionView *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn CollectionView *CollectionView::init(CollectionView *self, const SDL_Rect *frame)
 	 * @brief Initializes this CollectionView with the specified frame and style.
 	 * @param self The CollectionView.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized CollectionView, or `NULL` on error.
 	 * @memberof CollectionView
 	 */
-	CollectionView *(*initWithFrame)(CollectionView *self, const SDL_Rect *frame, ControlStyle style);
+	CollectionView *(*initWithFrame)(CollectionView *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn IndexPath *CollectionView::indexPathForItem(const CollectionView *self, const CollectionItemView *item)

@@ -68,7 +68,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Checkbox *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Checkbox *) self, initWithFrame, NULL);
 }
 
 #pragma mark - Control
@@ -116,17 +116,17 @@ static void stateDidChange(Control *self) {
 #pragma mark - Checkbox
 
 /**
- * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame, ControlStyle style)
+ * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame)
  * @memberof Checkbox
  */
-static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlStyle style) {
+static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
 
-	self = (Checkbox *) super(Control, self, initWithFrame, frame, style);
+	self = (Checkbox *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
 		self->control.view.autoresizingMask = ViewAutoresizingContain;
  
-		self->box = $(alloc(Control), initWithFrame, frame, style);
+		self->box = $(alloc(Control), initWithFrame, frame);
 		assert(self->box);
 
 		self->box->view.alignment = ViewAlignmentMiddleCenter;
@@ -140,9 +140,7 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame, ControlSty
 		$((View *) self->box, addSubview, (View *) self->check);
 		$((View *) self, addSubview, (View *) self->box);
 
-		if (self->control.style == ControlStyleDefault) {
-			self->box->bevel = ControlBevelInset;
-		}
+		self->box->bevel = ControlBevelInset;
 	}
 
 	return self;

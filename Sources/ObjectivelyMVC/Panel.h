@@ -131,15 +131,14 @@ struct PanelInterface {
 	SDL_Size (*contentSize)(const Panel *self);
 
 	/**
-	 * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn Panel *Panel::initWithFrame(Panel *self, const SDL_Rect *frame)
 	 * @brief Initializes this Panel with the specified frame and style.
 	 * @param self The Panel.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized Panel, or `NULL` on error.
 	 * @memberof Panel
 	 */
-	Panel *(*initWithFrame)(Panel *self, const SDL_Rect *frame, ControlStyle style);
+	Panel *(*initWithFrame)(Panel *self, const SDL_Rect *frame);
 };
 
 /**

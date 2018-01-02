@@ -87,25 +87,23 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 #pragma mark - ScrollView
 
 /**
- * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame)
  * @memberof ScrollView
  */
-static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style) {
+static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
 
-	self = (ScrollView *) super(Control, self, initWithFrame, frame, style);
+	self = (ScrollView *) super(Control, self, initWithFrame, frame);
 	if (self) {
 		self->step = 1.0;
 
 		self->control.view.clipsSubviews = true;
 
-		if (style == ControlStyleDefault) {
-			self->step = SCROLL_VIEW_DEFAULT_STEP;
-			
-			self->control.view.padding.top = 0;
-			self->control.view.padding.right = 0;
-			self->control.view.padding.bottom = 0;
-			self->control.view.padding.left = 0;
-		}
+		self->step = SCROLL_VIEW_DEFAULT_STEP;
+
+		self->control.view.padding.top = 0;
+		self->control.view.padding.right = 0;
+		self->control.view.padding.bottom = 0;
+		self->control.view.padding.left = 0;
 	}
 
 	return self;
