@@ -270,8 +270,7 @@ static void loadView(ViewController *self) {
 	$(this->select, addOption, "This is another", (ident) 3);
 	$(this->select, addOption, "This is yet another", (ident) 4);
 	this->select->delegate.didSelectOption = didSelectOption;
-	$((View *) this->select, sizeToFit);
-
+	
 	this->slider->delegate.didSetValue = didSetValue;
 
 	this->tableView->dataSource.numberOfRows = numberOfRows;

@@ -60,15 +60,17 @@ static void layoutSubviews(View *self) {
 
 	Select *this = (Select *) self;
 
-	if (this->control.selection == ControlSelectionSingle) {
+	Control *control = (Control *) self;
+
+	if (control->selection == ControlSelectionSingle) {
 
 		const Array *options = (Array *) this->options;
 		for (size_t i = 0; i < options->count; i++) {
 
 			Option *option = $(options, objectAtIndex, i);
-			if ($((Control *) self, highlighted)) {
+			if (option->isSelected) {
 				option->view.hidden = false;
-			} else if (option->isSelected) {
+			} else if ($(control, highlighted)) {
 				option->view.hidden = false;
 			} else {
 				option->view.hidden = true;
@@ -97,6 +99,7 @@ static SDL_Size sizeThatFits(const View *self) {
 		const SDL_Size optionSize = $(option, sizeThatFits);
 
 		size.w = max(size.w, optionSize.w + self->padding.left + self->padding.right);
+		size.h = max(size.h, optionSize.h + self->padding.top + self->padding.bottom);
 	}
 
 	return size;
@@ -133,20 +136,63 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	return super(Control, self, captureEvent, event);
 }
 
+/**
+ * @see Control::stateDidChange(Control *)
+ */
+static void stateDidChange(Control *self) {
+
+	Select *this = (Select *) self;
+
+	if (self->selection == ControlSelectionSingle) {
+
+		View *stackView = (View *) this->stackView;
+
+		if ($(self, highlighted)) {
+
+			const SDL_Rect renderFrame = $((View *) self, renderFrame);
+
+			stackView->frame.x = renderFrame.x;
+			stackView->frame.y = renderFrame.y;
+
+			View *view = (View *) self;
+
+			while (view->superview) {
+				view = view->superview;
+			}
+
+			$(stackView, addClassName, "options");
+			$(view, addSubview, stackView);
+
+			stackView->nextResponder = (View *) self;
+
+		} else {
+
+			$(stackView, removeClassName, "options");
+			$((View *) self, addSubview, stackView);
+
+			stackView->nextResponder = NULL;
+		}
+
+		$(stackView, sizeToFit);
+	}
+
+	super(Control, self, stateDidChange);
+}
+
 #pragma mark - Select
 
 /**
- * @brief ArrayEnumerator for adding sorted Options.
+ * @brief ArrayEnumerator to remove Options from the stackView.
  */
 static void addOption_removeSubview(const Array *array, ident obj, ident data) {
-	$((View *) data, removeSubview, (View *) obj);
+	$((View *) data, removeSubview, obj);
 }
 
 /**
- * @brief ArrayEnumerator for removing sorted Options.
+ * @brief ArrayEnumerator to add Options to the stackView.
  */
 static void addOption_addSubview(const Array *array, ident obj, ident data) {
-	$((View *) data, addSubview, (View *) obj);
+	$((View *) data, addSubview, obj);
 }
 
 /**
@@ -159,22 +205,24 @@ static void addOption(Select *self, const char *title, ident value) {
 	assert(option);
 
 	$(self->options, addObject, option);
-	$((View *) self->stackView, addSubview, (View *) option);
+
+	$((Array *) self->options, enumerateObjects, addOption_removeSubview, self->stackView);
 
 	if (self->comparator) {
-		const Array *options = (Array *) self->options;
-		$(options, enumerateObjects, addOption_removeSubview, self->stackView);
 		$(self->options, sort, self->comparator);
-		$(options, enumerateObjects, addOption_addSubview, self->stackView);
 	}
+
+	$((Array *) self->options, enumerateObjects, addOption_addSubview, self->stackView);
 
 	if (self->control.selection == ControlSelectionSingle) {
 		if ($(self, selectedOption) == NULL) {
-			$(self, selectOption, option);
+			$(option, setSelected, true);
 		}
 	}
 
 	release(option);
+
+	self->control.view.needsLayout = true;
 }
 
 /**
@@ -188,7 +236,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle s
 
 		self->control.selection = ControlSelectionSingle;
 
-		self->options = $$(MutableArray, array);
+		self->options = $$(MutableArray, arrayWithCapacity, 8);
 		assert(self->options);
 
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
@@ -249,6 +297,8 @@ static void removeOption(Select *self, Option *option) {
 				}
 			}
 		}
+
+		self->control.view.needsLayout = true;
 	}
 }
 
@@ -292,7 +342,7 @@ static void selectOption(Select *self, Option *option) {
 		}
 	}
 
-	self->stackView->view.needsLayout = true;
+	self->control.view.needsLayout = true;
 }
 
 /**
@@ -343,6 +393,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 
 	((SelectInterface *) clazz->def->interface)->addOption = addOption;
 	((SelectInterface *) clazz->def->interface)->initWithFrame = initWithFrame;

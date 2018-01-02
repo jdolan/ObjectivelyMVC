@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include <ObjectivelyMVC/Option.h>
-#include <ObjectivelyMVC/Select.h>
 
 #define _Class _Option
 
@@ -51,7 +50,7 @@ static String *description(const Object *self) {
 
 	const SDL_Rect *f = &this->view.frame;
 
-	return str("%s@%p \"%s:%p\"(%d,%d) %dx%d", this->view.identifier ?: self->clazz->name, self,
+	return str("%s@%p \"%s\" [%p] (%d,%d) %dx%d", this->view.identifier ?: self->clazz->name, self,
 			   this->title->text, this->value, f->x, f->y, f->w, f->h);
 }
 
@@ -105,7 +104,10 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
 		self->value = value;
 
 		self->title->view.alignment = ViewAlignmentMiddleLeft;
+
 		$((View *) self, addSubview, (View *) self->title);
+
+		self->view.autoresizingMask = ViewAutoresizingContain | ViewAutoresizingWidth;
 	}
 
 	return self;

@@ -10,12 +10,12 @@ Box {
 }
 
 Box > Label {
-	backgroundColor: #88888844;
+	backgroundColor: #888888;
 	padding: 0 8 0 8;
 	x: 20;
 }
 
-Box .content {
+Box > .content {
 	spacing: 4;
 }
 
@@ -61,12 +61,7 @@ Control {
 }
 
 Option {
-	autoresizingMask: ViewAutoresizingContain | ViewAutoresizingWidth;
 	padding: 2 2 2 2;
-}
-
-Option > Text {
-	alignment: ViewAlignmentMiddleLeft;
 }
 
 Panel {
@@ -77,28 +72,30 @@ Panel {
 }
 
 Select {
+	backgroundColor: #dedede10;
 	bevel: ControlBevelOutset;
-	padding: 2 2 2 2;
+	padding: 4 4 4 4;
 }
 
 Select > StackView {
 	alignment: ViewAlignmentMiddleLeft;
-	borderColor: #dededeaa;
 }
 
-Select:highlighted > StackView {
+.options {
+	alignment: ViewAlignmentInternal;
+	borderColor: #dededeaa;
 	borderWidth: 1;
 }
 
-Select:highlighted Option {
+.options > Option {
 	backgroundColor: charcoal;
 }
 
-Select:highlighted Option:hover {
+.options > Option:hover {
 	backgroundColor: darkgray;
 }
 
-Select:highlighted Option:selected {
+.options > Option:selected {
 	backgroundColor: backgroundColor: dimgray;
 }
 

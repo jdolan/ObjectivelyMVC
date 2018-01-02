@@ -113,19 +113,11 @@ static void render(WindowController *self) {
 
 	if (self->viewController) {
 
-		View *view = self->viewController->view;
-		assert(view);
+		$(self->viewController->view, applyThemeIfNeeded, self->theme);
 
-		$(view, applyThemeIfNeeded, self->theme);
+		$(self->viewController->view, layoutIfNeeded);
 
-		$(view, layoutIfNeeded);
-
-		$(view, draw, self->renderer);
-
-		View *firstResponder = MVC_FirstResponder(self->window);
-		if (firstResponder) {
-			$(firstResponder, draw, self->renderer);
-		}
+		$(self->viewController->view, draw, self->renderer);
 	} else {
 		MVC_LogWarn("viewController is NULL\n");
 	}
@@ -181,26 +173,19 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 				View *current = $(self->viewController->view, hitTest, &b);
 
 				if (current != previous) {
-
-					String *this = current ? $((Object *) current, description) : str("");
-					String *that = previous ? $((Object *) previous, description) : str("");
-
-					printf("%s -> %s\n", that->chars, this->chars);
-
-					release(this);
-					release(that);
-
 					if (current && previous) {
-						if ($(current, isDescendantOfView, previous)) {
-							$(current, invalidateStyle);
-						} else if ($(previous, isDescendantOfView, current)) {
-							$(previous, invalidateStyle);
+						View *view = current;
+						while (view) {
+							if ($(previous, isDescendantOfView, view)) {
+								$(view, invalidateStyle);
+								break;
+							}
+							view = view->superview;
 						}
 					} else {
 						if (current) {
 							$(current, invalidateStyle);
-						}
-						if (previous) {
+						} else {
 							$(previous, invalidateStyle);
 						}
 					}
@@ -211,11 +196,14 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 		View *firstResponder = $(self, firstResponder, event);
 		if (firstResponder) {
 
-			const int priority = event->type == SDL_MOUSEMOTION ? SDL_LOG_PRIORITY_VERBOSE : SDL_LOG_PRIORITY_DEBUG;
-			if (MVC_LogEnabled(priority)) {
-				String *desc = $((Object *) firstResponder, description);
-				MVC_LogMessage(priority, "Event type %d -> %s\n", event->type, desc->chars);
-				release(desc);
+			switch (event->type) {
+				case SDL_MOUSEMOTION:
+					break;
+				default: {
+					String *desc = $((Object *) firstResponder, description);
+					MVC_LogMessage(SDL_LOG_PRIORITY_DEBUG, "%d -> %s\n", event->type, desc->chars);
+					release(desc);
+				}
 			}
 
 			$(firstResponder, respondToEvent, event);

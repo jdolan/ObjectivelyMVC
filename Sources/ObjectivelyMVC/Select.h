@@ -32,8 +32,6 @@
  * @brief A Control allowing users to select one or more Options.
  */
 
-#define DEFAULT_SELECT_WIDTH 100
-
 typedef struct SelectDelegate SelectDelegate;
 
 typedef struct Select Select;
@@ -86,14 +84,12 @@ struct Select {
 	SelectDelegate delegate;
 
 	/**
-	 * @brief The Select Options.
-	 * @private
+	 * @brief The Options.
 	 */
 	MutableArray *options;
 
 	/**
-	 * @brief The StackView for rendering all Options.
-	 * @private
+	 * @brief The StackView for rendering the Options.
 	 */
 	StackView *stackView;
 };

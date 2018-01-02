@@ -389,8 +389,6 @@ static void _bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
 	if (inlets) {
 		bindInlets(inlets, dictionary);
 	}
-
-	$(self, updateBindings);
 }
 
 /**
@@ -565,15 +563,10 @@ static void draw(View *self, Renderer *renderer) {
 	assert(self->window);
 
 	if (self->hidden == false) {
+
 		$(renderer, drawView, self);
 
-		const Array *subviews = (Array *) self->subviews;
-		for (size_t i = 0; i < subviews->count; i++) {
-			View *subview = $(subviews, objectAtIndex, i);
-			if ($(subview, isFirstResponder) == false) {
-				$(subview, draw, renderer);
-			}
-		}
+		$(self, enumerateSubviews, (ViewEnumerator) draw, renderer);
 	}
 }
 
