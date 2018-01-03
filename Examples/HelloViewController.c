@@ -294,6 +294,16 @@ static void loadView(ViewController *self) {
 	this->hueColorPicker->delegate.didPickColor = didPickHueColor;
 }
 
+#pragma mark - HelloViewController
+
+/**
+ * @fn HelloViewController *HelloViewController::init(HelloViewController *self)
+ * @memberof HelloViewController
+ */
+static HelloViewController *init(HelloViewController *self) {
+	return (HelloViewController *) super(ViewController, self, init);
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -302,6 +312,8 @@ static void loadView(ViewController *self) {
 static void initialize(Class *clazz) {
 
 	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
+
+	((HelloViewControllerInterface *) clazz->def->interface)->init = init;
 }
 
 /**

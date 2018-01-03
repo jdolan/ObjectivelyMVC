@@ -132,6 +132,15 @@ struct HelloViewControllerInterface {
 	 * @brief The superclass interface.
 	 */
 	ViewControllerInterface viewControllerInterface;
+
+	/**
+	 * @fn HelloViewController *HelloViewController::init(HelloViewController *self)
+	 * @brief Initializes this HelloViewController.
+	 * @param self The HelloViewController.
+	 * @return The initialized HelloViewController, or `NULL` on error.
+	 * @memberof HelloViewController
+	 */
+	HelloViewController *(*init)(HelloViewController *self);
 };
 
 /**
