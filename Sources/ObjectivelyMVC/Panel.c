@@ -181,16 +181,14 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
 
-		self->stackView->spacing = DEFAULT_PANEL_SPACING;
-
 		$(this, addSubview, (View *) self->stackView);
 
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
 		$((View *) self->contentView, addClassName, "contentView");
+		$((View *) self->contentView, addClassName, "container");
 
-		self->contentView->spacing = DEFAULT_PANEL_SPACING;
 		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
 
 		$((View *) self->stackView, addSubview, (View *) self->contentView);
@@ -199,6 +197,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		assert(self->accessoryView);
 
 		$((View *) self->accessoryView, addClassName, "accessoryView");
+		$((View *) self->accessoryView, addClassName, "container");
 
 		self->accessoryView->axis = StackViewAxisHorizontal;
 		self->accessoryView->spacing = DEFAULT_PANEL_SPACING;

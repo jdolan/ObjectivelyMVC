@@ -97,7 +97,8 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
-		$((View *) self->contentView, addClassName, "content");
+		$((View *) self->contentView, addClassName, "contentView");
+		$((View *) self->contentView, addClassName, "container");
 
 		$((View *) self, addSubview, (View *) self->contentView);
 

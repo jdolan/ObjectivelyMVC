@@ -61,8 +61,8 @@ static void applyStyle(View *self, const Style *style) {
 
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) CollectionViewAxisNames),
-		MakeInlet("itemSize", InletTypeSize, &this->itemSize, NULL),
-		MakeInlet("itemSpacing", InletTypeSize, &this->itemSpacing, NULL)
+		MakeInlet("item-size", InletTypeSize, &this->itemSize, NULL),
+		MakeInlet("item-spacing", InletTypeSize, &this->itemSpacing, NULL)
 	);
 
 	$(self, bind, inlets, (Dictionary *) style->attributes);
@@ -79,8 +79,8 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) CollectionViewAxisNames),
-		MakeInlet("itemSize", InletTypeSize, &this->itemSize, NULL),
-		MakeInlet("itemSpacing", InletTypeSize, &this->itemSpacing, NULL)
+		MakeInlet("item-size", InletTypeSize, &this->itemSize, NULL),
+		MakeInlet("item-spacing", InletTypeSize, &this->itemSpacing, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -319,7 +319,8 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 		self->contentView->autoresizingMask = ViewAutoresizingContain;
 
-		$(self->contentView, addClassName, "content");
+		$(self->contentView, addClassName, "contentView");
+		$(self->contentView, addClassName, "container");
 
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);

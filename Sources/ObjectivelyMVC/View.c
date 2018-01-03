@@ -34,31 +34,31 @@
 #define MVC_FIRST_RESPONDER "firstResponder"
 
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
-	MakeEnumName(ViewAlignmentNone),
-	MakeEnumName(ViewAlignmentTop),
-	MakeEnumName(ViewAlignmentMiddle),
-	MakeEnumName(ViewAlignmentBottom),
-	MakeEnumName(ViewAlignmentLeft),
-	MakeEnumName(ViewAlignmentCenter),
-	MakeEnumName(ViewAlignmentRight),
-	MakeEnumName(ViewAlignmentTopLeft),
-	MakeEnumName(ViewAlignmentTopCenter),
-	MakeEnumName(ViewAlignmentTopRight),
-	MakeEnumName(ViewAlignmentMiddleLeft),
-	MakeEnumName(ViewAlignmentMiddleCenter),
-	MakeEnumName(ViewAlignmentMiddleRight),
-	MakeEnumName(ViewAlignmentBottomLeft),
-	MakeEnumName(ViewAlignmentBottomCenter),
-	MakeEnumName(ViewAlignmentBottomRight),
-	MakeEnumName(ViewAlignmentInternal)
+	MakeEnumAlias(ViewAlignmentNone, none),
+	MakeEnumAlias(ViewAlignmentTop, top),
+	MakeEnumAlias(ViewAlignmentMiddle, middle),
+	MakeEnumAlias(ViewAlignmentBottom, bottom),
+	MakeEnumAlias(ViewAlignmentLeft, left),
+	MakeEnumAlias(ViewAlignmentCenter, center),
+	MakeEnumAlias(ViewAlignmentRight, right),
+	MakeEnumAlias(ViewAlignmentTopLeft, top-left),
+	MakeEnumAlias(ViewAlignmentTopCenter, top-center),
+	MakeEnumAlias(ViewAlignmentTopRight, top-right),
+	MakeEnumAlias(ViewAlignmentMiddleLeft, middle-left),
+	MakeEnumAlias(ViewAlignmentMiddleCenter, middle-center),
+	MakeEnumAlias(ViewAlignmentMiddleRight, middle-right),
+	MakeEnumAlias(ViewAlignmentBottomLeft, bottom-left),
+	MakeEnumAlias(ViewAlignmentBottomCenter, bottom-center),
+	MakeEnumAlias(ViewAlignmentBottomRight, bottom-right),
+	MakeEnumAlias(ViewAlignmentInternal, internal)
 );
 
 const EnumName ViewAutoresizingNames[] = MakeEnumNames(
-	MakeEnumName(ViewAutoresizingNone),
-	MakeEnumName(ViewAutoresizingWidth),
-	MakeEnumName(ViewAutoresizingHeight),
-	MakeEnumName(ViewAutoresizingFill),
-	MakeEnumName(ViewAutoresizingContain)
+	MakeEnumAlias(ViewAutoresizingNone, none),
+	MakeEnumAlias(ViewAutoresizingWidth, width),
+	MakeEnumAlias(ViewAutoresizingHeight, height),
+	MakeEnumAlias(ViewAutoresizingFill, fill),
+	MakeEnumAlias(ViewAutoresizingContain, contain)
 );
 
 static __thread Outlet *_outlets;
@@ -295,8 +295,6 @@ static void applyStyle(View *self, const Style *style) {
 	);
 
 	$(self, bind, inlets, style->attributes);
-
-	self->needsLayout = true;
 }
 
 /**

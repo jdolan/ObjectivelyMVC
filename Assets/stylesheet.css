@@ -4,7 +4,7 @@
 }
 
 Box {
-	autoresizing: ViewAutoresizingContain;
+	autoresizing-mask: contain;
 	border-color: #dededeaa;
 	border-width: 1;
 	padding: 10 10 10 10;
@@ -16,20 +16,20 @@ Box > Label {
 	left: 20;
 }
 
-Box > .content {
-	autoresizing: ViewAutoresizingContain | ViewAutoresizingWidth;
+Box > .contentView {
+	autoresizing-mask: contain | width;
 	spacing: 4;
 }
 
 Button {
-	autoresizing: ViewAutoresizingContain;
+	autoresizing-mask: contain;
 	background-color: #88888822;
-	bevel: ControlBevelOutset;
+	bevel: outset;
 	padding: 8 8 8 8;
 }
 
 Button > * {
-	alignment: ViewAlignmentMiddleCenter;
+	alignment: middle-center;
 }
 
 Checkbox > Control {
@@ -55,8 +55,8 @@ CollectionItemView:selected > .selectionOverlay {
 
 CollectionView {
 	background-color: #22222266;
-	itemSize: 64 64;
-	itemSpacing: 10 10;
+	item-size: 64 64;
+	item-spacing: 10 10;
 }
 
 CollectionView .content {
@@ -65,7 +65,7 @@ CollectionView .content {
 
 Control {
 	height: 32;
-	selection: ControlSelectionSingle;
+	selection: single;
 }
 
 Option {
@@ -81,16 +81,16 @@ Panel {
 
 Select {
 	background-color: #dedede10;
-	bevel: ControlBevelOutset;
+	bevel: outset;
 	padding: 4 4 4 4;
 }
 
 Select > StackView {
-	alignment: ViewAlignmentMiddleLeft;
+	alignment: middle-left;
 }
 
 .options {
-	alignment: ViewAlignmentInternal;
+	alignment: internal;
 	border-color: #dededeaa;
 	border-width: 1;
 }
@@ -104,7 +104,7 @@ Select > StackView {
 }
 
 .options > Option:selected {
-	background-color: background-color: dimgray;
+	background-color: dimgray;
 }
 
 Slider {
@@ -112,32 +112,44 @@ Slider {
 }
 
 Slider > .bar {
-	alignment: ViewAlignmentMiddleLeft;
-	autoresizing: ViewAutoresizingFill;
+	alignment: middle-left;
+	autoresizing-mask: fill;
 }
 
 Slider > .bar > .handle {
-	alignment: ViewAlignmentMiddle;
+	alignment: middle;
 	background-color: #444444dd;
-	bevel: ControlBevelOutset;
+	bevel: outset;
 	width: 8;
 	height: 16;
 }
 
 Slider > .label {
-	alignment: ViewAlignmentMiddleRight;
+	alignment: middle-right;
 	padding: 0 0 0 18;
+}
+
+StackView.container {
+	spacing: 12;
+}
+
+TableHeaderView {
+	background-color: #ffffff22;
+}
+
+TableHeaderView * {
+	font-style: bold;
 }
 
 TextView {
 	background-color: #22222266;
-	bevel: ControlBevelInset;
+	bevel: inset;
 	padding: 4 4 4 4;
 	width: 160;
 }
 
 TextView > Text {
-	alignment: ViewAlignmentMiddleLeft;
+	alignment: middle-left;
 }
 
 Text {

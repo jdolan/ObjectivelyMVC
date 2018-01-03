@@ -26,22 +26,22 @@
 #include <ObjectivelyMVC/Control.h>
 
 const EnumName ControlBevelNames[] = MakeEnumNames(
-	MakeEnumName(ControlBevelNone),
-	MakeEnumName(ControlBevelInset),
-	MakeEnumName(ControlBevelOutset)
+	MakeEnumAlias(ControlBevelNone, none),
+	MakeEnumAlias(ControlBevelInset, inset),
+	MakeEnumAlias(ControlBevelOutset, outset)
 );
 
 const EnumName ControlSelectionNames[] = MakeEnumNames(
-	MakeEnumName(ControlSelectionNone),
-	MakeEnumName(ControlSelectionSingle),
-	MakeEnumName(ControlSelectionMultiple)
+	MakeEnumAlias(ControlSelectionNone, none),
+	MakeEnumAlias(ControlSelectionSingle, single),
+	MakeEnumAlias(ControlSelectionMultiple, multiple)
 );
 
 const EnumName ControlStateNames[] = MakeEnumNames(
-	MakeEnumName(ControlStateDefault),
-	MakeEnumName(ControlStateHighlighted),
-	MakeEnumName(ControlStateSelected),
-	MakeEnumName(ControlStateFocused)
+	MakeEnumAlias(ControlStateDefault, default),
+	MakeEnumAlias(ControlStateHighlighted, highlighted),
+	MakeEnumAlias(ControlStateSelected, selected),
+	MakeEnumAlias(ControlStateFocused, focused)
 );
 
 #define _Class _Control
