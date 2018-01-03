@@ -107,7 +107,7 @@ static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
 		self->background = $(alloc(ImageView), initWithFrame, NULL);
 		assert(self->background);
 
-		self->background->view.autoresizing = ViewAutoresizingFill;
+		self->background->view.autoresizingMask = ViewAutoresizingFill;
 		self->background->view.backgroundColor = Colors.Silver;
 
 		$((View *) self, addSubview, (View *) self->background);
@@ -115,7 +115,7 @@ static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
 		self->foreground = $(alloc(ImageView), initWithFrame, NULL);
 		assert(self->foreground);
 
-		self->foreground->view.autoresizing = ViewAutoresizingHeight;
+		self->foreground->view.autoresizingMask = ViewAutoresizingHeight;
 
 		$((View *) self, addSubview, (View *) self->foreground);
 

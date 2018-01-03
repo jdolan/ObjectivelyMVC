@@ -107,7 +107,7 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
 
 		$((View *) self, addSubview, (View *) self->title);
 
-		self->view.autoresizing = ViewAutoresizingContain | ViewAutoresizingWidth;
+		self->view.autoresizingMask = ViewAutoresizingContain | ViewAutoresizingWidth;
 	}
 
 	return self;

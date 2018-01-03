@@ -114,7 +114,7 @@ static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame
 
 	self = (HueColorPicker *) super(Control, self, initWithFrame, frame);
 	if (self) {
-		self->control.view.autoresizing = ViewAutoresizingContain;
+		self->control.view.autoresizingMask = ViewAutoresizingContain;
 
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
@@ -124,7 +124,7 @@ static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame
 		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
 		assert(self->colorView);
 
-		self->colorView->autoresizing = ViewAutoresizingWidth;
+		self->colorView->autoresizingMask = ViewAutoresizingWidth;
 
 		$((View *) self->stackView, addSubview, self->colorView);
 

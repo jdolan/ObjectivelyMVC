@@ -81,7 +81,7 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 		self->imageView = $(alloc(ImageView), initWithFrame, frame);
 		assert(self->imageView);
 
-		self->imageView->view.autoresizing = ViewAutoresizingFill;
+		self->imageView->view.autoresizingMask = ViewAutoresizingFill;
 
 		$((View *) self, addSubview, (View *) self->imageView);
 
@@ -97,7 +97,7 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 
 		$(self->selectionOverlay, addClassName, "selectionOverlay");
 
-		self->selectionOverlay->autoresizing = ViewAutoresizingFill;
+		self->selectionOverlay->autoresizingMask = ViewAutoresizingFill;
 
 		$((View *) self, addSubview, self->selectionOverlay);
 

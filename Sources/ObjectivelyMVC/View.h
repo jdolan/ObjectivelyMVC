@@ -143,12 +143,12 @@ struct View {
 	/**
 	 * @brief The ViewAutoresizing bitmask.
 	 */
-	int autoresizing;
 
 	/**
 	 * @brief The Dictionary this View was awakened with.
 	 */
 	MutableDictionary *attributes;
+	int autoresizingMask;
 
 	/**
 	 * @brief The background color.
@@ -813,7 +813,7 @@ struct ViewInterface {
 	 * @param self The View.
 	 * @return An SDL_Size that fits this View's subviews.
 	 * @remarks The default implementation of this method returns the View's current size, or an
-	 * appropriate value based on this View's `autoresizing` mask.
+	 * appropriate value based on this View's `autoresizingMask`.
 	 * @memberof View
 	 */
 	SDL_Size (*sizeThatFits)(const View *self);

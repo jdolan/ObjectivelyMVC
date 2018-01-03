@@ -71,7 +71,7 @@ static TabViewItem *initWithIdentifier(TabViewItem *self, const char *identifier
 		self->view = $(alloc(View), initWithFrame, NULL);
 		assert(self->view);
 
-		self->view->autoresizing = ViewAutoresizingContain;
+		self->view->autoresizingMask = ViewAutoresizingContain;
 
 		$(self, setState, TabStateDefault);
 	}

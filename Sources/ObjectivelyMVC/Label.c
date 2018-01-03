@@ -99,7 +99,7 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
 
 		$((View *) self, addSubview, (View *) self->text);
 
-		self->view.autoresizing = ViewAutoresizingContain;
+		self->view.autoresizingMask = ViewAutoresizingContain;
 	}
 
 	return self;

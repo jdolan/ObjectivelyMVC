@@ -191,7 +191,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		$((View *) self->contentView, addClassName, "contentView");
 
 		self->contentView->spacing = DEFAULT_PANEL_SPACING;
-		self->contentView->view.autoresizing |= ViewAutoresizingWidth;
+		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
 
 		$((View *) self->stackView, addSubview, (View *) self->contentView);
 
@@ -218,7 +218,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		$((View *) self, addSubview, (View *) self->resizeHandle);
 
-		this->autoresizing = ViewAutoresizingContain;
+		this->autoresizingMask = ViewAutoresizingContain;
 	}
 
 	return self;

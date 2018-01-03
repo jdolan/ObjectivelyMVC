@@ -317,14 +317,14 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 		self->contentView = $(alloc(View), initWithFrame, NULL);
 		assert(self->contentView);
 
-		self->contentView->autoresizing = ViewAutoresizingContain;
+		self->contentView->autoresizingMask = ViewAutoresizingContain;
 
 		$(self->contentView, addClassName, "content");
 
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
 
-		self->scrollView->control.view.autoresizing = ViewAutoresizingFill;
+		self->scrollView->control.view.autoresizingMask = ViewAutoresizingFill;
 
 		$(self->scrollView, setContentView, self->contentView);
 
