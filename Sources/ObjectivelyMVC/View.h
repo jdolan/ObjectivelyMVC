@@ -143,11 +143,6 @@ struct View {
 	/**
 	 * @brief The ViewAutoresizing bitmask.
 	 */
-
-	/**
-	 * @brief The Dictionary this View was awakened with.
-	 */
-	MutableDictionary *attributes;
 	int autoresizingMask;
 
 	/**
@@ -175,6 +170,11 @@ struct View {
 	 * @brief If true, subviews will be clipped to this View's frame.
 	 */
 	_Bool clipsSubviews;
+
+	/**
+	 * @brief The computed Style of this View.
+	 */
+	Style *computedStyle;
 
 	/**
 	 * @brief The Constraints held on this View.
@@ -227,7 +227,7 @@ struct View {
 	ViewPadding padding;
 
 	/**
-	 * @brief The computed Style.
+	 * @brief The element-level Style of this View.
 	 */
 	Style *style;
 

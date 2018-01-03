@@ -87,13 +87,13 @@ struct ThemeInterface {
 	void (*addStylesheet)(Theme *self, Stylesheet *stylesheet);
 
 	/**
-	 * @fn void Theme::apply(const Theme *self, View *view)
+	 * @fn void Theme::apply(const Theme *self, const View *view)
 	 * @brief Applies this Theme to the given View.
 	 * @param self The Theme.
 	 * @param view The View.
 	 * @memberof Theme
 	 */
-	Style *(*computeStyle)(const Theme *self, View *view);
+	Style *(*computeStyle)(const Theme *self, const View *view);
 
 	/**
 	 * @static

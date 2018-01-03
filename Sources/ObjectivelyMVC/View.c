@@ -78,8 +78,8 @@ static void dealloc(Object *self) {
 
 	free(this->identifier);
 
-	release(this->attributes);
 	release(this->classNames);
+	release(this->computedStyle);
 	release(this->constraints);
 	release(this->style);
 	release(this->subviews);
@@ -116,6 +116,7 @@ static _Bool acceptsFirstResponder(const View *self) {
 static void addClassName(View *self, const char *className) {
 
 	if (className) {
+
 		String *string = $$(String, stringWithCharacters, className);
 		assert(string);
 
@@ -287,10 +288,10 @@ static void applyStyle(View *self, const Style *style) {
 		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
+		MakeInlet("left", InletTypeInteger, &self->frame.x, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
-		MakeInlet("width", InletTypeInteger, &self->frame.w, NULL),
-		MakeInlet("x", InletTypeInteger, &self->frame.x, NULL),
-		MakeInlet("y", InletTypeInteger, &self->frame.y, NULL)
+		MakeInlet("top", InletTypeInteger, &self->frame.y, NULL),
+		MakeInlet("width", InletTypeInteger, &self->frame.w, NULL)
 	);
 
 	$(self, bind, inlets, style->attributes);
@@ -309,14 +310,13 @@ static void applyTheme(View *self, const Theme *theme) {
 	Style *computedStyle = $(theme, computeStyle, self);
 	assert(computedStyle);
 
-	if (!$(self->style, isComputedEqual, computedStyle)) {
+	if (!$(self->computedStyle, isComputedEqual, computedStyle)) {
 
-		release(self->style);
-		self->style = retain(computedStyle);
+		release(self->computedStyle);
+		self->computedStyle = retain(computedStyle);
 
-		$(self->style, addAttributes, (Dictionary *) self->attributes);
-
-		$(self, applyStyle, self->style);
+		$(self->computedStyle, addAttributes, self->style->attributes);
+		$(self, applyStyle, self->computedStyle);
 	}
 
 	release(computedStyle);
@@ -347,12 +347,11 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	assert(dictionary);
 
-	$(self->attributes, addEntriesFromDictionary, dictionary);
-
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("identifier", InletTypeCharacters, &self->identifier, NULL),
 		MakeInlet("classNames", InletTypeClassNames, &self, NULL),
 		MakeInlet("constraints", InletTypeConstraints, &self, NULL),
+		MakeInlet("style", InletTypeStyle, &self, NULL),
 		MakeInlet("subviews", InletTypeSubviews, &self, NULL)
 	);
 
@@ -387,7 +386,9 @@ static void becomeFirstResponder(View *self) {
 static void _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
 	if (inlets) {
-		bindInlets(inlets, dictionary);
+		if (bindInlets(inlets, dictionary)) {
+			self->needsLayout = true;
+		}
 	}
 }
 
@@ -749,11 +750,11 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 			self->frame = *frame;
 		}
 
-		self->attributes = $$(MutableDictionary, dictionaryWithCapacity, 0);
-		assert(self->attributes);
-
 		self->classNames = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->classNames);
+
+		self->computedStyle = $(alloc(Style), initWithAttributes, NULL);
+		assert(self->computedStyle);
 
 		self->constraints = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->constraints);

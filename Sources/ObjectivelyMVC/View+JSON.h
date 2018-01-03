@@ -116,8 +116,14 @@ typedef enum {
 	InletTypeSize,
 
 	/**
+	 * @remarks Inlet destination must be of type `View **`. The Style of the specified View is
+	 * populated with the attributes of the bound Dictionary.
+	 */
+	InletTypeStyle,
+
+	/**
 	 * @remarks Inlet destination must be of type `View **`. The subviews of the specified View are
-	 * populated from the bound array of View definitions.
+	 * populated from the bound Array of View definitions.
 	 */
 	InletTypeSubviews,
 
@@ -244,5 +250,8 @@ struct Outlet {
 
 /**
  * @brief Binds each Inlet specified in `inlets` to the data provided in `dictionary`.
+ * @param inlets The Inlets to bind.
+ * @param dictionary The Dictionary from which to bind.
+ * @return True if one or more Inlets were bound, false otherwise.
  */
-OBJECTIVELYMVC_EXPORT void bindInlets(const Inlet *inlets, const Dictionary *dictionary);
+OBJECTIVELYMVC_EXPORT _Bool bindInlets(const Inlet *inlets, const Dictionary *dictionary);

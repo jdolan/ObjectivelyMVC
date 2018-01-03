@@ -62,17 +62,19 @@ static ident computeStyle_reduce(const ident obj, ident accumulator, ident data)
 
 	const Stylesheet *stylesheet = obj;
 
+	const View *view = data;
+
 	for (size_t i = 0; i < stylesheet->selectors->count; i++) {
 
 		Selector *selector = $(stylesheet->selectors, objectAtIndex, i);
-		if ($(selector, matchesView, (View *) data)) {
+		if ($(selector, matchesView, view)) {
 
 			const Style *style = $(stylesheet->styles, objectForKey, selector);
 
 			if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
 
 				String *this = $((Object *) selector, description);
-				String *that = $((Object *) data, description);
+				String *that = $((Object *) view, description);
 
 				MVC_LogVerbose("%s -> %s\n", this->chars, that->chars);
 
@@ -96,14 +98,14 @@ static ident computeStyle_reduce(const ident obj, ident accumulator, ident data)
  * @fn Style *Theme::computeStyle(const Theme *self, View *view)
  * @memberof Theme
  */
-static Style *computeStyle(const Theme *self, View *view) {
+static Style *computeStyle(const Theme *self, const View *view) {
 
 	assert(view);
 
 	Style *style = $(alloc(Style), initWithAttributes, NULL);
 	assert(style);
 
-	return $(self->stylesheets, reduce, computeStyle_reduce, style, view);
+	return $(self->stylesheets, reduce, computeStyle_reduce, style, (ident) view);
 }
 
 static Theme *_defaultTheme;

@@ -287,6 +287,13 @@ static void bindSubviews_enumerate(const Array *array, ident obj, ident data) {
 }
 
 /**
+ * @brief InletBinding for InletTypeStyle.
+ */
+static void bindStyle(const Inlet *inlet, ident obj) {
+	$(cast(View, *((View **) inlet->dest))->style, addAttributes, cast(Dictionary, obj));
+}
+
+/**
  * @brief InletBinding for InletTypeSubviews.
  */
 static void bindSubviews(const Inlet *inlet, ident obj) {
@@ -322,22 +329,28 @@ const InletBinding inletBindings[] = {
 	bindPoint,
 	bindRectangle,
 	bindSize,
+	bindStyle,
 	bindSubviews,
 	bindView,
 	bindApplicationDefined,
 };
 
-void bindInlets(const Inlet *inlets, const Dictionary *dictionary) {
+_Bool bindInlets(const Inlet *inlets, const Dictionary *dictionary) {
 
 	assert(inlets);
 	assert(dictionary);
+
+	_Bool didBindInlets = false;
 
 	for (const Inlet *inlet = inlets; inlet->name; inlet++) {
 		const ident obj = $(dictionary, objectForKeyPath, inlet->name);
 		if (obj) {
 			BindInlet(inlet, obj);
+			didBindInlets = true;
 		}
 	}
+
+	return didBindInlets;
 }
 
 #undef _Class
