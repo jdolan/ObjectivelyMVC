@@ -39,6 +39,7 @@ static void dealloc(Object *self) {
 
 	WindowController *this = (WindowController *) self;
 
+	release(this->debugViewController);
 	release(this->renderer);
 	release(this->viewController);
 
@@ -46,6 +47,31 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - WindowController
+
+/**
+ * @fn void WindowController::debug(WindowController *self)
+ * @memberof WindowController
+ */
+static void debug(WindowController *self) {
+
+	if (self->debugViewController) {
+
+		ViewController *debugViewController = (ViewController *) self->debugViewController;
+
+		SDL_Point point;
+		SDL_GetMouseState(&point.x, &point.y);
+		View *view = $(self->viewController->view, hitTest, &point);
+		if (view) {
+			$(self->debugViewController, debug, view);
+		}
+
+		$(debugViewController->view, applyThemeIfNeeded, self->theme);
+
+		$(debugViewController->view, layoutIfNeeded);
+
+		$(debugViewController->view, draw, self->renderer);
+	}
+}
 
 /**
  * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
@@ -121,6 +147,8 @@ static void render(WindowController *self) {
 	} else {
 		MVC_LogWarn("viewController is NULL\n");
 	}
+
+	$(self, debug);
 
 	$(self->renderer, endFrame);
 }
@@ -212,6 +240,14 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 		} else {
 			MVC_LogDebug("firstResponder for event type %d is NULL\n", event->type);
 		}
+
+		if (event->type == SDL_KEYUP) {
+			if (event->key.keysym.sym == SDLK_d) {
+				if (event->key.keysym.mod & KMOD_CTRL) {
+					$(self, toggleDebugger);
+				}
+			}
+		}
 	}
 }
 
@@ -283,6 +319,28 @@ static void setViewController(WindowController *self, ViewController *viewContro
 	}
 }
 
+/**
+ * @fn void WindowController::toggleDebugger(WindowController *self)
+ * @memberof WindowController
+ */
+static void toggleDebugger(WindowController *self) {
+
+	if (self->debugViewController == NULL) {
+
+		self->debugViewController = $(alloc(DebugViewController), init);
+		assert(self->debugViewController);
+
+		ViewController *debugViewController = (ViewController *) self->debugViewController;
+
+		$(debugViewController, loadView);
+		$(debugViewController, viewWillAppear);
+		$(debugViewController->view, setWindow, self->window);
+		$(debugViewController, viewDidAppear);
+	} else {
+		self->debugViewController = release(self->debugViewController);
+	}
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -292,6 +350,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((WindowControllerInterface *) clazz->def->interface)->debug = debug;
 	((WindowControllerInterface *) clazz->def->interface)->eventTarget = eventTarget;
 	((WindowControllerInterface *) clazz->def->interface)->firstResponder = firstResponder;
 	((WindowControllerInterface *) clazz->def->interface)->initWithWindow = initWithWindow;
@@ -300,6 +359,7 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->def->interface)->setRenderer = setRenderer;
 	((WindowControllerInterface *) clazz->def->interface)->setTheme = setTheme;
 	((WindowControllerInterface *) clazz->def->interface)->setViewController = setViewController;
+	((WindowControllerInterface *) clazz->def->interface)->toggleDebugger = toggleDebugger;
 }
 
 /**

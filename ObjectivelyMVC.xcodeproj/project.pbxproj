@@ -130,6 +130,8 @@
 		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE84C6CC1FFC917600F72267 /* DebugViewController.c */; };
 		CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */ = {isa = PBXBuildFile; fileRef = CE862AD71F79FB82005C3B10 /* ProgressBar.c */; };
 		CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */ = {isa = PBXBuildFile; fileRef = CE862AD81F79FB82005C3B10 /* ProgressBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE8819661F8AAC00000D5AB7 /* Notification.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819641F8AAC00000D5AB7 /* Notification.c */; };
@@ -393,6 +395,9 @@
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 		CE7EA4CD1D479A9000BD37A3 /* quetoo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = quetoo.jpg; sourceTree = "<group>"; };
+		CE84C6CA1FFC8E9E00F72267 /* debug.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = debug.json; sourceTree = "<group>"; };
+		CE84C6CB1FFC917600F72267 /* DebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
+		CE84C6CC1FFC917600F72267 /* DebugViewController.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = DebugViewController.c; sourceTree = "<group>"; };
 		CE862AD71F79FB82005C3B10 /* ProgressBar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ProgressBar.c; sourceTree = "<group>"; };
 		CE862AD81F79FB82005C3B10 /* ProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressBar.h; sourceTree = "<group>"; };
 		CE8819641F8AAC00000D5AB7 /* Notification.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Notification.c; sourceTree = "<group>"; };
@@ -544,6 +549,8 @@
 				CE3CB2A01F410D1900FAA016 /* Constraint.h */,
 				CE12D46D1C4D82AF00CD0B13 /* Control.c */,
 				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
+				CE84C6CC1FFC917600F72267 /* DebugViewController.c */,
+				CE84C6CB1FFC917600F72267 /* DebugViewController.h */,
 				CE12D4091C4C367100CD0B13 /* Font.c */,
 				CE12D40A1C4C367100CD0B13 /* Font.h */,
 				CE6EE3791F6EA91900FBC830 /* HSVColorPicker.c */,
@@ -671,6 +678,7 @@
 			children = (
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
+				CE84C6CA1FFC8E9E00F72267 /* debug.json */,
 				CEF1D8921D429F7A0099A857 /* resize.png */,
 				CE92C5171FE029C000FDB0DF /* resize.png.h */,
 				CE92C5141FE01F6300FDB0DF /* stylesheet.css */,
@@ -775,6 +783,7 @@
 				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
 				CE3CB2A21F410D1900FAA016 /* Constraint.h in Headers */,
 				CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */,
+				CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */,
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
 				CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */,
 				CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */,
@@ -998,15 +1007,12 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Assets/check.png",
-				"$(SRCROOT)/Assets/resize.png",
-				"$(SRCROOT)/Assets/stylesheet.css",
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1065,6 +1071,7 @@
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
 				CE3CB2A11F410D1900FAA016 /* Constraint.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
+				CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
 				CE6EE37B1F6EA91900FBC830 /* HSVColorPicker.c in Sources */,
 				CE6EE3CC1F7156BC00FBC830 /* HueColorPicker.c in Sources */,

@@ -1,0 +1,41 @@
+{
+  "class": "StackView",
+  "identifier": "debug",
+  "classNames": [
+    "container"
+  ],
+  "subviews": [
+    {
+      "class": "Text",
+      "identifier": "description"
+    },
+    {
+      "class": "TableView",
+      "identifier": "selectors",
+      "columns": [
+        {
+          "identifier": "Selector",
+          "width": 400
+        }
+      ],
+      "rowHeight": 18,
+      "alternateBackgroundColor": "#ffffff22"
+    },
+    {
+      "class": "TableView",
+      "identifier": "computedStyle",
+      "columns": [
+        {
+          "identifier": "Attribute",
+          "width": 160
+        },
+        {
+          "identifier": "Value",
+          "width": 240
+        }
+      ],
+      "rowHeight": 18,
+      "alternateBackgroundColor": "#ffffff22"
+    }
+  ]
+}

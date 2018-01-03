@@ -155,3 +155,29 @@ TextView > Text {
 Text {
 	color: ghostwhite;
 }
+
+#debug {
+	padding: 4 4 4 4;
+}
+
+#debug * {
+	font-size: 12;
+}
+
+#debug > * {
+	background-color: #ffffff22;
+}
+
+#debug > #description {
+	color: white;
+}
+
+#debug > #selectors * {
+	color: green;
+}
+
+#debug > #computedStyle * {
+	color: yellow;
+}
+
+

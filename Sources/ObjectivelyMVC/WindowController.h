@@ -25,6 +25,7 @@
 
 #include <Objectively/Object.h>
 
+#include <ObjectivelyMVC/DebugViewController.h>
 #include <ObjectivelyMVC/ViewController.h>
 
 /**
@@ -52,6 +53,11 @@ struct WindowController {
 	 * @protected
 	 */
 	WindowControllerInterface *interface;
+
+	/**
+	 * @brief The DebugViewController.
+	 */
+	DebugViewController *debugViewController;
 
 	/**
 	 * @brief The Renderer.
@@ -85,6 +91,15 @@ struct WindowControllerInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @private
+	 * @fn void WindowController::debug(WindowController *self)
+	 * @brief Debugs the current frame.
+	 * @param self The WindowController.
+	 * @memberof WindowController
+	 */
+	void (*debug)(WindowController *self);
+
+	/**
 	 * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
 	 * @param self The WindowController.
 	 * @param event The event.
@@ -115,33 +130,6 @@ struct WindowControllerInterface {
 	WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
 
 	/**
-	 * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
-	 * @brief Sets this WindowController's Renderer.
-	 * @param self The WindowController.
-	 * @param renderer The Renderer.
-	 * @memberof WindowController
-	 */
-	void (*setRenderer)(WindowController *self, Renderer *renderer);
-
-	/**
-	 * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
-	 * @brief Sets this WindowController's Theme.
-	 * @param self The WindowController.
-	 * @param theme The Theme.
-	 * @memberof WindowController
-	 */
-	void (*setTheme)(WindowController *self, Theme *theme);
-
-	/**
-	 * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
-	 * @brief Sets this WindowController's ViewController.
-	 * @param self The WindowController.
-	 * @param viewController The ViewController.
-	 * @memberof WindowController
-	 */
-	void (*setViewController)(WindowController *self, ViewController *viewController);
-
-	/**
 	 * @fn void WindowController::render(WindowController *self)
 	 * @brief Renders the ViewController's View.
 	 * @param self The WindowController.
@@ -169,6 +157,41 @@ struct WindowControllerInterface {
 	 * @memberof WindowController
 	 */
 	void (*respondToEvent)(WindowController * self, const SDL_Event *event);
+
+	/**
+	 * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
+	 * @brief Sets this WindowController's Renderer.
+	 * @param self The WindowController.
+	 * @param renderer The Renderer.
+	 * @memberof WindowController
+	 */
+	void (*setRenderer)(WindowController *self, Renderer *renderer);
+
+	/**
+	 * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
+	 * @brief Sets this WindowController's Theme.
+	 * @param self The WindowController.
+	 * @param theme The Theme.
+	 * @memberof WindowController
+	 */
+	void (*setTheme)(WindowController *self, Theme *theme);
+
+	/**
+	 * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
+	 * @brief Sets this WindowController's ViewController.
+	 * @param self The WindowController.
+	 * @param viewController The ViewController.
+	 * @memberof WindowController
+	 */
+	void (*setViewController)(WindowController *self, ViewController *viewController);
+
+	/**
+	 * @fn void WindowController::toggleDebugger(WindowController *self)
+	 * @brief Toggles the debugger tools.
+	 * @param self The WindowViewController.
+	 * @memberof WindowController
+	 */
+	void (*toggleDebugger)(WindowController *self);
 };
 
 /**
