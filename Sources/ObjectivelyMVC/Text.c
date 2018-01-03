@@ -72,11 +72,33 @@ static void applyStyle(View *self, const Style *style) {
 
 	Text *this = (Text *) self;
 
+	char *fontFamily = NULL;
+	int fontSize = 0;
+	int fontStyle = 0;
+
 	const Inlet inlets[] = MakeInlets(
-		MakeInlet("color", InletTypeColor, &this->color, NULL)
+		MakeInlet("color", InletTypeColor, &this->color, NULL),
+		MakeInlet("font", InletTypeFont, &this->font, NULL),
+		MakeInlet("font-family", InletTypeCharacters, &fontFamily, NULL),
+		MakeInlet("font-size", InletTypeInteger, &fontSize, NULL),
+		MakeInlet("font-style", InletTypeEnum, &fontStyle, (ident) FontStyleNames)
 	);
 
-	$(self, bind, inlets, (Dictionary *) style->attributes);
+	$(self, bind, inlets, style->attributes);
+
+	if (fontFamily || fontSize || fontStyle) {
+
+		Font *font = $(alloc(Font), initWithAttributes, fontFamily, fontSize, fontStyle);
+		if (font) {
+			$(this, setFont, font);
+		}
+
+		release(font);
+
+		if (fontFamily) {
+			free(fontFamily);
+		}
+	}
 }
 
 /**

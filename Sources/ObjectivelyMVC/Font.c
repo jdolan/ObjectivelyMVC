@@ -34,6 +34,25 @@
 #include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/Window.h>
 
+const EnumName FontStyleNames[] = MakeEnumNames(
+	MakeEnumAlias(FontStyleRegular, regular),
+	MakeEnumAlias(FontStyleBold, bold),
+	MakeEnumAlias(FontStyleItalic, italic),
+	MakeEnumAlias(FontStyleUnderline, underline),
+	MakeEnumAlias(FontStyleStrikeThrough, strikethrough)
+);
+
+const EnumName FontCategoryNames[] = MakeEnumNames(
+	MakeEnumAlias(FontCategoryDefault, default),
+	MakeEnumAlias(FontCategoryPrimaryLabel, primary-label),
+	MakeEnumAlias(FontCategorySecondaryLabel, secondary-label),
+	MakeEnumAlias(FontCategoryPrimaryControl, primary-control),
+	MakeEnumAlias(FontCategorySecondaryControl, secondary-control),
+	MakeEnumAlias(FontCategoryPrimaryResponder, primary-responder),
+	MakeEnumAlias(FontCategorySecondaryResponder, secondary-responder),
+	MakeEnumAlias(FontCategoryUser, user)
+);
+
 #define _Class _Font
 
 #pragma mark - Object
@@ -141,8 +160,8 @@ static Font *initWithAttributes(Font *self, const char *family, int size, int st
 	assert(search);
 
 	FcPatternAddString(search, FC_FONTFORMAT, (FcChar8 *) "TrueType");
-	FcPatternAddString(search, FC_FAMILY, (FcChar8 *) family);
-	FcPatternAddDouble(search, FC_SIZE, (double) size);
+	FcPatternAddString(search, FC_FAMILY, (FcChar8 *) (family ?: DEFAULT_FONT_FAMILY));
+	FcPatternAddDouble(search, FC_SIZE, (double) (size ?: DEFAULT_FONT_SIZE));
 
 	if (style & FontStyleBold) {
 		if (style & FontStyleItalic) {

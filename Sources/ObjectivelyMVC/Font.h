@@ -25,6 +25,7 @@
 
 #include <SDL2/SDL_ttf.h>
 
+#include <Objectively/Enum.h>
 #include <Objectively/Array.h>
 #include <Objectively/Data.h>
 
@@ -37,6 +38,8 @@
 #else
 #define DEFAULT_FONT_FAMILY "DejaVu Sans"
 #endif
+
+#define DEFAULT_FONT_SIZE 16
 
 /**
  * @file
@@ -54,6 +57,8 @@ typedef enum {
 	FontStyleStrikeThrough = TTF_STYLE_STRIKETHROUGH
 } FontStyle;
 
+OBJECTIVELYMVC_EXPORT const EnumName FontStyleNames[];
+
 /**
  * @brief Font categories.
  */
@@ -68,6 +73,8 @@ typedef enum {
 	FontCategoryUser,
 	FontCategoryMax = 16
 } FontCategory;
+
+OBJECTIVELYMVC_EXPORT const EnumName FontCategoryNames[];
 
 typedef struct Font Font;
 typedef struct FontInterface FontInterface;
