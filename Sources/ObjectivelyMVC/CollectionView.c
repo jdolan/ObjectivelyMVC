@@ -69,24 +69,6 @@ static void applyStyle(View *self, const Style *style) {
 }
 
 /**
- * @see View::awakeWithDictionary(View *, const Dictionary *)
- */
-static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
-
-	super(View, self, awakeWithDictionary, dictionary);
-
-	CollectionView *this = (CollectionView *) self;
-
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) CollectionViewAxisNames),
-		MakeInlet("item-size", InletTypeSize, &this->itemSize, NULL),
-		MakeInlet("item-spacing", InletTypeSize, &this->itemSpacing, NULL)
-	);
-
-	$(self, bind, inlets, dictionary);
-}
-
-/**
  * @see View::init(View *)
  */
 static View *init(View *self) {
@@ -227,6 +209,7 @@ static void deselectItemAtIndexPath(CollectionView *self, const IndexPath *index
 		CollectionItemView *item = $(self, itemAtIndexPath, indexPath);
 		if (item) {
 			$(item, setSelected, false);
+			$(self->contentView, invalidateStyle);
 		}
 	}
 }
@@ -324,8 +307,6 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
-
-		self->scrollView->control.view.autoresizingMask = ViewAutoresizingFill;
 
 		$(self->scrollView, setContentView, self->contentView);
 
@@ -439,6 +420,7 @@ static void selectItemAtIndexPath(CollectionView *self, const IndexPath *indexPa
 		CollectionItemView *item = $(self, itemAtIndexPath, indexPath);
 		if (item) {
 			$(item, setSelected, true);
+			$(self->contentView, invalidateStyle);
 		}
 	}
 }
@@ -471,7 +453,6 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 

@@ -110,11 +110,10 @@
                     "w >= 300",
                     "h >= 300"
                   ],
-                  "selection": "ControlSelectionMultiple",
-                  "itemSize": [
-                    64,
-                    48
-                  ]
+                  "style": {
+                    "item-size": [ 64, 48 ],
+                    "selection": "multiple"
+                  }
                 }
               ]
             }

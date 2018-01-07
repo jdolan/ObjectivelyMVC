@@ -62,7 +62,7 @@ CollectionView {
 	item-spacing: 10 10;
 }
 
-CollectionView .content {
+CollectionView .contentView {
 	padding: 10 10 10 10;
 }
 
