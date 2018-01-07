@@ -289,6 +289,12 @@ static void applyStyle(View *self, const Style *style) {
 		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
 		MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
 		MakeInlet("left", InletTypeInteger, &self->frame.x, NULL),
+		MakeInlet("max-height", InletTypeInteger, &self->maxSize.h, NULL),
+		MakeInlet("max-size", InletTypeSize, &self->maxSize, NULL),
+		MakeInlet("max-width", InletTypeInteger, &self->maxSize.w, NULL),
+		MakeInlet("min-height", InletTypeInteger, &self->minSize.h, NULL),
+		MakeInlet("min-size", InletTypeSize, &self->minSize, NULL),
+		MakeInlet("min-width", InletTypeInteger, &self->minSize.w, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
 		MakeInlet("padding-top", InletTypeInteger, &self->padding.top, NULL),
 		MakeInlet("padding-right", InletTypeInteger, &self->padding.right, NULL),
@@ -767,6 +773,8 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->style = $(alloc(Style), initWithAttributes, NULL);
 		assert(self->style);
 
+		self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
+
 		self->needsApplyConstraints = true;
 		self->needsApplyTheme = true;
 		self->needsLayout = true;
@@ -1228,8 +1236,8 @@ static void resize(View *self, const SDL_Size *size) {
 
 	if (self->frame.w != size->w || self->frame.h != size->h) {
 
-		self->frame.w = size->w;
-		self->frame.h = size->h;
+		self->frame.w = clamp(size->w, self->minSize.w, self->maxSize.w);
+		self->frame.h = clamp(size->h, self->minSize.h, self->maxSize.h);
 
 		self->needsLayout = true;
 		self->needsApplyConstraints = true;
@@ -1350,6 +1358,9 @@ static SDL_Size sizeThatFits(const View *self) {
 
 		release(subviews);
 	}
+
+	size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
+	size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
 
 	return size;
 }

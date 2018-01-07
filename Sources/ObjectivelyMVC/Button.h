@@ -33,8 +33,6 @@
 typedef struct Button Button;
 typedef struct ButtonInterface ButtonInterface;
 
-#define DEFAULT_BUTTON_MIN_WIDTH 100
-
 /**
  * @brief Buttons are Controls that respond to click events.
  * @extends Control

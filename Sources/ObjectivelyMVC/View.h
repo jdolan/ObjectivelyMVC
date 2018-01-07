@@ -198,6 +198,16 @@ struct View {
 	char *identifier;
 
 	/**
+	 * @brief The maximum size this View may be resized to during layout.
+	 */
+	SDL_Size maxSize;
+
+	/**
+	 * @brief The minimum size this View may be resized to during layout.
+	 */
+	SDL_Size minSize;
+
+	/**
 	 * @brief If true, this View will apply Constraints before it is drawn.
 	 */
 	_Bool needsApplyConstraints;

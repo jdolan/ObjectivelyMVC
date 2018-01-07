@@ -66,18 +66,6 @@ static View *init(View *self) {
 	return (View *) $((Button *) self, initWithFrame, NULL);
 }
 
-/**
- * @see View::sizeThatFits(const View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
-
-	SDL_Size size = super(View, self, sizeThatFits);
-
-	size.w = max(size.w, DEFAULT_BUTTON_MIN_WIDTH);
-
-	return size;
-}
-
 #pragma mark - Control
 
 /**
@@ -127,10 +115,6 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame) {
 		assert(self->title);
 
 		$((View *) self, addSubview, (View *) self->title);
-
-		if (self->control.view.frame.w == 0) {
-			self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;
-		}
 	}
 
 	return self;
@@ -160,7 +144,6 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
