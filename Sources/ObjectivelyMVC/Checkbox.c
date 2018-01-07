@@ -139,8 +139,6 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
 
 		$((View *) self->box, addSubview, (View *) self->check);
 		$((View *) self, addSubview, (View *) self->box);
-
-		self->box->bevel = ControlBevelInset;
 	}
 
 	return self;

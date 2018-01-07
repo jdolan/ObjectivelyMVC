@@ -36,6 +36,7 @@ Button > * {
 
 Checkbox > Control {
 	background-color: #22222266;
+	bevel: inset;
 	min-width: 18;
 	min-height: 18;
 	padding: 4 4 4 4;
