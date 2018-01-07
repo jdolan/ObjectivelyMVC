@@ -18,6 +18,7 @@ Box > Label {
 
 Box > .contentView {
 	autoresizing-mask: contain | width;
+	padding-top: 4;
 	spacing: 4;
 }
 

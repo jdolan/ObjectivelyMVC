@@ -290,6 +290,10 @@ static void applyStyle(View *self, const Style *style) {
 		MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
 		MakeInlet("left", InletTypeInteger, &self->frame.x, NULL),
 		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
+		MakeInlet("padding-top", InletTypeInteger, &self->padding.top, NULL),
+		MakeInlet("padding-right", InletTypeInteger, &self->padding.right, NULL),
+		MakeInlet("padding-bottom", InletTypeInteger, &self->padding.bottom, NULL),
+		MakeInlet("padding-left", InletTypeInteger, &self->padding.left, NULL),
 		MakeInlet("top", InletTypeInteger, &self->frame.y, NULL),
 		MakeInlet("width", InletTypeInteger, &self->frame.w, NULL)
 	);
