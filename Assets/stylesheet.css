@@ -82,6 +82,11 @@ Panel {
 	padding: 12 12 12 12;
 }
 
+ScrollView {
+	autoresizing-mask: fill;
+	clips-subviews: true;
+}
+
 Select {
 	background-color: #dedede10;
 	bevel: outset;
