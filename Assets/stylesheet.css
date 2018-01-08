@@ -106,11 +106,27 @@ Option > Text {
 	alignment: middle-left;
 }
 
+PageView {
+	autoresizing-mask: contain;
+	border-color: #888888;
+	padding: 12 12 12 12;
+}
+
 Panel {
+	autoresizing-mask: contain;
 	background-color: #444444dd;
 	border-color: #dedede;
 	border-width: 1;
 	padding: 12 12 12 12;
+}
+
+Panel > StackView {
+	spacing: 12;
+}
+
+Panel .accessoryView {
+	alignment: middle-right;
+	axis: horizontal;
 }
 
 ScrollView {
@@ -160,6 +176,34 @@ TableHeaderView {
 
 TableHeaderView * {
 	font-style: bold;
+}
+
+TabView {
+	spacing: 4;
+}
+
+TabView > .tabPageView {
+	border-color: silver;
+	border-width: 1;
+}
+
+TabView > .tabSelectionView {
+	autoresizing-mask: contain | width;
+	axis: horizontal;
+	distribution: fill;
+	spacing: 4;
+}
+
+TabView > .tabSelectionView > Label {
+	padding: 2 2 2 2;
+}
+
+TabView > .tabSelectionView > Label.selected {
+	background-color: darkgray;
+}
+
+TabView > .tabSelectionView > Label > Text {
+	alignment: middle-center;
 }
 
 TextView {
@@ -218,5 +262,3 @@ Text {
 .options > Option:selected {
 	background-color: dimgray;
 }
-
-

@@ -199,10 +199,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		$((View *) self->accessoryView, addClassName, "accessoryView");
 		$((View *) self->accessoryView, addClassName, "container");
 
-		self->accessoryView->axis = StackViewAxisHorizontal;
-		self->accessoryView->spacing = DEFAULT_PANEL_SPACING;
-		self->accessoryView->view.alignment = ViewAlignmentMiddleRight;
-
 		self->accessoryView->view.hidden = true;
 
 		$((View *) self->stackView, addSubview, (View *) self->accessoryView);
@@ -216,8 +212,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 
 		$((View *) self, addSubview, (View *) self->resizeHandle);
-
-		this->autoresizingMask = ViewAutoresizingContain;
 	}
 
 	return self;

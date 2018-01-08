@@ -33,8 +33,6 @@
  * @brief TabViewItems embed Views in a TabView.
  */
 
-#define DEFAULT_TAB_VIEW_ITEM_LABEL_PADDING 2
-
 /**
  * @brief Tab states, which are bit-masked.
  */
