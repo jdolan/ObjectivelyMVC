@@ -86,20 +86,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	return super(Control, self, captureEvent, event);
 }
 
-/**
- * @see Control::stateDidChange(Control *)
- */
-static void stateDidChange(Control *self) {
-
-	super(Control, self, stateDidChange);
-
-	if (self->state & ControlStateHighlighted) {
-		self->bevel = ControlBevelInset;
-	} else {
-		self->bevel = ControlBevelOutset;
-	}
-}
-
 #pragma mark - Button
 
 /**
@@ -146,7 +132,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->init = init;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 
 	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((ButtonInterface *) clazz->def->interface)->initWithTitle = initWithTitle;

@@ -25,9 +25,14 @@ Box > .contentView {
 Button {
 	autoresizing-mask: contain;
 	background-color: #88888822;
+	border-color: ghostwhite;
 	bevel: outset;
 	min-width: 100;
 	padding: 8 8 8 8;
+}
+
+Button:highlighted {
+	bevel: inset;
 }
 
 Button > * {
