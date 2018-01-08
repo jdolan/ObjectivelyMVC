@@ -115,24 +115,6 @@ Select > StackView {
 	alignment: middle-left;
 }
 
-.options {
-	alignment: internal;
-	border-color: #dededeaa;
-	border-width: 1;
-}
-
-.options > Option {
-	background-color: charcoal;
-}
-
-.options > Option:hover {
-	background-color: darkgray;
-}
-
-.options > Option:selected {
-	background-color: dimgray;
-}
-
 Slider {
 	width: 140;
 }
@@ -204,6 +186,24 @@ Text {
 
 #debug > #computedStyle * {
 	color: yellow;
+}
+
+.options {
+	alignment: internal;
+	border-color: #dededeaa;
+	border-width: 1;
+}
+
+.options > Option {
+	background-color: charcoal;
+}
+
+.options > Option:hover {
+	background-color: darkgray;
+}
+
+.options > Option:selected {
+	background-color: dimgray;
 }
 
 
