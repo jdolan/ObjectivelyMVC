@@ -26,8 +26,8 @@
 #include <ObjectivelyMVC/CollectionView.h>
 
 const EnumName CollectionViewAxisNames[] = MakeEnumNames(
-	MakeEnumName(CollectionViewAxisHorizontal),
-	MakeEnumName(CollectionViewAxisVertical)
+	MakeEnumAlias(CollectionViewAxisHorizontal, horizontal),
+	MakeEnumAlias(CollectionViewAxisVertical, vertical)
 );
 
 #define _Class _CollectionView
