@@ -65,6 +65,10 @@ static void bindColor(const Inlet *inlet, ident obj) {
 		String *string = cast(String, obj);
 		if (string->length) {
 
+			if (strcmp("none", string->chars) == 0) {
+				return;
+			}
+
 			if (string->chars[0] == '#') {
 				color = MVC_HexToRGBA(string->chars + 1);
 			} else {
