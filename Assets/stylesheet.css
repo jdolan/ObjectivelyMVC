@@ -98,7 +98,12 @@ Label > Text {
 }
 
 Option {
+	autoresizing-mask: contain | width;
 	padding: 2 2 2 2;
+}
+
+Option > Text {
+	alignment: middle-left;
 }
 
 Panel {
