@@ -126,12 +126,13 @@ struct ControlInterface {
 	ViewInterface viewInterface;
 
 	/**
-	 * @fn Action *Control::actionForEvent(const Control *self, const SDL_Event *event)
+	 * @fn Array *Control::actionsForEvent(const Control *self, const SDL_Event *event)
 	 * @param self The Control.
-	 * @param event An SDL_Event.
+	 * @param event The event.
+	 * @return An Array of all Actions bound to the given event.
 	 * @memberof Control
 	 */
-	Action *(*actionForEvent)(const Control *self, const SDL_Event *event);
+	Array *(*actionsForEvent)(const Control *self, const SDL_Event *event);
 
 	/**
 	 * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)

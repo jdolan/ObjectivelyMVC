@@ -219,9 +219,13 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	const _Bool didCaptureEvent = $(this, captureEvent, event);
 	if (didCaptureEvent) {
 
-		Action *action = $(this, actionForEvent, event);
-		if (action) {
-			action->function(this, event, action->sender, action->data);
+		const Array *actions = (Array *) this->actions;
+		for (size_t i = 0; i < actions->count; i++) {
+
+			const Action *action = $(actions, objectAtIndex, i);
+			if (action->eventType == event->type) {
+				action->function(this, event, action->sender, action->data);
+			}
 		}
 	}
 
@@ -239,21 +243,18 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 #pragma mark - Control
 
 /**
- * @fn Action *Controll::actionForEvent(const Control *self, const SDL_Event *event)
+ * @brief Predicate for actionsForEvent.
+ */
+static _Bool actionsForEvent_predicate(const ident obj, ident data) {
+	return ((Action *) obj)->eventType == ((SDL_Event *) data)->type;
+}
+
+/**
+ * @fn Array *Control::actionsForEvent(const Control *self, const SDL_Event *event)
  * @memberof Control
  */
-static Action *actionForEvent(const Control *self, const SDL_Event *event) {
-
-	Array *actions = (Array *) self->actions;
-	for (size_t i = 0; i < actions->count; i++) {
-
-		Action *action = (Action *) $(actions, objectAtIndex, i);
-		if (action->eventType == event->type) {
-			return action;
-		}
-	}
-
-	return NULL;
+static Array *actionsForEvent(const Control *self, const SDL_Event *event) {
+	return $((Array *) self->actions, filteredArray, actionsForEvent_predicate, (ident) event);
 }
 
 /**
@@ -360,7 +361,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 
-	((ControlInterface *) clazz->def->interface)->actionForEvent = actionForEvent;
+	((ControlInterface *) clazz->def->interface)->actionsForEvent = actionsForEvent;
 	((ControlInterface *) clazz->def->interface)->addActionForEventType = addActionForEventType;
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 	((ControlInterface *) clazz->def->interface)->disabled = disabled;
