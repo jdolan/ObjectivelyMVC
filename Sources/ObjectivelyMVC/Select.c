@@ -151,8 +151,8 @@ static void stateDidChange(Control *self) {
 
 			const SDL_Rect renderFrame = $((View *) self, renderFrame);
 
-			stackView->frame.x = renderFrame.x;
-			stackView->frame.y = renderFrame.y;
+			stackView->frame.x = renderFrame.x + self->view.padding.left;
+			stackView->frame.y = renderFrame.y + self->view.padding.top;
 
 			View *view = (View *) self;
 
