@@ -64,8 +64,10 @@ ObjectivelyMVC allows you to define your View hierarchy programmatically, via JS
 ```json
 {
 	"class": "Panel",
-	"frame": [50, 50, 0, 0],
-	"autoresizing": "ViewAutoresizingWidth",
+	"style": {
+		"top": 50,
+		"left": 50
+	},
 	"contentView": {
 		"subviews": [{
 			"class": "Input",
