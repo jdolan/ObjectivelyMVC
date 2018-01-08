@@ -89,6 +89,14 @@ RGBColorPicker .colorView {
 	background-color: none;
 }
 
+Label {
+	autoresizing-mask: contain;
+}
+
+Label > Text {
+	alignment: middle-left;
+}
+
 Option {
 	padding: 2 2 2 2;
 }
