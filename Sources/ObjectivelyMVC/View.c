@@ -1129,11 +1129,13 @@ static void render(View *self, Renderer *renderer) {
 
 		SDL_Rect frame = $(self, renderFrame);
 		for (int i = 0; i < self->borderWidth; i++) {
+
+			$(renderer, drawRect, &frame);
+
 			frame.x -= 1;
 			frame.y -= 1;
 			frame.w += 2;
 			frame.h += 2;
-			$(renderer, drawRect, &frame);
 		}
 	}
 
