@@ -76,6 +76,19 @@ Control {
 	selection: single;
 }
 
+HSVColorPicker,
+HueColorPicker,
+RGBColorPicker {
+	autoresizing-mask: contain;
+}
+
+HSVColorPicker .colorView,
+HueColorPicker .colorView,
+RGBColorPicker .colorView {
+	autoresizing-mask: width;
+	background-color: none;
+}
+
 Option {
 	padding: 2 2 2 2;
 }

@@ -143,8 +143,6 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 	self = (RGBColorPicker *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
-		self->control.view.autoresizingMask = ViewAutoresizingContain;
-
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
 
@@ -153,8 +151,7 @@ static RGBColorPicker *initWithFrame(RGBColorPicker *self, const SDL_Rect *frame
 		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
 		assert(self->colorView);
 
-		self->colorView->autoresizingMask = ViewAutoresizingWidth;
-
+		$(self->colorView, addClassName, "colorView");
 		$((View *) self->stackView, addSubview, self->colorView);
 
 		self->redSlider = $(alloc(Slider), initWithFrame, NULL);
