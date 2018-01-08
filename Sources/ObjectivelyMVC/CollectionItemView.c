@@ -46,7 +46,7 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::matchesSelector(Const View *, const SimpleSelector *)
+ * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
 static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 

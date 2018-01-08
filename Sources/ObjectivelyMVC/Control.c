@@ -94,7 +94,7 @@ static View *init(View *self) {
 }
 
 /**
- * @see View::matchesSelector(Const View *, const SimpleSelector *)
+ * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
 static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
