@@ -165,12 +165,12 @@ static void removeCell(TableRowView *self, TableCellView *cell) {
 }
 
 /**
- * @fn void TableRowView::setSelected(TableRowView *self, _Bool selected)
+ * @fn void TableRowView::setSelected(TableRowView *self, _Bool isSelected)
  * @memberof TableRowView
  */
-static void setSelected(TableRowView *self, _Bool selected) {
+static void setSelected(TableRowView *self, _Bool isSelected) {
 
-	self->isSelected = selected;
+	self->isSelected = isSelected;
 	if (self->isSelected) {
 		self->stackView.view.backgroundColor = Colors.DimGray;
 	} else {

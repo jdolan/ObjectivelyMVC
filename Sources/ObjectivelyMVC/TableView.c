@@ -177,7 +177,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			return true;
 		}
 
-		if ($((Control *) this->scrollView, highlighted) == false) {
+		if ($((Control *) this->scrollView, isHighlighted) == false) {
 			if ($((View *) this->contentView, didReceiveEvent, event)) {
 
 				const SDL_Point point = {

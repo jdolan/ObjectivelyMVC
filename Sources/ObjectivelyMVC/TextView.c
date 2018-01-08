@@ -84,7 +84,7 @@ static void layoutSubviews(View *self) {
 	const char *text = this->attributedText->string.chars;
 
 	if (text == NULL || strlen(text) == 0) {
-		if ($((Control *) this, focused) == false) {
+		if ($((Control *) this, isFocused) == false) {
 			text = this->defaultText;
 		}
 	}
@@ -113,7 +113,7 @@ static void render(View *self, Renderer *renderer) {
 
 	TextView *this = (TextView *) self;
 
-	if ($((Control *) this, focused)) {
+	if ($((Control *) this, isFocused)) {
 		const char *text = this->text->text ?: "";
 
 		int w, h;

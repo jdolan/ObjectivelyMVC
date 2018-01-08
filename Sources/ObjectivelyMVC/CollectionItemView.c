@@ -108,12 +108,11 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 }
 
 /**
- * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool selected)
+ * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool isSelected)
  * @memberof CollectionItemView
  */
-static void setSelected(CollectionItemView *self, _Bool selected) {
-
-	self->isSelected = selected;
+static void setSelected(CollectionItemView *self, _Bool isSelected) {
+	self->isSelected = isSelected;
 }
 
 #pragma mark - Class lifecycle

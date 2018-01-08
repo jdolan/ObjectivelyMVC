@@ -42,7 +42,7 @@ static void buttonAction(Control *control, const SDL_Event *event, ident sender,
  * @brief ActionFunction for Checkbox.
  */
 static void checkboxAction(Control *control, const SDL_Event *event, ident sender, ident data) {
-	printf("%s: %s\n", __func__, $(control, selected) ? "checked": "unchecked");
+	printf("%s: %s\n", __func__, $(control, isSelected) ? "checked": "unchecked");
 }
 
 #pragma mark - TextViewDelegate

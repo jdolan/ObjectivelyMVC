@@ -105,13 +105,13 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 	switch (simpleSelector->type) {
 		case SimpleSelectorTypePseudo:
 			if (strcmp("highlighted", simpleSelector->pattern) == 0) {
-				return $(this, highlighted);
+				return $(this, isHighlighted);
 			} else if (strcmp("disabled", simpleSelector->pattern) == 0) {
-				return $(this, disabled);
+				return $(this, isDisabled);
 			} else if (strcmp("selected", simpleSelector->pattern) == 0) {
-				return $(this, selected);
+				return $(this, isSelected);
 			} else if (strcmp("focused", simpleSelector->pattern) == 0) {
-				return $(this, focused);
+				return $(this, isFocused);
 			} else if (strcmp("single", simpleSelector->pattern) == 0) {
 				return this->selection == ControlSelectionSingle;
 			} else if (strcmp("multiple", simpleSelector->pattern) == 0) {
@@ -279,30 +279,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 }
 
 /**
- * @fn _Bool Control::disabled(const Control *self)
- * @memberof Control
- */
-static _Bool disabled(const Control *self) {
-	return (self->state & ControlStateDisabled) == ControlStateDisabled;
-}
-
-/**
- * @fn _Bool Control::focused(const Control *self)
- * @memberof Control
- */
-static _Bool focused(const Control *self) {
-	return (self->state & ControlStateFocused) == ControlStateFocused;
-}
-
-/**
- * @fn _Bool Control::highlighted(const Control *self)
- * @memberof Control
- */
-static _Bool highlighted(const Control *self) {
-	return (self->state & ControlStateHighlighted) == ControlStateHighlighted;
-}
-
-/**
  * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
  * @memberof Control
  */
@@ -319,10 +295,34 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
 }
 
 /**
- * @fn _Bool Control::selected(const Control *self)
+ * @fn _Bool Control::isDisabled(const Control *self)
  * @memberof Control
  */
-static _Bool selected(const Control *self) {
+static _Bool isDisabled(const Control *self) {
+	return (self->state & ControlStateDisabled) == ControlStateDisabled;
+}
+
+/**
+ * @fn _Bool Control::isFocused(const Control *self)
+ * @memberof Control
+ */
+static _Bool isFocused(const Control *self) {
+	return (self->state & ControlStateFocused) == ControlStateFocused;
+}
+
+/**
+ * @fn _Bool Control::isHighlighted(const Control *self)
+ * @memberof Control
+ */
+static _Bool isHighlighted(const Control *self) {
+	return (self->state & ControlStateHighlighted) == ControlStateHighlighted;
+}
+
+/**
+ * @fn _Bool Control::isSelected(const Control *self)
+ * @memberof Control
+ */
+static _Bool isSelected(const Control *self) {
 	return (self->state & ControlStateSelected) == ControlStateSelected;
 }
 
@@ -364,11 +364,11 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->def->interface)->actionsForEvent = actionsForEvent;
 	((ControlInterface *) clazz->def->interface)->addActionForEventType = addActionForEventType;
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->def->interface)->disabled = disabled;
-	((ControlInterface *) clazz->def->interface)->focused = focused;
-	((ControlInterface *) clazz->def->interface)->highlighted = highlighted;
 	((ControlInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ControlInterface *) clazz->def->interface)->selected = selected;
+	((ControlInterface *) clazz->def->interface)->isDisabled = isDisabled;
+	((ControlInterface *) clazz->def->interface)->isFocused = isFocused;
+	((ControlInterface *) clazz->def->interface)->isHighlighted = isHighlighted;
+	((ControlInterface *) clazz->def->interface)->isSelected = isSelected;
 	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 }
 

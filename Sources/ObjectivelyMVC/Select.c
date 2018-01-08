@@ -70,7 +70,7 @@ static void layoutSubviews(View *self) {
 			Option *option = $(options, objectAtIndex, i);
 			if (option->isSelected) {
 				option->view.hidden = false;
-			} else if ($(control, highlighted)) {
+			} else if ($(control, isHighlighted)) {
 				option->view.hidden = false;
 			} else {
 				option->view.hidden = true;
@@ -147,7 +147,7 @@ static void stateDidChange(Control *self) {
 
 		View *stackView = (View *) this->stackView;
 
-		if ($(self, highlighted)) {
+		if ($(self, isHighlighted)) {
 
 			const SDL_Rect renderFrame = $((View *) self, renderFrame);
 

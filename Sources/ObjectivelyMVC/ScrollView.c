@@ -89,7 +89,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		return true;
 	} else if (event->type == SDL_MOUSEBUTTONUP && (event->button.button & SDL_BUTTON_LMASK)) {
 
-		if ($(self, highlighted)) {
+		if ($(self, isHighlighted)) {
 			self->state &= ~ControlStateHighlighted;
 			return true;
 		}
