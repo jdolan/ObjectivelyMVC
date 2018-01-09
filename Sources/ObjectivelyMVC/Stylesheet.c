@@ -116,6 +116,10 @@ static Stylesheet *defaultStylesheet(void) {
 		_initialize(_Select());
 		_initialize(_Slider());
 		_initialize(_StackView());
+		_initialize(_TableCellView());
+		_initialize(_TableHeaderView());
+		_initialize(_TableHeaderCellView());
+		_initialize(_TableRowView());
 		_initialize(_TableView());
 		_initialize(_TabView());
 		_initialize(_Text());

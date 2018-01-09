@@ -58,7 +58,7 @@ struct TableColumn {
 	/**
 	 * @brief The cell alignment.
 	 */
-	ViewAlignment cellAlignment;
+	ViewAlignment alignment;
 
 	/**
 	 * @brief The header cell.

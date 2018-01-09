@@ -51,8 +51,6 @@ static void layoutSubviews(View *self) {
 
 	TableRowView *this = (TableRowView *) self;
 
-	this->stackView.spacing = this->tableView->cellSpacing;
-
 	const Array *cells = (Array *) this->cells;
 	const Array *columns = (Array *) this->tableView->columns;
 
@@ -60,13 +58,29 @@ static void layoutSubviews(View *self) {
 
 	for (size_t i = 0; i < columns->count; i++) {
 
-		TableCellView *cell = $(cells, objectAtIndex, i);
 		const TableColumn *column = $(columns, objectAtIndex, i);
 
+		TableCellView *cell = $(cells, objectAtIndex, i);
 		cell->view.frame.w = column->width;
 	}
 
 	super(View, self, layoutSubviews);
+}
+
+/**
+ * @see View::matchesSelector(const View *, const SimpleSelector *)
+ */
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+
+	TableRowView *this = (TableRowView *) self;
+
+	if (simpleSelector->type == SimpleSelectorTypePseudo) {
+		if (strcmp("selected", simpleSelector->pattern) == 0) {
+			return this->isSelected;
+		}
+	}
+
+	return super(View, self, matchesSelector, simpleSelector);
 }
 
 /**
@@ -85,7 +99,7 @@ static SDL_Size sizeThatFits(const View *self) {
 			size.w += column->width;
 		}
 
-		size.w += (columns->count - 1) * this->tableView->cellSpacing;
+		size.w += (columns->count - 1) * this->stackView.spacing;
 	}
 
 	return size;
@@ -123,10 +137,6 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 		self->tableView = tableView;
 		assert(self->tableView);
 
-		self->stackView.axis = StackViewAxisHorizontal;
-		self->stackView.distribution = StackViewDistributionFill;
-
-		self->stackView.view.autoresizingMask |= ViewAutoresizingWidth;
 	}
 
 	return self;
@@ -170,11 +180,9 @@ static void removeCell(TableRowView *self, TableCellView *cell) {
  */
 static void setSelected(TableRowView *self, _Bool isSelected) {
 
-	self->isSelected = isSelected;
-	if (self->isSelected) {
-		self->stackView.view.backgroundColor = Colors.DimGray;
-	} else {
-		self->stackView.view.backgroundColor = self->assignedBackgroundColor;
+	if (isSelected != self->isSelected) {
+		self->isSelected = isSelected;
+		$((View *) self, invalidateStyle);
 	}
 }
 
@@ -188,6 +196,7 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((TableRowViewInterface *) clazz->def->interface)->addCell = addCell;

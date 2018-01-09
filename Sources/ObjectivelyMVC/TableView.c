@@ -51,6 +51,22 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::applyStyle(View *, const Style *)
+ */
+static void applyStyle(View *self, const Style *style) {
+
+	super(View, self, applyStyle, style);
+
+	TableView *this = (TableView *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("row-height", InletTypeInteger, &this->rowHeight, NULL)
+	);
+
+	$(self, bind, inlets, style->attributes);
+}
+
+/**
  * @brief ArrayEnumerator for awaking TableColumns.
  */
 static void awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
@@ -62,7 +78,7 @@ static void awakeWithDictionary_columns(const Array *array, ident obj, ident dat
 	assert(column);
 
 	const Inlet inlets[] = MakeInlets(
-		MakeInlet("cellAlignment", InletTypeEnum, &column->cellAlignment, (ident) ViewAlignmentNames),
+		MakeInlet("alignment", InletTypeEnum, &column->alignment, (ident) ViewAlignmentNames),
 		MakeInlet("width", InletTypeInteger, &column->width, NULL)
 	);
 
@@ -78,17 +94,6 @@ static void awakeWithDictionary_columns(const Array *array, ident obj, ident dat
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
-
-	TableView *this = (TableView *) self;
-
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("alternateBackgroundColor", InletTypeColor, &this->alternateBackgroundColor, NULL),
-		MakeInlet("cellSpacing", InletTypeInteger, &this->cellSpacing, NULL),
-		MakeInlet("rowHeight", InletTypeInteger, &this->rowHeight, NULL),
-		MakeInlet("usesAlternateBackgroundColor", InletTypeBool, &this->usesAlternateBackgroundColor, NULL)
-	);
-
-	$(self, bind, inlets, dictionary);
 
 	const Array *columns = $(dictionary, objectForKeyPath, "columns");
 	if (columns) {
@@ -118,16 +123,8 @@ static void layoutSubviews(View *self) {
 	const Array *rows = (Array *) this->rows;
 	for (size_t i = 0; i < rows->count; i++) {
 
-		TableRowView *row = (TableRowView *) $(rows, objectAtIndex, i);
-		row->stackView.view.frame.h = this->rowHeight;
-
-		if (this->usesAlternateBackgroundColor && (i & 1)) {
-			row->assignedBackgroundColor = this->alternateBackgroundColor;
-		} else {
-			row->assignedBackgroundColor = Colors.Transparent;
-		}
-
-		row->stackView.view.backgroundColor = row->assignedBackgroundColor;
+		View *row = (View *) $(rows, objectAtIndex, i);
+		row->frame.h = this->rowHeight;
 	}
 
 	super(View, self, layoutSubviews);
@@ -360,29 +357,14 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
-		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
+		$((View *) self->contentView, addClassName, "contentView");
 
 		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
 
-		self->scrollView->control.view.autoresizingMask |= ViewAutoresizingWidth;
-
 		$(self->scrollView, setContentView, (View *) self->contentView);
 
 		$((View *) self, addSubview, (View *) self->scrollView);
-
-		self->alternateBackgroundColor = Colors.DarkGray;
-		self->usesAlternateBackgroundColor = true;
-
-		self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
-		self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
-
-		self->control.view.backgroundColor = Colors.Gray;
-
-		self->control.view.padding.top = 0;
-		self->control.view.padding.right = 0;
-		self->control.view.padding.bottom = 0;
-		self->control.view.padding.left = 0;
 	}
 
 	return self;
@@ -603,6 +585,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;

@@ -114,10 +114,6 @@ struct TableViewDelegate {
 	void (*didSetSortColumn)(TableView *tableView);
 };
 
-#define DEFAULT_TABLE_VIEW_PADDING 4
-#define DEFAULT_TABLE_VIEW_CELL_SPACING 2
-#define DEFAULT_TABLE_VIEW_ROW_HEIGHT 24
-
 /**
  * @brief TableViews provide sortable, tabular presentations of data.
  * @extends Control
@@ -135,16 +131,6 @@ struct TableView {
 	 * @protected
 	 */
 	TableViewInterface *interface;
-
-	/**
-	 * @brief The
-	 */
-	SDL_Color alternateBackgroundColor;
-
-	/**
-	 * @brief Inter-cell (horizontal) spacing.
-	 */
-	int cellSpacing;
 
 	/**
 	 * @brief The column definitions.
@@ -172,14 +158,14 @@ struct TableView {
 	TableHeaderView *headerView;
 
 	/**
-	 * @brief The rows.
-	 */
-	MutableArray *rows;
-
-	/**
 	 * @brief The row height.
 	 */
 	int rowHeight;
+
+	/**
+	 * @brief The rows.
+	 */
+	MutableArray *rows;
 
 	/**
 	 * @brief The scroll view.
@@ -190,11 +176,6 @@ struct TableView {
 	 * @brief The column to sort by.
 	 */
 	TableColumn *sortColumn;
-
-	/**
-	 * @brief Set to `true` to enable alternate row coloring.
-	 */
-	_Bool usesAlternateBackgroundColor;
 };
 
 /**

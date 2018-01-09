@@ -72,18 +72,7 @@ static SDL_Size sizeThatFits(const View *self) {
  * @memberof TableHeaderView
  */
 static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tableView) {
-
-	self = (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
-	if (self) {
-
-		((View *) self)->backgroundColor = Colors.DimGray;
-
-		if (((View *) self)->frame.h == 0) {
-			((View *) self)->frame.h = DEFAULT_TABLE_HEADER_VIEW_HEIGHT;
-		}
-	}
-
-	return self;
+	return (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
 }
 
 #pragma mark - Class lifecycle

@@ -170,12 +170,42 @@ StackView.container {
 	spacing: 12;
 }
 
+TableCellView {
+	alignment: middle-left;
+	autoresizing-mask: height;
+	padding: 2 2 2 2;
+}
+
 TableHeaderView {
 	background-color: #ffffff22;
+	height: 28;
 }
 
 TableHeaderView * {
 	font-style: bold;
+}
+
+TableRowView {
+	autoresizing-mask: contain | width;
+	axis: horizontal;
+	distribution: fill;
+	spacing: 1;
+}
+
+TableRowView:nth-child(even) TableCellView {
+	background-color: #ffffff11;
+}
+
+TableRowView:selected {
+	background-color: darkgray;
+}
+
+TableView {
+	row-height: 24;
+}
+
+TableView .contentView {
+	autoresizing-mask: contain | width;
 }
 
 TabView {

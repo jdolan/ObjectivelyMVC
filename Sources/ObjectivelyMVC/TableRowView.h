@@ -55,11 +55,6 @@ struct TableRowView {
 	TableRowViewInterface *interface;
 
 	/**
-	 * @brief The background color assigned by the table.
-	 */
-	SDL_Color assignedBackgroundColor;
-
-	/**
 	 * @brief The cells.
 	 */
 	MutableArray *cells;
