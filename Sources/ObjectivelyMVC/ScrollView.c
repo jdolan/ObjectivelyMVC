@@ -108,11 +108,7 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
 
 	self = (ScrollView *) super(Control, self, initWithFrame, frame);
 	if (self) {
-
-		self->control.view.autoresizingMask = ViewAutoresizingFill;
-		self->control.view.clipsSubviews = true;
-
-		self->step = SCROLL_VIEW_DEFAULT_STEP;
+		self->step = DEFAULT_SCROLL_VIEW_STEP;
 	}
 
 	return self;
