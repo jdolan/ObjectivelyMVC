@@ -988,6 +988,14 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 				if (self->superview) {
 					return $((Array *) self->superview->subviews, lastObject) == self;
 				}
+			} else if (strcmp("nth-child(even)", pattern) == 0) {
+				if (self->superview) {
+					return ($((Array *) self->superview->subviews, indexOfObject, (ident) self) & 1) == 0;
+				}
+			}  else if (strcmp("nth-child(odd)", pattern) == 0) {
+				if (self->superview) {
+					return $((Array *) self->superview->subviews, indexOfObject, (ident) self) & 1;
+				}
 			} else if (strcmp("hover", pattern) == 0) {
 				SDL_Point point;
 				SDL_GetMouseState(&point.x, &point.y);
