@@ -173,7 +173,7 @@ StackView.container {
 TableCellView {
 	alignment: middle-left;
 	autoresizing-mask: height;
-	padding: 2 2 2 2;
+	padding: 0 2 0 2;
 }
 
 TableHeaderView {
@@ -181,15 +181,10 @@ TableHeaderView {
 	height: 28;
 }
 
-TableHeaderView * {
-	font-style: bold;
-}
-
 TableRowView {
 	autoresizing-mask: contain | width;
 	axis: horizontal;
 	distribution: fill;
-	spacing: 1;
 }
 
 TableRowView:nth-child(even) TableCellView {
