@@ -74,14 +74,32 @@ static void didSetValue(Slider *slider) {
 
 #pragma mark - TableViewDataSource
 
-static int tableData[7][3] = {
+static int tableData[25][3] = {
 	{ 1, 1, 1 },
 	{ 2, 2, 2 },
 	{ 3, 3, 3 },
 	{ 4, 4, 4 },
 	{ 5, 5, 5 },
 	{ 6, 6, 6 },
-	{ 7, 7, 7 }
+	{ 7, 7, 7 },
+	{ 8, 8, 8 },
+	{ 9, 9, 9 },
+	{ 10, 10, 10 },
+	{ 11, 11, 11 },
+	{ 12, 12, 12 },
+	{ 13, 13, 13 },
+	{ 14, 14, 14 },
+	{ 15, 15, 15 },
+	{ 16, 16, 16 },
+	{ 17, 17, 17 },
+	{ 18, 18, 18 },
+	{ 19, 19, 19 },
+	{ 20, 20, 20 },
+	{ 21, 21, 21 },
+	{ 22, 22, 22 },
+	{ 23, 23, 23 },
+	{ 24, 24, 24 },
+	{ 25, 25, 25 }
 };
 
 /**
@@ -112,8 +130,8 @@ static TableCellView *cellForColumnAndRow(const TableView *tableView, const Tabl
 
 	const ssize_t col = $((Array *) tableView->columns, indexOfObject, (ident) column);
 
-	char text[16];
-	snprintf(text, sizeof(text), "Cell %d%c", tableData[row][col], 'A' + (int) col);
+	char text[8];
+	snprintf(text, sizeof(text), "%d%c", tableData[row][col], 'A' + (int) col);
 
 	$(cell->text, setText, text);
 	return cell;
@@ -168,7 +186,7 @@ static void didSetSortColumn(TableView *tableView) {
  * @see CollectionViewDataSource::numberOfItems
  */
 static size_t numberOfItems(const CollectionView *collectionView) {
-	return 24;
+	return 48;
 }
 
 /**
@@ -270,7 +288,7 @@ static void loadView(ViewController *self) {
 	$(this->select, addOption, "This is another", (ident) 3);
 	$(this->select, addOption, "This is yet another", (ident) 4);
 	this->select->delegate.didSelectOption = didSelectOption;
-	
+
 	this->slider->delegate.didSetValue = didSetValue;
 
 	this->tableView->dataSource.numberOfRows = numberOfRows;
@@ -280,7 +298,7 @@ static void loadView(ViewController *self) {
 	this->tableView->delegate.didSetSortColumn = didSetSortColumn;
 
 	$(this->tableView, reloadData);
-	
+
 	this->collectionView->dataSource.numberOfItems = numberOfItems;
 	this->collectionView->dataSource.objectForItemAtIndexPath = objectForItemAtIndexPath;
 

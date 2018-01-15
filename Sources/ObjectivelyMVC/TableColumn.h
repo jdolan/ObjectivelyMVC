@@ -56,11 +56,6 @@ struct TableColumn {
 	TableColumnInterface *interface;
 
 	/**
-	 * @brief The cell alignment.
-	 */
-	ViewAlignment alignment;
-
-	/**
 	 * @brief The header cell.
 	 */
 	TableHeaderCellView *headerCell;
@@ -74,11 +69,6 @@ struct TableColumn {
 	 * @brief The sort order.
 	 */
 	Order order;
-
-	/**
-	 * @brief The requested width.
-	 */
-	int width;
 };
 
 /**

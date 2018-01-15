@@ -45,29 +45,6 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::layoutSubviews(View *)
- */
-static void layoutSubviews(View *self) {
-
-	TableRowView *this = (TableRowView *) self;
-
-	const Array *cells = (Array *) this->cells;
-	const Array *columns = (Array *) this->tableView->columns;
-
-	assert(cells->count == columns->count);
-
-	for (size_t i = 0; i < columns->count; i++) {
-
-		const TableColumn *column = $(columns, objectAtIndex, i);
-
-		TableCellView *cell = $(cells, objectAtIndex, i);
-		cell->view.frame.w = column->width;
-	}
-
-	super(View, self, layoutSubviews);
-}
-
-/**
  * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
 static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
@@ -81,28 +58,6 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 	}
 
 	return super(View, self, matchesSelector, simpleSelector);
-}
-
-/**
- * @see View::sizeThatFits(const View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
-
-	TableRowView *this = (TableRowView *) self;
-
-	SDL_Size size = MakeSize(0, this->tableView->rowHeight);
-
-	const Array *columns = (Array *) this->tableView->columns;
-	if (columns->count) {
-		for (size_t i = 0; i < columns->count; i++) {
-			const TableColumn *column = $(columns, objectAtIndex, i);
-			size.w += column->width;
-		}
-
-		size.w += (columns->count - 1) * this->stackView.spacing;
-	}
-
-	return size;
 }
 
 #pragma mark - TableRowView
@@ -136,7 +91,6 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 
 		self->tableView = tableView;
 		assert(self->tableView);
-
 	}
 
 	return self;
@@ -195,9 +149,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((TableRowViewInterface *) clazz->def->interface)->addCell = addCell;
 	((TableRowViewInterface *) clazz->def->interface)->initWithTableView = initWithTableView;

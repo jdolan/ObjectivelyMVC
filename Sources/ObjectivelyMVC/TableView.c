@@ -51,22 +51,6 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::applyStyle(View *, const Style *)
- */
-static void applyStyle(View *self, const Style *style) {
-
-	super(View, self, applyStyle, style);
-
-	TableView *this = (TableView *) self;
-
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("row-height", InletTypeInteger, &this->rowHeight, NULL)
-	);
-
-	$(self, bind, inlets, style->attributes);
-}
-
-/**
  * @brief ArrayEnumerator for awaking TableColumns.
  */
 static void awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
@@ -77,12 +61,6 @@ static void awakeWithDictionary_columns(const Array *array, ident obj, ident dat
 	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);
 	assert(column);
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("alignment", InletTypeEnum, &column->alignment, (ident) ViewAlignmentNames),
-		MakeInlet("width", InletTypeInteger, &column->width, NULL)
-	);
-
-	$((View *) data, bind, inlets, obj);
 	$((TableView *) data, addColumn, column);
 
 	release(column);
@@ -116,16 +94,20 @@ static void layoutSubviews(View *self) {
 	TableView *this = (TableView *) self;
 
 	View *scrollView = (View *) this->scrollView;
+	View *headerView = (View *) this->headerView;
 
-	scrollView->frame = $(this, scrollableArea);
-	scrollView->needsLayout = true;
+	SDL_Rect frame = $(self, bounds);
 
-	const Array *rows = (Array *) this->rows;
-	for (size_t i = 0; i < rows->count; i++) {
+	if (headerView->hidden == false) {
 
-		View *row = (View *) $(rows, objectAtIndex, i);
-		row->frame.h = this->rowHeight;
+		const SDL_Size size = $(headerView, sizeThatFits);
+
+		frame.y += size.h;
+		frame.h -= size.h;
 	}
+
+	scrollView->frame = frame;
+	scrollView->needsLayout = true;
 
 	super(View, self, layoutSubviews);
 }
@@ -393,8 +375,7 @@ static void reloadData(TableView *self) {
 	assert(self->dataSource.numberOfRows);
 	assert(self->delegate.cellForColumnAndRow);
 
-	$((Array *) self->rows, enumerateObjects, reloadData_removeRows, self->contentView);
-	$(self->rows, removeAllObjects);
+	$(self->rows, removeAllObjectsWithEnumerator, reloadData_removeRows, self->contentView);
 
 	TableRowView *headerView = (TableRowView *) self->headerView;
 	$(headerView, removeAllCells);
@@ -420,6 +401,8 @@ static void reloadData(TableView *self) {
 
 			TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i);
 			assert(cell);
+
+			cell->view.identifier = strdup(column->identifier);
 
 			$(row, addCell, cell);
 			release(cell);
@@ -455,32 +438,20 @@ static void removeColumn(TableView *self, TableColumn *column) {
  */
 static ssize_t rowAtPoint(const TableView *self, const SDL_Point *point) {
 
-	if (self->rowHeight) {
-		const SDL_Rect contentFrame = $((View *) self->contentView, renderFrame);
-		if (SDL_PointInRect(point, &contentFrame)) {
-			return (point->y - contentFrame.y) / self->rowHeight;
+	const SDL_Rect scrollFrame = $((View *) self->scrollView, renderFrame);
+	if (SDL_PointInRect(point, &scrollFrame)) {
+
+		const Array *rows = (Array *) self->rows;
+		for (size_t i = 0; i < rows->count; i++) {
+
+			const View *row = $(rows, objectAtIndex, i);
+			if ($(row, containsPoint, point)) {
+				return i;
+			}
 		}
 	}
 
 	return -1;
-}
-
-/**
- * @fn SDL_Rect TableView::scrollableArea(const TableView *self)
- * @memberof TableView
- */
-static SDL_Rect scrollableArea(const TableView *self) {
-
-	const View *headerView = (View *) self->headerView;
-
-	SDL_Rect frame = $((View *) self, bounds);
-
-	if (headerView->hidden == false) {
-		frame.y = headerView->frame.h;
-		frame.h -= headerView->frame.h;
-	}
-
-	return frame;
 }
 
 /**
@@ -585,7 +556,6 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
@@ -603,7 +573,6 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->def->interface)->reloadData = reloadData;
 	((TableViewInterface *) clazz->def->interface)->removeColumn = removeColumn;
 	((TableViewInterface *) clazz->def->interface)->rowAtPoint = rowAtPoint;
-	((TableViewInterface *) clazz->def->interface)->scrollableArea = scrollableArea;
 	((TableViewInterface *) clazz->def->interface)->selectedRowIndexes = selectedRowIndexes;
 	((TableViewInterface *) clazz->def->interface)->selectAll = selectAll;
 	((TableViewInterface *) clazz->def->interface)->selectRowAtIndex = selectRowAtIndex;

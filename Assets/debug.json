@@ -14,28 +14,21 @@
       "identifier": "selectors",
       "columns": [
         {
-          "identifier": "Selector",
-          "width": 400
+          "identifier": "Selector"
         }
-      ],
-      "rowHeight": 18,
-      "alternateBackgroundColor": "#ffffff22"
+      ]
     },
     {
       "class": "TableView",
       "identifier": "computedStyle",
       "columns": [
         {
-          "identifier": "Attribute",
-          "width": 160
+          "identifier": "Attribute"
         },
         {
-          "identifier": "Value",
-          "width": 240
+          "identifier": "Value"
         }
-      ],
-      "rowHeight": 18,
-      "alternateBackgroundColor": "#ffffff22"
+      ]
     }
   ]
 }

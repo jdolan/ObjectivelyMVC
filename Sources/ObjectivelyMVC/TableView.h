@@ -158,11 +158,6 @@ struct TableView {
 	TableHeaderView *headerView;
 
 	/**
-	 * @brief The row height.
-	 */
-	int rowHeight;
-
-	/**
 	 * @brief The rows.
 	 */
 	MutableArray *rows;
@@ -278,14 +273,6 @@ struct TableViewInterface {
 	 * @memberof TableView
 	 */
 	ssize_t (*rowAtPoint)(const TableView *self, const SDL_Point *point);
-
-	/**
-	 * @fn SDL_Rect TableView::scrollableArea(const TableView *self)
-	 * @param self The TableView.
-	 * @return The frame available to this TableView's ScrollView.
-	 * @memberof TableView
-	 */
-	SDL_Rect (*scrollableArea)(const TableView *self);
 
 	/**
 	 * @fn void TableView::selectAll(TableView *self)
