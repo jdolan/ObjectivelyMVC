@@ -193,6 +193,15 @@ struct TableViewInterface {
 	void (*addColumn)(TableView *self, TableColumn *column);
 
 	/**
+	 * @fn void TableView::addColumnWithIdentifier(TableView *self, TableColumn *column)
+	 * @brief Adds a new TableColumn with the given identifier to this table.
+	 * @param self The TableView.
+	 * @param identifier The column identifier.
+	 * @memberof TableView
+	 */
+	void (*addColumnWithIdentifier)(TableView *self, const char *identifier);
+
+	/**
 	 * @fn TableColumn *TableView::columnAtPoint(const TableView *self, const SDL_Point *point)
 	 * @param self The TableView.
 	 * @param point A point in window coordinate space.

@@ -228,6 +228,20 @@ static void addColumn(TableView *self, TableColumn *column) {
 }
 
 /**
+ * @fn void TableView::addColumnWithIdentifier(TableView *self, TableColumn *column)
+ * @memberof TableView
+ */
+static void addColumnWithIdentifier(TableView *self, const char *identifier) {
+
+	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier);
+	assert(column);
+
+	$(self, addColumn, column);
+
+	release(column);
+}
+
+/**
  * @fn TableColumn *TableView::columnAtPoint(const TableView *self, const SDL_Point *point)
  * @memberof TableView
  */
@@ -564,6 +578,7 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
 	((TableViewInterface *) clazz->def->interface)->addColumn = addColumn;
+	((TableViewInterface *) clazz->def->interface)->addColumnWithIdentifier = addColumnWithIdentifier;
 	((TableViewInterface *) clazz->def->interface)->columnAtPoint = columnAtPoint;
 	((TableViewInterface *) clazz->def->interface)->columnWithIdentifier = columnWithIdentifier;
 	((TableViewInterface *) clazz->def->interface)->deselectAll = deselectAll;
