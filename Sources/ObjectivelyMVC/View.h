@@ -238,6 +238,8 @@ struct View {
 
 	/**
 	 * @brief The element-level Style of this View.
+	 * @remarks Attributes in this Style are local to this View, and override any Attributes matched
+	 * via Selector. That is, it is always the last Style added to the computed Style.
 	 */
 	Style *style;
 
