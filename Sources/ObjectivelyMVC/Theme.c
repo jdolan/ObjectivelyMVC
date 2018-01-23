@@ -140,6 +140,8 @@ static Theme *defaultTheme(void) {
 	do_once(&once, {
 		_defaultTheme = $(alloc(Theme), init);
 		assert(_defaultTheme);
+
+		$(_defaultTheme, addStylesheet, $$(Stylesheet, defaultStylesheet));
 	});
 
 	return _defaultTheme;
@@ -156,8 +158,6 @@ static Theme *init(Theme *self) {
 
 		self->stylesheets = $$(MutableArray, arrayWithCapacity, 8);
 		assert(self->stylesheets);
-
-		$(self, addStylesheet, $$(Stylesheet, defaultStylesheet));
 	}
 
 	return self;
