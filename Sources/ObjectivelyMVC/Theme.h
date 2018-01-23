@@ -87,6 +87,16 @@ struct ThemeInterface {
 	void (*addStylesheet)(Theme *self, Stylesheet *stylesheet);
 
 	/**
+	 * @fn void Theme::addStylesheetWithIdentifier(Theme *self, Stylesheet *stylesheet, const char *identifier)
+	 * @brief Adds the specified Stylesheet to this Theme.
+	 * @param self The Theme.
+	 * @param stylesheet The Stylesheet.
+	 * @param identifier The identifier.
+	 * @memberof Theme
+	 */
+	void (*addStylesheetWithIdentifier)(Theme *self, Stylesheet *stylesheet, const char *identifier);
+
+	/**
 	 * @fn void Theme::apply(const Theme *self, const View *view)
 	 * @brief Applies this Theme to the given View.
 	 * @param self The Theme.
@@ -120,6 +130,24 @@ struct ThemeInterface {
 	 * @memberof Theme
 	 */
 	void (*removeStylesheet)(Theme *self, Stylesheet *stylesheet);
+
+	/**
+	 * @fn void Theme::removeStylesheetWithIdentifier(Theme *self, const char *identifier)
+	 * @brief Removes the first Stylesheet with the given identifier from this Theme.
+	 * @param self The Theme.
+	 * @param identifier The identifier.
+	 * @memberof Theme
+	 */
+	void (*removeStylesheetWithIdentifier)(Theme *self, const char *identifier);
+
+	/**
+	 * @fn Stylesheet *Theme::stylesheetWithIdentifier(const Theme *self, const char *identifier)
+	 * @param self The Theme.
+	 * @param identifier The identifier.
+	 * @return The first Stylesheet with the given identifier in this Theme.
+	 * @memberof Theme
+	 */
+	Stylesheet *(*stylesheetWithIdentifier)(const Theme *self, const char *identifier);
 };
 
 /**
