@@ -82,12 +82,14 @@ static ident computeStyle_reduce(const ident obj, ident accumulator, ident data)
 
 	const View *view = data;
 
-	for (size_t i = 0; i < stylesheet->selectors->count; i++) {
+	const Array *selectors = (Array *) stylesheet->selectors;
+	for (size_t i = 0; i < selectors->count; i++) {
 
-		Selector *selector = $(stylesheet->selectors, objectAtIndex, i);
+		Selector *selector = $(selectors, objectAtIndex, i);
 		if ($(selector, matchesView, view)) {
 
-			const Style *style = $(stylesheet->styles, objectForKey, selector);
+			const Dictionary *styles = (Dictionary *) stylesheet->styles;
+			const Style *style = $(styles, objectForKey, selector);
 
 			if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
 
@@ -123,7 +125,7 @@ static Style *computeStyle(const Theme *self, const View *view) {
 	Style *style = $(alloc(Style), initWithAttributes, NULL);
 	assert(style);
 
-	return $(self->stylesheets, reduce, computeStyle_reduce, style, (ident) view);
+	return $((Array *) self->stylesheets, reduce, computeStyle_reduce, style, (ident) view);
 }
 
 static Theme *_defaultTheme;
@@ -152,7 +154,7 @@ static Theme *init(Theme *self) {
 	self = (Theme *) super(Object, self, init);
 	if (self) {
 
-		self->stylesheets = (Array *) $$(MutableArray, arrayWithCapacity, 8);
+		self->stylesheets = $$(MutableArray, arrayWithCapacity, 8);
 		assert(self->stylesheets);
 
 		$(self, addStylesheet, $$(Stylesheet, defaultStylesheet));

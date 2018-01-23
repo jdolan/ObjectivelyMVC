@@ -159,10 +159,10 @@ static Stylesheet *initWithCharacters(Stylesheet *self, const char *chars) {
 	self = (Stylesheet *) super(Object, self, init);
 	if (self) {
 
-		self->selectors = (Array *) $$(MutableArray, array);
+		self->selectors = $$(MutableArray, array);
 		assert(self->selectors);
 
-		self->styles = (Dictionary *) $$(MutableDictionary, dictionary);
+		self->styles = $$(MutableDictionary, dictionary);
 		assert(self->styles);
 
 		Array *styles = $$(Style, parse, chars);
@@ -174,11 +174,11 @@ static Stylesheet *initWithCharacters(Stylesheet *self, const char *chars) {
 			for (size_t j = 0; j < style->selectors->count; j++) {
 				Selector *selector = $(style->selectors, objectAtIndex, j);
 
-				$((MutableArray *) self->selectors, addObject, selector);
-				$((MutableDictionary *) self->styles, setObjectForKey, style, selector);
+				$(self->selectors, addObject, selector);
+				$(self->styles, setObjectForKey, style, selector);
 			}
 
-			$((MutableArray *) self->selectors, sort, selectorsComparator);
+			$(self->selectors, sort, selectorsComparator);
 		}
 
 		release(styles);
@@ -196,10 +196,10 @@ static Stylesheet *initWithContentsOfFile(Stylesheet *self, const char *path, St
 	String *string = $$(String, stringWithContentsOfFile, path, encoding);
 	if (string) {
 		self = $(self, initWithString, string);
+		release(string);
 	} else {
 		self = release(self);
 	}
-	release(string);
 
 	return self;
 }
