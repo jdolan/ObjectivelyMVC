@@ -237,8 +237,36 @@ START_TEST(_select)
 		Set *selection = $(selector, select, root);
 		ck_assert(selection);
 
-		ck_assert_int_eq(1, selection->count);
+		ck_assert_int_le(1, selection->count);
 		ck_assert($(selection, containsObject, container));
+
+		release(selection);
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, ".contentView");
+		ck_assert(selector);
+
+		Set *selection = $(selector, select, root);
+		ck_assert(selection);
+
+		ck_assert_int_eq(1, selection->count);
+		ck_assert($(selection, containsObject, panel->contentView));
+
+		release(selection);
+		release(selector);
+	}
+
+	{
+		Selector *selector = $(alloc(Selector), initWithRule, ".accessoryView");
+		ck_assert(selector);
+
+		Set *selection = $(selector, select, root);
+		ck_assert(selection);
+
+		ck_assert_int_eq(1, selection->count);
+		ck_assert($(selection, containsObject, panel->accessoryView));
 
 		release(selection);
 		release(selector);
