@@ -31,8 +31,6 @@
 #include <ObjectivelyMVC/ViewController.h>
 #include <ObjectivelyMVC/Window.h>
 
-#define MVC_FIRST_RESPONDER "firstResponder"
-
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
 	MakeEnumAlias(ViewAlignmentNone, none),
 	MakeEnumAlias(ViewAlignmentTop, top),
@@ -381,7 +379,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 static void becomeFirstResponder(View *self) {
 
 	if (self->window) {
-		MVC_SetFirstResponder(self->window, self);
+		$$(View, setFirstResponder, self->window, self);
 	} else {
 		MVC_LogWarn("%s: window is NULL\n", (self->identifier ?: self->object.clazz->name));
 	}
@@ -691,6 +689,17 @@ static void enumerateSuperview(const View *self, ViewEnumerator enumerator, iden
 }
 
 /**
+ * @fn View *View::firstResponder(SDL_Window *window)
+ * @memberof View
+ */
+static View *firstResponder(SDL_Window *window) {
+
+	assert(window);
+
+	return SDL_GetWindowData(window, "firstResponder");
+}
+
+/**
  * @brief Predicate for hasClassName.
  */
 static _Bool hasClassName_predicate(const ident obj, ident data) {
@@ -823,7 +832,7 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
 static _Bool isFirstResponder(const View *self) {
 
 	if (self->window) {
-		return MVC_FirstResponder(self->window) == self;
+		return $$(View, firstResponder, self->window) == self;
 	} else {
 		return false;
 	}
@@ -1212,7 +1221,7 @@ static void replaceSubview(View *self, View *subview, View *replacement) {
 static void resignFirstResponder(View *self) {
 
 	if ($(self, isFirstResponder)) {
-		MVC_SetFirstResponder(self->window, NULL);
+		$$(View, setFirstResponder, self->window, NULL);
 	}
 }
 
@@ -1272,6 +1281,24 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		$(self->nextResponder, respondToEvent, event);
 	} else if (self->superview) {
 		$(self->superview, respondToEvent, event);
+	}
+}
+
+static void setFirstResponder(SDL_Window *window, View *view) {
+
+	assert(window);
+
+	if (view) {
+		assert(view->window == window);
+		SDL_SetWindowData(window, "firstResponder", view);
+		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+			String *desc = $((Object *) view, description);
+			SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, desc->chars);
+			release(desc);
+		}
+	} else {
+		SDL_SetWindowData(window, "firstResponder", NULL);
+		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
 	}
 }
 
@@ -1558,6 +1585,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->enumerateSiblings = enumerateSiblings;
 	((ViewInterface *) clazz->def->interface)->enumerateSubviews = enumerateSubviews;
 	((ViewInterface *) clazz->def->interface)->enumerateSuperview = enumerateSuperview;
+	((ViewInterface *) clazz->def->interface)->firstResponder = firstResponder;
 	((ViewInterface *) clazz->def->interface)->hasClassName = hasClassName;
 	((ViewInterface *) clazz->def->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->def->interface)->init = init;
@@ -1583,6 +1611,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->resignFirstResponder = resignFirstResponder;
 	((ViewInterface *) clazz->def->interface)->resize = resize;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->def->interface)->setFirstResponder = setFirstResponder;
 	((ViewInterface *) clazz->def->interface)->setWindow = setWindow;
 	((ViewInterface *) clazz->def->interface)->size = size;
 	((ViewInterface *) clazz->def->interface)->sizeThatContains = sizeThatContains;
@@ -1619,30 +1648,3 @@ Class *_View(void) {
 }
 
 #undef _Class
-
-#pragma mark - Utilities
-
-void MVC_SetFirstResponder(SDL_Window *window, View *view) {
-
-	assert(window);
-
-	if (view) {
-		assert(window == view->window);
-		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, view);
-		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
-			String *desc = $((Object *) view, description);
-			SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, desc->chars);
-			release(desc);
-		}
-	} else {
-		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, NULL);
-		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
-	}
-}
-
-View *MVC_FirstResponder(SDL_Window *window) {
-
-	assert(window);
-	
-	return SDL_GetWindowData(window, MVC_FIRST_RESPONDER);
-}

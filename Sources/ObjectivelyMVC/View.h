@@ -570,6 +570,15 @@ struct ViewInterface {
 	void (*enumerateSuperview)(const View *self, ViewEnumerator enumerator, ident data);
 
 	/**
+	 * @static
+	 * @fn View *View::firstResponder(SDL_Window *window)
+	 * @param window The window.
+	 * @return The first responder for the given window, or `NULL` if none.
+	 * @memberof View
+	 */
+	View *(*firstResponder)(SDL_Window *window);
+
+	/**
 	 * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
 	 * @param self The View
 	 * @param className The class name.
@@ -794,6 +803,16 @@ struct ViewInterface {
 	void (*respondToEvent)(View *self, const SDL_Event *event);
 
 	/**
+	 * @static
+	 * @fn void View::setFirstResponder(SDL_Window *window, View *view)
+	 * @brief Sets the first responder for the given window.
+	 * @param window The window.
+	 * @param view The View.
+	 * @memberof View
+	 */
+	void (*setFirstResponder)(SDL_Window *window, View *view);
+
+	/**
 	 * @fn void View::setWindow(View *self, SDL_Window *window)
 	 * @brief Sets the window associated with this View.
 	 * @param self The View.
@@ -925,18 +944,3 @@ struct ViewInterface {
  * @memberof View
  */
 OBJECTIVELYMVC_EXPORT Class *_View(void);
-
-/**
- * @param window The window.
- * @return The first responder for the given window, or `NULL` if none.
- * @relates View
- */
-OBJECTIVELYMVC_EXPORT View *MVC_FirstResponder(SDL_Window *window);
-
-/**
- * @brief Sets the specified View as the first responder for the given window.
- * @param window The window.
- * @param view The View, or `NULL`.
- * @relates View
- */
-OBJECTIVELYMVC_EXPORT void MVC_SetFirstResponder(SDL_Window *window, View *view);

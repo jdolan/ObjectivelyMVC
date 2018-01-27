@@ -99,7 +99,7 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
  * @memberof WindowController
  */
 static View *firstResponder(const WindowController *self, const SDL_Event *event) {
-	return MVC_FirstResponder(self->window) ?: $(self, eventTarget, event);
+	return $$(View, firstResponder, self->window) ?: $(self, eventTarget, event);
 }
 
 /**
