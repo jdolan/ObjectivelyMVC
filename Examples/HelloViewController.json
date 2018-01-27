@@ -115,7 +115,10 @@
                     "h = 360"
                   ],
                   "style": {
-                    "item-size": [ 62, 48 ],
+                    "item-size": [
+                      62,
+                      48
+                    ],
                     "selection": "multiple"
                   }
                 }
