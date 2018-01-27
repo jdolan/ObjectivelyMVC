@@ -128,23 +128,15 @@ static Style *computeStyle(const Theme *self, const View *view) {
 	return $((Array *) self->stylesheets, reduce, computeStyle_reduce, style, (ident) view);
 }
 
-static Theme *_defaultTheme;
-
 /**
- * @fn Theme *Theme::defaultTheme(void)
+ * @fn Theme *Theme::currentTheme(SDL_Window *window)
  * @memberof Theme
  */
-static Theme *defaultTheme(void) {
-	static Once once;
+static Theme *currentTheme(SDL_Window *window) {
 
-	do_once(&once, {
-		_defaultTheme = $(alloc(Theme), init);
-		assert(_defaultTheme);
+	assert(window);
 
-		$(_defaultTheme, addStylesheet, $$(Stylesheet, defaultStylesheet));
-	});
-
-	return _defaultTheme;
+	return SDL_GetWindowData(window, "currentTheme");
 }
 
 /**
@@ -158,6 +150,8 @@ static Theme *init(Theme *self) {
 
 		self->stylesheets = $$(MutableArray, arrayWithCapacity, 8);
 		assert(self->stylesheets);
+
+		$(self, addStylesheet, $$(Stylesheet, defaultStylesheet));
 	}
 
 	return self;
@@ -181,6 +175,17 @@ static void removeStylesheetWithIdentifier(Theme *self, const char *identifier) 
 	if (stylesheet) {
 		$(self, removeStylesheet, stylesheet);
 	}
+}
+
+/**
+ * @fn void Theme::setCurrentTheme(SDL_Window *window, Theme *theme)
+ * @memberof Theme
+ */
+static void setCurrentTheme(SDL_Window *window, Theme *theme) {
+
+	assert(window);
+
+	SDL_SetWindowData(window, "currentTheme", theme);
 }
 
 /**
@@ -219,18 +224,12 @@ static void initialize(Class *clazz) {
 	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
 	((ThemeInterface *) clazz->def->interface)->addStylesheetWithIdentifier = addStylesheetWithIdentifier;
 	((ThemeInterface *) clazz->def->interface)->computeStyle = computeStyle;
-	((ThemeInterface *) clazz->def->interface)->defaultTheme = defaultTheme;
+	((ThemeInterface *) clazz->def->interface)->currentTheme = currentTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
 	((ThemeInterface *) clazz->def->interface)->removeStylesheet = removeStylesheet;
 	((ThemeInterface *) clazz->def->interface)->removeStylesheetWithIdentifier = removeStylesheetWithIdentifier;
+	((ThemeInterface *) clazz->def->interface)->setCurrentTheme = setCurrentTheme;
 	((ThemeInterface *) clazz->def->interface)->stylesheetWithIdentifier = stylesheetWithIdentifier;
-}
-
-/**
- * @see Class::destroy(Class *)
- */
-static void destroy(Class *clazz) {
-	release(_defaultTheme);
 }
 
 /**
@@ -248,7 +247,6 @@ Class *_Theme(void) {
 		clazz.interfaceOffset = offsetof(Theme, interface);
 		clazz.interfaceSize = sizeof(ThemeInterface);
 		clazz.initialize = initialize;
-		clazz.destroy = destroy;
 	});
 
 	return &clazz;

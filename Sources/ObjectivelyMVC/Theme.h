@@ -107,11 +107,12 @@ struct ThemeInterface {
 
 	/**
 	 * @static
-	 * @fn Theme *Theme::defaultTheme(void)
-	 * @return The default Theme.
+	 * @fn Theme *Theme::currentTheme(SDL_Window *window)
+	 * @param window The window.
+	 * @return The current Theme for the given window.
 	 * @memberof Theme
 	 */
-	Theme *(*defaultTheme)(void);
+	Theme *(*currentTheme)(SDL_Window *window);
 
 	/**
 	 * @fn Theme *Theme::init(Theme *self)
@@ -139,6 +140,16 @@ struct ThemeInterface {
 	 * @memberof Theme
 	 */
 	void (*removeStylesheetWithIdentifier)(Theme *self, const char *identifier);
+
+	/**
+	 * @static
+	 * @fn void Theme::setCurrentTheme(SDL_Window *window, Theme *theme)
+	 * @brief Sets the current Theme for the given window.
+	 * @param window The window.
+	 * @param theme The Theme.
+	 * @memberof Theme
+	 */
+	void (*setCurrentTheme)(SDL_Window *window, Theme *theme);
 
 	/**
 	 * @fn Stylesheet *Theme::stylesheetWithIdentifier(const Theme *self, const char *identifier)

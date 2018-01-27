@@ -75,7 +75,7 @@ struct WindowController {
 	ViewController *viewController;
 
 	/**
-	 * @brief The Window.
+	 * @brief The window.
 	 */
 	SDL_Window *window;
 };

@@ -120,7 +120,7 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 		self->renderer = $(alloc(Renderer), init);
 		assert(self->renderer);
 
-		self->theme = $$(Theme, defaultTheme);
+		self->theme = $(alloc(Theme), init);
 		assert(self->theme);
 	}
 
@@ -264,7 +264,7 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 		if (renderer) {
 			self->renderer = retain(renderer);
 		} else {
-			self->renderer = NULL;
+			self->renderer = $(alloc(Renderer), init);
 		}
 	}
 }
@@ -282,8 +282,10 @@ static void setTheme(WindowController *self, Theme *theme) {
 		if (theme) {
 			self->theme = retain(theme);
 		} else {
-			self->theme = $$(Theme, defaultTheme);
+			self->theme = $(alloc(Theme), init);
 		}
+
+		$$(Theme, setCurrentTheme, self->window, theme);
 	}
 }
 
