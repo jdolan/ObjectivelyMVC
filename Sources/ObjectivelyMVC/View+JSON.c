@@ -242,21 +242,21 @@ static void bindView(const Inlet *inlet, ident obj) {
 	} else {
 		if (clazzName) {
 			Class *clazz = classForName(clazzName->chars);
-			if (clazz) {
-				const Class *c = clazz;
-				while (c) {
-					if (c == _View()) {
-						break;
-					}
-					c = c->superclass;
-				}
-				assert(c);
+			assert(clazz);
 
-				view = $((View *) _alloc(clazz), init);
-				assert(view);
-				
-				$(view, awakeWithDictionary, dictionary);
+			const Class *c = clazz;
+			while (c) {
+				if (c == _View()) {
+					break;
+				}
+				c = c->superclass;
 			}
+			assert(c);
+
+			view = $((View *) _alloc(clazz), init);
+			assert(view);
+
+			$(view, awakeWithDictionary, dictionary);
 		} else if (includePath) {
 			view = $$(View, viewWithContentsOfFile, includePath->chars, NULL);
 		}
