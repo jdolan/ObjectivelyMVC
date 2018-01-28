@@ -430,6 +430,9 @@
 		CE9351671F9B6ED000B46882 /* SelectorSequence.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectorSequence.h; sourceTree = "<group>"; };
 		CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = RGBColorPicker.c; sourceTree = "<group>"; };
 		CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RGBColorPicker.h; sourceTree = "<group>"; };
+		CE9FECD5201D5F2A00F954ED /* debug.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = debug.css; sourceTree = "<group>"; };
+		CE9FECD6201D5F8000F954ED /* debug.css.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.css.h; sourceTree = "<group>"; };
+		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
@@ -678,7 +681,10 @@
 			children = (
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
+				CE9FECD5201D5F2A00F954ED /* debug.css */,
+				CE9FECD6201D5F8000F954ED /* debug.css.h */,
 				CE84C6CA1FFC8E9E00F72267 /* debug.json */,
+				CE9FECD7201D5F8000F954ED /* debug.json.h */,
 				CEF1D8921D429F7A0099A857 /* resize.png */,
 				CE92C5171FE029C000FDB0DF /* resize.png.h */,
 				CE92C5141FE01F6300FDB0DF /* stylesheet.css */,
@@ -1012,7 +1018,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

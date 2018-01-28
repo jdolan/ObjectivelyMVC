@@ -245,42 +245,6 @@ Text {
 	color: ghostwhite;
 }
 
-#debug {
-	padding: 4 4 4 4;
-}
-
-#debug * {
-	font-size: 12;
-}
-
-#debug > * {
-	background-color: #ffffff22;
-}
-
-#debug > #description {
-	color: white;
-}
-
-#debug > #selectors * {
-	color: green;
-}
-
-#debug > #selectors #Selector {
-	min-width: 400;
-}
-
-#debug > #computedStyle * {
-	color: yellow;
-}
-
-#debug > #computedStyle #Attribute {
-	min-width: 160;
-}
-
-#debug > #computedStyle #Value {
-	min-width: 240;
-}
-
 .options {
 	alignment: internal;
 	border-color: #dededeaa;

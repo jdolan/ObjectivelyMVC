@@ -25,6 +25,7 @@
 
 #include <ObjectivelyMVC/DebugViewController.h>
 
+#include <debug.css.h>
 #include <debug.json.h>
 
 #define _Class _DebugViewController
@@ -143,13 +144,11 @@ static void loadView(ViewController *self) {
 		MakeOutlet("computedStyle", &this->computedStyle)
 	);
 
-	Data *data = $$(Data, dataWithBytes, debug_json, debug_json_len);
-
-	this->stackView = (StackView *) $$(View, viewWithData, data, outlets);
-
-	release(data);
+	this->stackView = (StackView *) $$(View, viewWithCharacters, (char *) debug_json, outlets);
+	this->stackView->view.stylesheet = $$(Stylesheet, stylesheetWithCharacters, (char *) debug_css);
 
 	$(self->view, addSubview, (View *) this->stackView);
+	release(this->stackView);
 
 	this->selectors->dataSource.self = self;
 	this->selectors->dataSource.numberOfRows = selectors_numberOfRows;
@@ -165,7 +164,6 @@ static void loadView(ViewController *self) {
 }
 
 #pragma mark - DebugViewController
-
 
 /**
  * @fn void DebugViewController::debug(DebugViewController *self, const View *view)
