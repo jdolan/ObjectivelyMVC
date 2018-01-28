@@ -80,6 +80,7 @@ static void dealloc(Object *self) {
 	release(this->computedStyle);
 	release(this->constraints);
 	release(this->style);
+	release(this->stylesheet);
 	release(this->subviews);
 
 	super(Object, self, dealloc);
