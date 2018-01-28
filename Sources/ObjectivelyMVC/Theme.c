@@ -56,24 +56,6 @@ static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
 }
 
 /**
- * @fn void Theme::addStylesheetWithIdentifier(Theme *self, Stylesheet *stylesheet, const char *identifier)
- * @memberof Theme
- */
-static void addStylesheetWithIdentifier(Theme *self, Stylesheet *stylesheet, const char *identifier) {
-
-	assert(stylesheet);
-	assert(identifier);
-
-	free(stylesheet->identifier);
-	stylesheet->identifier = NULL;
-
-	stylesheet->identifier = strdup(identifier);
-	assert(stylesheet->identifier);
-
-	$(self, addStylesheet, stylesheet);
-}
-
-/**
  * @brief Reducer for computeStyle.
  */
 static ident computeStyle_reduce(const ident obj, ident accumulator, ident data) {
@@ -166,18 +148,6 @@ static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
 }
 
 /**
- * @fn void Theme::removeStylesheetWithIdentifier(Theme *self, const char *identifier)
- * @memberof Theme
- */
-static void removeStylesheetWithIdentifier(Theme *self, const char *identifier) {
-
-	Stylesheet *stylesheet = $(self, stylesheetWithIdentifier, identifier);
-	if (stylesheet) {
-		$(self, removeStylesheet, stylesheet);
-	}
-}
-
-/**
  * @fn void Theme::setCurrentTheme(SDL_Window *window, Theme *theme)
  * @memberof Theme
  */
@@ -188,28 +158,6 @@ static void setCurrentTheme(SDL_Window *window, Theme *theme) {
 	SDL_SetWindowData(window, "currentTheme", theme);
 }
 
-/**
- * @brief Predicate for stylesheetWithIdentifier.
- */
-static _Bool stylesheetWithIdentifier_predicate(const ident obj, ident data) {
-
-	const Stylesheet *stylesheet = obj;
-	const char *identifier = data;
-
-	return stylesheet->identifier && !strcmp(stylesheet->identifier, identifier);
-}
-
-/**
- * @fn Stylesheet *Theme::stylesheetWithIdentifier(const Theme *self, const char *identifier)
- * @memberof Theme
- */
-static Stylesheet *stylesheetWithIdentifier(const Theme *self, const char *identifier) {
-
-	if (identifier) {
-		return $((Array *) self->stylesheets, findObject, stylesheetWithIdentifier_predicate, (ident) identifier);
-	}
-
-	return NULL;
 }
 
 #pragma mark - Class lifecycle
@@ -222,14 +170,11 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
-	((ThemeInterface *) clazz->def->interface)->addStylesheetWithIdentifier = addStylesheetWithIdentifier;
 	((ThemeInterface *) clazz->def->interface)->computeStyle = computeStyle;
 	((ThemeInterface *) clazz->def->interface)->currentTheme = currentTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
 	((ThemeInterface *) clazz->def->interface)->removeStylesheet = removeStylesheet;
-	((ThemeInterface *) clazz->def->interface)->removeStylesheetWithIdentifier = removeStylesheetWithIdentifier;
 	((ThemeInterface *) clazz->def->interface)->setCurrentTheme = setCurrentTheme;
-	((ThemeInterface *) clazz->def->interface)->stylesheetWithIdentifier = stylesheetWithIdentifier;
 }
 
 /**

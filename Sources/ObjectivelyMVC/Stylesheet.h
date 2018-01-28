@@ -55,11 +55,6 @@ struct Stylesheet {
 	StylesheetInterface *interface;
 
 	/**
-	 * @brief An optional identifier.
-	 */
-	char *identifier;
-
-	/**
 	 * @brief The Selectors, ordered by specificity.
 	 */
 	MutableArray *selectors;

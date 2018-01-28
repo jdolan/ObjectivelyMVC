@@ -41,8 +41,6 @@ static void dealloc(Object *self) {
 
 	Stylesheet *this = (Stylesheet *) self;
 
-	free(this->identifier);
-
 	release(this->selectors);
 	release(this->styles);
 
@@ -58,7 +56,6 @@ static int hash(const Object *self) {
 
 	int hash = HASH_SEED;
 
-	hash = HashForCString(hash, this->identifier);
 	hash = HashForObject(hash, this->selectors);
 	hash = HashForObject(hash, this->styles);
 
@@ -78,14 +75,6 @@ static _Bool isEqual(const Object *self, const Object *other) {
 
 		const Stylesheet *this = (Stylesheet *) self;
 		const Stylesheet *that = (Stylesheet *) other;
-
-		if (this->identifier && that->identifier) {
-			if (strcmp(this->identifier, that->identifier)) {
-				return false;
-			}
-		} else if (this->identifier || that->identifier) {
-			return false;
-		}
 
 		if ($((Object *) this->selectors, isEqual, (Object *) that->selectors)) {
 			return $((Object *) this->styles, isEqual, (Object *) that->styles);
