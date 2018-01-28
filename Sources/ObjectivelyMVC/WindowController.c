@@ -117,11 +117,17 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 		const Uint32 flags = SDL_GetWindowFlags(self->window);
 		assert(flags & SDL_WINDOW_OPENGL);
 
-		self->renderer = $(alloc(Renderer), init);
-		assert(self->renderer);
+		Renderer *renderer = $(alloc(Renderer), init);
+		assert(renderer);
 
-		self->theme = $(alloc(Theme), init);
-		assert(self->theme);
+		$(self, setRenderer, renderer);
+		release(renderer);
+
+		Theme *theme = $(alloc(Theme), init);
+		assert(theme);
+
+		$(self, setTheme, theme);
+		release(theme);
 	}
 
 	return self;
@@ -140,9 +146,7 @@ static void render(WindowController *self) {
 	if (self->viewController) {
 
 		$(self->viewController->view, applyThemeIfNeeded, self->theme);
-
 		$(self->viewController->view, layoutIfNeeded);
-
 		$(self->viewController->view, draw, self->renderer);
 	} else {
 		MVC_LogWarn("viewController is NULL\n");
@@ -285,7 +289,7 @@ static void setTheme(WindowController *self, Theme *theme) {
 			self->theme = $(alloc(Theme), init);
 		}
 
-		$$(Theme, setCurrentTheme, self->window, theme);
+		SDL_SetWindowData(self->window, CURRENT_THEME, self->theme);
 	}
 }
 

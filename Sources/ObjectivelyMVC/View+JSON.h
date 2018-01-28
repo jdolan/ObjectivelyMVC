@@ -200,6 +200,7 @@ typedef struct Outlet Outlet;
 
 /**
  * @brief Outlets enable outbound data binding of Views through JSON.
+ * @remarks References returned via Outlet binding are weak, and do not `retain` the matched View.
  * @see View::viewWithDictionary(const Dictionary *, Outlet *)
  */
 struct Outlet {

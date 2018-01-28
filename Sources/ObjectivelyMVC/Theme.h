@@ -32,6 +32,8 @@
  * @brief The Theme type.
  */
 
+#define CURRENT_THEME "currentTheme"
+
 /**
  * @defgroup Theme Theming
  * @brief A Theme is a collection of one or more Stylesheets, ordered by priority.
@@ -121,16 +123,6 @@ struct ThemeInterface {
 	 * @memberof Theme
 	 */
 	void (*removeStylesheet)(Theme *self, Stylesheet *stylesheet);
-
-	/**
-	 * @static
-	 * @fn void Theme::setCurrentTheme(SDL_Window *window, Theme *theme)
-	 * @brief Sets the current Theme for the given window.
-	 * @param window The window.
-	 * @param theme The Theme.
-	 * @memberof Theme
-	 */
-	void (*setCurrentTheme)(SDL_Window *window, Theme *theme);
 };
 
 /**

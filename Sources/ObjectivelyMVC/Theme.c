@@ -115,10 +115,7 @@ static Style *computeStyle(const Theme *self, const View *view) {
  * @memberof Theme
  */
 static Theme *currentTheme(SDL_Window *window) {
-
-	assert(window);
-
-	return SDL_GetWindowData(window, "currentTheme");
+	return SDL_GetWindowData(window ?: SDL_GL_GetCurrentWindow(), CURRENT_THEME);
 }
 
 /**
@@ -147,19 +144,6 @@ static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
 	$((MutableArray *) self->stylesheets, removeObject, stylesheet);
 }
 
-/**
- * @fn void Theme::setCurrentTheme(SDL_Window *window, Theme *theme)
- * @memberof Theme
- */
-static void setCurrentTheme(SDL_Window *window, Theme *theme) {
-
-	assert(window);
-
-	SDL_SetWindowData(window, "currentTheme", theme);
-}
-
-}
-
 #pragma mark - Class lifecycle
 
 /**
@@ -174,7 +158,6 @@ static void initialize(Class *clazz) {
 	((ThemeInterface *) clazz->def->interface)->currentTheme = currentTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
 	((ThemeInterface *) clazz->def->interface)->removeStylesheet = removeStylesheet;
-	((ThemeInterface *) clazz->def->interface)->setCurrentTheme = setCurrentTheme;
 }
 
 /**
