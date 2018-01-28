@@ -1476,6 +1476,21 @@ static SDL_Rect viewport(const View *self) {
 }
 
 /**
+ * @fn View *View::viewWithCharacters(const char *chars, Outlet *outlets)
+ * @memberof View
+ */
+static View *viewWithCharacters(const char *chars, Outlet *outlets) {
+
+	Data *data = $$(Data, dataWithConstMemory, (ident) chars, strlen(chars));
+
+	View *view = $$(View, viewWithData, data, outlets);
+
+	release(data);
+
+	return view;
+}
+
+/**
  * @fn View *View::viewWithContentsOfFile(const char *path, Outlet *outlets)
  * @memberof View
  */
@@ -1624,6 +1639,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
 	((ViewInterface *) clazz->def->interface)->viewWithData = viewWithData;
 	((ViewInterface *) clazz->def->interface)->viewWithDictionary = viewWithDictionary;
+	((ViewInterface *) clazz->def->interface)->viewWithCharacters = viewWithCharacters;
 	((ViewInterface *) clazz->def->interface)->visibleSubviews = visibleSubviews;
 }
 

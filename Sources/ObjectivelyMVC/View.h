@@ -895,6 +895,17 @@ struct ViewInterface {
 
 	/**
 	 * @static
+	 * @fn View *View::viewWithCharacters(const char *chars, Outlet *outlets)
+	 * @brief Instantiates a View initialized with the given null-terminated JSON C string.
+	 * @param json A null-terminated JSON C string describing a View.
+	 * @param outlets An optional array of Outlets to resolve.
+	 * @return The initialized View, or `NULL` on error.
+	 * @memberof View
+	 */
+	View *(*viewWithCharacters)(const char *chars, Outlet *outlets);
+
+	/**
+	 * @static
 	 * @fn View *View::viewWithContentsOfFile(const char *path, Outlet *outlets)
 	 * @brief Instantiates a View initialized with the contents of the JSON file at `path`.
 	 * @param path A path to a JSON file describing a View.
