@@ -244,6 +244,13 @@ struct View {
 	Style *style;
 
 	/**
+	 * @brief An optional Stylesheet.
+	 * @remarks If set, this Stylesheet is added to or removed from the current Theme when this
+	 * View is added to or removed from a valid View hierarchy.
+	 */
+	Stylesheet *stylesheet;
+
+	/**
 	 * @brief The immediate subviews.
 	 */
 	MutableArray *subviews;

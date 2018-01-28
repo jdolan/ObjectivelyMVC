@@ -1315,21 +1315,32 @@ static void setWindow_recurse(View *subview, ident data) {
  */
 static void setWindow(View *self, SDL_Window *window) {
 
-	$(self, resignFirstResponder);
+	if (self->window != window) {
 
-	self->window = window;
+		$(self, resignFirstResponder);
 
-	if (self->window && self->superview == NULL) {
-		if (self->autoresizingMask & ViewAutoresizingFill) {
-
-			SDL_Size size;
-			SDL_GetWindowSize(self->window, &size.w, &size.h);
-
-			$(self, resize, &size);
+		if (self->window && self->stylesheet) {
+			$($$(Theme, currentTheme, self->window), removeStylesheet, self->stylesheet);
 		}
-	}
 
-	$(self, enumerateSubviews, setWindow_recurse, window);
+		self->window = window;
+
+		if (self->window && self->stylesheet) {
+			$($$(Theme, currentTheme, self->window), addStylesheet, self->stylesheet);
+		}
+
+		if (self->window && self->superview == NULL) {
+			if (self->autoresizingMask & ViewAutoresizingFill) {
+
+				SDL_Size size;
+				SDL_GetWindowSize(self->window, &size.w, &size.h);
+
+				$(self, resize, &size);
+			}
+		}
+
+		$(self, enumerateSubviews, setWindow_recurse, window);
+	}
 }
 
 /**
