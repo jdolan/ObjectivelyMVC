@@ -147,8 +147,7 @@ static void loadView(ViewController *self) {
 	this->stackView = (StackView *) $$(View, viewWithCharacters, (char *) debug_json, outlets);
 	this->stackView->view.stylesheet = $$(Stylesheet, stylesheetWithCharacters, (char *) debug_css);
 
-	$(self->view, addSubview, (View *) this->stackView);
-	release(this->stackView);
+	$(self, setView, (View *) this->stackView);
 
 	this->selectors->dataSource.self = self;
 	this->selectors->dataSource.numberOfRows = selectors_numberOfRows;
