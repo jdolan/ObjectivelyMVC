@@ -58,17 +58,12 @@ static void debug(WindowController *self) {
 
 		ViewController *debugViewController = (ViewController *) self->debugViewController;
 
-		SDL_Point point;
-		SDL_GetMouseState(&point.x, &point.y);
-		View *view = $(self->viewController->view, hitTest, &point);
-		if (view) {
-			$(self->debugViewController, debug, view);
+		if (self->hover) {
+			$(self->debugViewController, debug, self->hover);
 		}
 
 		$(debugViewController->view, applyThemeIfNeeded, self->theme);
-
 		$(debugViewController->view, layoutIfNeeded);
-
 		$(debugViewController->view, draw, self->renderer);
 	}
 }
@@ -110,24 +105,10 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 
 	self = (WindowController *) super(Object, self, init);
 	if (self) {
-
-		self->window = window;
-		assert(self->window);
-
-		const Uint32 flags = SDL_GetWindowFlags(self->window);
-		assert(flags & SDL_WINDOW_OPENGL);
-
-		Renderer *renderer = $(alloc(Renderer), init);
-		assert(renderer);
-
-		$(self, setRenderer, renderer);
-		release(renderer);
-
-		Theme *theme = $(alloc(Theme), init);
-		assert(theme);
-
-		$(self, setTheme, theme);
-		release(theme);
+		$(self, setWindow, window);
+		$(self, setViewController, NULL);
+		$(self, setTheme, NULL);
+		$(self, setRenderer, NULL);
 	}
 
 	return self;
@@ -143,14 +124,9 @@ static void render(WindowController *self) {
 
 	$(self->renderer, beginFrame);
 
-	if (self->viewController) {
-
-		$(self->viewController->view, applyThemeIfNeeded, self->theme);
-		$(self->viewController->view, layoutIfNeeded);
-		$(self->viewController->view, draw, self->renderer);
-	} else {
-		MVC_LogWarn("viewController is NULL\n");
-	}
+	$(self->viewController->view, applyThemeIfNeeded, self->theme);
+	$(self->viewController->view, layoutIfNeeded);
+	$(self->viewController->view, draw, self->renderer);
 
 	$(self, debug);
 
@@ -163,66 +139,18 @@ static void render(WindowController *self) {
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
-	if (event->type == SDL_WINDOWEVENT) {
-
-		SDL_Window *window = SDL_GL_GetCurrentWindow();
-		assert(window);
-
-		if (window != self->window) {
-			self->window = window;
-
-			int w, h;
-			SDL_GetWindowSize(self->window, &w, &h);
-			MVC_LogInfo("Detected new window (%dx%d)", w, h);
-
-			if (self->renderer) {
-				$(self->renderer, renderDeviceDidReset);
-			}
-
-			if (self->viewController) {
-				$(self->viewController->view, setWindow, self->window);
-				$(self->viewController->view, renderDeviceDidReset);
-			}
-		}
-	} else if (event->type == MVC_NOTIFICATION_EVENT) {
-
-		if (self->viewController) {
-			$(self->viewController, handleNotification, &(const Notification) {
-				.name = event->user.code,
-				.sender = event->user.data1,
-				.data = event->user.data2
-			});
-		}
+	if (event->type == MVC_NOTIFICATION_EVENT) {
+		$(self->viewController, handleNotification, &(const Notification) {
+			.name = event->user.code,
+			.sender = event->user.data1,
+			.data = event->user.data2
+		});
 	} else {
 
-		if (event->type == SDL_MOUSEMOTION) {
-
-			if (self->viewController) {
-				const SDL_Point a = MakePoint(event->motion.x - event->motion.xrel, event->motion.y - event->motion.yrel);
-				const SDL_Point b = MakePoint(event->motion.x, event->motion.y);
-
-				View *previous = $(self->viewController->view, hitTest, &a);
-				View *current = $(self->viewController->view, hitTest, &b);
-
-				if (current != previous) {
-					if (current && previous) {
-						View *view = current;
-						while (view) {
-							if ($(previous, isDescendantOfView, view)) {
-								$(view, invalidateStyle);
-								break;
-							}
-							view = view->superview;
-						}
-					} else {
-						if (current) {
-							$(current, invalidateStyle);
-						} else {
-							$(previous, invalidateStyle);
-						}
-					}
-				}
-			}
+		if (event->type == SDL_WINDOWEVENT) {
+			$(self, setWindow, SDL_GL_GetCurrentWindow());
+		} else if (event->type == SDL_MOUSEMOTION) {
+			$(self, updateHover, event);
 		}
 
 		View *firstResponder = $(self, firstResponder, event);
@@ -239,10 +167,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 			}
 
 			$(firstResponder, respondToEvent, event);
-		} else if (self->viewController) {
-			$(self->viewController, respondToEvent, event);
-		} else {
-			MVC_LogDebug("firstResponder for event type %d is NULL\n", event->type);
 		}
 
 		if (event->type == SDL_KEYUP) {
@@ -261,7 +185,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
  */
 static void setRenderer(WindowController *self, Renderer *renderer) {
 
-	if (self->renderer != renderer) {
+	if (self->renderer != renderer || self->renderer == NULL) {
 
 		release(self->renderer);
 
@@ -270,6 +194,8 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 		} else {
 			self->renderer = $(alloc(Renderer), init);
 		}
+
+		$(self->viewController->view, renderDeviceDidReset);
 	}
 }
 
@@ -279,7 +205,7 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
  */
 static void setTheme(WindowController *self, Theme *theme) {
 
-	if (self->theme != theme) {
+	if (self->theme != theme || self->theme == NULL) {
 
 		release(self->theme);
 
@@ -288,9 +214,9 @@ static void setTheme(WindowController *self, Theme *theme) {
 		} else {
 			self->theme = $(alloc(Theme), init);
 		}
-
-		SDL_SetWindowData(self->window, CURRENT_THEME, self->theme);
 	}
+
+	$(self->viewController->view, invalidateStyle);
 }
 
 /**
@@ -299,7 +225,7 @@ static void setTheme(WindowController *self, Theme *theme) {
  */
 static void setViewController(WindowController *self, ViewController *viewController) {
 
-	if (self->viewController != viewController) {
+	if (self->viewController != viewController || self->viewController == NULL) {
 
 		if (self->viewController) {
 			$(self->viewController, viewWillDisappear);
@@ -312,15 +238,49 @@ static void setViewController(WindowController *self, ViewController *viewContro
 		if (viewController) {
 			self->viewController = retain(viewController);
 		} else {
-			self->viewController = NULL;
+			self->viewController = $(alloc(ViewController), init);
+		}
+
+		$(self->viewController, loadViewIfNeeded);
+
+		$(self->viewController, viewWillAppear);
+		$(self->viewController->view, setWindow, self->window);
+		$(self->viewController, viewDidAppear);
+	}
+}
+
+/**
+ * @fn void WindowController::setWindow(WindowController *self, SDL_Window *window)
+ * @memberof WindowController
+ */
+static void setWindow(WindowController *self, SDL_Window *window) {
+
+	assert(window);
+
+	if (self->window != window) {
+		self->window = window;
+
+		const Uint32 flags = SDL_GetWindowFlags(self->window);
+		assert(flags & SDL_WINDOW_OPENGL);
+
+		SDL_SetWindowData(window, "windowController", self);
+
+		int w, h;
+		SDL_GetWindowSize(self->window, &w, &h);
+		MVC_LogInfo("%d %dx%d", SDL_GetWindowID(self->window), w, h);
+
+		if (self->renderer) {
+			$(self->renderer, renderDeviceDidReset);
 		}
 
 		if (self->viewController) {
-			$(self->viewController, loadViewIfNeeded);
-
-			$(self->viewController, viewWillAppear);
 			$(self->viewController->view, setWindow, self->window);
-			$(self->viewController, viewDidAppear);
+			$(self->viewController->view, renderDeviceDidReset);
+		}
+
+		if (self->debugViewController) {
+			$(self->debugViewController->viewController.view, setWindow, self->window);
+			$(self->debugViewController->viewController.view, renderDeviceDidReset);
 		}
 	}
 }
@@ -347,6 +307,42 @@ static void toggleDebugger(WindowController *self) {
 	}
 }
 
+/**
+ * @fn void WindowController::updateHover(WindowController *self, const SDL_Event *event)
+ * @memberof WindowController
+ */
+static void updateHover(WindowController *self, const SDL_Event *event) {
+
+	assert(event);
+	assert(event->type == SDL_MOUSEMOTION);
+
+	const SDL_Point point = MakePoint(event->motion.x, event->motion.y);
+	View *hover = $(self->viewController->view, hitTest, &point);
+
+	if (self->hover != hover) {
+
+		if (self->hover && hover) {
+			View *view = hover;
+			while (view) {
+				if ($(self->hover, isDescendantOfView, view)) {
+					$(view, invalidateStyle);
+					break;
+				}
+				view = view->superview;
+			}
+		} else {
+			if (self->hover) {
+				$(self->hover, invalidateStyle);
+			} else {
+				$(hover, invalidateStyle);
+			}
+		}
+
+		release(self->hover);
+		self->hover = hover ? retain(hover) : NULL;
+	}
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -365,7 +361,9 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->def->interface)->setRenderer = setRenderer;
 	((WindowControllerInterface *) clazz->def->interface)->setTheme = setTheme;
 	((WindowControllerInterface *) clazz->def->interface)->setViewController = setViewController;
+	((WindowControllerInterface *) clazz->def->interface)->setWindow = setWindow;
 	((WindowControllerInterface *) clazz->def->interface)->toggleDebugger = toggleDebugger;
+	((WindowControllerInterface *) clazz->def->interface)->updateHover = updateHover;
 }
 
 /**

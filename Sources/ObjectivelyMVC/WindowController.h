@@ -60,6 +60,11 @@ struct WindowController {
 	DebugViewController *debugViewController;
 
 	/**
+	 * @brief The View that the mouse cursor is currently hovering over.
+	 */
+	View *hover;
+
+	/**
 	 * @brief The Renderer.
 	 */
 	Renderer *renderer;
@@ -186,12 +191,30 @@ struct WindowControllerInterface {
 	void (*setViewController)(WindowController *self, ViewController *viewController);
 
 	/**
+	 * @fn void WindowController::setWindow(WindowController *self, SDL_Window *window)
+	 * @brief Sets this WindowController's window.
+	 * @param self The WindowController.
+	 * @param window The window.
+	 * @memberof WindowController
+	 */
+	void (*setWindow)(WindowController *self, SDL_Window *window);
+
+	/**
 	 * @fn void WindowController::toggleDebugger(WindowController *self)
 	 * @brief Toggles the debugger tools.
 	 * @param self The WindowViewController.
 	 * @memberof WindowController
 	 */
 	void (*toggleDebugger)(WindowController *self);
+
+	/**
+	 * @fn void WindowController::updateHover(WindowController *self, const SDL_Event *event)
+	 * @brief Updates the hover state for this WindowController's window.
+	 * @param self The WindowController.
+	 * @param event The mouse motion event.
+	 * @memberof WindowController
+	 */
+	void (*updateHover)(WindowController *self, const SDL_Event *event);
 };
 
 /**

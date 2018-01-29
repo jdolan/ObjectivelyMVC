@@ -32,8 +32,6 @@
  * @brief The Theme type.
  */
 
-#define CURRENT_THEME "currentTheme"
-
 /**
  * @defgroup Theme Theming
  * @brief A Theme is a collection of one or more Stylesheets, ordered by priority.

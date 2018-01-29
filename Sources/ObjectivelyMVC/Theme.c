@@ -28,6 +28,7 @@
 #include <ObjectivelyMVC/Log.h>
 #include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/WindowController.h>
 
 #define _Class _Theme
 
@@ -115,7 +116,15 @@ static Style *computeStyle(const Theme *self, const View *view) {
  * @memberof Theme
  */
 static Theme *currentTheme(SDL_Window *window) {
-	return SDL_GetWindowData(window ?: SDL_GL_GetCurrentWindow(), CURRENT_THEME);
+
+	assert(window);
+
+	WindowController *windowController = SDL_GetWindowData(window, "windowController");
+	if (windowController) {
+		return windowController->theme;
+	}
+
+	return NULL;
 }
 
 /**
