@@ -374,13 +374,6 @@ static void reloadData_removeRows(const Array *array, ident obj, ident data) {
 }
 
 /**
- * @brief ArrayEnumerator to add TableRowViews to the table's contentView.
- */
-static void reloadData_addRows(const Array *array, ident obj, ident data) {
-	$((View *) data, addSubview, (View *) obj);
-}
-
-/**
  * @fn void TableView::reloadData(TableView *self)
  * @memberof TableView
  */
@@ -407,9 +400,6 @@ static void reloadData(TableView *self) {
 		TableRowView *row = $(alloc(TableRowView), initWithTableView, self);
 		assert(row);
 
-		$(self->rows, addObject, row);
-		release(row);
-
 		for (size_t j = 0; j < columns->count; j++) {
 			const TableColumn *column = $(columns, objectAtIndex, j);
 
@@ -421,9 +411,12 @@ static void reloadData(TableView *self) {
 			$(row, addCell, cell);
 			release(cell);
 		}
-	}
 
-	$((Array *) self->rows, enumerateObjects, reloadData_addRows, self->contentView);
+		$(self->rows, addObject, row);
+		release(row);
+
+		$((View *) self->contentView, addSubview, (View *) row);
+	}
 
 	self->control.view.needsLayout = true;
 }
