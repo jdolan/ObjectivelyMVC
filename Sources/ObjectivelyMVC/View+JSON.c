@@ -239,52 +239,51 @@ static void bindSize(const Inlet *inlet, ident obj) {
  */
 static void bindView(const Inlet *inlet, ident obj) {
 
-	View *view = NULL, *source = *(View **) inlet->dest;
+	View *dest = *(View **) inlet->dest;
 
 	const Dictionary *dictionary = cast(Dictionary, obj);
 
 	const String *clazzName = $(dictionary, objectForKeyPath, "class");
-	const String *includePath = $(dictionary, objectForKeyPath, "include");
+	if (clazzName) {
 
-	if (clazzName == NULL && includePath == NULL) {
-		if (source) {
-			$(source, awakeWithDictionary, dictionary);
-		} else {
-			MVC_LogWarn("Inlet %s has NULL destination\n", inlet->name);
-		}
-	} else {
-		if (clazzName) {
-			Class *clazz = classForName(clazzName->chars);
-			assert(clazz);
+		Class *clazz = classForName(clazzName->chars);
+		assert(clazz);
 
-			const Class *c = clazz;
-			while (c) {
-				if (c == _View()) {
-					break;
-				}
-				c = c->superclass;
+		const Class *c = clazz;
+		while (c) {
+			if (c == _View()) {
+				break;
 			}
-			assert(c);
-
-			view = $((View *) _alloc(clazz), init);
-			assert(view);
-
-			$(view, awakeWithDictionary, dictionary);
-		} else if (includePath) {
-			view = $$(View, viewWithContentsOfFile, includePath->chars, NULL);
+			c = c->superclass;
 		}
+		assert(c);
 
+		View *view = $((View *) _alloc(clazz), init);
 		assert(view);
 
-		if (source) {
-			if (source->superview) {
-				$(source->superview, replaceSubview, source, view);
+		$(view, awakeWithDictionary, dictionary);
+
+		if (dest) {
+			if (dest->superview) {
+				$(dest->superview, replaceSubview, dest, view);
 			}
-			release(source);
+			release(dest);
 		}
 
 		*(View **) inlet->dest = view;
+
+	} else if (dest) {
+		$(dest, awakeWithDictionary, dictionary);
+	} else {
+		MVC_LogWarn("Inlet %s has NULL destination and no className specified\n", inlet->name);
 	}
+}
+
+/**
+ * @brief InletBinding for InletTypeStyle.
+ */
+static void bindStyle(const Inlet *inlet, ident obj) {
+	$(cast(View, *((View **) inlet->dest))->style, addAttributes, cast(Dictionary, obj));
 }
 
 /**
@@ -301,13 +300,6 @@ static void bindSubviews_enumerate(const Array *array, ident obj, ident data) {
 	$(cast(View, data), addSubview, subview);
 
 	release(subview);
-}
-
-/**
- * @brief InletBinding for InletTypeStyle.
- */
-static void bindStyle(const Inlet *inlet, ident obj) {
-	$(cast(View, *((View **) inlet->dest))->style, addAttributes, cast(Dictionary, obj));
 }
 
 /**
