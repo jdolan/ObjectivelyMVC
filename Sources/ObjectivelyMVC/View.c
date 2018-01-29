@@ -1110,12 +1110,12 @@ static void removeSubview(View *self, View *subview) {
 	assert(subview);
 
 	if (subview->superview == self) {
-
-		$(self->subviews, removeObject, subview);
-
+		
 		subview->superview = NULL;
 
 		$(subview, setWindow, NULL);
+
+		$(self->subviews, removeObject, subview);
 
 		self->needsLayout = true;
 	}
