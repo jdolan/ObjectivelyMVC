@@ -109,10 +109,7 @@ static void removeAllCells_enumerate(const Array *array, ident obj, ident data) 
  * @memberof TableRowView
  */
 static void removeAllCells(TableRowView *self) {
-
-	$((Array *) self->cells, enumerateObjects, removeAllCells_enumerate, NULL);
-
-	$(self->cells, removeAllObjects);
+	$(self->cells, removeAllObjectsWithEnumerator, removeAllCells_enumerate, NULL);
 }
 
 /**
