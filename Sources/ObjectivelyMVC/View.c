@@ -72,8 +72,6 @@ static void dealloc(Object *self) {
 
 	View *this = (View *) self;
 
-	$(this, removeFromSuperview);
-
 	free(this->identifier);
 
 	release(this->classNames);
