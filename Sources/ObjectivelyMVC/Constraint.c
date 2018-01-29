@@ -260,6 +260,8 @@ static Constraint *initWithDescriptor(Constraint *self, const char *descriptor) 
 				self->priority = (int) strtol(string->chars + priority->location + 1, NULL, 10);
 				assert(self->priority);
 			}
+
+			free(ranges);
 		} else {
 			self = release(self);
 		}
