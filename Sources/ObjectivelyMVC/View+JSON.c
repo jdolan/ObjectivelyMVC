@@ -36,7 +36,14 @@ static void bindBool(const Inlet *inlet, ident obj) {
  * @brief InletBinding for InletTypeCharacters.
  */
 static void bindCharacters(const Inlet *inlet, ident obj) {
-	*((char **) inlet->dest) = strdup(cast(String, obj)->chars);
+
+	char **dest = inlet->dest;
+
+	if (*dest) {
+		free(*dest);
+	}
+
+	*dest = strdup(cast(String, obj)->chars);
 }
 
 /**
@@ -157,6 +164,9 @@ static void bindFloat(const Inlet *inlet, ident obj) {
  * @brief InletBinding for InletTypeFont.
  */
 static void bindFont(const Inlet *inlet, ident obj) {
+
+	release(*(Font **) inlet->dest);
+
 	*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
 }
 
@@ -164,6 +174,9 @@ static void bindFont(const Inlet *inlet, ident obj) {
  * @brief InletBinding for InletTypeImage.
  */
 static void bindImage(const Inlet *inlet, ident obj) {
+
+	release(*(Font **) inlet->dest);
+
 	*((Image **) inlet->dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
 }
 
