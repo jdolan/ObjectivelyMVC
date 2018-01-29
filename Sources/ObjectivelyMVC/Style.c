@@ -375,7 +375,7 @@ static ident parseValue(String *string) {
 		if (stop == READER_EOF) {
 
 			if (number) {
-				value = number;
+				value = retain(number);
 			} else if (strcmp("true", token->chars) == 0) {
 				value = $$(Boole, True);
 			} else if (strcmp("false", token->chars) == 0) {
@@ -398,6 +398,7 @@ static ident parseValue(String *string) {
 			value = retain(trimmed);
 		}
 
+		release(number);
 		release(formatter);
 		release(token);
 	}
@@ -468,6 +469,8 @@ static Array *parse(const char *css) {
 				break;
 			}
 		}
+
+		release(reader);
 	}
 
 	return (Array *) styles;
