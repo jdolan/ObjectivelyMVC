@@ -343,6 +343,17 @@ static void updateHover(WindowController *self, const SDL_Event *event) {
 	}
 }
 
+/**
+ * @fn WindowController *WindowController::windowController(SDL_Window *window)
+ * @memberof WindowController
+ */
+static WindowController *windowController(SDL_Window *window) {
+
+	assert(window);
+
+	return SDL_GetWindowData(window, "windowController");
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -364,6 +375,7 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->def->interface)->setWindow = setWindow;
 	((WindowControllerInterface *) clazz->def->interface)->toggleDebugger = toggleDebugger;
 	((WindowControllerInterface *) clazz->def->interface)->updateHover = updateHover;
+	((WindowControllerInterface *) clazz->def->interface)->windowController = windowController;
 }
 
 /**

@@ -112,22 +112,6 @@ static Style *computeStyle(const Theme *self, const View *view) {
 }
 
 /**
- * @fn Theme *Theme::currentTheme(SDL_Window *window)
- * @memberof Theme
- */
-static Theme *currentTheme(SDL_Window *window) {
-
-	assert(window);
-
-	WindowController *windowController = SDL_GetWindowData(window, "windowController");
-	if (windowController) {
-		return windowController->theme;
-	}
-
-	return NULL;
-}
-
-/**
  * @fn Theme *Theme::init(Theme *self)
  * @memberof Theme
  */
@@ -153,6 +137,22 @@ static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
 	$((MutableArray *) self->stylesheets, removeObject, stylesheet);
 }
 
+/**
+ * @fn Theme *Theme::theme(SDL_Window *window)
+ * @memberof Theme
+ */
+static Theme *theme(SDL_Window *window) {
+
+	assert(window);
+
+	WindowController *windowController = $$(WindowController, windowController, window);
+	if (windowController) {
+		return windowController->theme;
+	}
+
+	return NULL;
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -164,9 +164,9 @@ static void initialize(Class *clazz) {
 
 	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
 	((ThemeInterface *) clazz->def->interface)->computeStyle = computeStyle;
-	((ThemeInterface *) clazz->def->interface)->currentTheme = currentTheme;
 	((ThemeInterface *) clazz->def->interface)->init = init;
 	((ThemeInterface *) clazz->def->interface)->removeStylesheet = removeStylesheet;
+	((ThemeInterface *) clazz->def->interface)->theme = theme;
 }
 
 /**

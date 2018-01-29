@@ -1321,13 +1321,13 @@ static void setWindow(View *self, SDL_Window *window) {
 		$(self, resignFirstResponder);
 
 		if (self->window && self->stylesheet) {
-			$($$(Theme, currentTheme, self->window), removeStylesheet, self->stylesheet);
+			$($$(Theme, theme, self->window), removeStylesheet, self->stylesheet);
 		}
 
 		self->window = window;
 
 		if (self->window && self->stylesheet) {
-			$($$(Theme, currentTheme, self->window), addStylesheet, self->stylesheet);
+			$($$(Theme, theme, self->window), addStylesheet, self->stylesheet);
 		}
 
 		if (self->window && self->superview == NULL) {

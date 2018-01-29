@@ -215,6 +215,15 @@ struct WindowControllerInterface {
 	 * @memberof WindowController
 	 */
 	void (*updateHover)(WindowController *self, const SDL_Event *event);
+
+	/**
+	 * @static
+	 * @fn WindowController *WindowController::windowController(SDL_Window *window)
+	 * @param window The window.
+	 * @return The WindowController bound to the given window.
+	 * @memberof WindowController
+	 */
+	WindowController *(*windowController)(SDL_Window *window);
 };
 
 /**

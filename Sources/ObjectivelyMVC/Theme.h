@@ -96,15 +96,6 @@ struct ThemeInterface {
 	Style *(*computeStyle)(const Theme *self, const View *view);
 
 	/**
-	 * @static
-	 * @fn Theme *Theme::currentTheme(SDL_Window *window)
-	 * @param window The window.
-	 * @return The current Theme for the given window.
-	 * @memberof Theme
-	 */
-	Theme *(*currentTheme)(SDL_Window *window);
-
-	/**
 	 * @fn Theme *Theme::init(Theme *self)
 	 * @brief Initializes this Theme.
 	 * @param self The Theme.
@@ -121,6 +112,15 @@ struct ThemeInterface {
 	 * @memberof Theme
 	 */
 	void (*removeStylesheet)(Theme *self, Stylesheet *stylesheet);
+
+	/**
+	 * @static
+	 * @fn Theme *Theme::theme(SDL_Window *window)
+	 * @param window The window.
+	 * @return The Theme for the given window.
+	 * @memberof Theme
+	 */
+	Theme *(*theme)(SDL_Window *window);
 };
 
 /**
