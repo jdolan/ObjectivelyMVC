@@ -40,6 +40,8 @@ static void dealloc(Object *self) {
 
 	TableColumn *this = (TableColumn *) self;
 
+	release(this->headerCell);
+	
 	free(this->identifier);
 
 	super(Object, self, dealloc);
