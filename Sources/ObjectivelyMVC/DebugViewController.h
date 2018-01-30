@@ -57,11 +57,6 @@ struct DebugViewController {
 	const View *debug;
 
 	/**
-	 * @brief The StackView.
-	 */
-	StackView *stackView;
-
-	/**
 	 * @brief The View description.
 	 */
 	Text *description;

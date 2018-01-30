@@ -144,10 +144,11 @@ static void loadView(ViewController *self) {
 		MakeOutlet("computedStyle", &this->computedStyle)
 	);
 
-	this->stackView = (StackView *) $$(View, viewWithCharacters, (char *) debug_json, outlets);
-	this->stackView->view.stylesheet = $$(Stylesheet, stylesheetWithCharacters, (char *) debug_css);
+	View *view = $$(View, viewWithCharacters, (char *) debug_json, outlets);
+	view->stylesheet = $$(Stylesheet, stylesheetWithCharacters, (char *) debug_css);
 
-	$(self, setView, (View *) this->stackView);
+	$(self, setView, view);
+	release(view);
 
 	this->selectors->dataSource.self = self;
 	this->selectors->dataSource.numberOfRows = selectors_numberOfRows;
@@ -183,7 +184,7 @@ static void debug(DebugViewController *self, const View *view) {
 		$(self->computedStyle, reloadData);
 		$((View *) self->computedStyle, sizeToFit);
 
-		self->stackView->view.needsLayout = true;
+		((ViewController *) self)->view->needsLayout = true;
 	}
 }
 

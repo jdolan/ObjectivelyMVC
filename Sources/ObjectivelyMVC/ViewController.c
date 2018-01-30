@@ -117,6 +117,7 @@ static void loadView(ViewController *self) {
 	view->autoresizingMask = ViewAutoresizingFill;
 
 	$(self, setView, view);
+	release(view);
 }
 
 /**
@@ -202,9 +203,11 @@ static void setView(ViewController *self, View *view) {
 			release(self->view);
 		}
 
-		self->view = view;
-		if (self->view) {
+		if (view) {
+			self->view = retain(view);
 			self->view->viewController = self;
+		} else {
+			self->view = NULL;
 		}
 	}
 }
