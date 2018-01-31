@@ -6,7 +6,6 @@ DEFAULT_INCLUDES = \
 	$(top_srcdir)/Sources
 
 TESTS = \
-	Constraint \
 	Selector \
 	Style \
 	Stylesheet

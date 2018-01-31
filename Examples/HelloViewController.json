@@ -85,10 +85,10 @@
                       "identifier": "Column C"
                     }
                   ],
-                  "constraints": [
-                    "w = 300",
-                    "h = 360"
-                  ],
+                  "style": {
+                    "min-width": 300,
+                    "min-height": 360
+                  },
                   "selection": "ControlSelectionMultiple"
                 }
               ]
@@ -110,11 +110,9 @@
                 {
                   "class": "CollectionView",
                   "identifier": "collectionView",
-                  "constraints": [
-                    "w = 300",
-                    "h = 360"
-                  ],
                   "style": {
+                    "min-width": 300,
+                    "min-height": 360,
                     "item-size": [
                       62,
                       48

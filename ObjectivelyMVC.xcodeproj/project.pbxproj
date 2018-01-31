@@ -94,10 +94,7 @@
 		CE34C89C1FB29F700025F231 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE34C89D1FB29F700025F231 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE34C8A31FB29F8B0025F231 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CE34C8941FB29F3A0025F231 /* Stylesheet.c */; };
-		CE3CB2A11F410D1900FAA016 /* Constraint.c in Sources */ = {isa = PBXBuildFile; fileRef = CE3CB29F1F410D1900FAA016 /* Constraint.c */; };
-		CE3CB2A21F410D1900FAA016 /* Constraint.h in Headers */ = {isa = PBXBuildFile; fileRef = CE3CB2A01F410D1900FAA016 /* Constraint.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE423A361F53452D002767E7 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
-		CE423A421F534543002767E7 /* Constraint.c in Sources */ = {isa = PBXBuildFile; fileRef = CE423A2D1F534179002767E7 /* Constraint.c */; };
 		CE423A441F53457D002767E7 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE55C1C21F944C6D00D5A326 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE55C1C31F944C6D00D5A326 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
@@ -356,10 +353,7 @@
 		CE1CCDA31D9E859F00891F05 /* View+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+JSON.h"; sourceTree = "<group>"; };
 		CE34C8941FB29F3A0025F231 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CE34C8A21FB29F700025F231 /* ObjectivelyMVC-Stylesheet */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Stylesheet"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE3CB29F1F410D1900FAA016 /* Constraint.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Constraint.c; sourceTree = "<group>"; };
-		CE3CB2A01F410D1900FAA016 /* Constraint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constraint.h; sourceTree = "<group>"; };
 		CE423A2C1F534127002767E7 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
-		CE423A2D1F534179002767E7 /* Constraint.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Constraint.c; sourceTree = "<group>"; };
 		CE423A411F53452D002767E7 /* ObjectivelyMVC-Constraint */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Constraint"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE423A431F53457D002767E7 /* libcheck.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcheck.0.dylib; path = ../../../../opt/local/lib/libcheck.0.dylib; sourceTree = "<group>"; };
 		CE423A4F1F53BA44002767E7 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
@@ -548,8 +542,6 @@
 				CE12D4081C4C367100CD0B13 /* Colors.h */,
 				CE9305C31D9B27F900D62770 /* Config.h */,
 				CE9305C21D9B277E00D62770 /* Config.h.in */,
-				CE3CB29F1F410D1900FAA016 /* Constraint.c */,
-				CE3CB2A01F410D1900FAA016 /* Constraint.h */,
 				CE12D46D1C4D82AF00CD0B13 /* Control.c */,
 				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
 				CE84C6CC1FFC917600F72267 /* DebugViewController.c */,
@@ -655,7 +647,6 @@
 		CE12D4291C4C377B00CD0B13 /* ObjectivelyMVC */ = {
 			isa = PBXGroup;
 			children = (
-				CE423A2D1F534179002767E7 /* Constraint.c */,
 				CE55C1BB1F944C1B00D5A326 /* Selector.c */,
 				CE8819891F91B094000D5AB7 /* Style.c */,
 				CE34C8941FB29F3A0025F231 /* Stylesheet.c */,
@@ -787,7 +778,6 @@
 				CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */,
 				CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */,
 				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
-				CE3CB2A21F410D1900FAA016 /* Constraint.h in Headers */,
 				CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */,
 				CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */,
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
@@ -1044,7 +1034,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE423A421F534543002767E7 /* Constraint.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1075,7 +1064,6 @@
 				CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */,
 				CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */,
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
-				CE3CB2A11F410D1900FAA016 /* Constraint.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,

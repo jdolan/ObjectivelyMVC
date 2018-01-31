@@ -29,7 +29,6 @@
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/View+JSON.h>
@@ -177,11 +176,6 @@ struct View {
 	Style *computedStyle;
 
 	/**
-	 * @brief The Constraints held on this View.
-	 */
-	MutableArray *constraints;
-
-	/**
 	 * @brief The frame, relative to the superview.
 	 */
 	SDL_Rect frame;
@@ -208,19 +202,12 @@ struct View {
 	SDL_Size minSize;
 
 	/**
-	 * @brief If true, this View will apply Constraints before it is drawn.
-	 */
-	_Bool needsApplyConstraints;
-
-	/**
 	 * @brief If true, this View will apply the Theme before it is drawn.
-	 * @remarks If Theme application results in changes to this View's Style, layout will applied.
 	 */
 	_Bool needsApplyTheme;
 
 	/**
 	 * @brief If true, this View will layout its subviews before it is drawn.
-	 * @remarks If layout results in changes to this View's size, constraints will be applied.
 	 */
 	_Bool needsLayout;
 
@@ -302,24 +289,6 @@ struct ViewInterface {
 	void (*addClassName)(View *self, const char *className);
 
 	/**
-	 * @fn void View::addConstraint(View *self, Constraint *constraint)
-	 * @brief Adds a Constraint on this View.
-	 * @param self The View.
-	 * @param constraint The Constraint.
-	 * @memberof View
-	 */
-	void (*addConstraint)(View *self, Constraint *constraint);
-
-	/**
-	 * @fn void View::addConstraintWithDescriptor(View *self, const char *descriptor)
-	 * @brief Adds a Constraint on this View.
-	 * @param self The View.
-	 * @param descriptor The Constraint descriptor.
-	 * @memberof View
-	 */
-	void (*addConstraintWithDescriptor)(View *self, const char *descriptor);
-
-	/**
 	 * @fn void View::addSubview(View *self, View *subview)
 	 * @brief Adds a subview to this view, to be drawn above its siblings.
 	 * @param self The View.
@@ -348,22 +317,6 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	View *(*ancestorWithIdentifier)(const View *self, const char *identifier);
-
-	/**
-	 * @fn void View::applyConstraints(View *self)
-	 * @brief Applies all Constraints on this View before laying out its subviews.
-	 * @param self The View.
-	 * @memberof View
-	 */
-	void (*applyConstraints)(View *self);
-
-	/**
-	 * @fn void View::applyConstraintsIfNeeded(View *self)
-	 * @brief Recursively applies Constraints against this View and its subviews.
-	 * @param self The View.
-	 * @memberof View
-	 */
-	void (*applyConstraintsIfNeeded)(View *self);
 
 	/**
 	 * @fn void View::applyStyle(View *self, const Style *style)
@@ -458,15 +411,6 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
-
-	/**
-	 * @fn void View::createConstraint(View *self, const char *descriptor)
-	 * @brief Creates a new Constraint with the given descriptor on this View.
-	 * @param self The View.
-	 * @param descriptor The Constraint descriptor.
-	 * @memberof View
-	 */
-	void (*createConstraint)(View *self, const char *descriptor);
 
 	/**
 	 * @fn int View::depth(const View *self)
@@ -670,8 +614,10 @@ struct ViewInterface {
 
 	/**
 	 * @fn View::layoutSubviews(View *self)
-	 * @brief Updates the frame of this View's hierarchy using the installed Constraints.
+	 * @brief Performs layout for this View's immediate subviews.
 	 * @param self The View.
+	 * @remarks Subclasses may override this method to perform their own layout operations. This
+	 * method is called recursively by View::layoutIfNeeded.
 	 * @memberof View
 	 */
 	void (*layoutSubviews)(View *self);
@@ -694,14 +640,6 @@ struct ViewInterface {
 	void (*removeAllClassNames)(View *self);
 
 	/**
-	 * @fn void View::removeAllConstraints(View *self)
-	 * @brief Removes all Constraints on this View.
-	 * @param self The View.
-	 * @memberof View
-	 */
-	void (*removeAllConstraints)(View *self);
-
-	/**
 	 * @fn void View::removeAllSubviews(View *self)
 	 * @brief Removes all subviews from this View.
 	 * @param self The View.
@@ -717,15 +655,6 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*removeClassName)(View *self, const char *className);
-
-	/**
-	 * @fn void View::removeConstraint(View *self, Constraint *constraint)
-	 * @brief Removes the given Constraint from this View.
-	 * @param self The View.
-	 * @param constraint The Constraint.
-	 * @memberof View
-	 */
-	void (*removeConstraint)(View *self, Constraint *constraint);
 
 	/**
 	 * @fn void View::removeFromSuperview(View *self)

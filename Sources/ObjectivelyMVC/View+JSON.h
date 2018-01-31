@@ -57,17 +57,6 @@ typedef enum {
 	InletTypeColor,
 
 	/**
-	 * @remarks Inlet destination must be of type `Constraint **`.
-	 */
-	InletTypeConstraint,
-
-	/**
-	 * @remarks Inlet destination must be of type `View **`. The Constraints of the specified View
-	 * are populated from the bound array of Constraint definitions.
-	 */
-	InletTypeConstraints,
-
-	/**
 	 * @remarks Inlet destination must be of type `double *`.
 	 */
 	InletTypeDouble,

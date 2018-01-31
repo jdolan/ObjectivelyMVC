@@ -107,39 +107,6 @@ static void bindColor(const Inlet *inlet, ident obj) {
 }
 
 /**
- * @brief InletBinding for InletTypeConstraint.
- */
-static void bindConstraint(const Inlet *inlet, ident obj) {
-
-	String *descriptor = cast(String, obj);
-
-	*(Constraint **) inlet->dest = $(alloc(Constraint), initWithDescriptor, descriptor->chars);
-}
-
-/**
- * @brief ArrayEnumerator for `bindConstraints`.
- */
-static void bindConstraints_enumerate(const Array *array, ident obj, ident data) {
-
-	Constraint *constraint = NULL;
-
-	const Inlet inlet = MakeInlet(NULL, InletTypeConstraint, &constraint, NULL);
-
-	bindConstraint(&inlet, obj);
-
-	$(cast(View, data), addConstraint, constraint);
-
-	release(constraint);
-}
-
-/**
- * @brief InletBinding for InletTypeConstraints.
- */
-static void bindConstraints(const Inlet *inlet, ident obj) {
-	$(cast(Array, obj), enumerateObjects, bindConstraints_enumerate, *(View **) inlet->dest);
-}
-
-/**
  * @brief InletBinding for InletTypeDouble.
  */
 static void bindDouble(const Inlet *inlet, ident obj) {
@@ -327,8 +294,6 @@ const InletBinding inletBindings[] = {
 	bindCharacters,
 	bindClassNames,
 	bindColor,
-	bindConstraint,
-	bindConstraints,
 	bindDouble,
 	bindEnum,
 	bindFloat,

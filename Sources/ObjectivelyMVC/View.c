@@ -76,7 +76,6 @@ static void dealloc(Object *self) {
 
 	release(this->classNames);
 	release(this->computedStyle);
-	release(this->constraints);
 	release(this->style);
 	release(this->stylesheet);
 	release(this->subviews);
@@ -122,31 +121,6 @@ static void addClassName(View *self, const char *className) {
 
 		$(self, invalidateStyle);
 	}
-}
-
-/**
- * @fn void View::addConstraint(View *self, Constraint *constraint)
- * @memberof View
- */
-static void addConstraint(View *self, Constraint *constraint) {
-
-	$(self->constraints, addObject, constraint);
-
-	self->needsLayout = true;
-	self->needsApplyConstraints = true;
-}
-
-/**
- * @fn void View::addConstraintWithDescriptor(View *self, const char *descriptor)
- * @memberof View
- */
-static void addConstraintWithDescriptor(View *self, const char *descriptor) {
-
-	Constraint *constraint = $(alloc(Constraint), initWithDescriptor, descriptor);
-	assert(constraint);
-
-	$(self, addConstraint, constraint);
-	release(constraint);
 }
 
 /**
@@ -218,53 +192,6 @@ static View *ancestorWithIdentifier(const View *self, const char *identifier) {
 	}
 
 	return NULL;
-}
-
-/**
- * @brief Comparator for applyConstraints sorting.
- */
-static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
-	return ((Constraint *) obj1)->priority - ((Constraint *) obj2)->priority;
-}
-
-/**
- * @fn void View::applyConstraints(View *self)
- * @memberof View
- */
-static void applyConstraints(View *self) {
-
-	$(self->constraints, sort, applyConstraints_comparator);
-
-	const Array *constraints = (Array *) self->constraints;
-	for (size_t i = 0; i < constraints->count; i++) {
-
-		const Constraint *constraint = $(constraints, objectAtIndex, i);
-		if (constraint->enabled) {
-			$(constraint, apply, self);
-		}
-	}
-}
-
-/**
- * @brief ViewEnumerator for applyConstraints recursion.
- */
-static void applyConstraintsIfNeeded_recurse(View *subview, ident data) {
-	$(subview, applyConstraintsIfNeeded);
-}
-
-/**
- * @fn void View::applyConstraintsIfNeeded(View *self)
- * @memberof View
- */
-static void applyConstraintsIfNeeded(View *self) {
-
-	if (self->needsApplyConstraints) {
-		$(self, applyConstraints);
-	}
-
-	self->needsApplyConstraints = false;
-
-	$(self, enumerateSubviews, applyConstraintsIfNeeded_recurse, NULL);
 }
 
 /**
@@ -355,7 +282,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("identifier", InletTypeCharacters, &self->identifier, NULL),
 		MakeInlet("classNames", InletTypeClassNames, &self, NULL),
-		MakeInlet("constraints", InletTypeConstraints, &self, NULL),
 		MakeInlet("style", InletTypeStyle, &self, NULL),
 		MakeInlet("subviews", InletTypeSubviews, &self, NULL)
 	);
@@ -484,19 +410,6 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 	const SDL_Rect frame = $(self, clippingFrame);
 
 	return (_Bool) SDL_PointInRect(point, &frame);
-}
-
-/**
- * @fn void View::createConstraint(View *self, const char *descriptor)
- * @memberof View
- */
-static void createConstraint(View *self, const char *descriptor) {
-
-	Constraint *constraint = $(alloc(Constraint), initWithDescriptor, descriptor);
-
-	$(self, addConstraint, constraint);
-
-	release(constraint);
 }
 
 /**
@@ -772,9 +685,6 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->computedStyle = $(alloc(Style), initWithAttributes, NULL);
 		assert(self->computedStyle);
 
-		self->constraints = $$(MutableArray, arrayWithCapacity, 0);
-		assert(self->constraints);
-
 		self->subviews = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->subviews);
 
@@ -783,7 +693,6 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 
 		self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
 
-		self->needsApplyConstraints = true;
 		self->needsApplyTheme = true;
 		self->needsLayout = true;
 	}
@@ -891,8 +800,6 @@ static void layoutIfNeeded(View *self) {
 	}
 
 	self->needsLayout = false;
-
-	$(self, applyConstraintsIfNeeded);
 
 	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
 }
@@ -1031,21 +938,6 @@ static void removeAllClassNames(View *self) {
 }
 
 /**
- * @brief ArrayEnumerator for removeAllConstraints.
- */
-static void removeAllConstraints_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) data, removeConstraint, obj);
-}
-
-/**
- * @fn void View::removeAllConstraints(View *self)
- * @memberof View
- */
-static void removeAllConstraints(View *self) {
-	$((Array *) self->constraints, enumerateObjects, removeAllConstraints_enumerate, self);
-}
-
-/**
  * @brief ArrayEnumerator for removeAllSubviews.
  */
 static void removeAllSubviews_enumerate(const Array *array, ident obj, ident data) {
@@ -1075,17 +967,6 @@ static void removeClassName(View *self, const char *className) {
 
 		$(self, invalidateStyle);
 	}
-}
-
-/**
- * @fn void View::removeConstraint(View *self, Constraint *constraint)
- * @memberof View
- */
-static void removeConstraint(View *self, Constraint *constraint) {
-
-	$(self->constraints, removeObject, constraint);
-
-	self->needsApplyConstraints = true;
 }
 
 /**
@@ -1258,7 +1139,6 @@ static void resize(View *self, const SDL_Size *size) {
 		self->frame.h = clamp(size->h, self->minSize.h, self->maxSize.h);
 
 		self->needsLayout = true;
-		self->needsApplyConstraints = true;
 
 		$(self, enumerateSubviews, resize_recurse, NULL);
 	}
@@ -1581,13 +1461,9 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->addClassName = addClassName;
-	((ViewInterface *) clazz->def->interface)->addConstraint = addConstraint;
-	((ViewInterface *) clazz->def->interface)->addConstraintWithDescriptor = addConstraintWithDescriptor;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
 	((ViewInterface *) clazz->def->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
-	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
-	((ViewInterface *) clazz->def->interface)->applyConstraintsIfNeeded = applyConstraintsIfNeeded;
 	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->applyTheme = applyTheme;
 	((ViewInterface *) clazz->def->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
@@ -1598,7 +1474,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->bringSubviewToFront = bringSubviewToFront;
 	((ViewInterface *) clazz->def->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
-	((ViewInterface *) clazz->def->interface)->createConstraint = createConstraint;
 	((ViewInterface *) clazz->def->interface)->depth = depth;
 	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
@@ -1623,10 +1498,8 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
 	((ViewInterface *) clazz->def->interface)->removeAllClassNames = removeAllClassNames;
-	((ViewInterface *) clazz->def->interface)->removeAllConstraints = removeAllConstraints;
 	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
 	((ViewInterface *) clazz->def->interface)->removeClassName = removeClassName;
-	((ViewInterface *) clazz->def->interface)->removeConstraint = removeConstraint;
 	((ViewInterface *) clazz->def->interface)->removeFromSuperview = removeFromSuperview;
 	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
 	((ViewInterface *) clazz->def->interface)->render = render;
