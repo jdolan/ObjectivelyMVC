@@ -128,7 +128,7 @@ static int specificity(const Selector *selector) {
 										 simpleSelector->pattern, selector->rule);
 						}
 					} else {
-						MVC_LogWarn("Class `%s` in Selector `%s` has not been initialized\n",
+						MVC_LogWarn("Class `%s` in Selector `%s` not found\n",
 									simpleSelector->pattern, selector->rule);
 					}
 
