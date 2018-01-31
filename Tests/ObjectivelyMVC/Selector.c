@@ -31,7 +31,7 @@ START_TEST(selector)
 	ck_assert_ptr_ne(NULL, selector);
 	ck_assert_ptr_eq(_Selector(), classof(selector));
 	ck_assert_int_eq(3, selector->sequences->count);
-	ck_assert_int_eq(122, selector->specificity);
+	ck_assert_int_eq(125, selector->specificity);
 
 	SelectorSequence *selectorSequence;
 	SimpleSelector *simpleSelector;
