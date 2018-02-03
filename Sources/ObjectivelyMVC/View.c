@@ -853,15 +853,17 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	if (self->autoresizingMask & ViewAutoresizingFill) {
-		if (self->superview == NULL) {
+	if (self->superview == NULL) {
+		if (self->autoresizingMask & ViewAutoresizingFill) {
 
 			SDL_Size size;
 			SDL_GetWindowSize(self->window, &size.w, &size.h);
 
 			$(self, resize, &size);
 		}
-	} else if (self->autoresizingMask & ViewAutoresizingContain) {
+	}
+
+	if (self->autoresizingMask & ViewAutoresizingContain) {
 		$(self, sizeToContain);
 	}
 
