@@ -120,11 +120,11 @@ static void render(View *self, Renderer *renderer) {
  */
 static void renderDeviceDidReset(View *self) {
 
-	super(View, self, renderDeviceDidReset);
-
 	ImageView *this = (ImageView *) self;
 
 	this->texture = 0;
+
+	super(View, self, renderDeviceDidReset);
 }
 
 #pragma mark - ImageView

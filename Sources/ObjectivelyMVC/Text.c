@@ -157,13 +157,13 @@ static void render(View *self, Renderer *renderer) {
  */
 static void renderDeviceDidReset(View *self) {
 
-	super(View, self, renderDeviceDidReset);
-
 	Text *this = (Text *) self;
 
 	this->texture = 0;
 
 	$(this->font, renderDeviceDidReset);
+
+	super(View, self, renderDeviceDidReset);
 }
 
 /**
