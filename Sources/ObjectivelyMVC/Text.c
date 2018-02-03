@@ -159,9 +159,22 @@ static void renderDeviceDidReset(View *self) {
 
 	Text *this = (Text *) self;
 
-	this->texture = 0;
-
 	$(this->font, renderDeviceDidReset);
+
+	super(View, self, renderDeviceDidReset);
+}
+
+/**
+ * @see View::renderDeviceWillReset(View *)
+ */
+static void renderDeviceWillReset(View *self) {
+
+	Text *this = (Text *) self;
+
+	if (this->texture) {
+		glDeleteTextures(1, &this->texture);
+		this->texture = 0;
+	}
 
 	super(View, self, renderDeviceDidReset);
 }
@@ -266,6 +279,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((TextInterface *) clazz->def->interface)->initWithText = initWithText;

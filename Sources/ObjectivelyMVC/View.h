@@ -686,13 +686,21 @@ struct ViewInterface {
 
 	/**
 	 * @fn void View::renderDeviceDidReset(View *self)
-	 * @brief This method is invoked when the render context is invalidated.
+	 * @brief Informs this View that the render device has reset.
 	 * @param self The View.
-	 * @remarks Subclasses should override this method to recreate any texture resources or other
-	 * OpenGL objects they own.
+	 * @remarks Subclasses may override this method to allocate any OpenGL objects they require.
 	 * @memberof View
 	 */
 	void (*renderDeviceDidReset)(View *self);
+
+	/**
+	 * @fn void View::renderDeviceWillReset(View *self)
+	 * @brief Informs this View that the render device will reset.
+	 * @param self The View.
+	 * @remarks Subclasses should override this method to free any OpenGL objects they own.
+	 * @memberof View
+	 */
+	void (*renderDeviceWillReset)(View *self);
 
 	/**
 	 * @fn SDL_Frame View::renderFrame(const View *self)

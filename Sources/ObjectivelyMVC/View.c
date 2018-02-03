@@ -1055,6 +1055,21 @@ static void renderDeviceDidReset(View *self) {
 }
 
 /**
+ * @brief ViewEnumerator for renderDeviceWillReset recursion.
+ */
+static void renderDeviceWillReset_recurse(View *subview, ident data) {
+	$(subview, renderDeviceWillReset);
+}
+
+/**
+ * @fn void View::renderDeviceWillReset(View *self)
+ * @memberof View
+ */
+static void renderDeviceWillReset(View *self) {
+	$(self, enumerateSubviews, renderDeviceWillReset_recurse, NULL);
+}
+
+/**
  * @fn SDL_Rect View::renderFrame(const View *self)
  * @memberof View
  */
@@ -1504,6 +1519,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
 	((ViewInterface *) clazz->def->interface)->renderFrame = renderFrame;
 	((ViewInterface *) clazz->def->interface)->replaceSubview = replaceSubview;
 	((ViewInterface *) clazz->def->interface)->resignFirstResponder = resignFirstResponder;

@@ -246,6 +246,14 @@ static void renderDeviceDidReset(Renderer *self) {
 }
 
 /**
+ * @fn void Renderer::renderDeviceWillReset(Renderer *self)
+ * @memberof Renderer
+ */
+static void renderDeviceWillReset(Renderer *self) {
+
+}
+
+/**
  * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)
  * @memberof Renderer
  */
@@ -292,6 +300,7 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
 	((RendererInterface *) clazz->def->interface)->init = init;
 	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((RendererInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
 	((RendererInterface *) clazz->def->interface)->setClippingFrame = setClippingFrame;
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
 }

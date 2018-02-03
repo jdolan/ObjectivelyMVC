@@ -148,8 +148,18 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 	} else {
 
 		if (event->type == SDL_WINDOWEVENT) {
-			if (event->window.event == SDL_WINDOWEVENT_EXPOSED) {
-				$(self, setWindow, SDL_GL_GetCurrentWindow());
+			$(self, setWindow, SDL_GL_GetCurrentWindow());
+			switch (event->window.event) {
+				case SDL_WINDOWEVENT_EXPOSED:
+					$(self->renderer, renderDeviceDidReset);
+					$(self->viewController->view, renderDeviceDidReset);
+					break;
+				case SDL_WINDOWEVENT_CLOSE:
+					$(self->renderer, renderDeviceWillReset);
+					$(self->viewController->view, renderDeviceWillReset);
+					break;
+				default:
+					break;
 			}
 		} else if (event->type == SDL_MOUSEMOTION) {
 			$(self, updateHover, event);
