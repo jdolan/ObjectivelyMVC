@@ -241,7 +241,7 @@ static void setViewController(WindowController *self, ViewController *viewContro
 
 		if (self->viewController) {
 			$(self->viewController, viewWillDisappear);
-			$(self->viewController->view, setWindow, NULL);
+			$(self->viewController->view, moveToWindow, NULL);
 			$(self->viewController, viewDidDisappear);
 		}
 
@@ -256,7 +256,7 @@ static void setViewController(WindowController *self, ViewController *viewContro
 		$(self->viewController, loadViewIfNeeded);
 
 		$(self->viewController, viewWillAppear);
-		$(self->viewController->view, setWindow, self->window);
+		$(self->viewController->view, moveToWindow, self->window);
 		$(self->viewController, viewDidAppear);
 	}
 }
@@ -285,18 +285,12 @@ static void setWindow(WindowController *self, SDL_Window *window) {
 		SDL_GetWindowSize(self->window, &w, &h);
 		MVC_LogInfo("%d %dx%d", SDL_GetWindowID(self->window), w, h);
 
-		if (self->renderer) {
-			$(self->renderer, renderDeviceDidReset);
-		}
-
 		if (self->viewController) {
-			$(self->viewController->view, setWindow, self->window);
-			$(self->viewController->view, renderDeviceDidReset);
+			$(self->viewController->view, moveToWindow, self->window);
 		}
 
 		if (self->debugViewController) {
-			$(self->debugViewController->viewController.view, setWindow, self->window);
-			$(self->debugViewController->viewController.view, renderDeviceDidReset);
+			$(self->debugViewController->viewController.view, moveToWindow, self->window);
 		}
 	}
 }
@@ -316,7 +310,7 @@ static void toggleDebugger(WindowController *self) {
 
 		$(debugViewController, loadView);
 		$(debugViewController, viewWillAppear);
-		$(debugViewController->view, setWindow, self->window);
+		$(debugViewController->view, moveToWindow, self->window);
 		$(debugViewController, viewDidAppear);
 	} else {
 		self->debugViewController = release(self->debugViewController);

@@ -346,6 +346,15 @@ struct ViewInterface {
 	void (*applyThemeIfNeeded)(View *self, const Theme *theme);
 
 	/**
+	 * @fn void View::attachStylesheet(View *self)
+	 * @brief Attaches this View's Stylesheet to the Theme associated with the given window.
+	 * @param self The View.
+	 * @param window The window.
+	 * @memberof View
+	 */
+	void (*attachStylesheet)(View *self, SDL_Window *window);
+
+	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)
 	 * @brief Wakes this View with the specified Dictionary.
 	 * @param self The View.
@@ -428,6 +437,24 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	View *(*descendantWithIdentifier)(const View *self, const char *identifier);
+
+	/**
+	 * @fn void View::detachStylesheet(View *self)
+	 * @brief Detaches this View's Stylesheet from the Theme associated with the given window.
+	 * @param self The View.
+	 * @param window The window.
+	 * @memberof View
+	 */
+	void (*detachStylesheet)(View *self, SDL_Window *window);
+
+	/**
+	 * @fn void View::didMoveToWindow(View *self, SDL_Window *window)
+	 * @brief Informs this View that it has been added to the View hierachy of the given window.
+	 * @param self The View.
+	 * @param window The window, or `NULL` if this View has been removed from the window.
+	 * @memberof View
+	 */
+	void (*didMoveToWindow)(View *self, SDL_Window *window);
 
 	/**
 	 * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
@@ -632,6 +659,15 @@ struct ViewInterface {
 	_Bool (*matchesSelector)(const View *self, const SimpleSelector *simpleSelector);
 
 	/**
+	 * @fn void View::moveToWindow(View *self, SDL_Window *window)
+	 * @brief Moves this View to the View hierarchy of the given window.
+	 * @param self The View.
+	 * @param window The window, or `NULL` if this View is moving from its current window.
+	 * @memberof View
+	 */
+	void (*moveToWindow)(View *self, SDL_Window *window);
+
+	/**
 	 * @fn void View::removeAllClassNames(View *self)
 	 * @brief Removes all class names from this View.
 	 * @param self The View.
@@ -757,16 +793,6 @@ struct ViewInterface {
 	void (*setFirstResponder)(SDL_Window *window, View *view);
 
 	/**
-	 * @fn void View::setWindow(View *self, SDL_Window *window)
-	 * @brief Sets the window associated with this View.
-	 * @param self The View.
-	 * @param window The window.
-	 * @remarks This is called as Views are added to and removed from the View hierarchy.
-	 * @memberof View
-	 */
-	void (*setWindow)(View *self, SDL_Window *window);
-
-	/**
 	 * @fn SDL_Size View::size(const View *self)
 	 * @param self The View.
 	 * @return The size of this View's frame.
@@ -890,6 +916,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	Array *(*visibleSubviews)(const View *self);
+
+	/**
+	 * @fn void View::willMoveToWindow(View *self, SDL_Window *window)
+	 * @brief Informs this View that it will be added to the View hierarchy for the given window.
+	 * @param self The View.
+	 * @param window The window, or `NULL` if this View will be removed from the window.
+	 * @memberof View
+	 */
+	void (*willMoveToWindow)(View *self, SDL_Window *window);
 };
 
 /**

@@ -166,7 +166,7 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
 	subview->superview = self;
 
-	$(subview, setWindow, self->window);
+	$(subview, moveToWindow, self->window);
 
 	$(subview, invalidateStyle);
 
@@ -269,6 +269,22 @@ static void applyThemeIfNeeded(View *self, const Theme *theme) {
 	self->needsApplyTheme = false;
 
 	$(self, enumerateSubviews, (ViewEnumerator) applyThemeIfNeeded, (ident) theme);
+}
+
+/**
+ * @fn void View::attachStylesheet(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void attachStylesheet(View *self, SDL_Window *window) {
+
+	assert(window);
+
+	if (self->stylesheet) {
+		Theme *theme = $$(Theme, theme, window);
+		if (theme) {
+			$(theme, addStylesheet, self->stylesheet);
+		}
+	}
 }
 
 /**
@@ -445,6 +461,33 @@ static View *descendantWithIdentifier(const View *self, const char *identifier) 
 	}
 
 	return NULL;
+}
+
+/**
+ * @fn void View::detachStylesheet(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void detachStylesheet(View *self, SDL_Window *window) {
+
+	assert(window);
+
+	if (self->stylesheet) {
+		Theme *theme = $$(Theme, theme, self->window);
+		if (theme) {
+			$(theme, removeStylesheet, self->stylesheet);
+		}
+	}
+}
+
+/**
+ * @fn void View::didMoveToWindow(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void didMoveToWindow(View *self, SDL_Window *window) {
+
+	if (window) {
+		$(self, attachStylesheet, window);
+	}
 }
 
 /**
@@ -810,7 +853,15 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	if (self->autoresizingMask & ViewAutoresizingContain) {
+	if (self->autoresizingMask & ViewAutoresizingFill) {
+		if (self->superview == NULL) {
+
+			SDL_Size size;
+			SDL_GetWindowSize(self->window, &size.w, &size.h);
+
+			$(self, resize, &size);
+		}
+	} else if (self->autoresizingMask & ViewAutoresizingContain) {
 		$(self, sizeToContain);
 	}
 
@@ -923,6 +974,31 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 }
 
 /**
+ * @brief ViewEnumerator for moveToWindow recursion.
+ */
+static void moveToWindow_recurse(View *subview, ident data) {
+	$(subview, moveToWindow, data);
+}
+
+/**
+ * @fn void View::moveToWindow(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void moveToWindow(View *self, SDL_Window *window) {
+
+	if (self->window != window) {
+
+		$(self, willMoveToWindow, window);
+
+		self->window = window;
+
+		$(self, didMoveToWindow, window);
+
+		$(self, enumerateSubviews, moveToWindow_recurse, window);
+	}
+}
+
+/**
  * @brief ArrayEnumerator for removeAllClassNames.
  */
 static void removeAllClassNames_enumerate(const Array *array, ident obj, ident data) {
@@ -992,7 +1068,7 @@ static void removeSubview(View *self, View *subview) {
 		
 		subview->superview = NULL;
 
-		$(subview, setWindow, NULL);
+		$(subview, moveToWindow, NULL);
 
 		$(self->subviews, removeObject, subview);
 
@@ -1193,47 +1269,6 @@ static void setFirstResponder(SDL_Window *window, View *view) {
 	} else {
 		SDL_SetWindowData(window, "firstResponder", NULL);
 		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
-	}
-}
-
-/**
- * @brief ViewEnumerator for setWindow recursion.
- */
-static void setWindow_recurse(View *subview, ident data) {
-	$(subview, setWindow, data);
-}
-
-/**
- * @fn void View::setWindow(View *self, SDL_Window *window)
- * @memberof View
- */
-static void setWindow(View *self, SDL_Window *window) {
-
-	if (self->window != window) {
-
-		$(self, resignFirstResponder);
-
-		if (self->window && self->stylesheet) {
-			$($$(Theme, theme, self->window), removeStylesheet, self->stylesheet);
-		}
-
-		self->window = window;
-
-		if (self->window && self->stylesheet) {
-			$($$(Theme, theme, self->window), addStylesheet, self->stylesheet);
-		}
-
-		if (self->window && self->superview == NULL) {
-			if (self->autoresizingMask & ViewAutoresizingFill) {
-
-				SDL_Size size;
-				SDL_GetWindowSize(self->window, &size.w, &size.h);
-
-				$(self, resize, &size);
-			}
-		}
-
-		$(self, enumerateSubviews, setWindow_recurse, window);
 	}
 }
 
@@ -1464,6 +1499,18 @@ static Array *visibleSubviews(const View *self) {
 	return $((Array *) self->subviews, filteredArray, visibleSubviews_filter, NULL);
 }
 
+/**
+ * @fn void View::willMoveToWindow(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void willMoveToWindow(View *self, SDL_Window *window) {
+
+	if (self->window) {
+		$(self, resignFirstResponder);
+		$(self, detachStylesheet, self->window);
+	}
+}
+
 #pragma mark - View class methods
 
 /**
@@ -1482,6 +1529,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->applyTheme = applyTheme;
 	((ViewInterface *) clazz->def->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
+	((ViewInterface *) clazz->def->interface)->attachStylesheet = attachStylesheet;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
@@ -1491,6 +1539,8 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
 	((ViewInterface *) clazz->def->interface)->depth = depth;
 	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
+	((ViewInterface *) clazz->def->interface)->detachStylesheet = detachStylesheet;
+	((ViewInterface *) clazz->def->interface)->didMoveToWindow = didMoveToWindow;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
 	((ViewInterface *) clazz->def->interface)->enumerate = enumerate;
@@ -1512,6 +1562,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
+	((ViewInterface *) clazz->def->interface)->moveToWindow = moveToWindow;
 	((ViewInterface *) clazz->def->interface)->removeAllClassNames = removeAllClassNames;
 	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
 	((ViewInterface *) clazz->def->interface)->removeClassName = removeClassName;
@@ -1526,7 +1577,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->resize = resize;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->def->interface)->setFirstResponder = setFirstResponder;
-	((ViewInterface *) clazz->def->interface)->setWindow = setWindow;
 	((ViewInterface *) clazz->def->interface)->size = size;
 	((ViewInterface *) clazz->def->interface)->sizeThatContains = sizeThatContains;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
@@ -1540,6 +1590,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->viewWithDictionary = viewWithDictionary;
 	((ViewInterface *) clazz->def->interface)->viewWithCharacters = viewWithCharacters;
 	((ViewInterface *) clazz->def->interface)->visibleSubviews = visibleSubviews;
+	((ViewInterface *) clazz->def->interface)->willMoveToWindow = willMoveToWindow;
 }
 
 /**
