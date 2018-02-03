@@ -148,7 +148,9 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 	} else {
 
 		if (event->type == SDL_WINDOWEVENT) {
-			$(self, setWindow, SDL_GL_GetCurrentWindow());
+			if (event->window.event == SDL_WINDOWEVENT_EXPOSED) {
+				$(self, setWindow, SDL_GL_GetCurrentWindow());
+			}
 		} else if (event->type == SDL_MOUSEMOTION) {
 			$(self, updateHover, event);
 		}
@@ -257,7 +259,11 @@ static void setWindow(WindowController *self, SDL_Window *window) {
 
 	assert(window);
 
-	if (self->window != window) {
+	const int display = SDL_GetWindowDisplayIndex(window);
+	
+	if (self->window != window || self->display != display) {
+
+		self->display = display;
 		self->window = window;
 
 		const Uint32 flags = SDL_GetWindowFlags(self->window);
