@@ -176,7 +176,7 @@ static void renderDeviceWillReset(View *self) {
 		this->texture = 0;
 	}
 
-	super(View, self, renderDeviceDidReset);
+	super(View, self, renderDeviceWillReset);
 }
 
 /**
