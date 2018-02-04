@@ -46,12 +46,18 @@ static void dealloc(Object *self) {
  */
 static String *description(const Object *self) {
 
-	Option *this = (Option *) self;
+	View *this = (View *) self;
 
-	const SDL_Rect *f = &this->view.frame;
+	String *classNames = $((Array *) this->classNames, componentsJoinedByCharacters, ", ");
+	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
+							  this->identifier ?: self->clazz->name,
+							  self,
+							  ((Option *) self)->title->text,
+							  classNames->chars,
+							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
 
-	return str("%s@%p \"%s\" [%p] (%d,%d) %dx%d", this->view.identifier ?: self->clazz->name, self,
-			   this->title->text, this->value, f->x, f->y, f->w, f->h);
+	release(classNames);
+	return description;
 }
 
 #pragma mark - View

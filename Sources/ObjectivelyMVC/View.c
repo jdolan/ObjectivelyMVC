@@ -90,9 +90,15 @@ static String *description(const Object *self) {
 
 	View *this = (View *) self;
 
-	const SDL_Rect *f = &this->frame;
+	String *classNames = $((Array *) this->classNames, componentsJoinedByCharacters, ", ");
+	String *description = str("%s@%p %s [%d, %d, %d, %d]",
+							  this->identifier ?: self->clazz->name,
+							  self,
+							  classNames->chars,
+							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
 
-	return str("%s@%p (%d,%d) %dx%d", this->identifier ?: self->clazz->name, self, f->x, f->y, f->w, f->h);
+	release(classNames);
+	return description;
 }
 
 #pragma mark - View
