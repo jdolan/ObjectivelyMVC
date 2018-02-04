@@ -214,7 +214,7 @@ TabView > .tabPageView {
 TabView > .tabSelectionView {
 	autoresizing-mask: contain | width;
 	axis: horizontal;
-	distribution: fill;
+	distribution: fill-equally;
 	spacing: 4;
 }
 
