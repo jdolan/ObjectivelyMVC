@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/ImageView.h>
 
 /**
  * @file
@@ -52,6 +53,11 @@ struct Button {
 	ButtonInterface *interface;
 
 	/**
+	 * @brief The image.
+	 */
+	ImageView *image;
+
+	/**
 	 * @brief The title.
 	 */
 	Text *title;
@@ -78,8 +84,18 @@ struct ButtonInterface {
 	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame);
 
 	/**
+	 * @fn Button *Button::initWithImage(Button *self, Image *image)
+	 * @brief Initializes this Button with the sopecified Image.
+	 * @param self The Button.
+	 * @param image The Image.
+	 * @return The initialized Button, or `NULL` on error.
+	 * @memberof Button
+	 */
+	Button *(*initWithImage)(Button *self, Image *image);
+
+	/**
 	 * @fn Button *Button::initWithTitle(Button *self, const char *title)
-	 * @brief Initializes this Button with the specified title and style.
+	 * @brief Initializes this Button with the specified title.
 	 * @param self The Button.
 	 * @param title The title text.
 	 * @return The initialized Button, or `NULL` on error.

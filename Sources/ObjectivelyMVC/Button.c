@@ -36,6 +36,7 @@ static void dealloc(Object *self) {
 
 	Button *this = (Button *) self;
 
+	release(this->image);
 	release(this->title);
 
 	super(Object, self, dealloc);
@@ -97,12 +98,30 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame) {
 	self = (Button *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
+		self->image = $(alloc(ImageView), initWithFrame, frame);
+		assert(self->image);
+
+		$((View *) self, addSubview, (View *) self->image);
+
 		self->title = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->title);
 
 		$((View *) self, addSubview, (View *) self->title);
 	}
 
+	return self;
+}
+
+/**
+ * @fn Button *Button::initWithImage(Button *self, Image *image)
+ * @memberof Button
+ */
+static Button *initWithImage(Button *self, Image *image) {
+
+	self = $(self, initWithFrame, NULL);
+	if (self) {
+		$(self->image, setImage, image);
+	}
 	return self;
 }
 
@@ -134,6 +153,7 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
 	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((ButtonInterface *) clazz->def->interface)->initWithImage = initWithImage;
 	((ButtonInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
 }
 
