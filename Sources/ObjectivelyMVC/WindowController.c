@@ -273,8 +273,7 @@ static void setWindow(WindowController *self, SDL_Window *window) {
 	
 	if (self->window != window || self->display != display) {
 
-		self->display = display;
-		self->window = window;
+		self->display = display; self->window = window; self->hover = NULL;
 
 		const Uint32 flags = SDL_GetWindowFlags(self->window);
 		assert(flags & SDL_WINDOW_OPENGL);
