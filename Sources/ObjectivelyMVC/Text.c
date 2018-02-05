@@ -97,7 +97,7 @@ static void applyStyle(View *self, const Style *style) {
 	Font *font = NULL;
 
 	if (fontCategory != (FontCategory) -1) {
-		font = $$(Font, defaultFont, fontCategory);
+		font = retain($$(Font, defaultFont, fontCategory));
 	} else if (fontFamily || fontSize || fontStyle) {
 
 		font = $(alloc(Font), initWithAttributes, fontFamily, fontSize, fontStyle);
