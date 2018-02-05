@@ -78,6 +78,7 @@ static void applyStyle(View *self, const Style *style) {
 
 	Text *this = (Text *) self;
 
+	FontCategory fontCategory = -1;
 	char *fontFamily = NULL;
 	int fontSize = 0;
 	int fontStyle = 0;
@@ -85,6 +86,7 @@ static void applyStyle(View *self, const Style *style) {
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("color", InletTypeColor, &this->color, NULL),
 		MakeInlet("font", InletTypeFont, &this->font, NULL),
+		MakeInlet("font-category", InletTypeEnum, &fontCategory, (ident) FontCategoryNames),
 		MakeInlet("font-family", InletTypeCharacters, &fontFamily, NULL),
 		MakeInlet("font-size", InletTypeInteger, &fontSize, NULL),
 		MakeInlet("font-style", InletTypeEnum, &fontStyle, (ident) FontStyleNames)
@@ -92,19 +94,24 @@ static void applyStyle(View *self, const Style *style) {
 
 	$(self, bind, inlets, style->attributes);
 
-	if (fontFamily || fontSize || fontStyle) {
+	Font *font = NULL;
 
-		Font *font = $(alloc(Font), initWithAttributes, fontFamily, fontSize, fontStyle);
-		if (font) {
-			$(this, setFont, font);
-		}
+	if (fontCategory != (FontCategory) -1) {
+		font = $$(Font, defaultFont, fontCategory);
+	} else if (fontFamily || fontSize || fontStyle) {
 
-		release(font);
+		font = $(alloc(Font), initWithAttributes, fontFamily, fontSize, fontStyle);
 
 		if (fontFamily) {
 			free(fontFamily);
 		}
 	}
+
+	if (font) {
+		$(this, setFont, font);
+	}
+
+	release(font);
 }
 
 /**
