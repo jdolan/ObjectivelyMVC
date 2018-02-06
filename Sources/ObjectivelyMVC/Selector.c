@@ -315,7 +315,7 @@ typedef struct {
 /**
  * @brief Recursively selects Views by iterating the SelectorSequences in the given Selection.
  */
-static Set *_select(View *view, Selection *selection) {
+static Set *__select(View *view, Selection *selection) {
 
 	const SelectorSequence *sequence = $(selection->sequences, objectAtIndex, selection->sequence);
 	
@@ -327,22 +327,22 @@ static Set *_select(View *view, Selection *selection) {
 
 			case SequenceCombinatorDescendent:
 				selection->sequence++;
-				$(view, enumerateDescendants, (ViewEnumerator) _select, selection);
+				$(view, enumerateDescendants, (ViewEnumerator) __select, selection);
 				break;
 
 			case SequenceCombinatorChild:
 				selection->sequence++;
-				$(view, enumerateSubviews, (ViewEnumerator) _select, selection);
+				$(view, enumerateSubviews, (ViewEnumerator) __select, selection);
 				break;
 
 			case SequenceCombinatorSibling:
 				selection->sequence++;
-				$(view, enumerateSiblings, (ViewEnumerator) _select, selection);
+				$(view, enumerateSiblings, (ViewEnumerator) __select, selection);
 				break;
 
 			case SequenceCombinatorAdjacent:
 				selection->sequence++;
-				$(view, enumerateAdjacent, (ViewEnumerator) _select, selection);
+				$(view, enumerateAdjacent, (ViewEnumerator) __select, selection);
 				break;
 
 			case SequenceCombinatorTerminal:
@@ -351,20 +351,21 @@ static Set *_select(View *view, Selection *selection) {
 		}
 	}
 
-	$(view, enumerateSubviews, (ViewEnumerator) _select, selection);
+	$(view, enumerateSubviews, (ViewEnumerator) __select, selection);
 
 	return (Set *) selection->selection;
 }
+
 
 /**
  * @fn Array *Selector::select(const Selector *self, View *view)
  * @memberof Selector
  */
-static Set *select(const Selector *self, View *view) {
+static Set *_select(const Selector *self, View *view) {
 
 	assert(view);
 
-	return _select(view, &(Selection) {
+	return __select(view, &(Selection) {
 		.sequences = self->sequences,
 		.selection = $$(MutableSet, set)
 	});
@@ -387,7 +388,7 @@ static void initialize(Class *clazz) {
 	((SelectorInterface *) clazz->def->interface)->initWithRule = initWithRule;
 	((SelectorInterface *) clazz->def->interface)->matchesView = matchesView;
 	((SelectorInterface *) clazz->def->interface)->parse = parse;
-	((SelectorInterface *) clazz->def->interface)->select = select;
+	((SelectorInterface *) clazz->def->interface)->select = _select;
 }
 
 /**
