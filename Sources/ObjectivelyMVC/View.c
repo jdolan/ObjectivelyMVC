@@ -333,16 +333,19 @@ static void becomeFirstResponder(View *self) {
 }
 
 /**
- * @fn void View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
+ * @fn _Bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
  * @memberof View
  */
-static void _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
+static _Bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
 	if (inlets) {
 		if (bindInlets(inlets, dictionary)) {
 			self->needsLayout = true;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 /**

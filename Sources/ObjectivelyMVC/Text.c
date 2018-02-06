@@ -78,40 +78,32 @@ static void applyStyle(View *self, const Style *style) {
 
 	Text *this = (Text *) self;
 
-	FontCategory fontCategory = -1;
-	char *fontFamily = NULL;
-	int fontSize = 0;
-	int fontStyle = 0;
-
 	const Inlet inlets[] = MakeInlets(
-		MakeInlet("color", InletTypeColor, &this->color, NULL),
-		MakeInlet("font", InletTypeFont, &this->font, NULL),
-		MakeInlet("font-category", InletTypeEnum, &fontCategory, (ident) FontCategoryNames),
+		MakeInlet("color", InletTypeColor, &this->color, NULL)
+	);
+
+	$(self, bind, inlets, style->attributes);
+
+	char *fontFamily = NULL;
+	int fontSize = -1, fontStyle = -1;
+
+	const Inlet fontInlets[] = MakeInlets(
 		MakeInlet("font-family", InletTypeCharacters, &fontFamily, NULL),
 		MakeInlet("font-size", InletTypeInteger, &fontSize, NULL),
 		MakeInlet("font-style", InletTypeEnum, &fontStyle, (ident) FontStyleNames)
 	);
 
-	$(self, bind, inlets, style->attributes);
+	if ($(self, bind, fontInlets, style->attributes)) {
 
-	Font *font = NULL;
+		Font *font = $$(Font, cachedFont, fontFamily , fontSize, fontStyle);
+		assert(font);
 
-	if (fontCategory != (FontCategory) -1) {
-		font = retain($$(Font, defaultFont, fontCategory));
-	} else if (fontFamily || fontSize || fontStyle) {
-
-		font = $(alloc(Font), initWithAttributes, fontFamily, fontSize, fontStyle);
+		$(this, setFont, font);
 
 		if (fontFamily) {
 			free(fontFamily);
 		}
 	}
-
-	if (font) {
-		$(this, setFont, font);
-	}
-
-	release(font);
 }
 
 /**
@@ -239,7 +231,7 @@ static SDL_Size naturalSize(const Text *self) {
  */
 static void setFont(Text *self, Font *font) {
 
-	font = font ?: $$(Font, defaultFont, FontCategoryDefault);
+	font = font ?: $$(Font, defaultFont);
 
 	if (font != self->font) {
 

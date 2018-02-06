@@ -375,15 +375,16 @@ struct ViewInterface {
 	void (*becomeFirstResponder)(View *self);
 
 	/**
-	 * @fn void View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
+	 * @fn _Bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
 	 * @brief Performs data binding for the Inlets described in `dictionary`.
 	 * @param self The View.
 	 * @param inlets The Inlets to bind.
 	 * @param dictionary A Dictionary describing this View.
+	 * @return True if one or more Inlet was bound, false otherwise.
 	 * @remarks Subclasses will typically call this method from View::awakeWithDictionary.
 	 * @memberof View
 	 */
-	void (*bind)(View *self, const Inlet *inlets, const Dictionary *dictionary);
+	_Bool (*bind)(View *self, const Inlet *inlets, const Dictionary *dictionary);
 
 	/**
 	 * @fn SDL_Rect View::bounds(const View *self)

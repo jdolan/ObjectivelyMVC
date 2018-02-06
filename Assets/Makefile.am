@@ -3,6 +3,7 @@
 
 BUILT_SOURCES = \
 	check.png.h \
+	coda.ttf.h \
 	debug.css.h \
 	debug.json.h \
 	resize.png.h \

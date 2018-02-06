@@ -101,9 +101,8 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
 
 	self = (Option *) super(View, self, initWithFrame, NULL);
 	if (self) {
-		Font *font = $$(Font, defaultFont, FontCategoryPrimaryControl);
 
-		self->title = $(alloc(Text), initWithText, title, font);
+		self->title = $(alloc(Text), initWithText, title, NULL);
 		assert(self->title);
 
 		self->value = value;

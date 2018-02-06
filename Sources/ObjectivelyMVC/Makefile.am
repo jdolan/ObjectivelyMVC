@@ -119,9 +119,7 @@ libObjectivelyMVC_la_CFLAGS = \
 	-I$(top_srcdir) \
 	-I$(top_srcdir)/Assets \
 	-I$(top_srcdir)/Sources \
-	-DPKGDATADIR=\"$(pkgdatadir)\" \
 	@HOST_CFLAGS@ \
-	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
 	@SDL2_CFLAGS@
 
@@ -131,6 +129,5 @@ libObjectivelyMVC_la_LDFLAGS = \
 
 libObjectivelyMVC_la_LIBADD = \
 	@HOST_LIBS@ \
-	@FONTCONFIG_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
 	@SDL2_LIBS@

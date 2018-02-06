@@ -156,7 +156,6 @@
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
 		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E31C4BF45C00FBA2DE /* libfontconfig.1.dylib */; };
 		CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
 		CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
@@ -359,6 +358,8 @@
 		CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HueColorPicker.h; sourceTree = "<group>"; };
 		CE76279C1D4A5A5800EEEE78 /* Renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Renderer.c; sourceTree = "<group>"; };
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		CE7CBD7E202942B300C5316A /* coda.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = coda.ttf; sourceTree = "<group>"; };
+		CE7CBD7F20294B9B00C5316A /* coda.ttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coda.ttf.h; sourceTree = "<group>"; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 		CE7EA4CD1D479A9000BD37A3 /* quetoo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = quetoo.jpg; sourceTree = "<group>"; };
 		CE84C6CA1FFC8E9E00F72267 /* debug.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = debug.json; sourceTree = "<group>"; };
@@ -475,7 +476,6 @@
 			files = (
 				CE12D8741C5CF43500CD0B13 /* libObjectively.dylib in Frameworks */,
 				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
-				CED157E71C4BF45D00FBA2DE /* libfontconfig.1.dylib in Frameworks */,
 				CED157E81C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib in Frameworks */,
 				CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
 				CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */,
@@ -634,6 +634,8 @@
 			children = (
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
+				CE7CBD7E202942B300C5316A /* coda.ttf */,
+				CE7CBD7F20294B9B00C5316A /* coda.ttf.h */,
 				CE9FECD5201D5F2A00F954ED /* debug.css */,
 				CE9FECD6201D5F8000F954ED /* debug.css.h */,
 				CE84C6CA1FFC8E9E00F72267 /* debug.json */,
@@ -950,7 +952,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i coda.ttf coda.ttf.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

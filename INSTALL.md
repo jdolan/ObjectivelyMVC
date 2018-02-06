@@ -4,7 +4,6 @@ Installing and Compiling with ObjectivelyMVC
 ### Dependencies
 
  * [Objectively](https://github.com/jdolan/Objectively)
- * [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/)
  * [SDL2](https://www.libsdl.org/)
  * [SDL2_image](https://www.libsdl.org/projects/SDL_image/)
  * [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)

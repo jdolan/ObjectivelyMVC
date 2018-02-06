@@ -134,7 +134,9 @@ static void bindFont(const Inlet *inlet, ident obj) {
 
 	release(*(Font **) inlet->dest);
 
-	*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
+	// TODO
+
+	//*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
 }
 
 /**
