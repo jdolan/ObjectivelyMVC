@@ -91,6 +91,8 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
+	super(View, self, layoutSubviews);
+
 	TableView *this = (TableView *) self;
 
 	View *scrollView = (View *) this->scrollView;
@@ -107,27 +109,6 @@ static void layoutSubviews(View *self) {
 	}
 
 	scrollView->frame = frame;
-	scrollView->needsLayout = true;
-
-	super(View, self, layoutSubviews);
-}
-
-/**
- * @see View::sizeThatFits(const View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
-
-	const TableView *this = (TableView *) self;
-
-	const SDL_Size headerSize = $((View *) this->headerView, sizeThatFits);
-	const SDL_Size contentSize = $((View *) this->contentView, sizeThatFits);
-
-	SDL_Size size = MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
-
-	size.w += self->padding.left + self->padding.right;
-	size.h += self->padding.top + self->padding.bottom;
-
-	return size;
 }
 
 #pragma mark - Control
@@ -566,7 +547,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 

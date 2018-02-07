@@ -16,6 +16,10 @@ Box > Label {
 	left: 20;
 }
 
+Box > Label > Text {
+	font-size: 12;
+}
+
 Box > .contentView {
 	autoresizing-mask: contain | width;
 	padding-top: 4;
@@ -173,7 +177,7 @@ StackView.container {
 TableCellView {
 	autoresizing-mask: contain;
 	padding: 0 2 0 2;
-	width: 100;
+	min-width: 80;
 }
 
 TableCellView > Text {
