@@ -176,16 +176,22 @@ static void bindPoint(const Inlet *inlet, ident obj) {
  */
 static void bindRectangle(const Inlet *inlet, ident obj) {
 
-	const Array *array = cast(Array, obj);
+	if ($((Object *) obj, isKindOfClass, _Number())) {
+		const Number *n = obj;
 
-	assert(array->count == 4);
+		*((SDL_Rect *) inlet->dest) = MakeRect(n->value, n->value, n->value, n->value);
+	} else {
+		const Array *array = cast(Array, obj);
 
-	const Number *x = $(array, objectAtIndex, 0);
-	const Number *y = $(array, objectAtIndex, 1);
-	const Number *w = $(array, objectAtIndex, 2);
-	const Number *h = $(array, objectAtIndex, 3);
+		assert(array->count == 4);
 
-	*((SDL_Rect *) inlet->dest) = MakeRect(x->value, y->value, w->value, h->value);
+		const Number *x = $(array, objectAtIndex, 0);
+		const Number *y = $(array, objectAtIndex, 1);
+		const Number *w = $(array, objectAtIndex, 2);
+		const Number *h = $(array, objectAtIndex, 3);
+
+		*((SDL_Rect *) inlet->dest) = MakeRect(x->value, y->value, w->value, h->value);
+	}
 }
 
 /**
