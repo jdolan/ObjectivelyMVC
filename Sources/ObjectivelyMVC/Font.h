@@ -128,11 +128,10 @@ struct FontInterface {
 
 	/**
 	 * @static
-	 * @fn void Font::cacheFont(Font *font)
 	 * @brief Caches the specified font Data.
 	 * @param data The TTF Data.
 	 * @param family The family.
-	 * @member Font
+	 * @memberof Font
 	 */
 	void (*cacheFont)(Data *data, const char *family);
 
@@ -156,6 +155,7 @@ struct FontInterface {
 	 * @fn Font *Font::initWithData(Font *self, Data *data, const char *family, int size, int style)
 	 * @brief Initializes this Font with the given TTF Data and attributes.
 	 * @param self The Font.
+	 * @param data The Data.
 	 * @param family The family.
 	 * @param size The size.
 	 * @param style The style.

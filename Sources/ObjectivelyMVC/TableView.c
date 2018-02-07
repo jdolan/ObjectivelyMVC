@@ -223,7 +223,7 @@ static void addColumn(TableView *self, TableColumn *column) {
 }
 
 /**
- * @fn void TableView::addColumnWithIdentifier(TableView *self, TableColumn *column)
+ * @fn void TableView::addColumnWithIdentifier(TableView *self, const char *identifier)
  * @memberof TableView
  */
 static void addColumnWithIdentifier(TableView *self, const char *identifier) {

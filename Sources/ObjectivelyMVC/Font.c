@@ -110,8 +110,8 @@ static MutableDictionary *_cache;
 static MutableArray *_fonts;
 
 /**
- * @fn void Font::cacheFont(Data *font, const char *family)
- * @member Font
+ * @fn void Font::cacheFont(Data *data, const char *family)
+ * @memberof Font
  */
 static void cacheFont(Data *data, const char *family) {
 	$(_cache, setObjectForKeyPath, data, family);

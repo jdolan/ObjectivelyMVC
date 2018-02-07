@@ -346,7 +346,7 @@ struct ViewInterface {
 	void (*applyThemeIfNeeded)(View *self, const Theme *theme);
 
 	/**
-	 * @fn void View::attachStylesheet(View *self)
+	 * @fn void View::attachStylesheet(View *self, SDL_Window *window)
 	 * @brief Attaches this View's Stylesheet to the Theme associated with the given window.
 	 * @param self The View.
 	 * @param window The window.
@@ -440,7 +440,7 @@ struct ViewInterface {
 	View *(*descendantWithIdentifier)(const View *self, const char *identifier);
 
 	/**
-	 * @fn void View::detachStylesheet(View *self)
+	 * @fn void View::detachStylesheet(View *self, SDL_Window *window)
 	 * @brief Detaches this View's Stylesheet from the Theme associated with the given window.
 	 * @param self The View.
 	 * @param window The window.
@@ -868,7 +868,7 @@ struct ViewInterface {
 	 * @static
 	 * @fn View *View::viewWithCharacters(const char *chars, Outlet *outlets)
 	 * @brief Instantiates a View initialized with the given null-terminated JSON C string.
-	 * @param json A null-terminated JSON C string describing a View.
+	 * @param chars A null-terminated JSON C string describing a View.
 	 * @param outlets An optional array of Outlets to resolve.
 	 * @return The initialized View, or `NULL` on error.
 	 * @memberof View
