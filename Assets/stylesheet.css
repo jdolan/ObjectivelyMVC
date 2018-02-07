@@ -178,6 +178,7 @@ TableCellView {
 	autoresizing-mask: contain;
 	padding: 0 2 0 2;
 	min-width: 80;
+	min-height: 24;
 }
 
 TableCellView > Text {

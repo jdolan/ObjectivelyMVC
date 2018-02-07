@@ -85,9 +85,9 @@
                     }
                   ],
                   "style": {
-                    "width": 300,
+                    "width": 400,
                     "height": 480,
-					"selection": "multiple"
+                    "selection": "multiple"
                   }
                 }
               ]
@@ -110,10 +110,10 @@
                   "class": "CollectionView",
                   "identifier": "collectionView",
                   "style": {
-                    "width": 300,
+                    "width": 400,
                     "height": 480,
                     "item-size": [
-                      62,
+                      88,
                       48
                     ],
                     "selection": "multiple"

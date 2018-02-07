@@ -111,6 +111,20 @@ static void layoutSubviews(View *self) {
 	scrollView->frame = frame;
 }
 
+/**
+  * @see View::sizeThatContains(const View *)
+  */
+static SDL_Size sizeThatContains(const View *self) {
+
+	const TableView *this = (TableView *) self;
+
+	if (self->autoresizingMask & ViewAutoresizingContain) {
+		return $(this, naturalSize);
+	}
+
+	return super(View, self, sizeThatContains);
+}
+
 #pragma mark - Control
 
 /**
@@ -348,6 +362,25 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 }
 
 /**
+ * @fn SDL_Size TableView::naturalSize(const TableView *self)
+ * @memberof TableView
+ */
+static SDL_Size naturalSize(const TableView *self) {
+
+	const SDL_Size headerSize = $((View *) self->headerView, sizeThatFits);
+	const SDL_Size contentSize = $((View *) self->contentView, sizeThatFits);
+
+	SDL_Size size = MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
+
+	View *this = (View *) self;
+
+	size.w += this->padding.left + this->padding.right;
+	size.h += this->padding.top + this->padding.bottom;
+
+	return size;
+}
+
+/**
  * @brief ArrayEnumerator to remove TableRowViews from the table's contentView.
  */
 static void reloadData_removeRows(const Array *array, ident obj, ident data) {
@@ -547,6 +580,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->def->interface)->sizeThatContains = sizeThatContains;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
@@ -558,6 +592,7 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->def->interface)->deselectRowAtIndex = deselectRowAtIndex;
 	((TableViewInterface *) clazz->def->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
 	((TableViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((TableViewInterface *) clazz->def->interface)->naturalSize = naturalSize;
 	((TableViewInterface *) clazz->def->interface)->reloadData = reloadData;
 	((TableViewInterface *) clazz->def->interface)->removeColumn = removeColumn;
 	((TableViewInterface *) clazz->def->interface)->rowAtPoint = rowAtPoint;

@@ -256,6 +256,14 @@ struct TableViewInterface {
 	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame);
 
 	/**
+	 * @fn SDL_Size TableView::naturalSize(const TableView *self)
+	 * @param self The TableView.
+	 * @return The natural size of this TableView, including all header and content rows.
+	 * @memberof TableView
+	 */
+	SDL_Size (*naturalSize)(const TableView *self);
+
+	/**
 	 * @fn void TableView::reloadData(TableView *self)
 	 * @brief Reloads this TableView's visible rows.
 	 * @param self The TableView.

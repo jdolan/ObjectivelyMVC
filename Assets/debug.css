@@ -15,6 +15,10 @@
 	color: white;
 }
 
+#debug > TableView {
+	autoresizing-mask: contain;
+}
+
 #debug > #selectors * {
 	color: green;
 }

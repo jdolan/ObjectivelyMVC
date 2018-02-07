@@ -179,10 +179,7 @@ static void debug(DebugViewController *self, const View *view) {
 		release(description);
 
 		$(self->selectors, reloadData);
-		$((View *) self->selectors, sizeToFit);
-
 		$(self->computedStyle, reloadData);
-		$((View *) self->computedStyle, sizeToFit);
 
 		((ViewController *) self)->view->needsLayout = true;
 	}
