@@ -7,6 +7,9 @@
     <Filter Include="Sources\ObjectivelyMVC">
       <UniqueIdentifier>{5a7276a0-1ac2-4f29-89da-9558e190f7ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{3266bded-3792-4f2f-b7b0-f7bb43f65f64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Sources\ObjectivelyMVC.h">
@@ -34,9 +37,6 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Constraint.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h">
@@ -171,6 +171,24 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\WindowController.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Assets\check.png.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\debug.css.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\debug.json.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\resize.png.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\stylesheet.css.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\DebugViewController.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c">
@@ -192,9 +210,6 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Colors.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Constraint.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Control.c">
@@ -321,6 +336,9 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\WindowController.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\DebugViewController.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
   </ItemGroup>
