@@ -73,7 +73,6 @@
                 {
                   "class": "TableView",
                   "identifier": "tableView",
-                  "autoresizingMask": "ViewAutoresizingWidth",
                   "columns": [
                     {
                       "identifier": "Column A"
@@ -86,10 +85,10 @@
                     }
                   ],
                   "style": {
-                    "min-width": 300,
-                    "min-height": 360
-                  },
-                  "selection": "ControlSelectionMultiple"
+                    "width": 300,
+                    "height": 480,
+					"selection": "multiple"
+                  }
                 }
               ]
             }
@@ -111,8 +110,8 @@
                   "class": "CollectionView",
                   "identifier": "collectionView",
                   "style": {
-                    "min-width": 300,
-                    "min-height": 360,
+                    "width": 300,
+                    "height": 480,
                     "item-size": [
                       62,
                       48
