@@ -87,7 +87,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((HueColorPicker *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((HueColorPicker *) self, initWithFrame, NULL);
 }
 
 /**
@@ -107,14 +107,13 @@ static void updateBindings(View *self) {
 #pragma mark - HueColorPicker
 
 /**
- * @fn HueColorPicker *HueColorPicker::initWithFrame(HueColorPicker *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn HueColorPicker *HueColorPicker::initWithFrame(HueColorPicker *self, const SDL_Rect *frame)
  * @memberof HueColorPicker
  */
-static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame, ControlStyle style) {
+static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame) {
 
-	self = (HueColorPicker *) super(Control, self, initWithFrame, frame, style);
+	self = (HueColorPicker *) super(Control, self, initWithFrame, frame);
 	if (self) {
-		self->control.view.autoresizingMask = ViewAutoresizingContain;
 
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
@@ -124,11 +123,10 @@ static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame
 		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
 		assert(self->colorView);
 
-		self->colorView->autoresizingMask = ViewAutoresizingWidth;
-
+		$(self->colorView, addClassName, "colorView");
 		$((View *) self->stackView, addSubview, self->colorView);
 
-		self->hueSlider = $(alloc(Slider), initWithFrame, NULL, style);
+		self->hueSlider = $(alloc(Slider), initWithFrame, NULL);
 		assert(self->hueSlider);
 
 		self->hueSlider->delegate.self = self;

@@ -32,8 +32,6 @@
  * @brief A Control allowing users to select one or more Options.
  */
 
-#define DEFAULT_SELECT_WIDTH 100
-
 typedef struct SelectDelegate SelectDelegate;
 
 typedef struct Select Select;
@@ -86,19 +84,12 @@ struct Select {
 	SelectDelegate delegate;
 
 	/**
-	 * @brief The Select Options.
-	 * @private
+	 * @brief The Options.
 	 */
 	MutableArray *options;
 
 	/**
-	 * @brief The selected Option, or `NULL`.
-	 */
-	Option *selectedOption;
-
-	/**
-	 * @brief The StackView for rendering all Options.
-	 * @private
+	 * @brief The StackView for rendering the Options.
 	 */
 	StackView *stackView;
 };
@@ -124,15 +115,14 @@ struct SelectInterface {
 	void (*addOption)(Select *self, const char *title, ident value);
 
 	/**
-	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame)
 	 * @brief Initializes this Select with the specified frame and style.
 	 * @param self The Select.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized Select, or `NULL` on error.
 	 * @memberof Select
 	 */
-	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame, ControlStyle style);
+	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn Option *Select::optionWithValue(const Select *self, ident value)
@@ -170,6 +160,15 @@ struct SelectInterface {
 	void (*removeOptionWithValue)(Select *self, ident value);
 
 	/**
+	 * @fn void Select::selectOption(Select *self, Option *option)
+	 * @brief Selects the given Option.
+	 * @param self The Select.
+	 * @param option The Option to select.
+	 * @memberof Select
+	 */
+	void (*selectOption)(Select *self, Option *option);
+
+	/**
 	 * @fn void Select::selectOptionWithValue(Select *self, ident value)
 	 * @brief Selects the first Option with the given value.
 	 * @param self The Select.
@@ -181,10 +180,20 @@ struct SelectInterface {
 	/**
 	 * @fn Option *Select::selectedOption(const Select *self)
 	 * @param self The Select.
-	 * @return The selected Option, or `NULL`.
+	 * @return The first selected Option, or `NULL`.
+	 * @remarks This is a convenience method for ControlSelectionSingle. For
+	 * ControlSelectionMultiple, use Select::selectedOptions.
 	 * @memberof Select
 	 */
 	Option *(*selectedOption)(const Select *self);
+
+	/**
+	 * @fn Array *Select::selectedOptions(const Select *self)
+	 * @param self The Select.
+	 * @return An Array containing the selected Options.
+	 * @memberof Select
+	 */
+	Array *(*selectedOptions)(const Select *self);
 };
 
 /**

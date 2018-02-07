@@ -114,10 +114,6 @@ struct TableViewDelegate {
 	void (*didSetSortColumn)(TableView *tableView);
 };
 
-#define DEFAULT_TABLE_VIEW_PADDING 4
-#define DEFAULT_TABLE_VIEW_CELL_SPACING 2
-#define DEFAULT_TABLE_VIEW_ROW_HEIGHT 24
-
 /**
  * @brief TableViews provide sortable, tabular presentations of data.
  * @extends Control
@@ -135,16 +131,6 @@ struct TableView {
 	 * @protected
 	 */
 	TableViewInterface *interface;
-
-	/**
-	 * @brief The
-	 */
-	SDL_Color alternateBackgroundColor;
-
-	/**
-	 * @brief Inter-cell (horizontal) spacing.
-	 */
-	int cellSpacing;
 
 	/**
 	 * @brief The column definitions.
@@ -177,11 +163,6 @@ struct TableView {
 	MutableArray *rows;
 
 	/**
-	 * @brief The row height.
-	 */
-	int rowHeight;
-
-	/**
 	 * @brief The scroll view.
 	 */
 	ScrollView *scrollView;
@@ -190,11 +171,6 @@ struct TableView {
 	 * @brief The column to sort by.
 	 */
 	TableColumn *sortColumn;
-
-	/**
-	 * @brief Set to `true` to enable alternate row coloring.
-	 */
-	_Bool usesAlternateBackgroundColor;
 };
 
 /**
@@ -215,6 +191,15 @@ struct TableViewInterface {
 	 * @memberof TableView
 	 */
 	void (*addColumn)(TableView *self, TableColumn *column);
+
+	/**
+	 * @fn void TableView::addColumnWithIdentifier(TableView *self, const char *identifier)
+	 * @brief Adds a new TableColumn with the given identifier to this table.
+	 * @param self The TableView.
+	 * @param identifier The column identifier.
+	 * @memberof TableView
+	 */
+	void (*addColumnWithIdentifier)(TableView *self, const char *identifier);
 
 	/**
 	 * @fn TableColumn *TableView::columnAtPoint(const TableView *self, const SDL_Point *point)
@@ -261,15 +246,22 @@ struct TableViewInterface {
 	void (*deselectRowsAtIndexes)(TableView *self, const IndexSet *indexSet);
 
 	/**
-	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame)
 	 * @brief Initializes this TableView with the specified frame and style.
 	 * @param self The TableView.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized TableView, or `NULL` on error.
 	 * @memberof TableView
 	 */
-	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame, ControlStyle style);
+	TableView *(*initWithFrame)(TableView *self, const SDL_Rect *frame);
+
+	/**
+	 * @fn SDL_Size TableView::naturalSize(const TableView *self)
+	 * @param self The TableView.
+	 * @return The natural size of this TableView, including all header and content rows.
+	 * @memberof TableView
+	 */
+	SDL_Size (*naturalSize)(const TableView *self);
 
 	/**
 	 * @fn void TableView::reloadData(TableView *self)
@@ -298,14 +290,6 @@ struct TableViewInterface {
 	 * @memberof TableView
 	 */
 	ssize_t (*rowAtPoint)(const TableView *self, const SDL_Point *point);
-
-	/**
-	 * @fn SDL_Rect TableView::scrollableArea(const TableView *self)
-	 * @param self The TableView.
-	 * @return The frame available to this TableView's ScrollView.
-	 * @memberof TableView
-	 */
-	SDL_Rect (*scrollableArea)(const TableView *self);
 
 	/**
 	 * @fn void TableView::selectAll(TableView *self)

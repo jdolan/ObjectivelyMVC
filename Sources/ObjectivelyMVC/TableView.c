@@ -61,12 +61,6 @@ static void awakeWithDictionary_columns(const Array *array, ident obj, ident dat
 	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);
 	assert(column);
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("cellAlignment", InletTypeEnum, &column->cellAlignment, (ident) ViewAlignmentNames),
-		MakeInlet("width", InletTypeInteger, &column->width, NULL)
-	);
-
-	$((View *) data, bind, inlets, obj);
 	$((TableView *) data, addColumn, column);
 
 	release(column);
@@ -79,17 +73,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
 	super(View, self, awakeWithDictionary, dictionary);
 
-	TableView *this = (TableView *) self;
-
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("alternateBackgroundColor", InletTypeColor, &this->alternateBackgroundColor, NULL),
-		MakeInlet("cellSpacing", InletTypeInteger, &this->cellSpacing, NULL),
-		MakeInlet("rowHeight", InletTypeInteger, &this->rowHeight, NULL),
-		MakeInlet("usesAlternateBackgroundColor", InletTypeBool, &this->usesAlternateBackgroundColor, NULL)
-	);
-
-	$(self, bind, inlets, dictionary);
-
 	const Array *columns = $(dictionary, objectForKeyPath, "columns");
 	if (columns) {
 		$(columns, enumerateObjects, awakeWithDictionary_columns, self);
@@ -100,7 +83,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((TableView *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((TableView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -108,47 +91,38 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
+	super(View, self, layoutSubviews);
+
 	TableView *this = (TableView *) self;
 
 	View *scrollView = (View *) this->scrollView;
+	View *headerView = (View *) this->headerView;
 
-	scrollView->frame = $(this, scrollableArea);
-	scrollView->needsLayout = true;
+	SDL_Rect frame = $(self, bounds);
 
-	const Array *rows = (Array *) this->rows;
-	for (size_t i = 0; i < rows->count; i++) {
+	if (headerView->hidden == false) {
 
-		TableRowView *row = (TableRowView *) $(rows, objectAtIndex, i);
-		row->stackView.view.frame.h = this->rowHeight;
+		const SDL_Size size = $(headerView, sizeThatFits);
 
-		if (this->usesAlternateBackgroundColor && (i & 1)) {
-			row->assignedBackgroundColor = this->alternateBackgroundColor;
-		} else {
-			row->assignedBackgroundColor = Colors.Clear;
-		}
-
-		row->stackView.view.backgroundColor = row->assignedBackgroundColor;
+		frame.y += size.h;
+		frame.h -= size.h;
 	}
 
-	super(View, self, layoutSubviews);
+	scrollView->frame = frame;
 }
 
 /**
- * @see View::sizeThatFits(const View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
+  * @see View::sizeThatContains(const View *)
+  */
+static SDL_Size sizeThatContains(const View *self) {
 
 	const TableView *this = (TableView *) self;
 
-	const SDL_Size headerSize = $((View *) this->headerView, sizeThatFits);
-	const SDL_Size contentSize = $((View *) this->contentView, sizeThatFits);
+	if (self->autoresizingMask & ViewAutoresizingContain) {
+		return $(this, naturalSize);
+	}
 
-	SDL_Size size = MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
-
-	size.w += self->padding.left + self->padding.right;
-	size.h += self->padding.top + self->padding.bottom;
-
-	return size;
+	return super(View, self, sizeThatContains);
 }
 
 #pragma mark - Control
@@ -177,7 +151,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			return true;
 		}
 
-		if ($((Control *) this->scrollView, highlighted) == false) {
+		if ($((Control *) this->scrollView, isHighlighted) == false) {
 			if ($((View *) this->contentView, didReceiveEvent, event)) {
 
 				const SDL_Point point = {
@@ -246,6 +220,20 @@ static void addColumn(TableView *self, TableColumn *column) {
 	$(self->columns, addObject, column);
 
 	$((TableRowView *) self->headerView, addCell, (TableCellView *) column->headerCell);
+}
+
+/**
+ * @fn void TableView::addColumnWithIdentifier(TableView *self, const char *identifier)
+ * @memberof TableView
+ */
+static void addColumnWithIdentifier(TableView *self, const char *identifier) {
+
+	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier);
+	assert(column);
+
+	$(self, addColumn, column);
+
+	release(column);
 }
 
 /**
@@ -339,12 +327,12 @@ static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
 }
 
 /**
- * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn TableView *TableView::initWithFrame(TableView *self, const SDL_Rect *frame)
  * @memberof TableView
  */
-static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlStyle style) {
+static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
-	self = (TableView *) super(Control, self, initWithFrame, frame, style);
+	self = (TableView *) super(Control, self, initWithFrame, frame);
 	if (self) {
 		self->columns = $$(MutableArray, array);
 		assert(self->columns);
@@ -360,35 +348,36 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
-		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
+		$((View *) self->contentView, addClassName, "contentView");
 
-		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL, style);
+		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
 		assert(self->scrollView);
-
-		self->scrollView->control.view.autoresizingMask |= ViewAutoresizingWidth;
 
 		$(self->scrollView, setContentView, (View *) self->contentView);
 
 		$((View *) self, addSubview, (View *) self->scrollView);
-
-		if (self->control.style == ControlStyleDefault) {
-
-			self->alternateBackgroundColor = Colors.AlternateColor;
-			self->usesAlternateBackgroundColor = true;
-
-			self->cellSpacing = DEFAULT_TABLE_VIEW_CELL_SPACING;
-			self->rowHeight = DEFAULT_TABLE_VIEW_ROW_HEIGHT;
-
-			self->control.view.backgroundColor = Colors.DefaultColor;
-
-			self->control.view.padding.top = 0;
-			self->control.view.padding.right = 0;
-			self->control.view.padding.bottom = 0;
-			self->control.view.padding.left = 0;
-		}
 	}
 
 	return self;
+}
+
+/**
+ * @fn SDL_Size TableView::naturalSize(const TableView *self)
+ * @memberof TableView
+ */
+static SDL_Size naturalSize(const TableView *self) {
+
+	const SDL_Size headerSize = $((View *) self->headerView, sizeThatFits);
+	const SDL_Size contentSize = $((View *) self->contentView, sizeThatFits);
+
+	SDL_Size size = MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
+
+	View *this = (View *) self;
+
+	size.w += this->padding.left + this->padding.right;
+	size.h += this->padding.top + this->padding.bottom;
+
+	return size;
 }
 
 /**
@@ -396,13 +385,6 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame, ControlS
  */
 static void reloadData_removeRows(const Array *array, ident obj, ident data) {
 	$((View *) data, removeSubview, (View *) obj);
-}
-
-/**
- * @brief ArrayEnumerator to add TableRowViews to the table's contentView.
- */
-static void reloadData_addRows(const Array *array, ident obj, ident data) {
-	$((View *) data, addSubview, (View *) obj);
 }
 
 /**
@@ -414,8 +396,7 @@ static void reloadData(TableView *self) {
 	assert(self->dataSource.numberOfRows);
 	assert(self->delegate.cellForColumnAndRow);
 
-	$((Array *) self->rows, enumerateObjects, reloadData_removeRows, self->contentView);
-	$(self->rows, removeAllObjects);
+	$(self->rows, removeAllObjectsWithEnumerator, reloadData_removeRows, self->contentView);
 
 	TableRowView *headerView = (TableRowView *) self->headerView;
 	$(headerView, removeAllCells);
@@ -433,21 +414,23 @@ static void reloadData(TableView *self) {
 		TableRowView *row = $(alloc(TableRowView), initWithTableView, self);
 		assert(row);
 
-		$(self->rows, addObject, row);
-		release(row);
-
 		for (size_t j = 0; j < columns->count; j++) {
 			const TableColumn *column = $(columns, objectAtIndex, j);
 
 			TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i);
 			assert(cell);
 
+			cell->view.identifier = strdup(column->identifier);
+
 			$(row, addCell, cell);
 			release(cell);
 		}
-	}
 
-	$((Array *) self->rows, enumerateObjects, reloadData_addRows, self->contentView);
+		$(self->rows, addObject, row);
+		release(row);
+
+		$((View *) self->contentView, addSubview, (View *) row);
+	}
 
 	self->control.view.needsLayout = true;
 }
@@ -476,32 +459,20 @@ static void removeColumn(TableView *self, TableColumn *column) {
  */
 static ssize_t rowAtPoint(const TableView *self, const SDL_Point *point) {
 
-	if (self->rowHeight) {
-		const SDL_Rect contentFrame = $((View *) self->contentView, renderFrame);
-		if (SDL_PointInRect(point, &contentFrame)) {
-			return (point->y - contentFrame.y) / self->rowHeight;
+	const SDL_Rect scrollFrame = $((View *) self->scrollView, renderFrame);
+	if (SDL_PointInRect(point, &scrollFrame)) {
+
+		const Array *rows = (Array *) self->rows;
+		for (size_t i = 0; i < rows->count; i++) {
+
+			const View *row = $(rows, objectAtIndex, i);
+			if ($(row, containsPoint, point)) {
+				return i;
+			}
 		}
 	}
 
 	return -1;
-}
-
-/**
- * @fn SDL_Rect TableView::scrollableArea(const TableView *self)
- * @memberof TableView
- */
-static SDL_Rect scrollableArea(const TableView *self) {
-
-	const View *headerView = (View *) self->headerView;
-
-	SDL_Rect frame = $((View *) self, bounds);
-
-	if (headerView->hidden == false) {
-		frame.y = headerView->frame.h;
-		frame.h -= headerView->frame.h;
-	}
-
-	return frame;
 }
 
 /**
@@ -609,21 +580,22 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->sizeThatContains = sizeThatContains;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
 
 	((TableViewInterface *) clazz->def->interface)->addColumn = addColumn;
+	((TableViewInterface *) clazz->def->interface)->addColumnWithIdentifier = addColumnWithIdentifier;
 	((TableViewInterface *) clazz->def->interface)->columnAtPoint = columnAtPoint;
 	((TableViewInterface *) clazz->def->interface)->columnWithIdentifier = columnWithIdentifier;
 	((TableViewInterface *) clazz->def->interface)->deselectAll = deselectAll;
 	((TableViewInterface *) clazz->def->interface)->deselectRowAtIndex = deselectRowAtIndex;
 	((TableViewInterface *) clazz->def->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
 	((TableViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((TableViewInterface *) clazz->def->interface)->naturalSize = naturalSize;
 	((TableViewInterface *) clazz->def->interface)->reloadData = reloadData;
 	((TableViewInterface *) clazz->def->interface)->removeColumn = removeColumn;
 	((TableViewInterface *) clazz->def->interface)->rowAtPoint = rowAtPoint;
-	((TableViewInterface *) clazz->def->interface)->scrollableArea = scrollableArea;
 	((TableViewInterface *) clazz->def->interface)->selectedRowIndexes = selectedRowIndexes;
 	((TableViewInterface *) clazz->def->interface)->selectAll = selectAll;
 	((TableViewInterface *) clazz->def->interface)->selectRowAtIndex = selectRowAtIndex;

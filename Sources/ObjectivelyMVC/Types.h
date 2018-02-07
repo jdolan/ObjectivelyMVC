@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <SDL2/SDL_assert.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_pixels.h>
 
@@ -45,6 +46,13 @@
 
 typedef struct View View;
 typedef struct ViewController ViewController;
+
+/**
+ * @brief A function type for View enumeration
+ * @param view The View.
+ * @param data User data.
+ */
+typedef void (*ViewEnumerator)(View *view, ident data);
 
 typedef struct SDL_Size SDL_Size;
 

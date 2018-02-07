@@ -34,13 +34,7 @@
  * @memberof TableHeaderCellView
  */
 static TableHeaderCellView *initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame) {
-
-	self = (TableHeaderCellView *) super(TableCellView, self, initWithFrame, frame);
-	if (self) {
-
-	}
-
-	return self;
+	return (TableHeaderCellView *) super(TableCellView, self, initWithFrame, frame);
 }
 
 #pragma mark - Class lifecycle

@@ -25,7 +25,6 @@
 
 #include <Objectively/Array.h>
 
-#include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/Select.h>
 
 #define _Class _Select
@@ -40,7 +39,6 @@ static void dealloc(Object *self) {
 	Select *this = (Select *) self;
 
 	release(this->options);
-
 	release(this->stackView);
 
 	super(Object, self, dealloc);
@@ -52,7 +50,7 @@ static void dealloc(Object *self) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Select *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Select *) self, initWithFrame, NULL);
 }
 
 /**
@@ -62,37 +60,25 @@ static void layoutSubviews(View *self) {
 
 	Select *this = (Select *) self;
 
-	const Array *options = (Array *) this->options;
-	for (size_t i = 0; i < options->count; i++) {
+	Control *control = (Control *) self;
 
-		View *option = $(options, objectAtIndex, i);
-		if ((Option *) option == this->selectedOption) {
-			option->hidden = false;
-		} else {
-			option->hidden = this->control.state != ControlStateHighlighted;
-		}
+	if (control->selection == ControlSelectionSingle) {
 
-		if (option->hidden == false) {
+		const Array *options = (Array *) this->options;
+		for (size_t i = 0; i < options->count; i++) {
 
-			if (this->control.state == ControlStateHighlighted) {
-				if ((Option *) option == this->selectedOption) {
-					option->backgroundColor = Colors.SelectedColor;
-				} else {
-					option->backgroundColor = Colors.HighlightedColor;
-				}
+			Option *option = $(options, objectAtIndex, i);
+			if (option->isSelected) {
+				option->view.hidden = false;
+			} else if ($(control, isHighlighted)) {
+				option->view.hidden = false;
 			} else {
-				option->backgroundColor = Colors.Clear;
+				option->view.hidden = true;
 			}
 		}
-	}
 
-	if (this->control.state == ControlStateHighlighted) {
-		this->stackView->view.borderWidth = 1;
-	} else {
-		this->stackView->view.borderWidth = 0;
+		$((View *) this->stackView, sizeToFit);
 	}
-
-	$((View *) this->stackView, sizeToFit);
 
 	super(View, self, layoutSubviews);
 }
@@ -106,19 +92,14 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	SDL_Size size = super(View, self, sizeThatFits);
 
-	if (((Control *) self)->style == ControlStyleDefault) {
-		size.w = DEFAULT_SELECT_WIDTH;
-	} else {
-		size.w = 0;
-	}
-
 	const Array *options = (Array *) this->options;
 	for (size_t i = 0; i < options->count; i++) {
 
-		const View *option = (View *) $(options, objectAtIndex, i);
+		const View *option = $(options, objectAtIndex, i);
 		const SDL_Size optionSize = $(option, sizeThatFits);
 
 		size.w = max(size.w, optionSize.w + self->padding.left + self->padding.right);
+		size.h = max(size.h, optionSize.h + self->padding.top + self->padding.bottom);
 	}
 
 	return size;
@@ -152,51 +133,66 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 	}
 
-	else if (event->type == SDL_MOUSEMOTION) {
-		if (this->control.state == ControlStateHighlighted) {
-
-			const Array *options = (Array *) this->options;
-			for (size_t i = 0; i < options->count; i++) {
-
-				View *option = $(options, objectAtIndex, i);
-				if ($(option, didReceiveEvent, event)) {
-					option->backgroundColor = Colors.SelectedColor;
-				} else {
-					option->backgroundColor = Colors.HighlightedColor;
-				}
-			}
-		}
-		return true;
-	}
-
 	return super(Control, self, captureEvent, event);
 }
 
 /**
- * @fn void Control::stateDidChange(Control *self)
- * @memberof Control
+ * @see Control::stateDidChange(Control *)
  */
 static void stateDidChange(Control *self) {
-	
-	super(Control, self, stateDidChange);
 
-	((View *) self)->needsLayout = true;
+	Select *this = (Select *) self;
+
+	if (self->selection == ControlSelectionSingle) {
+
+		View *stackView = (View *) this->stackView;
+
+		if ($(self, isHighlighted)) {
+
+			const SDL_Rect renderFrame = $((View *) self, renderFrame);
+
+			stackView->frame.x = renderFrame.x + self->view.padding.left;
+			stackView->frame.y = renderFrame.y + self->view.padding.top;
+
+			View *view = (View *) self;
+
+			while (view->superview) {
+				view = view->superview;
+			}
+
+			$(stackView, addClassName, "options");
+			$(view, addSubview, stackView);
+
+			stackView->nextResponder = (View *) self;
+
+		} else {
+
+			$(stackView, removeClassName, "options");
+			$((View *) self, addSubview, stackView);
+
+			stackView->nextResponder = NULL;
+		}
+
+		$(stackView, sizeToFit);
+	}
+
+	super(Control, self, stateDidChange);
 }
 
 #pragma mark - Select
 
 /**
- * @brief ArrayEnumerator to remove Options from the Select's StackView.
+ * @brief ArrayEnumerator to remove Options from the stackView.
  */
-static void addOption_removeOptions(const Array *array, ident obj, ident data) {
-	$((View *) data, removeSubview, (View *) obj);
+static void addOption_removeSubview(const Array *array, ident obj, ident data) {
+	$((View *) data, removeSubview, obj);
 }
 
 /**
- * @brief ArrayEnumerator to add Options to the Select's StacKView.
+ * @brief ArrayEnumerator to add Options to the stackView.
  */
-static void addOption_addOptions(const Array *array, ident obj, ident data) {
-	$((View *) data, addSubview, (View *) obj);
+static void addOption_addSubview(const Array *array, ident obj, ident data) {
+	$((View *) data, addSubview, obj);
 }
 
 /**
@@ -209,56 +205,44 @@ static void addOption(Select *self, const char *title, ident value) {
 	assert(option);
 
 	$(self->options, addObject, option);
-	$((View *) self->stackView, addSubview, (View *) option);
+
+	$((Array *) self->options, enumerateObjects, addOption_removeSubview, self->stackView);
 
 	if (self->comparator) {
-		const Array *options = (Array *) self->options;
-		$(options, enumerateObjects, addOption_removeOptions, self->stackView);
 		$(self->options, sort, self->comparator);
-		$(options, enumerateObjects, addOption_addOptions, self->stackView);
 	}
 
-	if (self->selectedOption == NULL) {
-		self->selectedOption = option;
-	}
+	$((Array *) self->options, enumerateObjects, addOption_addSubview, self->stackView);
 
-	self->control.view.needsLayout = true;
+	if (self->control.selection == ControlSelectionSingle) {
+		if ($(self, selectedOption) == NULL) {
+			$(option, setSelected, true);
+		}
+	}
 
 	release(option);
+
+	self->control.view.needsLayout = true;
 }
 
 /**
- * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame)
  * @memberof Select
  */
-static Select *initWithFrame(Select *self, const SDL_Rect *frame, ControlStyle style) {
+static Select *initWithFrame(Select *self, const SDL_Rect *frame) {
 
-	self = (Select *) super(Control, self, initWithFrame, frame, style);
+	self = (Select *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
-		self->options = $$(MutableArray, array);
+		self->control.selection = ControlSelectionSingle;
+
+		self->options = $$(MutableArray, arrayWithCapacity, 8);
 		assert(self->options);
 
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
 
 		$((View *) self, addSubview, (View *) self->stackView);
-
-		self->stackView->view.alignment = ViewAlignmentMiddleLeft;
-		self->stackView->view.autoresizingMask |= ViewAutoresizingWidth;
-		self->stackView->view.borderWidth = 1;
-
-		self->control.selection = ControlSelectionSingle;
-
-		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = ControlBevelTypeOutset;
-
-			if (self->control.view.frame.w == 0) {
-				self->control.view.frame.w = DEFAULT_SELECT_WIDTH;
-			}
-
-			self->stackView->view.borderColor = Colors.Silver;
-		}
 	}
 
 	return self;
@@ -283,23 +267,15 @@ static Option *optionWithValue(const Select *self, const ident value) {
  * @brief ArrayEnumerator for removeAllOptions.
  */
 static void removeAllOptions_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) obj, removeFromSuperview);
+	$((Select *) data, removeOption, obj);
 }
 
 /**
  * @fn void Select::removeAllOptions(Select *self)
- * @brief Removes all Options from this Select.
  * @memberof Select
  */
 static void removeAllOptions(Select *self) {
-
 	$((Array *) self->options, enumerateObjects, removeAllOptions_enumerate, self);
-
-	$(self->options, removeAllObjects);
-
-	self->selectedOption = NULL;
-
-	self->control.view.needsLayout = true;
 }
 
 /**
@@ -308,15 +284,22 @@ static void removeAllOptions(Select *self) {
  */
 static void removeOption(Select *self, Option *option) {
 
-	$(self->options, removeObject, option);
+	if ($((Array *) self->options, containsObject, option)) {
 
-	if ((Option *) option == self->selectedOption) {
-		self->selectedOption = $((Array *) self->options, firstObject);
+		$(self->options, removeObject, option);
+		$((View *) self->stackView, removeSubview, (View *) option);
+
+		if (self->control.selection == ControlSelectionSingle) {
+			if ($(self, selectedOption) == NULL) {
+				Option *option = $((Array *) self->options, firstObject);
+				if (option) {
+					$(self, selectOption, option);
+				}
+			}
+		}
+
+		self->control.view.needsLayout = true;
 	}
-
-	$((View *) option, removeFromSuperview);
-
-	self->control.view.needsLayout = true;
 }
 
 /**
@@ -332,18 +315,68 @@ static void removeOptionWithValue(Select *self, ident value) {
 }
 
 /**
+ * @brief ArrayEnumerator for enforcing ControlSelectionSingle.
+ */
+static void selectOption_enumerate(const Array *array, ident obj, ident data) {
+	$((Option *) obj, setSelected, false);
+}
+
+/**
+ * @fn void Select::selectOption(Select *self, Option *option)
+ * @memberof Select
+ */
+static void selectOption(Select *self, Option *option) {
+
+	if (self->control.selection == ControlSelectionSingle) {
+		$((Array *) self->options, enumerateObjects, selectOption_enumerate, NULL);
+	}
+
+	if (option) {
+
+		if (option && option->isSelected == false) {
+			$(option, setSelected, true);
+
+			if (self->delegate.didSelectOption) {
+				self->delegate.didSelectOption(self, option);
+			}
+		}
+	}
+
+	self->control.view.needsLayout = true;
+}
+
+/**
  * @fn void Select::selectOptionWithValue(Select *self, ident value)
  * @memberof Select
  */
 static void selectOptionWithValue(Select *self, ident value) {
 
-	self->selectedOption = $(self, optionWithValue, value);
-	if (self->selectedOption) {
+	Option *option = $(self, optionWithValue, value);
 
-		if (self->delegate.didSelectOption) {
-			self->delegate.didSelectOption(self, self->selectedOption);
-		}
-	}
+	$(self, selectOption, option);
+}
+
+/**
+ * @brief Predicate for selectedOption and selectedOptions.
+ */
+static _Bool selectedOptions_predicate(ident obj, ident data) {
+	return ((Option *) obj)->isSelected;
+}
+
+/**
+ * @fn Option *Select::selectedOption(const Select *self)
+ * @memberof Select
+ */
+static Option *selectedOption(const Select *self) {
+	return $((Array *) self->options, findObject, selectedOptions_predicate, NULL);
+}
+
+/**
+ * @fn Array *Select::selectedOptions(const Select *self)
+ * @memberof Select
+ */
+static Array *selectedOptions(const Select *self) {
+	return $((Array *) self->options, filteredArray, selectedOptions_predicate, NULL);
 }
 
 #pragma mark - Class lifecycle
@@ -368,7 +401,10 @@ static void initialize(Class *clazz) {
 	((SelectInterface *) clazz->def->interface)->removeAllOptions = removeAllOptions;
 	((SelectInterface *) clazz->def->interface)->removeOption = removeOption;
 	((SelectInterface *) clazz->def->interface)->removeOptionWithValue = removeOptionWithValue;
+	((SelectInterface *) clazz->def->interface)->selectOption = selectOption;
 	((SelectInterface *) clazz->def->interface)->selectOptionWithValue = selectOptionWithValue;
+	((SelectInterface *) clazz->def->interface)->selectedOption = selectedOption;
+	((SelectInterface *) clazz->def->interface)->selectedOptions = selectedOptions;
 }
 
 /**

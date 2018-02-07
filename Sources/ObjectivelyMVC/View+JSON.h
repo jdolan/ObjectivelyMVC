@@ -47,20 +47,14 @@ typedef enum {
 	InletTypeCharacters,
 
 	/**
+	 * @remarks Inlet destination must be of type `View **`.
+	 */
+	InletTypeClassNames,
+
+	/**
 	 * @remarks Inlet destination must be of type `SDL_Color *`.
 	 */
 	InletTypeColor,
-
-	/**
-	 * @remarks Inlet destination must be of type `Constraint **`.
-	 */
-	InletTypeConstraint,
-
-	/**
-	 * @remarks Inlet destination must be of type `View **`. The Constraints of the specified View
-	 * are populated from the bound array of Constraint definitions.
-	 */
-	InletTypeConstraints,
 
 	/**
 	 * @remarks Inlet destination must be of type `double *`.
@@ -96,6 +90,11 @@ typedef enum {
 	InletTypeInteger,
 
 	/**
+	 * @remarks Inlet destination must be of type `SDL_Point *`.
+	 */
+	InletTypePoint,
+
+	/**
 	 * @remarks Inlet destination must be of type `SDL_Rect *`.
 	 */
 	InletTypeRectangle,
@@ -106,8 +105,14 @@ typedef enum {
 	InletTypeSize,
 
 	/**
+	 * @remarks Inlet destination must be of type `View **`. The Style of the specified View is
+	 * populated with the attributes of the bound Dictionary.
+	 */
+	InletTypeStyle,
+
+	/**
 	 * @remarks Inlet destination must be of type `View **`. The subviews of the specified View are
-	 * populated from the bound array of View definitions.
+	 * populated from the bound Array of View definitions.
 	 */
 	InletTypeSubviews,
 
@@ -184,6 +189,7 @@ typedef struct Outlet Outlet;
 
 /**
  * @brief Outlets enable outbound data binding of Views through JSON.
+ * @remarks References returned via Outlet binding are weak, and do not `retain` the matched View.
  * @see View::viewWithDictionary(const Dictionary *, Outlet *)
  */
 struct Outlet {
@@ -234,5 +240,8 @@ struct Outlet {
 
 /**
  * @brief Binds each Inlet specified in `inlets` to the data provided in `dictionary`.
+ * @param inlets The Inlets to bind.
+ * @param dictionary The Dictionary from which to bind.
+ * @return True if one or more Inlets were bound, false otherwise.
  */
-OBJECTIVELYMVC_EXPORT void bindInlets(const Inlet *inlets, const Dictionary *dictionary);
+OBJECTIVELYMVC_EXPORT _Bool bindInlets(const Inlet *inlets, const Dictionary *dictionary);

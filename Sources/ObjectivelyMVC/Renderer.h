@@ -169,11 +169,21 @@ struct RendererInterface {
 
 	/**
 	 * @fn void Renderer::renderDeviceDidReset(Renderer *self)
-	 * @brief This method is invoked when the render context is invalidated.
+	 * @brief This method is invoked when the render device has reset.
 	 * @param self The Renderer.
+	 * @remarks Subclasses may override this method to allocate any OpenGL objects they require.
 	 * @memberof Renderer
 	 */
 	void (*renderDeviceDidReset)(Renderer *self);
+
+	/**
+	 * @fn void Renderer::renderDeviceWillReset(Renderer *self)
+	 * @brief This method is invoked when the render device will become reset.
+	 * @param self The Renderer.
+	 * @remarks Subclasses should override this method to free any OpenGL objects they own.
+	 * @memberof Renderer
+	 */
+	void (*renderDeviceWillReset)(Renderer *self);
 
 	/**
 	 * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)

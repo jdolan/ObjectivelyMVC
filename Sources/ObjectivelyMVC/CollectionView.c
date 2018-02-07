@@ -26,8 +26,8 @@
 #include <ObjectivelyMVC/CollectionView.h>
 
 const EnumName CollectionViewAxisNames[] = MakeEnumNames(
-	MakeEnumName(CollectionViewAxisHorizontal),
-	MakeEnumName(CollectionViewAxisVertical)
+	MakeEnumAlias(CollectionViewAxisHorizontal, horizontal),
+	MakeEnumAlias(CollectionViewAxisVertical, vertical)
 );
 
 #define _Class _CollectionView
@@ -51,28 +51,28 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::awakeWithDictionary(View *, const Dictionary *)
+ * @see View::applyStyle(View *, const Style *)
  */
-static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+static void applyStyle(View *self, const Style *style) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+	super(View, self, applyStyle, style);
 
 	CollectionView *this = (CollectionView *) self;
 
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("axis", InletTypeEnum, &this->axis, (ident) CollectionViewAxisNames),
-		MakeInlet("itemSize", InletTypeSize, &this->itemSize, NULL),
-		MakeInlet("itemSpacing", InletTypeSize, &this->itemSpacing, NULL)
+		MakeInlet("item-size", InletTypeSize, &this->itemSize, NULL),
+		MakeInlet("item-spacing", InletTypeSize, &this->itemSpacing, NULL)
 	);
 
-	$(self, bind, inlets, dictionary);
+	$(self, bind, inlets, (Dictionary *) style->attributes);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((CollectionView *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((CollectionView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -128,7 +128,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 		CollectionView *this = (CollectionView *) self;
 
-		if ($((Control *) this->scrollView, highlighted) == false) {
+		if ($((Control *) this->scrollView, isHighlighted) == false) {
 			if ($((View *) this->contentView, didReceiveEvent, event)) {
 
 				const SDL_Point point = {
@@ -209,6 +209,7 @@ static void deselectItemAtIndexPath(CollectionView *self, const IndexPath *index
 		CollectionItemView *item = $(self, itemAtIndexPath, indexPath);
 		if (item) {
 			$(item, setSelected, false);
+			$(self->contentView, invalidateStyle);
 		}
 	}
 }
@@ -286,12 +287,12 @@ static IndexPath *indexPathForItem(const CollectionView *self, const CollectionI
 }
 
 /**
- * @fn CollectionView *CollectionView::initWithFrame(CollectionView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn CollectionView *CollectionView::initWithFrame(CollectionView *self, const SDL_Rect *frame)
  * @memberof CollectionView
  */
-static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame, ControlStyle style) {
+static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame) {
 
-	self = (CollectionView *) super(Control, self, initWithFrame, frame, style);
+	self = (CollectionView *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
 		self->items = $$(MutableArray, array);
@@ -301,36 +302,15 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 		self->contentView->autoresizingMask = ViewAutoresizingContain;
 
-		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL, style);
-		assert(self->scrollView);
+		$(self->contentView, addClassName, "contentView");
+		$(self->contentView, addClassName, "container");
 
-		self->scrollView->control.view.autoresizingMask = ViewAutoresizingFill;
+		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
+		assert(self->scrollView);
 
 		$(self->scrollView, setContentView, self->contentView);
 
 		$((View *) self, addSubview, (View *) self->scrollView);
-
-		if (self->control.style == ControlStyleDefault) {
-
-			self->itemSize.w = DEFAULT_COLLECTION_VIEW_ITEM_SIZE;
-			self->itemSize.h = DEFAULT_COLLECTION_VIEW_ITEM_SIZE;
-
-			self->itemSpacing.w = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
-			self->itemSpacing.h = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
-
-			self->control.view.backgroundColor = Colors.Black;
-			self->control.view.backgroundColor.a = 48;
-
-			self->control.view.padding.top = 0;
-			self->control.view.padding.right = 0;
-			self->control.view.padding.bottom = 0;
-			self->control.view.padding.left = 0;
-
-			self->contentView->padding.top = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
-			self->contentView->padding.right = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
-			self->contentView->padding.bottom = DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING;
-			self->contentView->padding.left = DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING;
-		}
 	}
 
 	return self;
@@ -440,6 +420,7 @@ static void selectItemAtIndexPath(CollectionView *self, const IndexPath *indexPa
 		CollectionItemView *item = $(self, itemAtIndexPath, indexPath);
 		if (item) {
 			$(item, setSelected, true);
+			$(self->contentView, invalidateStyle);
 		}
 	}
 }
@@ -471,7 +452,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 

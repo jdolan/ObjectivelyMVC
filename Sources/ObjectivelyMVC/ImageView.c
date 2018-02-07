@@ -45,7 +45,7 @@ const EnumName GLBlendNames[] = MakeEnumNames(
 #pragma mark - Object
 
 /**
- * @see ObjectInterface::dealloc(Object *)
+ * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
 
@@ -116,15 +116,19 @@ static void render(View *self, Renderer *renderer) {
 }
 
 /**
- * @see View::renderDeviceDidReset(View *)
+ * @see View::renderDeviceWillReset(View *)
  */
-static void renderDeviceDidReset(View *self) {
-
-	super(View, self, renderDeviceDidReset);
+static void renderDeviceWillReset(View *self) {
 
 	ImageView *this = (ImageView *) self;
 
+	if (this->texture) {
+		glDeleteTextures(1, &this->texture);
+	}
+
 	this->texture = 0;
+
+	super(View, self, renderDeviceWillReset);
 }
 
 #pragma mark - ImageView
@@ -214,7 +218,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->render = render;
-	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
 
 	((ImageViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((ImageViewInterface *) clazz->def->interface)->initWithImage = initWithImage;

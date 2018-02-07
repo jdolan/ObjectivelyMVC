@@ -25,12 +25,12 @@
 
 #include <Objectively/Data.h>
 #include <Objectively/Enum.h>
-#include <Objectively/Dictionary.h>
+#include <Objectively/MutableDictionary.h>
 #include <Objectively/MutableArray.h>
 
 #include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Renderer.h>
+#include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/View+JSON.h>
 
 /**
@@ -46,11 +46,23 @@
 #define ViewAlignmentMaskRight    0x20
 #define ViewAlignmentMaskInternal 0x100
 
+#define ViewAlignmentMaskVertical \
+	(ViewAlignmentMaskTop | ViewAlignmentMaskMiddle | ViewAlignmentMaskBottom)
+
+#define ViewAlignmentMaskHorizontal \
+	(ViewAlignmentMaskLeft | ViewAlignmentMaskCenter | ViewAlignmentMaskRight)
+
 /**
  * @brief Alignment constants, used to align a View within its superview.
  */
 typedef enum {
 	ViewAlignmentNone,
+	ViewAlignmentTop = ViewAlignmentMaskTop,
+	ViewAlignmentMiddle = ViewAlignmentMaskMiddle,
+	ViewAlignmentBottom = ViewAlignmentMaskBottom,
+	ViewAlignmentLeft = ViewAlignmentMaskLeft,
+	ViewAlignmentCenter = ViewAlignmentMaskCenter,
+	ViewAlignmentRight = ViewAlignmentMaskRight,
 	ViewAlignmentTopLeft = (ViewAlignmentMaskTop | ViewAlignmentMaskLeft),
 	ViewAlignmentTopCenter = (ViewAlignmentMaskTop | ViewAlignmentMaskCenter),
 	ViewAlignmentTopRight = (ViewAlignmentMaskTop | ViewAlignmentMaskRight),
@@ -84,6 +96,12 @@ OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
 typedef struct {
 	int top, right, bottom, left;
 } ViewPadding;
+
+/**
+ * @brief Creates a ViewPadding with the given dimensions.
+ */
+#define MakePadding(top, right, bottom, left) \
+	(ViewPadding) { (top), (right), (bottom), (left) }
 
 /**
  * @brief Relative positioning of subviews within their superview.
@@ -142,14 +160,20 @@ struct View {
 	int borderWidth;
 
 	/**
+	 * @brief The class names.
+	 * @see Style
+	 */
+	MutableArray *classNames;
+
+	/**
 	 * @brief If true, subviews will be clipped to this View's frame.
 	 */
 	_Bool clipsSubviews;
 
 	/**
-	 * @brief The Constraints held on this View.
+	 * @brief The computed Style of this View.
 	 */
-	MutableArray *constraints;
+	Style *computedStyle;
 
 	/**
 	 * @brief The frame, relative to the superview.
@@ -168,9 +192,19 @@ struct View {
 	char *identifier;
 
 	/**
-	 * @brief If true, this View will apply Constraints before it is drawn.
+	 * @brief The maximum size this View may be resized to during layout.
 	 */
-	_Bool needsApplyConstraints;
+	SDL_Size maxSize;
+
+	/**
+	 * @brief The minimum size this View may be resized to during layout.
+	 */
+	SDL_Size minSize;
+
+	/**
+	 * @brief If true, this View will apply the Theme before it is drawn.
+	 */
+	_Bool needsApplyTheme;
 
 	/**
 	 * @brief If true, this View will layout its subviews before it is drawn.
@@ -178,9 +212,30 @@ struct View {
 	_Bool needsLayout;
 
 	/**
+	 * @brief The next responder, or event handler, in the chain.
+	 * @remarks By default, Views propagate events to their superview. If this member is not `NULL`,
+	 * events will instead be propagated to this View.
+	 */
+	View *nextResponder;
+
+	/**
 	 * @brief The padding.
 	 */
 	ViewPadding padding;
+
+	/**
+	 * @brief The element-level Style of this View.
+	 * @remarks Attributes in this Style are local to this View, and override any Attributes matched
+	 * via Selector. That is, it is always the last Style added to the computed Style.
+	 */
+	Style *style;
+
+	/**
+	 * @brief An optional Stylesheet.
+	 * @remarks If set, this Stylesheet is added to or removed from the current Theme when this
+	 * View is added to or removed from a valid View hierarchy.
+	 */
+	Stylesheet *stylesheet;
 
 	/**
 	 * @brief The immediate subviews.
@@ -189,6 +244,7 @@ struct View {
 
 	/**
 	 * @brief The super View.
+	 * @remarks This reference is not retained.
 	 */
 	View *superview;
 
@@ -224,22 +280,13 @@ struct ViewInterface {
 	_Bool (*acceptsFirstResponder)(const View *self);
 
 	/**
-	 * @fn void View::addConstraint(View *self, Constraint *constraint)
-	 * @brief Adds a Constraint on this View.
+	 * @fn void View::addClassName(View *self, const char *className)
+	 * @brief Adds the given class name to this View.
 	 * @param self The View.
-	 * @param constraint The Constraint.
+	 * @param className The class name.
 	 * @memberof View
 	 */
-	void (*addConstraint)(View *self, Constraint *constraint);
-
-	/**
-	 * @fn void View::addConstraintWithDescriptor(View *self, const char *descriptor)
-	 * @brief Adds a Constraint on this View.
-	 * @param self The View.
-	 * @param descriptor The Constraint descriptor.
-	 * @memberof View
-	 */
-	void (*addConstraintWithDescriptor)(View *self, const char *descriptor);
+	void (*addClassName)(View *self, const char *className);
 
 	/**
 	 * @fn void View::addSubview(View *self, View *subview)
@@ -272,20 +319,40 @@ struct ViewInterface {
 	View *(*ancestorWithIdentifier)(const View *self, const char *identifier);
 
 	/**
-	 * @fn void View::applyConstraints(View *self)
-	 * @brief Applies all Constraints on this View before laying out its subviews.
+	 * @fn void View::applyStyle(View *self, const Style *style)
+	 * @brief Applies the given Style to this View.
 	 * @param self The View.
+	 * @param style The Style.
 	 * @memberof View
 	 */
-	void (*applyConstraints)(View *self);
+	void (*applyStyle)(View *self, const Style *style);
 
 	/**
-	 * @fn void View::applyConstraintsIfNeeded(View *self)
-	 * @brief Recursively applies Constraints against this View and its subviews.
+	 * @fn void View::applyTheme(View *self, const Theme *theme)
+	 * @brief Applies the given Theme to this View.
 	 * @param self The View.
+	 * @param theme The Theme.
 	 * @memberof View
 	 */
-	void (*applyConstraintsIfNeeded)(View *self);
+	void (*applyTheme)(View *self, const Theme *theme);
+
+	/**
+	 * @fn void View::applyThemeIfNeeded(View *self, const Theme *theme)
+	 * @brief Recursively applies the Theme to this View and its subviews.
+	 * @param self The View.
+	 * @param theme The Theme.
+	 * @memberof View
+	 */
+	void (*applyThemeIfNeeded)(View *self, const Theme *theme);
+
+	/**
+	 * @fn void View::attachStylesheet(View *self, SDL_Window *window)
+	 * @brief Attaches this View's Stylesheet to the Theme associated with the given window.
+	 * @param self The View.
+	 * @param window The window.
+	 * @memberof View
+	 */
+	void (*attachStylesheet)(View *self, SDL_Window *window);
 
 	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)
@@ -308,15 +375,16 @@ struct ViewInterface {
 	void (*becomeFirstResponder)(View *self);
 
 	/**
-	 * @fn void View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
+	 * @fn _Bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
 	 * @brief Performs data binding for the Inlets described in `dictionary`.
 	 * @param self The View.
 	 * @param inlets The Inlets to bind.
 	 * @param dictionary A Dictionary describing this View.
+	 * @return True if one or more Inlet was bound, false otherwise.
 	 * @remarks Subclasses will typically call this method from View::awakeWithDictionary.
 	 * @memberof View
 	 */
-	void (*bind)(View *self, const Inlet *inlets, const Dictionary *dictionary);
+	_Bool (*bind)(View *self, const Inlet *inlets, const Dictionary *dictionary);
 
 	/**
 	 * @fn SDL_Rect View::bounds(const View *self)
@@ -355,15 +423,6 @@ struct ViewInterface {
 	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
 
 	/**
-	 * @fn void View::createConstraint(View *self, const char *descriptor)
-	 * @brief Creates a new Constraint with the given descriptor on this View.
-	 * @param self The View.
-	 * @param descriptor The Constraint descriptor.
-	 * @memberof View
-	 */
-	void (*createConstraint)(View *self, const char *descriptor);
-
-	/**
 	 * @fn int View::depth(const View *self)
 	 * @param self The View.
 	 * @return The depth of this View (`ancestor depth + 1`).
@@ -379,6 +438,24 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	View *(*descendantWithIdentifier)(const View *self, const char *identifier);
+
+	/**
+	 * @fn void View::detachStylesheet(View *self, SDL_Window *window)
+	 * @brief Detaches this View's Stylesheet from the Theme associated with the given window.
+	 * @param self The View.
+	 * @param window The window.
+	 * @memberof View
+	 */
+	void (*detachStylesheet)(View *self, SDL_Window *window);
+
+	/**
+	 * @fn void View::didMoveToWindow(View *self, SDL_Window *window)
+	 * @brief Informs this View that it has been added to the View hierachy of the given window.
+	 * @param self The View.
+	 * @param window The window, or `NULL` if this View has been removed from the window.
+	 * @memberof View
+	 */
+	void (*didMoveToWindow)(View *self, SDL_Window *window);
 
 	/**
 	 * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
@@ -400,6 +477,94 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*draw)(View *self, Renderer *renderer);
+
+	/**
+	 * @fn void View::enumerate(View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates this View and its descendants, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerate)(View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates adjacent siblings of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateAdjacent)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateAncestors(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all ancestors of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateAncestors)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all descendants of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateDescendants)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateSiblings(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all siblings of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateSiblings)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateSubviews(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all subviews of this View, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateSubviews)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @fn void View::enumerateSuperview(const View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates the superview of this View, if any, applying `enumerator` to it.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateSuperview)(const View *self, ViewEnumerator enumerator, ident data);
+
+	/**
+	 * @static
+	 * @fn View *View::firstResponder(SDL_Window *window)
+	 * @param window The window.
+	 * @return The first responder for the given window, or `NULL` if none.
+	 * @memberof View
+	 */
+	View *(*firstResponder)(SDL_Window *window);
+
+	/**
+	 * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
+	 * @param self The View
+	 * @param className The class name.
+	 * @return True if this View has the given class name, false otherwise.
+	 * @memberof View
+	 */
+	_Bool (*hasClassName)(const View *self, const char *className);
 
 	/**
 	 * @fn View *View::hitTest(const View *self, const SDL_Point *point)
@@ -433,6 +598,14 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	View *(*initWithFrame)(View *self, const SDL_Rect *frame);
+
+	/**
+	 * @fn void View::invalidateStyle(View *self)
+	 * @brief Invalidates the computed Style for this View and its descendants.
+	 * @param self The View.
+	 * @memberof View
+	 */
+	void (*invalidateStyle)(View *self);
 
 	/**
 	 * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
@@ -469,19 +642,39 @@ struct ViewInterface {
 
 	/**
 	 * @fn View::layoutSubviews(View *self)
-	 * @brief Updates the frame of this View's hierarchy using the installed Constraints.
+	 * @brief Performs layout for this View's immediate subviews.
 	 * @param self The View.
+	 * @remarks Subclasses may override this method to perform their own layout operations. This
+	 * method is called recursively by View::layoutIfNeeded.
 	 * @memberof View
 	 */
 	void (*layoutSubviews)(View *self);
 
 	/**
-	 * @fn void View::removeAllConstraints(View *self)
-	 * @brief Removes all Constraints on this View.
+	 * @fn _Bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
+	 * @param self The View.
+	 * @param simpleSelector The SimpleSelector.
+	 * @return True if this View matches the SimpleSelector, false otherwise.
+	 * @memberof View
+	 */
+	_Bool (*matchesSelector)(const View *self, const SimpleSelector *simpleSelector);
+
+	/**
+	 * @fn void View::moveToWindow(View *self, SDL_Window *window)
+	 * @brief Moves this View to the View hierarchy of the given window.
+	 * @param self The View.
+	 * @param window The window, or `NULL` if this View is moving from its current window.
+	 * @memberof View
+	 */
+	void (*moveToWindow)(View *self, SDL_Window *window);
+
+	/**
+	 * @fn void View::removeAllClassNames(View *self)
+	 * @brief Removes all class names from this View.
 	 * @param self The View.
 	 * @memberof View
 	 */
-	void (*removeAllConstraints)(View *self);
+	void (*removeAllClassNames)(View *self);
 
 	/**
 	 * @fn void View::removeAllSubviews(View *self)
@@ -492,13 +685,13 @@ struct ViewInterface {
 	void (*removeAllSubviews)(View *self);
 
 	/**
-	 * @fn void View::removeConstraint(View *self, Constraint *constraint)
-	 * @brief Removes the given Constraint from this View.
+	 * @fn void View::removeClassName(View *self, const char *className)
+	 * @brief Removes the given class name to this View.
 	 * @param self The View.
-	 * @param constraint The Constraint.
+	 * @param className The class name.
 	 * @memberof View
 	 */
-	void (*removeConstraint)(View *self, Constraint *constraint);
+	void (*removeClassName)(View *self, const char *className);
 
 	/**
 	 * @fn void View::removeFromSuperview(View *self)
@@ -530,13 +723,21 @@ struct ViewInterface {
 
 	/**
 	 * @fn void View::renderDeviceDidReset(View *self)
-	 * @brief This method is invoked when the render context is invalidated.
+	 * @brief Informs this View that the render device has reset.
 	 * @param self The View.
-	 * @remarks Subclasses should override this method to recreate any texture resources or other
-	 * OpenGL objects they own.
+	 * @remarks Subclasses may override this method to allocate any OpenGL objects they require.
 	 * @memberof View
 	 */
 	void (*renderDeviceDidReset)(View *self);
+
+	/**
+	 * @fn void View::renderDeviceWillReset(View *self)
+	 * @brief Informs this View that the render device will reset.
+	 * @param self The View.
+	 * @remarks Subclasses should override this method to free any OpenGL objects they own.
+	 * @memberof View
+	 */
+	void (*renderDeviceWillReset)(View *self);
 
 	/**
 	 * @fn SDL_Frame View::renderFrame(const View *self)
@@ -583,14 +784,14 @@ struct ViewInterface {
 	void (*respondToEvent)(View *self, const SDL_Event *event);
 
 	/**
-	 * @fn void View::setWindow(View *self, SDL_Window *window)
-	 * @brief Sets the window associated with this View.
-	 * @param self The View.
+	 * @static
+	 * @fn void View::setFirstResponder(SDL_Window *window, View *view)
+	 * @brief Sets the first responder for the given window.
 	 * @param window The window.
-	 * @remarks This is called as Views are added to and removed from the View hierarchy.
+	 * @param view The View.
 	 * @memberof View
 	 */
-	void (*setWindow)(View *self, SDL_Window *window);
+	void (*setFirstResponder)(SDL_Window *window, View *view);
 
 	/**
 	 * @fn SDL_Size View::size(const View *self)
@@ -638,7 +839,7 @@ struct ViewInterface {
 	void (*sizeToFit)(View *self);
 
 	/**
-	 * @fn View::subviewWithIdentifier(const View *self, const char *identifier)
+	 * @fn View *View::subviewWithIdentifier(const View *self, const char *identifier)
 	 * @param self The View.
 	 * @param identifier The identifier.
 	 * @return The first subview matching the given identifier.
@@ -662,6 +863,17 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	SDL_Rect (*viewport)(const View *self);
+
+	/**
+	 * @static
+	 * @fn View *View::viewWithCharacters(const char *chars, Outlet *outlets)
+	 * @brief Instantiates a View initialized with the given null-terminated JSON C string.
+	 * @param chars A null-terminated JSON C string describing a View.
+	 * @param outlets An optional array of Outlets to resolve.
+	 * @return The initialized View, or `NULL` on error.
+	 * @memberof View
+	 */
+	View *(*viewWithCharacters)(const char *chars, Outlet *outlets);
 
 	/**
 	 * @static
@@ -705,19 +917,21 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	Array *(*visibleSubviews)(const View *self);
+
+	/**
+	 * @fn void View::willMoveToWindow(View *self, SDL_Window *window)
+	 * @brief Informs this View that it will be added to the View hierarchy for the given window.
+	 * @param self The View.
+	 * @param window The window, or `NULL` if this View will be removed from the window.
+	 * @memberof View
+	 */
+	void (*willMoveToWindow)(View *self, SDL_Window *window);
 };
 
+/**
+ * @fn Class *View::_View(void)
+ * @brief The View archetype.
+ * @return The View Class.
+ * @memberof View
+ */
 OBJECTIVELYMVC_EXPORT Class *_View(void);
-
-/**
- * @brief Sets the specified View as the first responder for the given window.
- * @param window The window.
- * @param view The View, or `NULL`.
- */
-OBJECTIVELYMVC_EXPORT void MVC_MakeFirstResponder(SDL_Window *window, View *view);
-
-/**
- * @param window The window.
- * @return The first responder for the given window, or `NULL` if none.
- */
-OBJECTIVELYMVC_EXPORT View *MVC_FirstResponder(SDL_Window *window);

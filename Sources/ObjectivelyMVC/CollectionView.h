@@ -35,13 +35,13 @@
  */
 
 /**
- * @defgroup CollectionViews
+ * @defgroup CollectionView Collection Views
  * @brief CollectionViews provide grid and gallery presentations of data.
  */
 
 /**
  * @brief Axis constants for specifying a CollectionView's primary layout direction.
- * @ingroup CollectionViews
+ * @ingroup CollectionView
  */
 typedef enum {
 	CollectionViewAxisVertical,
@@ -58,7 +58,7 @@ typedef struct CollectionViewInterface CollectionViewInterface;
 
 /**
  * @brief The CollectionView data source protocol.
- * @ingroup CollectionViews
+ * @ingroup CollectionView
  */
 struct CollectionViewDataSource {
 
@@ -84,7 +84,7 @@ struct CollectionViewDataSource {
 
 /**
  * @brief The CollectionView delegate protocol.
- * @ingroup CollectionViews
+ * @ingroup CollectionView
  */
 struct CollectionViewDelegate {
 
@@ -110,15 +110,10 @@ struct CollectionViewDelegate {
 	CollectionItemView *(*itemForObjectAtIndexPath)(const CollectionView *collectionView, const IndexPath *indexPath);
 };
 
-#define DEAFULT_COLLECTION_VIEW_PADDING 10
-#define DEFAULT_COLLECTION_VIEW_HORIZONTAL_SPACING 10
-#define DEFAULT_COLLECTION_VIEW_VERTICAL_SPACING 10
-#define DEFAULT_COLLECTION_VIEW_ITEM_SIZE 48
-
 /**
  * @brief CollectionViews display items in a grid.
  * @extends Control
- * @ingroup CollectionViews Containers Controls
+ * @ingroup CollectionView Containers Controls
  */
 struct CollectionView {
 
@@ -211,15 +206,14 @@ struct CollectionViewInterface {
 	void (*deselectItemsAtIndexPaths)(CollectionView *self, const Array *indexPaths);
 
 	/**
-	 * @fn CollectionView *CollectionView::init(CollectionView *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn CollectionView *CollectionView::init(CollectionView *self, const SDL_Rect *frame)
 	 * @brief Initializes this CollectionView with the specified frame and style.
 	 * @param self The CollectionView.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized CollectionView, or `NULL` on error.
 	 * @memberof CollectionView
 	 */
-	CollectionView *(*initWithFrame)(CollectionView *self, const SDL_Rect *frame, ControlStyle style);
+	CollectionView *(*initWithFrame)(CollectionView *self, const SDL_Rect *frame);
 
 	/**
 	 * @fn IndexPath *CollectionView::indexPathForItem(const CollectionView *self, const CollectionItemView *item)

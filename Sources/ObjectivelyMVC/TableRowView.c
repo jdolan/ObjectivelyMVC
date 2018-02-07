@@ -45,50 +45,19 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::layoutSubviews(View *)
+ * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
-static void layoutSubviews(View *self) {
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
 	TableRowView *this = (TableRowView *) self;
 
-	this->stackView.spacing = this->tableView->cellSpacing;
-
-	const Array *cells = (Array *) this->cells;
-	const Array *columns = (Array *) this->tableView->columns;
-
-	assert(cells->count == columns->count);
-
-	for (size_t i = 0; i < columns->count; i++) {
-
-		TableCellView *cell = $(cells, objectAtIndex, i);
-		const TableColumn *column = $(columns, objectAtIndex, i);
-
-		cell->view.frame.w = column->width;
-	}
-
-	super(View, self, layoutSubviews);
-}
-
-/**
- * @see View::sizeThatFits(const View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
-
-	TableRowView *this = (TableRowView *) self;
-
-	SDL_Size size = MakeSize(0, this->tableView->rowHeight);
-
-	const Array *columns = (Array *) this->tableView->columns;
-	if (columns->count) {
-		for (size_t i = 0; i < columns->count; i++) {
-			const TableColumn *column = $(columns, objectAtIndex, i);
-			size.w += column->width;
+	if (simpleSelector->type == SimpleSelectorTypePseudo) {
+		if (strcmp("selected", simpleSelector->pattern) == 0) {
+			return this->isSelected;
 		}
-
-		size.w += (columns->count - 1) * this->tableView->cellSpacing;
 	}
 
-	return size;
+	return super(View, self, matchesSelector, simpleSelector);
 }
 
 #pragma mark - TableRowView
@@ -115,16 +84,13 @@ static TableRowView *initWithTableView(TableRowView *self, TableView *tableView)
 	self = (TableRowView *) super(StackView, self, initWithFrame, NULL);
 	if (self) {
 
-		self->cells = $$(MutableArray, array);
+		const Array *columns = (Array *) tableView->columns;
+		
+		self->cells = $$(MutableArray, arrayWithCapacity, columns->count);
 		assert(self->cells);
 
 		self->tableView = tableView;
 		assert(self->tableView);
-
-		self->stackView.axis = StackViewAxisHorizontal;
-		self->stackView.distribution = StackViewDistributionFill;
-
-		self->stackView.view.autoresizingMask |= ViewAutoresizingWidth;
 	}
 
 	return self;
@@ -143,10 +109,7 @@ static void removeAllCells_enumerate(const Array *array, ident obj, ident data) 
  * @memberof TableRowView
  */
 static void removeAllCells(TableRowView *self) {
-
-	$((Array *) self->cells, enumerateObjects, removeAllCells_enumerate, NULL);
-
-	$(self->cells, removeAllObjects);
+	$(self->cells, removeAllObjectsWithEnumerator, removeAllCells_enumerate, NULL);
 }
 
 /**
@@ -163,16 +126,14 @@ static void removeCell(TableRowView *self, TableCellView *cell) {
 }
 
 /**
- * @fn void TableRowView::setSelected(TableRowView *self, _Bool selected)
+ * @fn void TableRowView::setSelected(TableRowView *self, _Bool isSelected)
  * @memberof TableRowView
  */
-static void setSelected(TableRowView *self, _Bool selected) {
+static void setSelected(TableRowView *self, _Bool isSelected) {
 
-	self->isSelected = selected;
-	if (self->isSelected) {
-		self->stackView.view.backgroundColor = Colors.SelectedColor;
-	} else {
-		self->stackView.view.backgroundColor = self->assignedBackgroundColor;
+	if (isSelected != self->isSelected) {
+		self->isSelected = isSelected;
+		$((View *) self, invalidateStyle);
 	}
 }
 
@@ -185,8 +146,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
 
 	((TableRowViewInterface *) clazz->def->interface)->addCell = addCell;
 	((TableRowViewInterface *) clazz->def->interface)->initWithTableView = initWithTableView;

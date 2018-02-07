@@ -98,16 +98,6 @@ struct ViewControllerInterface {
 	void (*addChildViewController)(ViewController *self, ViewController *childViewController);
 
 	/**
-	 * @fn void ViewController::drawView(ViewController *self, Renderer *renderer)
-	 * @brief Draws this ViewController's View hierarchy.
-	 * @param self The ViewController.
-	 * @param renderer The Renderer.
-	 * @remarks This method is called from WindowController::render to draw the View hierarchy.
-	 * @memberof ViewController
-	 */
-	void (*drawView)(ViewController *self, Renderer *renderer);
-
-	/**
 	 * @fn void ViewController::handleNotification(ViewController *self, const Notification *notification)
 	 * @brief Handles a broadcast notification.
 	 * @param self The ViewController.
@@ -168,16 +158,6 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*removeFromParentViewController)(ViewController *self);
-
-	/**
-	 * @fn void ViewController::renderDeviceDidReset(ViewController *self)
-	 * @brief This method is invoked when the render context is invalidated.
-	 * @param self The ViewController.
-	 * @remarks Subclasses should override this method to recreate any texture resources or other
-	 * OpenGL objects they own.
-	 * @memberof ViewController
-	 */
-	void (*renderDeviceDidReset)(ViewController *self);
 
 	/**
 	 * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)

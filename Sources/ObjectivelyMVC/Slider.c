@@ -80,7 +80,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Slider *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Slider *) self, initWithFrame, NULL);
 }
 
 /**
@@ -199,43 +199,31 @@ static void formatLabel(Slider *self) {
  * @fn Slider *Slider::init(Slider *self)
  * @memberof Slider
  */
-static Slider *initWithFrame(Slider *self, const SDL_Rect *frame, ControlStyle style) {
+static Slider *initWithFrame(Slider *self, const SDL_Rect *frame) {
 
-	self = (Slider *) super(Control, self, initWithFrame, frame, style);
+	self = (Slider *) super(Control, self, initWithFrame, frame);
 	if (self) {
 
 		self->bar = $(alloc(View), initWithFrame, frame);
 		assert(self->bar);
 
-		self->bar->alignment = ViewAlignmentMiddleLeft;
-		self->bar->autoresizingMask = ViewAutoresizingFill;
+		$(self->bar, addClassName, "bar");
 
 		$((View *) self, addSubview, self->bar);
 
-		self->handle = $(alloc(Control), initWithFrame, NULL, style);
+		self->handle = $(alloc(Control), initWithFrame, NULL);
 		assert(self->handle);
+
+		$((View *) self->handle, addClassName, "handle");
 
 		$(self->bar, addSubview, (View *) self->handle);
 
 		self->label = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->label);
 
-		self->label->view.alignment = ViewAlignmentMiddleRight;
-		self->label->view.padding.left = DEFAULT_SLIDER_LABEL_PADDING;
+		$((View *) self->label, addClassName, "label");
 
 		$((View *) self, addSubview, (View *) self->label);
-
-		if (self->control.style == ControlStyleDefault) {
-
-			if (self->control.view.frame.w == 0) {
-				self->control.view.frame.w = DEFAULT_SLIDER_WIDTH;
-			}
-
-			self->handle->bevel = ControlBevelTypeOutset;
-			self->handle->view.backgroundColor = Colors.FocusedColor;
-			self->handle->view.frame.w = DEFAULT_SLIDER_HANDLE_WIDTH;
-			self->handle->view.frame.h = DEFAULT_SLIDER_HANDLE_HEIGHT;
-		}
 
 		$(self, setLabelFormat, "%0.1f");
 	}

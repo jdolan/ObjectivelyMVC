@@ -31,16 +31,16 @@ $(windowController, respondToEvent, &event);
 $(windowController, render);
 ```
 
-### Beautiful, discoverable TrueType fonts
+### Beautiful 4K-ready fonts
 
-ObjectivelyMVC uses [Fontconfig](https://www.freedesktop.org/wiki/Software/fontconfig/) and [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) to discover and render the TrueType fonts that are available on your system. It also automatically detects High-DPI (Retina, 4K) displays, and scales fonts accordingly. The result is crisp, beautiful vector-based fonts that look native, because they are.
+ObjectivelyMVC uses [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) to render TrueType fonts. It also automatically detects High-DPI (Retina, 4K) displays, and scales fonts accordingly. The result is crisp, beautiful vector-based fonts that look native, because they are.
 
 ```c
-Array *fonts = $$(Font, allFonts); // an array of available font names
+Data *data = $$(Data, dataWithContentsOfFile, "Verdana.ttf");
 ...
-release(fonts);
+$$(Font, cacheFont, data, "Verdana");
 ...
-Font *verdana = $(alloc(Font), initWithAttributes, "Verdana", 24, 0); // will render at 48pt on Retina displays
+Font *verdana = $$(Font, cachedFont, "Verdana", 24, FontStyleRegular); // will render at 48pt on Retina displays
 ```
 
 ### Full suite of Views and Controls
@@ -52,7 +52,7 @@ $(button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_d
 ```
 
 ```c
-Select *select = $(alloc(Select), initWithFrame, NULL, ControlStyleDefault);
+Select *select = $(alloc(Select), initWithFrame, NULL);
 ...
 select->delegate.didSelectOption = my_callback;
 ```
@@ -64,8 +64,10 @@ ObjectivelyMVC allows you to define your View hierarchy programmatically, via JS
 ```json
 {
 	"class": "Panel",
-	"frame": [50, 50, 0, 0],
-	"autoresizingMask": "ViewAutoresizingWidth",
+	"style": {
+		"top": 50,
+		"left": 50
+	},
 	"contentView": {
 		"subviews": [{
 			"class": "Input",

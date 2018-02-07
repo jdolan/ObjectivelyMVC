@@ -35,8 +35,8 @@
 #include <ObjectivelyMVC/CollectionItemView.h>
 #include <ObjectivelyMVC/CollectionView.h>
 #include <ObjectivelyMVC/Colors.h>
-#include <ObjectivelyMVC/Constraint.h>
 #include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/DebugViewController.h>
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/HSVColorPicker.h>
 #include <ObjectivelyMVC/HueColorPicker.h>
@@ -55,8 +55,13 @@
 #include <ObjectivelyMVC/RGBColorPicker.h>
 #include <ObjectivelyMVC/ScrollView.h>
 #include <ObjectivelyMVC/Select.h>
+#include <ObjectivelyMVC/Selector.h>
+#include <ObjectivelyMVC/SelectorSequence.h>
+#include <ObjectivelyMVC/SimpleSelector.h>
 #include <ObjectivelyMVC/Slider.h>
 #include <ObjectivelyMVC/StackView.h>
+#include <ObjectivelyMVC/Style.h>
+#include <ObjectivelyMVC/Stylesheet.h>
 #include <ObjectivelyMVC/TableCellView.h>
 #include <ObjectivelyMVC/TableColumn.h>
 #include <ObjectivelyMVC/TableHeaderCellView.h>
@@ -68,6 +73,7 @@
 #include <ObjectivelyMVC/TabViewItem.h>
 #include <ObjectivelyMVC/Text.h>
 #include <ObjectivelyMVC/TextView.h>
+#include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/Types.h>
 #include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/View+JSON.h>

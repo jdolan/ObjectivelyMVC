@@ -34,17 +34,7 @@
  * @brief W3C Color constants.
  * @see http://www.w3schools.com/colors/colors_names.asp
  */
-OBJECTIVELYMVC_EXPORT const struct _Colors {
-
-	SDL_Color DefaultColor;
-	SDL_Color HighlightedColor;
-	SDL_Color DisabledColor;
-	SDL_Color SelectedColor;
-	SDL_Color FocusedColor;
-
-	SDL_Color AlternateColor;
-
-	SDL_Color Clear;
+OBJECTIVELYMVC_EXPORT const struct Colors {
 
 	SDL_Color AliceBlue;
 	SDL_Color AntiqueWhite;
@@ -188,6 +178,7 @@ OBJECTIVELYMVC_EXPORT const struct _Colors {
 	SDL_Color Teal;
 	SDL_Color Thistle;
 	SDL_Color Tomato;
+	SDL_Color Transparent;
 	SDL_Color Turquoise;
 	SDL_Color Violet;
 	SDL_Color Wheat;
@@ -199,13 +190,22 @@ OBJECTIVELYMVC_EXPORT const struct _Colors {
 
 /**
  * @brief Creates an SDL_Color with the given components.
+ * @relates Colors
  */
 #define MakeColor(r, g, b, a) (SDL_Color) { (r), (g), (b), (a) }
+
+/**
+ * @param name A W3C color name.
+ * @return An SDL_Color matching the given color name, or `Colors.Black` if none.
+ * @relates Colors
+ */
+OBJECTIVELYMVC_EXPORT SDL_Color MVC_ColorForName(const char *name);
 
 /**
  * @brief Converts the given hexadecimal color string to an RGBA color.
  * @param hexString The hexadecimal color string (e.g. `deadbeef`).
  * @return An SDL_Color containing the byte-clamped RGBA values.
+ * @relates Colors
  */
 OBJECTIVELYMVC_EXPORT SDL_Color MVC_HexToRGBA(const char *hexString);
 
@@ -213,6 +213,7 @@ OBJECTIVELYMVC_EXPORT SDL_Color MVC_HexToRGBA(const char *hexString);
  * @param color The RGB color.
  * @return The hexadecimal color string (e.g. `deadbeef`).
  * @remarks This function uses static memory and is not thread safe.
+ * @relates Colors
  */
 OBJECTIVELYMVC_EXPORT char *MVC_RGBToHex(const SDL_Color *color);
 
@@ -220,6 +221,7 @@ OBJECTIVELYMVC_EXPORT char *MVC_RGBToHex(const SDL_Color *color);
  * @param color The RGBA color.
  * @return The hexadecimal color string (e.g. `deadbeef`).
  * @remarks This function uses static memory and is not thread safe.
+ * @relates Colors
  */
 OBJECTIVELYMVC_EXPORT char *MVC_RGBAToHex(const SDL_Color *color);
 
@@ -229,6 +231,7 @@ OBJECTIVELYMVC_EXPORT char *MVC_RGBAToHex(const SDL_Color *color);
  * @param saturation The saturation component (0.0 - 1.0).
  * @param value The value component (0.0 - 1.0).
  * @return An SDL_Color containing the byte-clamped RGB values.
+ * @relates Colors
  */
 OBJECTIVELYMVC_EXPORT SDL_Color MVC_HSVToRGB(double hue, double saturation, double value);
 
@@ -238,5 +241,6 @@ OBJECTIVELYMVC_EXPORT SDL_Color MVC_HSVToRGB(double hue, double saturation, doub
  * @param *hue The hue component.
  * @param saturation The saturation component.
  * @param value The value component.
+ * @relates Colors
  */
 OBJECTIVELYMVC_EXPORT void MVC_RGBToHSV(const SDL_Color *color, double *hue, double *saturation, double *value);

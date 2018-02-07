@@ -1,3 +1,6 @@
 *.log
 *.trs
 Constraint
+Selector
+Style
+Stylesheet

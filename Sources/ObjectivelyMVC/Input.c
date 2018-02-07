@@ -89,7 +89,7 @@ static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
 	self = (Input *) super(StackView, self, initWithFrame, frame);
 	if (self) {
 
-		self->control = $(alloc(Control), initWithFrame, NULL, ControlStyleDefault);
+		self->control = $(alloc(Control), initWithFrame, NULL);
 		assert(self->control);
 
 		self->label = $(alloc(Label), initWithText, NULL, NULL);
@@ -98,9 +98,9 @@ static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
 		$((View *) self, addSubview, (View *) self->control);
 		$((View *) self, addSubview, (View *) self->label);
 
-		$(self, setOrientation, InputOrientationLeft);
+		$((View *) self, addClassName, "container");
 
-		self->stackView.spacing = DEFAULT_INPUT_SPACING;
+		$(self, setOrientation, InputOrientationLeft);
 	}
 
 	return self;

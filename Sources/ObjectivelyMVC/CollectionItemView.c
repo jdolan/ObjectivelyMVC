@@ -37,9 +37,35 @@ static void dealloc(Object *self) {
 	CollectionItemView *this = (CollectionItemView *) self;
 
 	release(this->imageView);
+	release(this->selectionOverlay);
 	release(this->text);
 
 	super(Object, self, dealloc);
+}
+
+#pragma mark - View
+
+/**
+ * @see View::matchesSelector(const View *, const SimpleSelector *)
+ */
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+
+	assert(simpleSelector);
+
+	const CollectionItemView *this = (CollectionItemView *) self;
+	const char *pattern = simpleSelector->pattern;
+
+	switch (simpleSelector->type) {
+		case SimpleSelectorTypePseudo:
+			if (strcmp("selected", pattern) == 0) {
+				return this->isSelected;
+			}
+			break;
+		default:
+			break;
+	}
+
+	return super(View, self, matchesSelector, simpleSelector);
 }
 
 #pragma mark - CollectionItemView
@@ -66,10 +92,14 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 
 		$((View *) self, addSubview, (View *) self->text);
 
-		self->view.backgroundColor = Colors.Black;
-		self->view.backgroundColor.a = 48;
+		self->selectionOverlay = $(alloc(View), initWithFrame, NULL);
+		assert(self->selectionOverlay);
 
-		self->view.borderColor = Colors.SelectedColor;
+		$(self->selectionOverlay, addClassName, "selectionOverlay");
+
+		self->selectionOverlay->autoresizingMask = ViewAutoresizingFill;
+
+		$((View *) self, addSubview, self->selectionOverlay);
 
 		self->view.clipsSubviews = true;
 	}
@@ -78,17 +108,11 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 }
 
 /**
- * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool selected)
+ * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool isSelected)
  * @memberof CollectionItemView
  */
-static void setSelected(CollectionItemView *self, _Bool selected) {
-
-	self->isSelected = selected;
-	if (self->isSelected) {
-		self->view.borderWidth = 2;
-	} else {
-		self->view.borderWidth = 0;
-	}
+static void setSelected(CollectionItemView *self, _Bool isSelected) {
+	self->isSelected = isSelected;
 }
 
 #pragma mark - Class lifecycle
@@ -100,6 +124,8 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
+	
 	((CollectionItemViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
 	((CollectionItemViewInterface *) clazz->def->interface)->setSelected = setSelected;
 }

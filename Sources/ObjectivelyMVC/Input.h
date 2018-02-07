@@ -32,8 +32,6 @@
  * @brief An Input stacks a Control and Label.
  */
 
-#define DEFAULT_INPUT_SPACING 10
-
 /**
  * @brief Input orientation defines the relative positioning of the Label.
  */

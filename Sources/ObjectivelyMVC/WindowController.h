@@ -25,6 +25,7 @@
 
 #include <Objectively/Object.h>
 
+#include <ObjectivelyMVC/DebugViewController.h>
 #include <ObjectivelyMVC/ViewController.h>
 
 /**
@@ -54,9 +55,29 @@ struct WindowController {
 	WindowControllerInterface *interface;
 
 	/**
+	 * @brief The DebugViewController.
+	 */
+	DebugViewController *debugViewController;
+
+	/**
+	 * @brief The display associated with this controller's window.
+	 */
+	int display;
+
+	/**
+	 * @brief The View that the mouse cursor is currently hovering over.
+	 */
+	View *hover;
+
+	/**
 	 * @brief The Renderer.
 	 */
 	Renderer *renderer;
+
+	/**
+	 * @brief The Theme.
+	 */
+	Theme *theme;
 
 	/**
 	 * @brief The ViewController.
@@ -64,7 +85,7 @@ struct WindowController {
 	ViewController *viewController;
 
 	/**
-	 * @brief The Window.
+	 * @brief The window.
 	 */
 	SDL_Window *window;
 };
@@ -80,10 +101,30 @@ struct WindowControllerInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @private
+	 * @fn void WindowController::debug(WindowController *self)
+	 * @brief Debugs the current frame.
+	 * @param self The WindowController.
+	 * @memberof WindowController
+	 */
+	void (*debug)(WindowController *self);
+
+	/**
+	 * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
+	 * @param self The WindowController.
+	 * @param event The event.
+	 * @return The View that was targeted by the given event.
+	 * @see View::hitTest(const View *, const SDL_Point *)
+	 * @memberof WindowController
+	 */
+	View *(*eventTarget)(const WindowController *self, const SDL_Event *event);
+
+	/**
 	 * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
 	 * @param self The WindowController.
 	 * @param event The event.
 	 * @return The first responder for the given event.
+	 * @see MVC_FirstResponder(SDL_Window *)
 	 * @memberof WindowController
 	 */
 	View *(*firstResponder)(const WindowController *self, const SDL_Event *event);
@@ -97,24 +138,6 @@ struct WindowControllerInterface {
 	 * @memberof WindowController
 	 */
 	WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
-
-	/**
-	 * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
-	 * @brief Sets this WindowController's Renderer.
-	 * @param self The WindowController.
-	 * @param renderer The Renderer.
-	 * @memberof WindowController
-	 */
-	void (*setRenderer)(WindowController *self, Renderer *renderer);
-
-	/**
-	 * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
-	 * @brief Sets this WindowController's ViewController.
-	 * @param self The WindowController.
-	 * @param viewController The ViewController.
-	 * @memberof WindowController
-	 */
-	void (*setViewController)(WindowController *self, ViewController *viewController);
 
 	/**
 	 * @fn void WindowController::render(WindowController *self)
@@ -144,6 +167,68 @@ struct WindowControllerInterface {
 	 * @memberof WindowController
 	 */
 	void (*respondToEvent)(WindowController * self, const SDL_Event *event);
+
+	/**
+	 * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
+	 * @brief Sets this WindowController's Renderer.
+	 * @param self The WindowController.
+	 * @param renderer The Renderer.
+	 * @memberof WindowController
+	 */
+	void (*setRenderer)(WindowController *self, Renderer *renderer);
+
+	/**
+	 * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
+	 * @brief Sets this WindowController's Theme.
+	 * @param self The WindowController.
+	 * @param theme The Theme.
+	 * @memberof WindowController
+	 */
+	void (*setTheme)(WindowController *self, Theme *theme);
+
+	/**
+	 * @fn void WindowController::setViewController(WindowController *self, ViewController *viewController)
+	 * @brief Sets this WindowController's ViewController.
+	 * @param self The WindowController.
+	 * @param viewController The ViewController.
+	 * @memberof WindowController
+	 */
+	void (*setViewController)(WindowController *self, ViewController *viewController);
+
+	/**
+	 * @fn void WindowController::setWindow(WindowController *self, SDL_Window *window)
+	 * @brief Sets this WindowController's window.
+	 * @param self The WindowController.
+	 * @param window The window.
+	 * @memberof WindowController
+	 */
+	void (*setWindow)(WindowController *self, SDL_Window *window);
+
+	/**
+	 * @fn void WindowController::toggleDebugger(WindowController *self)
+	 * @brief Toggles the debugger tools.
+	 * @param self The WindowViewController.
+	 * @memberof WindowController
+	 */
+	void (*toggleDebugger)(WindowController *self);
+
+	/**
+	 * @fn void WindowController::updateHover(WindowController *self, const SDL_Event *event)
+	 * @brief Updates the hover state for this WindowController's window.
+	 * @param self The WindowController.
+	 * @param event The mouse motion event.
+	 * @memberof WindowController
+	 */
+	void (*updateHover)(WindowController *self, const SDL_Event *event);
+
+	/**
+	 * @static
+	 * @fn WindowController *WindowController::windowController(SDL_Window *window)
+	 * @param window The window.
+	 * @return The WindowController bound to the given window.
+	 * @memberof WindowController
+	 */
+	WindowController *(*windowController)(SDL_Window *window);
 };
 
 /**

@@ -246,6 +246,14 @@ static void renderDeviceDidReset(Renderer *self) {
 }
 
 /**
+ * @fn void Renderer::renderDeviceWillReset(Renderer *self)
+ * @memberof Renderer
+ */
+static void renderDeviceWillReset(Renderer *self) {
+
+}
+
+/**
  * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)
  * @memberof Renderer
  */
@@ -263,7 +271,7 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
 
 	const SDL_Rect scissor = MVC_TransformToWindow(window, &rect);
 
-	glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 1, scissor.h + 1);
+	glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 2, scissor.h + 2);
 }
 
 /**
@@ -292,6 +300,7 @@ static void initialize(Class *clazz) {
 	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
 	((RendererInterface *) clazz->def->interface)->init = init;
 	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((RendererInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
 	((RendererInterface *) clazz->def->interface)->setClippingFrame = setClippingFrame;
 	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
 }

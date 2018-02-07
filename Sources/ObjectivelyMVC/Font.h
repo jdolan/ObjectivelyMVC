@@ -25,18 +25,15 @@
 
 #include <SDL2/SDL_ttf.h>
 
+#include <Objectively/Enum.h>
 #include <Objectively/Array.h>
 #include <Objectively/Data.h>
 
 #include <ObjectivelyMVC/Types.h>
 
-#if defined(__APPLE__)
-#define DEFAULT_FONT_FAMILY "Helvetica Neue"
-#elif defined(_WIN32)
-#define DEFAULT_FONT_FAMILY "Verdana"
-#else
-#define DEFAULT_FONT_FAMILY "DejaVu Sans"
-#endif
+#define DEFAULT_FONT_FAMILY "Coda"
+#define DEFAULT_FONT_SIZE 16
+#define DEFAULT_FONT_STYLE FontStyleRegular
 
 /**
  * @file
@@ -54,20 +51,7 @@ typedef enum {
 	FontStyleStrikeThrough = TTF_STYLE_STRIKETHROUGH
 } FontStyle;
 
-/**
- * @brief Font categories.
- */
-typedef enum {
-	FontCategoryDefault,
-	FontCategoryPrimaryLabel,
-	FontCategorySecondaryLabel,
-	FontCategoryPrimaryControl,
-	FontCategorySecondaryControl,
-	FontCategoryPrimaryResponder,
-	FontCategorySecondaryResponder,
-	FontCategoryUser,
-	FontCategoryMax = 16
-} FontCategory;
+OBJECTIVELYMVC_EXPORT const EnumName FontStyleNames[];
 
 typedef struct Font Font;
 typedef struct FontInterface FontInterface;
@@ -95,17 +79,17 @@ struct Font {
 	Data *data;
 
 	/**
+	 * @brief The family name.
+	 */
+	char *family;
+
+	/**
 	 * @brief The backing font.
 	 */
 	ident font;
 
 	/**
-	 * @brief The index in the backing font file.
-	 */
-	int index;
-
-	/**
-	 * @brief The render size, which is dependent on the display resolution.
+	 * @brief The render size, adjusted for display density.
 	 */
 	int renderSize;
 
@@ -113,6 +97,11 @@ struct Font {
 	 * @brief The point size.
 	 */
 	int size;
+
+	/**
+	 * @brief The style.
+	 */
+	int style;
 };
 
 /**
@@ -127,65 +116,53 @@ struct FontInterface {
 
 	/**
 	 * @static
-	 * @fn Array *Font::allFonts(void)
-	 * @return An Array of all Font names known to Fontconfig.
+	 * @fn Font *Font::cachedFont(const char *family, int size, int style)
+	 * @brief Resolves the cached Font with the given attributes.
+	 * @param family The family.
+	 * @param size The size.
+	 * @param style The style.
+	 * @return The cached Font, or the default Font if not found.
 	 * @memberof Font
 	 */
-	Array *(*allFonts)(void);
+	Font *(*cachedFont)(const char *family, int size, int style);
 
 	/**
 	 * @static
-	 * @fn Font *Font::defaultFont(FontCategory category)
-	 * @param category The FontCategory.
-	 * @return The default Font for the given category.
+	 * @brief Caches the specified font Data.
+	 * @param data The TTF Data.
+	 * @param family The family.
 	 * @memberof Font
 	 */
-	Font *(*defaultFont)(FontCategory category);
+	void (*cacheFont)(Data *data, const char *family);
 
 	/**
-	 * @fn Font *Font::initWithAttributes(Font *self, const char *family, int size, int style)
-	 * @brief Initializes this Font with the given attributes via Fontconfig.
+	 * @static
+	 * @fn void Font::clearCache(void)
+	 * @brief Clears the Font cache.
+	 * @memberof Font
+	 */
+	void (*clearCache)(void);
+
+	/**
+	 * @static
+	 * @fn Font *Font::defaultFont(void)
+	 * @return The default Font.
+	 * @memberof Font
+	 */
+	Font *(*defaultFont)(void);
+
+	/**
+	 * @fn Font *Font::initWithData(Font *self, Data *data, const char *family, int size, int style)
+	 * @brief Initializes this Font with the given TTF Data and attributes.
 	 * @param self The Font.
-	 * @param family The font family.
-	 * @param size The point size.
+	 * @param data The Data.
+	 * @param family The family.
+	 * @param size The size.
 	 * @param style The style.
 	 * @return The initialized Font, or `NULL` on error.
 	 * @memberof Font
 	 */
-	Font *(*initWithAttributes)(Font *self, const char *family, int size, int style);
-
-	/**
-	 * @fn Font *Font::initWithData(Font *self, Data *data, int size, int index)
-	 * @brief Initializes this Font with the given TrueType font file.
-	 * @param self The Font.
-	 * @param data The Data containing the TrueType font file.
-	 * @param size The point size.
-	 * @param index The index of the desired font face within the font file.
-	 * @return The initialized Font, or `NULL` on error.
-	 * @memberof Font
-	 */
-	Font *(*initWithData)(Font *self, Data *data, int size, int index);
-
-	/**
-	 * @fn Font *Font::initWithName(Font *self, const char *name)
-	 * @brief Initializes this Font with the given Fontconfig name.
-	 * @param self The Font.
-	 * @param name The Fontconfig name.
-	 * @return The initialized Font, or `NULL` on error.
-	 * @memberof Font
-	 */
-	Font *(*initWithName)(Font *self, const char *name);
-
-	/**
-	 * @fn Font *Font::initWithPattern(Font *self, FcPattern *pattern)
-	 * @brief Initializes this Font with the given Fontconfig pattern.
-	 * @param self The Font.
-	 * @param name The Fontconfig pattern.
-	 * @return The initialized Font, or `NULL` on error.
-	 * @memberof Font
-	 * @private
-	 */
-	Font *(*initWithPattern)(Font *self, ident pattern);
+	Font *(*initWithData)(Font *self, Data *data, const char *family, int size, int style);
 
 	/**
 	 * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color)
@@ -205,16 +182,6 @@ struct FontInterface {
 	 * @memberof Font
 	 */
 	void (*renderDeviceDidReset)(Font *self);
-
-	/**
-	 * @static
-	 * @fn void Font::setDefaultFont(FontCategory category, Font *font)
-	 * @brief Sets the default Font for the given category.
-	 * @param category The FontCategory.
-	 * @param font The Font.
-	 * @memberof Font
-	 */
-	void (*setDefaultFont)(FontCategory category, Font *font);
 
 	/**
 	 * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)

@@ -1,0 +1,41 @@
+{
+  "style": {
+    "autoresizing-mask": "fill"
+  },
+  "subviews": [
+    {
+      "class": "StackView",
+      "identifier": "debug",
+      "classNames": [
+        "container"
+      ],
+      "subviews": [
+        {
+          "class": "Text",
+          "identifier": "description"
+        },
+        {
+          "class": "TableView",
+          "identifier": "selectors",
+          "columns": [
+            {
+              "identifier": "Selector"
+            }
+          ]
+        },
+        {
+          "class": "TableView",
+          "identifier": "computedStyle",
+          "columns": [
+            {
+              "identifier": "Attribute"
+            },
+            {
+              "identifier": "Value"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

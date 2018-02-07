@@ -89,10 +89,7 @@ static PageView *initWithFrame(PageView *self, const SDL_Rect *frame) {
 
 	self = (PageView *) super(View, self, initWithFrame, frame);
 	if (self) {
-		self->view.autoresizingMask = ViewAutoresizingContain;
-
-		self->view.padding.top = self->view.padding.bottom = DEFAULT_PAGE_VIEW_PADDING;
-		self->view.padding.left = self->view.padding.right = DEFAULT_PAGE_VIEW_PADDING;
+		$((View *) self, addClassName, "container");
 	}
 
 	return self;

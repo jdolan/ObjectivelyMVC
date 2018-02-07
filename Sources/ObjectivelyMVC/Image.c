@@ -15,22 +15,12 @@
  * misrepresented as being the original software.
  */
 
-#include <ObjectivelyMVC/Config.h>
-
 #include <assert.h>
-
-#if HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 
 #include <SDL2/SDL_image.h>
 
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/Log.h>
-
-#ifndef PKGDATADIR
- #define PKGDATADIR "."
-#endif
 
 #define _Class _Image
 
@@ -141,13 +131,6 @@ static void initialize(Class *clazz) {
 	((ImageInterface *) clazz->def->interface)->initWithResource = initWithResource;
 	((ImageInterface *) clazz->def->interface)->initWithSurface = initWithSurface;
 	((ImageInterface *) clazz->def->interface)->size = size;
-
-	$$(Resource, addResourcePath, PKGDATADIR);
-
-	const char *dir = getenv("OBJECTIVELYMVC_DATA_DIR");
-	if (dir) {
-		$$(Resource, addResourcePath, dir);
-	}
 }
 
 /**

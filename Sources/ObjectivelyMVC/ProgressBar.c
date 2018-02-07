@@ -108,7 +108,7 @@ static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
 		assert(self->background);
 
 		self->background->view.autoresizingMask = ViewAutoresizingFill;
-		self->background->view.backgroundColor = Colors.DefaultColor;
+		self->background->view.backgroundColor = Colors.Silver;
 
 		$((View *) self, addSubview, (View *) self->background);
 

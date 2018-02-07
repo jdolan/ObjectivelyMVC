@@ -31,7 +31,7 @@
 #pragma mark - ObjectInterface
 
 /**
- * @see ObjectInterface::dealloc(Object *)
+ * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
 
@@ -48,7 +48,63 @@ static void dealloc(Object *self) {
 	super(Object, self, dealloc);
 }
 
+/**
+ * @see Object::description(const Object *)
+ */
+static String *description(const Object *self) {
+
+	View *this = (View *) self;
+
+	String *classNames = $((Array *) this->classNames, componentsJoinedByCharacters, ", ");
+	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
+							  this->identifier ?: self->clazz->name,
+							  self,
+							  ((Text *) self)->text,
+							  classNames->chars,
+							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
+
+	release(classNames);
+	return description;
+}
+
 #pragma mark - View
+
+/**
+ * @see View::applyStyle(View *, const Style *)
+ */
+static void applyStyle(View *self, const Style *style) {
+
+	super(View, self, applyStyle, style);
+
+	Text *this = (Text *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("color", InletTypeColor, &this->color, NULL)
+	);
+
+	$(self, bind, inlets, style->attributes);
+
+	char *fontFamily = NULL;
+	int fontSize = -1, fontStyle = -1;
+
+	const Inlet fontInlets[] = MakeInlets(
+		MakeInlet("font-family", InletTypeCharacters, &fontFamily, NULL),
+		MakeInlet("font-size", InletTypeInteger, &fontSize, NULL),
+		MakeInlet("font-style", InletTypeEnum, &fontStyle, (ident) FontStyleNames)
+	);
+
+	if ($(self, bind, fontInlets, style->attributes)) {
+
+		Font *font = $$(Font, cachedFont, fontFamily , fontSize, fontStyle);
+		assert(font);
+
+		$(this, setFont, font);
+
+		if (fontFamily) {
+			free(fontFamily);
+		}
+	}
+}
 
 /**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
@@ -65,8 +121,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	);
 
 	$(self, bind, inlets, dictionary);
-
-	$(self, sizeToFit);
 }
 
 /**
@@ -108,13 +162,26 @@ static void render(View *self, Renderer *renderer) {
  */
 static void renderDeviceDidReset(View *self) {
 
+	Text *this = (Text *) self;
+
+	$(this->font, renderDeviceDidReset);
+
 	super(View, self, renderDeviceDidReset);
+}
+
+/**
+ * @see View::renderDeviceWillReset(View *)
+ */
+static void renderDeviceWillReset(View *self) {
 
 	Text *this = (Text *) self;
 
-	this->texture = 0;
+	if (this->texture) {
+		glDeleteTextures(1, &this->texture);
+		this->texture = 0;
+	}
 
-	$(this->font, renderDeviceDidReset);
+	super(View, self, renderDeviceWillReset);
 }
 
 /**
@@ -136,8 +203,6 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 	self = (Text *) super(View, self, initWithFrame, NULL);
 	if (self) {
 
-		self->color = Colors.White;
-
 		$(self, setFont, font);
 		$(self, setText, text);
 	}
@@ -153,8 +218,8 @@ static SDL_Size naturalSize(const Text *self) {
 
 	SDL_Size size = MakeSize(0, 0);
 
-	if (self->font && self->text) {
-		$(self->font, sizeCharacters, self->text, &size.w, &size.h);
+	if (self->font) {
+		$(self->font, sizeCharacters, self->text ?: "", &size.w, &size.h);
 	}
 
 	return size;
@@ -166,7 +231,7 @@ static SDL_Size naturalSize(const Text *self) {
  */
 static void setFont(Text *self, Font *font) {
 
-	font = font ?: $$(Font, defaultFont, FontCategoryDefault);
+	font = font ?: $$(Font, defaultFont);
 
 	if (font != self->font) {
 
@@ -212,11 +277,14 @@ static void setText(Text *self, const char *text) {
 static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->def->interface)->description = description;
 
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((TextInterface *) clazz->def->interface)->initWithText = initWithText;

@@ -39,15 +39,15 @@
  */
 
 /**
- * @brief Bevel types.
+ * @brief Control bevel styles, for drawing depressed or raised bevels.
  */
 typedef enum {
-	ControlBevelTypeNone,
-	ControlBevelTypeInset,
-	ControlBevelTypeOutset
-} ControlBevelType;
+	ControlBevelNone,
+	ControlBevelInset,
+	ControlBevelOutset
+} ControlBevel;
 
-OBJECTIVELYMVC_EXPORT const EnumName ControlBevelTypeNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ControlBevelNames[];
 
 /**
  * @brief Control selection styles, for Controls that support user selection.
@@ -72,17 +72,6 @@ typedef enum {
 } ControlState;
 
 OBJECTIVELYMVC_EXPORT const EnumName ControlStateNames[];
-
-/**
- * @brief Control styles.
- */
-typedef enum {
-	ControlStyleDefault,
-	ControlStyleCustom,
-} ControlStyle;
-
-#define DEFAULT_CONTROL_HEIGHT 32
-#define DEFAULT_CONTROL_PADDING 8
 
 typedef struct ControlInterface ControlInterface;
 
@@ -111,9 +100,9 @@ struct Control {
 	MutableArray *actions;
 
 	/**
-	 * @brief The ControlBevelType.
+	 * @brief The ControlBevel.
 	 */
-	ControlBevelType bevel;
+	ControlBevel bevel;
 
 	/**
 	 * @brief The bit mask of ControlState.
@@ -124,11 +113,6 @@ struct Control {
 	 * @brief The ControlSelection.
 	 */
 	ControlSelection selection;
-
-	/**
-	 * @brief The ControlStyle.
-	 */
-	ControlStyle style;
 };
 
 /**
@@ -142,12 +126,13 @@ struct ControlInterface {
 	ViewInterface viewInterface;
 
 	/**
-	 * @fn Action *Control::actionForEvent(const Control *self, const SDL_Event *event)
+	 * @fn Array *Control::actionsForEvent(const Control *self, const SDL_Event *event)
 	 * @param self The Control.
-	 * @param event An SDL_Event.
+	 * @param event The event.
+	 * @return An Array of all Actions bound to the given event.
 	 * @memberof Control
 	 */
-	Action *(*actionForEvent)(const Control *self, const SDL_Event *event);
+	Array *(*actionsForEvent)(const Control *self, const SDL_Event *event);
 
 	/**
 	 * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
@@ -173,47 +158,46 @@ struct ControlInterface {
 	_Bool (*captureEvent)(Control *self, const SDL_Event *event);
 
 	/**
-	 * @fn _Bool Control::enabled(const Control *self)
+	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
+	 * @brief Initializes this Control with the specified frame and style.
 	 * @param self The Control.
-	 * @return True if this Control is enabled, false otherwise.
+	 * @param frame The frame.
+	 * @return The intialized Control, or `NULL` on error.
 	 * @memberof Control
 	 */
-	_Bool (*enabled)(const Control *self);
+	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn _Bool Control::focused(const Control *self)
+	 * @fn _Bool Control::isDisabled(const Control *self)
+	 * @param self The Control.
+	 * @return True if this Control is disabled, false otherwise.
+	 * @memberof Control
+	 */
+	_Bool (*isDisabled)(const Control *self);
+
+	/**
+	 * @fn _Bool Control::isFocused(const Control *self)
 	 * @param self The Control.
 	 * @return True if this Control is focused, false otherwise.
 	 * @memberof Control
 	 */
-	_Bool (*focused)(const Control *self);
+	_Bool (*isFocused)(const Control *self);
 
 	/**
-	 * @fn _Bool Control::highlighted(const Control *self)
+	 * @fn _Bool Control::isHighlighted(const Control *self)
 	 * @param self The Control.
 	 * @return True if this Control is highlighted, false otherwise.
 	 * @memberof Control
 	 */
-	_Bool (*highlighted)(const Control *self);
+	_Bool (*isHighlighted)(const Control *self);
 
 	/**
-	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style)
-	 * @brief Initializes this Control with the specified frame and style.
-	 * @param self The Control.
-	 * @param frame The frame.
-	 * @param style The ControlStyle.
-	 * @return The intialized Control, or `NULL` on error.
-	 * @memberof Control
-	 */
-	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame, ControlStyle style);
-
-	/**
-	 * @fn _Bool Control::selected(const Control *self)
+	 * @fn _Bool Control::isSelected(const Control *self)
 	 * @param self The Control.
 	 * @return True if this Control is selected, false otherwise.
 	 * @memberof Control
 	 */
-	_Bool (*selected)(const Control *self);
+	_Bool (*isSelected)(const Control *self);
 
 	/**
 	 * @fn void Control::stateDidChange(Control *self)

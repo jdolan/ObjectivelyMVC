@@ -40,6 +40,8 @@ static void dealloc(Object *self) {
 
 	TableColumn *this = (TableColumn *) self;
 
+	release(this->headerCell);
+	
 	free(this->identifier);
 
 	super(Object, self, dealloc);
@@ -62,9 +64,9 @@ static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier
 		self->identifier = strdup(identifier);
 		assert(self->identifier);
 
-		$(self->headerCell->tableCellView.text, setText, self->identifier);
+		self->headerCell->tableCellView.view.identifier = strdup(self->identifier);
 
-		self->width = DEFAULT_TABLE_COLUMN_WIDTH;
+		$(((TableCellView *) self->headerCell)->text, setText, self->identifier);
 	}
 
 	return self;

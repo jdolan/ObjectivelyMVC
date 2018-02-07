@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/ImageView.h>
 
 /**
  * @file
@@ -32,8 +33,6 @@
 
 typedef struct Button Button;
 typedef struct ButtonInterface ButtonInterface;
-
-#define DEFAULT_BUTTON_MIN_WIDTH 100
 
 /**
  * @brief Buttons are Controls that respond to click events.
@@ -54,6 +53,11 @@ struct Button {
 	ButtonInterface *interface;
 
 	/**
+	 * @brief The image.
+	 */
+	ImageView *image;
+
+	/**
 	 * @brief The title.
 	 */
 	Text *title;
@@ -70,26 +74,34 @@ struct ButtonInterface {
 	ControlInterface controlInterface;
 
 	/**
-	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
+	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
 	 * @brief Initializes this Button with the specified frame and style.
 	 * @param self The Button.
 	 * @param frame The frame.
-	 * @param style The ControlStyle.
 	 * @return The initialized Button, or `NULL` on error.
 	 * @memberof Button
 	 */
-	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame, ControlStyle style);
+	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn Button *Button::initWithTitle(Button *self, const char *title, ControlStyle style)
-	 * @brief Initializes this Button with the specified title and style.
+	 * @fn Button *Button::initWithImage(Button *self, Image *image)
+	 * @brief Initializes this Button with the sopecified Image.
 	 * @param self The Button.
-	 * @param title The title text.
-	 * @param style The ControlStyle.
+	 * @param image The Image.
 	 * @return The initialized Button, or `NULL` on error.
 	 * @memberof Button
 	 */
-	Button *(*initWithTitle)(Button *self, const char *title, ControlStyle style);
+	Button *(*initWithImage)(Button *self, Image *image);
+
+	/**
+	 * @fn Button *Button::initWithTitle(Button *self, const char *title)
+	 * @brief Initializes this Button with the specified title.
+	 * @param self The Button.
+	 * @param title The title text.
+	 * @return The initialized Button, or `NULL` on error.
+	 * @memberof Button
+	 */
+	Button *(*initWithTitle)(Button *self, const char *title);
 };
 
 /**

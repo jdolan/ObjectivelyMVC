@@ -25,28 +25,23 @@
 
 #include <ObjectivelyMVC/Control.h>
 
-const EnumName ControlBevelTypeNames[] = MakeEnumNames(
-	MakeEnumName(ControlBevelTypeNone),
-	MakeEnumName(ControlBevelTypeInset),
-	MakeEnumName(ControlBevelTypeOutset)
+const EnumName ControlBevelNames[] = MakeEnumNames(
+	MakeEnumAlias(ControlBevelNone, none),
+	MakeEnumAlias(ControlBevelInset, inset),
+	MakeEnumAlias(ControlBevelOutset, outset)
 );
 
 const EnumName ControlSelectionNames[] = MakeEnumNames(
-	MakeEnumName(ControlSelectionNone),
-	MakeEnumName(ControlSelectionSingle),
-	MakeEnumName(ControlSelectionMultiple)
+	MakeEnumAlias(ControlSelectionNone, none),
+	MakeEnumAlias(ControlSelectionSingle, single),
+	MakeEnumAlias(ControlSelectionMultiple, multiple)
 );
 
 const EnumName ControlStateNames[] = MakeEnumNames(
-	MakeEnumName(ControlStateDefault),
-	MakeEnumName(ControlStateHighlighted),
-	MakeEnumName(ControlStateSelected),
-	MakeEnumName(ControlStateFocused)
-);
-
-const EnumName ControlStyleNames[] = MakeEnumNames(
-	MakeEnumName(ControlStyleDefault),
-	MakeEnumName(ControlStyleCustom)
+	MakeEnumAlias(ControlStateDefault, default),
+	MakeEnumAlias(ControlStateHighlighted, highlighted),
+	MakeEnumAlias(ControlStateSelected, selected),
+	MakeEnumAlias(ControlStateFocused, focused)
 );
 
 #define _Class _Control
@@ -75,27 +70,59 @@ static _Bool acceptsFirstResponder(const View *self) {
 }
 
 /**
- * @see View::awakeWithDictionary(View *, const Dictionary *)
+ * @see View::applyStyle(View *, const Style *)
  */
-static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+static void applyStyle(View *self, const Style *style) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+	super(View, self, applyStyle, style);
 
 	Control *this = (Control *) self;
 
 	const Inlet inlets[] = MakeInlets(
-		MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames),
-		MakeInlet("style", InletTypeEnum, &this->style, (ident) ControlStyleNames)
+		MakeInlet("bevel", InletTypeEnum, &this->bevel, (ident) (ControlBevelNames)),
+		MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames)
 	);
 
-	$(self, bind, inlets, dictionary);
+	$(self, bind, inlets, (Dictionary *) style->attributes);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Control *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((Control *) self, initWithFrame, NULL);
+}
+
+/**
+ * @see View::matchesSelector(const View *, const SimpleSelector *)
+ */
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+
+	assert(simpleSelector);
+
+	const Control *this = (Control *) self;
+
+	switch (simpleSelector->type) {
+		case SimpleSelectorTypePseudo:
+			if (strcmp("highlighted", simpleSelector->pattern) == 0) {
+				return $(this, isHighlighted);
+			} else if (strcmp("disabled", simpleSelector->pattern) == 0) {
+				return $(this, isDisabled);
+			} else if (strcmp("selected", simpleSelector->pattern) == 0) {
+				return $(this, isSelected);
+			} else if (strcmp("focused", simpleSelector->pattern) == 0) {
+				return $(this, isFocused);
+			} else if (strcmp("single", simpleSelector->pattern) == 0) {
+				return this->selection == ControlSelectionSingle;
+			} else if (strcmp("multiple", simpleSelector->pattern) == 0) {
+				return this->selection == ControlSelectionMultiple;
+			}
+			break;
+		default:
+			break;
+	}
+
+	return super(View, self, matchesSelector, simpleSelector);
 }
 
 /**
@@ -109,70 +136,70 @@ static void render(View *self, Renderer *renderer) {
 
 	const SDL_Rect frame = $(self, renderFrame);
 
-	if (this->bevel == ControlBevelTypeInset) {
+	if (this->bevel == ControlBevelInset) {
 
 		$(renderer, setDrawColor, &Colors.Silver);
 
 		SDL_Point points[3];
 
-		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 1;
+		points[0].x = frame.x;
+		points[0].y = frame.y + frame.h;
 
-		points[1].x = frame.x + frame.w - 1;
-		points[1].y = frame.y + frame.h - 1;
+		points[1].x = frame.x + frame.w;
+		points[1].y = frame.y + frame.h;
 
-		points[2].x = frame.x + frame.w - 1;
-		points[2].y = frame.y + 1;
-
-		$(renderer, drawLines, points, lengthof(points));
-
-		$(renderer, setDrawColor, &Colors.Charcoal);
-
-		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 1;
-
-		points[1].x = frame.x + 1;
-		points[1].y = frame.y + 1;
-
-		points[2].x = frame.x + frame.w - 1;
-		points[2].y = frame.y + 1;
+		points[2].x = frame.x + frame.w;
+		points[2].y = frame.y;
 
 		$(renderer, drawLines, points, lengthof(points));
 
-	} else if (this->bevel == ControlBevelTypeOutset) {
+		$(renderer, setDrawColor, &Colors.Black);
 
-		$(renderer, setDrawColor, &Colors.Charcoal);
+		points[0].x = frame.x;
+		points[0].y = frame.y + frame.h;
+
+		points[1].x = frame.x;
+		points[1].y = frame.y;
+
+		points[2].x = frame.x + frame.w;
+		points[2].y = frame.y;
+
+		$(renderer, drawLines, points, lengthof(points));
+
+	} else if (this->bevel == ControlBevelOutset) {
+
+		$(renderer, setDrawColor, &Colors.Black);
 
 		SDL_Point points[3];
 
-		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 1;
+		points[0].x = frame.x;
+		points[0].y = frame.y + frame.h;
 
-		points[1].x = frame.x + frame.w - 1;
-		points[1].y = frame.y + frame.h - 1;
+		points[1].x = frame.x + frame.w;
+		points[1].y = frame.y + frame.h;
 
-		points[2].x = frame.x + frame.w - 1;
-		points[2].y = frame.y + 1;
+		points[2].x = frame.x + frame.w;
+		points[2].y = frame.y;
 
 		$(renderer, drawLines, points, lengthof(points));
 
 		$(renderer, setDrawColor, &Colors.Silver);
 
-		points[0].x = frame.x + 1;
-		points[0].y = frame.y + frame.h - 1;
+		points[0].x = frame.x;
+		points[0].y = frame.y + frame.h;
 
-		points[1].x = frame.x + 1;
-		points[1].y = frame.y + 1;
+		points[1].x = frame.x;
+		points[1].y = frame.y;
 
-		points[2].x = frame.x + frame.w - 1;
-		points[2].y = frame.y + 1;
+		points[2].x = frame.x + frame.w;
+		points[2].y = frame.y;
 
 		$(renderer, drawLines, points, lengthof(points));
 	}
 
 	if (this->state & ControlStateFocused) {
 
-		$(renderer, setDrawColor, &Colors.Black);
+		$(renderer, setDrawColor, &Colors.Charcoal);
 
 		$(renderer, drawRect, &frame);
 	}
@@ -192,9 +219,13 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	const _Bool didCaptureEvent = $(this, captureEvent, event);
 	if (didCaptureEvent) {
 
-		Action *action = $(this, actionForEvent, event);
-		if (action) {
-			action->function(this, event, action->sender, action->data);
+		const Array *actions = (Array *) this->actions;
+		for (size_t i = 0; i < actions->count; i++) {
+
+			const Action *action = $(actions, objectAtIndex, i);
+			if (action->eventType == event->type) {
+				action->function(this, event, action->sender, action->data);
+			}
 		}
 	}
 
@@ -212,21 +243,18 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 #pragma mark - Control
 
 /**
- * @fn Action *Controll::actionForEvent(const Control *self, const SDL_Event *event)
+ * @brief Predicate for actionsForEvent.
+ */
+static _Bool actionsForEvent_predicate(const ident obj, ident data) {
+	return ((Action *) obj)->eventType == ((SDL_Event *) data)->type;
+}
+
+/**
+ * @fn Array *Control::actionsForEvent(const Control *self, const SDL_Event *event)
  * @memberof Control
  */
-static Action *actionForEvent(const Control *self, const SDL_Event *event) {
-
-	Array *actions = (Array *) self->actions;
-	for (size_t i = 0; i < actions->count; i++) {
-
-		Action *action = (Action *) $(actions, objectAtIndex, i);
-		if (action->eventType == event->type) {
-			return action;
-		}
-	}
-
-	return NULL;
+static Array *actionsForEvent(const Control *self, const SDL_Event *event) {
+	return $((Array *) self->actions, filteredArray, actionsForEvent_predicate, (ident) event);
 }
 
 /**
@@ -251,63 +279,50 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 }
 
 /**
- * @fn _Bool Control::enabled(const Control *self)
+ * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
  * @memberof Control
  */
-static _Bool enabled(const Control *self) {
-	return (self->state & ControlStateDisabled) == 0;
-}
-
-/**
- * @fn _Bool Control::focused(const Control *self)
- * @memberof Control
- */
-static _Bool focused(const Control *self) {
-	return (self->state & ControlStateFocused) == ControlStateFocused;
-}
-
-/**
- * @fn _Bool Control::highlighted(const Control *self)
- * @memberof Control
- */
-static _Bool highlighted(const Control *self) {
-	return (self->state & ControlStateHighlighted) == ControlStateHighlighted;
-}
-
-/**
- * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style)
- * @memberof Control
- */
-static Control *initWithFrame(Control *self, const SDL_Rect *frame, ControlStyle style) {
+static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
 
 	self = (Control *) super(View, self, initWithFrame, frame);
 	if (self) {
 
-		self->actions = $$(MutableArray, array);
+		self->actions = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->actions);
-
-		self->style = style;
-		if (self->style == ControlStyleDefault) {
-
-			if (self->view.frame.h == 0) {
-				self->view.frame.h = DEFAULT_CONTROL_HEIGHT;
-			}
-
-			self->view.padding.top = DEFAULT_CONTROL_PADDING;
-			self->view.padding.right = DEFAULT_CONTROL_PADDING;
-			self->view.padding.bottom = DEFAULT_CONTROL_PADDING;
-			self->view.padding.left = DEFAULT_CONTROL_PADDING;
-		}
 	}
 
 	return self;
 }
 
 /**
- * @fn _Bool Control::selected(const Control *self)
+ * @fn _Bool Control::isDisabled(const Control *self)
  * @memberof Control
  */
-static _Bool selected(const Control *self) {
+static _Bool isDisabled(const Control *self) {
+	return (self->state & ControlStateDisabled) == ControlStateDisabled;
+}
+
+/**
+ * @fn _Bool Control::isFocused(const Control *self)
+ * @memberof Control
+ */
+static _Bool isFocused(const Control *self) {
+	return (self->state & ControlStateFocused) == ControlStateFocused;
+}
+
+/**
+ * @fn _Bool Control::isHighlighted(const Control *self)
+ * @memberof Control
+ */
+static _Bool isHighlighted(const Control *self) {
+	return (self->state & ControlStateHighlighted) == ControlStateHighlighted;
+}
+
+/**
+ * @fn _Bool Control::isSelected(const Control *self)
+ * @memberof Control
+ */
+static _Bool isSelected(const Control *self) {
 	return (self->state & ControlStateSelected) == ControlStateSelected;
 }
 
@@ -317,11 +332,17 @@ static _Bool selected(const Control *self) {
  */
 static void stateDidChange(Control *self) {
 
+	View *this = (View *) self;
+
 	if (self->state & (ControlStateHighlighted | ControlStateFocused)) {
-		$((View *) self, becomeFirstResponder);
+		$(this, becomeFirstResponder);
 	} else {
-		$((View *) self, resignFirstResponder);
+		$(this, resignFirstResponder);
 	}
+
+	$(this, invalidateStyle);
+
+	this->needsLayout = true;
 }
 
 #pragma mark - Class lifecycle
@@ -334,19 +355,20 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
 
-	((ControlInterface *) clazz->def->interface)->actionForEvent = actionForEvent;
+	((ControlInterface *) clazz->def->interface)->actionsForEvent = actionsForEvent;
 	((ControlInterface *) clazz->def->interface)->addActionForEventType = addActionForEventType;
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->def->interface)->enabled = enabled;
-	((ControlInterface *) clazz->def->interface)->focused = focused;
-	((ControlInterface *) clazz->def->interface)->highlighted = highlighted;
 	((ControlInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ControlInterface *) clazz->def->interface)->selected = selected;
+	((ControlInterface *) clazz->def->interface)->isDisabled = isDisabled;
+	((ControlInterface *) clazz->def->interface)->isFocused = isFocused;
+	((ControlInterface *) clazz->def->interface)->isHighlighted = isHighlighted;
+	((ControlInterface *) clazz->def->interface)->isSelected = isSelected;
 	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 }
 

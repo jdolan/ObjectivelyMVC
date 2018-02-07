@@ -27,6 +27,20 @@
 
 #define _Class _ScrollView
 
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+	ScrollView *this = (ScrollView *) self;
+
+	release(this->contentView);
+
+	super(Object, self, dealloc);
+}
+
 #pragma mark - View
 
 /**
@@ -75,7 +89,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		return true;
 	} else if (event->type == SDL_MOUSEBUTTONUP && (event->button.button & SDL_BUTTON_LMASK)) {
 
-		if ($(self, highlighted)) {
+		if ($(self, isHighlighted)) {
 			self->state &= ~ControlStateHighlighted;
 			return true;
 		}
@@ -87,25 +101,14 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 #pragma mark - ScrollView
 
 /**
- * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame)
  * @memberof ScrollView
  */
-static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame, ControlStyle style) {
+static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
 
-	self = (ScrollView *) super(Control, self, initWithFrame, frame, style);
+	self = (ScrollView *) super(Control, self, initWithFrame, frame);
 	if (self) {
-		self->step = 1.0;
-
-		self->control.view.clipsSubviews = true;
-
-		if (style == ControlStyleDefault) {
-			self->step = SCROLL_VIEW_DEFAULT_STEP;
-			
-			self->control.view.padding.top = 0;
-			self->control.view.padding.right = 0;
-			self->control.view.padding.bottom = 0;
-			self->control.view.padding.left = 0;
-		}
+		self->step = DEFAULT_SCROLL_VIEW_STEP;
 	}
 
 	return self;
@@ -146,18 +149,22 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
  */
 static void setContentView(ScrollView *self, View *contentView) {
 
-	if (self->contentView) {
-		$((View *) self, removeSubview, self->contentView);
+	if (contentView != self->contentView) {
+
+		if (self->contentView) {
+			$(self->contentView, removeClassName, "contentView");
+			$((View *) self, removeSubview, self->contentView);
+			self->contentView = release(self->contentView);
+		}
+
+		if (contentView) {
+			$(contentView, addClassName, "contentView");
+			$((View *) self, addSubview, contentView);
+			self->contentView = retain(contentView);
+		}
+
+		$(self, scrollToOffset, &MakePoint(0, 0));
 	}
-
-	if (contentView) {
-		$((View *) self, addSubview, contentView);
-	}
-
-	self->contentView = contentView;
-
-	const SDL_Point origin = { .x = 0, .y = 0 };
-	$(self, scrollToOffset, &origin);
 }
 
 #pragma mark - Class lifecycle
@@ -166,6 +173,8 @@ static void setContentView(ScrollView *self, View *contentView) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
+
+	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 

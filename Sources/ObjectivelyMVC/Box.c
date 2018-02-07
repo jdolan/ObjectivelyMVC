@@ -97,33 +97,19 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 		self->contentView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->contentView);
 
-		self->contentView->spacing = DEFAULT_BOX_SPACING;
-		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
+		$((View *) self->contentView, addClassName, "contentView");
+		$((View *) self->contentView, addClassName, "container");
 
 		$((View *) self, addSubview, (View *) self->contentView);
 
-		Font *font = $$(Font, defaultFont, FontCategorySecondaryLabel);
-
-		self->label = $(alloc(Label), initWithText, NULL, font);
+		self->label = $(alloc(Label), initWithText, NULL, NULL);
 		assert(self->label);
 
 		View *label = (View *) self->label;
 
 		label->alignment = ViewAlignmentInternal;
-		label->backgroundColor = Colors.DarkGray;
-		label->frame.x = DEFAULT_BOX_LABEL_X;
-		label->padding.right = DEFAULT_BOX_LABEL_PADDING;
-		label->padding.left = DEFAULT_BOX_LABEL_PADDING;
 
 		$((View *) self, addSubview, (View *) self->label);
-
-		self->view.autoresizingMask = ViewAutoresizingContain;
-		self->view.borderColor = Colors.DarkGray;
-		self->view.borderWidth = 1;
-		self->view.padding.top = DEFAULT_BOX_PADDING;
-		self->view.padding.right = DEFAULT_BOX_PADDING;
-		self->view.padding.bottom = DEFAULT_BOX_PADDING;
-		self->view.padding.left = DEFAULT_BOX_PADDING;
 	}
 
 	return self;

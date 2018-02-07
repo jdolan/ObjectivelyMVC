@@ -30,8 +30,6 @@
  * @brief Header rows for TableViews.
  */
 
-#define DEFAULT_TABLE_HEADER_VIEW_HEIGHT 28
-
 typedef struct TableHeaderView TableHeaderView;
 typedef struct TableHeaderViewInterface TableHeaderViewInterface;
 

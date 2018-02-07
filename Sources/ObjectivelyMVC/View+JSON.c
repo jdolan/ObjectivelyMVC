@@ -23,6 +23,8 @@
 
 #include <ObjectivelyMVC.h>
 
+#define _Class _View
+
 /**
  * @brief InletBinding for InletTypeBool.
  */
@@ -34,7 +36,28 @@ static void bindBool(const Inlet *inlet, ident obj) {
  * @brief InletBinding for InletTypeCharacters.
  */
 static void bindCharacters(const Inlet *inlet, ident obj) {
-	*((char **) inlet->dest) = strdup(cast(String, obj)->chars);
+
+	char **dest = inlet->dest;
+
+	if (*dest) {
+		free(*dest);
+	}
+
+	*dest = strdup(cast(String, obj)->chars);
+}
+
+/**
+ * @brief ArrayEnumerator for bindClassNames.
+ */
+static void bindClassNames_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, addClassName, cast(String, obj)->chars);
+}
+
+/**
+ * @brief InletBinding for InletTypeClassNames.
+ */
+static void bindClassNames(const Inlet *inlet, ident obj) {
+	$(cast(Array, obj), enumerateObjects, bindClassNames_enumerate, *(View **) inlet->dest);
 }
 
 /**
@@ -42,58 +65,45 @@ static void bindCharacters(const Inlet *inlet, ident obj) {
  */
 static void bindColor(const Inlet *inlet, ident obj) {
 
-	const Array *array = cast(Array, obj);
+	SDL_Color color = Colors.Black;
 
-	assert(array->count == 4);
+	if ($((Object *) obj, isKindOfClass, _String())) {
 
-	const Number *r = $(array, objectAtIndex, 0);
-	const Number *g = $(array, objectAtIndex, 1);
-	const Number *b = $(array, objectAtIndex, 2);
-	const Number *a = $(array, objectAtIndex, 3);
+		String *string = cast(String, obj);
+		if (string->length) {
 
-	#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
+			if (strcmp("none", string->chars) == 0) {
+				return;
+			}
 
-	SDL_Color color = {
-		ScaleColor(r->value),
-		ScaleColor(g->value),
-		ScaleColor(b->value),
-		ScaleColor(a->value)
-	};
+			if (string->chars[0] == '#') {
+				color = MVC_HexToRGBA(string->chars + 1);
+			} else {
+				color = MVC_ColorForName(string->chars);
+			}
+		}
+
+	} else {
+		const Array *array = cast(Array, obj);
+
+		assert(array->count == 4);
+
+		const Number *r = $(array, objectAtIndex, 0);
+		const Number *g = $(array, objectAtIndex, 1);
+		const Number *b = $(array, objectAtIndex, 2);
+		const Number *a = $(array, objectAtIndex, 3);
+
+		#define ScaleColor(c) (c > 0.0 && c < 1.0 ? c * 255 : c)
+
+		color = MakeColor(
+			ScaleColor(r->value),
+			ScaleColor(g->value),
+			ScaleColor(b->value),
+			ScaleColor(a->value)
+		);
+	}
 
 	*((SDL_Color *) inlet->dest) = color;
-}
-
-/**
- * @brief InletBinding for InletTypeConstraint.
- */
-static void bindConstraint(const Inlet *inlet, ident obj) {
-
-	String *descriptor = cast(String, obj);
-
-	*(Constraint **) inlet->dest = $(alloc(Constraint), initWithDescriptor, descriptor->chars);
-}
-
-/**
- * @brief ArrayEnumerator for `bindConstraints`.
- */
-static void bindConstraints_enumerate(const Array *array, ident obj, ident data) {
-
-	Constraint *constraint = NULL;
-
-	const Inlet inlet = MakeInlet(NULL, InletTypeConstraint, &constraint, NULL);
-
-	bindConstraint(&inlet, obj);
-
-	$(cast(View, data), addConstraint, constraint);
-
-	release(constraint);
-}
-
-/**
- * @brief InletBinding for InletTypeConstraints.
- */
-static void bindConstraints(const Inlet *inlet, ident obj) {
-	$(cast(Array, obj), enumerateObjects, bindConstraints_enumerate, *(View **) inlet->dest);
 }
 
 /**
@@ -121,13 +131,21 @@ static void bindFloat(const Inlet *inlet, ident obj) {
  * @brief InletBinding for InletTypeFont.
  */
 static void bindFont(const Inlet *inlet, ident obj) {
-	*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
+
+	release(*(Font **) inlet->dest);
+
+	// TODO
+
+	//*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
 }
 
 /**
  * @brief InletBinding for InletTypeImage.
  */
 static void bindImage(const Inlet *inlet, ident obj) {
+
+	release(*(Font **) inlet->dest);
+
 	*((Image **) inlet->dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
 }
 
@@ -139,20 +157,41 @@ static void bindInteger(const Inlet *inlet, ident obj) {
 }
 
 /**
+ * @brief InletBinding for InletTypePoint.
+ */
+static void bindPoint(const Inlet *inlet, ident obj) {
+
+	const Array *array = cast(Array, obj);
+
+	assert(array->count == 2);
+
+	const Number *x = $(array, objectAtIndex, 0);
+	const Number *y = $(array, objectAtIndex, 1);
+
+	*((SDL_Point *) inlet->dest) = MakePoint(x->value, y->value);
+}
+
+/**
  * @brief InletBinding for InletTypeRectangle.
  */
 static void bindRectangle(const Inlet *inlet, ident obj) {
 
-	const Array *array = cast(Array, obj);
+	if ($((Object *) obj, isKindOfClass, _Number())) {
+		const Number *n = obj;
 
-	assert(array->count == 4);
+		*((SDL_Rect *) inlet->dest) = MakeRect(n->value, n->value, n->value, n->value);
+	} else {
+		const Array *array = cast(Array, obj);
 
-	const Number *x = $(array, objectAtIndex, 0);
-	const Number *y = $(array, objectAtIndex, 1);
-	const Number *w = $(array, objectAtIndex, 2);
-	const Number *h = $(array, objectAtIndex, 3);
+		assert(array->count == 4);
 
-	*((SDL_Rect *) inlet->dest) = MakeRect(x->value, y->value, w->value, h->value);
+		const Number *x = $(array, objectAtIndex, 0);
+		const Number *y = $(array, objectAtIndex, 1);
+		const Number *w = $(array, objectAtIndex, 2);
+		const Number *h = $(array, objectAtIndex, 3);
+
+		*((SDL_Rect *) inlet->dest) = MakeRect(x->value, y->value, w->value, h->value);
+	}
 }
 
 /**
@@ -175,46 +214,51 @@ static void bindSize(const Inlet *inlet, ident obj) {
  */
 static void bindView(const Inlet *inlet, ident obj) {
 
-	View *view = NULL, *source = *(View **) inlet->dest;
+	View *dest = *(View **) inlet->dest;
 
 	const Dictionary *dictionary = cast(Dictionary, obj);
 
-	const String *clazzName = $(dictionary, objectForKeyPath, "class");
-	const String *includePath = $(dictionary, objectForKeyPath, "include");
+	const String *className = $(dictionary, objectForKeyPath, "class");
+	if (className || dest == NULL) {
 
-	if (clazzName == NULL && includePath == NULL) {
-		$(source, awakeWithDictionary, dictionary);
-	} else {
-		if (clazzName) {
-			Class *clazz = classForName(clazzName->chars);
-			if (clazz) {
-				const Class *c = clazz;
-				while (c) {
-					if (c == _View()) {
-						break;
-					}
-					c = c->superclass;
-				}
-				assert(c);
+		Class *clazz = className ? classForName(className->chars) : _View();
+		assert(clazz);
 
-				view = $((View *) _alloc(clazz), init);
-				$(view, awakeWithDictionary, dictionary);
+		const Class *c = clazz;
+		while (c) {
+			if (c == _View()) {
+				break;
 			}
-		} else if (includePath) {
-			view = $$(View, viewWithContentsOfFile, includePath->chars, NULL);
+			c = c->superclass;
 		}
+		assert(c);
 
+		View *view = $((View *) _alloc(clazz), init);
 		assert(view);
 
-		if (source) {
-			if (source->superview) {
-				$(source->superview, replaceSubview, source, view);
+		$(view, awakeWithDictionary, dictionary);
+
+		if (dest) {
+			if (dest->superview) {
+				$(dest->superview, replaceSubview, dest, view);
 			}
-			release(source);
+			release(dest);
 		}
 
 		*(View **) inlet->dest = view;
+
+	} else if (dest) {
+		$(dest, awakeWithDictionary, dictionary);
+	} else {
+		MVC_LogWarn("Inlet %s has NULL destination and no className specified\n", inlet->name);
 	}
+}
+
+/**
+ * @brief InletBinding for InletTypeStyle.
+ */
+static void bindStyle(const Inlet *inlet, ident obj) {
+	$(cast(View, *((View **) inlet->dest))->style, addAttributes, cast(Dictionary, obj));
 }
 
 /**
@@ -256,31 +300,39 @@ static void bindApplicationDefined(const Inlet *inlet, ident obj) {
 const InletBinding inletBindings[] = {
 	bindBool,
 	bindCharacters,
+	bindClassNames,
 	bindColor,
-	bindConstraint,
-	bindConstraints,
 	bindDouble,
 	bindEnum,
 	bindFloat,
 	bindFont,
 	bindImage,
 	bindInteger,
+	bindPoint,
 	bindRectangle,
 	bindSize,
+	bindStyle,
 	bindSubviews,
 	bindView,
 	bindApplicationDefined,
 };
 
-void bindInlets(const Inlet *inlets, const Dictionary *dictionary) {
+_Bool bindInlets(const Inlet *inlets, const Dictionary *dictionary) {
 
 	assert(inlets);
 	assert(dictionary);
+
+	_Bool didBindInlets = false;
 
 	for (const Inlet *inlet = inlets; inlet->name; inlet++) {
 		const ident obj = $(dictionary, objectForKeyPath, inlet->name);
 		if (obj) {
 			BindInlet(inlet, obj);
+			didBindInlets = true;
 		}
 	}
+
+	return didBindInlets;
 }
+
+#undef _Class

@@ -49,24 +49,23 @@ int main(int argc, char *argv[]) {
 
 	SDL_GLContext *context = SDL_GL_CreateContext(window);
 
-	SDL_GL_SetSwapInterval(0);
+	SDL_GL_SetSwapInterval(1);
 
 	WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 
-	ViewController *viewController = $((ViewController *) alloc(HelloViewController), init);
+	ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
 
 	$(windowController, setViewController, viewController);
 
 	while (true) {
+		
 		SDL_Event event;
-
-		if (SDL_PollEvent(&event)) {
-
+		while (SDL_PollEvent(&event)) {
 			$(windowController, respondToEvent, &event);
+		}
 
-			if (event.type == SDL_QUIT) {
-				break;
-			}
+		if (event.type == SDL_QUIT) {
+			break;
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

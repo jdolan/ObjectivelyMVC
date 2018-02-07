@@ -23,18 +23,7 @@
 #include <ObjectivelyMVC/Colors.h>
 #include <SDL2/SDL_endian.h>
 
-const struct _Colors Colors = {
-
-	.DefaultColor = { 128, 128, 128, 224 },
-	.HighlightedColor = { 105, 105, 105, 255 },
-	.DisabledColor = { 96, 96, 96, 255 },
-	.SelectedColor = { 48, 48, 48, 255 },
-	.FocusedColor = { 128, 128, 128, 255 },
-
-	.AlternateColor = { 152, 152, 152, 192 },
-
-	.Clear = { 255, 255, 255, 0 },
-
+const struct Colors Colors = {
 	.AliceBlue = { 240, 248, 255, 255 },
 	.AntiqueWhite = { 250, 235, 215, 255 },
 	.Aqua = { 0, 255, 255, 255 },
@@ -177,6 +166,7 @@ const struct _Colors Colors = {
 	.Teal = { 0, 128, 128, 255 },
 	.Thistle = { 216, 191, 216, 255 },
 	.Tomato = { 255, 99, 71, 255 },
+	.Transparent = { 255, 255, 255, 0 },
 	.Turquoise = { 64, 224, 208, 255 },
 	.Violet = { 238, 130, 238, 255 },
 	.Wheat = { 245, 222, 179, 255 },
@@ -185,6 +175,464 @@ const struct _Colors Colors = {
 	.Yellow = { 255, 255, 0, 255 },
 	.YellowGreen = { 154, 205, 50, 255 },
 };
+
+SDL_Color MVC_ColorForName(const char *name) {
+
+	if (name) {
+		if (strcasecmp(name, "AliceBlue") == 0) {
+			return Colors.AliceBlue;
+		}
+		if (strcasecmp(name, "AntiqueWhite") == 0) {
+			return Colors.AntiqueWhite;
+		}
+		if (strcasecmp(name, "Aqua") == 0) {
+			return Colors.Aqua;
+		}
+		if (strcasecmp(name, "Aquamarine") == 0) {
+			return Colors.Aquamarine;
+		}
+		if (strcasecmp(name, "Azure") == 0) {
+			return Colors.Azure;
+		}
+		if (strcasecmp(name, "Beige") == 0) {
+			return Colors.Beige;
+		}
+		if (strcasecmp(name, "Bisque") == 0) {
+			return Colors.Bisque;
+		}
+		if (strcasecmp(name, "Black") == 0) {
+			return Colors.Black;
+		}
+		if (strcasecmp(name, "BlanchedAlmond") == 0) {
+			return Colors.BlanchedAlmond;
+		}
+		if (strcasecmp(name, "Blue") == 0) {
+			return Colors.Blue;
+		}
+		if (strcasecmp(name, "BlueViolet") == 0) {
+			return Colors.BlueViolet;
+		}
+		if (strcasecmp(name, "Brown") == 0) {
+			return Colors.Brown;
+		}
+		if (strcasecmp(name, "BurlyWood") == 0) {
+			return Colors.BurlyWood;
+		}
+		if (strcasecmp(name, "CadetBlue") == 0) {
+			return Colors.CadetBlue;
+		}
+		if (strcasecmp(name, "Charcoal") == 0) {
+			return Colors.Charcoal;
+		}
+		if (strcasecmp(name, "Chartreuse") == 0) {
+			return Colors.Chartreuse;
+		}
+		if (strcasecmp(name, "Chocolate") == 0) {
+			return Colors.Chocolate;
+		}
+		if (strcasecmp(name, "Coral") == 0) {
+			return Colors.Coral;
+		}
+		if (strcasecmp(name, "CornflowerBlue") == 0) {
+			return Colors.CornflowerBlue;
+		}
+		if (strcasecmp(name, "Cornsilk") == 0) {
+			return Colors.Cornsilk;
+		}
+		if (strcasecmp(name, "Crimson") == 0) {
+			return Colors.Crimson;
+		}
+		if (strcasecmp(name, "Cyan") == 0) {
+			return Colors.Cyan;
+		}
+		if (strcasecmp(name, "DarkBlue") == 0) {
+			return Colors.DarkBlue;
+		}
+		if (strcasecmp(name, "DarkCyan") == 0) {
+			return Colors.DarkCyan;
+		}
+		if (strcasecmp(name, "DarkGoldenRod") == 0) {
+			return Colors.DarkGoldenRod;
+		}
+		if (strcasecmp(name, "DarkGray") == 0) {
+			return Colors.DarkGray;
+		}
+		if (strcasecmp(name, "DarkGrey") == 0) {
+			return Colors.DarkGrey;
+		}
+		if (strcasecmp(name, "DarkGreen") == 0) {
+			return Colors.DarkGreen;
+		}
+		if (strcasecmp(name, "DarkKhaki") == 0) {
+			return Colors.DarkKhaki;
+		}
+		if (strcasecmp(name, "DarkMagenta") == 0) {
+			return Colors.DarkMagenta;
+		}
+		if (strcasecmp(name, "DarkOliveGreen") == 0) {
+			return Colors.DarkOliveGreen;
+		}
+		if (strcasecmp(name, "DarkOrange") == 0) {
+			return Colors.DarkOrange;
+		}
+		if (strcasecmp(name, "DarkOrchid") == 0) {
+			return Colors.DarkOrchid;
+		}
+		if (strcasecmp(name, "DarkRed") == 0) {
+			return Colors.DarkRed;
+		}
+		if (strcasecmp(name, "DarkSalmon") == 0) {
+			return Colors.DarkSalmon;
+		}
+		if (strcasecmp(name, "DarkSeaGreen") == 0) {
+			return Colors.DarkSeaGreen;
+		}
+		if (strcasecmp(name, "DarkSlateBlue") == 0) {
+			return Colors.DarkSlateBlue;
+		}
+		if (strcasecmp(name, "DarkSlateGray") == 0) {
+			return Colors.DarkSlateGray;
+		}
+		if (strcasecmp(name, "DarkSlateGrey") == 0) {
+			return Colors.DarkSlateGrey;
+		}
+		if (strcasecmp(name, "DarkTurquoise") == 0) {
+			return Colors.DarkTurquoise;
+		}
+		if (strcasecmp(name, "DarkViolet") == 0) {
+			return Colors.DarkViolet;
+		}
+		if (strcasecmp(name, "DeepPink") == 0) {
+			return Colors.DeepPink;
+		}
+		if (strcasecmp(name, "DeepSkyBlue") == 0) {
+			return Colors.DeepSkyBlue;
+		}
+		if (strcasecmp(name, "DimGray") == 0) {
+			return Colors.DimGray;
+		}
+		if (strcasecmp(name, "DimGrey") == 0) {
+			return Colors.DimGrey;
+		}
+		if (strcasecmp(name, "DodgerBlue") == 0) {
+			return Colors.DodgerBlue;
+		}
+		if (strcasecmp(name, "FireBrick") == 0) {
+			return Colors.FireBrick;
+		}
+		if (strcasecmp(name, "FloralWhite") == 0) {
+			return Colors.FloralWhite;
+		}
+		if (strcasecmp(name, "ForestGreen") == 0) {
+			return Colors.ForestGreen;
+		}
+		if (strcasecmp(name, "Fuchsia") == 0) {
+			return Colors.Fuchsia;
+		}
+		if (strcasecmp(name, "Gainsboro") == 0) {
+			return Colors.Gainsboro;
+		}
+		if (strcasecmp(name, "GhostWhite") == 0) {
+			return Colors.GhostWhite;
+		}
+		if (strcasecmp(name, "Gold") == 0) {
+			return Colors.Gold;
+		}
+		if (strcasecmp(name, "GoldenRod") == 0) {
+			return Colors.GoldenRod;
+		}
+		if (strcasecmp(name, "Gray") == 0) {
+			return Colors.Gray;
+		}
+		if (strcasecmp(name, "Grey") == 0) {
+			return Colors.Grey;
+		}
+		if (strcasecmp(name, "Green") == 0) {
+			return Colors.Green;
+		}
+		if (strcasecmp(name, "GreenYellow") == 0) {
+			return Colors.GreenYellow;
+		}
+		if (strcasecmp(name, "HoneyDew") == 0) {
+			return Colors.HoneyDew;
+		}
+		if (strcasecmp(name, "HotPink") == 0) {
+			return Colors.HotPink;
+		}
+		if (strcasecmp(name, "IndianRed") == 0) {
+			return Colors.IndianRed;
+		}
+		if (strcasecmp(name, "Indigo") == 0) {
+			return Colors.Indigo;
+		}
+		if (strcasecmp(name, "Ivory") == 0) {
+			return Colors.Ivory;
+		}
+		if (strcasecmp(name, "Khaki") == 0) {
+			return Colors.Khaki;
+		}
+		if (strcasecmp(name, "Lavender") == 0) {
+			return Colors.Lavender;
+		}
+		if (strcasecmp(name, "LavenderBlush") == 0) {
+			return Colors.LavenderBlush;
+		}
+		if (strcasecmp(name, "LawnGreen") == 0) {
+			return Colors.LawnGreen;
+		}
+		if (strcasecmp(name, "LemonChiffon") == 0) {
+			return Colors.LemonChiffon;
+		}
+		if (strcasecmp(name, "LightBlue") == 0) {
+			return Colors.LightBlue;
+		}
+		if (strcasecmp(name, "LightCoral") == 0) {
+			return Colors.LightCoral;
+		}
+		if (strcasecmp(name, "LightCyan") == 0) {
+			return Colors.LightCyan;
+		}
+		if (strcasecmp(name, "LightGoldenRodYellow") == 0) {
+			return Colors.LightGoldenRodYellow;
+		}
+		if (strcasecmp(name, "LightGray") == 0) {
+			return Colors.LightGray;
+		}
+		if (strcasecmp(name, "LightGrey") == 0) {
+			return Colors.LightGrey;
+		}
+		if (strcasecmp(name, "LightGreen") == 0) {
+			return Colors.LightGreen;
+		}
+		if (strcasecmp(name, "LightPink") == 0) {
+			return Colors.LightPink;
+		}
+		if (strcasecmp(name, "LightSalmon") == 0) {
+			return Colors.LightSalmon;
+		}
+		if (strcasecmp(name, "LightSeaGreen") == 0) {
+			return Colors.LightSeaGreen;
+		}
+		if (strcasecmp(name, "LightSkyBlue") == 0) {
+			return Colors.LightSkyBlue;
+		}
+		if (strcasecmp(name, "LightSlateGray") == 0) {
+			return Colors.LightSlateGray;
+		}
+		if (strcasecmp(name, "LightSlateGrey") == 0) {
+			return Colors.LightSlateGrey;
+		}
+		if (strcasecmp(name, "LightSteelBlue") == 0) {
+			return Colors.LightSteelBlue;
+		}
+		if (strcasecmp(name, "LightYellow") == 0) {
+			return Colors.LightYellow;
+		}
+		if (strcasecmp(name, "Lime") == 0) {
+			return Colors.Lime;
+		}
+		if (strcasecmp(name, "LimeGreen") == 0) {
+			return Colors.LimeGreen;
+		}
+		if (strcasecmp(name, "Linen") == 0) {
+			return Colors.Linen;
+		}
+		if (strcasecmp(name, "Magenta") == 0) {
+			return Colors.Magenta;
+		}
+		if (strcasecmp(name, "Maroon") == 0) {
+			return Colors.Maroon;
+		}
+		if (strcasecmp(name, "MediumAquaMarine") == 0) {
+			return Colors.MediumAquaMarine;
+		}
+		if (strcasecmp(name, "MediumBlue") == 0) {
+			return Colors.MediumBlue;
+		}
+		if (strcasecmp(name, "MediumOrchid") == 0) {
+			return Colors.MediumOrchid;
+		}
+		if (strcasecmp(name, "MediumPurple") == 0) {
+			return Colors.MediumPurple;
+		}
+		if (strcasecmp(name, "MediumSeaGreen") == 0) {
+			return Colors.MediumSeaGreen;
+		}
+		if (strcasecmp(name, "MediumSlateBlue") == 0) {
+			return Colors.MediumSlateBlue;
+		}
+		if (strcasecmp(name, "MediumSpringGreen") == 0) {
+			return Colors.MediumSpringGreen;
+		}
+		if (strcasecmp(name, "MediumTurquoise") == 0) {
+			return Colors.MediumTurquoise;
+		}
+		if (strcasecmp(name, "MediumVioletRed") == 0) {
+			return Colors.MediumVioletRed;
+		}
+		if (strcasecmp(name, "MidnightBlue") == 0) {
+			return Colors.MidnightBlue;
+		}
+		if (strcasecmp(name, "MintCream") == 0) {
+			return Colors.MintCream;
+		}
+		if (strcasecmp(name, "MistyRose") == 0) {
+			return Colors.MistyRose;
+		}
+		if (strcasecmp(name, "Moccasin") == 0) {
+			return Colors.Moccasin;
+		}
+		if (strcasecmp(name, "NavajoWhite") == 0) {
+			return Colors.NavajoWhite;
+		}
+		if (strcasecmp(name, "Navy") == 0) {
+			return Colors.Navy;
+		}
+		if (strcasecmp(name, "OldLace") == 0) {
+			return Colors.OldLace;
+		}
+		if (strcasecmp(name, "Olive") == 0) {
+			return Colors.Olive;
+		}
+		if (strcasecmp(name, "OliveDrab") == 0) {
+			return Colors.OliveDrab;
+		}
+		if (strcasecmp(name, "Orange") == 0) {
+			return Colors.Orange;
+		}
+		if (strcasecmp(name, "OrangeRed") == 0) {
+			return Colors.OrangeRed;
+		}
+		if (strcasecmp(name, "Orchid") == 0) {
+			return Colors.Orchid;
+		}
+		if (strcasecmp(name, "PaleGoldenRod") == 0) {
+			return Colors.PaleGoldenRod;
+		}
+		if (strcasecmp(name, "PaleGreen") == 0) {
+			return Colors.PaleGreen;
+		}
+		if (strcasecmp(name, "PaleTurquoise") == 0) {
+			return Colors.PaleTurquoise;
+		}
+		if (strcasecmp(name, "PaleVioletRed") == 0) {
+			return Colors.PaleVioletRed;
+		}
+		if (strcasecmp(name, "PapayaWhip") == 0) {
+			return Colors.PapayaWhip;
+		}
+		if (strcasecmp(name, "PeachPuff") == 0) {
+			return Colors.PeachPuff;
+		}
+		if (strcasecmp(name, "Peru") == 0) {
+			return Colors.Peru;
+		}
+		if (strcasecmp(name, "Pink") == 0) {
+			return Colors.Pink;
+		}
+		if (strcasecmp(name, "Plum") == 0) {
+			return Colors.Plum;
+		}
+		if (strcasecmp(name, "PowderBlue") == 0) {
+			return Colors.PowderBlue;
+		}
+		if (strcasecmp(name, "Purple") == 0) {
+			return Colors.Purple;
+		}
+		if (strcasecmp(name, "RebeccaPurple") == 0) {
+			return Colors.RebeccaPurple;
+		}
+		if (strcasecmp(name, "Red") == 0) {
+			return Colors.Red;
+		}
+		if (strcasecmp(name, "RosyBrown") == 0) {
+			return Colors.RosyBrown;
+		}
+		if (strcasecmp(name, "RoyalBlue") == 0) {
+			return Colors.RoyalBlue;
+		}
+		if (strcasecmp(name, "SaddleBrown") == 0) {
+			return Colors.SaddleBrown;
+		}
+		if (strcasecmp(name, "Salmon") == 0) {
+			return Colors.Salmon;
+		}
+		if (strcasecmp(name, "SandyBrown") == 0) {
+			return Colors.SandyBrown;
+		}
+		if (strcasecmp(name, "SeaGreen") == 0) {
+			return Colors.SeaGreen;
+		}
+		if (strcasecmp(name, "SeaShell") == 0) {
+			return Colors.SeaShell;
+		}
+		if (strcasecmp(name, "Sienna") == 0) {
+			return Colors.Sienna;
+		}
+		if (strcasecmp(name, "Silver") == 0) {
+			return Colors.Silver;
+		}
+		if (strcasecmp(name, "SkyBlue") == 0) {
+			return Colors.SkyBlue;
+		}
+		if (strcasecmp(name, "SlateBlue") == 0) {
+			return Colors.SlateBlue;
+		}
+		if (strcasecmp(name, "SlateGray") == 0) {
+			return Colors.SlateGray;
+		}
+		if (strcasecmp(name, "SlateGrey") == 0) {
+			return Colors.SlateGrey;
+		}
+		if (strcasecmp(name, "Snow") == 0) {
+			return Colors.Snow;
+		}
+		if (strcasecmp(name, "SpringGreen") == 0) {
+			return Colors.SpringGreen;
+		}
+		if (strcasecmp(name, "SteelBlue") == 0) {
+			return Colors.SteelBlue;
+		}
+		if (strcasecmp(name, "Tan") == 0) {
+			return Colors.Tan;
+		}
+		if (strcasecmp(name, "Teal") == 0) {
+			return Colors.Teal;
+		}
+		if (strcasecmp(name, "Thistle") == 0) {
+			return Colors.Thistle;
+		}
+		if (strcasecmp(name, "Tomato") == 0) {
+			return Colors.Tomato;
+		}
+		if (strcasecmp(name, "Transparent") == 0) {
+			return Colors.Transparent;
+		}
+		if (strcasecmp(name, "Turquoise") == 0) {
+			return Colors.Turquoise;
+		}
+		if (strcasecmp(name, "Violet") == 0) {
+			return Colors.Violet;
+		}
+		if (strcasecmp(name, "Wheat") == 0) {
+			return Colors.Wheat;
+		}
+		if (strcasecmp(name, "White") == 0) {
+			return Colors.White;
+		}
+		if (strcasecmp(name, "WhiteSmoke") == 0) {
+			return Colors.WhiteSmoke;
+		}
+		if (strcasecmp(name, "Yellow") == 0) {
+			return Colors.Yellow;
+		}
+		if (strcasecmp(name, "YellowGreen") == 0) {
+			return Colors.YellowGreen;
+		}
+	}
+
+	return Colors.Black;
+}
 
 SDL_Color MVC_HexToRGBA(const char *hex) {
 	static char buffer[9];
@@ -224,6 +672,8 @@ char *MVC_RGBToHex(const SDL_Color *color) {
 
 char *MVC_RGBAToHex(const SDL_Color *color) {
 	static char hex[9];
+
+	assert(color);
 
 	snprintf(hex, sizeof(hex), "%02x%02x%02x%02x", color->r, color->g, color->b, color->a);
 

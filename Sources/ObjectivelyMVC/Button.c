@@ -36,6 +36,7 @@ static void dealloc(Object *self) {
 
 	Button *this = (Button *) self;
 
+	release(this->image);
 	release(this->title);
 
 	super(Object, self, dealloc);
@@ -63,23 +64,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Button *) self, initWithFrame, NULL, ControlStyleDefault);
-}
-
-/**
- * @see View::sizeThatFits(const View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
-
-	SDL_Size size = super(View, self, sizeThatFits);
-
-	const Button *this = (Button *) self;
-
-	if (this->control.style == ControlStyleDefault) {
-		size.w = max(size.w, DEFAULT_BUTTON_MIN_WIDTH);
-	}
-
-	return size;
+	return (View *) $((Button *) self, initWithFrame, NULL);
 }
 
 #pragma mark - Control
@@ -102,61 +87,51 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 	return super(Control, self, captureEvent, event);
 }
 
-/**
- * @see Control::stateDidChange(Control *)
- */
-static void stateDidChange(Control *self) {
-
-	super(Control, self, stateDidChange);
-
-	if (self->style == ControlStyleDefault) {
-		if (self->state & ControlStateHighlighted) {
-			self->bevel = ControlBevelTypeInset;
-		} else {
-			self->bevel = ControlBevelTypeOutset;
-		}
-	}
-}
-
 #pragma mark - Button
 
 /**
- * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
  * @memberof Button
  */
-static Button *initWithFrame(Button *self, const SDL_Rect *frame, ControlStyle style) {
+static Button *initWithFrame(Button *self, const SDL_Rect *frame) {
 
-	self = (Button *) super(Control, self, initWithFrame, frame, style);
+	self = (Button *) super(Control, self, initWithFrame, frame);
 	if (self) {
+
+		self->image = $(alloc(ImageView), initWithFrame, frame);
+		assert(self->image);
+
+		$((View *) self, addSubview, (View *) self->image);
 
 		self->title = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->title);
 
 		$((View *) self, addSubview, (View *) self->title);
-		self->title->view.alignment = ViewAlignmentMiddleCenter;
-
-		self->control.view.autoresizingMask = ViewAutoresizingContain;
-		self->control.view.clipsSubviews = true;
-
-		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = ControlBevelTypeOutset;
-
-			if (self->control.view.frame.w == 0) {
-				self->control.view.frame.w = DEFAULT_BUTTON_MIN_WIDTH;
-			}
-		}
 	}
 
 	return self;
 }
 
 /**
- * @fn Button *Button::initWithFrame(Button *self, const char *title, ControlStyle style)
+ * @fn Button *Button::initWithImage(Button *self, Image *image)
  * @memberof Button
  */
-static Button *initWithTitle(Button *self, const char *title, ControlStyle style) {
+static Button *initWithImage(Button *self, Image *image) {
 
-	self = $(self, initWithFrame, NULL, style);
+	self = $(self, initWithFrame, NULL);
+	if (self) {
+		$(self->image, setImage, image);
+	}
+	return self;
+}
+
+/**
+ * @fn Button *Button::initWithFrame(Button *self, const char *title)
+ * @memberof Button
+ */
+static Button *initWithTitle(Button *self, const char *title) {
+
+	self = $(self, initWithFrame, NULL);
 	if (self) {
 		$(self->title, setText, title);
 	}
@@ -174,12 +149,11 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
 
 	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((ButtonInterface *) clazz->def->interface)->initWithImage = initWithImage;
 	((ButtonInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
 }
 

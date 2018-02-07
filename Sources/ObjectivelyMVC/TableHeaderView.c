@@ -53,18 +53,6 @@ static void render(View *self, Renderer *renderer) {
 	$(renderer, setDrawColor, &Colors.White);
 }
 
-/**
- * @see View::sizeThatFits(const View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
-
-	SDL_Size size = super(View, self, sizeThatFits);
-
-	size.h = self->frame.h;
-
-	return size;
-}
-
 #pragma mark - TableHeaderView
 
 /**
@@ -72,18 +60,7 @@ static SDL_Size sizeThatFits(const View *self) {
  * @memberof TableHeaderView
  */
 static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tableView) {
-
-	self = (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
-	if (self) {
-
-		((View *) self)->backgroundColor = Colors.DimGray;
-
-		if (((View *) self)->frame.h == 0) {
-			((View *) self)->frame.h = DEFAULT_TABLE_HEADER_VIEW_HEIGHT;
-		}
-	}
-
-	return self;
+	return (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
 }
 
 #pragma mark - Class lifecycle
@@ -94,7 +71,6 @@ static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tabl
 static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->render = render;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
 
 	((TableHeaderViewInterface *) clazz->def->interface)->initWithTableView = initWithTableView;
 }

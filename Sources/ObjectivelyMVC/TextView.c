@@ -71,22 +71,20 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((TextView *) self, initWithFrame, NULL, ControlStyleDefault);
+	return (View *) $((TextView *) self, initWithFrame, NULL);
 }
 
 /**
- * @see View::render(View *, Renderer *)
+ * @see View::layoutSubviews(View *)
  */
-static void render(View *self, Renderer *renderer) {
-
-	super(View, self, render, renderer);
+static void layoutSubviews(View *self) {
 
 	TextView *this = (TextView *) self;
 
 	const char *text = this->attributedText->string.chars;
 
 	if (text == NULL || strlen(text) == 0) {
-		if ($((Control *) this, focused) == false) {
+		if ($((Control *) this, isFocused) == false) {
 			text = this->defaultText;
 		}
 	}
@@ -103,11 +101,23 @@ static void render(View *self, Renderer *renderer) {
 		}
 	}
 
-	if ($((Control *) this, focused)) {
-		text = text ?: "";
+	super(View, self, layoutSubviews);
+}
+
+/**
+ * @see View::render(View *, Renderer *)
+ */
+static void render(View *self, Renderer *renderer) {
+
+	super(View, self, render, renderer);
+
+	TextView *this = (TextView *) self;
+
+	if ($((Control *) this, isFocused)) {
+		const char *text = this->text->text ?: "";
 
 		int w, h;
-		if (this->position == this->attributedText->string.length) {
+		if (this->position == strlen(text)) {
 			$(this->text->font, sizeCharacters, text, &w, &h);
 		} else {
 			char *chars = calloc(this->position + 1, sizeof(char));
@@ -156,6 +166,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 					if (this->delegate.didEndEditing) {
 						this->delegate.didEndEditing(this);
 					}
+					didCaptureEvent = true;
 				}
 			}
 		} else if (event->type == SDL_TEXTINPUT) {
@@ -275,6 +286,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 
 		if (didEdit) {
+			self->view.needsLayout = true;
 			if (this->delegate.didEdit) {
 				this->delegate.didEdit(this);
 			}
@@ -287,12 +299,12 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 #pragma mark - TextView
 
 /**
- * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style)
+ * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
  * @memberof TextView
  */
-static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlStyle style) {
+static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
 
-	self = (TextView *) super(Control, self, initWithFrame, frame, style);
+	self = (TextView *) super(Control, self, initWithFrame, frame);
 	if (self) {
 		self->attributedText = $$(MutableString, string);
 		assert(self->attributedText);
@@ -305,17 +317,6 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame, ControlSty
 		$((View *) self, addSubview, (View *) self->text);
 
 		self->control.view.clipsSubviews = true;
-
-		if (self->control.style == ControlStyleDefault) {
-			self->control.bevel = ControlBevelTypeInset;
-
-			self->control.view.backgroundColor = Colors.Charcoal;
-			self->control.view.backgroundColor.a = 48;
-
-			if (self->control.view.frame.w == 0) {
-				self->control.view.frame.w = DEFAULT_TEXTVIEW_WIDTH;
-			}
-		}
 	}
 
 	return self;
@@ -332,6 +333,7 @@ static void initialize(Class *clazz) {
 
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->def->interface)->render = render;
 
 	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;

@@ -158,24 +158,16 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 		self->tabPageView = $(alloc(PageView), initWithFrame, NULL);
 		assert(self->tabPageView);
 
-		self->tabPageView->view.borderColor = Colors.DarkGray;
-		self->tabPageView->view.borderWidth = 1;
-
 		self->tabs = $$(MutableArray, array);
 		assert(self->tabs);
 
 		self->tabSelectionView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->tabSelectionView);
 
-		self->tabSelectionView->axis = StackViewAxisHorizontal;
-		self->tabSelectionView->distribution = StackViewDistributionFillEqually;
-		self->tabSelectionView->spacing = DEFAULT_TAB_VIEW_ITEM_SPACING;
-
-		self->tabSelectionView->view.autoresizingMask |= ViewAutoresizingWidth;
-
-		self->stackView.spacing = DEFAULT_TAB_VIEW_SPACING;
-
+		$((View *) self->tabSelectionView, addClassName, "tabSelectionView");
 		$((View *) self, addSubview, (View *) self->tabSelectionView);
+
+		$((View *) self->tabPageView, addClassName, "tabPageView");
 		$((View *) self, addSubview, (View *) self->tabPageView);
 	}
 

@@ -26,14 +26,14 @@
 #include <ObjectivelyMVC/StackView.h>
 
 const EnumName StackViewAxisNames[] = MakeEnumNames(
-	MakeEnumName(StackViewAxisVertical),
-	MakeEnumName(StackViewAxisHorizontal)
+	MakeEnumAlias(StackViewAxisVertical, vertical),
+	MakeEnumAlias(StackViewAxisHorizontal, horizontal)
 );
 
 const EnumName StackViewDistributionNames[] = MakeEnumNames(
-	MakeEnumName(StackViewDistributionDefault),
-	MakeEnumName(StackViewDistributionFill),
-	MakeEnumName(StackViewDistributionFillEqually)
+	MakeEnumAlias(StackViewDistributionDefault, default),
+	MakeEnumAlias(StackViewDistributionFill, fill),
+	MakeEnumAlias(StackViewDistributionFillEqually, fill-equally)
 );
 
 #define _Class _StackView
@@ -41,11 +41,11 @@ const EnumName StackViewDistributionNames[] = MakeEnumNames(
 #pragma mark - View
 
 /**
- * @see View::awakeWithDictionary(View *, const Dictionary *)
+ * @see View::applyStyle(View *, const Style *)
  */
-static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+static void applyStyle(View *self, const Style *style) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+	super(View, self, applyStyle, style);
 
 	StackView *this = (StackView *) self;
 
@@ -55,7 +55,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("spacing", InletTypeInteger, &this->spacing, NULL)
 	);
 
-	$(self, bind, inlets, dictionary);
+	$(self, bind, inlets, (Dictionary *) style->attributes);
 }
 
 /**
@@ -246,7 +246,7 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->def->interface)->init = init;
 
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;

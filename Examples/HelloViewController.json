@@ -1,11 +1,5 @@
 {
   "class": "Panel",
-  "frame": [
-    50,
-    50,
-    0,
-    0
-  ],
   "contentView": {
     "subviews": [
       {
@@ -21,12 +15,13 @@
             },
             "view": {
               "class": "StackView",
-              "spacing": 12,
+              "classNames": [
+                "container"
+              ],
               "subviews": [
                 {
                   "class": "Button",
                   "identifier": "button",
-                  "style": "ControlStyleDefault",
                   "title": {
                     "text": "This is a Button"
                   }
@@ -71,11 +66,13 @@
             },
             "view": {
               "class": "StackView",
+              "classNames": [
+                "container"
+              ],
               "subviews": [
                 {
                   "class": "TableView",
                   "identifier": "tableView",
-                  "autoresizingMask": "ViewAutoresizingWidth",
                   "columns": [
                     {
                       "identifier": "Column A"
@@ -87,7 +84,11 @@
                       "identifier": "Column C"
                     }
                   ],
-                  "selection": "ControlSelectionMultiple"
+                  "style": {
+                    "width": 400,
+                    "height": 480,
+                    "selection": "multiple"
+                  }
                 }
               ]
             }
@@ -101,19 +102,22 @@
             },
             "view": {
               "class": "StackView",
+              "classNames": [
+                "container"
+              ],
               "subviews": [
                 {
                   "class": "CollectionView",
                   "identifier": "collectionView",
-                  "constraints": [
-                    "w >= 300",
-                    "h >= 260"
-                  ],
-                  "selection": "ControlSelectionMultiple",
-                  "itemSize": [
-                    64,
-                    48
-                  ]
+                  "style": {
+                    "width": 400,
+                    "height": 480,
+                    "item-size": [
+                      88,
+                      48
+                    ],
+                    "selection": "multiple"
+                  }
                 }
               ]
             }
@@ -127,7 +131,9 @@
             },
             "view": {
               "class": "StackView",
-              "spacing": 20,
+              "classNames": [
+                "container"
+              ],
               "subviews": [
                 {
                   "class": "Box",
@@ -185,7 +191,9 @@
     ]
   },
   "accessoryView": {
-    "hidden": false,
+    "style": {
+      "hidden": false
+    },
     "subviews": [
       {
         "class": "Button",
@@ -202,5 +210,9 @@
         }
       }
     ]
+  },
+  "style": {
+    "top": 50,
+    "left": 50
   }
 }

@@ -1,6 +1,8 @@
 AUTOMAKE_OPTIONS = nostdinc
 
-pkgdatadir = $(datadir)/ObjectivelyMVC
+noinst_HEADERS = \
+	Config.h
+
 pkgincludedir = $(includedir)/ObjectivelyMVC
 
 pkginclude_HEADERS = \
@@ -11,9 +13,8 @@ pkginclude_HEADERS = \
 	CollectionItemView.h \
 	CollectionView.h \
 	Colors.h \
-	Config.h \
-	Constraint.h \
 	Control.h \
+	DebugViewController.h \
 	Font.h \
 	HSVColorPicker.h \
 	HueColorPicker.h \
@@ -33,8 +34,13 @@ pkginclude_HEADERS = \
 	RGBColorPicker.h \
 	ScrollView.h \
 	Select.h \
+	Selector.h \
+	SelectorSequence.h \
+	SimpleSelector.h \
 	Slider.h \
 	StackView.h \
+	Style.h \
+	Stylesheet.h \
 	TableCellView.h \
 	TableColumn.h \
 	TableHeaderCellView.h \
@@ -45,6 +51,7 @@ pkginclude_HEADERS = \
 	TabViewController.h \
 	TabViewItem.h \
 	TextView.h \
+	Theme.h \
 	Types.h \
 	View.h \
 	View+JSON.h \
@@ -63,8 +70,8 @@ libObjectivelyMVC_la_SOURCES = \
 	CollectionItemView.c \
 	CollectionView.c \
 	Colors.c \
-	Constraint.c \
 	Control.c \
+	DebugViewController.c \
 	Font.c \
 	HSVColorPicker.c \
 	HueColorPicker.c \
@@ -82,8 +89,13 @@ libObjectivelyMVC_la_SOURCES = \
 	RGBColorPicker.c \
 	ScrollView.c \
 	Select.c \
+	Selector.c \
+	SelectorSequence.c \
+	SimpleSelector.c \
 	Slider.c \
 	StackView.c \
+	Style.c \
+	Stylesheet.c \
 	TableCellView.c \
 	TableColumn.c \
 	TableHeaderCellView.c \
@@ -95,6 +107,7 @@ libObjectivelyMVC_la_SOURCES = \
 	TabViewItem.c \
 	Text.c \
 	TextView.c \
+	Theme.c \
 	View.c \
 	View+JSON.c \
 	ViewController.c \
@@ -103,10 +116,9 @@ libObjectivelyMVC_la_SOURCES = \
 
 libObjectivelyMVC_la_CFLAGS = \
 	-I$(top_srcdir) \
+	-I$(top_srcdir)/Assets \
 	-I$(top_srcdir)/Sources \
-	-DPKGDATADIR=\"$(pkgdatadir)\" \
 	@HOST_CFLAGS@ \
-	@FONTCONFIG_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
 	@SDL2_CFLAGS@
 
@@ -116,6 +128,5 @@ libObjectivelyMVC_la_LDFLAGS = \
 
 libObjectivelyMVC_la_LIBADD = \
 	@HOST_LIBS@ \
-	@FONTCONFIG_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
 	@SDL2_LIBS@

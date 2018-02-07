@@ -30,9 +30,6 @@
  * @brief Select Options.
  */
 
-#define DEFAULT_OPTION_HEIGHT 16
-#define DEFAULT_OPTION_PADDING 2
-
 typedef struct Option Option;
 typedef struct OptionInterface OptionInterface;
 
@@ -53,6 +50,11 @@ struct Option {
 	 * @protected
 	 */
 	OptionInterface *interface;
+
+	/**
+	 * @brief True if this Option is selected, false otherwise.
+	 */
+	_Bool isSelected;
 
 	/**
 	 * @brief The title.
@@ -85,6 +87,15 @@ struct OptionInterface {
 	 * @memberof Option
 	 */
 	Option *(*initWithTitle)(Option *self, const char *title, ident value);
+
+	/**
+	 * @fn void Option::setSelected(Option *self, _Bool isSelected)
+	 * @brief Sets this Option's selected state.
+	 * @param self The Option.
+	 * @param isSelected True if this Option is selected, false otherwise.
+	 * @memberof Option
+	 */
+	void (*setSelected)(Option *self, _Bool isSelected);
 };
 
 /**

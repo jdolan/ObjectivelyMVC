@@ -26,30 +26,37 @@
 
 #include <Objectively.h>
 
-#include <ObjectivelyMVC.h>
-
-#define MVC_FIRST_RESPONDER "firstResponder"
+#include <ObjectivelyMVC/Log.h>
+#include <ObjectivelyMVC/View.h>
+#include <ObjectivelyMVC/ViewController.h>
+#include <ObjectivelyMVC/Window.h>
 
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
-	MakeEnumName(ViewAlignmentNone),
-	MakeEnumName(ViewAlignmentTopLeft),
-	MakeEnumName(ViewAlignmentTopCenter),
-	MakeEnumName(ViewAlignmentTopRight),
-	MakeEnumName(ViewAlignmentMiddleLeft),
-	MakeEnumName(ViewAlignmentMiddleCenter),
-	MakeEnumName(ViewAlignmentMiddleRight),
-	MakeEnumName(ViewAlignmentBottomLeft),
-	MakeEnumName(ViewAlignmentBottomCenter),
-	MakeEnumName(ViewAlignmentBottomRight),
-	MakeEnumName(ViewAlignmentInternal)
+	MakeEnumAlias(ViewAlignmentNone, none),
+	MakeEnumAlias(ViewAlignmentTop, top),
+	MakeEnumAlias(ViewAlignmentMiddle, middle),
+	MakeEnumAlias(ViewAlignmentBottom, bottom),
+	MakeEnumAlias(ViewAlignmentLeft, left),
+	MakeEnumAlias(ViewAlignmentCenter, center),
+	MakeEnumAlias(ViewAlignmentRight, right),
+	MakeEnumAlias(ViewAlignmentTopLeft, top-left),
+	MakeEnumAlias(ViewAlignmentTopCenter, top-center),
+	MakeEnumAlias(ViewAlignmentTopRight, top-right),
+	MakeEnumAlias(ViewAlignmentMiddleLeft, middle-left),
+	MakeEnumAlias(ViewAlignmentMiddleCenter, middle-center),
+	MakeEnumAlias(ViewAlignmentMiddleRight, middle-right),
+	MakeEnumAlias(ViewAlignmentBottomLeft, bottom-left),
+	MakeEnumAlias(ViewAlignmentBottomCenter, bottom-center),
+	MakeEnumAlias(ViewAlignmentBottomRight, bottom-right),
+	MakeEnumAlias(ViewAlignmentInternal, internal)
 );
 
 const EnumName ViewAutoresizingNames[] = MakeEnumNames(
-	MakeEnumName(ViewAutoresizingNone),
-	MakeEnumName(ViewAutoresizingWidth),
-	MakeEnumName(ViewAutoresizingHeight),
-	MakeEnumName(ViewAutoresizingFill),
-	MakeEnumName(ViewAutoresizingContain)
+	MakeEnumAlias(ViewAutoresizingNone, none),
+	MakeEnumAlias(ViewAutoresizingWidth, width),
+	MakeEnumAlias(ViewAutoresizingHeight, height),
+	MakeEnumAlias(ViewAutoresizingFill, fill),
+	MakeEnumAlias(ViewAutoresizingContain, contain)
 );
 
 static __thread Outlet *_outlets;
@@ -65,12 +72,12 @@ static void dealloc(Object *self) {
 
 	View *this = (View *) self;
 
-	release(this->constraints);
-
 	free(this->identifier);
 
-	$(this, removeFromSuperview);
-
+	release(this->classNames);
+	release(this->computedStyle);
+	release(this->style);
+	release(this->stylesheet);
 	release(this->subviews);
 
 	super(Object, self, dealloc);
@@ -83,9 +90,15 @@ static String *description(const Object *self) {
 
 	View *this = (View *) self;
 
-	const SDL_Rect *f = &this->frame;
+	String *classNames = $((Array *) this->classNames, componentsJoinedByCharacters, ", ");
+	String *description = str("%s@%p %s [%d, %d, %d, %d]",
+							  this->identifier ?: self->clazz->name,
+							  self,
+							  classNames->chars,
+							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
 
-	return str("%s@%p (%d,%d) %dx%d", this->identifier ?: self->clazz->name, self, f->x, f->y, f->w, f->h);
+	release(classNames);
+	return description;
 }
 
 #pragma mark - View
@@ -99,28 +112,21 @@ static _Bool acceptsFirstResponder(const View *self) {
 }
 
 /**
- * @fn void View::addConstraint(View *self, Constraint *constraint)
+ * @fn void View::addClassName(View *self, const char *className)
  * @memberof View
  */
-static void addConstraint(View *self, Constraint *constraint) {
+static void addClassName(View *self, const char *className) {
 
-	$(self->constraints, addObject, constraint);
+	if (className) {
 
-	self->needsLayout = true;
-	self->needsApplyConstraints = true;
-}
+		String *string = $$(String, stringWithCharacters, className);
+		assert(string);
 
-/**
- * @fn void View::addConstraintWithDescriptor(View *self, const char *descriptor)
- * @memberof View
- */
-static void addConstraintWithDescriptor(View *self, const char *descriptor) {
+		$(self->classNames, addObject, string);
+		release(string);
 
-	Constraint *constraint = $(alloc(Constraint), initWithDescriptor, descriptor);
-	assert(constraint);
-
-	$(self, addConstraint, constraint);
-	release(constraint);
+		$(self, invalidateStyle);
+	}
 }
 
 /**
@@ -166,7 +172,9 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
 	subview->superview = self;
 
-	$(subview, setWindow, self->window);
+	$(subview, moveToWindow, self->window);
+
+	$(subview, invalidateStyle);
 
 	self->needsLayout = true;
 }
@@ -193,50 +201,96 @@ static View *ancestorWithIdentifier(const View *self, const char *identifier) {
 }
 
 /**
- * @brief Comparator for applyConstraints sorting.
+ * @fn void View::applyStyle(View *self, const Style *style)
+ * @memberof View
  */
-static Order applyConstraints_comparator(const ident obj1, const ident obj2) {
-	return ((Constraint *) obj1)->priority - ((Constraint *) obj2)->priority;
+static void applyStyle(View *self, const Style *style) {
+
+	assert(style);
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
+		MakeInlet("autoresizing-mask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
+		MakeInlet("background-color", InletTypeColor, &self->backgroundColor, NULL),
+		MakeInlet("border-color", InletTypeColor, &self->borderColor, NULL),
+		MakeInlet("border-width", InletTypeInteger, &self->borderWidth, NULL),
+		MakeInlet("clips-subviews", InletTypeBool, &self->clipsSubviews, NULL),
+		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
+		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
+		MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
+		MakeInlet("left", InletTypeInteger, &self->frame.x, NULL),
+		MakeInlet("max-height", InletTypeInteger, &self->maxSize.h, NULL),
+		MakeInlet("max-size", InletTypeSize, &self->maxSize, NULL),
+		MakeInlet("max-width", InletTypeInteger, &self->maxSize.w, NULL),
+		MakeInlet("min-height", InletTypeInteger, &self->minSize.h, NULL),
+		MakeInlet("min-size", InletTypeSize, &self->minSize, NULL),
+		MakeInlet("min-width", InletTypeInteger, &self->minSize.w, NULL),
+		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
+		MakeInlet("padding-top", InletTypeInteger, &self->padding.top, NULL),
+		MakeInlet("padding-right", InletTypeInteger, &self->padding.right, NULL),
+		MakeInlet("padding-bottom", InletTypeInteger, &self->padding.bottom, NULL),
+		MakeInlet("padding-left", InletTypeInteger, &self->padding.left, NULL),
+		MakeInlet("top", InletTypeInteger, &self->frame.y, NULL),
+		MakeInlet("width", InletTypeInteger, &self->frame.w, NULL)
+	);
+
+	$(self, bind, inlets, style->attributes);
 }
 
 /**
- * @fn void View::applyConstraints(View *self)
+ * @fn void View::applyTheme(View *self, const Theme *theme)
  * @memberof View
  */
-static void applyConstraints(View *self) {
+static void applyTheme(View *self, const Theme *theme) {
 
-	$(self->constraints, sort, applyConstraints_comparator);
+	assert(theme);
 
-	const Array *constraints = (Array *) self->constraints;
-	for (size_t i = 0; i < constraints->count; i++) {
+	Style *computedStyle = $(theme, computeStyle, self);
+	assert(computedStyle);
 
-		const Constraint *constraint = $(constraints, objectAtIndex, i);
-		if (constraint->enabled) {
-			$(constraint, apply, self);
+	if (!$(self->computedStyle, isComputedEqual, computedStyle)) {
+
+		release(self->computedStyle);
+		self->computedStyle = retain(computedStyle);
+
+		$(self->computedStyle, addAttributes, self->style->attributes);
+		$(self, applyStyle, self->computedStyle);
+	}
+
+	release(computedStyle);
+}
+
+/**
+ * @fn void View::applyThemeIfNeeded(View *self, const Theme *theme)
+ * @memberof View
+ */
+static void applyThemeIfNeeded(View *self, const Theme *theme) {
+
+	assert(theme);
+
+	if (self->needsApplyTheme) {
+		$(self, applyTheme, theme);
+	}
+
+	self->needsApplyTheme = false;
+
+	$(self, enumerateSubviews, (ViewEnumerator) applyThemeIfNeeded, (ident) theme);
+}
+
+/**
+ * @fn void View::attachStylesheet(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void attachStylesheet(View *self, SDL_Window *window) {
+
+	assert(window);
+
+	if (self->stylesheet) {
+		Theme *theme = $$(Theme, theme, window);
+		if (theme) {
+			$(theme, addStylesheet, self->stylesheet);
 		}
 	}
-}
-
-/**
- * @brief ArrayEnumerator for applyConstraints recursion.
- */
-static void applyConstraintsIfNeeded_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, applyConstraintsIfNeeded);
-}
-
-/**
- * @fn void View::applyConstraintsIfNeeded(View *self)
- * @memberof View
- */
-static void applyConstraintsIfNeeded(View *self) {
-
-	if (self->needsApplyConstraints) {
-		$(self, applyConstraints);
-	}
-
-	self->needsApplyConstraints = false;
-
-	$((Array *) self->subviews, enumerateObjects, applyConstraintsIfNeeded_recurse, NULL);
 }
 
 /**
@@ -245,17 +299,12 @@ static void applyConstraintsIfNeeded(View *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
+	assert(dictionary);
+
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("identifier", InletTypeCharacters, &self->identifier, NULL),
-		MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
-		MakeInlet("autoresizingMask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
-		MakeInlet("backgroundColor", InletTypeColor, &self->backgroundColor, NULL),
-		MakeInlet("borderColor", InletTypeColor, &self->borderColor, NULL),
-		MakeInlet("borderWidth", InletTypeInteger, &self->borderWidth, NULL),
-		MakeInlet("constraints", InletTypeConstraints, &self, NULL),
-		MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
-		MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
-		MakeInlet("padding", InletTypeRectangle, &self->padding, NULL),
+		MakeInlet("classNames", InletTypeClassNames, &self, NULL),
+		MakeInlet("style", InletTypeStyle, &self, NULL),
 		MakeInlet("subviews", InletTypeSubviews, &self, NULL)
 	);
 
@@ -277,23 +326,26 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 static void becomeFirstResponder(View *self) {
 
 	if (self->window) {
-		MVC_MakeFirstResponder(self->window, self);
+		$$(View, setFirstResponder, self->window, self);
 	} else {
 		MVC_LogWarn("%s: window is NULL\n", (self->identifier ?: self->object.clazz->name));
 	}
 }
 
 /**
- * @fn void View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
+ * @fn _Bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
  * @memberof View
  */
-static void _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
+static _Bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
 	if (inlets) {
-		bindInlets(inlets, dictionary);
+		if (bindInlets(inlets, dictionary)) {
+			self->needsLayout = true;
+			return true;
+		}
 	}
 
-	$(self, updateBindings);
+	return false;
 }
 
 /**
@@ -386,19 +438,6 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 }
 
 /**
- * @fn void View::createConstraint(View *self, const char *descriptor)
- * @memberof View
- */
-static void createConstraint(View *self, const char *descriptor) {
-
-	Constraint *constraint = $(alloc(Constraint), initWithDescriptor, descriptor);
-
-	$(self, addConstraint, constraint);
-
-	release(constraint);
-}
-
-/**
  * @fn int View::depth(const View *self)
  * @memberof View
  */
@@ -434,6 +473,33 @@ static View *descendantWithIdentifier(const View *self, const char *identifier) 
 }
 
 /**
+ * @fn void View::detachStylesheet(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void detachStylesheet(View *self, SDL_Window *window) {
+
+	assert(window);
+
+	if (self->stylesheet) {
+		Theme *theme = $$(Theme, theme, self->window);
+		if (theme) {
+			$(theme, removeStylesheet, self->stylesheet);
+		}
+	}
+}
+
+/**
+ * @fn void View::didMoveToWindow(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void didMoveToWindow(View *self, SDL_Window *window) {
+
+	if (window) {
+		$(self, attachStylesheet, window);
+	}
+}
+
+/**
  * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
  * @memberof View
  */
@@ -460,7 +526,7 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 }
 
 /**
- * @fn Array *View::draw(View *self)
+ * @fn void *View::draw(View *self, Renderer *renderer)
  * @memberof View
  */
 static void draw(View *self, Renderer *renderer) {
@@ -468,16 +534,153 @@ static void draw(View *self, Renderer *renderer) {
 	assert(self->window);
 
 	if (self->hidden == false) {
+
 		$(renderer, drawView, self);
 
-		const Array *subviews = (Array *) self->subviews;
-		for (size_t i = 0; i < subviews->count; i++) {
-			View *subview = $(subviews, objectAtIndex, i);
-			if ($(subview, isFirstResponder) == false) {
-				$(subview, draw, renderer);
+		$(self, enumerateSubviews, (ViewEnumerator) draw, renderer);
+	}
+}
+
+/**
+ * @fn void View::enumerate(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerate(View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	enumerator(self, data);
+
+	$(self, enumerateDescendants, enumerator, data);
+}
+
+/**
+ * @fn void View::enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	if (self->superview) {
+		const Array *siblings = (Array *) self->superview->subviews;
+		const ssize_t index = $(siblings, indexOfObject, (const ident) self);
+		if (index > 0) {
+			enumerator($(siblings, objectAtIndex, index - 1), data);
+		}
+		if (index < siblings->count - 1) {
+			enumerator($(siblings, objectAtIndex, index + 1), data);
+		}
+	}
+}
+
+/**
+ * @fn void View::enumerateAncestors(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateAncestors(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	for (View *view = self->superview; view; view = view->superview) {
+		enumerator(view, data);
+	}
+}
+
+/**
+ * @fn void View::enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+
+		View *subview = $(subviews, objectAtIndex, i);
+		enumerator(subview, data);
+
+		$(subview, enumerateDescendants, enumerator, data);
+	}
+}
+
+/**
+ * @fn void View::enumerateSubviews(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateSiblings(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	if (self->superview) {
+
+		const Array *siblings = (Array *) self->superview->subviews;
+		for (size_t i = 0; i < siblings->count; i++) {
+			View *sibling = $(siblings, objectAtIndex, i);
+			if (sibling != self) {
+				enumerator(sibling, data);
 			}
 		}
 	}
+}
+
+/**
+ * @fn void View::enumerateSubviews(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateSubviews(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+		enumerator((View *) subviews->elements[i], data);
+	}
+}
+
+/**
+ * @fn void View::enumerateSuperview(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateSuperview(const View *self, ViewEnumerator enumerator, ident data) {
+
+	assert(enumerator);
+
+	if (self->superview) {
+		enumerator(self->superview, data);
+	}
+}
+
+/**
+ * @fn View *View::firstResponder(SDL_Window *window)
+ * @memberof View
+ */
+static View *firstResponder(SDL_Window *window) {
+
+	assert(window);
+
+	return SDL_GetWindowData(window, "firstResponder");
+}
+
+/**
+ * @brief Predicate for hasClassName.
+ */
+static _Bool hasClassName_predicate(const ident obj, ident data) {
+	return strcmp(((String *) obj)->chars, (const char *) data) == 0;
+}
+
+/**
+ * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
+ * @memberof View
+ */
+static _Bool hasClassName(const View *self, const char *className) {
+
+	if (className) {
+		return $((Array *) self->classNames, findObject, hasClassName_predicate, (ident) className);
+	}
+
+	return false;
 }
 
 /**
@@ -528,17 +731,40 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 			self->frame = *frame;
 		}
 
-		self->constraints = $$(MutableArray, array);
-		assert(self->constraints);
+		self->classNames = $$(MutableArray, arrayWithCapacity, 0);
+		assert(self->classNames);
 
-		self->subviews = $$(MutableArray, array);
+		self->computedStyle = $(alloc(Style), initWithAttributes, NULL);
+		assert(self->computedStyle);
+
+		self->subviews = $$(MutableArray, arrayWithCapacity, 0);
 		assert(self->subviews);
 
-		self->backgroundColor = Colors.Clear;
-		self->borderColor = Colors.White;
+		self->style = $(alloc(Style), initWithAttributes, NULL);
+		assert(self->style);
+
+		self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
+
+		self->needsApplyTheme = true;
+		self->needsLayout = true;
 	}
 
 	return self;
+}
+
+/**
+ * @brief ViewEnumerator for invalidateStyle.
+ */
+static void invalidateStyle_enumerate(View *view, ident data) {
+	view->needsApplyTheme = true;
+}
+
+/**
+ * @fn void View::invalidateStyle(View *self)
+ * @memberof View
+ */
+static void invalidateStyle(View *self) {
+	$(self, enumerate, invalidateStyle_enumerate, NULL);
 }
 
 /**
@@ -546,6 +772,8 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
  * @memberof View
  */
 static _Bool isDescendantOfView(const View *self, const View *view) {
+
+	assert(view);
 
 	while (self) {
 		if (self == view) {
@@ -564,7 +792,7 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
 static _Bool isFirstResponder(const View *self) {
 
 	if (self->window) {
-		return MVC_FirstResponder(self->window) == self;
+		return $$(View, firstResponder, self->window) == self;
 	} else {
 		return false;
 	}
@@ -586,10 +814,10 @@ static _Bool isVisible(const View *self) {
 }
 
 /**
- * @brief ArrayEnumerator for layoutIfNeeded recursion.
+ * @brief ViewEnumerator for layoutIfNeeded recursion.
  */
-static void layoutIfNeeded_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, layoutIfNeeded);
+static void layoutIfNeeded_recurse(View *subview, ident data) {
+	$(subview, layoutIfNeeded);
 }
 
 /**
@@ -600,13 +828,32 @@ static void layoutIfNeeded(View *self) {
 
 	if (self->needsLayout) {
 		$(self, layoutSubviews);
+
+		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+
+			if (self->superview && self->hidden == false) {
+
+				const SDL_Rect bounds = $(self, bounds);
+				const SDL_Rect superviewBounds = $(self->superview, bounds);
+
+				if (bounds.x + bounds.w > superviewBounds.w ||
+					bounds.y + bounds.h > superviewBounds.h) {
+
+					String *this = $((Object *) self, description);
+					String *that = $((Object *) self->superview, description);
+
+					MVC_LogDebug("%s exceeds superview bounds %s\n", this->chars, that->chars);
+
+					release(this);
+					release(that);
+				}
+			}
+		}
 	}
 
 	self->needsLayout = false;
 
-	$(self, applyConstraintsIfNeeded);
-
-	$((Array *) self->subviews, enumerateObjects, layoutIfNeeded_recurse, NULL);
+	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
 }
 
 /**
@@ -614,6 +861,16 @@ static void layoutIfNeeded(View *self) {
  * @memberof View
  */
 static void layoutSubviews(View *self) {
+
+	if (self->superview == NULL) {
+		if (self->autoresizingMask & ViewAutoresizingFill) {
+
+			SDL_Size size;
+			SDL_GetWindowSize(self->window, &size.w, &size.h);
+
+			$(self, resize, &size);
+		}
+	}
 
 	if (self->autoresizingMask & ViewAutoresizingContain) {
 		$(self, sizeToContain);
@@ -638,48 +895,26 @@ static void layoutSubviews(View *self) {
 
 		$(subview, resize, &subviewSize);
 
-		switch (subview->alignment) {
-
-			case ViewAlignmentNone:
-			case ViewAlignmentInternal:
-				break;
-
-			case ViewAlignmentTopLeft:
+		switch (subview->alignment & ViewAlignmentMaskHorizontal) {
+			case ViewAlignmentLeft:
 				subview->frame.x = 0;
-				subview->frame.y = 0;
 				break;
-			case ViewAlignmentTopCenter:
+			case ViewAlignmentCenter:
 				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
-				subview->frame.y = 0;
 				break;
-			case ViewAlignmentTopRight:
+			case ViewAlignmentRight:
 				subview->frame.x = bounds.w - subview->frame.w;
+				break;
+		}
+
+		switch (subview->alignment & ViewAlignmentMaskVertical) {
+			case ViewAlignmentMaskTop:
 				subview->frame.y = 0;
 				break;
-
-			case ViewAlignmentMiddleLeft:
-				subview->frame.x = 0;
+			case ViewAlignmentMaskMiddle:
 				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
 				break;
-			case ViewAlignmentMiddleCenter:
-				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
-				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
-				break;
-			case ViewAlignmentMiddleRight:
-				subview->frame.x = bounds.w -subview->frame.w;
-				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
-				break;
-
-			case ViewAlignmentBottomLeft:
-				subview->frame.x = 0;
-				subview->frame.y = bounds.h - subview->frame.h;
-				break;
-			case ViewAlignmentBottomCenter:
-				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
-				subview->frame.y = bounds.h - subview->frame.h;
-				break;
-			case ViewAlignmentBottomRight:
-				subview->frame.x = bounds.w - subview->frame.w;
+			case ViewAlignmentMaskBottom:
 				subview->frame.y = bounds.h - subview->frame.h;
 				break;
 		}
@@ -687,18 +922,106 @@ static void layoutSubviews(View *self) {
 }
 
 /**
- * @brief ArrayEnumerator for removeAllConstraints.
+ * @fn _Bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
+ * @memberof View
  */
-static void removeAllConstraints_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) data, removeConstraint, obj);
+static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+
+	assert(simpleSelector);
+
+	const char *pattern = simpleSelector->pattern;
+
+	switch (simpleSelector->type) {
+		case SimpleSelectorTypeNone:
+			return false;
+
+		case SimpleSelectorTypeUniversal:
+			return true;
+
+		case SimpleSelectorTypeType: {
+			const Class *clazz = classForName(pattern);
+			if (clazz) {
+				return $((Object *) self, isKindOfClass, clazz);
+			}
+		}
+			break;
+
+		case SimpleSelectorTypeClass:
+			return $(self, hasClassName, pattern);
+
+		case SimpleSelectorTypeId:
+			if (self->identifier) {
+				return strcmp(self->identifier, pattern) == 0;
+			} else {
+				return false;
+			}
+
+		case SimpleSelectorTypePseudo:
+			if (strcmp("first-child", pattern) == 0) {
+				if (self->superview) {
+					return $((Array *) self->superview->subviews, firstObject) == self;
+				}
+			} else if (strcmp("last-child", pattern) == 0) {
+				if (self->superview) {
+					return $((Array *) self->superview->subviews, lastObject) == self;
+				}
+			} else if (strcmp("nth-child(even)", pattern) == 0) {
+				if (self->superview) {
+					return ($((Array *) self->superview->subviews, indexOfObject, (ident) self) & 1) == 0;
+				}
+			}  else if (strcmp("nth-child(odd)", pattern) == 0) {
+				if (self->superview) {
+					return $((Array *) self->superview->subviews, indexOfObject, (ident) self) & 1;
+				}
+			} else if (strcmp("hover", pattern) == 0) {
+				SDL_Point point;
+				SDL_GetMouseState(&point.x, &point.y);
+				return $(self, containsPoint, &point);
+			}
+			break;
+	}
+
+	return false;
 }
 
 /**
- * @fn void View::removeAllConstraints(View *self)
+ * @brief ViewEnumerator for moveToWindow recursion.
+ */
+static void moveToWindow_recurse(View *subview, ident data) {
+	$(subview, moveToWindow, data);
+}
+
+/**
+ * @fn void View::moveToWindow(View *self, SDL_Window *window)
  * @memberof View
  */
-static void removeAllConstraints(View *self) {
-	$((Array *) self->constraints, enumerateObjects, removeAllConstraints_enumerate, self);
+static void moveToWindow(View *self, SDL_Window *window) {
+
+	if (self->window != window) {
+
+		$(self, willMoveToWindow, window);
+
+		self->window = window;
+
+		$(self, didMoveToWindow, window);
+
+		$(self, enumerateSubviews, moveToWindow_recurse, window);
+	}
+}
+
+/**
+ * @brief ArrayEnumerator for removeAllClassNames.
+ */
+static void removeAllClassNames_enumerate(const Array *array, ident obj, ident data) {
+	$((View *) data, removeClassName, ((String *) obj)->chars);
+}
+
+/**
+ * @fn void View::removeAllClassNames(View *self)
+ * @memberof View
+ */
+static void removeAllClassNames(View *self) {
+	$((Array *) self->classNames, enumerateObjects, removeAllClassNames_enumerate, self);
 }
 
 /**
@@ -717,14 +1040,20 @@ static void removeAllSubviews(View *self) {
 }
 
 /**
- * @fn void View::removeConstraint(View *self, Constraint *constraint)
+ * @fn void View::removeClassName(View *self, const char *className)
  * @memberof View
  */
-static void removeConstraint(View *self, Constraint *constraint) {
+static void removeClassName(View *self, const char *className) {
 
-	$(self->constraints, removeObject, constraint);
+	if (className) {
+		String *string = $$(String, stringWithCharacters, className);
+		assert(string);
 
-	self->needsApplyConstraints = true;
+		$(self->classNames, removeObject, string);
+		release(string);
+
+		$(self, invalidateStyle);
+	}
 }
 
 /**
@@ -747,12 +1076,12 @@ static void removeSubview(View *self, View *subview) {
 	assert(subview);
 
 	if (subview->superview == self) {
-
-		$(self->subviews, removeObject, subview);
-
+		
 		subview->superview = NULL;
 
-		$(subview, setWindow, NULL);
+		$(subview, moveToWindow, NULL);
+
+		$(self->subviews, removeObject, subview);
 
 		self->needsLayout = true;
 	}
@@ -765,6 +1094,10 @@ static void removeSubview(View *self, View *subview) {
 static void render(View *self, Renderer *renderer) {
 
 	assert(self->window);
+
+	if ($(self, hasClassName, "debug")) {
+		SDL_TriggerBreakpoint();
+	}
 	
 	if (self->backgroundColor.a) {
 
@@ -780,11 +1113,13 @@ static void render(View *self, Renderer *renderer) {
 
 		SDL_Rect frame = $(self, renderFrame);
 		for (int i = 0; i < self->borderWidth; i++) {
+
+			$(renderer, drawRect, &frame);
+
 			frame.x -= 1;
 			frame.y -= 1;
 			frame.w += 2;
 			frame.h += 2;
-			$(renderer, drawRect, &frame);
 		}
 	}
 
@@ -792,10 +1127,10 @@ static void render(View *self, Renderer *renderer) {
 }
 
 /**
- * @brief ArrayEnumerator for renderDeviceDidReset recursion.
+ * @brief ViewEnumerator for renderDeviceDidReset recursion.
  */
-static void renderDeviceDidReset_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, renderDeviceDidReset);
+static void renderDeviceDidReset_recurse(View *subview, ident data) {
+	$(subview, renderDeviceDidReset);
 }
 
 /**
@@ -803,7 +1138,22 @@ static void renderDeviceDidReset_recurse(const Array *array, ident obj, ident da
  * @memberof View
  */
 static void renderDeviceDidReset(View *self) {
-	$((Array *) self->subviews, enumerateObjects, renderDeviceDidReset_recurse, NULL);
+	$(self, enumerateSubviews, renderDeviceDidReset_recurse, NULL);
+}
+
+/**
+ * @brief ViewEnumerator for renderDeviceWillReset recursion.
+ */
+static void renderDeviceWillReset_recurse(View *subview, ident data) {
+	$(subview, renderDeviceWillReset);
+}
+
+/**
+ * @fn void View::renderDeviceWillReset(View *self)
+ * @memberof View
+ */
+static void renderDeviceWillReset(View *self) {
+	$(self, enumerateSubviews, renderDeviceWillReset_recurse, NULL);
 }
 
 /**
@@ -853,16 +1203,14 @@ static void replaceSubview(View *self, View *subview, View *replacement) {
 static void resignFirstResponder(View *self) {
 
 	if ($(self, isFirstResponder)) {
-		MVC_MakeFirstResponder(self->window, NULL);
+		$$(View, setFirstResponder, self->window, NULL);
 	}
 }
 
 /**
- * @brief ArrayEnumerator for resize recursion.
+ * @brief ViewEnumerator for resize recursion.
  */
-static void resize_recurse(const Array *array, ident obj, ident data) {
-
-	View *subview = (View *) obj;
+static void resize_recurse(View *subview, ident data) {
 
 	SDL_Size size = $(subview, size);
 
@@ -889,12 +1237,12 @@ static void resize(View *self, const SDL_Size *size) {
 
 	if (self->frame.w != size->w || self->frame.h != size->h) {
 
-		self->frame.w = size->w;
-		self->frame.h = size->h;
+		self->frame.w = clamp(size->w, self->minSize.w, self->maxSize.w);
+		self->frame.h = clamp(size->h, self->minSize.h, self->maxSize.h);
 
 		self->needsLayout = true;
 
-		$((Array *) self->subviews, enumerateObjects, resize_recurse, NULL);
+		$(self, enumerateSubviews, resize_recurse, NULL);
 	}
 }
 
@@ -910,39 +1258,29 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		$(self->viewController, respondToEvent, event);
 	}
 
-	if (self->superview) {
+	if (self->nextResponder) {
+		$(self->nextResponder, respondToEvent, event);
+	} else if (self->superview) {
 		$(self->superview, respondToEvent, event);
 	}
 }
 
-/**
- * @brief ArrayEnumerator for setWindow recursion.
- */
-static void setWindow_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, setWindow, data);
-}
+static void setFirstResponder(SDL_Window *window, View *view) {
 
-/**
- * @fn void View::setWindow(View *self, SDL_Window *window)
- * @memberof View
- */
-static void setWindow(View *self, SDL_Window *window) {
+	assert(window);
 
-	$(self, resignFirstResponder);
-
-	self->window = window;
-
-	if (self->window && self->superview == NULL) {
-		if (self->autoresizingMask & ViewAutoresizingFill) {
-
-			SDL_Size size;
-			SDL_GetWindowSize(self->window, &size.w, &size.h);
-
-			$(self, resize, &size);
+	if (view) {
+		assert(view->window == window);
+		SDL_SetWindowData(window, "firstResponder", view);
+		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+			String *desc = $((Object *) view, description);
+			SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, desc->chars);
+			release(desc);
 		}
+	} else {
+		SDL_SetWindowData(window, "firstResponder", NULL);
+		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
 	}
-
-	$((Array *) self->subviews, enumerateObjects, setWindow_recurse, window);
 }
 
 /**
@@ -1009,6 +1347,9 @@ static SDL_Size sizeThatFits(const View *self) {
 		release(subviews);
 	}
 
+	size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
+	size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
+
 	return size;
 }
 
@@ -1058,10 +1399,10 @@ static View *subviewWithIdentifier(const View *self, const char *identifier) {
 }
 
 /**
- * @brief ArrayEnumerator for updateBindings recursion.
+ * @brief ViewEnumerator for updateBindings recursion.
  */
-static void updateBindings_recurse(const Array *array, ident obj, ident data) {
-	$((View *) obj, updateBindings);
+static void updateBindings_recurse(View *subview, ident data) {
+	$(subview, updateBindings);
 }
 
 /**
@@ -1069,7 +1410,7 @@ static void updateBindings_recurse(const Array *array, ident obj, ident data) {
  * @memberof View
  */
 static void updateBindings(View *self) {
-	$((Array *) self->subviews, enumerateObjects, updateBindings_recurse, NULL);
+	$(self, enumerateSubviews, updateBindings_recurse, NULL);
 }
 
 /**
@@ -1083,6 +1424,21 @@ static SDL_Rect viewport(const View *self) {
 	const SDL_Rect frame =  $(self, renderFrame);
 
 	return MVC_TransformToWindow(self->window, &frame);
+}
+
+/**
+ * @fn View *View::viewWithCharacters(const char *chars, Outlet *outlets)
+ * @memberof View
+ */
+static View *viewWithCharacters(const char *chars, Outlet *outlets) {
+
+	Data *data = $$(Data, dataWithConstMemory, (ident) chars, strlen(chars));
+
+	View *view = $$(View, viewWithData, data, outlets);
+
+	release(data);
+
+	return view;
 }
 
 /**
@@ -1120,30 +1476,6 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
  * @memberof View
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
-	static Once once;
-
-	do_once(&once, {
-		_initialize(_Box());
-		_initialize(_Button());
-		_initialize(_Checkbox());
-		_initialize(_CollectionView());
-		_initialize(_HSVColorPicker());
-		_initialize(_HueColorPicker());
-		_initialize(_ImageView());
-		_initialize(_Input());
-		_initialize(_Label());
-		_initialize(_PageView());
-		_initialize(_Panel());
-		_initialize(_RGBColorPicker());
-		_initialize(_ScrollView());
-		_initialize(_Select());
-		_initialize(_Slider());
-		_initialize(_StackView());
-		_initialize(_TableView());
-		_initialize(_TabView());
-		_initialize(_Text());
-		_initialize(_TextView());
-	});
 
 	_outlets = outlets;
 
@@ -1178,6 +1510,18 @@ static Array *visibleSubviews(const View *self) {
 	return $((Array *) self->subviews, filteredArray, visibleSubviews_filter, NULL);
 }
 
+/**
+ * @fn void View::willMoveToWindow(View *self, SDL_Window *window)
+ * @memberof View
+ */
+static void willMoveToWindow(View *self, SDL_Window *window) {
+
+	if (self->window) {
+		$(self, resignFirstResponder);
+		$(self, detachStylesheet, self->window);
+	}
+}
+
 #pragma mark - View class methods
 
 /**
@@ -1188,47 +1532,62 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
 	((ObjectInterface *) clazz->def->interface)->description = description;
 
-	((ViewInterface *) clazz->def->interface)->addConstraint = addConstraint;
-	((ViewInterface *) clazz->def->interface)->addConstraintWithDescriptor = addConstraintWithDescriptor;
+	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
+	((ViewInterface *) clazz->def->interface)->addClassName = addClassName;
 	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
 	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
-	((ViewInterface *) clazz->def->interface)->applyConstraints = applyConstraints;
-	((ViewInterface *) clazz->def->interface)->applyConstraintsIfNeeded = applyConstraintsIfNeeded;
 	((ViewInterface *) clazz->def->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
+	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
+	((ViewInterface *) clazz->def->interface)->applyTheme = applyTheme;
+	((ViewInterface *) clazz->def->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
+	((ViewInterface *) clazz->def->interface)->attachStylesheet = attachStylesheet;
 	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->def->interface)->bind = _bind;
 	((ViewInterface *) clazz->def->interface)->bounds = bounds;
 	((ViewInterface *) clazz->def->interface)->bringSubviewToFront = bringSubviewToFront;
-	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
 	((ViewInterface *) clazz->def->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
-	((ViewInterface *) clazz->def->interface)->createConstraint = createConstraint;
 	((ViewInterface *) clazz->def->interface)->depth = depth;
 	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
+	((ViewInterface *) clazz->def->interface)->detachStylesheet = detachStylesheet;
+	((ViewInterface *) clazz->def->interface)->didMoveToWindow = didMoveToWindow;
 	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->def->interface)->draw = draw;
+	((ViewInterface *) clazz->def->interface)->enumerate = enumerate;
+	((ViewInterface *) clazz->def->interface)->enumerateAdjacent = enumerateAdjacent;
+	((ViewInterface *) clazz->def->interface)->enumerateAncestors = enumerateAncestors;
+	((ViewInterface *) clazz->def->interface)->enumerateDescendants = enumerateDescendants;
+	((ViewInterface *) clazz->def->interface)->enumerateSiblings = enumerateSiblings;
+	((ViewInterface *) clazz->def->interface)->enumerateSubviews = enumerateSubviews;
+	((ViewInterface *) clazz->def->interface)->enumerateSuperview = enumerateSuperview;
+	((ViewInterface *) clazz->def->interface)->firstResponder = firstResponder;
+	((ViewInterface *) clazz->def->interface)->hasClassName = hasClassName;
 	((ViewInterface *) clazz->def->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->def->interface)->init = init;
 	((ViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((ViewInterface *) clazz->def->interface)->invalidateStyle = invalidateStyle;
 	((ViewInterface *) clazz->def->interface)->isDescendantOfView = isDescendantOfView;
 	((ViewInterface *) clazz->def->interface)->isFirstResponder = isFirstResponder;
 	((ViewInterface *) clazz->def->interface)->isVisible = isVisible;
 	((ViewInterface *) clazz->def->interface)->layoutIfNeeded = layoutIfNeeded;
 	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->removeAllConstraints = removeAllConstraints;
+	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
+	((ViewInterface *) clazz->def->interface)->moveToWindow = moveToWindow;
+	((ViewInterface *) clazz->def->interface)->removeAllClassNames = removeAllClassNames;
 	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
-	((ViewInterface *) clazz->def->interface)->removeConstraint = removeConstraint;
+	((ViewInterface *) clazz->def->interface)->removeClassName = removeClassName;
 	((ViewInterface *) clazz->def->interface)->removeFromSuperview = removeFromSuperview;
 	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
 	((ViewInterface *) clazz->def->interface)->render = render;
 	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
 	((ViewInterface *) clazz->def->interface)->renderFrame = renderFrame;
 	((ViewInterface *) clazz->def->interface)->replaceSubview = replaceSubview;
 	((ViewInterface *) clazz->def->interface)->resignFirstResponder = resignFirstResponder;
 	((ViewInterface *) clazz->def->interface)->resize = resize;
 	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
-	((ViewInterface *) clazz->def->interface)->setWindow = setWindow;
+	((ViewInterface *) clazz->def->interface)->setFirstResponder = setFirstResponder;
 	((ViewInterface *) clazz->def->interface)->size = size;
 	((ViewInterface *) clazz->def->interface)->sizeThatContains = sizeThatContains;
 	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
@@ -1240,7 +1599,9 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->def->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
 	((ViewInterface *) clazz->def->interface)->viewWithData = viewWithData;
 	((ViewInterface *) clazz->def->interface)->viewWithDictionary = viewWithDictionary;
+	((ViewInterface *) clazz->def->interface)->viewWithCharacters = viewWithCharacters;
 	((ViewInterface *) clazz->def->interface)->visibleSubviews = visibleSubviews;
+	((ViewInterface *) clazz->def->interface)->willMoveToWindow = willMoveToWindow;
 }
 
 /**
@@ -1264,30 +1625,3 @@ Class *_View(void) {
 }
 
 #undef _Class
-
-#pragma mark - Utilities
-
-void MVC_MakeFirstResponder(SDL_Window *window, View *view) {
-
-	assert(window);
-
-	if (view) {
-		assert(window == view->window);
-		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, view);
-		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
-			String *desc = $((Object *) view, description);
-			SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, desc->chars);
-			release(desc);
-		}
-	} else {
-		SDL_SetWindowData(window, MVC_FIRST_RESPONDER, NULL);
-		SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
-	}
-}
-
-View *MVC_FirstResponder(SDL_Window *window) {
-
-	assert(window);
-	
-	return SDL_GetWindowData(window, MVC_FIRST_RESPONDER);
-}

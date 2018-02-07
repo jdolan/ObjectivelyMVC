@@ -38,7 +38,7 @@ typedef struct CollectionItemViewInterface CollectionItemViewInterface;
 /**
  * @brief CollectionViewItems are a visual representation of an item within a CollectionView.
  * @extends View
- * @ingroup CollectionViews
+ * @ingroup CollectionView
  */
 struct CollectionItemView {
 
@@ -62,6 +62,11 @@ struct CollectionItemView {
 	 * @brief True when this item is selected, false otherwise.
 	 */
 	_Bool isSelected;
+
+	/**
+	 * @brief The View drawn over this item when it is selected.
+	 */
+	View *selectionOverlay;
 
 	/**
 	 * @brief The text.
@@ -90,14 +95,14 @@ struct CollectionItemViewInterface {
 	CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool selected)
+	 * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool isSelected)
 	 * @brief Sets the selected state of this item.
 	 * @param self The CollectionItemView.
-	 * @param selected The selected state.
+	 * @param isSelected The selected state.
 	 * @remarks Subclasses may override this method to change the visual cue for selection.
 	 * @memberof CollectionItemView
 	 */
-	void (*setSelected)(CollectionItemView *self, _Bool selected);
+	void (*setSelected)(CollectionItemView *self, _Bool isSelected);
 };
 
 /**

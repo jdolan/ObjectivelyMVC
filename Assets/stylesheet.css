@@ -1,0 +1,269 @@
+* {
+	background-color: transparent;
+	border-width: 0;
+}
+
+Box {
+	autoresizing-mask: contain;
+	border-color: #dededeaa;
+	border-width: 1;
+	padding: 10 10 10 10;
+}
+
+Box > Label {
+	background-color: #888888;
+	padding: 0 8 0 8;
+	left: 20;
+}
+
+Box > Label > Text {
+	font-size: 12;
+}
+
+Box > .contentView {
+	autoresizing-mask: contain | width;
+	padding-top: 4;
+	spacing: 4;
+}
+
+Button {
+	autoresizing-mask: contain;
+	background-color: #88888822;
+	border-color: ghostwhite;
+	bevel: outset;
+	min-width: 100;
+	padding: 8 8 8 8;
+}
+
+Button:highlighted {
+	bevel: inset;
+}
+
+Button > * {
+	alignment: middle-center;
+}
+
+Checkbox > Control {
+	background-color: #22222266;
+	bevel: inset;
+	min-width: 18;
+	min-height: 18;
+	padding: 4 4 4 4;
+}
+
+CollectionItemView {
+	background-color: #22222266;
+	border-color: #999999aa;
+}
+
+CollectionItemView > .selectionOverlay {
+	background-color: #ffffff22;
+	hidden: true;
+}
+
+CollectionItemView:selected > .selectionOverlay {
+	hidden: false;
+}
+
+CollectionView {
+	background-color: #22222266;
+	item-size: 64 64;
+	item-spacing: 10 10;
+}
+
+CollectionView .contentView {
+	padding: 10 10 10 10;
+}
+
+Control {
+	min-height: 32;
+	selection: single;
+}
+
+HSVColorPicker,
+HueColorPicker,
+RGBColorPicker {
+	autoresizing-mask: contain;
+}
+
+HSVColorPicker .colorView,
+HueColorPicker .colorView,
+RGBColorPicker .colorView {
+	autoresizing-mask: width;
+	background-color: none;
+}
+
+Label {
+	autoresizing-mask: contain;
+}
+
+Label > Text {
+	alignment: middle-left;
+}
+
+Option {
+	autoresizing-mask: contain | width;
+	padding: 2 2 2 2;
+}
+
+Option > Text {
+	alignment: middle-left;
+}
+
+PageView {
+	autoresizing-mask: contain;
+	border-color: #888888;
+	padding: 12 12 12 12;
+}
+
+Panel {
+	autoresizing-mask: contain;
+	background-color: #444444dd;
+	border-color: #dedede;
+	border-width: 1;
+	padding: 12 12 12 12;
+}
+
+Panel > StackView {
+	spacing: 12;
+}
+
+Panel .accessoryView {
+	alignment: middle-right;
+	axis: horizontal;
+}
+
+ScrollView {
+	autoresizing-mask: fill;
+	clips-subviews: true;
+}
+
+Select {
+	background-color: #dedede10;
+	bevel: outset;
+	padding: 4 4 4 4;
+}
+
+Select > StackView {
+	alignment: middle-left;
+}
+
+Slider {
+	width: 140;
+}
+
+Slider > .bar {
+	alignment: middle-left;
+	autoresizing-mask: fill;
+}
+
+Slider > .bar > .handle {
+	alignment: middle;
+	background-color: #444444dd;
+	bevel: outset;
+	min-width: 8;
+	max-height: 16;
+}
+
+Slider > .label {
+	alignment: middle-right;
+	padding: 0 0 0 18;
+}
+
+StackView.container {
+	spacing: 12;
+}
+
+TableCellView {
+	autoresizing-mask: contain;
+	padding: 0 2 0 2;
+	min-width: 80;
+	min-height: 24;
+}
+
+TableCellView > Text {
+	alignment: middle-left;
+}
+
+TableHeaderView {
+	background-color: #ffffff22;
+}
+
+TableRowView {
+	autoresizing-mask: contain | width;
+	axis: horizontal;
+	distribution: fill;
+}
+
+TableRowView:nth-child(even) TableCellView {
+	background-color: #ffffff11;
+}
+
+TableRowView:selected {
+	background-color: darkgray;
+}
+
+TableView .contentView {
+	autoresizing-mask: contain | width;
+}
+
+TabView {
+	spacing: 4;
+}
+
+TabView > .tabPageView {
+	border-color: silver;
+	border-width: 1;
+}
+
+TabView > .tabSelectionView {
+	autoresizing-mask: contain | width;
+	axis: horizontal;
+	distribution: fill-equally;
+	spacing: 4;
+}
+
+TabView > .tabSelectionView > Label {
+	padding: 2 2 2 2;
+}
+
+TabView > .tabSelectionView > Label.selected {
+	background-color: darkgray;
+}
+
+TabView > .tabSelectionView > Label > Text {
+	alignment: middle-center;
+}
+
+TextView {
+	background-color: #22222266;
+	bevel: inset;
+	padding: 4 4 4 4;
+	width: 160;
+}
+
+TextView > Text {
+	alignment: middle-left;
+}
+
+Text {
+	color: ghostwhite;
+}
+
+.options {
+	alignment: internal;
+	border-color: #dededeaa;
+	border-width: 1;
+}
+
+.options > Option {
+	background-color: charcoal;
+}
+
+.options > Option:hover {
+	background-color: darkgray;
+}
+
+.options > Option:selected {
+	background-color: dimgray;
+}

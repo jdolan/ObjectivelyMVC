@@ -30,8 +30,6 @@
  * @brief PageViews manage their subviews as pages in a book.
  */
 
-#define DEFAULT_PAGE_VIEW_PADDING 12
-
 typedef struct PageViewDelegate PageViewDelegate;
 
 typedef struct PageView PageView;

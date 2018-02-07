@@ -49,21 +49,12 @@ static void dealloc(Object *self) {
  */
 static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) {
 
-	self = (TableCellView *) super(View, self, initWithFrame, NULL);
+	self = (TableCellView *) super(View, self, initWithFrame, frame);
 	if (self) {
 		self->text = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->text);
 
-		self->text->view.alignment = ViewAlignmentMiddleLeft;
-
 		$((View *) self, addSubview, (View *) self->text);
-
-		self->view.autoresizingMask = ViewAutoresizingHeight;
-
-		self->view.padding.top = DEFAULT_TABLE_CELL_VIEW_PADDING;
-		self->view.padding.left = DEFAULT_TABLE_CELL_VIEW_PADDING;
-		self->view.padding.right = DEFAULT_TABLE_CELL_VIEW_PADDING;
-		self->view.padding.bottom = DEFAULT_TABLE_CELL_VIEW_PADDING;
 	}
 
 	return self;
