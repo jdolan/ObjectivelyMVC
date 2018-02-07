@@ -1,32 +1,39 @@
 {
-  "class": "StackView",
-  "identifier": "debug",
-  "classNames": [
-    "container"
-  ],
+  "style": {
+    "autoresizing-mask": "fill"
+  },
   "subviews": [
     {
-      "class": "Text",
-      "identifier": "description"
-    },
-    {
-      "class": "TableView",
-      "identifier": "selectors",
-      "columns": [
+      "class": "StackView",
+      "identifier": "debug",
+      "classNames": [
+        "container"
+      ],
+      "subviews": [
         {
-          "identifier": "Selector"
-        }
-      ]
-    },
-    {
-      "class": "TableView",
-      "identifier": "computedStyle",
-      "columns": [
-        {
-          "identifier": "Attribute"
+          "class": "Text",
+          "identifier": "description"
         },
         {
-          "identifier": "Value"
+          "class": "TableView",
+          "identifier": "selectors",
+          "columns": [
+            {
+              "identifier": "Selector"
+            }
+          ]
+        },
+        {
+          "class": "TableView",
+          "identifier": "computedStyle",
+          "columns": [
+            {
+              "identifier": "Attribute"
+            },
+            {
+              "identifier": "Value"
+            }
+          ]
         }
       ]
     }
