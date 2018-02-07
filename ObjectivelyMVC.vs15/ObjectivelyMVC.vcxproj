@@ -19,6 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Assets\check.png.h" />
+    <ClInclude Include="..\Assets\debug.css.h" />
+    <ClInclude Include="..\Assets\debug.json.h" />
+    <ClInclude Include="..\Assets\resize.png.h" />
+    <ClInclude Include="..\Assets\stylesheet.css.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Action.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Box.h" />
@@ -27,8 +32,8 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionItemView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Constraint.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\DebugViewController.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Font.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\HSVColorPicker.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\HueColorPicker.h" />
@@ -82,8 +87,8 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionItemView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\CollectionView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Colors.c" />
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Constraint.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Control.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\DebugViewController.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Font.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\HSVColorPicker.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\HueColorPicker.c" />
@@ -174,28 +179,28 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\;libs\sdl_ttf\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
