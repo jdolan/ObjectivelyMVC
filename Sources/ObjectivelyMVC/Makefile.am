@@ -1,10 +1,9 @@
 AUTOMAKE_OPTIONS = nostdinc
 
-pkgdatadir = $(datadir)/ObjectivelyMVC
-pkgincludedir = $(includedir)/ObjectivelyMVC
-
 noinst_HEADERS = \
 	Config.h
+
+pkgincludedir = $(includedir)/ObjectivelyMVC
 
 pkginclude_HEADERS = \
 	Action.h \
