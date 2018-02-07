@@ -129,7 +129,7 @@ static Font *cachedFont(const char *family, int size, int style) {
 	if (size < 1) {
 		size = DEFAULT_FONT_SIZE;
 	}
-	if (style < FontStyleRegular) {
+	if (style < FontStyleRegular || style > FontStyleStrikeThrough) {
 		style = DEFAULT_FONT_STYLE;
 	}
 
