@@ -218,10 +218,10 @@ static void bindView(const Inlet *inlet, ident obj) {
 
 	const Dictionary *dictionary = cast(Dictionary, obj);
 
-	const String *clazzName = $(dictionary, objectForKeyPath, "class");
-	if (clazzName) {
+	const String *className = $(dictionary, objectForKeyPath, "class");
+	if (className || dest == NULL) {
 
-		Class *clazz = classForName(clazzName->chars);
+		Class *clazz = className ? classForName(className->chars) : _View();
 		assert(clazz);
 
 		const Class *c = clazz;
