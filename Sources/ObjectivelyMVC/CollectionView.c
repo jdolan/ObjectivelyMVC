@@ -450,26 +450,26 @@ static void selectItemsAtIndexPaths(CollectionView *self, const Array *indexPath
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((CollectionViewInterface *) clazz->def->interface)->deselectAll = deselectAll;
-	((CollectionViewInterface *) clazz->def->interface)->deselectItemAtIndexPath = deselectItemAtIndexPath;
-	((CollectionViewInterface *) clazz->def->interface)->deselectItemsAtIndexPaths = deselectItemsAtIndexPaths;
-	((CollectionViewInterface *) clazz->def->interface)->indexPathForItem = indexPathForItem;
-	((CollectionViewInterface *) clazz->def->interface)->indexPathForItemAtPoint = indexPathForItemAtPoint;
-	((CollectionViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((CollectionViewInterface *) clazz->def->interface)->itemAtIndexPath = itemAtIndexPath;
-	((CollectionViewInterface *) clazz->def->interface)->reloadData = reloadData;
-	((CollectionViewInterface *) clazz->def->interface)->selectAll = selectAll;
-	((CollectionViewInterface *) clazz->def->interface)->selectionIndexPaths = selectionIndexPaths;
-	((CollectionViewInterface *) clazz->def->interface)->selectItemAtIndexPath = selectItemAtIndexPath;
-	((CollectionViewInterface *) clazz->def->interface)->selectItemsAtIndexPaths = selectItemsAtIndexPaths;
+	((CollectionViewInterface *) clazz->interface)->deselectAll = deselectAll;
+	((CollectionViewInterface *) clazz->interface)->deselectItemAtIndexPath = deselectItemAtIndexPath;
+	((CollectionViewInterface *) clazz->interface)->deselectItemsAtIndexPaths = deselectItemsAtIndexPaths;
+	((CollectionViewInterface *) clazz->interface)->indexPathForItem = indexPathForItem;
+	((CollectionViewInterface *) clazz->interface)->indexPathForItemAtPoint = indexPathForItemAtPoint;
+	((CollectionViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((CollectionViewInterface *) clazz->interface)->itemAtIndexPath = itemAtIndexPath;
+	((CollectionViewInterface *) clazz->interface)->reloadData = reloadData;
+	((CollectionViewInterface *) clazz->interface)->selectAll = selectAll;
+	((CollectionViewInterface *) clazz->interface)->selectionIndexPaths = selectionIndexPaths;
+	((CollectionViewInterface *) clazz->interface)->selectItemAtIndexPath = selectItemAtIndexPath;
+	((CollectionViewInterface *) clazz->interface)->selectItemsAtIndexPaths = selectItemsAtIndexPaths;
 }
 
 /**
@@ -477,19 +477,21 @@ static void initialize(Class *clazz) {
  * @memberof CollectionView
  */
 Class *_CollectionView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "CollectionView";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(CollectionView);
-		clazz.interfaceOffset = offsetof(CollectionView, interface);
-		clazz.interfaceSize = sizeof(CollectionViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "CollectionView",
+			.superclass = _Control(),
+			.instanceSize = sizeof(CollectionView),
+			.interfaceOffset = offsetof(CollectionView, interface),
+			.interfaceSize = sizeof(CollectionViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

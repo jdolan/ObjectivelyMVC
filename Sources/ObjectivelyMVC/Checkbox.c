@@ -151,15 +151,15 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
 
-	((CheckboxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
 	_check = $(alloc(Image), initWithBytes, check_png, check_png_len);
 }
@@ -176,20 +176,22 @@ static void destroy(Class *clazz) {
  * @memberof Checkbox
  */
 Class *_Checkbox(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Checkbox";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(Checkbox);
-		clazz.interfaceOffset = offsetof(Checkbox, interface);
-		clazz.interfaceSize = sizeof(CheckboxInterface);
-		clazz.initialize = initialize;
-		clazz.destroy = destroy;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Checkbox",
+			.superclass = _Control(),
+			.instanceSize = sizeof(Checkbox),
+			.interfaceOffset = offsetof(Checkbox, interface),
+			.interfaceSize = sizeof(CheckboxInterface),
+			.initialize = initialize,
+			.destroy = destroy,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

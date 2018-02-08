@@ -281,17 +281,17 @@ static TabViewItem *tabWithIdentifier(const TabView *self, const char *identifie
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
-	((TabViewInterface *) clazz->def->interface)->addTab = addTab;
-	((TabViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((TabViewInterface *) clazz->def->interface)->removeTab = removeTab;
-	((TabViewInterface *) clazz->def->interface)->selectTab = selectTab;
-	((TabViewInterface *) clazz->def->interface)->tabWithIdentifier = tabWithIdentifier;
+	((TabViewInterface *) clazz->interface)->addTab = addTab;
+	((TabViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TabViewInterface *) clazz->interface)->removeTab = removeTab;
+	((TabViewInterface *) clazz->interface)->selectTab = selectTab;
+	((TabViewInterface *) clazz->interface)->tabWithIdentifier = tabWithIdentifier;
 }
 
 /**
@@ -299,19 +299,21 @@ static void initialize(Class *clazz) {
  * @memberof TabView
  */
 Class *_TabView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "TabView";
-		clazz.superclass = _StackView();
-		clazz.instanceSize = sizeof(TabView);
-		clazz.interfaceOffset = offsetof(TabView, interface);
-		clazz.interfaceSize = sizeof(TabViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "TabView",
+			.superclass = _StackView(),
+			.instanceSize = sizeof(TabView),
+			.interfaceOffset = offsetof(TabView, interface),
+			.interfaceSize = sizeof(TabViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

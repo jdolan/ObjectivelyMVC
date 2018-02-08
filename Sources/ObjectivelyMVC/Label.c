@@ -48,10 +48,16 @@ static String *description(const Object *self) {
 
 	View *this = (View *) self;
 
-	const SDL_Rect *f = &this->frame;
+	String *classNames = $((Object *) this->classNames, description);
+	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
+							  this->identifier ?: classnameof(self),
+							  self,
+							  ((Label *) self)->text->text,
+							  classNames->chars,
+							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
 
-	return str("%s@%p \"%s\"(%d,%d) %dx%d", this->identifier ?: self->clazz->name, self,
-			   ((Label *) self)->text->text, f->x, f->y, f->w, f->h);
+	release(classNames);
+	return description;
 }
 
 #pragma mark - View
@@ -108,13 +114,13 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->description = description;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 
-	((LabelInterface *) clazz->def->interface)->initWithText = initWithText;
+	((LabelInterface *) clazz->interface)->initWithText = initWithText;
 }
 
 /**
@@ -122,19 +128,21 @@ static void initialize(Class *clazz) {
  * @memberof Label
  */
 Class *_Label(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Label";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(Label);
-		clazz.interfaceOffset = offsetof(Label, interface);
-		clazz.interfaceSize = sizeof(LabelInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Label",
+			.superclass = _View(),
+			.instanceSize = sizeof(Label),
+			.interfaceOffset = offsetof(Label, interface),
+			.interfaceSize = sizeof(LabelInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

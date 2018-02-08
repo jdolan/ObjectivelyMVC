@@ -352,24 +352,24 @@ static void stateDidChange(Control *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
-	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
-	((ViewInterface *) clazz->def->interface)->render = render;
-	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
+	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
+	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
-	((ControlInterface *) clazz->def->interface)->actionsForEvent = actionsForEvent;
-	((ControlInterface *) clazz->def->interface)->addActionForEventType = addActionForEventType;
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ControlInterface *) clazz->def->interface)->isDisabled = isDisabled;
-	((ControlInterface *) clazz->def->interface)->isFocused = isFocused;
-	((ControlInterface *) clazz->def->interface)->isHighlighted = isHighlighted;
-	((ControlInterface *) clazz->def->interface)->isSelected = isSelected;
-	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
+	((ControlInterface *) clazz->interface)->actionsForEvent = actionsForEvent;
+	((ControlInterface *) clazz->interface)->addActionForEventType = addActionForEventType;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ControlInterface *) clazz->interface)->isDisabled = isDisabled;
+	((ControlInterface *) clazz->interface)->isFocused = isFocused;
+	((ControlInterface *) clazz->interface)->isHighlighted = isHighlighted;
+	((ControlInterface *) clazz->interface)->isSelected = isSelected;
+	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
 }
 
 /**
@@ -377,19 +377,21 @@ static void initialize(Class *clazz) {
  * @memberof Control
  */
 Class *_Control(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Control";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(Control);
-		clazz.interfaceOffset = offsetof(Control, interface);
-		clazz.interfaceSize = sizeof(ControlInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Control",
+			.superclass = _View(),
+			.instanceSize = sizeof(Control),
+			.interfaceOffset = offsetof(Control, interface),
+			.interfaceSize = sizeof(ControlInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

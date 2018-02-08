@@ -174,12 +174,12 @@ static Array *parse(const char *rule) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->description = description;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
 
-	((SelectorSequenceInterface *) clazz->def->interface)->initWithSequence = initWithSequence;
-	((SelectorSequenceInterface *) clazz->def->interface)->matchesView = matchesView;
-	((SelectorSequenceInterface *) clazz->def->interface)->parse = parse;
+	((SelectorSequenceInterface *) clazz->interface)->initWithSequence = initWithSequence;
+	((SelectorSequenceInterface *) clazz->interface)->matchesView = matchesView;
+	((SelectorSequenceInterface *) clazz->interface)->parse = parse;
 }
 
 /**
@@ -187,19 +187,21 @@ static void initialize(Class *clazz) {
  * @memberof SelectorSequence
  */
 Class *_SelectorSequence(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "SelectorSequence";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(SelectorSequence);
-		clazz.interfaceOffset = offsetof(SelectorSequence, interface);
-		clazz.interfaceSize = sizeof(SelectorSequenceInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "SelectorSequence",
+			.superclass = _Object(),
+			.instanceSize = sizeof(SelectorSequence),
+			.interfaceOffset = offsetof(SelectorSequence, interface),
+			.interfaceSize = sizeof(SelectorSequenceInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

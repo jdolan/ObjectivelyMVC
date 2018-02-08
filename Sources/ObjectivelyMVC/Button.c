@@ -145,16 +145,16 @@ static Button *initWithTitle(Button *self, const char *title) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((ButtonInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ButtonInterface *) clazz->def->interface)->initWithImage = initWithImage;
-	((ButtonInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
+	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ButtonInterface *) clazz->interface)->initWithImage = initWithImage;
+	((ButtonInterface *) clazz->interface)->initWithTitle = initWithTitle;
 }
 
 /**
@@ -162,19 +162,21 @@ static void initialize(Class *clazz) {
  * @memberof Button
  */
 Class *_Button(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Button";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(Button);
-		clazz.interfaceOffset = offsetof(Button, interface);
-		clazz.interfaceSize = sizeof(ButtonInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Button",
+			.superclass = _Control(),
+			.instanceSize = sizeof(Button),
+			.interfaceOffset = offsetof(Button, interface),
+			.interfaceSize = sizeof(ButtonInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

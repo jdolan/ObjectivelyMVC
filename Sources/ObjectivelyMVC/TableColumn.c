@@ -79,9 +79,9 @@ static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((TableColumnInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
+	((TableColumnInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
 }
 
 /**
@@ -89,19 +89,21 @@ static void initialize(Class *clazz) {
  * @memberof TableColumn
  */
 Class *_TableColumn(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "TableColumn";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(TableColumn);
-		clazz.interfaceOffset = offsetof(TableColumn, interface);
-		clazz.interfaceSize = sizeof(TableColumnInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "TableColumn",
+			.superclass = _Object(),
+			.instanceSize = sizeof(TableColumn),
+			.interfaceOffset = offsetof(TableColumn, interface),
+			.interfaceSize = sizeof(TableColumnInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

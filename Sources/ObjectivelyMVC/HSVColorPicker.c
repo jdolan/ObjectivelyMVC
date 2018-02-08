@@ -240,16 +240,16 @@ static void setRGBColor(HSVColorPicker *self, const SDL_Color *color) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 
-	((HSVColorPickerInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((HSVColorPickerInterface *) clazz->def->interface)->rgbColor = rgbColor;
-	((HSVColorPickerInterface *) clazz->def->interface)->setColor = setColor;
-	((HSVColorPickerInterface *) clazz->def->interface)->setRGBColor = setRGBColor;
+	((HSVColorPickerInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((HSVColorPickerInterface *) clazz->interface)->rgbColor = rgbColor;
+	((HSVColorPickerInterface *) clazz->interface)->setColor = setColor;
+	((HSVColorPickerInterface *) clazz->interface)->setRGBColor = setRGBColor;
 }
 
 /**
@@ -257,19 +257,21 @@ static void initialize(Class *clazz) {
  * @memberof HSVColorPicker
  */
 Class *_HSVColorPicker(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "HSVColorPicker";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(HSVColorPicker);
-		clazz.interfaceOffset = offsetof(HSVColorPicker, interface);
-		clazz.interfaceSize = sizeof(HSVColorPickerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "HSVColorPicker",
+			.superclass = _Control(),
+			.instanceSize = sizeof(HSVColorPicker),
+			.interfaceOffset = offsetof(HSVColorPicker, interface),
+			.interfaceSize = sizeof(HSVColorPickerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

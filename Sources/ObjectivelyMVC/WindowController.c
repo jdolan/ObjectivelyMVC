@@ -370,21 +370,21 @@ static WindowController *windowController(SDL_Window *window) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((WindowControllerInterface *) clazz->def->interface)->debug = debug;
-	((WindowControllerInterface *) clazz->def->interface)->eventTarget = eventTarget;
-	((WindowControllerInterface *) clazz->def->interface)->firstResponder = firstResponder;
-	((WindowControllerInterface *) clazz->def->interface)->initWithWindow = initWithWindow;
-	((WindowControllerInterface *) clazz->def->interface)->render = render;
-	((WindowControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
-	((WindowControllerInterface *) clazz->def->interface)->setRenderer = setRenderer;
-	((WindowControllerInterface *) clazz->def->interface)->setTheme = setTheme;
-	((WindowControllerInterface *) clazz->def->interface)->setViewController = setViewController;
-	((WindowControllerInterface *) clazz->def->interface)->setWindow = setWindow;
-	((WindowControllerInterface *) clazz->def->interface)->toggleDebugger = toggleDebugger;
-	((WindowControllerInterface *) clazz->def->interface)->updateHover = updateHover;
-	((WindowControllerInterface *) clazz->def->interface)->windowController = windowController;
+	((WindowControllerInterface *) clazz->interface)->debug = debug;
+	((WindowControllerInterface *) clazz->interface)->eventTarget = eventTarget;
+	((WindowControllerInterface *) clazz->interface)->firstResponder = firstResponder;
+	((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
+	((WindowControllerInterface *) clazz->interface)->render = render;
+	((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
+	((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
+	((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
+	((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;
+	((WindowControllerInterface *) clazz->interface)->toggleDebugger = toggleDebugger;
+	((WindowControllerInterface *) clazz->interface)->updateHover = updateHover;
+	((WindowControllerInterface *) clazz->interface)->windowController = windowController;
 }
 
 /**
@@ -392,19 +392,21 @@ static void initialize(Class *clazz) {
  * @memberof WindowController
  */
 Class *_WindowController(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "WindowController";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(WindowController);
-		clazz.interfaceOffset = offsetof(WindowController, interface);
-		clazz.interfaceSize = sizeof(WindowControllerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "WindowController",
+			.superclass = _Object(),
+			.instanceSize = sizeof(WindowController),
+			.interfaceOffset = offsetof(WindowController, interface),
+			.interfaceSize = sizeof(WindowControllerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

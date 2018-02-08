@@ -123,14 +123,14 @@ SDL_Size size(const Image *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ImageInterface *) clazz->def->interface)->initWithBytes = initWithBytes;
-	((ImageInterface *) clazz->def->interface)->initWithData = initWithData;
-	((ImageInterface *) clazz->def->interface)->initWithName = initWithName;
-	((ImageInterface *) clazz->def->interface)->initWithResource = initWithResource;
-	((ImageInterface *) clazz->def->interface)->initWithSurface = initWithSurface;
-	((ImageInterface *) clazz->def->interface)->size = size;
+	((ImageInterface *) clazz->interface)->initWithBytes = initWithBytes;
+	((ImageInterface *) clazz->interface)->initWithData = initWithData;
+	((ImageInterface *) clazz->interface)->initWithName = initWithName;
+	((ImageInterface *) clazz->interface)->initWithResource = initWithResource;
+	((ImageInterface *) clazz->interface)->initWithSurface = initWithSurface;
+	((ImageInterface *) clazz->interface)->size = size;
 }
 
 /**
@@ -138,19 +138,21 @@ static void initialize(Class *clazz) {
  * @memberof Image
  */
 Class *_Image(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Image";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(Image);
-		clazz.interfaceOffset = offsetof(Image, interface);
-		clazz.interfaceSize = sizeof(ImageInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Image",
+			.superclass = _Object(),
+			.instanceSize = sizeof(Image),
+			.interfaceOffset = offsetof(Image, interface),
+			.interfaceSize = sizeof(ImageInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

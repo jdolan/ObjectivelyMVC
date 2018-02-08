@@ -55,9 +55,9 @@ static String *description(const Object *self) {
 
 	View *this = (View *) self;
 
-	String *classNames = $((Array *) this->classNames, componentsJoinedByCharacters, ", ");
+	String *classNames = $((Object *) this->classNames, description);
 	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
-							  this->identifier ?: self->clazz->name,
+							  this->identifier ?: classnameof(self),
 							  self,
 							  ((Text *) self)->text,
 							  classNames->chars,
@@ -276,21 +276,21 @@ static void setText(Text *self, const char *text) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->description = description;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
 
-	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->render = render;
-	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
-	((ViewInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
-	((TextInterface *) clazz->def->interface)->initWithText = initWithText;
-	((TextInterface *) clazz->def->interface)->naturalSize = naturalSize;
-	((TextInterface *) clazz->def->interface)->setFont = setFont;
-	((TextInterface *) clazz->def->interface)->setText = setText;
+	((TextInterface *) clazz->interface)->initWithText = initWithText;
+	((TextInterface *) clazz->interface)->naturalSize = naturalSize;
+	((TextInterface *) clazz->interface)->setFont = setFont;
+	((TextInterface *) clazz->interface)->setText = setText;
 }
 
 /**
@@ -298,19 +298,21 @@ static void initialize(Class *clazz) {
  * @memberof Text
  */
 Class *_Text(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Text";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(Text);
-		clazz.interfaceOffset = offsetof(Text, interface);
-		clazz.interfaceSize = sizeof(TextInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Text",
+			.superclass = _View(),
+			.instanceSize = sizeof(Text),
+			.interfaceOffset = offsetof(Text, interface),
+			.interfaceSize = sizeof(TextInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

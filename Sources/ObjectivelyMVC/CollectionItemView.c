@@ -122,12 +122,12 @@ static void setSelected(CollectionItemView *self, _Bool isSelected) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
+	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
 	
-	((CollectionItemViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((CollectionItemViewInterface *) clazz->def->interface)->setSelected = setSelected;
+	((CollectionItemViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((CollectionItemViewInterface *) clazz->interface)->setSelected = setSelected;
 }
 
 /**
@@ -135,19 +135,21 @@ static void initialize(Class *clazz) {
  * @memberof CollectionItemView
  */
 Class *_CollectionItemView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "CollectionItemView";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(CollectionItemView);
-		clazz.interfaceOffset = offsetof(CollectionItemView, interface);
-		clazz.interfaceSize = sizeof(CollectionItemViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "CollectionItemView",
+			.superclass = _View(),
+			.instanceSize = sizeof(CollectionItemView),
+			.interfaceOffset = offsetof(CollectionItemView, interface),
+			.interfaceSize = sizeof(CollectionItemViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

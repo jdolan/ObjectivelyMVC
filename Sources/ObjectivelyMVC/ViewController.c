@@ -284,22 +284,22 @@ static void viewWillDisappear(ViewController *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewControllerInterface *) clazz->def->interface)->addChildViewController = addChildViewController;
-	((ViewControllerInterface *) clazz->def->interface)->handleNotification = handleNotification;
-	((ViewControllerInterface *) clazz->def->interface)->init = init;
-	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
-	((ViewControllerInterface *) clazz->def->interface)->loadViewIfNeeded = loadViewIfNeeded;
-	((ViewControllerInterface *) clazz->def->interface)->moveToParentViewController = moveToParentViewController;
-	((ViewControllerInterface *) clazz->def->interface)->removeChildViewController = removeChildViewController;
-	((ViewControllerInterface *) clazz->def->interface)->removeFromParentViewController = removeFromParentViewController;
-	((ViewControllerInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
-	((ViewControllerInterface *) clazz->def->interface)->setView = setView;
-	((ViewControllerInterface *) clazz->def->interface)->viewDidAppear = viewDidAppear;
-	((ViewControllerInterface *) clazz->def->interface)->viewDidDisappear = viewDidDisappear;
-	((ViewControllerInterface *) clazz->def->interface)->viewWillAppear = viewWillAppear;
-	((ViewControllerInterface *) clazz->def->interface)->viewWillDisappear = viewWillDisappear;
+	((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
+	((ViewControllerInterface *) clazz->interface)->handleNotification = handleNotification;
+	((ViewControllerInterface *) clazz->interface)->init = init;
+	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
+	((ViewControllerInterface *) clazz->interface)->loadViewIfNeeded = loadViewIfNeeded;
+	((ViewControllerInterface *) clazz->interface)->moveToParentViewController = moveToParentViewController;
+	((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
+	((ViewControllerInterface *) clazz->interface)->removeFromParentViewController = removeFromParentViewController;
+	((ViewControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ViewControllerInterface *) clazz->interface)->setView = setView;
+	((ViewControllerInterface *) clazz->interface)->viewDidAppear = viewDidAppear;
+	((ViewControllerInterface *) clazz->interface)->viewDidDisappear = viewDidDisappear;
+	((ViewControllerInterface *) clazz->interface)->viewWillAppear = viewWillAppear;
+	((ViewControllerInterface *) clazz->interface)->viewWillDisappear = viewWillDisappear;
 }
 
 /**
@@ -307,19 +307,21 @@ static void initialize(Class *clazz) {
  * @memberof ViewController
  */
 Class *_ViewController(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "ViewController";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(ViewController);
-		clazz.interfaceOffset = offsetof(ViewController, interface);
-		clazz.interfaceSize = sizeof(ViewControllerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "ViewController",
+			.superclass = _Object(),
+			.instanceSize = sizeof(ViewController),
+			.interfaceOffset = offsetof(ViewController, interface),
+			.interfaceSize = sizeof(ViewControllerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

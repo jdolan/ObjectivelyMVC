@@ -145,13 +145,13 @@ static void setCurrentPage(PageView *self, View *currentPage) {
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
-	((ViewInterface *) clazz->def->interface)->visibleSubviews = visibleSubviews;
+	((ViewInterface *) clazz->interface)->addSubview = addSubview;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->removeSubview = removeSubview;
+	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 
-	((PageViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((PageViewInterface *) clazz->def->interface)->setCurrentPage = setCurrentPage;
+	((PageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((PageViewInterface *) clazz->interface)->setCurrentPage = setCurrentPage;
 }
 
 /**
@@ -159,19 +159,21 @@ static void initialize(Class *clazz) {
  * @memberof PageView
  */
 Class *_PageView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "PageView";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(PageView);
-		clazz.interfaceOffset = offsetof(PageView, interface);
-		clazz.interfaceSize = sizeof(PageViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "PageView",
+			.superclass = _View(),
+			.instanceSize = sizeof(PageView),
+			.interfaceOffset = offsetof(PageView, interface),
+			.interfaceSize = sizeof(PageViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

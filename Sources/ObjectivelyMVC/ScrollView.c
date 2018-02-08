@@ -174,15 +174,15 @@ static void setContentView(ScrollView *self, View *contentView) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((ScrollViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ScrollViewInterface *) clazz->def->interface)->scrollToOffset = scrollToOffset;
-	((ScrollViewInterface *) clazz->def->interface)->setContentView = setContentView;
+	((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ScrollViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
+	((ScrollViewInterface *) clazz->interface)->setContentView = setContentView;
 }
 
 /**
@@ -190,19 +190,21 @@ static void initialize(Class *clazz) {
  * @memberof ScrollView
  */
 Class *_ScrollView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "ScrollView";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(ScrollView);
-		clazz.interfaceOffset = offsetof(ScrollView, interface);
-		clazz.interfaceSize = sizeof(ScrollViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "ScrollView",
+			.superclass = _Control(),
+			.instanceSize = sizeof(ScrollView),
+			.interfaceOffset = offsetof(ScrollView, interface),
+			.interfaceSize = sizeof(ScrollViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

@@ -184,13 +184,13 @@ static Array *parse(const char *sequence) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->description = description;
-	((ObjectInterface *) clazz->def->interface)->hash = hash;
-	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
+	((ObjectInterface *) clazz->interface)->hash = hash;
+	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((SimpleSelectorInterface *) clazz->def->interface)->initWithPattern = initWithPattern;
-	((SimpleSelectorInterface *) clazz->def->interface)->parse = parse;
+	((SimpleSelectorInterface *) clazz->interface)->initWithPattern = initWithPattern;
+	((SimpleSelectorInterface *) clazz->interface)->parse = parse;
 }
 
 /**
@@ -198,19 +198,21 @@ static void initialize(Class *clazz) {
  * @memberof SimpleSelector
  */
 Class *_SimpleSelector(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "SimpleSelector";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(SimpleSelector);
-		clazz.interfaceOffset = offsetof(SimpleSelector, interface);
-		clazz.interfaceSize = sizeof(SimpleSelectorInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "SimpleSelector",
+			.superclass = _Object(),
+			.instanceSize = sizeof(SimpleSelector),
+			.interfaceOffset = offsetof(SimpleSelector, interface),
+			.interfaceSize = sizeof(SimpleSelectorInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

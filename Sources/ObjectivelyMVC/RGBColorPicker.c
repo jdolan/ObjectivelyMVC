@@ -244,14 +244,14 @@ static void setColor(RGBColorPicker *self, const SDL_Color *color) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 
-	((RGBColorPickerInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((RGBColorPickerInterface *) clazz->def->interface)->setColor = setColor;
+	((RGBColorPickerInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((RGBColorPickerInterface *) clazz->interface)->setColor = setColor;
 }
 
 /**
@@ -259,19 +259,21 @@ static void initialize(Class *clazz) {
  * @memberof RGBColorPicker
  */
 Class *_RGBColorPicker(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "RGBColorPicker";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(RGBColorPicker);
-		clazz.interfaceOffset = offsetof(RGBColorPicker, interface);
-		clazz.interfaceSize = sizeof(RGBColorPickerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "RGBColorPicker",
+			.superclass = _Control(),
+			.instanceSize = sizeof(RGBColorPicker),
+			.interfaceOffset = offsetof(RGBColorPicker, interface),
+			.interfaceSize = sizeof(RGBColorPickerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

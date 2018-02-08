@@ -206,17 +206,17 @@ static Stylesheet *stylesheetWithString(const String *string) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->hash = hash;
-	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->hash = hash;
+	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((StylesheetInterface *) clazz->def->interface)->defaultStylesheet = defaultStylesheet;
-	((StylesheetInterface *) clazz->def->interface)->initWithCharacters = initWithCharacters;
-	((StylesheetInterface *) clazz->def->interface)->initWithContentsOfFile = initWithContentsOfFile;
-	((StylesheetInterface *) clazz->def->interface)->initWithString = initWithString;
-	((StylesheetInterface *) clazz->def->interface)->stylesheetWithCharacters = stylesheetWithCharacters;
-	((StylesheetInterface *) clazz->def->interface)->stylesheetWithContentsOfFile = stylesheetWithContentsOfFile;
-	((StylesheetInterface *) clazz->def->interface)->stylesheetWithString = stylesheetWithString;
+	((StylesheetInterface *) clazz->interface)->defaultStylesheet = defaultStylesheet;
+	((StylesheetInterface *) clazz->interface)->initWithCharacters = initWithCharacters;
+	((StylesheetInterface *) clazz->interface)->initWithContentsOfFile = initWithContentsOfFile;
+	((StylesheetInterface *) clazz->interface)->initWithString = initWithString;
+	((StylesheetInterface *) clazz->interface)->stylesheetWithCharacters = stylesheetWithCharacters;
+	((StylesheetInterface *) clazz->interface)->stylesheetWithContentsOfFile = stylesheetWithContentsOfFile;
+	((StylesheetInterface *) clazz->interface)->stylesheetWithString = stylesheetWithString;
 }
 
 /**
@@ -231,20 +231,22 @@ static void destroy(Class *clazz) {
  * @memberof Stylesheet
  */
 Class *_Stylesheet(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Stylesheet";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(Stylesheet);
-		clazz.interfaceOffset = offsetof(Stylesheet, interface);
-		clazz.interfaceSize = sizeof(StylesheetInterface);
-		clazz.initialize = initialize;
-		clazz.destroy = destroy;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Stylesheet",
+			.superclass = _Object(),
+			.instanceSize = sizeof(Stylesheet),
+			.interfaceOffset = offsetof(Stylesheet, interface),
+			.interfaceSize = sizeof(StylesheetInterface),
+			.initialize = initialize,
+			.destroy = destroy,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

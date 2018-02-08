@@ -194,15 +194,15 @@ static void setOrientation(Input *self, InputOrientation orientation) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 
-	((InputInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((InputInterface *) clazz->def->interface)->setControl = setControl;
-	((InputInterface *) clazz->def->interface)->setLabel = setLabel;
-	((InputInterface *) clazz->def->interface)->setOrientation = setOrientation;
+	((InputInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((InputInterface *) clazz->interface)->setControl = setControl;
+	((InputInterface *) clazz->interface)->setLabel = setLabel;
+	((InputInterface *) clazz->interface)->setOrientation = setOrientation;
 }
 
 /**
@@ -210,19 +210,21 @@ static void initialize(Class *clazz) {
  * @memberof Input
  */
 Class *_Input(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Input";
-		clazz.superclass = _StackView();
-		clazz.instanceSize = sizeof(Input);
-		clazz.interfaceOffset = offsetof(Input, interface);
-		clazz.interfaceSize = sizeof(InputInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Input",
+			.superclass = _StackView(),
+			.instanceSize = sizeof(Input),
+			.interfaceOffset = offsetof(Input, interface),
+			.interfaceSize = sizeof(InputInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

@@ -280,18 +280,18 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->hash = hash;
-	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->hash = hash;
+	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((FontInterface *) clazz->def->interface)->cachedFont = cachedFont;
-	((FontInterface *) clazz->def->interface)->cacheFont = cacheFont;
-	((FontInterface *) clazz->def->interface)->clearCache = clearCache;
-	((FontInterface *) clazz->def->interface)->defaultFont = defaultFont;
-	((FontInterface *) clazz->def->interface)->initWithData = initWithData;
-	((FontInterface *) clazz->def->interface)->renderCharacters = renderCharacters;
-	((FontInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
-	((FontInterface *) clazz->def->interface)->sizeCharacters = sizeCharacters;
+	((FontInterface *) clazz->interface)->cachedFont = cachedFont;
+	((FontInterface *) clazz->interface)->cacheFont = cacheFont;
+	((FontInterface *) clazz->interface)->clearCache = clearCache;
+	((FontInterface *) clazz->interface)->defaultFont = defaultFont;
+	((FontInterface *) clazz->interface)->initWithData = initWithData;
+	((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
+	((FontInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
 
 	const int err = TTF_Init();
 	assert(err == 0);
@@ -319,20 +319,22 @@ static void destroy(Class *clazz) {
  * @memberof Font
  */
 Class *_Font(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Font";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(Font);
-		clazz.interfaceOffset = offsetof(Font, interface);
-		clazz.interfaceSize = sizeof(FontInterface);
-		clazz.initialize = initialize;
-		clazz.destroy = destroy;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Font",
+			.superclass = _Object(),
+			.instanceSize = sizeof(Font),
+			.interfaceOffset = offsetof(Font, interface),
+			.interfaceSize = sizeof(FontInterface),
+			.initialize = initialize,
+			.destroy = destroy,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

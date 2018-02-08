@@ -386,25 +386,25 @@ static Array *selectedOptions(const Select *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->def->interface)->stateDidChange = stateDidChange;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
 
-	((SelectInterface *) clazz->def->interface)->addOption = addOption;
-	((SelectInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((SelectInterface *) clazz->def->interface)->optionWithValue = optionWithValue;
-	((SelectInterface *) clazz->def->interface)->removeAllOptions = removeAllOptions;
-	((SelectInterface *) clazz->def->interface)->removeOption = removeOption;
-	((SelectInterface *) clazz->def->interface)->removeOptionWithValue = removeOptionWithValue;
-	((SelectInterface *) clazz->def->interface)->selectOption = selectOption;
-	((SelectInterface *) clazz->def->interface)->selectOptionWithValue = selectOptionWithValue;
-	((SelectInterface *) clazz->def->interface)->selectedOption = selectedOption;
-	((SelectInterface *) clazz->def->interface)->selectedOptions = selectedOptions;
+	((SelectInterface *) clazz->interface)->addOption = addOption;
+	((SelectInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((SelectInterface *) clazz->interface)->optionWithValue = optionWithValue;
+	((SelectInterface *) clazz->interface)->removeAllOptions = removeAllOptions;
+	((SelectInterface *) clazz->interface)->removeOption = removeOption;
+	((SelectInterface *) clazz->interface)->removeOptionWithValue = removeOptionWithValue;
+	((SelectInterface *) clazz->interface)->selectOption = selectOption;
+	((SelectInterface *) clazz->interface)->selectOptionWithValue = selectOptionWithValue;
+	((SelectInterface *) clazz->interface)->selectedOption = selectedOption;
+	((SelectInterface *) clazz->interface)->selectedOptions = selectedOptions;
 }
 
 /**
@@ -412,19 +412,21 @@ static void initialize(Class *clazz) {
  * @memberof Select
  */
 Class *_Select(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Select";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(Select);
-		clazz.interfaceOffset = offsetof(Select, interface);
-		clazz.interfaceSize = sizeof(SelectInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Select",
+			.superclass = _Control(),
+			.instanceSize = sizeof(Select),
+			.interfaceOffset = offsetof(Select, interface),
+			.interfaceSize = sizeof(SelectInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

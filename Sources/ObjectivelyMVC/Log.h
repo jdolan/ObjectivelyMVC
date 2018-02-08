@@ -38,22 +38,22 @@
 	(SDL_LogGetPriority(LOG_CATEGORY_MVC) <= priority)
 
 #define MVC_LogMessage(priority, fmt, ...) \
-	SDL_LogMessage(LOG_CATEGORY_MVC, priority, "%s:%s "fmt, _Class()->name, __func__, ## __VA_ARGS__)
+	SDL_LogMessage(LOG_CATEGORY_MVC, priority, "%s:%s "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
 
 #define MVC_LogVerbose(fmt, ...) \
-	SDL_LogVerbose(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->name, __func__, ## __VA_ARGS__)
+	SDL_LogVerbose(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
 
 #define MVC_LogDebug(fmt, ...) \
-	SDL_LogDebug(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->name, __func__, ## __VA_ARGS__)
+	SDL_LogDebug(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
 
 #define MVC_LogInfo(fmt, ...) \
-	SDL_LogInfo(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->name, __func__, ## __VA_ARGS__)
+	SDL_LogInfo(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
 
 #define MVC_LogWarn(fmt, ...) \
-	SDL_LogWarn(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->name, __func__, ## __VA_ARGS__)
+	SDL_LogWarn(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
 
 #define MVC_LogError(fmt, ...) \
-	SDL_LogError(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->name, __func__, ## __VA_ARGS__)
+	SDL_LogError(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
 
 #define MVC_LogCritical(fmt, ...) \
-	SDL_LogCritical(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->name, __func__, ## __VA_ARGS__)
+	SDL_LogCritical(LOG_CATEGORY_MVC, "%s:%s: "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
