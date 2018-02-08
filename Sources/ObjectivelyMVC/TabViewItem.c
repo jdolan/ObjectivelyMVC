@@ -76,7 +76,7 @@ static TabViewItem *initWithIdentifier(TabViewItem *self, const char *identifier
  */
 static TabViewItem *initWithView(TabViewItem *self, View *view) {
 
-	self = $(self, initWithIdentifier, view->identifier ?: _TabViewItem()->name);
+	self = $(self, initWithIdentifier, view->identifier ?: classnameof(self));
 	if (self) {
 		release(self->view);
 		self->view = retain(view);
@@ -107,11 +107,11 @@ static void setState(TabViewItem *self, int state) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((TabViewItemInterface *) clazz->def->interface)->initWithIdentifier = initWithIdentifier;
-	((TabViewItemInterface *) clazz->def->interface)->initWithView = initWithView;
-	((TabViewItemInterface *) clazz->def->interface)->setState = setState;
+	((TabViewItemInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
+	((TabViewItemInterface *) clazz->interface)->initWithView = initWithView;
+	((TabViewItemInterface *) clazz->interface)->setState = setState;
 }
 
 /**
@@ -119,19 +119,21 @@ static void initialize(Class *clazz) {
  * @memberof TabViewItem
  */
 Class *_TabViewItem(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "TabViewItem";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(TabViewItem);
-		clazz.interfaceOffset = offsetof(TabViewItem, interface);
-		clazz.interfaceSize = sizeof(TabViewItemInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "TabViewItem",
+			.superclass = _Object(),
+			.instanceSize = sizeof(TabViewItem),
+			.interfaceOffset = offsetof(TabViewItem, interface),
+			.interfaceSize = sizeof(TabViewItemInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

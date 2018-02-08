@@ -90,9 +90,9 @@ static String *description(const Object *self) {
 
 	View *this = (View *) self;
 
-	String *classNames = $((Array *) this->classNames, componentsJoinedByCharacters, ", ");
+	String *classNames = $((Object *) this->classNames, description);
 	String *description = str("%s@%p %s [%d, %d, %d, %d]",
-							  this->identifier ?: self->clazz->name,
+							  this->identifier ?: classnameof(self),
 							  self,
 							  classNames->chars,
 							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
@@ -324,12 +324,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  * @memberof View
  */
 static void becomeFirstResponder(View *self) {
-
-	if (self->window) {
-		$$(View, setFirstResponder, self->window, self);
-	} else {
-		MVC_LogWarn("%s: window is NULL\n", (self->identifier ?: self->object.clazz->name));
-	}
+	$$(View, setFirstResponder, self->window, self);
 }
 
 /**
@@ -1529,79 +1524,79 @@ static void willMoveToWindow(View *self, SDL_Window *window) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->description = description;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
 
-	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
-	((ViewInterface *) clazz->def->interface)->addClassName = addClassName;
-	((ViewInterface *) clazz->def->interface)->addSubview = addSubview;
-	((ViewInterface *) clazz->def->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
-	((ViewInterface *) clazz->def->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
-	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
-	((ViewInterface *) clazz->def->interface)->applyTheme = applyTheme;
-	((ViewInterface *) clazz->def->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
-	((ViewInterface *) clazz->def->interface)->attachStylesheet = attachStylesheet;
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->becomeFirstResponder = becomeFirstResponder;
-	((ViewInterface *) clazz->def->interface)->bind = _bind;
-	((ViewInterface *) clazz->def->interface)->bounds = bounds;
-	((ViewInterface *) clazz->def->interface)->bringSubviewToFront = bringSubviewToFront;
-	((ViewInterface *) clazz->def->interface)->clippingFrame = clippingFrame;
-	((ViewInterface *) clazz->def->interface)->containsPoint = containsPoint;
-	((ViewInterface *) clazz->def->interface)->depth = depth;
-	((ViewInterface *) clazz->def->interface)->descendantWithIdentifier = descendantWithIdentifier;
-	((ViewInterface *) clazz->def->interface)->detachStylesheet = detachStylesheet;
-	((ViewInterface *) clazz->def->interface)->didMoveToWindow = didMoveToWindow;
-	((ViewInterface *) clazz->def->interface)->didReceiveEvent = didReceiveEvent;
-	((ViewInterface *) clazz->def->interface)->draw = draw;
-	((ViewInterface *) clazz->def->interface)->enumerate = enumerate;
-	((ViewInterface *) clazz->def->interface)->enumerateAdjacent = enumerateAdjacent;
-	((ViewInterface *) clazz->def->interface)->enumerateAncestors = enumerateAncestors;
-	((ViewInterface *) clazz->def->interface)->enumerateDescendants = enumerateDescendants;
-	((ViewInterface *) clazz->def->interface)->enumerateSiblings = enumerateSiblings;
-	((ViewInterface *) clazz->def->interface)->enumerateSubviews = enumerateSubviews;
-	((ViewInterface *) clazz->def->interface)->enumerateSuperview = enumerateSuperview;
-	((ViewInterface *) clazz->def->interface)->firstResponder = firstResponder;
-	((ViewInterface *) clazz->def->interface)->hasClassName = hasClassName;
-	((ViewInterface *) clazz->def->interface)->hitTest = hitTest;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ViewInterface *) clazz->def->interface)->invalidateStyle = invalidateStyle;
-	((ViewInterface *) clazz->def->interface)->isDescendantOfView = isDescendantOfView;
-	((ViewInterface *) clazz->def->interface)->isFirstResponder = isFirstResponder;
-	((ViewInterface *) clazz->def->interface)->isVisible = isVisible;
-	((ViewInterface *) clazz->def->interface)->layoutIfNeeded = layoutIfNeeded;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
-	((ViewInterface *) clazz->def->interface)->moveToWindow = moveToWindow;
-	((ViewInterface *) clazz->def->interface)->removeAllClassNames = removeAllClassNames;
-	((ViewInterface *) clazz->def->interface)->removeAllSubviews = removeAllSubviews;
-	((ViewInterface *) clazz->def->interface)->removeClassName = removeClassName;
-	((ViewInterface *) clazz->def->interface)->removeFromSuperview = removeFromSuperview;
-	((ViewInterface *) clazz->def->interface)->removeSubview = removeSubview;
-	((ViewInterface *) clazz->def->interface)->render = render;
-	((ViewInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
-	((ViewInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
-	((ViewInterface *) clazz->def->interface)->renderFrame = renderFrame;
-	((ViewInterface *) clazz->def->interface)->replaceSubview = replaceSubview;
-	((ViewInterface *) clazz->def->interface)->resignFirstResponder = resignFirstResponder;
-	((ViewInterface *) clazz->def->interface)->resize = resize;
-	((ViewInterface *) clazz->def->interface)->respondToEvent = respondToEvent;
-	((ViewInterface *) clazz->def->interface)->setFirstResponder = setFirstResponder;
-	((ViewInterface *) clazz->def->interface)->size = size;
-	((ViewInterface *) clazz->def->interface)->sizeThatContains = sizeThatContains;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
-	((ViewInterface *) clazz->def->interface)->sizeToContain = sizeToContain;
-	((ViewInterface *) clazz->def->interface)->sizeToFit = sizeToFit;
-	((ViewInterface *) clazz->def->interface)->subviewWithIdentifier = subviewWithIdentifier;
-	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
-	((ViewInterface *) clazz->def->interface)->viewport = viewport;
-	((ViewInterface *) clazz->def->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
-	((ViewInterface *) clazz->def->interface)->viewWithData = viewWithData;
-	((ViewInterface *) clazz->def->interface)->viewWithDictionary = viewWithDictionary;
-	((ViewInterface *) clazz->def->interface)->viewWithCharacters = viewWithCharacters;
-	((ViewInterface *) clazz->def->interface)->visibleSubviews = visibleSubviews;
-	((ViewInterface *) clazz->def->interface)->willMoveToWindow = willMoveToWindow;
+	((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
+	((ViewInterface *) clazz->interface)->addClassName = addClassName;
+	((ViewInterface *) clazz->interface)->addSubview = addSubview;
+	((ViewInterface *) clazz->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
+	((ViewInterface *) clazz->interface)->ancestorWithIdentifier = ancestorWithIdentifier;
+	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+	((ViewInterface *) clazz->interface)->applyTheme = applyTheme;
+	((ViewInterface *) clazz->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
+	((ViewInterface *) clazz->interface)->attachStylesheet = attachStylesheet;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
+	((ViewInterface *) clazz->interface)->bind = _bind;
+	((ViewInterface *) clazz->interface)->bounds = bounds;
+	((ViewInterface *) clazz->interface)->bringSubviewToFront = bringSubviewToFront;
+	((ViewInterface *) clazz->interface)->clippingFrame = clippingFrame;
+	((ViewInterface *) clazz->interface)->containsPoint = containsPoint;
+	((ViewInterface *) clazz->interface)->depth = depth;
+	((ViewInterface *) clazz->interface)->descendantWithIdentifier = descendantWithIdentifier;
+	((ViewInterface *) clazz->interface)->detachStylesheet = detachStylesheet;
+	((ViewInterface *) clazz->interface)->didMoveToWindow = didMoveToWindow;
+	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
+	((ViewInterface *) clazz->interface)->draw = draw;
+	((ViewInterface *) clazz->interface)->enumerate = enumerate;
+	((ViewInterface *) clazz->interface)->enumerateAdjacent = enumerateAdjacent;
+	((ViewInterface *) clazz->interface)->enumerateAncestors = enumerateAncestors;
+	((ViewInterface *) clazz->interface)->enumerateDescendants = enumerateDescendants;
+	((ViewInterface *) clazz->interface)->enumerateSiblings = enumerateSiblings;
+	((ViewInterface *) clazz->interface)->enumerateSubviews = enumerateSubviews;
+	((ViewInterface *) clazz->interface)->enumerateSuperview = enumerateSuperview;
+	((ViewInterface *) clazz->interface)->firstResponder = firstResponder;
+	((ViewInterface *) clazz->interface)->hasClassName = hasClassName;
+	((ViewInterface *) clazz->interface)->hitTest = hitTest;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ViewInterface *) clazz->interface)->invalidateStyle = invalidateStyle;
+	((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
+	((ViewInterface *) clazz->interface)->isFirstResponder = isFirstResponder;
+	((ViewInterface *) clazz->interface)->isVisible = isVisible;
+	((ViewInterface *) clazz->interface)->layoutIfNeeded = layoutIfNeeded;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
+	((ViewInterface *) clazz->interface)->moveToWindow = moveToWindow;
+	((ViewInterface *) clazz->interface)->removeAllClassNames = removeAllClassNames;
+	((ViewInterface *) clazz->interface)->removeAllSubviews = removeAllSubviews;
+	((ViewInterface *) clazz->interface)->removeClassName = removeClassName;
+	((ViewInterface *) clazz->interface)->removeFromSuperview = removeFromSuperview;
+	((ViewInterface *) clazz->interface)->removeSubview = removeSubview;
+	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((ViewInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
+	((ViewInterface *) clazz->interface)->renderFrame = renderFrame;
+	((ViewInterface *) clazz->interface)->replaceSubview = replaceSubview;
+	((ViewInterface *) clazz->interface)->resignFirstResponder = resignFirstResponder;
+	((ViewInterface *) clazz->interface)->resize = resize;
+	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->interface)->setFirstResponder = setFirstResponder;
+	((ViewInterface *) clazz->interface)->size = size;
+	((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->interface)->sizeToContain = sizeToContain;
+	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
+	((ViewInterface *) clazz->interface)->subviewWithIdentifier = subviewWithIdentifier;
+	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
+	((ViewInterface *) clazz->interface)->viewport = viewport;
+	((ViewInterface *) clazz->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
+	((ViewInterface *) clazz->interface)->viewWithData = viewWithData;
+	((ViewInterface *) clazz->interface)->viewWithDictionary = viewWithDictionary;
+	((ViewInterface *) clazz->interface)->viewWithCharacters = viewWithCharacters;
+	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
+	((ViewInterface *) clazz->interface)->willMoveToWindow = willMoveToWindow;
 }
 
 /**
@@ -1609,19 +1604,21 @@ static void initialize(Class *clazz) {
  * @memberof View
  */
 Class *_View(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "View";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(View);
-		clazz.interfaceOffset = offsetof(View, interface);
-		clazz.interfaceSize = sizeof(ViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "View",
+			.superclass = _Object(),
+			.instanceSize = sizeof(View),
+			.interfaceOffset = offsetof(View, interface),
+			.interfaceSize = sizeof(ViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

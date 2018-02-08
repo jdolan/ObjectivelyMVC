@@ -246,13 +246,13 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->def->interface)->applyStyle = applyStyle;
-	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+	((ViewInterface *) clazz->interface)->init = init;
 
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->sizeThatFits = sizeThatFits;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
-	((StackViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((StackViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 /**
@@ -260,19 +260,21 @@ static void initialize(Class *clazz) {
  * @memberof StackView
  */
 Class *_StackView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "StackView";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(StackView);
-		clazz.interfaceOffset = offsetof(StackView, interface);
-		clazz.interfaceSize = sizeof(StackViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "StackView",
+			.superclass = _View(),
+			.instanceSize = sizeof(StackView),
+			.interfaceOffset = offsetof(StackView, interface),
+			.interfaceSize = sizeof(StackViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

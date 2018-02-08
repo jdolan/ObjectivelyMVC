@@ -67,9 +67,9 @@ static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) 
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((TableCellViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((TableCellViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 /**
@@ -77,19 +77,21 @@ static void initialize(Class *clazz) {
  * @memberof TableCellView
  */
 Class *_TableCellView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "TableCellView";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(TableCellView);
-		clazz.interfaceOffset = offsetof(TableCellView, interface);
-		clazz.interfaceSize = sizeof(TableCellViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "TableCellView",
+			.superclass = _View(),
+			.instanceSize = sizeof(TableCellView),
+			.interfaceOffset = offsetof(TableCellView, interface),
+			.interfaceSize = sizeof(TableCellViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

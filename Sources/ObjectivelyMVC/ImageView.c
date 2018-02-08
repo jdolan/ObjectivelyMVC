@@ -213,17 +213,17 @@ static void setImageWithSurface(ImageView *self, SDL_Surface *surface) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->render = render;
-	((ViewInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->render = render;
+	((ViewInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
 
-	((ImageViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ImageViewInterface *) clazz->def->interface)->initWithImage = initWithImage;
-	((ImageViewInterface *) clazz->def->interface)->setImage = setImage;
-	((ImageViewInterface *) clazz->def->interface)->setImageWithSurface = setImageWithSurface;
+	((ImageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ImageViewInterface *) clazz->interface)->initWithImage = initWithImage;
+	((ImageViewInterface *) clazz->interface)->setImage = setImage;
+	((ImageViewInterface *) clazz->interface)->setImageWithSurface = setImageWithSurface;
 }
 
 /**
@@ -231,19 +231,21 @@ static void initialize(Class *clazz) {
  * @memberof ImageView
  */
 Class *_ImageView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "ImageView";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(ImageView);
-		clazz.interfaceOffset = offsetof(ImageView, interface);
-		clazz.interfaceSize = sizeof(ImageViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "ImageView",
+			.superclass = _View(),
+			.instanceSize = sizeof(ImageView),
+			.interfaceOffset = offsetof(ImageView, interface),
+			.interfaceSize = sizeof(ImageViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

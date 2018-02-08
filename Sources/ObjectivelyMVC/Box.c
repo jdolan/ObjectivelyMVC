@@ -122,13 +122,13 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
-	((BoxInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((BoxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 /**
@@ -136,19 +136,21 @@ static void initialize(Class *clazz) {
  * @memberof Box
  */
 Class *_Box(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Box";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(Box);
-		clazz.interfaceOffset = offsetof(Box, interface);
-		clazz.interfaceSize = sizeof(BoxInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Box",
+			.superclass = _View(),
+			.instanceSize = sizeof(Box),
+			.interfaceOffset = offsetof(Box, interface),
+			.interfaceSize = sizeof(BoxInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

@@ -70,9 +70,9 @@ static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tabl
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->def->interface)->render = render;
+	((ViewInterface *) clazz->interface)->render = render;
 
-	((TableHeaderViewInterface *) clazz->def->interface)->initWithTableView = initWithTableView;
+	((TableHeaderViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
 }
 
 /**
@@ -80,19 +80,21 @@ static void initialize(Class *clazz) {
  * @memberof TableHeaderView
  */
 Class *_TableHeaderView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "TableHeaderView";
-		clazz.superclass = _TableRowView();
-		clazz.instanceSize = sizeof(TableHeaderView);
-		clazz.interfaceOffset = offsetof(TableHeaderView, interface);
-		clazz.interfaceSize = sizeof(TableHeaderViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "TableHeaderView",
+			.superclass = _TableRowView(),
+			.instanceSize = sizeof(TableHeaderView),
+			.interfaceOffset = offsetof(TableHeaderView, interface),
+			.interfaceSize = sizeof(TableHeaderViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

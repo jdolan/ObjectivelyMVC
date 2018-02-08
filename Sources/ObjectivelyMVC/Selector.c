@@ -121,7 +121,7 @@ static int specificity(const Selector *selector) {
 								break;
 							}
 							specificity += 1;
-							clazz = clazz->superclass;
+							clazz = clazz->def.superclass;
 						}
 						if (clazz != _View()) {
 							MVC_LogError("Class `%s` in Selector `%s` does not extend View\n",
@@ -378,17 +378,17 @@ static Set *_select(const Selector *self, View *view) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->description = description;
-	((ObjectInterface *) clazz->def->interface)->hash = hash;
-	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
+	((ObjectInterface *) clazz->interface)->hash = hash;
+	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((SelectorInterface *) clazz->def->interface)->enumerateSelection = enumerateSelection;
-	((SelectorInterface *) clazz->def->interface)->compareTo = compareTo;
-	((SelectorInterface *) clazz->def->interface)->initWithRule = initWithRule;
-	((SelectorInterface *) clazz->def->interface)->matchesView = matchesView;
-	((SelectorInterface *) clazz->def->interface)->parse = parse;
-	((SelectorInterface *) clazz->def->interface)->select = _select;
+	((SelectorInterface *) clazz->interface)->enumerateSelection = enumerateSelection;
+	((SelectorInterface *) clazz->interface)->compareTo = compareTo;
+	((SelectorInterface *) clazz->interface)->initWithRule = initWithRule;
+	((SelectorInterface *) clazz->interface)->matchesView = matchesView;
+	((SelectorInterface *) clazz->interface)->parse = parse;
+	((SelectorInterface *) clazz->interface)->select = _select;
 }
 
 /**
@@ -396,19 +396,21 @@ static void initialize(Class *clazz) {
  * @memberof Selector
  */
 Class *_Selector(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Selector";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(Selector);
-		clazz.interfaceOffset = offsetof(Selector, interface);
-		clazz.interfaceSize = sizeof(SelectorInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Selector",
+			.superclass = _Object(),
+			.instanceSize = sizeof(Selector),
+			.interfaceOffset = offsetof(Selector, interface),
+			.interfaceSize = sizeof(SelectorInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

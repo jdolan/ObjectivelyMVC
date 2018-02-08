@@ -575,32 +575,32 @@ static void setSortColumn(TableView *self, TableColumn *column) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->sizeThatContains = sizeThatContains;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((TableViewInterface *) clazz->def->interface)->addColumn = addColumn;
-	((TableViewInterface *) clazz->def->interface)->addColumnWithIdentifier = addColumnWithIdentifier;
-	((TableViewInterface *) clazz->def->interface)->columnAtPoint = columnAtPoint;
-	((TableViewInterface *) clazz->def->interface)->columnWithIdentifier = columnWithIdentifier;
-	((TableViewInterface *) clazz->def->interface)->deselectAll = deselectAll;
-	((TableViewInterface *) clazz->def->interface)->deselectRowAtIndex = deselectRowAtIndex;
-	((TableViewInterface *) clazz->def->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
-	((TableViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((TableViewInterface *) clazz->def->interface)->naturalSize = naturalSize;
-	((TableViewInterface *) clazz->def->interface)->reloadData = reloadData;
-	((TableViewInterface *) clazz->def->interface)->removeColumn = removeColumn;
-	((TableViewInterface *) clazz->def->interface)->rowAtPoint = rowAtPoint;
-	((TableViewInterface *) clazz->def->interface)->selectedRowIndexes = selectedRowIndexes;
-	((TableViewInterface *) clazz->def->interface)->selectAll = selectAll;
-	((TableViewInterface *) clazz->def->interface)->selectRowAtIndex = selectRowAtIndex;
-	((TableViewInterface *) clazz->def->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
-	((TableViewInterface *) clazz->def->interface)->setSortColumn = setSortColumn;
+	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
+	((TableViewInterface *) clazz->interface)->addColumnWithIdentifier = addColumnWithIdentifier;
+	((TableViewInterface *) clazz->interface)->columnAtPoint = columnAtPoint;
+	((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;
+	((TableViewInterface *) clazz->interface)->deselectAll = deselectAll;
+	((TableViewInterface *) clazz->interface)->deselectRowAtIndex = deselectRowAtIndex;
+	((TableViewInterface *) clazz->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
+	((TableViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TableViewInterface *) clazz->interface)->naturalSize = naturalSize;
+	((TableViewInterface *) clazz->interface)->reloadData = reloadData;
+	((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
+	((TableViewInterface *) clazz->interface)->rowAtPoint = rowAtPoint;
+	((TableViewInterface *) clazz->interface)->selectedRowIndexes = selectedRowIndexes;
+	((TableViewInterface *) clazz->interface)->selectAll = selectAll;
+	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
+	((TableViewInterface *) clazz->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
+	((TableViewInterface *) clazz->interface)->setSortColumn = setSortColumn;
 }
 
 /**
@@ -608,19 +608,21 @@ static void initialize(Class *clazz) {
  * @memberof TableView
  */
 Class *_TableView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "TableView";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(TableView);
-		clazz.interfaceOffset = offsetof(TableView, interface);
-		clazz.interfaceSize = sizeof(TableViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "TableView",
+			.superclass = _Control(),
+			.instanceSize = sizeof(TableView),
+			.interfaceOffset = offsetof(TableView, interface),
+			.interfaceSize = sizeof(TableViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

@@ -200,10 +200,10 @@ static DebugViewController *init(DebugViewController *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
+	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
 
-	((DebugViewControllerInterface *) clazz->def->interface)->debug = debug;
-	((DebugViewControllerInterface *) clazz->def->interface)->init = init;
+	((DebugViewControllerInterface *) clazz->interface)->debug = debug;
+	((DebugViewControllerInterface *) clazz->interface)->init = init;
 }
 
 /**
@@ -211,19 +211,21 @@ static void initialize(Class *clazz) {
  * @memberof DebugViewController
  */
 Class *_DebugViewController(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "DebugViewController";
-		clazz.superclass = _ViewController();
-		clazz.instanceSize = sizeof(DebugViewController);
-		clazz.interfaceOffset = offsetof(DebugViewController, interface);
-		clazz.interfaceSize = sizeof(DebugViewControllerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "DebugViewController",
+			.superclass = _ViewController(),
+			.instanceSize = sizeof(DebugViewController),
+			.interfaceOffset = offsetof(DebugViewController, interface),
+			.interfaceSize = sizeof(DebugViewControllerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

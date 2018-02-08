@@ -181,16 +181,16 @@ static void setRGBColor(HueColorPicker *self, const SDL_Color *color) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->updateBindings = updateBindings;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 
-	((HueColorPickerInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((HueColorPickerInterface *) clazz->def->interface)->rgbColor = rgbColor;
-	((HueColorPickerInterface *) clazz->def->interface)->setColor = setColor;
-	((HueColorPickerInterface *) clazz->def->interface)->setRGBColor = setRGBColor;
+	((HueColorPickerInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((HueColorPickerInterface *) clazz->interface)->rgbColor = rgbColor;
+	((HueColorPickerInterface *) clazz->interface)->setColor = setColor;
+	((HueColorPickerInterface *) clazz->interface)->setRGBColor = setRGBColor;
 }
 
 /**
@@ -198,19 +198,21 @@ static void initialize(Class *clazz) {
  * @memberof HueColorPicker
  */
 Class *_HueColorPicker(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "HueColorPicker";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(HueColorPicker);
-		clazz.interfaceOffset = offsetof(HueColorPicker, interface);
-		clazz.interfaceSize = sizeof(HueColorPickerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "HueColorPicker",
+			.superclass = _Control(),
+			.instanceSize = sizeof(HueColorPicker),
+			.interfaceOffset = offsetof(HueColorPicker, interface),
+			.interfaceSize = sizeof(HueColorPickerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

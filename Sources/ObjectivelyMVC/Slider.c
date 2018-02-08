@@ -273,19 +273,19 @@ static void setValue(Slider *self, double value) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->render = render;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->render = render;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((SliderInterface *) clazz->def->interface)->formatLabel = formatLabel;
-	((SliderInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((SliderInterface *) clazz->def->interface)->setValue = setValue;
-	((SliderInterface *) clazz->def->interface)->setLabelFormat = setLabelFormat;
+	((SliderInterface *) clazz->interface)->formatLabel = formatLabel;
+	((SliderInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((SliderInterface *) clazz->interface)->setValue = setValue;
+	((SliderInterface *) clazz->interface)->setLabelFormat = setLabelFormat;
 }
 
 /**
@@ -293,19 +293,21 @@ static void initialize(Class *clazz) {
  * @memberof Slider
  */
 Class *_Slider(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Slider";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(Slider);
-		clazz.interfaceOffset = offsetof(Slider, interface);
-		clazz.interfaceSize = sizeof(SliderInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Slider",
+			.superclass = _Control(),
+			.instanceSize = sizeof(Slider),
+			.interfaceOffset = offsetof(Slider, interface),
+			.interfaceSize = sizeof(SliderInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

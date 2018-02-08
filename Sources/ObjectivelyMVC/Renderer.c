@@ -289,20 +289,20 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
  */
 static void initialize(Class *clazz) {
 	
-	((RendererInterface *) clazz->def->interface)->beginFrame = beginFrame;
-	((RendererInterface *) clazz->def->interface)->createTexture = createTexture;
-	((RendererInterface *) clazz->def->interface)->drawLine = drawLine;
-	((RendererInterface *) clazz->def->interface)->drawLines = drawLines;
-	((RendererInterface *) clazz->def->interface)->drawRect = drawRect;
-	((RendererInterface *) clazz->def->interface)->drawRectFilled = drawRectFilled;
-	((RendererInterface *) clazz->def->interface)->drawTexture = drawTexture;
-	((RendererInterface *) clazz->def->interface)->drawView = drawView;
-	((RendererInterface *) clazz->def->interface)->endFrame = endFrame;
-	((RendererInterface *) clazz->def->interface)->init = init;
-	((RendererInterface *) clazz->def->interface)->renderDeviceDidReset = renderDeviceDidReset;
-	((RendererInterface *) clazz->def->interface)->renderDeviceWillReset = renderDeviceWillReset;
-	((RendererInterface *) clazz->def->interface)->setClippingFrame = setClippingFrame;
-	((RendererInterface *) clazz->def->interface)->setDrawColor = setDrawColor;
+	((RendererInterface *) clazz->interface)->beginFrame = beginFrame;
+	((RendererInterface *) clazz->interface)->createTexture = createTexture;
+	((RendererInterface *) clazz->interface)->drawLine = drawLine;
+	((RendererInterface *) clazz->interface)->drawLines = drawLines;
+	((RendererInterface *) clazz->interface)->drawRect = drawRect;
+	((RendererInterface *) clazz->interface)->drawRectFilled = drawRectFilled;
+	((RendererInterface *) clazz->interface)->drawTexture = drawTexture;
+	((RendererInterface *) clazz->interface)->drawView = drawView;
+	((RendererInterface *) clazz->interface)->endFrame = endFrame;
+	((RendererInterface *) clazz->interface)->init = init;
+	((RendererInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+	((RendererInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
+	((RendererInterface *) clazz->interface)->setClippingFrame = setClippingFrame;
+	((RendererInterface *) clazz->interface)->setDrawColor = setDrawColor;
 }
 
 /**
@@ -310,19 +310,21 @@ static void initialize(Class *clazz) {
  * @memberof Renderer
  */
 Class *_Renderer(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Renderer";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(Renderer);
-		clazz.interfaceOffset = offsetof(Renderer, interface);
-		clazz.interfaceSize = sizeof(RendererInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Renderer",
+			.superclass = _Object(),
+			.instanceSize = sizeof(Renderer),
+			.interfaceOffset = offsetof(Renderer, interface),
+			.interfaceSize = sizeof(RendererInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

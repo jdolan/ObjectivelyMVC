@@ -134,13 +134,13 @@ static ViewController *topViewController(const NavigationViewController *self) {
  */
 static void initialize(Class *clazz) {
 
-	((NavigationViewControllerInterface *) clazz->def->interface)->init = init;
-	((NavigationViewControllerInterface *) clazz->def->interface)->pushViewController = pushViewController;
-	((NavigationViewControllerInterface *) clazz->def->interface)->popToRootViewController = popToRootViewController;
-	((NavigationViewControllerInterface *) clazz->def->interface)->popToViewController = popToViewController;
-	((NavigationViewControllerInterface *) clazz->def->interface)->popViewController = popViewController;
-	((NavigationViewControllerInterface *) clazz->def->interface)->rootViewController = rootViewController;
-	((NavigationViewControllerInterface *) clazz->def->interface)->topViewController = topViewController;
+	((NavigationViewControllerInterface *) clazz->interface)->init = init;
+	((NavigationViewControllerInterface *) clazz->interface)->pushViewController = pushViewController;
+	((NavigationViewControllerInterface *) clazz->interface)->popToRootViewController = popToRootViewController;
+	((NavigationViewControllerInterface *) clazz->interface)->popToViewController = popToViewController;
+	((NavigationViewControllerInterface *) clazz->interface)->popViewController = popViewController;
+	((NavigationViewControllerInterface *) clazz->interface)->rootViewController = rootViewController;
+	((NavigationViewControllerInterface *) clazz->interface)->topViewController = topViewController;
 }
 
 /**
@@ -148,19 +148,21 @@ static void initialize(Class *clazz) {
  * @memberof NavigationViewController
  */
 Class *_NavigationViewController(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "NavigationViewController";
-		clazz.superclass = _ViewController();
-		clazz.instanceSize = sizeof(NavigationViewController);
-		clazz.interfaceOffset = offsetof(NavigationViewController, interface);
-		clazz.interfaceSize = sizeof(NavigationViewControllerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "NavigationViewController",
+			.superclass = _ViewController(),
+			.instanceSize = sizeof(NavigationViewController),
+			.interfaceOffset = offsetof(NavigationViewController, interface),
+			.interfaceSize = sizeof(NavigationViewControllerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

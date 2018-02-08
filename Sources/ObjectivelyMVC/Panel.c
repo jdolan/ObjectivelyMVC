@@ -224,16 +224,16 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((PanelInterface *) clazz->def->interface)->contentSize = contentSize;
-	((PanelInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((PanelInterface *) clazz->interface)->contentSize = contentSize;
+	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
 	_resize = $(alloc(Image), initWithBytes, resize_png, resize_png_len);
 }
@@ -250,20 +250,22 @@ static void destroy(Class *clazz) {
  * @memberof Panel
  */
 Class *_Panel(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Panel";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(Panel);
-		clazz.interfaceOffset = offsetof(Panel, interface);
-		clazz.interfaceSize = sizeof(PanelInterface);
-		clazz.initialize = initialize;
-		clazz.destroy = destroy;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Panel",
+			.superclass = _Control(),
+			.instanceSize = sizeof(Panel),
+			.interfaceOffset = offsetof(Panel, interface),
+			.interfaceSize = sizeof(PanelInterface),
+			.initialize = initialize,
+			.destroy = destroy,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

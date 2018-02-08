@@ -160,13 +160,13 @@ static Theme *theme(SDL_Window *window) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ThemeInterface *) clazz->def->interface)->addStylesheet = addStylesheet;
-	((ThemeInterface *) clazz->def->interface)->computeStyle = computeStyle;
-	((ThemeInterface *) clazz->def->interface)->init = init;
-	((ThemeInterface *) clazz->def->interface)->removeStylesheet = removeStylesheet;
-	((ThemeInterface *) clazz->def->interface)->theme = theme;
+	((ThemeInterface *) clazz->interface)->addStylesheet = addStylesheet;
+	((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
+	((ThemeInterface *) clazz->interface)->init = init;
+	((ThemeInterface *) clazz->interface)->removeStylesheet = removeStylesheet;
+	((ThemeInterface *) clazz->interface)->theme = theme;
 }
 
 /**
@@ -174,19 +174,21 @@ static void initialize(Class *clazz) {
  * @memberof Theme
  */
 Class *_Theme(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Theme";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(Theme);
-		clazz.interfaceOffset = offsetof(Theme, interface);
-		clazz.interfaceSize = sizeof(ThemeInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Theme",
+			.superclass = _Object(),
+			.instanceSize = sizeof(Theme),
+			.interfaceOffset = offsetof(Theme, interface),
+			.interfaceSize = sizeof(ThemeInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

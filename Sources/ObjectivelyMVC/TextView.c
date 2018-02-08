@@ -329,16 +329,16 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
-	((ViewInterface *) clazz->def->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->def->interface)->render = render;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
+	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->render = render;
 
-	((ControlInterface *) clazz->def->interface)->captureEvent = captureEvent;
+	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((TextViewInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
+	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 /**
@@ -346,19 +346,21 @@ static void initialize(Class *clazz) {
  * @memberof TextView
  */
 Class *_TextView(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "TextView";
-		clazz.superclass = _Control();
-		clazz.instanceSize = sizeof(TextView);
-		clazz.interfaceOffset = offsetof(TextView, interface);
-		clazz.interfaceSize = sizeof(TextViewInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "TextView",
+			.superclass = _Control(),
+			.instanceSize = sizeof(TextView),
+			.interfaceOffset = offsetof(TextView, interface),
+			.interfaceSize = sizeof(TextViewInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

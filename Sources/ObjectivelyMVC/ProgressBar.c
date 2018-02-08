@@ -189,16 +189,16 @@ static void setValue(ProgressBar *self, double value) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->def->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->def->interface)->init = init;
+	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->init = init;
 
-	((ProgressBarInterface *) clazz->def->interface)->formatLabel = formatLabel;
-	((ProgressBarInterface *) clazz->def->interface)->initWithFrame = initWithFrame;
-	((ProgressBarInterface *) clazz->def->interface)->progress = progress;
-	((ProgressBarInterface *) clazz->def->interface)->setLabelFormat = setLabelFormat;
-	((ProgressBarInterface *) clazz->def->interface)->setValue = setValue;
+	((ProgressBarInterface *) clazz->interface)->formatLabel = formatLabel;
+	((ProgressBarInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((ProgressBarInterface *) clazz->interface)->progress = progress;
+	((ProgressBarInterface *) clazz->interface)->setLabelFormat = setLabelFormat;
+	((ProgressBarInterface *) clazz->interface)->setValue = setValue;
 }
 
 /**
@@ -206,19 +206,21 @@ static void initialize(Class *clazz) {
  * @memberof ProgressBar
  */
 Class *_ProgressBar(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "ProgressBar";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(ProgressBar);
-		clazz.interfaceOffset = offsetof(ProgressBar, interface);
-		clazz.interfaceSize = sizeof(ProgressBarInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "ProgressBar",
+			.superclass = _View(),
+			.instanceSize = sizeof(ProgressBar),
+			.interfaceOffset = offsetof(ProgressBar, interface),
+			.interfaceSize = sizeof(ProgressBarInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

@@ -50,7 +50,7 @@ static String *description(const Object *self) {
 
 	String *classNames = $((Array *) this->classNames, componentsJoinedByCharacters, ", ");
 	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
-							  this->identifier ?: self->clazz->name,
+							  this->identifier ?: classnameof(self),
 							  self,
 							  ((Option *) self)->title->text,
 							  classNames->chars,
@@ -133,14 +133,14 @@ static void setSelected(Option *self, _Bool isSelected) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->description = description;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
 
-	((ViewInterface *) clazz->def->interface)->acceptsFirstResponder = acceptsFirstResponder;
-	((ViewInterface *) clazz->def->interface)->matchesSelector = matchesSelector;
+	((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
+	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
 
-	((OptionInterface *) clazz->def->interface)->initWithTitle = initWithTitle;
-	((OptionInterface *) clazz->def->interface)->setSelected = setSelected;
+	((OptionInterface *) clazz->interface)->initWithTitle = initWithTitle;
+	((OptionInterface *) clazz->interface)->setSelected = setSelected;
 
 }
 
@@ -149,19 +149,21 @@ static void initialize(Class *clazz) {
  * @memberof Option
  */
 Class *_Option(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Option";
-		clazz.superclass = _View();
-		clazz.instanceSize = sizeof(Option);
-		clazz.interfaceOffset = offsetof(Option, interface);
-		clazz.interfaceSize = sizeof(OptionInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Option",
+			.superclass = _View(),
+			.instanceSize = sizeof(Option),
+			.interfaceOffset = offsetof(Option, interface),
+			.interfaceSize = sizeof(OptionInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

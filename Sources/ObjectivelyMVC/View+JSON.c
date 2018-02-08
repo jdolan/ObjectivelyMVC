@@ -229,7 +229,7 @@ static void bindView(const Inlet *inlet, ident obj) {
 			if (c == _View()) {
 				break;
 			}
-			c = c->superclass;
+			c = c->def.superclass;
 		}
 		assert(c);
 

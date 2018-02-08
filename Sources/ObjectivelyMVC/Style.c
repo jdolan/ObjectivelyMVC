@@ -499,31 +499,31 @@ static void removeAllAttributes(Style *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->def->interface)->description = description;
-	((ObjectInterface *) clazz->def->interface)->hash = hash;
-	((ObjectInterface *) clazz->def->interface)->isEqual = isEqual;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->description = description;
+	((ObjectInterface *) clazz->interface)->hash = hash;
+	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((StyleInterface *) clazz->def->interface)->addAttribute = addAttribute;
-	((StyleInterface *) clazz->def->interface)->addAttributes = addAttributes;
-	((StyleInterface *) clazz->def->interface)->addBoolAttribute = addBoolAttribute;
-	((StyleInterface *) clazz->def->interface)->addCharactersAttribute = addCharactersAttribute;
-	((StyleInterface *) clazz->def->interface)->addColorAttribute = addColorAttribute;
-	((StyleInterface *) clazz->def->interface)->addDoubleAttribute = addDoubleAttribute;
-	((StyleInterface *) clazz->def->interface)->addEnumAttribute = addEnumAttribute;
-	((StyleInterface *) clazz->def->interface)->addFloatAttribute = addFloatAttribute;
-	((StyleInterface *) clazz->def->interface)->addIntegerAttribute = addIntegerAttribute;
-	((StyleInterface *) clazz->def->interface)->addPointAttribute = addPointAttribute;
-	((StyleInterface *) clazz->def->interface)->addRectangleAttribute = addRectangleAttribute;
-	((StyleInterface *) clazz->def->interface)->addSelector = addSelector;
-	((StyleInterface *) clazz->def->interface)->addSizeAttribute = addSizeAttribute;
-	((StyleInterface *) clazz->def->interface)->attributeValue = attributeValue;
-	((StyleInterface *) clazz->def->interface)->initWithAttributes = initWithAttributes;
-	((StyleInterface *) clazz->def->interface)->initWithRules = initWithRules;
-	((StyleInterface *) clazz->def->interface)->isComputedEqual = isComputedEqual;
-	((StyleInterface *) clazz->def->interface)->parse = parse;
-	((StyleInterface *) clazz->def->interface)->removeAllAttributes = removeAllAttributes;
-	((StyleInterface *) clazz->def->interface)->removeAttribute = removeAttribute;
+	((StyleInterface *) clazz->interface)->addAttribute = addAttribute;
+	((StyleInterface *) clazz->interface)->addAttributes = addAttributes;
+	((StyleInterface *) clazz->interface)->addBoolAttribute = addBoolAttribute;
+	((StyleInterface *) clazz->interface)->addCharactersAttribute = addCharactersAttribute;
+	((StyleInterface *) clazz->interface)->addColorAttribute = addColorAttribute;
+	((StyleInterface *) clazz->interface)->addDoubleAttribute = addDoubleAttribute;
+	((StyleInterface *) clazz->interface)->addEnumAttribute = addEnumAttribute;
+	((StyleInterface *) clazz->interface)->addFloatAttribute = addFloatAttribute;
+	((StyleInterface *) clazz->interface)->addIntegerAttribute = addIntegerAttribute;
+	((StyleInterface *) clazz->interface)->addPointAttribute = addPointAttribute;
+	((StyleInterface *) clazz->interface)->addRectangleAttribute = addRectangleAttribute;
+	((StyleInterface *) clazz->interface)->addSelector = addSelector;
+	((StyleInterface *) clazz->interface)->addSizeAttribute = addSizeAttribute;
+	((StyleInterface *) clazz->interface)->attributeValue = attributeValue;
+	((StyleInterface *) clazz->interface)->initWithAttributes = initWithAttributes;
+	((StyleInterface *) clazz->interface)->initWithRules = initWithRules;
+	((StyleInterface *) clazz->interface)->isComputedEqual = isComputedEqual;
+	((StyleInterface *) clazz->interface)->parse = parse;
+	((StyleInterface *) clazz->interface)->removeAllAttributes = removeAllAttributes;
+	((StyleInterface *) clazz->interface)->removeAttribute = removeAttribute;
 }
 
 /**
@@ -531,19 +531,21 @@ static void initialize(Class *clazz) {
  * @memberof Style
  */
 Class *_Style(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "Style";
-		clazz.superclass = _Object();
-		clazz.instanceSize = sizeof(Style);
-		clazz.interfaceOffset = offsetof(Style, interface);
-		clazz.interfaceSize = sizeof(StyleInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "Style",
+			.superclass = _Object(),
+			.instanceSize = sizeof(Style),
+			.interfaceOffset = offsetof(Style, interface),
+			.interfaceSize = sizeof(StyleInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

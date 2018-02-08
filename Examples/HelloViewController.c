@@ -329,9 +329,9 @@ static HelloViewController *init(HelloViewController *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
+	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
 
-	((HelloViewControllerInterface *) clazz->def->interface)->init = init;
+	((HelloViewControllerInterface *) clazz->interface)->init = init;
 }
 
 /**
@@ -339,19 +339,21 @@ static void initialize(Class *clazz) {
  * @memberof HelloViewController
  */
 Class *_HelloViewController(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "HelloViewController";
-		clazz.superclass = _ViewController();
-		clazz.instanceSize = sizeof(HelloViewController);
-		clazz.interfaceOffset = offsetof(HelloViewController, interface);
-		clazz.interfaceSize = sizeof(HelloViewControllerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "HelloViewController",
+			.superclass = _ViewController(),
+			.instanceSize = sizeof(HelloViewController),
+			.interfaceOffset = offsetof(HelloViewController, interface),
+			.interfaceSize = sizeof(HelloViewControllerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class

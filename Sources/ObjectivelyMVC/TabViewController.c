@@ -131,14 +131,14 @@ static TabViewItem *tabForViewController(const TabViewController *self, const Vi
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->def->interface)->dealloc = dealloc;
+	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewControllerInterface *) clazz->def->interface)->loadView = loadView;
-	((ViewControllerInterface *) clazz->def->interface)->addChildViewController = addChildViewController;
-	((ViewControllerInterface *) clazz->def->interface)->removeChildViewController = removeChildViewController;
+	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
+	((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
+	((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
 
-	((TabViewControllerInterface *) clazz->def->interface)->init = init;
-	((TabViewControllerInterface *) clazz->def->interface)->tabForViewController = tabForViewController;
+	((TabViewControllerInterface *) clazz->interface)->init = init;
+	((TabViewControllerInterface *) clazz->interface)->tabForViewController = tabForViewController;
 }
 
 /**
@@ -146,19 +146,21 @@ static void initialize(Class *clazz) {
  * @memberof TabViewController
  */
 Class *_TabViewController(void) {
-	static Class clazz;
+	static Class *clazz;
 	static Once once;
 
 	do_once(&once, {
-		clazz.name = "TabViewController";
-		clazz.superclass = _ViewController();
-		clazz.instanceSize = sizeof(TabViewController);
-		clazz.interfaceOffset = offsetof(TabViewController, interface);
-		clazz.interfaceSize = sizeof(TabViewControllerInterface);
-		clazz.initialize = initialize;
+		clazz = _initialize(&(const ClassDef) {
+			.name = "TabViewController",
+			.superclass = _ViewController(),
+			.instanceSize = sizeof(TabViewController),
+			.interfaceOffset = offsetof(TabViewController, interface),
+			.interfaceSize = sizeof(TabViewControllerInterface),
+			.initialize = initialize,
+		});
 	});
 
-	return &clazz;
+	return clazz;
 }
 
 #undef _Class
