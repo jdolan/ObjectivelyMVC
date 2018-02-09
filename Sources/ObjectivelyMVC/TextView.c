@@ -51,6 +51,23 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @fn void View::applyStyle(View *self, const Style *style)
+ * @memberof View
+ */
+static void applyStyle(View *self, const Style *style) {
+
+	super(View, self, applyStyle, style);
+
+	TextView *this = (TextView *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("editable", InletTypeBool, &this->isEditable, NULL)
+	);
+
+	$(self, bind, inlets, style->attributes);
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -60,8 +77,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	TextView *this = (TextView *) self;
 
 	const Inlet inlets[] = MakeInlets(
-		MakeInlet("defaultText", InletTypeCharacters, &this->defaultText, NULL),
-		MakeInlet("isEditable", InletTypeBool, &this->isEditable, NULL)
+		MakeInlet("defaultText", InletTypeCharacters, &this->defaultText, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -351,6 +367,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
@@ -360,7 +377,6 @@ static void initialize(Class *clazz) {
 
 	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((TextViewInterface *) clazz->interface)->setDefaultText = setDefaultText;
-
 }
 
 /**
