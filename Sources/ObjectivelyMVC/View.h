@@ -775,6 +775,15 @@ struct ViewInterface {
 	void (*resize)(View *self, const SDL_Size *size);
 
 	/**
+	 * @fn void View::resolve(View *self, Outlet *outlets)
+	 * @brief Resolves the given Outlets from this View's hierarchy.
+	 * @param self The View.
+	 * @param outlets The Outlets to resolve.
+	 * @memberof View
+	 */
+	void (*resolve)(View *self, Outlet *outlets);
+
+	/**
 	 * @fn void View::respondToEvent(View *self, const SDL_Event *event)
 	 * @brief Responds to the specified event.
 	 * @param self The View.

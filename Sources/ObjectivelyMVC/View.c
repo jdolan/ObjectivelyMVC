@@ -59,8 +59,6 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 	MakeEnumAlias(ViewAutoresizingContain, contain)
 );
 
-static __thread Outlet *_outlets;
-
 #define _Class _View
 
 #pragma mark - ObjectInterface
@@ -187,7 +185,7 @@ static View *ancestorWithIdentifier(const View *self, const char *identifier) {
 
 	assert(identifier);
 
-	View *view = self->superview;
+	View *view = (View *) self;
 	while (view) {
 		if (view->identifier) {
 			if (strcmp(identifier, view->identifier) == 0) {
@@ -294,7 +292,7 @@ static void attachStylesheet(View *self, SDL_Window *window) {
 }
 
 /**
- * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary, Outlet *outlets)
+ * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary)
  * @memberof View
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -309,14 +307,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	);
 
 	$(self, bind, inlets, dictionary);
-
-	if (self->identifier) {
-		for (Outlet *outlet = _outlets; outlet->identifier; outlet++) {
-			if (strcmp(outlet->identifier, self->identifier) == 0) {
-				*outlet->view = self;
-			}
-		}
-	}
 }
 
 /**
@@ -448,19 +438,18 @@ static View *descendantWithIdentifier(const View *self, const char *identifier) 
 
 	assert(identifier);
 
+	if (self->identifier) {
+		if (strcmp(identifier, self->identifier) == 0) {
+			return (View *) self;
+		}
+	}
+
 	const Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
-
-		View *view = $(subviews, objectAtIndex, i);
-		if (view->identifier) {
-			if (strcmp(identifier, view->identifier)) {
-				return view;
-			}
-		}
-
-		view = $(view, descendantWithIdentifier, identifier);
-		if (view) {
-			return view;
+		const View *subview = $(subviews, objectAtIndex, i);
+		View *descendant = $(subview, descendantWithIdentifier, identifier);
+		if (descendant) {
+			return descendant;
 		}
 	}
 
@@ -1242,6 +1231,20 @@ static void resize(View *self, const SDL_Size *size) {
 }
 
 /**
+ * @fn void View::resolve(View *self, Outlet *outlets)
+ * @memberof View
+ */
+static void resolve(View *self, Outlet *outlets) {
+
+	if (outlets) {
+		for (Outlet *outlet = outlets; outlet->identifier; outlet++) {
+			*outlet->view = $(self, descendantWithIdentifier, outlet->identifier);
+			assert(*outlet->view);
+		}
+	}
+}
+
+/**
  * @fn void View::respondToEvent(View *self, const SDL_Event *event)
  * @memberof View
  */
@@ -1472,17 +1475,11 @@ static View *viewWithData(const Data *data, Outlet *outlets) {
  */
 static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 
-	_outlets = outlets;
-
 	View *view = NULL;
 
 	BindInlet(&MakeInlet(NULL, InletTypeView, &view, NULL), dictionary);
 
-	if (outlets) {
-		for (const Outlet *outlet = outlets; outlet->identifier; outlet++) {
-			assert(*outlet->view);
-		}
-	}
+	$(view, resolve, outlets);
 
 	return view;
 }
@@ -1581,6 +1578,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->replaceSubview = replaceSubview;
 	((ViewInterface *) clazz->interface)->resignFirstResponder = resignFirstResponder;
 	((ViewInterface *) clazz->interface)->resize = resize;
+	((ViewInterface *) clazz->interface)->resolve = resolve;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((ViewInterface *) clazz->interface)->setFirstResponder = setFirstResponder;
 	((ViewInterface *) clazz->interface)->size = size;
