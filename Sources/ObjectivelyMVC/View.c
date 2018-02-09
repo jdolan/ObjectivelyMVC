@@ -292,6 +292,19 @@ static void attachStylesheet(View *self, SDL_Window *window) {
 }
 
 /**
+ * @fn void View::awakeWithData(View *self, const Data *data)
+ * @memberof View
+ */
+static void awakeWithData(View *self, const Data *data) {
+
+	Dictionary *dictionary = $$(JSONSerialization, objectFromData, data, 0);
+
+	$(self, awakeWithDictionary, dictionary);
+
+	release(dictionary);
+}
+
+/**
  * @fn void Viem::awakeWithDictionary(View *self, const Dictionary *dictionary)
  * @memberof View
  */
@@ -1533,6 +1546,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->applyTheme = applyTheme;
 	((ViewInterface *) clazz->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
 	((ViewInterface *) clazz->interface)->attachStylesheet = attachStylesheet;
+	((ViewInterface *) clazz->interface)->awakeWithData = awakeWithData;
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->interface)->bind = _bind;

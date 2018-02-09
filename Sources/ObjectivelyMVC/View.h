@@ -355,6 +355,16 @@ struct ViewInterface {
 	void (*attachStylesheet)(View *self, SDL_Window *window);
 
 	/**
+	 * @fn void View::awakeWithData(View *self, const Data *data)
+	 * @brief Wakes this View with the specified JSON Data.
+	 * @param self The View.
+	 * @param data The JSON Data containing properties describing this View.
+	 * @remarks This is a convenience method for View::awakeWithDictionary.
+	 * @memberof View
+	 */
+	void (*awakeWithData)(View *self, const Data *data);
+
+	/**
 	 * @fn void View::awakeWithDictionary(View *self, const Dictionary *dictionary)
 	 * @brief Wakes this View with the specified Dictionary.
 	 * @param self The View.
