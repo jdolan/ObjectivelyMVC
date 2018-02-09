@@ -134,6 +134,15 @@ struct TextViewInterface {
 	 * @memberof TextView
 	 */
 	TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame);
+
+	/**
+	 * @fn void TextView::setDefaultText(TextView *self, const char *defaultText)
+	 * @brief Sets the default text for this TextView.
+	 * @param self The TextView.
+	 * @param defaultText The default text.
+	 * @memberof TextView
+	 */
+	void (*setDefaultText)(TextView *self, const char *defaultText);
 };
 
 /**

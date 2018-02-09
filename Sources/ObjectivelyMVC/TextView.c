@@ -322,6 +322,26 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
 	return self;
 }
 
+/**
+ * @fn void TextView::setDefaultText(TextView *self, const char *defaultText)
+ * @memberof TextView
+ */
+static void setDefaultText(TextView *self, const char *defaultText) {
+
+	if (strcmp(self->defaultText ?: "", defaultText ?: "")) {
+
+		free(self->defaultText);
+
+		if (defaultText) {
+			self->defaultText = strdup(defaultText);
+		} else {
+			self->defaultText = NULL;
+		}
+
+		self->control.view.needsLayout = true;
+	}
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -339,6 +359,8 @@ static void initialize(Class *clazz) {
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
 	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+	((TextViewInterface *) clazz->interface)->setDefaultText = setDefaultText;
+
 }
 
 /**
