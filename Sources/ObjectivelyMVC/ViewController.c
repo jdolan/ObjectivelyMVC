@@ -63,6 +63,7 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 	$(childViewController, loadViewIfNeeded);
 
 	if (self->view->window) {
+		$(childViewController->view, updateBindings);
 		$(childViewController, viewWillAppear);
 	}
 
@@ -254,11 +255,6 @@ static void viewWillAppear_recurse(const Array *array, ident obj, ident data) {
  * @memberof ViewController
  */
 static void viewWillAppear(ViewController *self) {
-
-	if (self->parentViewController == NULL) {
-		$(self->view, updateBindings);
-	}
-
 	$((Array *) self->childViewControllers, enumerateObjects, viewWillAppear_recurse, NULL);
 }
 
