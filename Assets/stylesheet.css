@@ -103,6 +103,7 @@ Label > Text {
 
 Option {
 	autoresizing-mask: contain | width;
+	min-width: 100;
 	padding: 2 2 2 2;
 }
 
