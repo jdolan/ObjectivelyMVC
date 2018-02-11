@@ -233,6 +233,12 @@ static void bindView(const Inlet *inlet, ident obj) {
 		}
 		assert(c);
 
+		if (clazz != _View()) {
+			if (interfaceof(View, clazz)->init == interfaceof(View, clazz->def.superclass)->init) {
+				MVC_LogWarn("%s does not implement View::init\n", clazz->def.name);
+			}
+		}
+
 		View *view = $((View *) _alloc(clazz), init);
 		assert(view);
 
