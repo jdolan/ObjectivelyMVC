@@ -91,6 +91,7 @@ HueColorPicker .colorView,
 RGBColorPicker .colorView {
 	autoresizing-mask: width;
 	background-color: none;
+	height: 8;
 }
 
 Label {
