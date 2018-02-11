@@ -50,6 +50,23 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::applyStyle(View *, const Style *)
+ */
+static void applyStyle(View *self, const Style *style) {
+
+	super(View, self, applyStyle, style);
+
+	Panel *this = (Panel *) self;
+
+	const Inlet inlets[] = MakeInlets(
+		MakeInlet("draggable", InletTypeBool, &this->isDraggable, NULL),
+		MakeInlet("resizable", InletTypeBool, &this->isResizable, NULL)
+	);
+
+	$(self, bind, inlets, (Dictionary *) style->attributes);
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -61,9 +78,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	const Inlet inlets[] = MakeInlets(
 		MakeInlet("accessoryView", InletTypeView, &this->accessoryView, NULL),
 		MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
-		MakeInlet("isDraggable", InletTypeBool, &this->isDraggable, NULL),
-		MakeInlet("isResiable", InletTypeBool, &this->isResizable, NULL),
-	    MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
+		MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -226,6 +241,7 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
