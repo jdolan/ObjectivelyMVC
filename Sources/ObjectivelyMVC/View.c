@@ -585,6 +585,19 @@ static void enumerateAncestors(const View *self, ViewEnumerator enumerator, iden
 }
 
 /**
+ * @fn void View::enumerateSelection(View *self, const char *rule, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateSelection(View *self, const char *rule, ViewEnumerator enumerator, ident data) {
+
+	Selector *selector = $(alloc(Selector), initWithRule, rule);
+	assert(selector);
+
+	$(selector, enumerateSelection, self, enumerator, data);
+	release(selector);
+}
+
+/**
  * @fn void View::enumerateDescendants(const View *self, ViewEnumerator enumerator, ident data)
  * @memberof View
  */
@@ -1276,6 +1289,25 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	}
 }
 
+/**
+ * @fn Set *View::select(View *self, const char *rule)
+ * @memberof View
+ */
+static Set *_select(View *self, const char *rule) {
+
+	Selector *selector = $(alloc(Selector), initWithRule, rule);
+	assert(selector);
+
+	Set *selection = $(selector, select, self);
+
+	release(selector);
+	return selection;
+}
+
+/**
+ * @fn void View::setFirstResponder(SDL_Window *window, View *view)
+ * @memberof View
+ */
 static void setFirstResponder(SDL_Window *window, View *view) {
 
 	assert(window);
@@ -1564,6 +1596,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->enumerateAdjacent = enumerateAdjacent;
 	((ViewInterface *) clazz->interface)->enumerateAncestors = enumerateAncestors;
 	((ViewInterface *) clazz->interface)->enumerateDescendants = enumerateDescendants;
+	((ViewInterface *) clazz->interface)->enumerateSelection = enumerateSelection;
 	((ViewInterface *) clazz->interface)->enumerateSiblings = enumerateSiblings;
 	((ViewInterface *) clazz->interface)->enumerateSubviews = enumerateSubviews;
 	((ViewInterface *) clazz->interface)->enumerateSuperview = enumerateSuperview;
@@ -1594,6 +1627,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->resize = resize;
 	((ViewInterface *) clazz->interface)->resolve = resolve;
 	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((ViewInterface *) clazz->interface)->select = _select;
 	((ViewInterface *) clazz->interface)->setFirstResponder = setFirstResponder;
 	((ViewInterface *) clazz->interface)->size = size;
 	((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;

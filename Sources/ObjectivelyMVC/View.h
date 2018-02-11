@@ -529,6 +529,17 @@ struct ViewInterface {
 	void (*enumerateDescendants)(const View *self, ViewEnumerator enumerator, ident data);
 
 	/**
+	 * @fn void View::enumerateSelection(View *self, const char *rule, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates all Views in the selection matched by `rule`, applying `enumerator` to each.
+	 * @param self The View.
+	 * @param rule The Selector rule.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateSelection)(View *self, const char *rule, ViewEnumerator enumerator, ident data);
+
+	/**
 	 * @fn void View::enumerateSiblings(const View *self, ViewEnumerator enumerator, ident data)
 	 * @brief Enumerates all siblings of this View, applying `enumerator` to each.
 	 * @param self The View.
@@ -801,6 +812,16 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*respondToEvent)(View *self, const SDL_Event *event);
+
+	/**
+	 * @fn Set *View::select(View *self, const char *rule)
+	 * @brief Resolves all descendants (including this View) that match the given Selector rule.
+	 * @param self The View.
+	 * @param rule The Selector rule.
+	 * @return The Set of selected descendant Views.
+	 * @memberof View
+	 */
+	Set *(*select)(View *self, const char *rule);
 
 	/**
 	 * @static
