@@ -135,6 +135,24 @@ Panel .accessoryView {
 	axis: horizontal;
 }
 
+ProgressBar {
+	autoresizing-mask: contain | width;
+}
+
+ProgressBar > .background {
+	autoresizing-mask: fill;
+	background-color: silver;
+}
+
+ProgressBar > .foreground {
+	autoresizing-mask: height;
+	background-color: darkgray;
+}
+
+ProgressBar > Label {
+	alignment: middle-center;
+}
+
 ScrollView {
 	autoresizing-mask: fill;
 	clips-subviews: true;

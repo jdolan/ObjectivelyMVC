@@ -107,27 +107,23 @@ static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
 		self->background = $(alloc(ImageView), initWithFrame, NULL);
 		assert(self->background);
 
-		self->background->view.autoresizingMask = ViewAutoresizingFill;
-		self->background->view.backgroundColor = Colors.Silver;
-
+		$((View *) self->background, addClassName, "background");
 		$((View *) self, addSubview, (View *) self->background);
 
 		self->foreground = $(alloc(ImageView), initWithFrame, NULL);
 		assert(self->foreground);
 
-		self->foreground->view.autoresizingMask = ViewAutoresizingHeight;
-
+		$((View *) self->foreground, addClassName, "foreground");
 		$((View *) self, addSubview, (View *) self->foreground);
 
 		self->label = $(alloc(Text), initWithText, NULL, NULL);
 		assert(self->label);
 
-		self->label->view.alignment = ViewAlignmentMiddleCenter;
-
 		$((View *) self, addSubview, (View *) self->label);
 
 		$(self, setLabelFormat, "%0.0lf%%");
 
+		self->value = -1.0;
 		self->max = 100.0;
 	}
 
