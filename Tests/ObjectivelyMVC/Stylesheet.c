@@ -44,7 +44,7 @@ START_TEST(stylesheet)
 		} \
 	");
 
-	ck_assert(stylesheet);
+	ck_assert_ptr_ne(NULL, stylesheet);
 
 	const Array *selectors = (Array *) stylesheet->selectors;
 	const Dictionary *styles = (Dictionary *) stylesheet->styles;
@@ -59,7 +59,7 @@ START_TEST(stylesheet)
 	ck_assert_str_eq("selector two .class", selectorTwo->rule);
 
 	Style *style = $(styles, objectForKey, selectorOne);
-	ck_assert(style);
+	ck_assert_ptr_ne(NULL, style);
 
 	Boole *booleAttribute = cast(Boole, $(style, attributeValue, "bool-attribute"));
 	ck_assert_ptr_eq($$(Boole, True), booleAttribute);

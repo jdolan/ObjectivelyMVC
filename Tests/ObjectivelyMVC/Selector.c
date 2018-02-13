@@ -84,11 +84,11 @@ START_TEST(selector)
 START_TEST(compareTo)
 {
 	Selector *a = $(alloc(Selector), initWithRule, "#id Type .class");
-	ck_assert(a);
+	ck_assert_ptr_ne(NULL, a);
 	ck_assert_int_eq(111, a->specificity);
 
 	Selector *b = $(alloc(Selector), initWithRule, "Type .class:pseudo");
-	ck_assert(b);
+	ck_assert_ptr_ne(NULL, b);
 	ck_assert_int_eq(21, b->specificity);
 
 	ck_assert_int_eq(OrderDescending, $(a, compareTo, b));
@@ -116,7 +116,7 @@ START_TEST(matchesView)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, "*");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		ck_assert_int_eq(1, $(selector, matchesView, (View *) panel));
 		ck_assert_int_eq(1, $(selector, matchesView, container));
@@ -127,7 +127,7 @@ START_TEST(matchesView)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, "Panel");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		ck_assert_int_eq(1, $(selector, matchesView, (View *) panel));
 		ck_assert_int_eq(0, $(selector, matchesView, container));
@@ -138,7 +138,7 @@ START_TEST(matchesView)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, ".container Panel");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		ck_assert_int_eq(1, $(selector, matchesView, (View *) panel));
 		ck_assert_int_eq(0, $(selector, matchesView, container));
@@ -149,7 +149,7 @@ START_TEST(matchesView)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, "#root .container Panel");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		ck_assert_int_eq(1, $(selector, matchesView, (View *) panel));
 		ck_assert_int_eq(0, $(selector, matchesView, container));
@@ -160,7 +160,7 @@ START_TEST(matchesView)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, ".contentView > View");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		ck_assert_int_eq(1, $(selector, matchesView, view));
 		ck_assert_int_eq(0, $(selector, matchesView, subview));
@@ -191,10 +191,10 @@ START_TEST(_select)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, "#root .container Panel");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		Set *selection = $(selector, select, root);
-		ck_assert(selection);
+		ck_assert_ptr_ne(NULL, selection);
 
 		ck_assert_int_eq(1, selection->count);
 		ck_assert($(selection, containsObject, panel));
@@ -205,10 +205,10 @@ START_TEST(_select)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, ".container Panel");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		Set *selection = $(selector, select, root);
-		ck_assert(selection);
+		ck_assert_ptr_ne(NULL, selection);
 
 		ck_assert_int_eq(1, selection->count);
 		ck_assert($(selection, containsObject, panel));
@@ -218,10 +218,10 @@ START_TEST(_select)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, "Panel");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		Set *selection = $(selector, select, root);
-		ck_assert(selection);
+		ck_assert_ptr_ne(NULL, selection);
 
 		ck_assert_int_eq(1, selection->count);
 		ck_assert($(selection, containsObject, panel));
@@ -232,10 +232,10 @@ START_TEST(_select)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, ".container");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		Set *selection = $(selector, select, root);
-		ck_assert(selection);
+		ck_assert_ptr_ne(NULL, selection);
 
 		ck_assert_int_le(1, selection->count);
 		ck_assert($(selection, containsObject, container));
@@ -246,10 +246,10 @@ START_TEST(_select)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, ".contentView");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		Set *selection = $(selector, select, root);
-		ck_assert(selection);
+		ck_assert_ptr_ne(NULL, selection);
 
 		ck_assert_int_eq(1, selection->count);
 		ck_assert($(selection, containsObject, panel->contentView));
@@ -260,10 +260,10 @@ START_TEST(_select)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, ".accessoryView");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		Set *selection = $(selector, select, root);
-		ck_assert(selection);
+		ck_assert_ptr_ne(NULL, selection);
 
 		ck_assert_int_eq(1, selection->count);
 		ck_assert($(selection, containsObject, panel->accessoryView));
@@ -274,10 +274,10 @@ START_TEST(_select)
 
 	{
 		Selector *selector = $(alloc(Selector), initWithRule, "*");
-		ck_assert(selector);
+		ck_assert_ptr_ne(NULL, selector);
 
 		Set *selection = $(selector, select, root);
-		ck_assert(selection);
+		ck_assert_ptr_ne(NULL, selection);
 
 		ck_assert($(selection, containsObject, root));
 		ck_assert($(selection, containsObject, container));
