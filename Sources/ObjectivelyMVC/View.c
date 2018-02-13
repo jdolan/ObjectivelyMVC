@@ -292,6 +292,19 @@ static void attachStylesheet(View *self, SDL_Window *window) {
 }
 
 /**
+ * @fn void View::awakeWithContentsOfFile(View *self, const char *path)
+ * @memberof View
+ */
+static void awakeWithContentsOfFile(View *self, const char *path) {
+
+	Data *data = $$(Data, dataWithContentsOfFile, path);
+
+	$(self, awakeWithData, data);
+
+	release(data);
+}
+
+/**
  * @fn void View::awakeWithData(View *self, const Data *data)
  * @memberof View
  */
@@ -320,6 +333,30 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	);
 
 	$(self, bind, inlets, dictionary);
+}
+
+/**
+ * @fn void View::awakeWithResource(View *self, const Resource *resource)
+ * @memberof View
+ */
+static void awakeWithResource(View *self, const Resource *resource) {
+
+	assert(resource);
+
+	$(self, awakeWithData, resource->data);
+}
+
+/**
+ * @fn void View::awakeWithResourceName(View *self, const char *name)
+ * @memberof View
+ */
+static void awakeWithResourceName(View *self, const char *name) {
+
+	Resource *resource = $$(Resource, resourceWithName, name);
+
+	$(self, awakeWithResource, resource);
+
+	release(resource);
 }
 
 /**
@@ -1485,21 +1522,6 @@ static View *viewWithCharacters(const char *chars, Outlet *outlets) {
 }
 
 /**
- * @fn View *View::viewWithContentsOfFile(const char *path, Outlet *outlets)
- * @memberof View
- */
-static View *viewWithContentsOfFile(const char *path, Outlet *outlets) {
-
-	Data *data = $$(Data, dataWithContentsOfFile, path);
-
-	View *view = $$(View, viewWithData, data, outlets);
-
-	release(data);
-
-	return view;
-}
-
-/**
  * @fn View *View::viewWithData(const Data *data, Outlet *outlets)
  * @memberof View
  */
@@ -1525,6 +1547,32 @@ static View *viewWithDictionary(const Dictionary *dictionary, Outlet *outlets) {
 	BindInlet(&MakeInlet(NULL, InletTypeView, &view, NULL), dictionary);
 
 	$(view, resolve, outlets);
+
+	return view;
+}
+
+/**
+ * @fn View *View::viewWithResource(const Resource *resource, Outlet *outlets)
+ * @memberof View
+ */
+static View *viewWithResource(const Resource *resource, Outlet *outlets) {
+
+	assert(resource);
+
+	return $$(View, viewWithData, resource->data, outlets);
+}
+
+/**
+ * @fn View *View::viewWithResourceName(const char *name, Outlet *outlets)
+ * @memberof View
+ */
+static View *viewWithResourceName(const char *name, Outlet *outlets) {
+
+	Resource *resource = $$(Resource, resourceWithName, name);
+
+	View *view = $$(View, viewWithResource, resource, outlets);
+
+	release(resource);
 
 	return view;
 }
@@ -1578,8 +1626,11 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->applyTheme = applyTheme;
 	((ViewInterface *) clazz->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
 	((ViewInterface *) clazz->interface)->attachStylesheet = attachStylesheet;
+	((ViewInterface *) clazz->interface)->awakeWithContentsOfFile = awakeWithContentsOfFile;
 	((ViewInterface *) clazz->interface)->awakeWithData = awakeWithData;
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+	((ViewInterface *) clazz->interface)->awakeWithResource = awakeWithResource;
+	((ViewInterface *) clazz->interface)->awakeWithResourceName = awakeWithResourceName;
 	((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
 	((ViewInterface *) clazz->interface)->bind = _bind;
 	((ViewInterface *) clazz->interface)->bounds = bounds;
@@ -1637,10 +1688,11 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->subviewWithIdentifier = subviewWithIdentifier;
 	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 	((ViewInterface *) clazz->interface)->viewport = viewport;
-	((ViewInterface *) clazz->interface)->viewWithContentsOfFile = viewWithContentsOfFile;
+	((ViewInterface *) clazz->interface)->viewWithCharacters = viewWithCharacters;
 	((ViewInterface *) clazz->interface)->viewWithData = viewWithData;
 	((ViewInterface *) clazz->interface)->viewWithDictionary = viewWithDictionary;
-	((ViewInterface *) clazz->interface)->viewWithCharacters = viewWithCharacters;
+	((ViewInterface *) clazz->interface)->viewWithResource = viewWithResource;
+	((ViewInterface *) clazz->interface)->viewWithResourceName = viewWithResourceName;
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->willMoveToWindow = willMoveToWindow;
 }

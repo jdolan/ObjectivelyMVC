@@ -65,10 +65,61 @@ struct ImageInterface {
 	ObjectInterface objectInterface;
 
 	/**
+	 * @static
+	 * @fn Image *Image::imageWithBytes(const uint8_t *bytes, size_t length)
+	 * @brief Instantiates an Image with the specified bytes.
+	 * @param bytes The encoded image bytes.
+	 * @param length The length of `bytes`.
+	 * @return The new Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*imageWithBytes)(const uint8_t *bytes, size_t length);
+
+	/**
+	 * @static
+	 * @fn Image *Image::imageWithData(const Data *data)
+	 * @brief Instantiates an Image with the specified Data.
+	 * @param data The encoded image Data.
+	 * @return The new Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*imageWithData)(const Data *data);
+
+	/**
+	 * @static
+	 * @fn Image *Image::imageWithResource(const Resource *resource)
+	 * @brief Instantiates an Image with the specified Resource.
+	 * @param resource The Resource containing encoded image data.
+	 * @return The new Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*imageWithResource)(const Resource *resource);
+
+	/**
+	 * @static
+	 * @fn Image *Image::imageWithResourceName(const char *name)
+	 * @brief Instantiates an Image with the specified Resource name.
+	 * @param name The name of a Resource containing encoded image data.
+	 * @return The new Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*imageWithResourceName)(const char *name);
+
+	/**
+	 * @static
+	 * @fn Image *Image::imageWithSurface(SDL_Surface *surface)
+	 * @brief Instantiates an Image with the specified surface.
+	 * @param surface The surface.
+	 * @return The new Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*imageWithSurface)(SDL_Surface *surface);
+
+	/**
 	 * @fn Image *Image::initWithBytes(Image *self, const uint8_t *bytes, size_t length)
 	 * @brief Initializes this Image with the specified bytes.
 	 * @param self The Image.
-	 * @param bytes The raw image bytes.
+	 * @param bytes The encoded image bytes.
 	 * @param length The length of `bytes`.
 	 * @return The initialized Image, or `NULL` on error.
 	 * @memberof Image
@@ -79,31 +130,31 @@ struct ImageInterface {
 	 * @fn Image *Image::initWithData(Image *self, const Data *data)
 	 * @brief Initializes this Image with the specified Data.
 	 * @param self The Image.
-	 * @param data The raw image data.
+	 * @param data The encoded image Data.
 	 * @return The initialized Image, or `NULL` on error.
 	 * @memberof Image
 	 */
 	Image *(*initWithData)(Image *self, const Data *data);
 
 	/**
-	 * @fn Image *Image::initWithName(Image *self, const char *name)
-	 * @brief Initializes this Image, loading the Resource by the given name.
-	 * @param self The Image.
-	 * @param name The image name.
-	 * @return The initialized Image, or `NULL` on error.
-	 * @memberof Image
-	 */
-	Image *(*initWithName)(Image *self, const char *name);
-
-	/**
 	 * @fn Image *Image::initWithResource(Image *self, const Resource *resource)
 	 * @brief Initializes this Image with the specified Resource.
 	 * @param self The Image.
-	 * @param resource The Resource containing the image data.
+	 * @param resource The Resource containing encoded image data.
 	 * @return The initialized Image, or `NULL` on error.
 	 * @memberof Image
 	 */
 	Image *(*initWithResource)(Image *self, const Resource *resource);
+
+	/**
+	 * @fn Image *Image::initWithResourceName(Image *self, const char *name)
+	 * @brief Initializes this Image, loading the Resource by the given name.
+	 * @param self The Image.
+	 * @param name The Resource name.
+	 * @return The initialized Image, or `NULL` on error.
+	 * @memberof Image
+	 */
+	Image *(*initWithResourceName)(Image *self, const char *name);
 
 	/**
 	 * @fn Image *Image::initWithSurface(Image *self, SDL_Surface *surface)

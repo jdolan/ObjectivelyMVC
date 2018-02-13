@@ -271,8 +271,7 @@ static void loadView(ViewController *self) {
 		MakeOutlet("hueColorPicker", &this->hueColorPicker)
 	);
 
-	const char *path = EXAMPLES"/HelloViewController.json";
-	this->panel = (Panel *) $$(View, viewWithContentsOfFile, path, outlets);
+	this->panel = (Panel *) $$(View, viewWithResourceName, "HelloViewController.json", outlets);
 
 	$(self->view, addSubview, (View *) this->panel);
 

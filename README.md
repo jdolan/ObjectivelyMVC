@@ -83,6 +83,52 @@ ObjectivelyMVC allows you to define your View hierarchy programmatically, via JS
 }
 ```
 
+### Fully themable via Cascading Stylesheets
+
+ObjectivelyMVC uses a custom CSS3 dialect to manage all aspects of its presentation. Nothing about the look and feel of ObjectivelyMVC is hard-coded, and authoring and attaching new `Stylesheets` is trivial and straightforward.
+
+```css
+/* MyView.css */
+
+Box {
+	border-color: #1e4e62;
+}
+
+Panel {
+	background-color: #08151aaa;
+}
+
+.columns {
+	autoreizing-mask: contain | width;
+	axis: horizontal;
+	distribution: fill;
+}
+
+.columns > .column {
+	autoresizing-mask: contain | height;
+	distribution: fill;
+	width: 384;
+}
+```
+
+### Simple, flexible resource loading
+
+ObjectivelyMVC makes loading `Fonts`, `Images`, `Stylesheets`, and `Views` painless. For direct filesystem access, add directories to its search path with `$$(Resource, addResourcePath, "/my/path")`. To search your game's filesystem abstraction, implement a custom `ResourceProvider` function, and register it:
+
+```c
+static Data *resourceProvider(const char *name) {
+	uint8_t *bytes;
+
+	const ssize_t length = read_file_from_gamefs(name, &bytes);
+
+	return length != -1 ? $$(Data, dataWithBytes, bytes, length) : NULL;
+}
+
+// ...
+
+$$(Resource, setProvider, resourceProvider);
+```
+
 Examples
 ---
 

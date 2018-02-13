@@ -41,6 +41,46 @@ static void dealloc(Object *self) {
 #pragma mark - Image
 
 /**
+ * @fn Image *Image::imageWithBytes(const uint8_t *bytes, size_t length)
+ * @memberof Image
+ */
+static Image *imageWithBytes(const uint8_t *bytes, size_t length) {
+	return $(alloc(Image), initWithBytes, bytes, length);
+}
+
+/**
+ * @fn Image *Image::imageWithData(const Data *data)
+ * @memberof Image
+ */
+static Image *imageWithData(const Data *data) {
+	return $(alloc(Image), initWithData, data);
+}
+
+/**
+ * @fn Image *Image::imageWithResource(const Resource *resource)
+ * @memberof Image
+ */
+static Image *imageWithResource(const Resource *resource) {
+	return $(alloc(Image), initWithResource, resource);
+}
+
+/**
+ * @fn Image *Image::imageWithResourceName(const char *name)
+ * @memberof Image
+ */
+static Image *imageWithResourceName(const char *name) {
+	return $(alloc(Image), initWithResourceName, name);
+}
+
+/**
+ * @fn Image *Image::imageWithSurface(SDL_Surface *surface)
+ * @memberof Image
+ */
+static Image *imageWithSurface(SDL_Surface *surface) {
+	return $(alloc(Image), initWithSurface, surface);
+}
+
+/**
  * @fn Image *Image::initWithBytes(Image *self, const uint8_t *bytes, size_t length)
  * @memberof Image
  */
@@ -52,6 +92,8 @@ static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
 		if (self) {
 			SDL_FreeSurface(self->surface);
 		}
+	} else {
+		self = release(self);
 	}
 
 	SDL_FreeRW(ops);
@@ -64,20 +106,13 @@ static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
  */
 static Image *initWithData(Image *self, const Data *data) {
 
-	assert(data);
+	if (data) {
+		self = $(self, initWithBytes, data->bytes, data->length);
+	} else {
+		self = release(self);
+	}
 
-	return $(self, initWithBytes, data->bytes, data->length);
-}
-
-/**
- * @fn Image *Image::initWithName(Image *self, const char *name)
- * @memberof Image
- */
-static Image *initWithName(Image *self, const char *name) {
-
-	assert(name);
-
-	return $(self, initWithResource, $$(Resource, resourceWithName, name));
+	return self;
 }
 
 /**
@@ -86,9 +121,28 @@ static Image *initWithName(Image *self, const char *name) {
  */
 static Image *initWithResource(Image *self, const Resource *resource) {
 
-	assert(resource);
+	if (resource) {
+		self = $(self, initWithData, resource->data);
+	} else {
+		self = release(self);
+	}
 
-	return $(self, initWithData, resource->data);
+	return self;
+}
+
+/**
+ * @fn Image *Image::initWithResourceName(Image *self, const char *name)
+ * @memberof Image
+ */
+static Image *initWithResourceName(Image *self, const char *name) {
+
+	Resource *resource = $$(Resource, resourceWithName, name);
+
+	self = $(self, initWithResource, resource);
+
+	release(resource);
+
+	return self;
 }
 
 /**
@@ -125,10 +179,15 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+	((ImageInterface *) clazz->interface)->imageWithBytes = imageWithBytes;
+	((ImageInterface *) clazz->interface)->imageWithData = imageWithData;
+	((ImageInterface *) clazz->interface)->imageWithResource = imageWithResource;
+	((ImageInterface *) clazz->interface)->imageWithResourceName = imageWithResourceName;
+	((ImageInterface *) clazz->interface)->imageWithSurface = imageWithSurface;
 	((ImageInterface *) clazz->interface)->initWithBytes = initWithBytes;
 	((ImageInterface *) clazz->interface)->initWithData = initWithData;
-	((ImageInterface *) clazz->interface)->initWithName = initWithName;
 	((ImageInterface *) clazz->interface)->initWithResource = initWithResource;
+	((ImageInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
 	((ImageInterface *) clazz->interface)->initWithSurface = initWithSurface;
 	((ImageInterface *) clazz->interface)->size = size;
 }

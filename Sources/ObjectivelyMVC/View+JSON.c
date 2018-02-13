@@ -146,7 +146,7 @@ static void bindImage(const Inlet *inlet, ident obj) {
 
 	release(*(Font **) inlet->dest);
 
-	*((Image **) inlet->dest) = $(alloc(Image), initWithName, cast(String, obj)->chars);
+	*((Image **) inlet->dest) = $(alloc(Image), initWithResourceName, cast(String, obj)->chars);
 }
 
 /**

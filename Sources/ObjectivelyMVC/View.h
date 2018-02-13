@@ -27,6 +27,7 @@
 #include <Objectively/Enum.h>
 #include <Objectively/MutableDictionary.h>
 #include <Objectively/MutableArray.h>
+#include <Objectively/Resource.h>
 
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Renderer.h>
@@ -355,6 +356,16 @@ struct ViewInterface {
 	void (*attachStylesheet)(View *self, SDL_Window *window);
 
 	/**
+	 * @fn void View::awakeWithContentsOfFile(View *self, const char *path)
+	 * @brief Wakes this View with the contents of the JSON file at `path`.
+	 * @param self The View.
+	 * @param path A path to a JSON file describing this View.
+	 * @remarks This is a convenience method for View::awakeWithDictionary.
+	 * @memberof View
+	 */
+	void (*awakeWithContentsOfFile)(View *self, const char *path);
+
+	/**
 	 * @fn void View::awakeWithData(View *self, const Data *data)
 	 * @brief Wakes this View with the specified JSON Data.
 	 * @param self The View.
@@ -374,6 +385,24 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*awakeWithDictionary)(View *self, const Dictionary *dictionary);
+
+	/**
+	 * @fn void View::awakeWithResource(View *self, const Resource *resource)
+	 * @brief Wakes this View with the specified Resource.
+	 * @param self The View.
+	 * @param resource A Resource providing JSON data describing this View.
+	 * @memberof View
+	 */
+	void (*awakeWithResource)(View *self, const Resource *resource);
+
+	/**
+	 * @fn void View::awakeWithResourceName(View *self, const char *name)
+	 * @brief Wakes this View with the Resource by the specified name.
+	 * @param self The View.
+	 * @param name The name of a Resource providing JSON data describing this View.
+	 * @memberof View
+	 */
+	void (*awakeWithResourceName)(View *self, const char *name);
 
 	/**
 	 * @fn void View::becomeFirstResponder(View *self)
@@ -917,17 +946,6 @@ struct ViewInterface {
 
 	/**
 	 * @static
-	 * @fn View *View::viewWithContentsOfFile(const char *path, Outlet *outlets)
-	 * @brief Instantiates a View initialized with the contents of the JSON file at `path`.
-	 * @param path A path to a JSON file describing a View.
-	 * @param outlets An optional array of Outlets to resolve.
-	 * @return The initialized View, or `NULL` on error.
-	 * @memberof View
-	 */
-	View *(*viewWithContentsOfFile)(const char *path, Outlet *outlets);
-
-	/**
-	 * @static
 	 * @fn View *View::viewWithData(const Data *data, Outlet *outlets)
 	 * @brief Instantiates a View initialized with the contents of `data`.
 	 * @param data A Data containing JSON describing a View.
@@ -948,6 +966,30 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	View *(*viewWithDictionary)(const Dictionary *dictionary, Outlet *outlets);
+
+	/**
+	 * @static
+	 * @fn View *View::viewWithResource(const Resource *resource, Outlet *outlets)
+	 * @brief Instantiates a View initialized with the JSON data in `resource`.
+	 * @param resource A Resource containing JSON describing a View.
+	 * @param outlets An optional array of Outlets to resolve.
+	 * @return The initialized View, or `NULL` on error.
+	 * @see View::initWithData(View *, const Data *, Outlet *outlets)
+	 * @memberof View
+	 */
+	View *(*viewWithResource)(const Resource *resource, Outlet *outlets);
+
+	/**
+	 * @static
+	 * @fn View *View::viewWithResourceName(const char *name, Outlet *outlets)
+	 * @brief Instantiates a View initialized with the JSON Resource with the specified `name`.
+	 * @param name The name of a JSON Resource describing a View.
+	 * @param outlets An optional array of Outlets to resolve.
+	 * @return The initialized View, or `NULL` on error.
+	 * @see View::initWithResource(View *, const Dictionary *, Outlet *outlets)
+	 * @memberof View
+	 */
+	View *(*viewWithResourceName)(const char *name, Outlet *outlets);
 
 	/**
 	 * @fn Array *View::visibleSubviews(const View *self)

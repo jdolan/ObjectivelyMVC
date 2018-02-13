@@ -28,6 +28,10 @@
 
 #include "HelloViewController.h"
 
+#ifndef EXAMPLES
+# define EXAMPLES "."
+#endif
+
 static void drawScene(SDL_Window *window);
 
 /**
@@ -50,6 +54,8 @@ int main(int argc, char *argv[]) {
 	SDL_GLContext *context = SDL_GL_CreateContext(window);
 
 	SDL_GL_SetSwapInterval(1);
+
+	$$(Resource, addResourcePath, EXAMPLES);
 
 	WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 
