@@ -32,7 +32,7 @@ START_TEST(style)
 	Style *style;
 
 	style = $(alloc(Style), initWithRules, "Control:highlighted, Control:focused");
-	ck_assert(style != NULL);
+	ck_assert_ptr_ne(NULL, style);
 	ck_assert_ptr_eq(_Style(), classof(style));
 
 	Object *object = $(alloc(Object), init);
