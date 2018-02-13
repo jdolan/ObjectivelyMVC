@@ -23,9 +23,8 @@
 
 #pragma once
 
+#include <Objectively/Array.h>
 #include <Objectively/Data.h>
-#include <Objectively/MutableArray.h>
-#include <Objectively/MutableDictionary.h>
 
 #include <ObjectivelyMVC/Style.h>
 
@@ -57,12 +56,12 @@ struct Stylesheet {
 	/**
 	 * @brief The Selectors, ordered by specificity.
 	 */
-	MutableArray *selectors;
+	Array *selectors;
 
 	/**
 	 * @brief The Styles, keyed by Selector.
 	 */
-	MutableDictionary *styles;
+	Array *styles;
 };
 
 /**

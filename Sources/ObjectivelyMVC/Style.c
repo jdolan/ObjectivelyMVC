@@ -313,6 +313,10 @@ static Style *initWithRules(Style *self, const char *rules) {
 		self->selectors = $$(Selector, parse, rules);
 		assert(self->selectors);
 
+		for (size_t i = 0; i < self->selectors->count; i++) {
+			((Selector *) self->selectors->elements[i])->style = self;
+		}
+
 		self->attributes = (Dictionary *) $$(MutableDictionary, dictionaryWithCapacity, 4);
 		assert(self->attributes);
 	}

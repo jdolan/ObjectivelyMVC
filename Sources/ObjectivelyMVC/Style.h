@@ -33,7 +33,6 @@
  * @brief The Style type.
  */
 
-typedef struct Style Style;
 typedef struct StyleInterface StyleInterface;
 
 /**

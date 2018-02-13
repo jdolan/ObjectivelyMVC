@@ -34,6 +34,8 @@
  * @brief The Selector type.
  */
 
+typedef struct Style Style;
+
 typedef struct Selector Selector;
 typedef struct SelectorInterface SelectorInterface;
 
@@ -72,6 +74,12 @@ struct Selector {
 	 * @see https://www.w3.org/TR/2011/REC-css3-selectors-20110929/#specificity
 	 */
 	int specificity;
+
+	/**
+	 * @brief The Style.
+	 * @remarks This is a weak reference to the Style if this Selector belongs to a Stylesheet.
+	 */
+	Style *style;
 };
 
 /**

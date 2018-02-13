@@ -71,8 +71,7 @@ static ident computeStyle_reduce(const ident obj, ident accumulator, ident data)
 		Selector *selector = $(selectors, objectAtIndex, i);
 		if ($(selector, matchesView, view)) {
 
-			const Dictionary *styles = (Dictionary *) stylesheet->styles;
-			const Style *style = $(styles, objectForKey, selector);
+			assert(selector->style);
 
 			if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
 
@@ -85,12 +84,12 @@ static ident computeStyle_reduce(const ident obj, ident accumulator, ident data)
 				release(that);
 			}
 
-			if ($(style, attributeValue, "debug")) {
+			if ($(selector->style, attributeValue, "debug")) {
 				SDL_TriggerBreakpoint();
 			}
 
 			$((Style *) accumulator, addSelector, selector);
-			$((Style *) accumulator, addAttributes, style->attributes);
+			$((Style *) accumulator, addAttributes, selector->style->attributes);
 		}
 	}
 

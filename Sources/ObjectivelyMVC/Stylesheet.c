@@ -103,6 +103,13 @@ static Stylesheet *defaultStylesheet(void) {
 	return _defaultStylesheet;
 }
 
+static ident selectorsReducer(const ident obj, ident accumulator, ident data) {
+
+	$((MutableArray *) accumulator, addObjectsFromArray, ((Style *) obj)->selectors);
+
+	return accumulator;
+}
+
 /**
  * @brief Comparator for Selector sorting.
  */
@@ -119,29 +126,18 @@ static Stylesheet *initWithCharacters(Stylesheet *self, const char *chars) {
 	self = (Stylesheet *) super(Object, self, init);
 	if (self) {
 
-		self->selectors = $$(MutableArray, array);
-		assert(self->selectors);
-
-		self->styles = $$(MutableDictionary, dictionary);
+		self->styles = $$(Style, parse, chars);
 		assert(self->styles);
 
-		Array *styles = $$(Style, parse, chars);
-		assert(styles);
+		MutableArray *selectors = $$(MutableArray, array);
+		assert(selectors);
 
-		for (size_t i = 0; i < styles->count; i++) {
-			Style *style = $(styles, objectAtIndex, i);
+		$(self->styles, reduce, selectorsReducer, selectors, NULL);
 
-			for (size_t j = 0; j < style->selectors->count; j++) {
-				Selector *selector = $(style->selectors, objectAtIndex, j);
+		self->selectors = $((Array *) selectors, sortedArray, selectorsComparator);
+		assert(self->selectors);
 
-				$(self->selectors, addObject, selector);
-				$(self->styles, setObjectForKey, style, selector);
-			}
-
-			$(self->selectors, sort, selectorsComparator);
-		}
-
-		release(styles);
+		release(selectors);
 	}
 
 	return self;
