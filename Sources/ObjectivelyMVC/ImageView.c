@@ -189,6 +189,32 @@ static void setImage(ImageView *self, Image *image) {
 }
 
 /**
+ * @fn void ImageView::setImageWithResource(ImageView *self, const Resource *resource);
+ * @memberof ImageView
+ */
+static void setImageWithResource(ImageView *self, const Resource *resource) {
+
+	Image *image = $$(Image, imageWithResource, resource);
+
+	$(self, setImage, image);
+
+	release(image);
+}
+
+/**
+ * @fn void ImageView::setImageWithResourceName(ImageView *self, const char *name);
+ * @memberof ImageView
+ */
+static void setImageWithResourceName(ImageView *self, const char *name) {
+
+	Resource *resource = $$(Resource, resourceWithName, name);
+
+	$(self, setImageWithResource, resource);
+
+	release(resource);
+}
+
+/**
  * @fn void ImageView::setImageWithSurface(ImageView *self, SDL_Surface *surface)
  * @memberof ImageView
  */
@@ -223,6 +249,8 @@ static void initialize(Class *clazz) {
 	((ImageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ImageViewInterface *) clazz->interface)->initWithImage = initWithImage;
 	((ImageViewInterface *) clazz->interface)->setImage = setImage;
+	((ImageViewInterface *) clazz->interface)->setImageWithResource = setImageWithResource;
+	((ImageViewInterface *) clazz->interface)->setImageWithResourceName = setImageWithResourceName;
 	((ImageViewInterface *) clazz->interface)->setImageWithSurface = setImageWithSurface;
 }
 

@@ -116,6 +116,24 @@ struct ImageViewInterface {
 	void (*setImage)(ImageView *self, Image *image);
 
 	/**
+	 * @fn void ImageView::setImageWithResource(ImageView *self, const Resource *resource);
+	 * @brief Sets the Image for this ImageView with the given Resource.
+	 * @param self The ImageView.
+	 * @param resource An Image Resource.
+	 * @memberof ImageView
+	 */
+	void (*setImageWithResource)(ImageView *self, const Resource *resource);
+
+	/**
+	 * @fn void ImageView::setImageWithResourceName(ImageView *self, const char *name);
+	 * @brief Sets the Image for this ImageView with the Resource by the given name.
+	 * @param self The ImageView.
+	 * @param image An Image Resource name.
+	 * @memberof ImageView
+	 */
+	void (*setImageWithResourceName)(ImageView *self, const char *name);
+
+	/**
 	 * @fn void ImageView::setImageWithSurface(ImageView *self, SDL_Surface *surface)
 	 * @brief A convenience method to set this view's Image with a surface.
 	 * @param self The ImageView.
