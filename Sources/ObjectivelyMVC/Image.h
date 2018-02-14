@@ -52,6 +52,11 @@ struct Image {
 	 * @brief The backing surface.
 	 */
 	SDL_Surface *surface;
+
+	/**
+	 * @brief The image type, inferred if instantiated with a Resource.
+	 */
+	const char *type;
 };
 
 /**

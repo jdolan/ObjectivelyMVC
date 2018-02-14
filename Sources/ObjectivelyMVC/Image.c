@@ -88,9 +88,12 @@ static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
 
 	SDL_RWops *ops = SDL_RWFromConstMem(bytes, (int) length);
 	if (ops) {
-		self = $(self, initWithSurface, IMG_Load_RW(ops, 0));
-		if (self) {
-			SDL_FreeSurface(self->surface);
+		SDL_Surface *surface = IMG_LoadTyped_RW(ops, 0, self->type);
+		if (surface) {
+			self = $(self, initWithSurface, surface);
+			SDL_FreeSurface(surface);
+		} else {
+			self = release(self);
 		}
 	} else {
 		self = release(self);
@@ -122,6 +125,7 @@ static Image *initWithData(Image *self, const Data *data) {
 static Image *initWithResource(Image *self, const Resource *resource) {
 
 	if (resource) {
+		self->type = strrchr(resource->name, '.') ? strrchr(resource->name, '.') + 1 : NULL;
 		self = $(self, initWithData, resource->data);
 	} else {
 		self = release(self);
@@ -153,10 +157,17 @@ Image *initWithSurface(Image *self, SDL_Surface *surface) {
 
 	self = (Image *) super(Object, self, init);
 	if (self) {
-		self->surface = surface;
-		assert(self->surface);
 
-		self->surface->refcount++;
+		if (surface) {
+			if (surface->format->format != SDL_PIXELFORMAT_ABGR8888) {
+				self->surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+			} else {
+				self->surface = surface;
+				self->surface->refcount++;
+			}
+
+			assert(self->surface);
+		}
 	}
 
 	return self;
