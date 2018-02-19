@@ -356,14 +356,14 @@ struct ViewInterface {
 	void (*attachStylesheet)(View *self, SDL_Window *window);
 
 	/**
-	 * @fn void View::awakeWithContentsOfFile(View *self, const char *path)
-	 * @brief Wakes this View with the contents of the JSON file at `path`.
+	 * @fn void View::awakeWithCharacters(View *self, const char *chars)
+	 * @brief Wakes this View with the given null-terminated JSON C string.
 	 * @param self The View.
-	 * @param path A path to a JSON file describing this View.
+	 * @param chars A null-terminated JSON C string describing this View.
 	 * @remarks This is a convenience method for View::awakeWithDictionary.
 	 * @memberof View
 	 */
-	void (*awakeWithContentsOfFile)(View *self, const char *path);
+	void (*awakeWithCharacters)(View *self, const char *chars);
 
 	/**
 	 * @fn void View::awakeWithData(View *self, const Data *data)

@@ -292,12 +292,12 @@ static void attachStylesheet(View *self, SDL_Window *window) {
 }
 
 /**
- * @fn void View::awakeWithContentsOfFile(View *self, const char *path)
+ * @fn void View::awakeWithCharacters(View *self, const char *chars)
  * @memberof View
  */
-static void awakeWithContentsOfFile(View *self, const char *path) {
+static void awakeWithCharacters(View *self, const char *chars) {
 
-	Data *data = $$(Data, dataWithContentsOfFile, path);
+	Data *data = $$(Data, dataWithConstMemory, (uint8_t *) chars, strlen(chars));
 
 	$(self, awakeWithData, data);
 
@@ -1626,7 +1626,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->applyTheme = applyTheme;
 	((ViewInterface *) clazz->interface)->applyThemeIfNeeded = applyThemeIfNeeded;
 	((ViewInterface *) clazz->interface)->attachStylesheet = attachStylesheet;
-	((ViewInterface *) clazz->interface)->awakeWithContentsOfFile = awakeWithContentsOfFile;
+	((ViewInterface *) clazz->interface)->awakeWithCharacters = awakeWithCharacters;
 	((ViewInterface *) clazz->interface)->awakeWithData = awakeWithData;
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->awakeWithResource = awakeWithResource;
