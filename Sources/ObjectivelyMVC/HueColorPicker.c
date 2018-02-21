@@ -31,11 +31,11 @@
 /**
  * @brief SliderDelegate callback for hue modification.
  */
-static void didSetHue(Slider *slider) {
+static void didSetHue(Slider *slider, double value) {
 
 	HueColorPicker *this = (HueColorPicker *) slider->delegate.self;
 
-	this->hue = slider->value;
+	this->hue = value;
 
 	$((View *) this, updateBindings);
 

@@ -32,16 +32,16 @@
 /**
  * @brief SliderDelegate callback for color component modification.
  */
-static void didSetComponent(Slider *slider) {
+static void didSetComponent(Slider *slider, double value) {
 
 	HSVColorPicker *this = (HSVColorPicker *) slider->delegate.self;
 
 	if (slider == this->hueSlider) {
-		this->hue = slider->value;
+		this->hue = value;
 	} else if (slider == this->saturationSlider) {
-		this->saturation = slider->value;
+		this->saturation = value;
 	} else if (slider == this->valueSlider) {
-		this->value = slider->value;
+		this->value = value;
 	} else {
 		assert(false);
 	}

@@ -49,8 +49,9 @@ struct SliderDelegate {
 	/**
 	 * @brief Delegate callback for Slider value modification.
 	 * @param slider The Slider.
+	 * @param value The value.
 	 */
-	void (*didSetValue)(Slider *slider);
+	void (*didSetValue)(Slider *slider, double value);
 };
 
 /**

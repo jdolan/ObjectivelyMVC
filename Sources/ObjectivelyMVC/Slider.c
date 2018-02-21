@@ -171,7 +171,14 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 					value = clamp(round(value / this->step) * this->step, this->min, this->max);
 				}
 
-				$(this, setValue, value);
+				const double delta = fabs(this->value - value);
+				if (delta > __DBL_EPSILON__) {
+					$(this, setValue, value);
+
+					if (this->delegate.didSetValue) {
+						this->delegate.didSetValue(this, this->value);
+					}
+				}
 
 				return true;
 			}
@@ -259,10 +266,6 @@ static void setValue(Slider *self, double value) {
 		self->control.view.needsLayout = true;
 
 		$(self, formatLabel);
-
-		if (self->delegate.didSetValue) {
-			self->delegate.didSetValue(self);
-		}
 	}
 }
 

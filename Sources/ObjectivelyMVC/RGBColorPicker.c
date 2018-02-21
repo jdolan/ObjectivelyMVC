@@ -32,11 +32,11 @@
 /**
  * @brief SliderDelegate callback for color component modification.
  */
-static void didSetComponent(Slider *slider) {
+static void didSetComponent(Slider *slider, double value) {
 
 	RGBColorPicker *this = (RGBColorPicker *) slider->delegate.self;
 
-	const int c = round(slider->value);
+	const int c = round(value);
 
 	if (slider == this->redSlider) {
 		this->color.r = c;

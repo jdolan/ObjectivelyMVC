@@ -68,8 +68,8 @@ static void didSelectOption(Select *select, Option *option) {
 /**
  * @see SliderDelegate::didSetValue
  */
-static void didSetValue(Slider *slider) {
-	printf("%s: %.1f\n", __func__, slider->value);
+static void didSetValue(Slider *slider, double value) {
+	printf("%s: %.1f\n", __func__, value);
 }
 
 #pragma mark - TableViewDataSource

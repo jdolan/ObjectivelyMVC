@@ -123,7 +123,10 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 				Option *option = $(options, objectAtIndex, i);
 				if ($((View *) option, didReceiveEvent, event)) {
-					$(this, selectOptionWithValue, option->value);
+					$(this, selectOption, option);
+					if (this->delegate.didSelectOption) {
+						this->delegate.didSelectOption(this, option);
+					}
 					return true;
 				}
 			}
@@ -335,10 +338,6 @@ static void selectOption(Select *self, Option *option) {
 
 		if (option && option->isSelected == false) {
 			$(option, setSelected, true);
-
-			if (self->delegate.didSelectOption) {
-				self->delegate.didSelectOption(self, option);
-			}
 		}
 	}
 
