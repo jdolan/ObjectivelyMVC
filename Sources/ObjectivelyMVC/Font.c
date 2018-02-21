@@ -222,17 +222,16 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
  */
 static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color) {
 
-	SDL_Color argb = {
-		.r = color.g, .g = color.b, .b = color.a, .a = color.r
-	};
-
-	SDL_Surface *surface = TTF_RenderUTF8_Blended(self->font, chars, argb);
-
-	if (surface == NULL) {
+	SDL_Surface *converted = NULL;
+	SDL_Surface *surface = TTF_RenderUTF8_Blended(self->font, chars, color);
+	if (surface) {
+		converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
+		SDL_FreeSurface(surface);
+	} else {
 		MVC_LogError("%s\n", TTF_GetError());
 	}
 
-	return surface;
+	return converted;
 }
 
 /**
