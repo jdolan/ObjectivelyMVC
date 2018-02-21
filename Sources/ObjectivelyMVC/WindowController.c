@@ -278,7 +278,8 @@ static void setWindow(WindowController *self, SDL_Window *window) {
 		const Uint32 flags = SDL_GetWindowFlags(self->window);
 		assert(flags & SDL_WINDOW_OPENGL);
 
-		SDL_SetWindowData(window, "windowController", self);
+		SDL_SetWindowData(self->window, "windowController", self);
+		assert(SDL_GetWindowData(self->window, "windowController") == self);
 
 		int w, h;
 		SDL_GetWindowSize(self->window, &w, &h);

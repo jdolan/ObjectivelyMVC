@@ -515,7 +515,7 @@ static void detachStylesheet(View *self, SDL_Window *window) {
 	assert(window);
 
 	if (self->stylesheet) {
-		Theme *theme = $$(Theme, theme, self->window);
+		Theme *theme = $$(Theme, theme, window);
 		if (theme) {
 			$(theme, removeStylesheet, self->stylesheet);
 		}
