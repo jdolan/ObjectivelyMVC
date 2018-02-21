@@ -123,6 +123,15 @@ struct TextInterface {
 	 * @memberof Text
 	 */
 	void (*setText)(Text *self, const char *text);
+
+	/**
+	 * @fn void Text::setTextWithFormat(Text *self, const char *fmt, ...)
+	 * @brief Sets this Text's text with the given format string.
+	 * @param self The Text.
+	 * @param fmt The format string.
+	 * @memberof Text
+	 */
+	void (*setTextWithFormat)(Text *self, const char *fmt, ...);
 };
 
 OBJECTIVELYMVC_EXPORT Class *_Text(void);

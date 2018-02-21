@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <stdarg.h>
 #include <string.h>
 
 #include <ObjectivelyMVC/Text.h>
@@ -138,6 +139,8 @@ static void render(View *self, Renderer *renderer) {
 	super(View, self, render, renderer);
 
 	Text *this = (Text *) self;
+
+	assert(this->font);
 
 	if (this->text) {
 
@@ -269,6 +272,28 @@ static void setText(Text *self, const char *text) {
 	$((View *) self, sizeToFit);
 }
 
+/**
+ * @fn void Text::setTextWithFormat(Text *self, const char *fmt, ...)
+ * @brief Sets this Text's text with the given format string.
+ * @param self The Text.
+ * @param fmt The format string.
+ * @memberof Text
+ */
+static void setTextWithFormat(Text *self, const char *fmt, ...) {
+
+	va_list args;
+	va_start(args, fmt);
+
+	char *text;
+	const int len = vasprintf(&text, fmt, args);
+	if (len >= 0) {
+		$(self, setText, text);
+	}
+
+	free(text);
+	va_end(args);
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -291,6 +316,7 @@ static void initialize(Class *clazz) {
 	((TextInterface *) clazz->interface)->naturalSize = naturalSize;
 	((TextInterface *) clazz->interface)->setFont = setFont;
 	((TextInterface *) clazz->interface)->setText = setText;
+	((TextInterface *) clazz->interface)->setTextWithFormat = setTextWithFormat;
 }
 
 /**
