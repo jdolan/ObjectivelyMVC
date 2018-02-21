@@ -12,6 +12,10 @@
       "subviews": [
         {
           "class": "Text",
+          "identifier": "statistics"
+        },
+        {
+          "class": "Text",
           "identifier": "description"
         },
         {

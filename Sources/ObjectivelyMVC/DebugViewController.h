@@ -57,6 +57,16 @@ struct DebugViewController {
 	const View *debug;
 
 	/**
+	 * The debug statistics.
+	 */
+	Text *statistics;
+
+	/**
+	 * Framerate counters.
+	 */
+	int frames, timestamp;
+
+	/**
 	 * @brief The View description.
 	 */
 	Text *description;

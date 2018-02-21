@@ -139,6 +139,7 @@ static void loadView(ViewController *self) {
 	DebugViewController *this = (DebugViewController *) self;
 
 	Outlet outlets[] = MakeOutlets(
+		MakeOutlet("statistics", &this->statistics),
 		MakeOutlet("description", &this->description),
 		MakeOutlet("selectors", &this->selectors),
 		MakeOutlet("computedStyle", &this->computedStyle)
@@ -170,6 +171,15 @@ static void loadView(ViewController *self) {
  * @memberof DebugViewController
  */
 static void debug(DebugViewController *self, const View *view) {
+
+	self->frames++;
+
+	const int delta = SDL_GetTicks() - self->timestamp;
+	if (delta >= 250) {
+		$(self->statistics, setTextWithFormat, "%gfps", self->frames * 4.0);
+		self->timestamp = SDL_GetTicks();
+		self->frames = 0;
+	}
 
 	if (view != self->debug) {
 		self->debug = view;
