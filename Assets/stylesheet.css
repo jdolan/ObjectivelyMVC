@@ -274,10 +274,12 @@ Text {
 	alignment: internal;
 	border-color: #dededeaa;
 	border-width: 1;
+	padding: 1;
 }
 
 .options > Option {
 	background-color: charcoal;
+	padding: 0 4 0 4;
 }
 
 .options > Option:hover {
