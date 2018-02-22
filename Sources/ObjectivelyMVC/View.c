@@ -530,6 +530,8 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
 
 	if (window) {
 		$(self, attachStylesheet, window);
+
+		self->needsLayout = true;
 	}
 }
 
