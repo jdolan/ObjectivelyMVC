@@ -208,7 +208,7 @@ struct Outlet {
 /**
  * @brief Creates an Inlet with the specified parameters.
  */
-#define MakeInlet(name, type, dest, data) (Inlet) { (name), (type), (dest), (data) }
+#define MakeInlet(name, type, dest, data) (Inlet) { (name), (type), (dest), (ident) (data) }
 
 /**
  * @brief Creates a null-termianted array of Inlets.
