@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <ObjectivelyMVC/Input.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/Slider.h>
 
@@ -83,6 +84,11 @@ struct HueColorPicker {
 	 * @brief The delegate.
 	 */
 	HueColorPickerDelegate delegate;
+
+	/**
+	 * @brief The Input.
+	 */
+	Input *hueInput;
 
 	/**
 	 * @brief The Slider.

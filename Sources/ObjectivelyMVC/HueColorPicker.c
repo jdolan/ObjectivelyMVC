@@ -54,6 +54,7 @@ static void dealloc(Object *self) {
 	HueColorPicker *this = (HueColorPicker *) self;
 
 	release(this->colorView);
+	release(this->hueInput);
 	release(this->hueSlider);
 	release(this->stackView);
 
@@ -76,6 +77,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 		MakeInlet("hue", InletTypeDouble, &this->hue, NULL),
 		MakeInlet("saturation", InletTypeDouble, &this->saturation, NULL),
 		MakeInlet("value", InletTypeDouble, &this->value, NULL),
+		MakeInlet("hueInput", InletTypeView, &this->hueInput, NULL),
 		MakeInlet("hueSlider", InletTypeView, &this->hueSlider, NULL),
 		MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
 	);
@@ -134,7 +136,13 @@ static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame
 		self->hueSlider->max = 360.0;
 		$(self->hueSlider, setLabelFormat, "%.0lf");
 
-		$((View *) self->stackView, addSubview, (View *) self->hueSlider);
+		self->hueInput = $(alloc(Input), initWithFrame, NULL);
+		assert(self->hueInput);
+
+		$(self->hueInput, setControl, (Control *) self->hueSlider);
+		$(self->hueInput->label->text, setText, "H");
+
+		$((View *) self->stackView, addSubview, (View *) self->hueInput);
 
 		$(self, setColor, 0.0, 1.0, 1.0);
 	}
