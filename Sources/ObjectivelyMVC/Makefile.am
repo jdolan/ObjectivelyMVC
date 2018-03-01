@@ -129,4 +129,5 @@ libObjectivelyMVC_la_LDFLAGS = \
 libObjectivelyMVC_la_LIBADD = \
 	@HOST_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
-	@SDL2_LIBS@
+	@SDL2_DLL_LIBS@
+

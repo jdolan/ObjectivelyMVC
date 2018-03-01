@@ -60,6 +60,8 @@ PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 1.0.0])
 PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.5 SDL2_image SDL2_ttf])
 
+AC_SUBST(SDL2_DLL_LIBS, $(echo $SDL2_LIBS | sed 's/-lmingw32//; s/-lSDL2main//'))
+
 AC_CONFIG_FILES([
 	Makefile
 	Assets/Makefile
