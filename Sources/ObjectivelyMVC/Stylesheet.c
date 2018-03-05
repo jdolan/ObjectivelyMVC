@@ -149,12 +149,14 @@ static Stylesheet *initWithCharacters(Stylesheet *self, const char *chars) {
  */
 static Stylesheet *initWithData(Stylesheet *self, const Data *data) {
 
-	if (data) {
-		self = $(self, initWithCharacters, (char *) data->bytes);
-	} else {
-		self = release(self);
-	}
+	assert(data);
 
+	String *string = $$(String, stringWithData, data, STRING_ENCODING_UTF8);
+	assert(string);
+
+	self = $(self, initWithString, string);
+
+	release(string);
 	return self;
 }
 
@@ -175,13 +177,26 @@ static Stylesheet *initWithResource(Stylesheet *self, const Resource *resource) 
  */
 static Stylesheet *initWithResourceName(Stylesheet *self, const char *name) {
 
-	Resource *resource = $$(Resource, resourceWithName, name);
+	assert(name);
 
-	Stylesheet *stylesheet = $(self, initWithResource, resource);
+	Resource *resource = $$(Resource, resourceWithName, name);
+	assert(resource);
+
+	self = $(self, initWithResource, resource);
 
 	release(resource);
+	return self;
+}
 
-	return stylesheet;
+/**
+ * @fn Stylesheet *Stylesheet::initWithString(Stylesheet *self, const String *string)
+ * @memberof Stylesheet
+ */
+static Stylesheet *initWithString(Stylesheet *self, const String *string) {
+
+	assert(string);
+
+	return $(self, initWithCharacters, string->chars);
 }
 
 /**
@@ -216,6 +231,14 @@ static Stylesheet *stylesheetWithResourceName(const char *name) {
 	return $(alloc(Stylesheet), initWithResourceName, name);
 }
 
+/**
+ * @fn Stylesheet *Stylesheet::stylesheetWithString(const String *string)
+ * @memberof Stylesheet
+ */
+static Stylesheet *stylesheetWithString(const String *string) {
+	return $(alloc(Stylesheet), initWithString, string);
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -232,10 +255,12 @@ static void initialize(Class *clazz) {
 	((StylesheetInterface *) clazz->interface)->initWithData = initWithData;
 	((StylesheetInterface *) clazz->interface)->initWithResource = initWithResource;
 	((StylesheetInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
+	((StylesheetInterface *) clazz->interface)->initWithString = initWithString;
 	((StylesheetInterface *) clazz->interface)->stylesheetWithCharacters = stylesheetWithCharacters;
 	((StylesheetInterface *) clazz->interface)->stylesheetWithData = stylesheetWithData;
 	((StylesheetInterface *) clazz->interface)->stylesheetWithResource = stylesheetWithResource;
 	((StylesheetInterface *) clazz->interface)->stylesheetWithResourceName = stylesheetWithResourceName;
+	((StylesheetInterface *) clazz->interface)->stylesheetWithString = stylesheetWithString;
 }
 
 /**

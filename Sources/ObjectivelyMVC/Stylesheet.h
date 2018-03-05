@@ -125,6 +125,16 @@ struct StylesheetInterface {
 	Stylesheet *(*initWithResourceName)(Stylesheet *self, const char *name);
 
 	/**
+	 * @fn Stylesheet *Stylesheet::initWithString(Stylesheet *self, const String *string)
+	 * @brief Initializes this Stylesheet with the CSS definitions in `string`.
+	 * @param self The Stylesheet.
+	 * @param string The String containing CSS definitions.
+	 * @return The initialized Stylesheet, or `NULL` on error.
+	 * @memberof Stylesheet
+	 */
+	Stylesheet *(*initWithString)(Stylesheet *self, const String *string);
+
+	/**
 	 * @static
 	 * @fn Stylesheet *Stylesheet::stylesheetWithCharacters(const char *chars)
 	 * @brief Instantiates a new Stylesheet with the given CSS definitions.
@@ -137,7 +147,7 @@ struct StylesheetInterface {
 	/**
 	 * @static
 	 * @fn Stylesheet *Stylesheet::stylesheetWithCharacters(const Data *data)
-	 * @brief Instantiates a new Stylesheet with the give CSS Data.
+	 * @brief Instantiates a new Stylesheet with the given CSS Data.
 	 * @param data The Data containing CSS definitions.
 	 * @return The new Stylesheet, or `NULL` on error.
 	 * @memberof Stylesheet
@@ -157,12 +167,22 @@ struct StylesheetInterface {
 	/**
 	 * @static
 	 * @fn Stylesheet *Stylesheet::stylesheetWithResourceName(const char *name)
-	 * @brief Instantiates a new Stylesheet with the CSS Resource by the specified `name.
+	 * @brief Instantiates a new Stylesheet with the CSS Resource by the specified `name`.
 	 * @param name The name of a Resource containing CSS definitions.
 	 * @return The new Stylesheet, or `NULL` on error.
 	 * @memberof Stylesheet
 	 */
 	Stylesheet *(*stylesheetWithResourceName)(const char *name);
+
+	/**
+	 * @static
+	 * @fn Stylesheet *Stylesheet::stylesheetWithString(const String *string)
+	 * @brief Instantiates a new Stylesheet with the given CSS String.
+	 * @param string The String of containing CSS definitions.
+	 * @return The new Stylesheet, or `NULL` on error.
+	 * @memberof Stylesheet
+	 */
+	Stylesheet *(*stylesheetWithString)(const String *string);
 };
 
 /**
