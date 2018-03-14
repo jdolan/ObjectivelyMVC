@@ -148,9 +148,9 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 	} else {
 
 		if (event->type == SDL_WINDOWEVENT) {
-			$(self, setWindow, SDL_GL_GetCurrentWindow());
 			switch (event->window.event) {
 				case SDL_WINDOWEVENT_EXPOSED:
+					$(self, setWindow, SDL_GL_GetCurrentWindow());
 					$(self->renderer, renderDeviceDidReset);
 					$(self->viewController->view, renderDeviceDidReset);
 					break;
@@ -267,31 +267,23 @@ static void setViewController(WindowController *self, ViewController *viewContro
  */
 static void setWindow(WindowController *self, SDL_Window *window) {
 
-	assert(window);
+	self->window = window;
+	assert(self->window);
 
-	const int display = SDL_GetWindowDisplayIndex(window);
-	
-	if (self->window != window || self->display != display) {
+	const Uint32 flags = SDL_GetWindowFlags(self->window);
+	assert(flags & SDL_WINDOW_OPENGL);
 
-		self->display = display; self->window = window; self->hover = NULL;
+	self->hover = NULL;
 
-		const Uint32 flags = SDL_GetWindowFlags(self->window);
-		assert(flags & SDL_WINDOW_OPENGL);
+	SDL_SetWindowData(self->window, "windowController", self);
+	assert(SDL_GetWindowData(self->window, "windowController") == self);
 
-		SDL_SetWindowData(self->window, "windowController", self);
-		assert(SDL_GetWindowData(self->window, "windowController") == self);
+	if (self->viewController) {
+		$(self->viewController->view, moveToWindow, self->window);
+	}
 
-		int w, h;
-		SDL_GetWindowSize(self->window, &w, &h);
-		MVC_LogInfo("%d %dx%d", SDL_GetWindowID(self->window), w, h);
-
-		if (self->viewController) {
-			$(self->viewController->view, moveToWindow, self->window);
-		}
-
-		if (self->debugViewController) {
-			$(self->debugViewController->viewController.view, moveToWindow, self->window);
-		}
+	if (self->debugViewController) {
+		$(self->debugViewController->viewController.view, moveToWindow, self->window);
 	}
 }
 

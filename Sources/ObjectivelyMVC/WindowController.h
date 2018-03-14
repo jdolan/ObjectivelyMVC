@@ -60,11 +60,6 @@ struct WindowController {
 	DebugViewController *debugViewController;
 
 	/**
-	 * @brief The display associated with this controller's window.
-	 */
-	int display;
-
-	/**
 	 * @brief The View that the mouse cursor is currently hovering over.
 	 */
 	View *hover;
