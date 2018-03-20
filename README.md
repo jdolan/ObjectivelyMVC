@@ -146,7 +146,9 @@ An example application that creates a Window, enters its main loop and draws a s
 ### Quetoo
 [Quetoo](https://github.com/jdolan/quetoo) is an open source FPS based on [idTech2](https://en.wikipedia.org/wiki/Quake_II_engine). Quetoo uses ObjectivelyMVC for its in-game user interface:
 
-![Quetoo](Documentation/quetoo.jpg)
+![Quetoo](Documentation/quetoo1.jpg)
+![Quetoo](Documentation/quetoo2.jpg)
+![Quetoo](Documentation/quetoo3.jpg)
 
 Installation
 ---
