@@ -135,7 +135,7 @@ Examples
 ### HelloViewController
 An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu. This example uses JSON layout.
 
-![Hello](Documentation/demo.gif)
+[![Hello, ObjectivelyMVC!](https://img.youtube.com/vi/Rm_mOr3gP5k/0.jpg)](https://www.youtube.com/watch?v=Rm_mOr3gP5k)
 
  * [Hello.c](Examples/Hello.c) - The application source code
  * [HelloViewController.h](Examples/HelloViewController.h) - The `HelloViewController` header.
