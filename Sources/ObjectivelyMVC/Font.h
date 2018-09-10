@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <SDL2/SDL_ttf.h>
+#include <SDL_ttf.h>
 
 #include <Objectively/Enum.h>
 #include <Objectively/Array.h>

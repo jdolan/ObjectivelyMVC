@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <SDL2/SDL_log.h>
+#include <SDL_log.h>
 
 /**
  * @file

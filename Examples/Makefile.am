@@ -1,13 +1,8 @@
-
-noinst_PROGRAMS = \
-	Hello
-
 noinst_HEADERS = \
 	HelloViewController.h
 
-Hello_SOURCES = \
-	HelloViewController.c \
-	Hello.c
+noinst_PROGRAMS = \
+	Hello
 
 CFLAGS += \
 	-I$(top_srcdir)/Sources \
@@ -22,3 +17,7 @@ LDADD = \
 	@OBJECTIVELY_LIBS@ \
 	@SDL2_LIBS@ \
 	-lm
+
+Hello_SOURCES = \
+	HelloViewController.c \
+	Hello.c

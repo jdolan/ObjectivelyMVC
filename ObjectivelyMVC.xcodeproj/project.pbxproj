@@ -1215,6 +1215,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					/opt/local/include,
+					/opt/local/include/SDL2,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
@@ -1268,6 +1269,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					/opt/local/include,
+					/opt/local/include/SDL2,
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
