@@ -427,9 +427,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEDCFC7720497B07008A4252 /* libObjectively.dylib in Frameworks */,
 				CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
 				CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */,
+				CEDCFC7720497B07008A4252 /* libObjectively.dylib in Frameworks */,
 				CE12D4601C4C8F2400CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -438,9 +438,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE34C89D1FB29F700025F231 /* libObjectivelyMVC.dylib in Frameworks */,
 				CE34C89B1FB29F700025F231 /* libcheck.0.dylib in Frameworks */,
 				CE34C89C1FB29F700025F231 /* libObjectively.dylib in Frameworks */,
-				CE34C89D1FB29F700025F231 /* libObjectivelyMVC.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,9 +448,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE55C1C41F944C6D00D5A326 /* libObjectivelyMVC.dylib in Frameworks */,
 				CE55C1C21F944C6D00D5A326 /* libcheck.0.dylib in Frameworks */,
 				CE55C1C31F944C6D00D5A326 /* libObjectively.dylib in Frameworks */,
-				CE55C1C41F944C6D00D5A326 /* libObjectivelyMVC.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -458,9 +458,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE8819921F91B0BE000D5AB7 /* libObjectivelyMVC.dylib in Frameworks */,
 				CE8819901F91B0BE000D5AB7 /* libcheck.0.dylib in Frameworks */,
 				CE8819911F91B0BE000D5AB7 /* libObjectively.dylib in Frameworks */,
-				CE8819921F91B0BE000D5AB7 /* libObjectivelyMVC.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
