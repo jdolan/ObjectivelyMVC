@@ -264,7 +264,7 @@ static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_
 				break;
 		}
 
-		if (index < self->items->array.count) {
+		if (index < (int) self->items->array.count) {
 			return $(alloc(IndexPath), initWithIndex, index);
 		}
 	}

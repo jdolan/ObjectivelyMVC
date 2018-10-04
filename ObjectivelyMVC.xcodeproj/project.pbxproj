@@ -36,132 +36,132 @@
 
 /* Begin PBXBuildFile section */
 		CE0943A71D60F1A300C11408 /* TableColumn.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943A61D60F1A300C11408 /* TableColumn.c */; };
-		CE0943A91D60F23100C11408 /* TableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943A81D60F23100C11408 /* TableColumn.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE0943A91D60F23100C11408 /* TableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943A81D60F23100C11408 /* TableColumn.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE0943AC1D60FFEC00C11408 /* TableRowView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943AA1D60FFEC00C11408 /* TableRowView.c */; };
-		CE0943AD1D60FFEC00C11408 /* TableRowView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AB1D60FFEC00C11408 /* TableRowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE0943AD1D60FFEC00C11408 /* TableRowView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AB1D60FFEC00C11408 /* TableRowView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE0943B01D615CF800C11408 /* TableHeaderCellView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943AE1D615CF800C11408 /* TableHeaderCellView.c */; };
-		CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0981C77AF73003E3CF7 /* Slider.c */; };
-		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
 		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
 		CE12D43F1C4C38B500CD0B13 /* Text.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40D1C4C367100CD0B13 /* Text.c */; };
 		CE12D4401C4C38B500CD0B13 /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4231C4C367100CD0B13 /* View.c */; };
 		CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4251C4C367100CD0B13 /* ViewController.c */; };
-		CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4081C4C367100CD0B13 /* Colors.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4431C4C38C700CD0B13 /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40A1C4C367100CD0B13 /* Font.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40C1C4C367100CD0B13 /* ImageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4451C4C38C700CD0B13 /* Text.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40E1C4C367100CD0B13 /* Text.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4461C4C38C700CD0B13 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4241C4C367100CD0B13 /* View.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4081C4C367100CD0B13 /* Colors.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4431C4C38C700CD0B13 /* Font.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40A1C4C367100CD0B13 /* Font.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40C1C4C367100CD0B13 /* ImageView.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4451C4C38C700CD0B13 /* Text.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D40E1C4C367100CD0B13 /* Text.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4461C4C38C700CD0B13 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4241C4C367100CD0B13 /* View.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4601C4C8F2400CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
 		CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE12D4621C4C8F4800CD0B13 /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
-		CE12D4661C4D587E00CD0B13 /* Log.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4651C4D587E00CD0B13 /* Log.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4661C4D587E00CD0B13 /* Log.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4651C4D587E00CD0B13 /* Log.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4691C4D810F00CD0B13 /* Button.c */; };
-		CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46A1C4D810F00CD0B13 /* Button.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46A1C4D810F00CD0B13 /* Button.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D46D1C4D82AF00CD0B13 /* Control.c */; };
-		CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46E1C4D82AF00CD0B13 /* Control.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46E1C4D82AF00CD0B13 /* Control.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4711C4DAF6100CD0B13 /* Action.c */; };
-		CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4721C4DAF6100CD0B13 /* Action.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4721C4DAF6100CD0B13 /* Action.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D47A1C4EAD3C00CD0B13 /* HelloViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */; };
 		CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D47C1C4F35DF00CD0B13 /* Checkbox.c */; };
-		CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4801C4F3A1600CD0B13 /* Image.c */; };
-		CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4811C4F3A1600CD0B13 /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4811C4F3A1600CD0B13 /* Image.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4931C547BDD00CD0B13 /* StackView.c */; };
-		CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4941C547BDD00CD0B13 /* StackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4941C547BDD00CD0B13 /* StackView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D49C1C568A7600CD0B13 /* TextView.c */; };
-		CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D49D1C568A7600CD0B13 /* TextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D8741C5CF43500CD0B13 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D8731C5CF43500CD0B13 /* libObjectively.dylib */; };
+		CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D49D1C568A7600CD0B13 /* TextView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE14A8CC1C66D89900B576FB /* Select.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CA1C66D89900B576FB /* Select.c */; };
-		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE14A8D01C68CE3C00B576FB /* Option.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CE1C68CE3C00B576FB /* Option.c */; };
-		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */ = {isa = PBXBuildFile; fileRef = CE1CCDA21D9E859F00891F05 /* View+JSON.c */; };
-		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE34C89B1FB29F700025F231 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE34C89C1FB29F700025F231 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE34C89D1FB29F700025F231 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE34C8A31FB29F8B0025F231 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CE34C8941FB29F3A0025F231 /* Stylesheet.c */; };
+		CE3A45A0216594D5005ACAD6 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE55C1C21F944C6D00D5A326 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE55C1C31F944C6D00D5A326 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE55C1C41F944C6D00D5A326 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE55C1CA1F944C7E00D5A326 /* Selector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55C1BB1F944C1B00D5A326 /* Selector.c */; };
 		CE55C1CD1F94CFB200D5A326 /* SimpleSelector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55C1CB1F94CFB200D5A326 /* SimpleSelector.c */; };
-		CE55C1CE1F94CFB200D5A326 /* SimpleSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE55C1CC1F94CFB200D5A326 /* SimpleSelector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE55C1CE1F94CFB200D5A326 /* SimpleSelector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE55C1CC1F94CFB200D5A326 /* SimpleSelector.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE5604D11EAB9F4B00E42E53 /* TabViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5604CF1EAB9F4B00E42E53 /* TabViewController.c */; };
-		CE5604D21EAB9F4B00E42E53 /* TabViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604D01EAB9F4B00E42E53 /* TabViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE5604D21EAB9F4B00E42E53 /* TabViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604D01EAB9F4B00E42E53 /* TabViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE5604D91EABA06E00E42E53 /* TabViewItem.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5604D71EABA06E00E42E53 /* TabViewItem.c */; };
-		CE5604DA1EABA06E00E42E53 /* TabViewItem.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604D81EABA06E00E42E53 /* TabViewItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE5604DA1EABA06E00E42E53 /* TabViewItem.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604D81EABA06E00E42E53 /* TabViewItem.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE5604DD1EABA0FB00E42E53 /* TabView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5604DB1EABA0FB00E42E53 /* TabView.c */; };
-		CE5604DE1EABA0FB00E42E53 /* TabView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604DC1EABA0FB00E42E53 /* TabView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE5604DE1EABA0FB00E42E53 /* TabView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604DC1EABA0FB00E42E53 /* TabView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE5604E11EADBE9400E42E53 /* PageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5604DF1EADBE9400E42E53 /* PageView.c */; };
-		CE5604E21EADBE9400E42E53 /* PageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604E01EADBE9400E42E53 /* PageView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE5604E21EADBE9400E42E53 /* PageView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5604E01EADBE9400E42E53 /* PageView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBA1D6876AB006DF143 /* NavigationViewController.c */; };
-		CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBB1D6876AB006DF143 /* NavigationViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBB1D6876AB006DF143 /* NavigationViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE562EC01D6A08DD006DF143 /* CollectionView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EBE1D6A08DD006DF143 /* CollectionView.c */; };
-		CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBF1D6A08DD006DF143 /* CollectionView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBF1D6A08DD006DF143 /* CollectionView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EC21D6A0A17006DF143 /* CollectionItemView.c */; };
-		CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EC31D6A0A17006DF143 /* CollectionItemView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EC31D6A0A17006DF143 /* CollectionItemView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6603791CBBF93E00EB86CF /* ScrollView.c */; };
-		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
 		CE6BC1821D837D550070FB2D /* Label.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6BC1801D837D550070FB2D /* Label.c */; };
-		CE6BC1831D837D550070FB2D /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6BC1811D837D550070FB2D /* Label.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE6BC1831D837D550070FB2D /* Label.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6BC1811D837D550070FB2D /* Label.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE6EE37B1F6EA91900FBC830 /* HSVColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6EE3791F6EA91900FBC830 /* HSVColorPicker.c */; };
-		CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE6EE3CC1F7156BC00FBC830 /* HueColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6EE3CA1F7156BC00FBC830 /* HueColorPicker.c */; };
-		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
-		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE84C6CC1FFC917600F72267 /* DebugViewController.c */; };
 		CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */ = {isa = PBXBuildFile; fileRef = CE862AD71F79FB82005C3B10 /* ProgressBar.c */; };
-		CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */ = {isa = PBXBuildFile; fileRef = CE862AD81F79FB82005C3B10 /* ProgressBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */ = {isa = PBXBuildFile; fileRef = CE862AD81F79FB82005C3B10 /* ProgressBar.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8819661F8AAC00000D5AB7 /* Notification.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819641F8AAC00000D5AB7 /* Notification.c */; };
-		CE8819671F8AAC00000D5AB7 /* Notification.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819651F8AAC00000D5AB7 /* Notification.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE8819671F8AAC00000D5AB7 /* Notification.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819651F8AAC00000D5AB7 /* Notification.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE88196A1F8AAC25000D5AB7 /* Window.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819681F8AAC25000D5AB7 /* Window.c */; };
-		CE88196B1F8AAC25000D5AB7 /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819691F8AAC25000D5AB7 /* Window.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE88196B1F8AAC25000D5AB7 /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819691F8AAC25000D5AB7 /* Window.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8819821F8CFD60000D5AB7 /* Theme.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819801F8CFD60000D5AB7 /* Theme.c */; };
-		CE8819831F8CFD60000D5AB7 /* Theme.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819811F8CFD60000D5AB7 /* Theme.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE8819831F8CFD60000D5AB7 /* Theme.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819811F8CFD60000D5AB7 /* Theme.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8819861F8DAC96000D5AB7 /* Style.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819841F8DAC96000D5AB7 /* Style.c */; };
-		CE8819871F8DAC96000D5AB7 /* Style.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819851F8DAC96000D5AB7 /* Style.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE8819871F8DAC96000D5AB7 /* Style.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819851F8DAC96000D5AB7 /* Style.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8819901F91B0BE000D5AB7 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE8819911F91B0BE000D5AB7 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE8819921F91B0BE000D5AB7 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE8819981F91B0CE000D5AB7 /* Style.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819891F91B094000D5AB7 /* Style.c */; };
 		CE88199D1F9231AF000D5AB7 /* Selector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE88199B1F9231AE000D5AB7 /* Selector.c */; };
-		CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE88199C1F9231AF000D5AB7 /* Selector.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE88199C1F9231AF000D5AB7 /* Selector.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
-		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF81C84E36100F4C3D4 /* TableView.c */; };
-		CE8E7FFB1C84E36100F4C3D4 /* TableView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF91C84E36100F4C3D4 /* TableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE8E7FFB1C84E36100F4C3D4 /* TableView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF91C84E36100F4C3D4 /* TableView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8E7FFE1C84E8DA00F4C3D4 /* TableHeaderView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FFC1C84E8DA00F4C3D4 /* TableHeaderView.c */; };
-		CE8E7FFF1C84E8DA00F4C3D4 /* TableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FFD1C84E8DA00F4C3D4 /* TableHeaderView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE8E7FFF1C84E8DA00F4C3D4 /* TableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FFD1C84E8DA00F4C3D4 /* TableHeaderView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8E80021C84F25400F4C3D4 /* TableCellView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E80001C84F25400F4C3D4 /* TableCellView.c */; };
-		CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E80011C84F25400F4C3D4 /* TableCellView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E80011C84F25400F4C3D4 /* TableCellView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE9305C41D9B27F900D62770 /* Config.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9305C31D9B27F900D62770 /* Config.h */; };
 		CE9351681F9B6ED000B46882 /* SelectorSequence.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9351661F9B6ED000B46882 /* SelectorSequence.c */; };
-		CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9351671F9B6ED000B46882 /* SelectorSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9351671F9B6ED000B46882 /* SelectorSequence.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */; };
-		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
-		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
 		CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
 		CEDCFC7520497979008A4252 /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CEDCFC7720497B07008A4252 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
-		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
 		CEF1D8A01D440C7B0099A857 /* Box.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D89E1D440C7B0099A857 /* Box.c */; };
-		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
-		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -468,7 +468,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE12D8741C5CF43500CD0B13 /* libObjectively.dylib in Frameworks */,
+				CE3A45A0216594D5005ACAD6 /* libObjectively.dylib in Frameworks */,
 				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
 				CEDCFC7520497979008A4252 /* libSDL2_image-2.0.0.dylib in Frameworks */,
 				CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
@@ -728,6 +728,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 				CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */,
 				CEF1D8A11D440C7B0099A857 /* Box.h in Headers */,
 				CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */,
@@ -747,7 +748,6 @@
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
 				CE8819671F8AAC00000D5AB7 /* Notification.h in Headers */,
-				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
 				CE5604E21EADBE9400E42E53 /* PageView.h in Headers */,
 				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
@@ -863,7 +863,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CED157CF1C4BF3AC00FBA2DE /* Build configuration list for PBXNativeTarget "ObjectivelyMVC" */;
 			buildPhases = (
-				CE92C5181FE02B5C00FDB0DF /* ShellScript */,
+				CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */,
 				CED157C91C4BF3AC00FBA2DE /* Sources */,
 				CED157CA1C4BF3AC00FBA2DE /* Frameworks */,
 				CED157CB1C4BF3AC00FBA2DE /* Headers */,
@@ -935,13 +935,14 @@
 			shellPath = /bin/sh;
 			shellScript = "$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Selector &&\n$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Style &&\n$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Stylesheet\n";
 		};
-		CE92C5181FE02B5C00FDB0DF /* ShellScript */ = {
+		CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Preprocess Assets";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1174,41 +1175,21 @@
 		CED157981C4BEA8900FBA2DE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1216,16 +1197,16 @@
 					/usr/local/include,
 					/opt/local/include,
 					/opt/local/include/SDL2,
+					"$(SRCROOT)/Assets",
+					"$(SRCROOT)/Sources",
+					"$(BUILT_PRODUCTS_DIR)/usr/local/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/opt/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				MTL_ENABLE_DEBUG_INFO = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-I$(SRCROOT)/Sources";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Assets $(SRCROOT)/Sources";
 				USE_HEADERMAP = NO;
 			};
 			name = Debug;
@@ -1233,36 +1214,20 @@
 		CED157991C4BEA8900FBA2DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1270,16 +1235,16 @@
 					/usr/local/include,
 					/opt/local/include,
 					/opt/local/include/SDL2,
+					"$(SRCROOT)/Assets",
+					"$(SRCROOT)/Sources",
+					"$(BUILT_PRODUCTS_DIR)/usr/local/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/opt/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
-				MTL_ENABLE_DEBUG_INFO = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_CFLAGS = "-I$(SRCROOT)/Sources";
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/Assets $(SRCROOT)/Sources";
 				USE_HEADERMAP = NO;
 			};
 			name = Release;
@@ -1287,11 +1252,8 @@
 		CED157D01C4BF3AC00FBA2DE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
 			};
 			name = Debug;
@@ -1299,11 +1261,8 @@
 		CED157D11C4BF3AC00FBA2DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
 				EXECUTABLE_PREFIX = lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
 			};
 			name = Release;

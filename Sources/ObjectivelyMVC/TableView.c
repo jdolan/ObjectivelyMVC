@@ -162,7 +162,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				const ssize_t index = $(this, rowAtPoint, &point);
 
 				const Array *rows = (Array *) this->rows;
-				if (index > -1 && index < rows->count) {
+				if (index > -1 && index < (ssize_t) rows->count) {
 
 					TableRowView *row = $(rows, objectAtIndex, index);
 

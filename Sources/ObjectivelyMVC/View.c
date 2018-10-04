@@ -154,7 +154,7 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 		const ssize_t index = $(subviews, indexOfObject, other);
 
 		if (position == ViewPositionAfter) {
-			if (index == subviews->count - 1) {
+			if (index == (ssize_t) (subviews->count - 1)) {
 				$(self->subviews, addObject, subview);
 			} else {
 				$(self->subviews, insertObjectAtIndex, subview, index + 1);
@@ -604,7 +604,7 @@ static void enumerateAdjacent(const View *self, ViewEnumerator enumerator, ident
 		if (index > 0) {
 			enumerator($(siblings, objectAtIndex, index - 1), data);
 		}
-		if (index < siblings->count - 1) {
+		if (index < (ssize_t) (siblings->count - 1)) {
 			enumerator($(siblings, objectAtIndex, index + 1), data);
 		}
 	}

@@ -26,14 +26,14 @@
 
 #include <ObjectivelyMVC/Notification.h>
 
-int MVC_NOTIFICATION_EVENT;
+Uint32 MVC_NOTIFICATION_EVENT;
 
 void MVC_PostNotification(const Notification *notification) {
 	static Once once;
 
 	do_once(&once, {
 		MVC_NOTIFICATION_EVENT = SDL_RegisterEvents(1);
-		assert(MVC_NOTIFICATION_EVENT != -1);
+		assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
 	});
 
 	assert(notification);

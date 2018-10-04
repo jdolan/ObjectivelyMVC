@@ -52,7 +52,7 @@ struct Notification {
 /**
  * @brief The custom event type for notifications.
  */
-OBJECTIVELYMVC_EXPORT int MVC_NOTIFICATION_EVENT;
+OBJECTIVELYMVC_EXPORT Uint32 MVC_NOTIFICATION_EVENT;
 
 /**
  * @brief Posts the Notification to all ViewControllers in the current window.
