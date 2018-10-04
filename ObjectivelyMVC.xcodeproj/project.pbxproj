@@ -152,6 +152,7 @@
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
 		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
 		CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
 		CEDCFC7520497979008A4252 /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
@@ -775,6 +776,7 @@
 				CE12D4451C4C38C700CD0B13 /* Text.h in Headers */,
 				CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */,
 				CE8819831F8CFD60000D5AB7 /* Theme.h in Headers */,
+				CEBCB6D521664EB1009E6289 /* Types.h in Headers */,
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
 				CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */,
 				CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */,
