@@ -99,7 +99,7 @@ Panel {
 }
 
 .columns {
-	autoreizing-mask: contain | width;
+	autoresizing-mask: contain | width;
 	axis: horizontal;
 	distribution: fill;
 }
