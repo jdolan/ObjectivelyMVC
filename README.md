@@ -9,6 +9,8 @@ Object oriented MVC framework for OpenGL, SDL2 and GNU C
 ---
 
 ObjectivelyMVC is a cross-platform user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by Apple's [AppKit](https://developer.apple.com/reference/appkit). It is geared towards building high-quality, modern looking user interfaces within [OpenGL](http://www.opengl.org/) video games that are already using SDL2. It is built on [Objectively](https://github.com/jdolan/Objectively), written in [GNU C](http://www.gnu.org/software/gnu-c-manual/), and requires `gcc` or `clang`.
+
+[![Hello, ObjectivelyMVC!](Documentation/hello-thumbnail.jpg)](https://www.youtube.com/watch?v=Rm_mOr3gP5k)
  
 Features
 ---
