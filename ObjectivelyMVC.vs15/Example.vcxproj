@@ -70,28 +70,28 @@
     <UseMultiToolTask>true</UseMultiToolTask>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_ttf\;libs\sdl\SDL2\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_ttf\SDL2\;libs\sdl\SDL2\;$(IncludePath)</IncludePath>
     <LibraryPath>bin\$(Platform)$(Configuration)\;..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\fontconfig\lib\$(Platform)\;..\..\Objectively\Objectively.vs15\libs\iconv\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <UseMultiToolTask>true</UseMultiToolTask>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_ttf\;libs\sdl\SDL2\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_ttf\SDL2\;libs\sdl\SDL2\;$(IncludePath)</IncludePath>
     <LibraryPath>bin\$(Platform)$(Configuration)\;..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\fontconfig\lib\$(Platform)\;..\..\Objectively\Objectively.vs15\libs\iconv\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <UseMultiToolTask>true</UseMultiToolTask>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_ttf\;libs\sdl\SDL2\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_ttf\SDL2\;libs\sdl\SDL2\;$(IncludePath)</IncludePath>
     <LibraryPath>bin\$(Platform)$(Configuration)\;..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\fontconfig\lib\$(Platform)\;..\..\Objectively\Objectively.vs15\libs\iconv\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <UseMultiToolTask>true</UseMultiToolTask>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
-    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_ttf\;libs\sdl\SDL2\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_ttf\SDL2\;libs\sdl\SDL2\;$(IncludePath)</IncludePath>
     <LibraryPath>bin\$(Platform)$(Configuration)\;..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\fontconfig\lib\$(Platform)\;..\..\Objectively\Objectively.vs15\libs\iconv\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
