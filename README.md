@@ -128,7 +128,7 @@ static Data *resourceProvider(const char *name) {
 
 // ...
 
-$$(Resource, setProvider, resourceProvider);
+$$(Resource, addResourceProvider, resourceProvider);
 ```
 
 Examples
