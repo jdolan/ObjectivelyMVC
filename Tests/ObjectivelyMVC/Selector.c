@@ -25,8 +25,8 @@
 
 #include <ObjectivelyMVC.h>
 
-START_TEST(selector)
-{
+START_TEST(selector) {
+
 	Selector *selector = $(alloc(Selector), initWithRule, "Panel#main .foo > Control:highlighted");
 	ck_assert_ptr_ne(NULL, selector);
 	ck_assert_ptr_eq(_Selector(), classof(selector));
@@ -81,8 +81,8 @@ START_TEST(selector)
 
 } END_TEST
 
-START_TEST(compareTo)
-{
+START_TEST(compareTo) {
+
 	Selector *a = $(alloc(Selector), initWithRule, "#id Type .class");
 	ck_assert_ptr_ne(NULL, a);
 	ck_assert_int_eq(111, a->specificity);
@@ -95,8 +95,8 @@ START_TEST(compareTo)
 
 } END_TEST
 
-START_TEST(matchesView)
-{
+START_TEST(matchesView) {
+
 	View *root = $(alloc(View), initWithFrame, NULL);
 	root->identifier = strdup("root");
 
@@ -176,8 +176,8 @@ START_TEST(matchesView)
 
 } END_TEST
 
-START_TEST(_select)
-{
+START_TEST(_select) {
+	
 	View *root = $(alloc(View), initWithFrame, NULL);
 	root->identifier = strdup("root");
 

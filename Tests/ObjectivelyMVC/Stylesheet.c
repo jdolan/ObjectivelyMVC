@@ -27,8 +27,8 @@
 
 #include <ObjectivelyMVC.h>
 
-START_TEST(stylesheet)
-{
+START_TEST(stylesheet) {
+
 	Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters, "\
 		selector one, selector two .class { \
 			bool-attribute: true; \
@@ -112,7 +112,7 @@ START_TEST(stylesheet)
 
 	release(stylesheet);
 
-}END_TEST
+} END_TEST
 
 int main(int argc, char **argv) {
 

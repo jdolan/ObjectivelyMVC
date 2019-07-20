@@ -27,8 +27,8 @@
 
 #include <ObjectivelyMVC.h>
 
-START_TEST(style)
-{
+START_TEST(style) {
+	
 	Style *style;
 
 	style = $(alloc(Style), initWithRules, "Control:highlighted, Control:focused");
@@ -98,7 +98,7 @@ START_TEST(style)
 
 	release(style);
 
-}END_TEST
+} END_TEST
 
 int main(int argc, char **argv) {
 
