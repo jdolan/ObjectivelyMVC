@@ -20,8 +20,9 @@
 #include <math.h>
 #include <string.h>
 
-#include <ObjectivelyMVC/Colors.h>
 #include <SDL_endian.h>
+
+#include "Colors.h"
 
 const struct Colors Colors = {
 	.AliceBlue = { 240, 248, 255, 255 },

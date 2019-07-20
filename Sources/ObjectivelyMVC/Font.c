@@ -28,12 +28,12 @@
 #include <Objectively/MutableArray.h>
 #include <Objectively/String.h>
 
-#include <ObjectivelyMVC/Font.h>
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/Window.h>
+#include "Font.h"
+#include "Log.h"
+#include "View.h"
+#include "Window.h"
 
-#include <coda.ttf.h>
+#include "coda.ttf.h"
 
 const EnumName FontStyleNames[] = MakeEnumNames(
 	MakeEnumAlias(FontStyleRegular, regular),

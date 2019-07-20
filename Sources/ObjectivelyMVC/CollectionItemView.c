@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/CollectionItemView.h>
+#include "CollectionItemView.h"
 
 #define _Class _CollectionItemView
 

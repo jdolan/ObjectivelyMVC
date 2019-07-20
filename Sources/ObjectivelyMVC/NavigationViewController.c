@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/NavigationViewController.h>
+#include "NavigationViewController.h"
 
 #define _Class _NavigationViewController
 

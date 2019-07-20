@@ -25,8 +25,8 @@
 
 #include <Objectively/String.h>
 
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/WindowController.h>
+#include "Log.h"
+#include "WindowController.h"
 
 #define _Class _WindowController
 

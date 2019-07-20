@@ -23,8 +23,8 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/TableRowView.h>
-#include <ObjectivelyMVC/TableView.h>
+#include "TableRowView.h"
+#include "TableView.h"
 
 #define _Class _TableRowView
 

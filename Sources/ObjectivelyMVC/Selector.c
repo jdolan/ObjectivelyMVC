@@ -28,9 +28,9 @@
 #include <Objectively/MutableArray.h>
 #include <Objectively/MutableSet.h>
 
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/Selector.h>
-#include <ObjectivelyMVC/View.h>
+#include "Log.h"
+#include "Selector.h"
+#include "View.h"
 
 #define _Class _Selector
 

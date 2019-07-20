@@ -27,7 +27,7 @@
 
 #include <Objectively.h>
 
-#include <ObjectivelyMVC/Style.h>
+#include "Style.h"
 
 #define _Class _Style
 

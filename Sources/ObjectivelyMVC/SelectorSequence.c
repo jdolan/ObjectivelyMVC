@@ -26,8 +26,8 @@
 
 #include <Objectively/MutableArray.h>
 
-#include <ObjectivelyMVC/SelectorSequence.h>
-#include <ObjectivelyMVC/View.h>
+#include "SelectorSequence.h"
+#include "View.h"
 
 #define _Class _SelectorSequence
 

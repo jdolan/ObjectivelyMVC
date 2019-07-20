@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Button.h>
+#include "Button.h"
 
 #define _Class _Button
 

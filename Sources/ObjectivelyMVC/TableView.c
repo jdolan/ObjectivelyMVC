@@ -26,7 +26,7 @@
 
 #include <Objectively/String.h>
 
-#include <ObjectivelyMVC/TableView.h>
+#include "TableView.h"
 
 #define _Class _TableView
 

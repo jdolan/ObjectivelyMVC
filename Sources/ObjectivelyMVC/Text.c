@@ -25,7 +25,7 @@
 #include <stdarg.h>
 #include <string.h>
 
-#include <ObjectivelyMVC/Text.h>
+#include "Text.h"
 
 #define _Class _Text
 

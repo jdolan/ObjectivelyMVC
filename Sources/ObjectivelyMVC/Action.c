@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Action.h>
+#include "Action.h"
 
 #define _Class _Action
 

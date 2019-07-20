@@ -23,10 +23,10 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/DebugViewController.h>
+#include "DebugViewController.h"
 
-#include <debug.css.h>
-#include <debug.json.h>
+#include "debug.css.h"
+#include "debug.json.h"
 
 #define _Class _DebugViewController
 

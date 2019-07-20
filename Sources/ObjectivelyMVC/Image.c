@@ -20,8 +20,8 @@
 
 #include <SDL_image.h>
 
-#include <ObjectivelyMVC/Image.h>
-#include <ObjectivelyMVC/Log.h>
+#include "Image.h"
+#include "Log.h"
 
 #define _Class _Image
 

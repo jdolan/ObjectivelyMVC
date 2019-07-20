@@ -27,7 +27,7 @@
 
 #include <Objectively/String.h>
 
-#include <ObjectivelyMVC/TableColumn.h>
+#include "TableColumn.h"
 
 #define _Class _TableColumn
 

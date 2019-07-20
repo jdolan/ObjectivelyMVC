@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Label.h>
+#include "Label.h"
 
 #define _Class _Label
 

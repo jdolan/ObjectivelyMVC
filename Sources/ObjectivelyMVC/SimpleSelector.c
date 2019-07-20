@@ -29,7 +29,7 @@
 #include <Objectively/MutableArray.h>
 #include <Objectively/String.h>
 
-#include <ObjectivelyMVC/SimpleSelector.h>
+#include "SimpleSelector.h"
 
 #define _Class _SimpleSelector
 

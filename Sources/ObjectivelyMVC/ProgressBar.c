@@ -24,7 +24,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include <ObjectivelyMVC/ProgressBar.h>
+#include "ProgressBar.h"
 
 #define _Class _ProgressBar
 

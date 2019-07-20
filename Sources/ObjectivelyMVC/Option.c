@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Option.h>
+#include "Option.h"
 
 #define _Class _Option
 

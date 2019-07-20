@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Box.h>
+#include "Box.h"
 
 #define _Class _Box
 

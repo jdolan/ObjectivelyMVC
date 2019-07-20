@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/CollectionView.h>
+#include "CollectionView.h"
 
 const EnumName CollectionViewAxisNames[] = MakeEnumNames(
 	MakeEnumAlias(CollectionViewAxisHorizontal, horizontal),

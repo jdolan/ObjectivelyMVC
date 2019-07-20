@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/ImageView.h>
+#include "ImageView.h"
 
 const EnumName GLBlendNames[] = MakeEnumNames(
 	MakeEnumName(GL_CONSTANT_ALPHA),

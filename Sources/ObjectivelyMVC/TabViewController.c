@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/TabViewController.h>
+#include "TabViewController.h"
 
 #define _Class _TabViewController
 

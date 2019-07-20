@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Input.h>
+#include "Input.h"
 
 const EnumName InputOrientationNames[] = MakeEnumNames(
 	MakeEnumName(InputOrientationLeft),

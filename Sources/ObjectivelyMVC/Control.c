@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Control.h>
+#include "Control.h"
 
 const EnumName ControlBevelNames[] = MakeEnumNames(
 	MakeEnumAlias(ControlBevelNone, none),

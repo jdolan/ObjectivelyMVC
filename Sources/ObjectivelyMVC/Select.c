@@ -25,7 +25,7 @@
 
 #include <Objectively/Array.h>
 
-#include <ObjectivelyMVC/Select.h>
+#include "Select.h"
 
 #define _Class _Select
 

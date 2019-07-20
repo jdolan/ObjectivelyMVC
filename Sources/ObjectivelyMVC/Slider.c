@@ -24,8 +24,8 @@
 #include <assert.h>
 #include <string.h>
 
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/Slider.h>
+#include "Log.h"
+#include "Slider.h"
 
 #define _Class _Slider
 

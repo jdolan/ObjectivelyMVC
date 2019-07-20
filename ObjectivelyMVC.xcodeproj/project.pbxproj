@@ -1210,7 +1210,6 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1224,17 +1223,12 @@
 					/usr/local/include,
 					/opt/local/include,
 					/opt/local/include/SDL2,
-					"$(SRCROOT)/Assets",
-					"$(SRCROOT)/Sources",
-					"$(BUILT_PRODUCTS_DIR)/usr/local/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/opt/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
-				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
@@ -1273,17 +1267,12 @@
 					/usr/local/include,
 					/opt/local/include,
 					/opt/local/include/SDL2,
-					"$(SRCROOT)/Assets",
-					"$(SRCROOT)/Sources",
-					"$(BUILT_PRODUCTS_DIR)/usr/local/include",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/usr/local/lib,
 					/opt/local/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
-				USE_HEADERMAP = NO;
 			};
 			name = Release;
 		};

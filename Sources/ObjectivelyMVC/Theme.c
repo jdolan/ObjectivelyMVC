@@ -25,10 +25,10 @@
 
 #include <Objectively/JSONSerialization.h>
 
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/Theme.h>
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/WindowController.h>
+#include "Log.h"
+#include "Theme.h"
+#include "View.h"
+#include "WindowController.h"
 
 #define _Class _Theme
 

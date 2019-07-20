@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/ViewController.h>
+#include "ViewController.h"
 
 #define _Class _ViewController
 

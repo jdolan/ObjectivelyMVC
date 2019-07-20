@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/StackView.h>
+#include "StackView.h"
 
 const EnumName StackViewAxisNames[] = MakeEnumNames(
 	MakeEnumAlias(StackViewAxisVertical, vertical),

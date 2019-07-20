@@ -22,9 +22,10 @@
  */
 
 #include <assert.h>
+
 #include <Objectively/Once.h>
 
-#include <ObjectivelyMVC/Notification.h>
+#include "Notification.h"
 
 Uint32 MVC_NOTIFICATION_EVENT;
 

@@ -26,7 +26,7 @@
 
 #include <Objectively/String.h>
 
-#include <ObjectivelyMVC/TextView.h>
+#include "TextView.h"
 
 #define _Class _TextView
 

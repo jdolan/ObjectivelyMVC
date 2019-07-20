@@ -23,9 +23,9 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Panel.h>
+#include "Panel.h"
 
-#include <resize.png.h>
+#include "resize.png.h"
 
 static Image *_resize;
 

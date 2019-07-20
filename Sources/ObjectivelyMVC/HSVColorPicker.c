@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/HSVColorPicker.h>
+#include "HSVColorPicker.h"
 
 #define _Class _HSVColorPicker
 

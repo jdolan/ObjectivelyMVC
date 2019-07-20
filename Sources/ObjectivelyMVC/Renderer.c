@@ -23,10 +23,10 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/Renderer.h>
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/Window.h>
+#include "Log.h"
+#include "Renderer.h"
+#include "View.h"
+#include "Window.h"
 
 #define _Class _Renderer
 

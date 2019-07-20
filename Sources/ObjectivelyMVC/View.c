@@ -26,10 +26,10 @@
 
 #include <Objectively.h>
 
-#include <ObjectivelyMVC/Log.h>
-#include <ObjectivelyMVC/View.h>
-#include <ObjectivelyMVC/ViewController.h>
-#include <ObjectivelyMVC/Window.h>
+#include "Log.h"
+#include "View.h"
+#include "ViewController.h"
+#include "Window.h"
 
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
 	MakeEnumAlias(ViewAlignmentNone, none),

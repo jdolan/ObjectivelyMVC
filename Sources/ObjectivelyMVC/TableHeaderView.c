@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/TableHeaderView.h>
+#include "TableHeaderView.h"
 
 #define _Class _TableHeaderView
 

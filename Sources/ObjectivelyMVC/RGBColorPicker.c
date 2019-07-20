@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/RGBColorPicker.h>
+#include "RGBColorPicker.h"
 
 #define _Class _RGBColorPicker
 

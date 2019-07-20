@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <ObjectivelyMVC/ScrollView.h>
+#include "ScrollView.h"
 
 #define _Class _ScrollView
 

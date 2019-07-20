@@ -26,9 +26,9 @@
 
 #include <Objectively/Hash.h>
 
-#include <ObjectivelyMVC.h>
+#include "ObjectivelyMVC.h"
 
-#include <stylesheet.css.h>
+#include "stylesheet.css.h"
 
 #define _Class _Stylesheet
 

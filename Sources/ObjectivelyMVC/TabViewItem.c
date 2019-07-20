@@ -24,7 +24,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include <ObjectivelyMVC/TabViewItem.h>
+#include "TabViewItem.h"
 
 #define _Class _TabViewItem
 
