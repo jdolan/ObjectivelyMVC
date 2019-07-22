@@ -225,7 +225,7 @@ struct Outlet {
 #define MakeOutlet(identifier, view) (Outlet) { (identifier), (View **) (view) }
 
 /**
- * @brief Creates a null-termianted array of Outlets.
+ * @brief Creates a `NULL`-termianted array of Outlets.
  */
 #define MakeOutlets(...) \
 	{ \
