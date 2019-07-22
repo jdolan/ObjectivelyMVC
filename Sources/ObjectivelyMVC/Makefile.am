@@ -4,7 +4,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/Sources
 noinst_HEADERS = \
 	Config.h
 
-pkgincludedir = $(includedir)/ObjectivelyMVC
+pkgincludedir = $(includedir)/$(PACKAGE_NAME)
 
 pkginclude_HEADERS = \
 	Action.h \
