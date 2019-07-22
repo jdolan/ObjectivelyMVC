@@ -295,18 +295,18 @@ START_TEST(_select) {
 
 int main(int argc, char **argv) {
 
-	TCase *tcase = tcase_create("selector");
+	TCase *tcase = tcase_create("Selector");
 	tcase_add_test(tcase, selector);
 	tcase_add_test(tcase, compareTo);
 	tcase_add_test(tcase, matchesView);
 	tcase_add_test(tcase, _select);
 
-	Suite *suite = suite_create("selector");
+	Suite *suite = suite_create("Selector");
 	suite_add_tcase(suite, tcase);
 
 	SRunner *runner = srunner_create(suite);
 
-	srunner_run_all(runner, CK_NORMAL);
+	srunner_run_all(runner, CK_VERBOSE);
 	int failed = srunner_ntests_failed(runner);
 
 	srunner_free(runner);

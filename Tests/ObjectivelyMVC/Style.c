@@ -102,15 +102,15 @@ START_TEST(style) {
 
 int main(int argc, char **argv) {
 
-	TCase *tcase = tcase_create("style");
+	TCase *tcase = tcase_create("Style");
 	tcase_add_test(tcase, style);
 
-	Suite *suite = suite_create("style");
+	Suite *suite = suite_create("Style");
 	suite_add_tcase(suite, tcase);
 
 	SRunner *runner = srunner_create(suite);
 
-	srunner_run_all(runner, CK_NORMAL);
+	srunner_run_all(runner, CK_VERBOSE);
 	int failed = srunner_ntests_failed(runner);
 
 	srunner_free(runner);
