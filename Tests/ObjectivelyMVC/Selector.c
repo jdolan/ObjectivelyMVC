@@ -25,7 +25,7 @@
 
 #include <ObjectivelyMVC.h>
 
-START_TEST(selector) {
+START_TEST(initWithRule) {
 
 	Selector *selector = $(alloc(Selector), initWithRule, "Panel#main .foo > Control:highlighted");
 	ck_assert_ptr_ne(NULL, selector);
@@ -296,7 +296,7 @@ START_TEST(_select) {
 int main(int argc, char **argv) {
 
 	TCase *tcase = tcase_create("Selector");
-	tcase_add_test(tcase, selector);
+	tcase_add_test(tcase, initWithRule);
 	tcase_add_test(tcase, compareTo);
 	tcase_add_test(tcase, matchesView);
 	tcase_add_test(tcase, _select);

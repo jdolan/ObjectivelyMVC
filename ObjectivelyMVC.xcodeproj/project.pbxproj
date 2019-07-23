@@ -429,8 +429,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
-				CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */,
 				CEDCFC7720497B07008A4252 /* libObjectively.dylib in Frameworks */,
+				CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */,
 				CE12D4601C4C8F2400CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -440,8 +440,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE34C89D1FB29F700025F231 /* libObjectivelyMVC.dylib in Frameworks */,
-				CE34C89B1FB29F700025F231 /* libcheck.0.dylib in Frameworks */,
 				CE34C89C1FB29F700025F231 /* libObjectively.dylib in Frameworks */,
+				CE34C89B1FB29F700025F231 /* libcheck.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,8 +450,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE55C1C41F944C6D00D5A326 /* libObjectivelyMVC.dylib in Frameworks */,
-				CE55C1C21F944C6D00D5A326 /* libcheck.0.dylib in Frameworks */,
 				CE55C1C31F944C6D00D5A326 /* libObjectively.dylib in Frameworks */,
+				CE55C1C21F944C6D00D5A326 /* libcheck.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -460,8 +460,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE8819921F91B0BE000D5AB7 /* libObjectivelyMVC.dylib in Frameworks */,
-				CE8819901F91B0BE000D5AB7 /* libcheck.0.dylib in Frameworks */,
 				CE8819911F91B0BE000D5AB7 /* libObjectively.dylib in Frameworks */,
+				CE8819901F91B0BE000D5AB7 /* libcheck.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -885,7 +885,7 @@
 		CED157931C4BEA8900FBA2DE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1030;
 				ORGANIZATIONNAME = "https://github.com/jdolan";
 				TargetAttributes = {
 					CE12D4541C4C8E8E00CD0B13 = {
@@ -936,7 +936,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Selector &&\n$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Style &&\n$BUILT_PRODUCTS_DIR/ObjectivelyMVC-Stylesheet\n";
+			shellScript = "cd $BUILT_PRODUCTS_DIR &&\n./ObjectivelyMVC-Selector &&\n./ObjectivelyMVC-Style &&\n./ObjectivelyMVC-Stylesheet\n";
 		};
 		CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1094,7 +1094,6 @@
 		CE12D45A1C4C8E8E00CD0B13 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1102,7 +1101,6 @@
 		CE12D45B1C4C8E8E00CD0B13 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1110,7 +1108,6 @@
 		CE34C8A01FB29F700025F231 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1118,7 +1115,6 @@
 		CE34C8A11FB29F700025F231 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1126,7 +1122,6 @@
 		CE3CB29A1F40F9A100FAA016 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1134,7 +1129,6 @@
 		CE3CB29B1F40F9A100FAA016 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1142,7 +1136,6 @@
 		CE423A491F534657002767E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1150,7 +1143,6 @@
 		CE423A4A1F534657002767E7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1158,7 +1150,6 @@
 		CE55C1C71F944C6D00D5A326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1166,7 +1157,6 @@
 		CE55C1C81F944C6D00D5A326 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1174,7 +1164,6 @@
 		CE8819951F91B0BE000D5AB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1182,7 +1171,6 @@
 		CE8819961F91B0BE000D5AB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1191,31 +1179,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1236,30 +1214,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_SIGN_COMPARE = YES;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
@@ -1279,7 +1247,6 @@
 		CED157D01C4BF3AC00FBA2DE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				EXECUTABLE_PREFIX = lib;
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
@@ -1289,7 +1256,6 @@
 		CED157D11C4BF3AC00FBA2DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_WEAK = YES;
 				EXECUTABLE_PREFIX = lib;
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
