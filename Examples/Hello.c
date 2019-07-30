@@ -21,8 +21,6 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#include <assert.h>
-
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
@@ -68,6 +66,10 @@ int main(int argc, char *argv[]) {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
 			$(windowController, respondToEvent, &event);
+			
+			if (event.type == SDL_QUIT) {
+				break;
+			}
 		}
 
 		if (event.type == SDL_QUIT) {
