@@ -107,7 +107,7 @@ struct Control {
 	/**
 	 * @brief The bit mask of ControlState.
 	 */
-	int state;
+	unsigned int state;
 
 	/**
 	 * @brief The ControlSelection.
