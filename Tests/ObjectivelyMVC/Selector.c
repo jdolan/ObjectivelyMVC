@@ -23,7 +23,7 @@
 
 #include <check.h>
 
-#include <ObjectivelyMVC.h>
+#include "ObjectivelyMVC.h"
 
 START_TEST(initWithRule) {
 

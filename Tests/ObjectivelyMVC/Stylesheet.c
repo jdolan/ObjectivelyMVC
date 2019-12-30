@@ -25,7 +25,7 @@
 
 #include <Objectively.h>
 
-#include <ObjectivelyMVC.h>
+#include "ObjectivelyMVC.h"
 
 START_TEST(stylesheet) {
 
