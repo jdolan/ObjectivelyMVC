@@ -37,7 +37,7 @@ OBJECTIVELYMVC_EXPORT SDL_Rect MVC_TransformToWindow(SDL_Window *window, const S
  * @brief Resolves the scale factor of the specified window for High-DPI support.
  * @param window The window, or `NULL` for the current OpenGL window.
  * @param height An optional output parameter to retrieve the window height.
- * @param drawableHeight AN optional output parameter to retrieve the window drawable height.
+ * @param drawableHeight An optional output parameter to retrieve the window drawable height.
  * @return The scale factor of the specified window.
  * @remarks Views and other classes should invoke this method to alter their rendering behavior for
  * High-DPI displays. This is particularly relevant for Views that render textures.
