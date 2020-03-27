@@ -154,7 +154,7 @@ static Image *initWithResourceName(Image *self, const char *name) {
  * @fn Image *Image::initWithSurface(Image *self, SDL_Surface *surface)
  * @memberof Image
  */
-Image *initWithSurface(Image *self, SDL_Surface *surface) {
+static Image *initWithSurface(Image *self, SDL_Surface *surface) {
 
 	self = (Image *) super(Object, self, init);
 	if (self) {
@@ -178,7 +178,7 @@ Image *initWithSurface(Image *self, SDL_Surface *surface) {
  * @fn SDL_Size Image::size(const Image *self)
  * @memberof Image
  */
-SDL_Size size(const Image *self) {
+static SDL_Size size(const Image *self) {
 	return MakeSize(self->surface->w, self->surface->h);
 }
 

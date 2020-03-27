@@ -34,7 +34,7 @@
  * @brief W3C Color constants.
  * @see http://www.w3schools.com/colors/colors_names.asp
  */
-OBJECTIVELYMVC_EXPORT const struct Colors {
+OBJECTIVELYMVC_EXPORT extern const struct Colors {
 
 	SDL_Color AliceBlue;
 	SDL_Color AntiqueWhite;
@@ -238,7 +238,7 @@ OBJECTIVELYMVC_EXPORT SDL_Color MVC_HSVToRGB(double hue, double saturation, doub
 /**
  * @brief Converts the given RGB color to HSV components.
  * @param color The RGB color.
- * @param *hue The hue component.
+ * @param hue The hue component.
  * @param saturation The saturation component.
  * @param value The value component.
  * @relates Colors

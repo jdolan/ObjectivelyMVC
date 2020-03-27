@@ -51,7 +51,7 @@ typedef enum {
 	FontStyleStrikeThrough = TTF_STYLE_STRIKETHROUGH
 } FontStyle;
 
-OBJECTIVELYMVC_EXPORT const EnumName FontStyleNames[];
+OBJECTIVELYMVC_EXPORT extern const EnumName FontStyleNames[];
 
 typedef struct Font Font;
 typedef struct FontInterface FontInterface;

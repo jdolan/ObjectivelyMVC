@@ -294,9 +294,9 @@ static void removeOption(Select *self, Option *option) {
 
 		if (self->control.selection == ControlSelectionSingle) {
 			if ($(self, selectedOption) == NULL) {
-				Option *option = $((Array *) self->options, firstObject);
-				if (option) {
-					$(self, selectOption, option);
+				Option *first_option = $((Array *) self->options, firstObject);
+				if (first_option) {
+					$(self, selectOption, first_option);
 				}
 			}
 		}

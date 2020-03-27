@@ -469,7 +469,7 @@ static _Bool containsPoint(const View *self, const SDL_Point *point) {
 
 	const SDL_Rect frame = $(self, clippingFrame);
 
-	return (_Bool) SDL_PointInRect(point, &frame);
+	return (_Bool) !!SDL_PointInRect(point, &frame);
 }
 
 /**
