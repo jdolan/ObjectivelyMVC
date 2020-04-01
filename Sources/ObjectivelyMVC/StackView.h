@@ -44,7 +44,7 @@ typedef enum {
 	StackViewAxisHorizontal
 } StackViewAxis;
 
-OBJECTIVELYMVC_EXPORT extern const EnumName StackViewAxisNames[];
+OBJECTIVELYMVC_EXPORT const EnumName StackViewAxisNames[];
 
 /**
  * @brief Distribution models for filling a StackView's frame.
@@ -55,7 +55,7 @@ typedef enum {
 	StackViewDistributionFillEqually,
 } StackViewDistribution;
 
-OBJECTIVELYMVC_EXPORT extern const EnumName StackViewDistributionNames[];
+OBJECTIVELYMVC_EXPORT const EnumName StackViewDistributionNames[];
 
 typedef struct StackView StackView;
 typedef struct StackViewInterface StackViewInterface;

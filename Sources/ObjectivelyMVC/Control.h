@@ -47,7 +47,7 @@ typedef enum {
 	ControlBevelOutset
 } ControlBevel;
 
-OBJECTIVELYMVC_EXPORT extern const EnumName ControlBevelNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ControlBevelNames[];
 
 /**
  * @brief Control selection styles, for Controls that support user selection.
@@ -58,7 +58,7 @@ typedef enum {
 	ControlSelectionMultiple
 } ControlSelection;
 
-OBJECTIVELYMVC_EXPORT extern const EnumName ControlSelectionNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ControlSelectionNames[];
 
 /**
  * @brief Control states, which are bit-masked.
@@ -71,7 +71,7 @@ typedef enum {
 	ControlStateFocused = 0x8,
 } ControlState;
 
-OBJECTIVELYMVC_EXPORT extern const EnumName ControlStateNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ControlStateNames[];
 
 typedef struct ControlInterface ControlInterface;
 

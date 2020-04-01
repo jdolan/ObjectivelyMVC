@@ -76,7 +76,7 @@ typedef enum {
 	ViewAlignmentInternal = ViewAlignmentMaskInternal
 } ViewAlignment;
 
-OBJECTIVELYMVC_EXPORT extern const EnumName ViewAlignmentNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ViewAlignmentNames[];
 
 /**
  * @brief Auto-resizing constants, which are bitmasked.
@@ -89,7 +89,7 @@ typedef enum {
 	ViewAutoresizingContain = 0x4
 } ViewAutoresizing;
 
-OBJECTIVELYMVC_EXPORT extern const EnumName ViewAutoresizingNames[];
+OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
 
 /**
  * @brief Spacing applied to the inside of a View's frame.

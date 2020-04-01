@@ -34,7 +34,7 @@
  * @brief W3C Color constants.
  * @see http://www.w3schools.com/colors/colors_names.asp
  */
-OBJECTIVELYMVC_EXPORT extern const struct Colors {
+OBJECTIVELYMVC_EXPORT const struct Colors {
 
 	SDL_Color AliceBlue;
 	SDL_Color AntiqueWhite;
