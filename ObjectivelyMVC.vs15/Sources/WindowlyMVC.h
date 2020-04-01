@@ -24,7 +24,7 @@
 #pragma once
 
 #ifdef BUILDING_OBJECTIVELYMVC
- #define OBJECTIVELYMVC_EXPORT __declspec(dllexport)
+ #define OBJECTIVELYMVC_EXPORT extern __declspec(dllexport)
 #else
  #define OBJECTIVELYMVC_EXPORT __declspec(dllimport)
 #endif
