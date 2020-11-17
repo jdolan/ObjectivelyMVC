@@ -36,6 +36,11 @@
 typedef enum {
 
 	/**
+	 * @remarks Special end-of-list value for an inlet list
+	 */
+	InitTypeEnd = -1,
+
+	/**
 	 * @remarks Inlet destination must be of type `Bool *`.
 	 */
 	InletTypeBool,
@@ -216,7 +221,7 @@ struct Outlet {
 #define MakeInlets(...) \
 	{ \
 		__VA_ARGS__, \
-		MakeInlet(NULL, -1, NULL, NULL) \
+		MakeInlet(NULL, InitTypeEnd, NULL, NULL) \
 	}
 
 /**
