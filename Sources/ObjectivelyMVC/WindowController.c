@@ -139,7 +139,7 @@ static void render(WindowController *self) {
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
-	if (event->type == MVC_NOTIFICATION_EVENT) {
+	if (event->type == SDL_USEREVENT && event->user.type == MVC_NOTIFICATION_EVENT) {
 		$(self->viewController, handleNotification, &(const Notification) {
 			.name = event->user.code,
 			.sender = event->user.data1,
