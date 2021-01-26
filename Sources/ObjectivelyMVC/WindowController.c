@@ -153,6 +153,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 					$(self, setWindow, SDL_GL_GetCurrentWindow());
 					$(self->renderer, renderDeviceDidReset);
 					$(self->viewController->view, renderDeviceDidReset);
+					$(self->viewController->view, updateBindings);
 					break;
 				case SDL_WINDOWEVENT_CLOSE:
 					$(self->renderer, renderDeviceWillReset);
