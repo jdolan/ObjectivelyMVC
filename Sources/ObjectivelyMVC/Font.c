@@ -271,7 +271,12 @@ static void renderDeviceDidReset(Font *self) {
  */
 static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
 
-	*w = *h = 0;
+	if (w) {
+		*w = 0;
+	}
+	if (h) {
+		*h = 0;
+	}
 
 	if (chars) {
 		char *lines = strdup(chars);
