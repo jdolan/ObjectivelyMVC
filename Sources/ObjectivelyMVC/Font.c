@@ -280,16 +280,18 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
 
 	if (chars) {
 		char *lines = strdup(chars);
-		char *p = lines;
-		char *line;
 
-		while ((line = strsep(&p, "\n\r"))) {
+		for (char *line = strtok(lines, "\n\r"); line; line = strtok(NULL, "\n\r")) {
 
 			int line_w, line_h;
 			TTF_SizeUTF8(self->font, line, &line_w, &line_h);
 
-			*w = max(*w, line_w);
-			*h += line_h;
+			if (w) {
+				*w = max(*w, line_w);
+			}
+			if (h) {
+				*h += line_h;
+			}
 		}
 		free(lines);
 

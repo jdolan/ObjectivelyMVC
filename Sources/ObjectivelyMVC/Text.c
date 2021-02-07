@@ -145,7 +145,7 @@ static void render(View *self, Renderer *renderer) {
 	assert(this->font);
 
 	if (this->text) {
-		
+
 		const SDL_Rect frame = $(self, renderFrame);
 
 		if (this->texture == 0) {
@@ -197,12 +197,6 @@ static void renderDeviceWillReset(View *self) {
  * @see View::sizeThatFits(View *)
  */
 static SDL_Size sizeThatFits(const View *self) {
-
-	Text *this = (Text *) self;
-	if (this->lineWrap) {
-		SDL_Size size = $(this, naturalSize);
-		printf("%s\n sized %d x %d\n", this->text, size.w, size.h);
-	}
 	return $((Text *) self, naturalSize);
 }
 
