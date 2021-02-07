@@ -117,8 +117,10 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	Text *this = (Text *) self;
 
 	const Inlet inlets[] = MakeInlets(
-		MakeInlet("text", InletTypeCharacters, &this->text, NULL),
-		MakeInlet("font", InletTypeFont, &this->font, NULL)
+		MakeInlet("color", InletTypeColor, &this->color, NULL),
+		MakeInlet("font", InletTypeFont, &this->font, NULL),
+		MakeInlet("lineWrap", InletTypeBool, &this->lineWrap, NULL),
+		MakeInlet("text", InletTypeCharacters, &this->text, NULL)
 	);
 
 	$(self, bind, inlets, dictionary);
@@ -143,9 +145,14 @@ static void render(View *self, Renderer *renderer) {
 	assert(this->font);
 
 	if (this->text) {
+		
+		const SDL_Rect frame = $(self, renderFrame);
 
 		if (this->texture == 0) {
-			SDL_Surface *surface = $(this->font, renderCharacters, this->text, this->color);
+			SDL_Surface *surface = $(this->font, renderCharacters,
+									 this->text,
+									 this->color,
+									 this->lineWrap ? frame.w : 0);
 			assert(surface);
 
 			this->texture = $(renderer, createTexture, surface);
@@ -155,7 +162,6 @@ static void render(View *self, Renderer *renderer) {
 
 		assert(this->texture);
 
-		const SDL_Rect frame = $(self, renderFrame);
 		$(renderer, drawTexture, this->texture, &frame);
 	}
 }
@@ -192,6 +198,11 @@ static void renderDeviceWillReset(View *self) {
  */
 static SDL_Size sizeThatFits(const View *self) {
 
+	Text *this = (Text *) self;
+	if (this->lineWrap) {
+		SDL_Size size = $(this, naturalSize);
+		printf("%s\n sized %d x %d\n", this->text, size.w, size.h);
+	}
 	return $((Text *) self, naturalSize);
 }
 
@@ -205,7 +216,6 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 
 	self = (Text *) super(View, self, initWithFrame, NULL);
 	if (self) {
-
 		$(self, setFont, font);
 		$(self, setText, text);
 	}

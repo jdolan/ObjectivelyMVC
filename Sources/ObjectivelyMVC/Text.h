@@ -64,6 +64,11 @@ struct Text {
 	Font *font;
 
 	/**
+	 * @brief If true, wrap text along word boundaries to fit this Text's width.
+	 */
+	_Bool lineWrap;
+
+	/**
 	 * @brief The text.
 	 * @remarks Do not set this property directly.
 	 * @see Text::setText(Text *, const char *)

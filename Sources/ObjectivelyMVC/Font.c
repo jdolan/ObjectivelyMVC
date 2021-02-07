@@ -217,13 +217,19 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
 }
 
 /**
- * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color)
+ * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
  * @memberof Font
  */
-static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color) {
+static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth) {
+
+	SDL_Surface *surface;
+	if (wrapWidth) {
+		surface = TTF_RenderUTF8_Blended_Wrapped(self->font, chars, color, wrapWidth * MVC_WindowScale(NULL, NULL, NULL));
+	} else {
+		surface = TTF_RenderUTF8_Blended(self->font, chars, color);
+	}
 
 	SDL_Surface *converted = NULL;
-	SDL_Surface *surface = TTF_RenderUTF8_Blended(self->font, chars, color);
 	if (surface) {
 		converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
 		SDL_FreeSurface(surface);
@@ -265,14 +271,30 @@ static void renderDeviceDidReset(Font *self) {
  */
 static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
 
-	TTF_SizeUTF8(self->font, chars, w, h);
+	*w = *h = 0;
 
-	const float scale = MVC_WindowScale(NULL, NULL, NULL);
-	if (w) {
-		*w /= scale;
-	}
-	if (h) {
-		*h /= scale;
+	if (chars) {
+		char *lines = strdup(chars);
+		char *p = lines;
+		char *line;
+
+		while ((line = strsep(&p, "\n\r"))) {
+
+			int line_w, line_h;
+			TTF_SizeUTF8(self->font, line, &line_w, &line_h);
+
+			*w = max(*w, line_w);
+			*h += line_h;
+		}
+		free(lines);
+
+		const float scale = MVC_WindowScale(NULL, NULL, NULL);
+		if (w) {
+			*w /= scale;
+		}
+		if (h) {
+			*h /= scale;
+		}
 	}
 }
 
