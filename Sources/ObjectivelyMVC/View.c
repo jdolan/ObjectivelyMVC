@@ -1292,6 +1292,10 @@ static void resize(View *self, const SDL_Size *size) {
 		self->needsLayout = true;
 
 		$(self, enumerateSubviews, resize_recurse, NULL);
+
+		if (self->superview) {
+			self->superview->needsLayout = true;
+		}
 	}
 }
 
