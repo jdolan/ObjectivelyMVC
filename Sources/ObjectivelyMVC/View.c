@@ -1070,7 +1070,7 @@ static void removeAllClassNames_enumerate(const Array *array, ident obj, ident d
  * @memberof View
  */
 static void removeAllClassNames(View *self) {
-	$((Array *) self->classNames, enumerateObjects, removeAllClassNames_enumerate, self);
+	$(self->classNames, removeAllObjectsWithEnumerator, removeAllClassNames_enumerate, self);
 }
 
 /**
@@ -1085,7 +1085,7 @@ static void removeAllSubviews_enumerate(const Array *array, ident obj, ident dat
  * @memberof View
  */
 static void removeAllSubviews(View *self) {
-	$((Array *) self->subviews, enumerateObjects, removeAllSubviews_enumerate, self);
+	$(self->subviews, removeAllObjectsWithEnumerator, removeAllSubviews_enumerate, self);
 }
 
 /**
