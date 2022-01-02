@@ -260,20 +260,23 @@ static void setFont(Text *self, Font *font) {
  */
 static void setText(Text *self, const char *text) {
 
-	free(self->text);
+	if (strcmp(self->text ?: "", text ?: "")) {
 
-	if (text && strlen(text)) {
-		self->text = strdup(text);
-	} else {
-		self->text = NULL;
+		free(self->text);
+
+		if (text && strlen(text)) {
+			self->text = strdup(text);
+		} else {
+			self->text = NULL;
+		}
+
+		if (self->texture) {
+			glDeleteTextures(1, &self->texture);
+			self->texture = 0;
+		}
+
+		$((View *) self, sizeToFit);
 	}
-
-	if (self->texture) {
-		glDeleteTextures(1, &self->texture);
-		self->texture = 0;
-	}
-
-	$((View *) self, sizeToFit);
 }
 
 /**
