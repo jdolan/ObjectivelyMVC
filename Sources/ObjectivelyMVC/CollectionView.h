@@ -129,7 +129,7 @@ struct CollectionView {
 	CollectionViewInterface *interface;
 
 	/**
-	 * @ The layout axis.
+	 * @brief The layout axis.
 	 */
 	CollectionViewAxis axis;
 

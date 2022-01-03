@@ -300,8 +300,6 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 		self->contentView = $(alloc(View), initWithFrame, NULL);
 		assert(self->contentView);
 
-		self->contentView->autoresizingMask = ViewAutoresizingContain;
-
 		$(self->contentView, addClassName, "contentView");
 		$(self->contentView, addClassName, "container");
 
