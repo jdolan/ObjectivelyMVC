@@ -726,7 +726,7 @@ static _Bool hasClassName_predicate(const ident obj, ident data) {
 static _Bool hasClassName(const View *self, const char *className) {
 
 	if (className) {
-		return $((Array *) self->classNames, findObject, hasClassName_predicate, (ident) className);
+		return $((Set *) self->classNames, containsObjectMatching, hasClassName_predicate, (ident) className);
 	}
 
 	return false;
@@ -780,7 +780,7 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 			self->frame = *frame;
 		}
 
-		self->classNames = $$(MutableArray, arrayWithCapacity, 0);
+		self->classNames = $$(MutableSet, setWithCapacity, 0);
 		assert(self->classNames);
 
 		self->computedStyle = $(alloc(Style), initWithAttributes, NULL);
@@ -1059,18 +1059,14 @@ static void moveToWindow(View *self, SDL_Window *window) {
 }
 
 /**
- * @brief ArrayEnumerator for removeAllClassNames.
- */
-static void removeAllClassNames_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) data, removeClassName, ((String *) obj)->chars);
-}
-
-/**
  * @fn void View::removeAllClassNames(View *self)
  * @memberof View
  */
 static void removeAllClassNames(View *self) {
-	$(self->classNames, removeAllObjectsWithEnumerator, removeAllClassNames_enumerate, self);
+
+	$(self->classNames, removeAllObjects);
+
+	$(self, invalidateStyle);
 }
 
 /**

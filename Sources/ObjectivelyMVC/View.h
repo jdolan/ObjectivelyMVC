@@ -27,6 +27,7 @@
 #include <Objectively/Enum.h>
 #include <Objectively/MutableDictionary.h>
 #include <Objectively/MutableArray.h>
+#include <Objectively/MutableSet.h>
 #include <Objectively/Resource.h>
 
 #include <ObjectivelyMVC/Colors.h>
@@ -164,7 +165,7 @@ struct View {
 	 * @brief The class names.
 	 * @see Style
 	 */
-	MutableArray *classNames;
+	MutableSet *classNames;
 
 	/**
 	 * @brief If true, subviews will be clipped to this View's frame.
