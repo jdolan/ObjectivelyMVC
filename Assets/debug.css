@@ -1,7 +1,7 @@
 #debug {
 	alignment: middle-right;
 	autoresizing-mask: fit;
-	background-color: #6688aa33;
+	background-color: #6688aacc;
 	border-color: #6080a0;
 	border-width 1;
 	padding: 4 4 4 4;
@@ -9,10 +9,6 @@
 
 #debug * {
 	font-size: 12;
-}
-
-#debug > * {
-	background-color: #ffffff22;
 }
 
 #debug > #description {
