@@ -167,6 +167,20 @@ static void loadView(ViewController *self) {
 #pragma mark - DebugViewController
 
 /**
+ * @brief
+ */
+static void countVisibleSubviews(View *view, ident data) {
+
+	const Array *subviews = (Array *) view->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+		View *subview = $(subviews, objectAtIndex, i);
+		if ($(subview, isVisible)) {
+			*((int *) data) += 1;
+		}
+	}
+}
+
+/**
  * @fn void DebugViewController::debug(DebugViewController *self, const View *view)
  * @memberof DebugViewController
  */
@@ -176,7 +190,16 @@ static void debug(DebugViewController *self, const View *view) {
 
 	const int delta = SDL_GetTicks() - self->timestamp;
 	if (delta >= 250) {
-		$(self->statistics, setTextWithFormat, "%gfps", self->frames * 4.0);
+
+		const View *root = view;
+		while (root->superview) {
+			root = root->superview;
+		}
+
+		int count = 1;
+		$((View *) root, enumerate, countVisibleSubviews, &count);
+
+		$(self->statistics, setTextWithFormat, "%d views, %gfps", self->frames * 4.0, count);
 		self->timestamp = SDL_GetTicks();
 		self->frames = 0;
 	}
