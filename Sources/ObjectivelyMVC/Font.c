@@ -297,10 +297,10 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
 
 		const float scale = MVC_WindowScale(NULL, NULL, NULL);
 		if (w) {
-			*w /= scale;
+			*w = ceil(*w / scale);
 		}
 		if (h) {
-			*h /= scale;
+			*h = ceil(*h / scale);
 		}
 	}
 }
