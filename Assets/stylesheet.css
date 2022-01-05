@@ -277,6 +277,13 @@ Text {
 	border-width: 1;
 }
 
+.inspect .warn {
+	background-color: #aa444433;
+	border-color: #993333;
+	border-width: 1;
+	padding: 4;
+}
+
 .options {
 	alignment: internal;
 	border-color: #dededeaa;

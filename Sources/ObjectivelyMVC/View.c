@@ -896,6 +896,8 @@ static void layoutIfNeeded(View *self) {
 
 					release(this);
 					release(that);
+
+					$(self, addClassName, "warn");
 				}
 			}
 		}
