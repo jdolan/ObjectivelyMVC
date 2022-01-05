@@ -56,7 +56,8 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 	MakeEnumAlias(ViewAutoresizingWidth, width),
 	MakeEnumAlias(ViewAutoresizingHeight, height),
 	MakeEnumAlias(ViewAutoresizingFill, fill),
-	MakeEnumAlias(ViewAutoresizingContain, contain)
+	MakeEnumAlias(ViewAutoresizingContain, contain),
+	MakeEnumAlias(ViewAutoresizingFit, fit)
 );
 
 #define _Class _View
@@ -921,6 +922,10 @@ static void layoutSubviews(View *self) {
 		}
 	}
 
+	if (self->autoresizingMask & ViewAutoresizingFit) {
+		$(self, sizeToFit);
+	}
+
 	if (self->autoresizingMask & ViewAutoresizingContain) {
 		$(self, sizeToContain);
 	}
@@ -1289,9 +1294,9 @@ static void resize(View *self, const SDL_Size *size) {
 		self->frame.w = clamp(size->w, self->minSize.w, self->maxSize.w);
 		self->frame.h = clamp(size->h, self->minSize.h, self->maxSize.h);
 
-		self->needsLayout = true;
-
 		$(self, enumerateSubviews, resize_recurse, NULL);
+
+		self->needsLayout = true;
 
 		if (self->superview) {
 			self->superview->needsLayout = true;
@@ -1405,7 +1410,7 @@ static SDL_Size sizeThatFits(const View *self) {
 		size.h = 0;
 	}
 
-	if (self->autoresizingMask & ViewAutoresizingContain) {
+	if (self->autoresizingMask & (ViewAutoresizingContain | ViewAutoresizingFit)) {
 		size = MakeSize(0, 0);
 
 		Array *subviews = $(self, visibleSubviews);

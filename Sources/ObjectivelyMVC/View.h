@@ -87,7 +87,8 @@ typedef enum {
 	ViewAutoresizingWidth = 0x1,
 	ViewAutoresizingHeight = 0x2,
 	ViewAutoresizingFill = 0x3,
-	ViewAutoresizingContain = 0x4
+	ViewAutoresizingFit = 0x4,
+	ViewAutoresizingContain = 0x8
 } ViewAutoresizing;
 
 OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
