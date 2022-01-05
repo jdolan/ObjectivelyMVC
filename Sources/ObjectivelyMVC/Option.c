@@ -48,7 +48,7 @@ static String *description(const Object *self) {
 
 	View *this = (View *) self;
 
-	String *classNames = $((Array *) this->classNames, componentsJoinedByCharacters, ", ");
+	String *classNames = $((Object *) this->classNames, description);
 	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
 							  this->identifier ?: classnameof(self),
 							  self,
