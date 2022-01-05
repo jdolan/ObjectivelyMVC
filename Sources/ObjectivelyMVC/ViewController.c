@@ -63,11 +63,11 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 	$(childViewController, loadViewIfNeeded);
 
 	if (self->view->window) {
-		$(childViewController->view, updateBindings);
 		$(childViewController, viewWillAppear);
 	}
 
 	$(self->view, addSubview, childViewController->view);
+	$(childViewController->view, updateBindings);
 
 	if (self->view->window) {
 		$(childViewController, viewDidAppear);

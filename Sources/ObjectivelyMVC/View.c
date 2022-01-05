@@ -1022,6 +1022,10 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 				if (self->superview) {
 					return $((Array *) self->superview->subviews, indexOfObject, (ident) self) & 1;
 				}
+			} else if (strcmp("hover(inspect)", pattern) == 0) {
+				if (self->window) {
+					return SDL_GetWindowData(self->window, "hover") == self;
+				}
 			} else if (strcmp("hover", pattern) == 0) {
 				SDL_Point point;
 				SDL_GetMouseState(&point.x, &point.y);

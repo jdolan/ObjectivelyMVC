@@ -271,6 +271,12 @@ Text {
 	color: ghostwhite;
 }
 
+.inspect :hover(inspect) {
+	background-color: #6688aa33;
+	border-color: #6080a0;
+	border-width: 1;
+}
+
 .options {
 	alignment: internal;
 	border-color: #dededeaa;

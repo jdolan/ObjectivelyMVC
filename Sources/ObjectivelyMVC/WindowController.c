@@ -305,8 +305,16 @@ static void toggleDebugger(WindowController *self) {
 		$(debugViewController, viewWillAppear);
 		$(debugViewController->view, moveToWindow, self->window);
 		$(debugViewController, viewDidAppear);
+
+		if (self->viewController) {
+			$(self->viewController->view, addClassName, "inspect");
+		}
 	} else {
 		self->debugViewController = release(self->debugViewController);
+
+		if (self->viewController) {
+			$(self->viewController->view, removeClassName, "inspect");
+		}
 	}
 }
 
@@ -343,6 +351,8 @@ static void updateHover(WindowController *self, const SDL_Event *event) {
 
 		release(self->hover);
 		self->hover = hover ? retain(hover) : NULL;
+
+		SDL_SetWindowData(self->window, "hover", self->hover);
 	}
 }
 
