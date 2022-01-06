@@ -898,6 +898,8 @@ static void layoutIfNeeded(View *self) {
 					release(that);
 
 					$(self, addClassName, "warn");
+				} else {
+					$(self, removeClassName, "warn");
 				}
 			}
 		}
@@ -1151,7 +1153,7 @@ static void render(View *self, Renderer *renderer) {
 
 	assert(self->window);
 
-	if ($(self, hasClassName, "debug")) {
+	if ($(self, hasClassName, "breakpoint")) {
 		SDL_TriggerBreakpoint();
 	}
 	

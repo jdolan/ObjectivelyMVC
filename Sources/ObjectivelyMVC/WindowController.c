@@ -307,13 +307,13 @@ static void toggleDebugger(WindowController *self) {
 		$(debugViewController, viewDidAppear);
 
 		if (self->viewController) {
-			$(self->viewController->view, addClassName, "inspect");
+			$(self->viewController->view, addClassName, "debug");
 		}
 	} else {
 		self->debugViewController = release(self->debugViewController);
 
 		if (self->viewController) {
-			$(self->viewController->view, removeClassName, "inspect");
+			$(self->viewController->view, removeClassName, "debug");
 		}
 	}
 }
