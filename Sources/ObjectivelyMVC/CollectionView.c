@@ -245,8 +245,8 @@ static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_
 		const int itemWidth = self->itemSize.w + self->itemSpacing.w;
 		const int itemHeight = self->itemSize.h + self->itemSpacing.h;
 
-		const int rows = frame.h / itemHeight;
-		const int cols = frame.w / itemWidth;
+		const int rows = max(1, frame.h / itemHeight);
+		const int cols = max(1, frame.w / itemWidth);
 
 		const int x = point->x - frame.x;
 		const int y = point->y - frame.y;
