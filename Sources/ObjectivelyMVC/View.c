@@ -1300,10 +1300,10 @@ static void resize(View *self, const SDL_Size *size) {
 
 		$(self, enumerateSubviews, resize_recurse, NULL);
 
-		self->needsLayout = true;
-
-		if (self->superview) {
-			self->superview->needsLayout = true;
+		View *view = self;
+		while (view) {
+			view->needsLayout = true;
+			view = view->superview;
 		}
 	}
 }
