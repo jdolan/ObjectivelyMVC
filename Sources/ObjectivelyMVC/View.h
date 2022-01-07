@@ -741,6 +741,14 @@ struct ViewInterface {
 	void (*moveToWindow)(View *self, SDL_Window *window);
 
 	/**
+	 * @fn String *View::path(const View *self)
+	 * @param self The view.
+	 * @return A unique CSS selector matching this View.
+	 * @memberof View
+	 */
+	String *(*path)(const View *self);
+
+	/**
 	 * @fn void View::removeAllClassNames(View *self)
 	 * @brief Removes all class names from this View.
 	 * @param self The View.

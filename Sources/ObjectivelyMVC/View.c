@@ -92,7 +92,7 @@ static String *description(const Object *self) {
 
 	String *classNames = $((Object *) this->classNames, description);
 	String *description = str("%s@%p %s [%d, %d, %d, %d]",
-							  this->identifier ?: classnameof(self),
+							  classnameof(self),
 							  self,
 							  classNames->chars,
 							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
@@ -1083,6 +1083,47 @@ static void moveToWindow(View *self, SDL_Window *window) {
 }
 
 /**
+ * @fn String *View::path(const View *self)
+ * @memberof View
+ */
+static String *path(const View *self) {
+
+	MutableArray *parts = $$(MutableArray, array);
+
+	const View *view = self;
+	while (view) {
+
+		Array *classNames = $((Set *) view->classNames, allObjects);
+
+		String *part;
+		if (view->identifier) {
+			part = str("#%s", view->identifier);
+		} else if (classNames->count) {
+			part = str(".%s", ((String *) $(classNames, firstObject))->chars);
+		} else {
+			part = str("%s", classnameof(view));
+		}
+
+		release(classNames);
+
+		$(parts, insertObjectAtIndex, part, 0);
+		release(part);
+
+		if (view->viewController) {
+			break;
+		}
+
+		view = view->superview;
+	}
+
+	String *path = $((Array *) parts, componentsJoinedByCharacters, " > ");
+
+	release(parts);
+
+	return path;
+}
+
+/**
  * @fn void View::removeAllClassNames(View *self)
  * @memberof View
  */
@@ -1685,6 +1726,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
 	((ViewInterface *) clazz->interface)->moveToWindow = moveToWindow;
+	((ViewInterface *) clazz->interface)->path = path;
 	((ViewInterface *) clazz->interface)->removeAllClassNames = removeAllClassNames;
 	((ViewInterface *) clazz->interface)->removeAllSubviews = removeAllSubviews;
 	((ViewInterface *) clazz->interface)->removeClassName = removeClassName;
