@@ -893,7 +893,7 @@ static void layoutIfNeeded(View *self) {
 
 		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
 
-			if (self->superview && self->hidden == false) {
+			if (self->hidden == false && self->superview && !self->superview->clipsSubviews) {
 
 				const SDL_Rect bounds = $(self, bounds);
 				const SDL_Rect superviewBounds = $(self->superview, bounds);
