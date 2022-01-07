@@ -243,6 +243,14 @@ struct CollectionViewInterface {
 	CollectionItemView *(*itemAtIndexPath)(const CollectionView *self, const IndexPath *indexPath);
 
 	/**
+	 * @fn SDL_Size CollectionView::naturalSize(const CollectionView *self)
+	 * @param self The CollectionView.
+	 * @return The natural size of this CollectionView, placing all items in a single column or row.
+	 * @memberof CollectionView
+	 */
+	SDL_Size (*naturalSize)(const CollectionView *self);
+
+	/**
 	 * @fn void CollectionView::reloadData(CollectionView *self)
 	 * @brief Reloads this CollectionView's visible items.
 	 * @param self The CollectionView.

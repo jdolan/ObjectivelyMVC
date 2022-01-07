@@ -117,6 +117,16 @@ static void layoutSubviews(View *self) {
 	}
 }
 
+/**
+ * @see View::sizeThatFits(const View *)
+ */
+static SDL_Size sizeThatFits(const View *self) {
+
+	const CollectionView *this = (CollectionView *) self;
+
+	return $(this, naturalSize);
+}
+
 #pragma mark - Control
 
 /**
@@ -333,6 +343,37 @@ static CollectionItemView *itemAtIndexPath(const CollectionView *self, const Ind
 }
 
 /**
+ * @fn SDL_Size CollectionView::naturalSize(const CollectionView *self)
+ * @memberof CollectionView
+ */
+static SDL_Size naturalSize(const CollectionView *self) {
+
+	ViewPadding padding = MakePadding(0, 0, 0, 0);
+	padding = AddPadding(padding, ((View *) self)->padding);
+	padding = AddPadding(padding, ((View *) self->scrollView)->padding);
+	padding = AddPadding(padding, ((View *) self->contentView)->padding);
+
+	SDL_Size size = MakeSize(padding.left + padding.right, padding.top + padding.bottom);
+
+	const size_t count = self->items->array.count;
+
+	switch (self->axis) {
+		case CollectionViewAxisVertical:
+			size.w = self->itemSize.w;
+			size.h += self->itemSize.h * count;
+			size.h += self->itemSpacing.h * count;
+			break;
+		case CollectionViewAxisHorizontal:
+			size.h = self->itemSize.h;
+			size.w += self->itemSize.w * count;
+			size.w += self->itemSpacing.w * count;
+			break;
+	}
+
+	return size;
+}
+
+/**
  * @brief ArrayEnumerator to remove CollectionItemViews from the collection's contentView.
  */
 static void reloadData_removeItems(const Array *array, ident obj, ident data) {
@@ -366,7 +407,7 @@ static void reloadData(CollectionView *self) {
 		release(indexPath);
 	}
 
-	self->control.view.needsLayout = true;
+	((View *) self)->needsLayout = true;
 }
 
 /**
@@ -453,6 +494,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
@@ -463,6 +505,7 @@ static void initialize(Class *clazz) {
 	((CollectionViewInterface *) clazz->interface)->indexPathForItemAtPoint = indexPathForItemAtPoint;
 	((CollectionViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((CollectionViewInterface *) clazz->interface)->itemAtIndexPath = itemAtIndexPath;
+	((CollectionViewInterface *) clazz->interface)->naturalSize = naturalSize;
 	((CollectionViewInterface *) clazz->interface)->reloadData = reloadData;
 	((CollectionViewInterface *) clazz->interface)->selectAll = selectAll;
 	((CollectionViewInterface *) clazz->interface)->selectionIndexPaths = selectionIndexPaths;
