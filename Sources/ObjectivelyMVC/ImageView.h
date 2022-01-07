@@ -87,7 +87,7 @@ struct ImageViewInterface {
 	ViewInterface viewInterface;
 
 	/**
-	 * @fn ImageView *ImageView::initWithImage(ImageView *self, const SDL_Rect *frame)
+	 * @fn ImageView *ImageView::initWithFrame(ImageView *self, const SDL_Rect *frame)
 	 * @brief Initializes this ImageView with the specified frame.
 	 * @param self The ImageView.
 	 * @param frame The frame.
