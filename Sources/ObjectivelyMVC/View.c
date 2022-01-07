@@ -951,7 +951,12 @@ static void layoutSubviews(View *self) {
 
 		View *subview = (View *) $(subviews, objectAtIndex, i);
 
-		SDL_Size subviewSize = $(subview, sizeThatContains);
+		SDL_Size subviewSize;
+		if (subview->autoresizingMask & ViewAutoresizingFit) {
+			subviewSize = $(subview, sizeThatFits);
+		} else {
+			subviewSize = $(subview, sizeThatContains);
+		}
 
 		if (subview->autoresizingMask & ViewAutoresizingWidth) {
 			subviewSize.w = bounds.w;
