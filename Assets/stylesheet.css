@@ -271,19 +271,6 @@ Text {
 	color: ghostwhite;
 }
 
-.debug :hover(inspect) {
-	background-color: #6688aa33;
-	border-color: #6080a0;
-	border-width: 1;
-}
-
-.debug .warn {
-	background-color: #aa444433;
-	border-color: #993333;
-	border-width: 1;
-	padding: 4;
-}
-
 .options {
 	alignment: internal;
 	border-color: #dededeaa;

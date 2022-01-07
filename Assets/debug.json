@@ -14,6 +14,11 @@
           "class": "Text",
           "identifier": "statistics"
         },
+		{
+		  "class": "Text",
+		  "identifier": "path",
+		  "lineWrap": true
+		},
         {
           "class": "Text",
           "identifier": "description"
@@ -23,7 +28,7 @@
           "identifier": "selectors",
           "columns": [
             {
-              "identifier": "Selector"
+              "identifier": "Selectors"
             }
           ]
         },
@@ -38,7 +43,16 @@
               "identifier": "Value"
             }
           ]
-        }
+        },
+		{
+		  "class": "TableView",
+		  "identifier": "warnings",
+		  "columns": [
+			{
+			  "identifier": "Warnings"
+			}
+		  ]
+		}
       ]
     }
   ]

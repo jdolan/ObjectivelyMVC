@@ -11,16 +11,24 @@
 	font-size: 12;
 }
 
+#debug > #statistics {
+	color: darkblue;
+}
+
+#debug > #path {
+	color: darkslateblue;
+}
+
 #debug > #description {
-	color: white;
+	color: purple;
 }
 
 #debug > TableView {
-	autoresizing-mask: contain;
+	autoresizing-mask: width;
 }
 
 #debug > #selectors * {
-	color: green;
+	color: darkviolet;
 }
 
 #debug > #selectors #Selector {
@@ -28,7 +36,7 @@
 }
 
 #debug > #computedStyle * {
-	color: yellow;
+	color: mediumvioletred;
 }
 
 #debug > #computedStyle #Attribute {
@@ -37,4 +45,8 @@
 
 #debug > #computedStyle #Value {
 	min-width: 240;
+}
+
+#debug > #warnings * {
+	color: yellow;
 }

@@ -23,7 +23,10 @@
 
 #include <assert.h>
 
+#include <Objectively/MutableString.h>
+
 #include "DebugViewController.h"
+#include "WindowController.h"
 
 #include "debug.css.h"
 #include "debug.json.h"
@@ -127,6 +130,50 @@ static TableCellView *computedStyle_cellForColumnAndRow(const TableView *tableVi
 	return cell;
 }
 
+#pragma mark - Warnings
+
+/**
+ * @see TableViewDataSource::numberOfRows(const TableView *)
+ */
+static size_t warnings_numberOfRows(const TableView *tableView) {
+
+	const DebugViewController *this = tableView->dataSource.self;
+	if (this->debug) {
+		return this->debug->warnings->array.count;
+	} else {
+		return 0;
+	}
+}
+
+/**
+ * @see TableViewDataSource::valueForColumnAndRow(const TableView *, const TableColumn *, size_t)
+ */
+static ident warnings_valueForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
+
+	ident value = NULL;
+
+	const DebugViewController *this = tableView->dataSource.self;
+	if (this->debug) {
+		value = $((Array *) this->debug->warnings, objectAtIndex, row);
+	}
+
+	return value;
+}
+
+/**
+ * @see TableViewDelegate::cellForColumnAndRow(const TableView *, const TableColumn *, size_t)
+ */
+static TableCellView *warnings_cellForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
+
+	ident value = tableView->dataSource.valueForColumnAndRow(tableView, column, row);
+	assert(value);
+
+	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
+	$(cell->text, setText, ((String *) value)->chars);
+
+	return cell;
+}
+
 #pragma mark - ViewController
 
 /**
@@ -141,8 +188,10 @@ static void loadView(ViewController *self) {
 	Outlet outlets[] = MakeOutlets(
 		MakeOutlet("statistics", &this->statistics),
 		MakeOutlet("description", &this->description),
+		MakeOutlet("path", &this->path),
 		MakeOutlet("selectors", &this->selectors),
-		MakeOutlet("computedStyle", &this->computedStyle)
+		MakeOutlet("computedStyle", &this->computedStyle),
+		MakeOutlet("warnings", &this->warnings)
 	);
 
 	View *view = $$(View, viewWithCharacters, (char *) debug_json, outlets);
@@ -162,6 +211,12 @@ static void loadView(ViewController *self) {
 	this->computedStyle->dataSource.valueForColumnAndRow = computedStyle_valueForColumnAndRow;
 	this->computedStyle->delegate.self = self;
 	this->computedStyle->delegate.cellForColumnAndRow = computedStyle_cellForColumnAndRow;
+
+	this->warnings->dataSource.self = self;
+	this->warnings->dataSource.numberOfRows = warnings_numberOfRows;
+	this->warnings->dataSource.valueForColumnAndRow = warnings_valueForColumnAndRow;
+	this->warnings->delegate.self = self;
+	this->warnings->delegate.cellForColumnAndRow = warnings_cellForColumnAndRow;
 }
 
 #pragma mark - DebugViewController
@@ -169,52 +224,87 @@ static void loadView(ViewController *self) {
 /**
  * @brief
  */
-static void countVisibleSubviews(View *view, ident data) {
+static void debugEnumerate(View *view, ident data) {
 
-	const Array *subviews = (Array *) view->subviews;
-	for (size_t i = 0; i < subviews->count; i++) {
-		View *subview = $(subviews, objectAtIndex, i);
-		if ($(subview, isVisible)) {
-			*((int *) data) += 1;
-		}
+	DebugViewController *this = data;
+
+	if ($(view, isVisible)) {
+		this->visibleViews++;
+	}
+
+	if (view == this->debug) {
+		const SDL_Rect frame = $(view, renderFrame);
+
+		$(this->renderer, setClippingFrame, NULL);
+		$(this->renderer, setDrawColor, &MakeColor(0x22, 0x66, 0x99, 0x88));
+		$(this->renderer, drawRectFilled, &frame);
+		$(this->renderer, setDrawColor, &Colors.White);
+	}
+
+	const Array *warnings = (Array *) view->warnings;
+	if (warnings->count) {
+		const SDL_Rect frame = $(view, renderFrame);
+
+		$(this->renderer, setClippingFrame, NULL);
+		$(this->renderer, setDrawColor, &Colors.DarkGoldenRod);
+		$(this->renderer, drawRect, &frame);
+		$(this->renderer, setDrawColor, &Colors.White);
 	}
 }
 
 /**
- * @fn void DebugViewController::debug(DebugViewController *self, const View *view)
+ * @fn void DebugViewController::debug(DebugViewController *self, const View *view, Renderer *renderer)
  * @memberof DebugViewController
  */
-static void debug(DebugViewController *self, const View *view) {
-
-	self->frames++;
-
-	const int delta = SDL_GetTicks() - self->timestamp;
-	if (delta >= 250) {
-
-		const View *root = view;
-		while (root->superview) {
-			root = root->superview;
-		}
-
-		int count = 1;
-		$((View *) root, enumerate, countVisibleSubviews, &count);
-
-		$(self->statistics, setTextWithFormat, "%d views, %gfps", self->frames * 4.0, count);
-		self->timestamp = SDL_GetTicks();
-		self->frames = 0;
-	}
+static void debug(DebugViewController *self, const View *view, Renderer *renderer) {
 
 	if (view != self->debug) {
 		self->debug = view;
 
-		String *description = $((Object *) view, description);
-		$(self->description, setText, description->chars);
-		release(description);
+		if (self->debug) {
+			self->root = self->debug;
+			while (self->root->superview) {
+				self->root = self->root->superview;
+			}
+
+			String *path = $(self->debug, path);
+			$(self->path, setText, path->chars);
+			release(path);
+
+			String *description = $((Object *) view, description);
+			$(self->description, setText, description->chars);
+			release(description);
+		} else {
+			$(self->path, setText, NULL);
+			$(self->description, setText, NULL);
+		}
 
 		$(self->selectors, reloadData);
-		$(self->computedStyle, reloadData);
+		$((View *) self->selectors, sizeToFit);
 
-		((ViewController *) self)->view->needsLayout = true;
+		$(self->computedStyle, reloadData);
+		$((View *) self->computedStyle, sizeToFit);
+
+		$(self->warnings, reloadData);
+		$((View *) self->warnings, sizeToFit);
+	}
+
+	self->renderer = renderer;
+	assert(self->renderer);
+
+	self->visibleViews = 0;
+
+	if (self->root) {
+		$((View *) self->root, enumerate, debugEnumerate, self);
+	}
+
+	self->frames++;
+	if (SDL_GetTicks() - self->timestamp >= 1000) {
+
+		$(self->statistics, setTextWithFormat, "%d views, %dfps", self->visibleViews, self->frames);
+
+		self->timestamp = SDL_GetTicks();
+		self->frames = 0;
 	}
 }
 

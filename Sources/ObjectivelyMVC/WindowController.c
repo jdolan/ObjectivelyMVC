@@ -59,7 +59,7 @@ static void debug(WindowController *self) {
 		ViewController *debugViewController = (ViewController *) self->debugViewController;
 
 		if (self->hover) {
-			$(self->debugViewController, debug, self->hover);
+			$(self->debugViewController, debug, self->hover, self->renderer);
 		}
 
 		$(debugViewController->view, applyThemeIfNeeded, self->theme);
