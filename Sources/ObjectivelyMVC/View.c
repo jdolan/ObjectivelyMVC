@@ -1328,11 +1328,10 @@ static void resize(View *self, const SDL_Size *size) {
 		self->frame.w = clamp(size->w, self->minSize.w, self->maxSize.w);
 		self->frame.h = clamp(size->h, self->minSize.h, self->maxSize.h);
 
+		self->needsLayout = true;
 
-		View *view = self;
-		while (view) {
-			view->needsLayout = true;
-			view = view->superview;
+		if (self->superview) {
+			self->superview->needsLayout = true;
 		}
 	}
 }
