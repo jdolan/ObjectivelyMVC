@@ -666,6 +666,14 @@ struct ViewInterface {
 	void (*invalidateStyle)(View *self);
 
 	/**
+	 * @fn _Bool View::isContainer(const View *self)
+	 * @param self The view.
+	 * @return True if this View's autoresizing mask includes `Fit` or `Contain`.
+	 * @memberof View
+	 */
+	_Bool (*isContainer)(const View *self);
+
+	/**
 	 * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
 	 * @param self The View.
 	 * @param view The View to test against this View's hierarchy.

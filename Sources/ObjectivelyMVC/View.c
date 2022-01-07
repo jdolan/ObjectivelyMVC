@@ -56,8 +56,8 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 	MakeEnumAlias(ViewAutoresizingWidth, width),
 	MakeEnumAlias(ViewAutoresizingHeight, height),
 	MakeEnumAlias(ViewAutoresizingFill, fill),
-	MakeEnumAlias(ViewAutoresizingContain, contain),
-	MakeEnumAlias(ViewAutoresizingFit, fit)
+	MakeEnumAlias(ViewAutoresizingFit, fit),
+	MakeEnumAlias(ViewAutoresizingContain, contain)
 );
 
 #define _Class _View
@@ -822,6 +822,14 @@ static void invalidateStyle(View *self) {
 }
 
 /**
+ * @fn _Bool View::isContainer(const View *self)
+ * @memberof View
+ */
+static _Bool isContainer(const View *self) {
+	return self->autoresizingMask & (ViewAutoresizingFit | ViewAutoresizingContain);
+}
+
+/**
  * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
  * @memberof View
  */
@@ -1412,7 +1420,7 @@ static SDL_Size sizeThatFits(const View *self) {
 		size.h = 0;
 	}
 
-	if (self->autoresizingMask & (ViewAutoresizingContain | ViewAutoresizingFit)) {
+	if ($(self, isContainer)) {
 		size = MakeSize(0, 0);
 
 		Array *subviews = $(self, visibleSubviews);
@@ -1687,6 +1695,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ViewInterface *) clazz->interface)->invalidateStyle = invalidateStyle;
+	((ViewInterface *) clazz->interface)->isContainer = isContainer;
 	((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
 	((ViewInterface *) clazz->interface)->isFirstResponder = isFirstResponder;
 	((ViewInterface *) clazz->interface)->isVisible = isVisible;

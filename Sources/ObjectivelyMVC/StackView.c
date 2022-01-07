@@ -177,7 +177,7 @@ static SDL_Size sizeThatFits(const View *self) {
 
 	SDL_Size size = super(View, self, sizeThatFits);
 
-	if (self->autoresizingMask & ViewAutoresizingContain) {
+	if ($(self, isContainer)) {
 
 		const StackView *this = (StackView *) self;
 
