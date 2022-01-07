@@ -1277,28 +1277,6 @@ static void resignFirstResponder(View *self) {
 }
 
 /**
- * @brief ViewEnumerator for resize recursion.
- */
-static void resize_recurse(View *subview, ident data) {
-
-	SDL_Size size = $(subview, size);
-
-	if (subview->autoresizingMask & ViewAutoresizingWidth) {
-		size.w = 0;
-	}
-
-	if (subview->autoresizingMask & ViewAutoresizingHeight) {
-		size.h = 0;
-	}
-
-	if (subview->autoresizingMask == ViewAutoresizingContain) {
-		size = MakeSize(0, 0);
-	}
-
-	$(subview, resize, &size);
-}
-
-/**
  * @fn void View::resize(View *self, const SDL_Size *size)
  * @memberof View
  */
@@ -1309,7 +1287,6 @@ static void resize(View *self, const SDL_Size *size) {
 		self->frame.w = clamp(size->w, self->minSize.w, self->maxSize.w);
 		self->frame.h = clamp(size->h, self->minSize.h, self->maxSize.h);
 
-		$(self, enumerateSubviews, resize_recurse, NULL);
 
 		View *view = self;
 		while (view) {
