@@ -258,6 +258,12 @@ struct View {
 	ViewController *viewController;
 
 	/**
+	 * @brief The warnings this View generated.
+	 * @remarks These are optionally displayed by the DebugViewController.
+	 */
+	MutableArray *warnings;
+
+	/**
 	 * @brief The window.
 	 * @remarks This is `NULL` until the View has been added to a WindowController.
 	 */
@@ -1001,6 +1007,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	Array *(*visibleSubviews)(const View *self);
+
+	/**
+	 * @fn void View::warn(View *self, const char *fmt, ...)
+	 * @brief Appends a warning for this View.
+	 * @param self The View.
+	 * @param fmt The format string.
+	 * @memberof View
+	 */
+	void (*warn)(View *self, const char *fmt, ...);
 
 	/**
 	 * @fn void View::willMoveToWindow(View *self, SDL_Window *window)

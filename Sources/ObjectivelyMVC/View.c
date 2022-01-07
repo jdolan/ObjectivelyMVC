@@ -78,6 +78,7 @@ static void dealloc(Object *self) {
 	release(this->style);
 	release(this->stylesheet);
 	release(this->subviews);
+	release(this->warnings);
 
 	super(Object, self, dealloc);
 }
@@ -793,6 +794,9 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
 		self->style = $(alloc(Style), initWithAttributes, NULL);
 		assert(self->style);
 
+		self->warnings = $$(MutableArray, arrayWithCapacity, 0);
+		assert(self->warnings);
+
 		self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
 
 		self->needsApplyTheme = true;
@@ -894,12 +898,10 @@ static void layoutIfNeeded(View *self) {
 
 					MVC_LogDebug("%s exceeds superview bounds %s\n", this->chars, that->chars);
 
+					$(self, warn, "%s exceeds superview bounds %s\n", this->chars, that->chars);
+
 					release(this);
 					release(that);
-
-					$(self, addClassName, "warn");
-				} else {
-					$(self, removeClassName, "warn");
 				}
 			}
 		}
@@ -1030,10 +1032,6 @@ static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelec
 			}  else if (strcmp("nth-child(odd)", pattern) == 0) {
 				if (self->superview) {
 					return $((Array *) self->superview->subviews, indexOfObject, (ident) self) & 1;
-				}
-			} else if (strcmp("hover(inspect)", pattern) == 0) {
-				if (self->window) {
-					return SDL_GetWindowData(self->window, "hover") == self;
 				}
 			} else if (strcmp("hover", pattern) == 0) {
 				SDL_Point point;
@@ -1611,6 +1609,23 @@ static Array *visibleSubviews(const View *self) {
 }
 
 /**
+ * @fn void View::warn(View *self, const char *fmt, ...)
+ * @memberof View
+ */
+static void warn(View *self, const char *fmt, ...) {
+	va_list args;
+	va_start(args, fmt);
+
+	String *warning = $(alloc(String), initWithVaList, fmt, args);
+	assert(warning);
+
+	va_end(args);
+
+	$(self->warnings, addObject, warning);
+	release(warning);
+}
+
+/**
  * @fn void View::willMoveToWindow(View *self, SDL_Window *window)
  * @memberof View
  */
@@ -1709,6 +1724,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->viewWithResource = viewWithResource;
 	((ViewInterface *) clazz->interface)->viewWithResourceName = viewWithResourceName;
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
+	((ViewInterface *) clazz->interface)->warn = warn;
 	((ViewInterface *) clazz->interface)->willMoveToWindow = willMoveToWindow;
 }
 
