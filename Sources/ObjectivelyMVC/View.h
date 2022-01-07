@@ -107,6 +107,12 @@ typedef struct {
 	(ViewPadding) { (top), (right), (bottom), (left) }
 
 /**
+ * @return A ViewPadding that is the sum of `a` and `b`.
+ */
+#define AddPadding(a, b) \
+	MakePadding(a.top + b.top, a.right + b.right, a.bottom + b.bottom, a.left + b.left)
+
+/**
  * @brief Relative positioning of subviews within their superview.
  */
 typedef enum {
