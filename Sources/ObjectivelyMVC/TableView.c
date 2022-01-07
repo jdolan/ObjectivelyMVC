@@ -112,17 +112,13 @@ static void layoutSubviews(View *self) {
 }
 
 /**
-  * @see View::sizeThatContains(const View *)
-  */
-static SDL_Size sizeThatContains(const View *self) {
+ * @see View::sizeThatFits(const View *)
+ */
+static SDL_Size sizeThatFits(const View *self) {
 
 	const TableView *this = (TableView *) self;
 
-	if (self->autoresizingMask & ViewAutoresizingContain) {
-		return $(this, naturalSize);
-	}
-
-	return super(View, self, sizeThatContains);
+	return $(this, naturalSize);
 }
 
 #pragma mark - Control
@@ -580,7 +576,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
+	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
