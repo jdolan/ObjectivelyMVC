@@ -80,6 +80,8 @@ static void dealloc(Object *self) {
 	release(this->subviews);
 	release(this->warnings);
 
+	this->superview = NULL;
+
 	super(Object, self, dealloc);
 }
 

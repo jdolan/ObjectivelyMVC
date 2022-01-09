@@ -208,13 +208,12 @@ struct WindowControllerInterface {
 	void (*toggleDebugger)(WindowController *self);
 
 	/**
-	 * @fn void WindowController::updateHover(WindowController *self, const SDL_Event *event)
+	 * @fn void WindowController::updateHover(WindowController *self)
 	 * @brief Updates the hover state for this WindowController's window.
 	 * @param self The WindowController.
-	 * @param event The mouse motion event.
 	 * @memberof WindowController
 	 */
-	void (*updateHover)(WindowController *self, const SDL_Event *event);
+	void (*updateHover)(WindowController *self);
 
 	/**
 	 * @static

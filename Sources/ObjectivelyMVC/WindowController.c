@@ -126,6 +126,9 @@ static void render(WindowController *self) {
 
 	$(self->viewController->view, applyThemeIfNeeded, self->theme);
 	$(self->viewController->view, layoutIfNeeded);
+
+	$(self, updateHover);
+
 	$(self->viewController->view, draw, self->renderer);
 
 	$(self, debug);
@@ -162,8 +165,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 				default:
 					break;
 			}
-		} else if (event->type == SDL_MOUSEMOTION) {
-			$(self, updateHover, event);
 		}
 
 		View *firstResponder = $(self, firstResponder, event);
@@ -319,41 +320,45 @@ static void toggleDebugger(WindowController *self) {
 }
 
 /**
- * @fn void WindowController::updateHover(WindowController *self, const SDL_Event *event)
+ * @fn void WindowController::updateHover(WindowController *self)
  * @memberof WindowController
  */
-static void updateHover(WindowController *self, const SDL_Event *event) {
+static void updateHover(WindowController *self) {
 
-	assert(event);
-	assert(event->type == SDL_MOUSEMOTION);
+	if (self->viewController) {
 
-	const SDL_Point point = MakePoint(event->motion.x, event->motion.y);
-	View *hover = $(self->viewController->view, hitTest, &point);
+		SDL_Point point = MakePoint(0, 0);
+		SDL_GetMouseState(&point.x, &point.y);
 
-	if (self->hover != hover) {
+		View *hover = $(self->viewController->view, hitTest, &point);
 
-		if (self->hover && hover) {
-			View *view = hover;
-			while (view) {
-				if ($(self->hover, isDescendantOfView, view)) {
-					$(view, invalidateStyle);
-					break;
+		if (self->hover != hover) {
+
+			if (self->hover && hover) {
+				View *view = hover;
+				while (view) {
+					if ($(self->hover, isDescendantOfView, view)) {
+						$(view, invalidateStyle);
+						break;
+					}
+					view = view->superview;
 				}
-				view = view->superview;
-			}
-		} else {
-			if (self->hover) {
-				$(self->hover, invalidateStyle);
 			} else {
-				$(hover, invalidateStyle);
+				if (self->hover) {
+					$(self->hover, invalidateStyle);
+				} else {
+					$(hover, invalidateStyle);
+				}
 			}
+
+			release(self->hover);
+			self->hover = hover ? retain(hover) : NULL;
 		}
-
-		release(self->hover);
-		self->hover = hover ? retain(hover) : NULL;
-
-		SDL_SetWindowData(self->window, "hover", self->hover);
+	} else {
+		self->hover = release(self->hover);
 	}
+
+	SDL_SetWindowData(self->window, "hover", self->hover);
 }
 
 /**
