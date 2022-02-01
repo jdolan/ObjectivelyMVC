@@ -355,18 +355,40 @@ static SDL_Size naturalSize(const CollectionView *self) {
 
 	SDL_Size size = MakeSize(padding.left + padding.right, padding.top + padding.bottom);
 
-	const size_t count = self->items->array.count;
+	const SDL_Rect bounds = $((View *) self->scrollView->contentView, bounds);
 
 	switch (self->axis) {
-		case CollectionViewAxisVertical:
-			size.w = self->itemSize.w;
-			size.h += self->itemSize.h * count;
-			size.h += self->itemSpacing.h * count;
+		case CollectionViewAxisVertical: {
+			int itemsPerRow = 1;
+			int w = bounds.w;
+			while (w > 0) {
+				w -= self->itemSize.w;
+				itemsPerRow++;
+				if (w - self->itemSpacing.w < 0) {
+					break;
+				}
+				w -= self->itemSpacing.w;
+			}
+			const int rows = ceilf(self->items->array.count / (float) itemsPerRow);
+			size.w += max(self->itemSize.w, bounds.w);
+			size.h += rows * (self->itemSize.h + self->itemSpacing.h);
+		}
 			break;
-		case CollectionViewAxisHorizontal:
-			size.h = self->itemSize.h;
-			size.w += self->itemSize.w * count;
-			size.w += self->itemSpacing.w * count;
+		case CollectionViewAxisHorizontal:{
+			int itemsPerCol = 1;
+			int h = bounds.h;
+			while (h > 0) {
+				h -= self->itemSize.h;
+				itemsPerCol++;
+				if (h - self->itemSpacing.h < 0) {
+					break;
+				}
+				h -= self->itemSpacing.h;
+			}
+			const int cols = ceilf(self->items->array.count / (float) itemsPerCol);
+			size.w += cols * (self->itemSize.w + self->itemSpacing.w);
+			size.h += max(self->itemSize.h, bounds.h);
+		}
 			break;
 	}
 

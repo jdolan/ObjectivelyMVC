@@ -398,8 +398,8 @@ static SDL_Rect bounds(const View *self) {
 	const SDL_Rect bounds = {
 		.x = self->padding.left,
 		.y = self->padding.top,
-		.w = size.w - self->padding.left - self->padding.right,
-		.h = size.h - self->padding.top - self->padding.bottom,
+		.w = size.w - (self->padding.left + self->padding.right),
+		.h = size.h - (self->padding.top + self->padding.bottom),
 	};
 
 	return bounds;

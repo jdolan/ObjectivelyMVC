@@ -72,7 +72,6 @@ CollectionView {
 }
 
 CollectionView .contentView {
-	autoresizing-mask: contain;
 	padding: 10 10 10 10;
 }
 
@@ -157,6 +156,10 @@ ProgressBar > Label {
 ScrollView {
 	autoresizing-mask: fill;
 	clips-subviews: true;
+}
+
+ScrollView > .contentView {
+	autoresizing-mask: fit;
 }
 
 Select {
