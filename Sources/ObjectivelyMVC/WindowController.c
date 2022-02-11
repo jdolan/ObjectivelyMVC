@@ -157,10 +157,12 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 					$(self->renderer, renderDeviceDidReset);
 					$(self->viewController->view, renderDeviceDidReset);
 					$(self->viewController->view, updateBindings);
+					$(self, setHover, NULL);
 					break;
 				case SDL_WINDOWEVENT_CLOSE:
 					$(self->renderer, renderDeviceWillReset);
 					$(self->viewController->view, renderDeviceWillReset);
+					$(self, setHover, NULL);
 					break;
 				default:
 					break;
@@ -191,6 +193,38 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 			}
 		}
 	}
+}
+
+/**
+ * @fn void WindowController::setHover(WindowController *self, View *hover)
+ * @memberof WindowController
+ */
+static void setHover(WindowController *self, View *hover) {
+
+	if (self->hover != hover) {
+
+		if (self->hover && hover) {
+			View *view = hover;
+			while (view) {
+				if ($(self->hover, isDescendantOfView, view)) {
+					$(view, invalidateStyle);
+					break;
+				}
+				view = view->superview;
+			}
+		} else {
+			if (self->hover) {
+				$(self->hover, invalidateStyle);
+			} else {
+				$(hover, invalidateStyle);
+			}
+		}
+
+		release(self->hover);
+		self->hover = hover ? retain(hover) : NULL;
+	}
+
+	SDL_SetWindowData(self->window, "hover", self->hover);
 }
 
 /**
@@ -332,33 +366,11 @@ static void updateHover(WindowController *self) {
 
 		View *hover = $(self->viewController->view, hitTest, &point);
 
-		if (self->hover != hover) {
+		$(self, setHover, hover);
 
-			if (self->hover && hover) {
-				View *view = hover;
-				while (view) {
-					if ($(self->hover, isDescendantOfView, view)) {
-						$(view, invalidateStyle);
-						break;
-					}
-					view = view->superview;
-				}
-			} else {
-				if (self->hover) {
-					$(self->hover, invalidateStyle);
-				} else {
-					$(hover, invalidateStyle);
-				}
-			}
-
-			release(self->hover);
-			self->hover = hover ? retain(hover) : NULL;
-		}
 	} else {
-		self->hover = release(self->hover);
+		$(self, setHover, NULL);
 	}
-
-	SDL_SetWindowData(self->window, "hover", self->hover);
 }
 
 /**
@@ -387,6 +399,7 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
 	((WindowControllerInterface *) clazz->interface)->render = render;
 	((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((WindowControllerInterface *) clazz->interface)->setHover = setHover;
 	((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
 	((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
 	((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
