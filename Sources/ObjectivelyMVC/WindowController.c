@@ -54,12 +54,16 @@ static void dealloc(Object *self) {
  */
 static void debug(WindowController *self) {
 
-	if (self->debugViewController) {
+	if (self->viewController && self->debugViewController) {
 
 		ViewController *debugViewController = (ViewController *) self->debugViewController;
 
-		if (self->hover) {
-			$(self->debugViewController, debug, self->hover, self->renderer);
+		SDL_Point point = MakePoint(0, 0);
+		SDL_GetMouseState(&point.x, &point.y);
+
+		View *view = $(self->viewController->view, hitTest, &point);
+		if (view) {
+			$(self->debugViewController, debug, view, self->renderer);
 		}
 
 		$(debugViewController->view, applyThemeIfNeeded, self->theme);
@@ -127,8 +131,6 @@ static void render(WindowController *self) {
 	$(self->viewController->view, applyThemeIfNeeded, self->theme);
 	$(self->viewController->view, layoutIfNeeded);
 
-	$(self, updateHover);
-
 	$(self->viewController->view, draw, self->renderer);
 
 	$(self, debug);
@@ -157,12 +159,10 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 					$(self->renderer, renderDeviceDidReset);
 					$(self->viewController->view, renderDeviceDidReset);
 					$(self->viewController->view, updateBindings);
-					$(self, setHover, NULL);
 					break;
 				case SDL_WINDOWEVENT_CLOSE:
 					$(self->renderer, renderDeviceWillReset);
 					$(self->viewController->view, renderDeviceWillReset);
-					$(self, setHover, NULL);
 					break;
 				default:
 					break;
@@ -193,38 +193,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 			}
 		}
 	}
-}
-
-/**
- * @fn void WindowController::setHover(WindowController *self, View *hover)
- * @memberof WindowController
- */
-static void setHover(WindowController *self, View *hover) {
-
-	if (self->hover != hover) {
-
-		if (self->hover && hover) {
-			View *view = hover;
-			while (view) {
-				if ($(self->hover, isDescendantOfView, view)) {
-					$(view, invalidateStyle);
-					break;
-				}
-				view = view->superview;
-			}
-		} else {
-			if (self->hover) {
-				$(self->hover, invalidateStyle);
-			} else {
-				$(hover, invalidateStyle);
-			}
-		}
-
-		release(self->hover);
-		self->hover = hover ? retain(hover) : NULL;
-	}
-
-	SDL_SetWindowData(self->window, "hover", self->hover);
 }
 
 /**
@@ -309,8 +277,6 @@ static void setWindow(WindowController *self, SDL_Window *window) {
 	const Uint32 flags = SDL_GetWindowFlags(self->window);
 	assert(flags & SDL_WINDOW_OPENGL);
 
-	self->hover = NULL;
-
 	SDL_SetWindowData(self->window, "windowController", self);
 	assert(SDL_GetWindowData(self->window, "windowController") == self);
 
@@ -354,26 +320,6 @@ static void toggleDebugger(WindowController *self) {
 }
 
 /**
- * @fn void WindowController::updateHover(WindowController *self)
- * @memberof WindowController
- */
-static void updateHover(WindowController *self) {
-
-	if (self->viewController) {
-
-		SDL_Point point = MakePoint(0, 0);
-		SDL_GetMouseState(&point.x, &point.y);
-
-		View *hover = $(self->viewController->view, hitTest, &point);
-
-		$(self, setHover, hover);
-
-	} else {
-		$(self, setHover, NULL);
-	}
-}
-
-/**
  * @fn WindowController *WindowController::windowController(SDL_Window *window)
  * @memberof WindowController
  */
@@ -399,13 +345,11 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
 	((WindowControllerInterface *) clazz->interface)->render = render;
 	((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
-	((WindowControllerInterface *) clazz->interface)->setHover = setHover;
 	((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
 	((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
 	((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
 	((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;
 	((WindowControllerInterface *) clazz->interface)->toggleDebugger = toggleDebugger;
-	((WindowControllerInterface *) clazz->interface)->updateHover = updateHover;
 	((WindowControllerInterface *) clazz->interface)->windowController = windowController;
 }
 
