@@ -108,6 +108,10 @@
 		CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBF1D6A08DD006DF143 /* CollectionView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EC21D6A0A17006DF143 /* CollectionItemView.c */; };
 		CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EC31D6A0A17006DF143 /* CollectionItemView.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE5EEB4028B3D16700C009BB /* SoundStage.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5EEB3E28B3D16700C009BB /* SoundStage.h */; };
+		CE5EEB4128B3D16700C009BB /* SoundStage.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5EEB3F28B3D16700C009BB /* SoundStage.c */; };
+		CE5EEB6B28B3D52600C009BB /* Sound.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5EEB6928B3D52600C009BB /* Sound.h */; };
+		CE5EEB6C28B3D52600C009BB /* Sound.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5EEB6A28B3D52600C009BB /* Sound.c */; };
 		CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6603791CBBF93E00EB86CF /* ScrollView.c */; };
 		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
@@ -345,6 +349,10 @@
 		CE562EC21D6A0A17006DF143 /* CollectionItemView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionItemView.c; sourceTree = "<group>"; };
 		CE562EC31D6A0A17006DF143 /* CollectionItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CollectionItemView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE5BD5921D3EDD7400C43B85 /* ObjectivelyMVC.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ObjectivelyMVC.pc.in; sourceTree = "<group>"; };
+		CE5EEB3E28B3D16700C009BB /* SoundStage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundStage.h; sourceTree = "<group>"; };
+		CE5EEB3F28B3D16700C009BB /* SoundStage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SoundStage.c; sourceTree = "<group>"; };
+		CE5EEB6928B3D52600C009BB /* Sound.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
+		CE5EEB6A28B3D52600C009BB /* Sound.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Sound.c; sourceTree = "<group>"; };
 		CE6603791CBBF93E00EB86CF /* ScrollView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollView.c; sourceTree = "<group>"; };
 		CE66037A1CBBF93E00EB86CF /* ScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE6BC16E1D79B2920070FB2D /* HelloViewController.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = HelloViewController.json; sourceTree = "<group>"; };
@@ -546,6 +554,10 @@
 				CE55C1CC1F94CFB200D5A326 /* SimpleSelector.h */,
 				CE0AD0981C77AF73003E3CF7 /* Slider.c */,
 				CE0AD0991C77AF73003E3CF7 /* Slider.h */,
+				CE5EEB6A28B3D52600C009BB /* Sound.c */,
+				CE5EEB6928B3D52600C009BB /* Sound.h */,
+				CE5EEB3F28B3D16700C009BB /* SoundStage.c */,
+				CE5EEB3E28B3D16700C009BB /* SoundStage.h */,
 				CE12D4931C547BDD00CD0B13 /* StackView.c */,
 				CE12D4941C547BDD00CD0B13 /* StackView.h */,
 				CE8819841F8DAC96000D5AB7 /* Style.c */,
@@ -743,6 +755,7 @@
 				CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */,
 				CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */,
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
+				CE5EEB6B28B3D52600C009BB /* Sound.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
 				CE6BC1831D837D550070FB2D /* Label.h in Headers */,
@@ -765,6 +778,7 @@
 				CE8819871F8DAC96000D5AB7 /* Style.h in Headers */,
 				CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */,
 				CE8E80031C84F25400F4C3D4 /* TableCellView.h in Headers */,
+				CE5EEB4028B3D16700C009BB /* SoundStage.h in Headers */,
 				CE0943A91D60F23100C11408 /* TableColumn.h in Headers */,
 				CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */,
 				CE8E7FFF1C84E8DA00F4C3D4 /* TableHeaderView.h in Headers */,
@@ -1037,6 +1051,8 @@
 				CE12D43F1C4C38B500CD0B13 /* Text.c in Sources */,
 				CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */,
 				CE8819821F8CFD60000D5AB7 /* Theme.c in Sources */,
+				CE5EEB6C28B3D52600C009BB /* Sound.c in Sources */,
+				CE5EEB4128B3D16700C009BB /* SoundStage.c in Sources */,
 				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,
 				CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */,
 				CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */,

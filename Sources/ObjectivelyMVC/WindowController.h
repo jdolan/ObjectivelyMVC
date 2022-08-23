@@ -26,6 +26,8 @@
 #include <Objectively/Object.h>
 
 #include <ObjectivelyMVC/DebugViewController.h>
+#include <ObjectivelyMVC/SoundStage.h>
+#include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/ViewController.h>
 
 /**
@@ -63,6 +65,11 @@ struct WindowController {
 	 * @brief The Renderer.
 	 */
 	Renderer *renderer;
+
+	/**
+	 * @brief The SoundStage.
+	 */
+	SoundStage *soundStage;
 
 	/**
 	 * @brief The Theme.
@@ -166,6 +173,15 @@ struct WindowControllerInterface {
 	 * @memberof WindowController
 	 */
 	void (*setRenderer)(WindowController *self, Renderer *renderer);
+
+	/**
+	 * @fn void WindowController::setSoundStage(WindowController *self, SoundStage *soundStage)
+	 * @brief Sets this WindowController's SoundStage.
+	 * @param self The WindowController.
+	 * @param soundStage The SoundStage.
+	 * @memberof WindowController
+	 */
+	void (*setSoundStage)(WindowController *self, SoundStage *soundStage);
 
 	/**
 	 * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
