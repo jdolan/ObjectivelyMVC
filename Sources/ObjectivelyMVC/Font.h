@@ -165,7 +165,7 @@ struct FontInterface {
 	Font *(*initWithData)(Font *self, Data *data, const char *family, int size, int style);
 
 	/**
-	 * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrap)
+	 * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
 	 * @brief Renders the given characters in this Font.
 	 * @param self The Font.
 	 * @param chars The null-terminated UTF-8 encoded C string to render.
