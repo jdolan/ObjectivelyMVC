@@ -57,7 +57,7 @@ AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h])
 
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 1.0.0])
-PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.5 SDL2_image SDL2_ttf])
+PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.5 SDL2_image SDL2_mixer SDL2_ttf])
 
 AC_SUBST(SDL2_DLL_LIBS, $(echo $SDL2_LIBS | sed 's/-lmingw32//; s/-lSDL2main//'))
 

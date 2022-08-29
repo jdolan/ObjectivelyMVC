@@ -23,8 +23,14 @@
 
 #include <assert.h>
 
+#include <SDL2/SDL_mixer.h>
+
+#include "clack.wav.h"
+#include "click.wav.h"
+
 #include "Log.h"
 #include "SoundStage.h"
+#include "WindowController.h"
 
 #define _Class _SoundStage
 
@@ -35,9 +41,7 @@
  */
 static void dealloc(Object *self) {
 
-	SoundStage *this = (SoundStage *) self;
-
-	SDL_CloseAudioDevice(this->deviceId);
+	Mix_CloseAudio();
 
 	super(Object, self, dealloc);
 }
@@ -45,45 +49,18 @@ static void dealloc(Object *self) {
 #pragma mark - SoundStage
 
 /**
- * @fn void SoundStage::clear(const SoundStage *)
- * @memberof SoundStage
- */
-static void clear(const SoundStage *self) {
-	SDL_ClearQueuedAudio(self->deviceId);
-}
-
-/**
- * @fn SoundStage *SoundStage::init(SoundStage *)
+ * @fn SoundStage *SoundStage::init(SoundStage *self)
  * @memberof SoundStage
  */
 static SoundStage *init(SoundStage *self) {
-	return $(self, initWithDevice, NULL, NULL);
-}
-
-/**
- * @fn SoundStage *SoundStage::initWithDevice(SoundStage *self, const char *, const SoundSpec *)
- * @memberof SoundStage
- */
-static SoundStage *initWithDevice(SoundStage *self, const char *device, const SoundSpec *spec) {
 
 	self = (SoundStage *) super(Object, self, init);
 	if (self) {
 
-		self->desired = (SDL_AudioSpec) {
-			.freq = spec ? (int) spec->rate : 44100,
-			.channels = spec ? spec->channels : 2,
-			.format = spec ? spec->format : AUDIO_U16SYS
-		};
-
-		self->deviceId = SDL_OpenAudioDevice(device, 0, &self->desired, &self->obtained, SDL_AUDIO_ALLOW_ANY_CHANGE);
-		if (self->deviceId) {
-			MVC_LogInfo("Opened device %s for %d bits @ %dHz with %d channels",
-						device,
-						SDL_AUDIO_BITSIZE(self->obtained.format),
-						self->obtained.freq,
-						self->obtained.channels);
+		if (Mix_OpenAudioDevice(48000, AUDIO_S16SYS, 2, 2048, NULL, SDL_AUDIO_ALLOW_ANY_CHANGE) == 0) {
+			MVC_LogInfo("Opened audio device for playback\n");
 		} else {
-			MVC_LogError("Failed to open audio device %s: %s\n", device, SDL_GetError());
+			MVC_LogError("Failed to open audio device: %s\n", SDL_GetError());
 			self = release(self);
 		}
 	}
@@ -92,35 +69,21 @@ static SoundStage *initWithDevice(SoundStage *self, const char *device, const So
 }
 
 /**
- * @fn void SoundStage::pause(SoundStage *)
- * @memberof SoundStage
- */
-static void pause(SoundStage *self) {
-
-	if (SDL_GetAudioDeviceStatus(self->deviceId) == SDL_AUDIO_PAUSED) {
-		SDL_PauseAudioDevice(self->deviceId, 0);
-	} else {
-		SDL_PauseAudioDevice(self->deviceId, 1);
-	}
-}
-
-/**
- * @fn void SoundStage::play(const SoundStage *, const Sound *)
+ * @fn void SoundStage::playResourceName(const SoundStage *, const Sound *sound)
  * @memberof SoundStage
  */
 static void play(const SoundStage *self, const Sound *sound) {
+	static unsigned int ch;
 
 	assert(sound);
-	assert(sound->data);
 
-//	if (!memcmp(&self->spec, &sound->spec, sizeof(self->spec))) {
-//		// convert it, or just cry?
-//	}
-
-	SDL_QueueAudio(self->deviceId, sound->data->bytes, (int) sound->data->length);
+	Mix_PlayChannel(ch++ % MIX_CHANNELS, sound->chunk, 0);
 }
 
 #pragma mark - Class lifecycle
+
+Sound *_click;
+Sound *_clack;
 
 /**
  * @see Class::initialize(Class *)
@@ -129,11 +92,25 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((SoundStageInterface *) clazz->interface)->clear = clear;
 	((SoundStageInterface *) clazz->interface)->init = init;
-	((SoundStageInterface *) clazz->interface)->initWithDevice = initWithDevice;
-	((SoundStageInterface *) clazz->interface)->pause = pause;
 	((SoundStageInterface *) clazz->interface)->play = play;
+
+	const int init = Mix_Init(0xff);
+	assert(init);
+
+	_click = $$(Sound, soundWithBytes, click_wav, click_wav_len);
+	_clack = $$(Sound, soundWithBytes, clack_wav, clack_wav_len);
+}
+
+/**
+ * @see Class::destroy(Class *)
+ */
+static void destroy(Class *clazz) {
+
+	release(_click);
+	release(_clack);
+
+	Mix_Quit();
 }
 
 /**
@@ -152,6 +129,7 @@ Class *_SoundStage(void) {
 			.interfaceOffset = offsetof(SoundStage, interface),
 			.interfaceSize = sizeof(SoundStageInterface),
 			.initialize = initialize,
+			.destroy = destroy,
 		});
 	});
 
@@ -159,3 +137,15 @@ Class *_SoundStage(void) {
 }
 
 #undef _Class
+
+OBJECTIVELYMVC_EXPORT void MVC_PlaySound(const Sound *sound) {
+
+	SDL_Window *window = SDL_GL_GetCurrentWindow();
+	assert(window);
+
+	WindowController *windowController = $$(WindowController, windowController, window);
+	assert(windowController);
+	assert(windowController->soundStage);
+
+	$(windowController->soundStage, play, sound);
+}

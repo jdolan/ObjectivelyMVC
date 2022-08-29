@@ -49,18 +49,6 @@ struct SoundStage {
 	 * @protected
 	 */
 	SoundStageInterface *interface;
-
-	/**
-	 * @brief The opened audio device.
-	 */
-	SDL_AudioDeviceID deviceId;
-
-	/**
-	 * @brief The SoundSpec.
-	 */
-	SDL_AudioSpec desired;
-
-	SDL_AudioSpec obtained;
 };
 
 /**
@@ -74,16 +62,8 @@ struct SoundStageInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 * @fn void SoundStage::clear(const SoundStage *self)
-	 * @brief Clears all pending sound playback.
-	 * @param self The SoundStage.
-	 * @memberof SoundStage
-	 */
-	void (*clear)(const SoundStage *self);
-
-	/**
 	 * @fn SoundStage *SoundStage::init(SoundStage *self)
-	 * @brief Initializes this SoundStage with the default device and specification.
+	 * @brief Initializes this SoundStage with the default device and configuration.
 	 * @param self The SoundStage.
 	 * @return The initialized SoundStage, or `NULL` on error.
 	 * @memberof SoundStage
@@ -91,26 +71,7 @@ struct SoundStageInterface {
 	SoundStage *(*init)(SoundStage *self);
 
 	/**
-	 * @fn SoundStage *SoundStage::initWithDevice(SoundStage *self, const char *device, const SoundSpec *spec)
-	 * @brief Initializes this SoundStage with the given device and specification.
-	 * @param self The SoundStage.
-	 * @param device The device name, as reported by SDL_GetAudioDeviceName.
-	 * @param spec The desired SoundSpec.
-	 * @return The initialized SoundStage, or `NULL` on error.
-	 * @memberof SoundStage
-	 */
-	SoundStage *(*initWithDevice)(SoundStage *self, const char *device, const SoundSpec *spec);
-
-	/**
-	 * @fn void SoundStage::pause(SoundStage *self)
-	 * @brief Toggles pause, either suspending or resuming playback.
-	 * @param self The SoundStage.
-	 * @memberof SoundStage
-	 */
-	void (*pause)(SoundStage *self);
-
-	/**
-	 * @fn void SoundStage::play(const SoundStage *self, const Sound *sound)
+	 * @fn void SoundStage::play(const SoundStage *self, const char *sound)
 	 * @brief Enqueues the given Sound for playback.
 	 * @param self The SoundStage.
 	 * @param sound The Sound.
@@ -125,4 +86,15 @@ struct SoundStageInterface {
  * @return The SoundStage Class.
  * @memberof SoundStage
  */
-OBJECTIVELY_EXPORT Class *_SoundStage(void);
+OBJECTIVELYMVC_EXPORT Class *_SoundStage(void);
+
+/**
+ * @brief Plays the specified Sound through the current SoundStage (if any).
+ * @param sound The Sound to play.
+ * @remarks This is a convenience function, allowing Views to emit sounds in an ad-hoc way,
+ * without obtaining a reference to the SoundStage.
+ */
+OBJECTIVELYMVC_EXPORT void MVC_PlaySound(const Sound *sound);
+
+OBJECTIVELYMVC_EXPORT Sound *_click;
+OBJECTIVELYMVC_EXPORT Sound *_clack;

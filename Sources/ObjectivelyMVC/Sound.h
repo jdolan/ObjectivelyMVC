@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <SDL_audio.h>
+#include <SDL_mixer.h>
 
 #include <Objectively/Data.h>
 #include <Objectively/Resource.h>
@@ -34,27 +34,6 @@
  * @file
  * @brief Sound loading and playback.
  */
-
-/**
- * @brief The sound specification type.
- */
-typedef struct SoundSpec {
-
-	/**
-	 * @brief The sample format.
-	 */
-	SDL_AudioFormat format;
-
-	/**
-	 * @brief The number of channels.
-	 */
-	size_t channels;
-
-	/**
-	 * @brief The sample rate.
-	 */
-	size_t rate;
-} SoundSpec;
 
 typedef struct Sound Sound;
 typedef struct SoundInterface SoundInterface;
@@ -77,14 +56,9 @@ struct Sound {
 	SoundInterface *interface;
 
 	/**
-	 * @brief The SoundSpec.
+	 * @brief The backing audio chunk.
 	 */
-	SoundSpec spec;
-
-	/**
-	 * @brief The PCM (waveform) data.
-	 */
-	Data *data;
+	Mix_Chunk *chunk;
 };
 
 /**
@@ -98,47 +72,107 @@ struct SoundInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 * @fn Sound *Sound::convert(const Sound *self, const SoundSpec *spec)
-	 * @brief Converts this Sound to the given SoundSpec.
+	 * @fn Sound *Sound::initWithBytes(Sound *self, const uint8_t *bytes, size_t length)
+	 * @brief Initializes this Sound with the specified bytes.
 	 * @param self The Sound.
-	 * @param spec The SoundSpec.
-	 * @return A copy of this Sound converted to the given SoundSpec.
+	 * @param bytes The encoded sound data.
+	 * @param length The length of `bytes`.
+	 * @return The new Sound, or `NULL` on error.
 	 * @memberof Sound
 	 */
-	Sound *(*convert)(const Sound *self, const SoundSpec *spec);
+	Sound *(*initWithBytes)(Sound *self, const uint8_t *bytes, size_t length);
 
 	/**
-	 * @fn Sound *Sound::initWithData(Sound *self, const SoundSpec *spec, Data *data)
+	 * @fn Sound *Sound::initWithChunk(Sound *self, const Chunk *chunk)
+	 * @brief Initializes this Sound with the given audio chunk.
+	 * @param self The Sound.
+	 * @param chunk The backing chunk.
+	 * @return The new Sound, or `NULL` on error.
+	 * @remarks Designated initializer.
+	 * @memberof Sound
+	 */
+	Sound *(*initWithChunk)(Sound *self, Mix_Chunk *chunk);
+
+	/**
+	 * @fn Sound *Sound::initWithData(Sound *self, const Data *data)
 	 * @brief Initializes this Sound with the specified Data.
 	 * @param self The Sound.
-	 * @param spec The SoundSpec.
-	 * @param data The Data providing PCM (waveform) data.
+	 * @param data The Data providing encoded audio data.
 	 * @return The initialized Sound, or `NULL` on error.
 	 * @memberof Sound
 	 */
-	Sound *(*initWithData)(Sound *self, const SoundSpec *spec, Data *data);
+	Sound *(*initWithData)(Sound *self, const Data *data);
 
 	/**
-	 * @fn Sound *Sound::initWithResource(Sound *self, const SoundSpec *spec, const Resource *resource)
+	 * @fn Sound *Sound::initWithResource(Sound *self, const Resource *resource)
 	 * @brief Initializes this Sound with the specified Resource.
 	 * @param self The Sound.
-	 * @param spec The SoundSpec.
-	 * @param resource The Resource providing PCM (waveform) data.
+	 * @param resource The Resource providing encoded audio data.
 	 * @return The initialized Sound, or `NULL` on error.
 	 * @memberof Sound
 	 */
-	Sound *(*initWithResource)(Sound *self, const SoundSpec *spec, const Resource *resource);
+	Sound *(*initWithResource)(Sound *self, const Resource *resource);
 
 	/**
-	 * @fn Sound *Sound::initWithResourceName(Sound *self, const SoundSpec *spec, const char *name)
+	 * @fn Sound *Sound::initWithResourceName(Sound *self, const char *name)
 	 * @brief Initializes this Sound with the specified Resource name.
 	 * @param self The Sound.
-	 * @param spec The SoundSpec.
-	 * @param resource The name of the Resource providing PCM (waveform) data.
+	 * @param name The name of the Resource providing encoded audio data.
 	 * @return The initialized Sound, or `NULL` on error.
 	 * @memberof Sound
 	 */
-	Sound *(*initWithResourceName)(Sound *self, const SoundSpec *spec, const char *name);
+	Sound *(*initWithResourceName)(Sound *self, const char *name);
+
+	/**
+	 * @static
+	 * @fn Sound *Sound::soundWithBytes(const uint8_t *bytes, size_t length)
+	 * @brief Instantiates an Sound with the specified bytes.
+	 * @param bytes The encoded sound bytes.
+	 * @param length The length of `bytes`.
+	 * @return The new Sound, or `NULL` on error.
+	 * @memberof Sound
+	 */
+	Sound *(*soundWithBytes)(const uint8_t *bytes, size_t length);
+
+	/**
+	 * @static
+	 * @fn Sound *Sound::soundWithChunk(Mix_Chunk *chunk)
+	 * @brief Instantiates an Sound with the specified chunk.
+	 * @param chunk The chunk.
+	 * @return The new Sound, or `NULL` on error.
+	 * @memberof Sound
+	 */
+	Sound *(*soundWithChunk)(Mix_Chunk *chunk);
+	
+	/**
+	 * @static
+	 * @fn Sound *Sound::soundWithData(const Data *data)
+	 * @brief Instantiates an Sound with the specified Data.
+	 * @param data The encoded sound Data.
+	 * @return The new Sound, or `NULL` on error.
+	 * @memberof Sound
+	 */
+	Sound *(*soundWithData)(const Data *data);
+
+	/**
+	 * @static
+	 * @fn Sound *Sound::soundWithResource(const Resource *resource)
+	 * @brief Instantiates an Sound with the specified Resource.
+	 * @param resource The Resource containing encoded sound data.
+	 * @return The new Sound, or `NULL` on error.
+	 * @memberof Sound
+	 */
+	Sound *(*soundWithResource)(const Resource *resource);
+
+	/**
+	 * @static
+	 * @fn Sound *Sound::soundWithResourceName(const char *name)
+	 * @brief Instantiates an Sound with the specified Resource name.
+	 * @param name The name of a Resource containing encoded sound data.
+	 * @return The new Sound, or `NULL` on error.
+	 * @memberof Sound
+	 */
+	Sound *(*soundWithResourceName)(const char *name);
 };
 
 /**

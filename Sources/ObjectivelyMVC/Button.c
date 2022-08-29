@@ -24,6 +24,7 @@
 #include <assert.h>
 
 #include "Button.h"
+#include "SoundStage.h"
 
 #define _Class _Button
 
@@ -76,11 +77,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		self->state |= ControlStateHighlighted;
+		MVC_PlaySound(_clack);
 		return true;
 	}
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
 		self->state &= ~ControlStateHighlighted;
+		MVC_PlaySound(_click);
 		return true;
 	}
 

@@ -3,6 +3,8 @@
 
 BUILT_SOURCES = \
 	check.png.h \
+	clack.wav.h \
+	click.wav.h \
 	coda.ttf.h \
 	debug.css.h \
 	debug.json.h \

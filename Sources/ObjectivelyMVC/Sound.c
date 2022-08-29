@@ -23,6 +23,8 @@
 
 #include <assert.h>
 
+#include <SDL_rwops.h>
+
 #include "Sound.h"
 
 #define _Class _Sound
@@ -36,7 +38,7 @@ static void dealloc(Object *self) {
 
 	Sound *this = (Sound *) self;
 
-	release(this->data);
+	Mix_FreeChunk(this->chunk);
 
 	super(Object, self, dealloc);
 }
@@ -44,37 +46,14 @@ static void dealloc(Object *self) {
 #pragma mark - Sound
 
 /**
- * @fn Sound *Sound::initWithData(Sound *, const SoundSpec *, Data *)
+ * @fn Sound *Sound::initWithBytes(Sound *self, const uint8_t *bytes, size_t length)
  * @memberof Sound
  */
-static Sound *initWithData(Sound *self, const SoundSpec *spec, Data *data) {
+static Sound *initWithBytes(Sound *self, const uint8_t *bytes, size_t length) {
 
-	self = (Sound *) super(Object, self, init);
-	if (self) {
-
-		assert(spec);
-		self->spec = *spec;
-
-		assert(self->spec.format);
-		assert(self->spec.channels);
-		assert(self->spec.rate);
-
-		if (data) {
-			self->data = retain(data);
-		}
-	}
-
-	return self;
-}
-
-/**
- * @fn Sound *Sound::initWithResource(Sound *, const SoundSpec *, const Resource *)
- * @memberof Sound
- */
-static Sound *initWithResource(Sound *self, const SoundSpec *spec, const Resource *resource) {
-
-	if (resource) {
-		self = $(self, initWithData, spec, resource->data);
+	SDL_RWops *src = SDL_RWFromConstMem(bytes, (int) length);
+	if (src) {
+		self = $(self, initWithChunk, Mix_LoadWAV_RW(src, 1));
 	} else {
 		self = release(self);
 	}
@@ -83,14 +62,59 @@ static Sound *initWithResource(Sound *self, const SoundSpec *spec, const Resourc
 }
 
 /**
- * @fn Sound *Sound::initWithResourceName(Sound *, const SoundSpec *, const char *)
+ * @fn Sound *Sound::initWithData(Sound *, Data *)
  * @memberof Sound
  */
-static Sound *initWithResourceName(Sound *self, const SoundSpec *spec, const char *name) {
+static Sound *initWithData(Sound *self, const Data *data) {
+
+	if (data) {
+		self = $(self, initWithBytes, data->bytes, data->length);
+	} else {
+		self = release(self);
+	}
+
+	return self;
+}
+
+/**
+ * @fn Sound *Sound::initWithChunk(Sound *, const Chunk *)
+ * @memberof Sound
+ */
+static Sound *initWithChunk(Sound *self, Mix_Chunk *chunk) {
+
+	self = (Sound *) super(Object, self, init);
+	if (self) {
+		self->chunk = chunk;
+		assert(self->chunk);
+	}
+
+	return self;
+}
+
+/**
+ * @fn Sound *Sound::initWithResource(Sound *, const Resource *)
+ * @memberof Sound
+ */
+static Sound *initWithResource(Sound *self, const Resource *resource) {
+
+	if (resource) {
+		self = $(self, initWithData, resource->data);
+	} else {
+		self = release(self);
+	}
+
+	return self;
+}
+
+/**
+ * @fn Sound *Sound::initWithResourceName(Sound *, const char *)
+ * @memberof Sound
+ */
+static Sound *initWithResourceName(Sound *self, const char *name) {
 
 	Resource *resource = $$(Resource, resourceWithName, name);
 
-	self = $(self, initWithResource, spec, resource);
+	self = $(self, initWithResource, resource);
 
 	release(resource);
 
@@ -98,36 +122,43 @@ static Sound *initWithResourceName(Sound *self, const SoundSpec *spec, const cha
 }
 
 /**
- * @fn Sound *Sound::convert(const Sound *, const SoundSpec *)
+ * @fn Sound *Sound::soundWithBytes(const uint8_t *bytes, size_t length)
  * @memberof Sound
  */
-static Sound *convert(const Sound *self, const SoundSpec *spec) {
+static Sound *soundWithBytes(const uint8_t *bytes, size_t length) {
+	return $(alloc(Sound), initWithBytes, bytes, length);
+}
 
-	Sound *sound = $(alloc(Sound), initWithData, spec, NULL);
-	assert(sound);
+/**
+ * @fn Sound *Sound::soundWithChunk(Mix_Chunk *chunk)
+ * @memberof Sound
+ */
+static Sound *soundWithChunk(Mix_Chunk *chunk) {
+	return $(alloc(Sound), initWithChunk, chunk);
+}
 
-	if (self->data) {
-		SDL_AudioStream *stream = SDL_NewAudioStream(self->spec.format,
-								  self->spec.channels,
-								  (int) self->spec.rate,
-								  spec->format,
-								  spec->channels,
-								  (int) spec->rate);
-		assert(stream);
+/**
+ * @fn Sound *Sound::soundWithData(const Data *data)
+ * @memberof Sound
+ */
+static Sound *soundWithData(const Data *data) {
+	return $(alloc(Sound), initWithData, data);
+}
 
-		SDL_AudioStreamPut(stream, self->data->bytes, (int) self->data->length);
-		SDL_AudioStreamFlush(stream);
+/**
+ * @fn Sound *Sound::soundWithResource(const Resource *resource)
+ * @memberof Sound
+ */
+static Sound *soundWithResource(const Resource *resource) {
+	return $(alloc(Sound), initWithResource, resource);
+}
 
-		const int length = SDL_AudioStreamAvailable(stream);
-
-		sound->data = $(alloc(Data), initWithMemory, malloc(length), length);
-		assert(sound->data);
-
-		SDL_AudioStreamGet(stream, (void *) sound->data->bytes, length);
-		SDL_FreeAudioStream(stream);
-	}
-
-	return sound;
+/**
+ * @fn Sound *Sound::soundWithResourceName(const char *name)
+ * @memberof Sound
+ */
+static Sound *soundWithResourceName(const char *name) {
+	return $(alloc(Sound), initWithResourceName, name);
 }
 
 #pragma mark - Class lifecycle
@@ -139,11 +170,17 @@ static void initialize(Class *clazz) {
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((SoundInterface *) clazz->interface)->convert = convert;
+	((SoundInterface *) clazz->interface)->initWithBytes = initWithBytes;
+	((SoundInterface *) clazz->interface)->initWithChunk = initWithChunk;
 	((SoundInterface *) clazz->interface)->initWithData = initWithData;
 	((SoundInterface *) clazz->interface)->initWithResource = initWithResource;
 	((SoundInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
 
+	((SoundInterface *) clazz->interface)->soundWithBytes = soundWithBytes;
+	((SoundInterface *) clazz->interface)->soundWithChunk = soundWithChunk;
+	((SoundInterface *) clazz->interface)->soundWithData = soundWithData;
+	((SoundInterface *) clazz->interface)->soundWithResource = soundWithResource;
+	((SoundInterface *) clazz->interface)->soundWithResourceName = soundWithResourceName;
 }
 
 /**
