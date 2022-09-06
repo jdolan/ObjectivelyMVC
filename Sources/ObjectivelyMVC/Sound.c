@@ -181,6 +181,15 @@ static void initialize(Class *clazz) {
 	((SoundInterface *) clazz->interface)->soundWithData = soundWithData;
 	((SoundInterface *) clazz->interface)->soundWithResource = soundWithResource;
 	((SoundInterface *) clazz->interface)->soundWithResourceName = soundWithResourceName;
+
+	Mix_Init(0xff);
+}
+
+/**
+ * @see Class::destroy(Class *)
+ */
+static void destroy(Class *clazz) {
+	Mix_Quit();
 }
 
 /**
@@ -199,6 +208,7 @@ Class *_Sound(void) {
 			.interfaceOffset = offsetof(Sound, interface),
 			.interfaceSize = sizeof(SoundInterface),
 			.initialize = initialize,
+			.destroy = destroy,
 		});
 	});
 

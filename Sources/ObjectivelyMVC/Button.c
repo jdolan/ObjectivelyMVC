@@ -23,6 +23,9 @@
 
 #include <assert.h>
 
+#include "clack.wav.h"
+#include "click.wav.h"
+
 #include "Button.h"
 #include "SoundStage.h"
 
@@ -70,6 +73,8 @@ static View *init(View *self) {
 
 #pragma mark - Control
 
+static Sound *_click, *_clack;
+
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
@@ -77,13 +82,13 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		self->state |= ControlStateHighlighted;
-		MVC_PlaySound(_clack);
+		$((View *) self, play, _clack);
 		return true;
 	}
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
 		self->state &= ~ControlStateHighlighted;
-		MVC_PlaySound(_click);
+		$((View *) self, play, _click);
 		return true;
 	}
 
@@ -158,6 +163,18 @@ static void initialize(Class *clazz) {
 	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ButtonInterface *) clazz->interface)->initWithImage = initWithImage;
 	((ButtonInterface *) clazz->interface)->initWithTitle = initWithTitle;
+
+	_click = $$(Sound, soundWithBytes, click_wav, click_wav_len);
+	_clack = $$(Sound, soundWithBytes, clack_wav, clack_wav_len);
+}
+
+/**
+ * @see Class::destroy(Class *)
+ */
+static void destroy(Class *clazz) {
+
+	release(_click);
+	release(_clack);
 }
 
 /**
@@ -176,6 +193,7 @@ Class *_Button(void) {
 			.interfaceOffset = offsetof(Button, interface),
 			.interfaceSize = sizeof(ButtonInterface),
 			.initialize = initialize,
+			.destroy = destroy,
 		});
 	});
 

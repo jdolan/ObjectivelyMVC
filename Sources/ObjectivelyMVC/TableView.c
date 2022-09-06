@@ -26,6 +26,8 @@
 
 #include <Objectively/String.h>
 
+#include "select.wav.h"
+
 #include "TableView.h"
 
 #define _Class _TableView
@@ -507,6 +509,8 @@ static IndexSet *selectedRowIndexes(const TableView *self) {
 	return $(alloc(IndexSet), initWithIndexes, indexes, count);
 }
 
+static Sound *_select;
+
 /**
  * @fn void TableView::selectRowAtIndex(TableView *self, size_t index)
  * @memberof TableView
@@ -517,7 +521,10 @@ static void selectRowAtIndex(TableView *self, size_t index) {
 	if (index < rows->count) {
 
 		TableRowView *row = $(rows, objectAtIndex, index);
-		$(row, setSelected, true);
+		if (!row->isSelected) {
+			$(row, setSelected, true);
+			$((View *) self, play, _select);
+		}
 	}
 }
 
@@ -597,6 +604,15 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
 	((TableViewInterface *) clazz->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
 	((TableViewInterface *) clazz->interface)->setSortColumn = setSortColumn;
+
+	_select = $$(Sound, soundWithBytes, select_wav, select_wav_len);
+}
+
+/**
+ * @see Class::destroy(Class *)
+ */
+static void destroy(Class *clazz) {
+	release(_select);
 }
 
 /**
@@ -615,6 +631,7 @@ Class *_TableView(void) {
 			.interfaceOffset = offsetof(TableView, interface),
 			.interfaceSize = sizeof(TableViewInterface),
 			.initialize = initialize,
+			.destroy = destroy,
 		});
 	});
 

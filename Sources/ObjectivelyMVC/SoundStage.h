@@ -87,14 +87,3 @@ struct SoundStageInterface {
  * @memberof SoundStage
  */
 OBJECTIVELYMVC_EXPORT Class *_SoundStage(void);
-
-/**
- * @brief Plays the specified Sound through the current SoundStage (if any).
- * @param sound The Sound to play.
- * @remarks This is a convenience function, allowing Views to emit sounds in an ad-hoc way,
- * without obtaining a reference to the SoundStage.
- */
-OBJECTIVELYMVC_EXPORT void MVC_PlaySound(const Sound *sound);
-
-OBJECTIVELYMVC_EXPORT Sound *_click;
-OBJECTIVELYMVC_EXPORT Sound *_clack;

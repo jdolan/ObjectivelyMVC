@@ -32,6 +32,7 @@
 
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Renderer.h>
+#include <ObjectivelyMVC/SoundStage.h>
 #include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/View+JSON.h>
 
@@ -742,11 +743,20 @@ struct ViewInterface {
 
 	/**
 	 * @fn String *View::path(const View *self)
-	 * @param self The view.
+	 * @param self The View.
 	 * @return A unique CSS selector matching this View.
 	 * @memberof View
 	 */
 	String *(*path)(const View *self);
+
+	/**
+	 * @fn void View::play(const View *self, const Sound *sound)
+	 * @brief Enqueue the specified Sound for playback.
+	 * @param self The View.
+	 * @param sound The Sound to play.
+	 * @memberof View
+	 */
+	void (*play)(const View *self, const Sound *sound);
 
 	/**
 	 * @fn void View::removeAllClassNames(View *self)

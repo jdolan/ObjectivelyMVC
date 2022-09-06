@@ -25,9 +25,6 @@
 
 #include <SDL2/SDL_mixer.h>
 
-#include "clack.wav.h"
-#include "click.wav.h"
-
 #include "Log.h"
 #include "SoundStage.h"
 #include "WindowController.h"
@@ -49,7 +46,7 @@ static void dealloc(Object *self) {
 #pragma mark - SoundStage
 
 /**
- * @fn SoundStage *SoundStage::init(SoundStage *self)
+ * @fn SoundStage *SoundStage::init(SoundStage *)
  * @memberof SoundStage
  */
 static SoundStage *init(SoundStage *self) {
@@ -69,7 +66,7 @@ static SoundStage *init(SoundStage *self) {
 }
 
 /**
- * @fn void SoundStage::playResourceName(const SoundStage *, const Sound *sound)
+ * @fn void SoundStage::play(const SoundStage *, const Sound *)
  * @memberof SoundStage
  */
 static void play(const SoundStage *self, const Sound *sound) {
@@ -82,9 +79,6 @@ static void play(const SoundStage *self, const Sound *sound) {
 
 #pragma mark - Class lifecycle
 
-Sound *_click;
-Sound *_clack;
-
 /**
  * @see Class::initialize(Class *)
  */
@@ -94,23 +88,6 @@ static void initialize(Class *clazz) {
 
 	((SoundStageInterface *) clazz->interface)->init = init;
 	((SoundStageInterface *) clazz->interface)->play = play;
-
-	const int init = Mix_Init(0xff);
-	assert(init);
-
-	_click = $$(Sound, soundWithBytes, click_wav, click_wav_len);
-	_clack = $$(Sound, soundWithBytes, clack_wav, clack_wav_len);
-}
-
-/**
- * @see Class::destroy(Class *)
- */
-static void destroy(Class *clazz) {
-
-	release(_click);
-	release(_clack);
-
-	Mix_Quit();
 }
 
 /**
@@ -129,7 +106,6 @@ Class *_SoundStage(void) {
 			.interfaceOffset = offsetof(SoundStage, interface),
 			.interfaceSize = sizeof(SoundStageInterface),
 			.initialize = initialize,
-			.destroy = destroy,
 		});
 	});
 
@@ -137,15 +113,3 @@ Class *_SoundStage(void) {
 }
 
 #undef _Class
-
-OBJECTIVELYMVC_EXPORT void MVC_PlaySound(const Sound *sound) {
-
-	SDL_Window *window = SDL_GL_GetCurrentWindow();
-	assert(window);
-
-	WindowController *windowController = $$(WindowController, windowController, window);
-	assert(windowController);
-	assert(windowController->soundStage);
-
-	$(windowController->soundStage, play, sound);
-}
