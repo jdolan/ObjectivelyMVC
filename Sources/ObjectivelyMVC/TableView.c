@@ -26,8 +26,6 @@
 
 #include <Objectively/String.h>
 
-#include "select.wav.h"
-
 #include "TableView.h"
 
 #define _Class _TableView
@@ -577,6 +575,7 @@ static void setSortColumn(TableView *self, TableColumn *column) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
+    #include "select.wav.h"
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 

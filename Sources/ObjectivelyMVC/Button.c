@@ -80,15 +80,17 @@ static Sound *_click, *_clack;
  */
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
+	const View *view = (View *) self;
+
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		self->state |= ControlStateHighlighted;
-		$((View *) self, play, _clack);
+		$(view, play, _clack);
 		return true;
 	}
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
 		self->state &= ~ControlStateHighlighted;
-		$((View *) self, play, _click);
+		$(view, play, _click);
 		return true;
 	}
 

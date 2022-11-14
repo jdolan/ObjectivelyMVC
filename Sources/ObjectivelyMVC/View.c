@@ -1132,8 +1132,11 @@ static String *path(const View *self) {
  */
 static void play(const View *self, const Sound *sound) {
 
-	assert(self->window);
 	assert(sound);
+
+	if (self->window == NULL) {
+		return;
+	}
 
 	WindowController *windowController = $$(WindowController, windowController, self->window);
 	assert(windowController);
