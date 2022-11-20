@@ -108,10 +108,6 @@
 		CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBF1D6A08DD006DF143 /* CollectionView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EC21D6A0A17006DF143 /* CollectionItemView.c */; };
 		CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EC31D6A0A17006DF143 /* CollectionItemView.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE5EEB4028B3D16700C009BB /* SoundStage.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5EEB3E28B3D16700C009BB /* SoundStage.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE5EEB4128B3D16700C009BB /* SoundStage.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5EEB3F28B3D16700C009BB /* SoundStage.c */; };
-		CE5EEB6B28B3D52600C009BB /* Sound.h in Headers */ = {isa = PBXBuildFile; fileRef = CE5EEB6928B3D52600C009BB /* Sound.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE5EEB6C28B3D52600C009BB /* Sound.c in Sources */ = {isa = PBXBuildFile; fileRef = CE5EEB6A28B3D52600C009BB /* Sound.c */; };
 		CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6603791CBBF93E00EB86CF /* ScrollView.c */; };
 		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
@@ -350,10 +346,6 @@
 		CE562EC21D6A0A17006DF143 /* CollectionItemView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionItemView.c; sourceTree = "<group>"; };
 		CE562EC31D6A0A17006DF143 /* CollectionItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CollectionItemView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE5BD5921D3EDD7400C43B85 /* ObjectivelyMVC.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ObjectivelyMVC.pc.in; sourceTree = "<group>"; };
-		CE5EEB3E28B3D16700C009BB /* SoundStage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundStage.h; sourceTree = "<group>"; };
-		CE5EEB3F28B3D16700C009BB /* SoundStage.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = SoundStage.c; sourceTree = "<group>"; };
-		CE5EEB6928B3D52600C009BB /* Sound.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
-		CE5EEB6A28B3D52600C009BB /* Sound.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Sound.c; sourceTree = "<group>"; };
 		CE6603791CBBF93E00EB86CF /* ScrollView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollView.c; sourceTree = "<group>"; };
 		CE66037A1CBBF93E00EB86CF /* ScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE6BC16E1D79B2920070FB2D /* HelloViewController.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = HelloViewController.json; sourceTree = "<group>"; };
@@ -386,10 +378,8 @@
 		CE88199B1F9231AE000D5AB7 /* Selector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Selector.c; sourceTree = "<group>"; };
 		CE88199C1F9231AF000D5AB7 /* Selector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Selector.h; sourceTree = "<group>"; };
 		CE89AD9E28B99568002E45C7 /* click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = click.wav; sourceTree = "<group>"; };
-		CE89AD9F28B995F0002E45C7 /* click.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = click.wav.h; sourceTree = "<group>"; };
 		CE89ADA728BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_mixer-2.0.0.dylib"; path = "../../../../opt/local/lib/libSDL2_mixer-2.0.0.dylib"; sourceTree = "<group>"; };
 		CE89ADB028BAF661002E45C7 /* clack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = clack.wav; sourceTree = "<group>"; };
-		CE89ADB128BAF67C002E45C7 /* clack.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = clack.wav.h; sourceTree = "<group>"; };
 		CE8E7FF41C7FAD9100F4C3D4 /* Input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = Input.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		CE8E7FF51C7FAD9100F4C3D4 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Input.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE8E7FF81C84E36100F4C3D4 /* TableView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableView.c; sourceTree = "<group>"; };
@@ -414,7 +404,6 @@
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		CEC9413428BED6ED00A88CAE /* select.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = select.wav; sourceTree = "<group>"; };
-		CEC9413528BED71C00A88CAE /* select.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = select.wav.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -562,10 +551,6 @@
 				CE55C1CC1F94CFB200D5A326 /* SimpleSelector.h */,
 				CE0AD0981C77AF73003E3CF7 /* Slider.c */,
 				CE0AD0991C77AF73003E3CF7 /* Slider.h */,
-				CE5EEB6A28B3D52600C009BB /* Sound.c */,
-				CE5EEB6928B3D52600C009BB /* Sound.h */,
-				CE5EEB3F28B3D16700C009BB /* SoundStage.c */,
-				CE5EEB3E28B3D16700C009BB /* SoundStage.h */,
 				CE12D4931C547BDD00CD0B13 /* StackView.c */,
 				CE12D4941C547BDD00CD0B13 /* StackView.h */,
 				CE8819841F8DAC96000D5AB7 /* Style.c */,
@@ -649,10 +634,8 @@
 			children = (
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
-				CE89ADB128BAF67C002E45C7 /* clack.wav.h */,
 				CE89ADB028BAF661002E45C7 /* clack.wav */,
 				CE89AD9E28B99568002E45C7 /* click.wav */,
-				CE89AD9F28B995F0002E45C7 /* click.wav.h */,
 				CE7CBD7E202942B300C5316A /* coda.ttf */,
 				CE7CBD7F20294B9B00C5316A /* coda.ttf.h */,
 				CE9FECD5201D5F2A00F954ED /* debug.css */,
@@ -662,7 +645,6 @@
 				CEF1D8921D429F7A0099A857 /* resize.png */,
 				CE92C5171FE029C000FDB0DF /* resize.png.h */,
 				CEC9413428BED6ED00A88CAE /* select.wav */,
-				CEC9413528BED71C00A88CAE /* select.wav.h */,
 				CE92C5141FE01F6300FDB0DF /* stylesheet.css */,
 				CE92C5151FE029BF00FDB0DF /* stylesheet.css.h */,
 				CEF1D8941D42ABCA0099A857 /* Makefile.am */,
@@ -787,8 +769,6 @@
 				CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */,
 				CE55C1CE1F94CFB200D5A326 /* SimpleSelector.h in Headers */,
 				CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */,
-				CE5EEB6B28B3D52600C009BB /* Sound.h in Headers */,
-				CE5EEB4028B3D16700C009BB /* SoundStage.h in Headers */,
 				CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */,
 				CE8819871F8DAC96000D5AB7 /* Style.h in Headers */,
 				CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */,
@@ -1051,8 +1031,6 @@
 				CE9351681F9B6ED000B46882 /* SelectorSequence.c in Sources */,
 				CE55C1CD1F94CFB200D5A326 /* SimpleSelector.c in Sources */,
 				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
-				CE5EEB6C28B3D52600C009BB /* Sound.c in Sources */,
-				CE5EEB4128B3D16700C009BB /* SoundStage.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
 				CE8819861F8DAC96000D5AB7 /* Style.c in Sources */,
 				CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */,

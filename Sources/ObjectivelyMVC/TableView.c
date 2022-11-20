@@ -123,9 +123,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
 #pragma mark - Control
 
-static Sound *_select;
-static Sound *_click;
-static Sound *_clack;
 
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
@@ -133,7 +130,6 @@ static Sound *_clack;
 static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	TableView *this = (TableView *) self;
-	View *view = (View *) self;
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
 
@@ -147,7 +143,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			TableColumn *column = $(this, columnAtPoint, &point);
 			if (column) {
 				$(this, setSortColumn, column);
-				$(view, play, _click);
 			}
 
 			return true;
@@ -175,22 +170,18 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 							if (row->isSelected == false) {
 								$(this, deselectAll);
 								$(this, selectRowAtIndex, index);
-								$(view, play, _select);
 							}
 							break;
 						case ControlSelectionMultiple:
 							if (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) {
 								if (row->isSelected) {
 									$(this, deselectRowAtIndex, index);
-									$(view, play, _clack);
 								} else {
 									$(this, selectRowAtIndex, index);
-									$(view, play, _select);
 								}
 							} else {
 								$(this, deselectAll);
 								$(this, selectRowAtIndex, index);
-								$(view, play, _select);
 							}
 							break;
 					}
@@ -582,9 +573,6 @@ static void setSortColumn(TableView *self, TableColumn *column) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-    #include "select.wav.h"
-	#include "click.wav.h"
-	#include "clack.wav.h"
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
@@ -612,20 +600,6 @@ static void initialize(Class *clazz) {
 	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
 	((TableViewInterface *) clazz->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
 	((TableViewInterface *) clazz->interface)->setSortColumn = setSortColumn;
-
-	_select = $$(Sound, soundWithBytes, select_wav, select_wav_len);
-	_click = $$(Sound, soundWithBytes, click_wav, click_wav_len);
-	_clack = $$(Sound, soundWithBytes, clack_wav, clack_wav_len);
-
-}
-
-/**
- * @see Class::destroy(Class *)
- */
-static void destroy(Class *clazz) {
-	release(_select);
-	release(_click);
-	release(_clack);
 }
 
 /**
@@ -644,7 +618,6 @@ Class *_TableView(void) {
 			.interfaceOffset = offsetof(TableView, interface),
 			.interfaceSize = sizeof(TableViewInterface),
 			.initialize = initialize,
-			.destroy = destroy,
 		});
 	});
 

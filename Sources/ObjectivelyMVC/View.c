@@ -1127,24 +1127,6 @@ static String *path(const View *self) {
 }
 
 /**
- * @fn void View::play(const View *, const Sound *)
- * @memberof View
- */
-static void play(const View *self, const Sound *sound) {
-
-	assert(sound);
-
-	if (self->window == NULL) {
-		return;
-	}
-
-	WindowController *windowController = $$(WindowController, windowController, self->window);
-	assert(windowController);
-
-	$(windowController->soundStage, play, sound);
-}
-
-/**
  * @fn void View::removeAllClassNames(View *self)
  * @memberof View
  */
@@ -1747,7 +1729,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
 	((ViewInterface *) clazz->interface)->moveToWindow = moveToWindow;
 	((ViewInterface *) clazz->interface)->path = path;
-	((ViewInterface *) clazz->interface)->play = play;
 	((ViewInterface *) clazz->interface)->removeAllClassNames = removeAllClassNames;
 	((ViewInterface *) clazz->interface)->removeAllSubviews = removeAllSubviews;
 	((ViewInterface *) clazz->interface)->removeClassName = removeClassName;

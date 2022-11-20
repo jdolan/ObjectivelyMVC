@@ -111,7 +111,6 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 	if (self) {
 		$(self, setWindow, window);
 		$(self, setViewController, NULL);
-		$(self, setSoundStage, NULL);
 		$(self, setRenderer, NULL);
 		$(self, setTheme, NULL);
 	}
@@ -213,24 +212,6 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 		}
 
 		$(self->viewController->view, renderDeviceDidReset);
-	}
-}
-
-/**
- * @fn void WindowController::setSoundStage(WindowController *self, SoundStage *soundStage)
- * @memberof WindowController
- */
-static void setSoundStage(WindowController *self, SoundStage *soundStage) {
-
-	if (self->soundStage != soundStage || self->soundStage == NULL) {
-
-		release(self->soundStage);
-
-		if (soundStage) {
-			self->soundStage = retain(soundStage);
-		} else {
-			self->soundStage = $(alloc(SoundStage), init);
-		}
 	}
 }
 
@@ -365,7 +346,6 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->interface)->render = render;
 	((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
-	((WindowControllerInterface *) clazz->interface)->setSoundStage = setSoundStage;
 	((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
 	((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
 	((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;

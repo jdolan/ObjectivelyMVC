@@ -59,8 +59,6 @@
 #include <ObjectivelyMVC/SelectorSequence.h>
 #include <ObjectivelyMVC/SimpleSelector.h>
 #include <ObjectivelyMVC/Slider.h>
-#include <ObjectivelyMVC/Sound.h>
-#include <ObjectivelyMVC/SoundStage.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/Style.h>
 #include <ObjectivelyMVC/Stylesheet.h>

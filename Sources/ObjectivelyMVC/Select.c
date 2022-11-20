@@ -107,8 +107,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
 #pragma mark - Control
 
-static Sound *_select;
-
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
@@ -126,7 +124,6 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 				Option *option = $(options, objectAtIndex, i);
 				if ($((View *) option, didReceiveEvent, event)) {
 					$(this, selectOption, option);
-					$((View *) self, play, _select);
 					if (this->delegate.didSelectOption) {
 						this->delegate.didSelectOption(this, option);
 					}
@@ -387,7 +384,6 @@ static Array *selectedOptions(const Select *self) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-    #include "select.wav.h"
 
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
@@ -408,15 +404,6 @@ static void initialize(Class *clazz) {
 	((SelectInterface *) clazz->interface)->selectOptionWithValue = selectOptionWithValue;
 	((SelectInterface *) clazz->interface)->selectedOption = selectedOption;
 	((SelectInterface *) clazz->interface)->selectedOptions = selectedOptions;
-
-	_select = $$(Sound, soundWithBytes, select_wav, select_wav_len);
-}
-
-/**
- * @see Class::destroy(Class *)
- */
-static void destroy(Class *clazz) {
-	release(_select);
 }
 
 /**
@@ -435,7 +422,6 @@ Class *_Select(void) {
 			.interfaceOffset = offsetof(Select, interface),
 			.interfaceSize = sizeof(SelectInterface),
 			.initialize = initialize,
-			.destroy = destroy,
 		});
 	});
 
