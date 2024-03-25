@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 
 	MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
 
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
 	SDL_Window *window = SDL_CreateWindow(__FILE__,
 		SDL_WINDOWPOS_CENTERED,

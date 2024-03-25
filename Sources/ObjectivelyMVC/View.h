@@ -742,7 +742,7 @@ struct ViewInterface {
 
 	/**
 	 * @fn String *View::path(const View *self)
-	 * @param self The view.
+	 * @param self The View.
 	 * @return A unique CSS selector matching this View.
 	 * @memberof View
 	 */

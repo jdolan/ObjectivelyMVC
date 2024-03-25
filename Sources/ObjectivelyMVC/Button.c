@@ -25,6 +25,8 @@
 
 #include "Button.h"
 
+Uint32 MVC_BUTTON_CLICK = -1;
+
 #define _Class _Button
 
 #pragma mark - Object
@@ -76,11 +78,21 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		self->state |= ControlStateHighlighted;
+		SDL_PushEvent((SDL_Event *) &(const SDL_UserEvent) {
+			.type = MVC_VIEW_EVENT,
+			.code = ViewEventMouseButtonDown,
+			.data1 = self,
+		});
 		return true;
 	}
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
 		self->state &= ~ControlStateHighlighted;
+		SDL_PushEvent((SDL_Event *) &(const SDL_UserEvent) {
+			.type = MVC_VIEW_EVENT,
+			.code = ViewEventMouseButtonUp,
+			.data1 = self,
+		});
 		return true;
 	}
 
@@ -155,6 +167,9 @@ static void initialize(Class *clazz) {
 	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ButtonInterface *) clazz->interface)->initWithImage = initWithImage;
 	((ButtonInterface *) clazz->interface)->initWithTitle = initWithTitle;
+
+	MVC_BUTTON_CLICK = SDL_RegisterEvents(1);
+	assert(MVC_BUTTON_CLICK != (Uint32) -1);
 }
 
 /**

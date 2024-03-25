@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -137,6 +137,7 @@
 		CE8819981F91B0CE000D5AB7 /* Style.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819891F91B094000D5AB7 /* Style.c */; };
 		CE88199D1F9231AF000D5AB7 /* Selector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE88199B1F9231AE000D5AB7 /* Selector.c */; };
 		CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE88199C1F9231AF000D5AB7 /* Selector.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE89ADA828BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE89ADA728BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib */; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
 		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF81C84E36100F4C3D4 /* TableView.c */; };
@@ -359,7 +360,6 @@
 		CE7CBD7E202942B300C5316A /* coda.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = coda.ttf; sourceTree = "<group>"; };
 		CE7CBD7F20294B9B00C5316A /* coda.ttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coda.ttf.h; sourceTree = "<group>"; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
-		CE7EA4CD1D479A9000BD37A3 /* quetoo.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = quetoo.jpg; sourceTree = "<group>"; };
 		CE84C6CA1FFC8E9E00F72267 /* debug.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = debug.json; sourceTree = "<group>"; };
 		CE84C6CB1FFC917600F72267 /* DebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
 		CE84C6CC1FFC917600F72267 /* DebugViewController.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = DebugViewController.c; sourceTree = "<group>"; };
@@ -377,6 +377,9 @@
 		CE8819971F91B0BE000D5AB7 /* ObjectivelyMVC-Style */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Style"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE88199B1F9231AE000D5AB7 /* Selector.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Selector.c; sourceTree = "<group>"; };
 		CE88199C1F9231AF000D5AB7 /* Selector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Selector.h; sourceTree = "<group>"; };
+		CE89AD9E28B99568002E45C7 /* click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = click.wav; sourceTree = "<group>"; };
+		CE89ADA728BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libSDL2_mixer-2.0.0.dylib"; path = "../../../../opt/local/lib/libSDL2_mixer-2.0.0.dylib"; sourceTree = "<group>"; };
+		CE89ADB028BAF661002E45C7 /* clack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = clack.wav; sourceTree = "<group>"; };
 		CE8E7FF41C7FAD9100F4C3D4 /* Input.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = Input.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		CE8E7FF51C7FAD9100F4C3D4 /* Input.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Input.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE8E7FF81C84E36100F4C3D4 /* TableView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableView.c; sourceTree = "<group>"; };
@@ -400,6 +403,7 @@
 		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
+		CEC9413428BED6ED00A88CAE /* select.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = select.wav; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -472,6 +476,7 @@
 				CE3A45A0216594D5005ACAD6 /* libObjectively.dylib in Frameworks */,
 				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
 				CEDCFC7520497979008A4252 /* libSDL2_image-2.0.0.dylib in Frameworks */,
+				CE89ADA828BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib in Frameworks */,
 				CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
 				CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */,
 			);
@@ -629,6 +634,8 @@
 			children = (
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
+				CE89ADB028BAF661002E45C7 /* clack.wav */,
+				CE89AD9E28B99568002E45C7 /* click.wav */,
 				CE7CBD7E202942B300C5316A /* coda.ttf */,
 				CE7CBD7F20294B9B00C5316A /* coda.ttf.h */,
 				CE9FECD5201D5F2A00F954ED /* debug.css */,
@@ -637,6 +644,7 @@
 				CE9FECD7201D5F8000F954ED /* debug.json.h */,
 				CEF1D8921D429F7A0099A857 /* resize.png */,
 				CE92C5171FE029C000FDB0DF /* resize.png.h */,
+				CEC9413428BED6ED00A88CAE /* select.wav */,
 				CE92C5141FE01F6300FDB0DF /* stylesheet.css */,
 				CE92C5151FE029BF00FDB0DF /* stylesheet.css.h */,
 				CEF1D8941D42ABCA0099A857 /* Makefile.am */,
@@ -651,7 +659,6 @@
 				CE12D48F1C505FB400CD0B13 /* index.md */,
 				CEEA01A31E2D28B900B68010 /* INSTALL.md */,
 				CE12D4901C505FB400CD0B13 /* layout.xml */,
-				CE7EA4CD1D479A9000BD37A3 /* quetoo.jpg */,
 				CE0AD0971C7241DE003E3CF7 /* style.css */,
 			);
 			path = Documentation;
@@ -660,6 +667,7 @@
 		CE12D4971C55012200CD0B13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE89ADA728BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib */,
 				CE423A431F53457D002767E7 /* libcheck.0.dylib */,
 				CEF1D8901D4270150099A857 /* libObjectively.dylib */,
 				CE12D49A1C5506F700CD0B13 /* GLUT.framework */,
@@ -885,7 +893,8 @@
 		CED157931C4BEA8900FBA2DE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1240;
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "https://github.com/jdolan";
 				TargetAttributes = {
 					CE12D4541C4C8E8E00CD0B13 = {
@@ -940,6 +949,7 @@
 		};
 		CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -950,7 +960,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i coda.ttf coda.ttf.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i click.wav click.wav.h\nxxd -i clack.wav clack.wav.h\nxxd -i coda.ttf coda.ttf.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i select.wav select.wav.h\nxxd -i stylesheet.css stylesheet.css.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1199,14 +1209,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
-					/opt/local/include,
-					/opt/local/include/SDL2,
+					/usr/local/include/SDL2,
 				);
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib,
-					/opt/local/lib,
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
 				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = OpenGL;
 			};
@@ -1235,14 +1241,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
-					/opt/local/include,
-					/opt/local/include/SDL2,
+					/usr/local/include/SDL2,
 				);
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib,
-					/opt/local/lib,
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
 				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = OpenGL;
 			};

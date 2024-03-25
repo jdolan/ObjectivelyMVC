@@ -123,6 +123,7 @@ static SDL_Size sizeThatFits(const View *self) {
 
 #pragma mark - Control
 
+
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
@@ -517,7 +518,9 @@ static void selectRowAtIndex(TableView *self, size_t index) {
 	if (index < rows->count) {
 
 		TableRowView *row = $(rows, objectAtIndex, index);
-		$(row, setSelected, true);
+		if (!row->isSelected) {
+			$(row, setSelected, true);
+		}
 	}
 }
 

@@ -39,10 +39,10 @@ void MVC_PostNotification(const Notification *notification) {
 
 	assert(notification);
 
-	SDL_PushEvent(&(SDL_Event) {
-		.user.type = MVC_NOTIFICATION_EVENT,
-		.user.code = notification->name,
-		.user.data1 = notification->sender,
-		.user.data2 = notification->data
+	SDL_PushEvent((SDL_Event *) &(SDL_UserEvent) {
+		.type = MVC_NOTIFICATION_EVENT,
+		.code = notification->name,
+		.data1 = notification->sender,
+		.data2 = notification->data
 	});
 }

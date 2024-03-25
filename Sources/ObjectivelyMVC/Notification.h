@@ -41,7 +41,7 @@ struct Notification {
 	/**
 	 * @brief The sender.
 	 */
-	ident sender;
+	const ident sender;
 
 	/**
 	 * @brief The data.
