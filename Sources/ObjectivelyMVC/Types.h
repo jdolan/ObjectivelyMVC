@@ -54,6 +54,26 @@ typedef struct ViewController ViewController;
  */
 typedef void (*ViewEnumerator)(View *view, ident data);
 
+/**
+ * @brief View event relay codes.
+ */
+typedef enum {
+	ViewEventNone,
+	ViewEventMouseButtonDown,
+	ViewEventMouseButtonUp,
+	ViewEventKeyDown,
+	ViewEventKeyUp,
+	ViewEventMouseMotion,
+
+} ViewEvent;
+
+/**
+ * @brief The custom `SDL_event` type for View event relaying.
+ * @details When a View responds to an input event, it may emit an output event. The application
+ * may handle these events to e.g. play sound effects.
+ */
+OBJECTIVELYMVC_EXPORT Uint32 MVC_VIEW_EVENT;
+
 typedef struct SDL_Size SDL_Size;
 
 /**

@@ -32,6 +32,8 @@
 #include "WindowController.h"
 #include "Window.h"
 
+Uint32 MVC_VIEW_EVENT;
+
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
 	MakeEnumAlias(ViewAlignmentNone, none),
 	MakeEnumAlias(ViewAlignmentTop, top),
@@ -1761,6 +1763,10 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->warn = warn;
 	((ViewInterface *) clazz->interface)->willMoveToWindow = willMoveToWindow;
+
+
+	MVC_VIEW_EVENT = SDL_RegisterEvents(1);
+	assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
 }
 
 /**
