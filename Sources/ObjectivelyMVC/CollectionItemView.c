@@ -48,7 +48,7 @@ static void dealloc(Object *self) {
 /**
  * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
-static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
 	assert(simpleSelector);
 
@@ -108,10 +108,10 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 }
 
 /**
- * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool isSelected)
+ * @fn void CollectionItemView::setSelected(CollectionItemView *self, bool isSelected)
  * @memberof CollectionItemView
  */
-static void setSelected(CollectionItemView *self, _Bool isSelected) {
+static void setSelected(CollectionItemView *self, bool isSelected) {
 	self->isSelected = isSelected;
 }
 

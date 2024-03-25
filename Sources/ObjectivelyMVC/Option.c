@@ -65,14 +65,14 @@ static String *description(const Object *self) {
 /**
  * @see View::acceptsFirstResponder(const View *)
  */
-static _Bool acceptsFirstResponder(const View *self) {
+static bool acceptsFirstResponder(const View *self) {
 	return true;
 }
 
 /**
  * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
-static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
 	assert(simpleSelector);
 
@@ -114,10 +114,10 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
 }
 
 /**
- * @fn void Option::setSelected(Option *self, _Bool isSelected)
+ * @fn void Option::setSelected(Option *self, bool isSelected)
  * @memberof Option
  */
-static void setSelected(Option *self, _Bool isSelected) {
+static void setSelected(Option *self, bool isSelected) {
 
 	if (self->isSelected != isSelected) {
 		self->isSelected = isSelected;

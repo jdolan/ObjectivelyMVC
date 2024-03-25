@@ -127,7 +127,7 @@ static SDL_Size sizeThatFits(const View *self) {
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
 
 	TableView *this = (TableView *) self;
 

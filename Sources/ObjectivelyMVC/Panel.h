@@ -71,22 +71,22 @@ struct Panel {
 	/**
 	 * @brief If true, this Panel may be repositioned by the user.
 	 */
-	_Bool isDraggable;
+	bool isDraggable;
 
 	/**
 	 * @brief True if the user is repositioning this Panel.
 	 */
-	_Bool isDragging;
+	bool isDragging;
 
 	/**
 	 * @brief If true, this Panel may be resized by the user.
 	 */
-	_Bool isResizable;
+	bool isResizable;
 
 	/**
 	 * @brief True if the user is resizing this Panel.
 	 */
-	_Bool isResizing;
+	bool isResizing;
 
 	/**
 	 * @brief The minimum size to which this Panel's frame can be resized.

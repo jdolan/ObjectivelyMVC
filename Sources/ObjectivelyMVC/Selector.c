@@ -72,7 +72,7 @@ static int hash(const Object *self) {
 /**
  * @see Object::isEqual(const Object *, const Object *)
  */
-static _Bool isEqual(const Object *self, const Object *other) {
+static bool isEqual(const Object *self, const Object *other) {
 
 	if (super(Object, self, isEqual, other)) {
 		return true;
@@ -208,13 +208,13 @@ static Selector *initWithRule(Selector *self, const char *rule) {
 typedef struct {
 	const Array *sequences;
 	size_t sequence;
-	_Bool match;
+	bool match;
 } Match;
 
 /**
  * @brief ViewEnumerator for matchesView.
  */
-static _Bool _matchesView(const View *view, Match *match) {
+static bool _matchesView(const View *view, Match *match) {
 
 	const SelectorSequence *sequence = $(match->sequences, objectAtIndex, match->sequence);
 
@@ -254,10 +254,10 @@ static _Bool _matchesView(const View *view, Match *match) {
 }
 
 /**
- * @fn _Bool Selector::matchesView(const Selector *self, View *view)
+ * @fn bool Selector::matchesView(const Selector *self, View *view)
  * @memberof Selector
  */
-static _Bool matchesView(const Selector *self, const View *view) {
+static bool matchesView(const Selector *self, const View *view) {
 
 	assert(view);
 

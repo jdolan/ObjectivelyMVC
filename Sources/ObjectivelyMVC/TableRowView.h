@@ -62,7 +62,7 @@ struct TableRowView {
 	/**
 	 * @brief True when this row is selected, false otherwise.
 	 */
-	_Bool isSelected;
+	bool isSelected;
 
 	/**
 	 * @brief The table.
@@ -117,14 +117,14 @@ struct TableRowViewInterface {
 	void (*removeCell)(TableRowView *self, TableCellView *cell);
 
 	/**
-	 * @fn void TableRowView::setSelected(TableRowView *self, _Bool isSelected)
+	 * @fn void TableRowView::setSelected(TableRowView *self, bool isSelected)
 	 * @brief Sets the selected state of this row.
 	 * @param self The TableRowView.
 	 * @param isSelected The selected state.
 	 * @remarks Subclasses may override this method to change the visual cue for selection.
 	 * @memberof TableRowView
 	 */
-	void (*setSelected)(TableRowView *self, _Bool isSelected);
+	void (*setSelected)(TableRowView *self, bool isSelected);
 };
 
 /**

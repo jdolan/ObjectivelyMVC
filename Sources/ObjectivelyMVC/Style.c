@@ -74,7 +74,7 @@ static int hash(const Object *self) {
 /**
  * @see Object::isEqual(const Object *, const Object *)
  */
-static _Bool isEqual(const Object *self, const Object *other) {
+static bool isEqual(const Object *self, const Object *other) {
 
 	if (super(Object, self, isEqual, other)) {
 		return true;
@@ -124,10 +124,10 @@ static void addAttributes(Style *self, const Dictionary *attributes) {
 }
 
 /**
- * @fn void Style::addBoolAttribute(Style *self, const char *attr, _Bool value)
+ * @fn void Style::addBoolAttribute(Style *self, const char *attr, bool value)
  * @memberof Style
  */
-static void addBoolAttribute(Style *self, const char *attr, _Bool value) {
+static void addBoolAttribute(Style *self, const char *attr, bool value) {
 	$(self, addAttribute, attr, $$(Boole, valueof, value));
 }
 
@@ -325,10 +325,10 @@ static Style *initWithRules(Style *self, const char *rules) {
 }
 
 /**
- * @fn _Bool Style::isComputedEqual(const Style *self, const Style *other)
+ * @fn bool Style::isComputedEqual(const Style *self, const Style *other)
  * @memberof Style
  */
-static _Bool isComputedEqual(const Style *self, const Style *other) {
+static bool isComputedEqual(const Style *self, const Style *other) {
 
 	assert(other);
 

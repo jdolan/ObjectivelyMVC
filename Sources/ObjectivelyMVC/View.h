@@ -177,7 +177,7 @@ struct View {
 	/**
 	 * @brief If true, subviews will be clipped to this View's frame.
 	 */
-	_Bool clipsSubviews;
+	bool clipsSubviews;
 
 	/**
 	 * @brief The computed Style of this View.
@@ -192,7 +192,7 @@ struct View {
 	/**
 	 * @brief If `true`, this View is not drawn.
 	 */
-	_Bool hidden;
+	bool hidden;
 
 	/**
 	 * @brief An optional identifier.
@@ -213,12 +213,12 @@ struct View {
 	/**
 	 * @brief If true, this View will apply the Theme before it is drawn.
 	 */
-	_Bool needsApplyTheme;
+	bool needsApplyTheme;
 
 	/**
 	 * @brief If true, this View will layout its subviews before it is drawn.
 	 */
-	_Bool needsLayout;
+	bool needsLayout;
 
 	/**
 	 * @brief The next responder, or event handler, in the chain.
@@ -287,12 +287,12 @@ struct ViewInterface {
 	ObjectInterface parentInterface;
 
 	/**
-	 * @fn _Bool View::acceptsFirstResponder(const View *self)
+	 * @fn bool View::acceptsFirstResponder(const View *self)
 	 * @param self The View.
 	 * @return True if this View can become the first responder, false otherwise.
 	 * @memberof View
 	 */
-	_Bool (*acceptsFirstResponder)(const View *self);
+	bool (*acceptsFirstResponder)(const View *self);
 
 	/**
 	 * @fn void View::addClassName(View *self, const char *className)
@@ -428,7 +428,7 @@ struct ViewInterface {
 	void (*becomeFirstResponder)(View *self);
 
 	/**
-	 * @fn _Bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
+	 * @fn bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
 	 * @brief Performs data binding for the Inlets described in `dictionary`.
 	 * @param self The View.
 	 * @param inlets The Inlets to bind.
@@ -437,7 +437,7 @@ struct ViewInterface {
 	 * @remarks Subclasses will typically call this method from View::awakeWithDictionary.
 	 * @memberof View
 	 */
-	_Bool (*bind)(View *self, const Inlet *inlets, const Dictionary *dictionary);
+	bool (*bind)(View *self, const Inlet *inlets, const Dictionary *dictionary);
 
 	/**
 	 * @fn SDL_Rect View::bounds(const View *self)
@@ -467,13 +467,13 @@ struct ViewInterface {
 	SDL_Rect (*clippingFrame)(const View *self);
 
 	/**
-	 * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
+	 * @fn bool View::containsPoint(const View *self, const SDL_Point *point)
 	 * @param self The View.
 	 * @param point A point in object space.
 	 * @return True if the point falls within this View's clipped frame.
 	 * @memberof View
 	 */
-	_Bool (*containsPoint)(const View *self, const SDL_Point *point);
+	bool (*containsPoint)(const View *self, const SDL_Point *point);
 
 	/**
 	 * @fn int View::depth(const View *self)
@@ -511,13 +511,13 @@ struct ViewInterface {
 	void (*didMoveToWindow)(View *self, SDL_Window *window);
 
 	/**
-	 * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
+	 * @fn bool View::didReceiveEvent(const View *self, const SDL_Event *event)
 	 * @param self The View.
 	 * @param event The event.
 	 * @return True if this View received the event, false otherwise.
 	 * @memberof View
 	 */
-	_Bool (*didReceiveEvent)(const View *self, const SDL_Event *event);
+	bool (*didReceiveEvent)(const View *self, const SDL_Event *event);
 
 	/**
 	 * @fn void View::draw(View *self, Renderer *renderer)
@@ -622,13 +622,13 @@ struct ViewInterface {
 	View *(*firstResponder)(SDL_Window *window);
 
 	/**
-	 * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
+	 * @fn bool View::hasClassName(const View *self, cosnt char *className)
 	 * @param self The View
 	 * @param className The class name.
 	 * @return True if this View has the given class name, false otherwise.
 	 * @memberof View
 	 */
-	_Bool (*hasClassName)(const View *self, const char *className);
+	bool (*hasClassName)(const View *self, const char *className);
 
 	/**
 	 * @fn View *View::hitTest(const View *self, const SDL_Point *point)
@@ -672,37 +672,37 @@ struct ViewInterface {
 	void (*invalidateStyle)(View *self);
 
 	/**
-	 * @fn _Bool View::isContainer(const View *self)
+	 * @fn bool View::isContainer(const View *self)
 	 * @param self The view.
 	 * @return True if this View's autoresizing mask includes `Fit` or `Contain`.
 	 * @memberof View
 	 */
-	_Bool (*isContainer)(const View *self);
+	bool (*isContainer)(const View *self);
 
 	/**
-	 * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
+	 * @fn bool View::isDescendantOfView(const View *self, const View *view)
 	 * @param self The View.
 	 * @param view The View to test against this View's hierarchy.
 	 * @return True if this View is a descendant of, or equal to, the given View.
 	 * @memberof View
 	 */
-	_Bool (*isDescendantOfView)(const View *self, const View *view);
+	bool (*isDescendantOfView)(const View *self, const View *view);
 
 	/**
-	 * @fn _Bool View::isFirstResponder(const View *self)
+	 * @fn bool View::isFirstResponder(const View *self)
 	 * @param self The View.
 	 * @return True if this View is the first responder, false otherwise.
 	 * @memberof View
 	 */
-	_Bool (*isFirstResponder)(const View *self);
+	bool (*isFirstResponder)(const View *self);
 
 	/**
-	 * @fn _Bool View::isVisible(const View *self)
+	 * @fn bool View::isVisible(const View *self)
 	 * @param self The View.
 	 * @return True if this View is visible, false if it, or an ancestor, is hidden.
 	 * @memberof View
 	 */
-	_Bool (*isVisible)(const View *self);
+	bool (*isVisible)(const View *self);
 
 	/**
 	 * @fn void View::layoutIfNeeded(View *self)
@@ -723,13 +723,13 @@ struct ViewInterface {
 	void (*layoutSubviews)(View *self);
 
 	/**
-	 * @fn _Bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
+	 * @fn bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
 	 * @param self The View.
 	 * @param simpleSelector The SimpleSelector.
 	 * @return True if this View matches the SimpleSelector, false otherwise.
 	 * @memberof View
 	 */
-	_Bool (*matchesSelector)(const View *self, const SimpleSelector *simpleSelector);
+	bool (*matchesSelector)(const View *self, const SimpleSelector *simpleSelector);
 
 	/**
 	 * @fn void View::moveToWindow(View *self, SDL_Window *window)

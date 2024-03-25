@@ -109,10 +109,10 @@ static String *description(const Object *self) {
 #pragma mark - View
 
 /**
- * @fn _Bool View::acceptsFirstResponder(const View *self)
+ * @fn bool View::acceptsFirstResponder(const View *self)
  * @memberof View
  */
-static _Bool acceptsFirstResponder(const View *self) {
+static bool acceptsFirstResponder(const View *self) {
 	return false;
 }
 
@@ -375,10 +375,10 @@ static void becomeFirstResponder(View *self) {
 }
 
 /**
- * @fn _Bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
+ * @fn bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
  * @memberof View
  */
-static _Bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
+static bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
 	if (inlets) {
 		if (bindInlets(inlets, dictionary)) {
@@ -469,14 +469,14 @@ static SDL_Rect clippingFrame(const View *self) {
 }
 
 /**
- * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
+ * @fn bool View::containsPoint(const View *self, const SDL_Point *point)
  * @memberof View
  */
-static _Bool containsPoint(const View *self, const SDL_Point *point) {
+static bool containsPoint(const View *self, const SDL_Point *point) {
 
 	const SDL_Rect frame = $(self, clippingFrame);
 
-	return (_Bool) !!SDL_PointInRect(point, &frame);
+	return (bool) !!SDL_PointInRect(point, &frame);
 }
 
 /**
@@ -543,10 +543,10 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
 }
 
 /**
- * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
+ * @fn bool View::didReceiveEvent(const View *self, const SDL_Event *event)
  * @memberof View
  */
-static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
+static bool didReceiveEvent(const View *self, const SDL_Event *event) {
 
 	if ($(self, isVisible)) {
 
@@ -722,15 +722,15 @@ static View *firstResponder(SDL_Window *window) {
 /**
  * @brief Predicate for hasClassName.
  */
-static _Bool hasClassName_predicate(const ident obj, ident data) {
+static bool hasClassName_predicate(const ident obj, ident data) {
 	return strcmp(((String *) obj)->chars, (const char *) data) == 0;
 }
 
 /**
- * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
+ * @fn bool View::hasClassName(const View *self, cosnt char *className)
  * @memberof View
  */
-static _Bool hasClassName(const View *self, const char *className) {
+static bool hasClassName(const View *self, const char *className) {
 
 	if (className) {
 		return $((Set *) self->classNames, containsObjectMatching, hasClassName_predicate, (ident) className);
@@ -827,18 +827,18 @@ static void invalidateStyle(View *self) {
 }
 
 /**
- * @fn _Bool View::isContainer(const View *self)
+ * @fn bool View::isContainer(const View *self)
  * @memberof View
  */
-static _Bool isContainer(const View *self) {
+static bool isContainer(const View *self) {
 	return self->autoresizingMask & (ViewAutoresizingFit | ViewAutoresizingContain);
 }
 
 /**
- * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
+ * @fn bool View::isDescendantOfView(const View *self, const View *view)
  * @memberof View
  */
-static _Bool isDescendantOfView(const View *self, const View *view) {
+static bool isDescendantOfView(const View *self, const View *view) {
 
 	assert(view);
 
@@ -853,10 +853,10 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
 }
 
 /**
- * @fn _Bool View::isFirstResponder(const View *self)
+ * @fn bool View::isFirstResponder(const View *self)
  * @memberof View
  */
-static _Bool isFirstResponder(const View *self) {
+static bool isFirstResponder(const View *self) {
 
 	if (self->window) {
 		return $$(View, firstResponder, self->window) == self;
@@ -866,10 +866,10 @@ static _Bool isFirstResponder(const View *self) {
 }
 
 /**
- * @fn _Bool View::isVisible(const View *self)
+ * @fn bool View::isVisible(const View *self)
  * @memberof View
  */
-static _Bool isVisible(const View *self) {
+static bool isVisible(const View *self) {
 
 	for (const View *view = self; view; view = view->superview) {
 		if (view->hidden) {
@@ -1000,10 +1000,10 @@ static void layoutSubviews(View *self) {
 }
 
 /**
- * @fn _Bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
+ * @fn bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
  * @memberof View
  */
-static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
 	assert(simpleSelector);
 
@@ -1628,7 +1628,7 @@ static View *viewWithResourceName(const char *name, Outlet *outlets) {
 /**
  * @brief Predicate for visibleSubviews.
  */
-static _Bool visibleSubviews_filter(ident obj, ident data) {
+static bool visibleSubviews_filter(ident obj, ident data) {
 
 	const View *view = (View *) obj;
 

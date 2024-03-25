@@ -47,7 +47,7 @@ static void dealloc(Object *self) {
 /**
  * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
-static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
 	TableRowView *this = (TableRowView *) self;
 
@@ -126,10 +126,10 @@ static void removeCell(TableRowView *self, TableCellView *cell) {
 }
 
 /**
- * @fn void TableRowView::setSelected(TableRowView *self, _Bool isSelected)
+ * @fn void TableRowView::setSelected(TableRowView *self, bool isSelected)
  * @memberof TableRowView
  */
-static void setSelected(TableRowView *self, _Bool isSelected) {
+static void setSelected(TableRowView *self, bool isSelected) {
 
 	if (isSelected != self->isSelected) {
 		self->isSelected = isSelected;
