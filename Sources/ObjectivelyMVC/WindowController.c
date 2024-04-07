@@ -138,24 +138,45 @@ static void render(WindowController *self) {
 }
 
 /**
+ * @brief ViewEnumerator for `SDL_MOUSEMOTION_EVENT` which dispatches `ViewEventMouseEnter`
+ * and `ViewEventMouseLeave`.
+ */
+static void mouseMotion_enumerate(View *view, ident data) {
+	
+	const SDL_MouseMotionEvent *event = data;
+	const SDL_Point a = MakePoint(event->x - event->xrel, event->y - event->yrel);
+	const SDL_Point b = MakePoint(event->x, event->y);
+
+	if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
+		SDL_PushEvent((SDL_Event *) &(SDL_UserEvent) {
+			.type = MVC_VIEW_EVENT,
+			.code = ViewEventMouseLeave,
+			.data1 = (ident) view,
+		});
+	} else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
+		SDL_PushEvent((SDL_Event *) &(SDL_UserEvent) {
+			.type = MVC_VIEW_EVENT,
+			.code = ViewEventMouseEnter,
+			.data1 = (ident) view,
+		});
+	}
+}
+
+/**
  * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
  * @memberof WindowController
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
 	if (event->type >= SDL_USEREVENT) {
-
 		if (event->type == MVC_NOTIFICATION_EVENT) {
-
 			const Notification notification = {
 				.name = event->user.code,
 				.sender = event->user.data1,
 				.data = event->user.data2
 			};
-
 			$(self->viewController, handleNotification, &notification);
 		}
-
 		return;
 	}
 
@@ -173,7 +194,12 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 				break;
 			default:
 				break;
+	
 		}
+	}
+
+	if (event->type == SDL_MOUSEMOTION) {
+		$(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
 	}
 
 	View *firstResponder = $(self, firstResponder, event);

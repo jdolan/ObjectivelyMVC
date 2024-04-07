@@ -68,14 +68,14 @@ struct ViewController {
 	MutableArray *childViewControllers;
 
 	/**
-	 * @brief The main view.
-	 */
-	View *view;
-
-	/**
 	 * @brief The parent view controller.
 	 */
 	ViewController *parentViewController;
+	
+	/**
+	 * @brief The main view.
+	 */
+	View *view;
 };
 
 /**

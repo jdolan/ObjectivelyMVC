@@ -63,6 +63,8 @@ typedef enum {
 	ViewEventMouseButtonUp,
 	ViewEventKeyDown,
 	ViewEventKeyUp,
+	ViewEventMouseEnter,
+	ViewEventMouseLeave,
 	ViewEventMouseMotion,
 
 } ViewEvent;
