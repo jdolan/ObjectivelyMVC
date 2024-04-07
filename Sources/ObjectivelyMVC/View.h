@@ -613,6 +613,17 @@ struct ViewInterface {
 	void (*enumerateSuperview)(const View *self, ViewEnumerator enumerator, ident data);
 
 	/**
+	 * @fn void View::enumerateVisible(View *self, ViewEnumerator enumerator, ident data)
+	 * @brief Enumerates this View and its visible descendants, applying `enumerator` to each.
+	 * @details This is an optimized path for enumerating only visible subtrees.
+	 * @param self The View.
+	 * @param enumerator The ViewEnumerator.
+	 * @param data User data.
+	 * @memberof View
+	 */
+	void (*enumerateVisible)(View *self, ViewEnumerator enumerator, ident data);
+
+	/**
 	 * @static
 	 * @fn View *View::firstResponder(SDL_Window *window)
 	 * @param window The window.

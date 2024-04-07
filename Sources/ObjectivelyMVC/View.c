@@ -709,6 +709,27 @@ static void enumerateSuperview(const View *self, ViewEnumerator enumerator, iden
 }
 
 /**
+ * @fn void View::enumerateVisible(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateVisible(View *self, ViewEnumerator enumerator, ident data) {
+
+	if ($(self, isVisible) == false) {
+		return;
+	}
+
+	enumerator(self, data);
+
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+
+		View *subview = $(subviews, objectAtIndex, i);
+		$(subview, enumerateVisible, enumerator, data);
+	}
+
+}
+
+/**
  * @fn View *View::firstResponder(SDL_Window *window)
  * @memberof View
  */
@@ -1716,6 +1737,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->enumerateSiblings = enumerateSiblings;
 	((ViewInterface *) clazz->interface)->enumerateSubviews = enumerateSubviews;
 	((ViewInterface *) clazz->interface)->enumerateSuperview = enumerateSuperview;
+	((ViewInterface *) clazz->interface)->enumerateVisible = enumerateVisible;
 	((ViewInterface *) clazz->interface)->firstResponder = firstResponder;
 	((ViewInterface *) clazz->interface)->hasClassName = hasClassName;
 	((ViewInterface *) clazz->interface)->hitTest = hitTest;
@@ -1763,7 +1785,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->warn = warn;
 	((ViewInterface *) clazz->interface)->willMoveToWindow = willMoveToWindow;
-
 
 	MVC_VIEW_EVENT = SDL_RegisterEvents(1);
 	assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
