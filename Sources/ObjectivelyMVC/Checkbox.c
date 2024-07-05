@@ -78,6 +78,8 @@ static View *init(View *self) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
+	View *this = (View *) self;
+
 	const View *box = (View *) ((Checkbox *) self)->box;
 	
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
@@ -87,9 +89,10 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 	}
 	if (event->type == SDL_MOUSEBUTTONUP) {
-		if ($(box, didReceiveEvent, event)) {
+		if ($(box, didReceiveEvent, event) && box->mouseButtonMask) {
 			self->state ^= ControlStateSelected;
 			self->state &= ~ControlStateHighlighted;
+			$(this, emitViewEvent, ViewEventChange, NULL);
 			return true;
 		}
 	}

@@ -111,6 +111,7 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 		$(self, setWindow, window);
 		$(self, setViewController, NULL);
 		$(self, setRenderer, NULL);
+		$(self, setSoundStage, NULL);
 		$(self, setTheme, NULL);
 	}
 
@@ -148,17 +149,10 @@ static void mouseMotion_enumerate(View *view, ident data) {
 	const SDL_Point b = MakePoint(event->x, event->y);
 
 	if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
-		SDL_PushEvent((SDL_Event *) &(SDL_UserEvent) {
-			.type = MVC_VIEW_EVENT,
-			.code = ViewEventMouseLeave,
-			.data1 = (ident) view,
-		});
+		view->mouseButtonMask = 0;
+		$(view, emitViewEvent, ViewEventMouseLeave, NULL);
 	} else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
-		SDL_PushEvent((SDL_Event *) &(SDL_UserEvent) {
-			.type = MVC_VIEW_EVENT,
-			.code = ViewEventMouseEnter,
-			.data1 = (ident) view,
-		});
+		$(view, emitViewEvent, ViewEventMouseEnter, NULL);
 	}
 }
 
@@ -170,13 +164,17 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
 	if (event->type >= SDL_USEREVENT) {
 		if (event->type == MVC_NOTIFICATION_EVENT) {
+			// FIXME: Kill notification struct, respondToNotificationEvent
 			const Notification notification = {
 				.name = event->user.code,
 				.sender = event->user.data1,
 				.data = event->user.data2
 			};
 			$(self->viewController, handleNotification, &notification);
+		} else if (event->type == MVC_VIEW_EVENT) {
+			$(self->soundStage, respondToViewEvent, event);
 		}
+
 		return;
 	}
 
@@ -194,7 +192,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 				break;
 			default:
 				break;
-	
 		}
 	}
 
@@ -235,6 +232,25 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 		$(self->viewController->view, renderDeviceDidReset);
 	}
 }
+
+/**
+ * @fn void WindowController::setSoundStage(WindowController *self, SoundStage *soundStage)
+ * @memberof WindowController
+ */
+static void setSoundStage(WindowController *self, SoundStage *soundStage) {
+
+	if (self->soundStage != soundStage || self->soundStage == NULL) {
+
+		release(self->soundStage);
+
+		if (soundStage) {
+			self->soundStage = retain(soundStage);
+		} else {
+			self->soundStage = $(alloc(SoundStage), initWithSpec, NULL, NULL);
+		}
+	}
+}
+
 
 /**
  * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
@@ -367,6 +383,7 @@ static void initialize(Class *clazz) {
 	((WindowControllerInterface *) clazz->interface)->render = render;
 	((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
 	((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
+	((WindowControllerInterface *) clazz->interface)->setSoundStage = setSoundStage;
 	((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
 	((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
 	((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;

@@ -39,6 +39,8 @@ pkginclude_HEADERS = \
 	SelectorSequence.h \
 	SimpleSelector.h \
 	Slider.h \
+	Sound.h \
+	SoundStage.h \
 	StackView.h \
 	Style.h \
 	Stylesheet.h \
@@ -94,6 +96,8 @@ libObjectivelyMVC_la_SOURCES = \
 	SelectorSequence.c \
 	SimpleSelector.c \
 	Slider.c \
+	Sound.c \
+	SoundStage.c \
 	StackView.c \
 	Style.c \
 	Stylesheet.c \

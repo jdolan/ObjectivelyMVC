@@ -234,6 +234,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		$(this, stateDidChange);
 	}
 
+	// FIXME: We want Button events to propagate up, but not motion events..
 	if (didCaptureEvent) {
 		return;
 	}
@@ -339,6 +340,12 @@ static void stateDidChange(Control *self) {
 		$(this, becomeFirstResponder);
 	} else {
 		$(this, resignFirstResponder);
+	}
+
+	if (self->state & ControlStateFocused) {
+		$(this, emitViewEvent, ViewEventFocus, NULL);
+	} else {
+		$(this, emitViewEvent, ViewEventBlur, NULL);
 	}
 
 	$(this, invalidateStyle);

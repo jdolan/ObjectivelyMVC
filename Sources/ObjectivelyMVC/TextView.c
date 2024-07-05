@@ -306,6 +306,8 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 			if (this->delegate.didEdit) {
 				this->delegate.didEdit(this);
 			}
+			
+			$((View *) self, emitViewEvent, ViewEventChange, NULL);
 		}
 	}
 

@@ -33,6 +33,7 @@ Button {
 	bevel: outset;
 	min-width: 100;
 	padding: 8 8 8 8;
+	sound-on-click: click.wav.h;
 }
 
 Button:highlighted {
@@ -41,6 +42,10 @@ Button:highlighted {
 
 Button > * {
 	alignment: middle-center;
+}
+
+Checkbox {
+	sound-on-change: clack.wav.h;
 }
 
 Checkbox > Control {
@@ -54,6 +59,7 @@ Checkbox > Control {
 CollectionItemView {
 	background-color: #22222266;
 	border-color: #999999aa;
+	sound-on-click: click.wav.h;
 }
 
 CollectionItemView > .selectionOverlay {
@@ -217,6 +223,7 @@ TableRowView {
 	autoresizing-mask: contain | width;
 	axis: horizontal;
 	distribution: fill;
+	sound-on-click: click.wav.h;
 }
 
 TableRowView:nth-child(even) TableCellView {
@@ -264,6 +271,7 @@ TextView {
 	bevel: inset;
 	padding: 4 4 4 4;
 	width: 160;
+	sound-on-change: select.wav.h;
 }
 
 TextView > Text {

@@ -569,7 +569,7 @@ static bool didReceiveEvent(const View *self, const SDL_Event *event) {
 }
 
 /**
- * @fn void *View::draw(View *self, Renderer *renderer)
+ * @fn void View::draw(View *self, Renderer *renderer)
  * @memberof View
  */
 static void draw(View *self, Renderer *renderer) {
@@ -582,6 +582,19 @@ static void draw(View *self, Renderer *renderer) {
 
 		$(self, enumerateSubviews, (ViewEnumerator) draw, renderer);
 	}
+}
+
+/**
+ * @fn void View::emitViewEvent(View *self, ViewEvent code, ident data)
+ * @memberof View
+ */
+static void emitViewEvent(View *self, ViewEvent code, ident data) {
+	SDL_PushEvent((SDL_Event *) &(const SDL_UserEvent) {
+		.type = MVC_VIEW_EVENT,
+		.code = code,
+		.data1 = self,
+		.data2 = data
+	});
 }
 
 /**
@@ -726,7 +739,6 @@ static void enumerateVisible(View *self, ViewEnumerator enumerator, ident data) 
 		View *subview = $(subviews, objectAtIndex, i);
 		$(subview, enumerateVisible, enumerator, data);
 	}
-
 }
 
 /**
@@ -1388,6 +1400,38 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		$(self->viewController, respondToEvent, event);
 	}
 
+	ViewEvent code = ViewEventNone;
+
+	switch (event->type) {
+		case SDL_MOUSEBUTTONDOWN:
+			code = ViewEventMouseButtonDown;
+			break;
+		case SDL_MOUSEBUTTONUP:
+			code = ViewEventMouseButtonUp;
+			break;
+		case SDL_KEYDOWN:
+			code = ViewEventKeyDown;
+			break;
+		case SDL_KEYUP:
+			code = ViewEventKeyUp;
+			break;
+		default:
+			break;
+	}
+
+	if (code != ViewEventNone) {
+		$(self, emitViewEvent, code, NULL);
+
+		if (code == ViewEventMouseButtonDown) {
+			self->mouseButtonMask |= event->button.button;
+		} else if (code == ViewEventMouseButtonUp) {
+			if (self->mouseButtonMask & event->button.button) {
+				self->mouseButtonMask &= ~event->button.button;
+				$(self, emitViewEvent, ViewEventClick, NULL);
+			}
+		}
+	}
+
 	if (self->nextResponder) {
 		$(self->nextResponder, respondToEvent, event);
 	} else if (self->superview) {
@@ -1729,6 +1773,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->didMoveToWindow = didMoveToWindow;
 	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->interface)->draw = draw;
+	((ViewInterface *) clazz->interface)->emitViewEvent = emitViewEvent;
 	((ViewInterface *) clazz->interface)->enumerate = enumerate;
 	((ViewInterface *) clazz->interface)->enumerateAdjacent = enumerateAdjacent;
 	((ViewInterface *) clazz->interface)->enumerateAncestors = enumerateAncestors;

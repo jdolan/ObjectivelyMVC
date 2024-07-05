@@ -59,14 +59,38 @@ typedef void (*ViewEnumerator)(View *view, ident data);
  */
 typedef enum {
 	ViewEventNone,
-	ViewEventMouseButtonDown,
-	ViewEventMouseButtonUp,
 	ViewEventKeyDown,
 	ViewEventKeyUp,
+	ViewEventMouseButtonDown,
+	ViewEventMouseButtonUp,
 	ViewEventMouseEnter,
 	ViewEventMouseLeave,
 	ViewEventMouseMotion,
 
+	/**
+	 * @brief A Control has lost focus.
+	 */
+	ViewEventBlur,
+
+	/**
+	 * @brief A Control's input value has changed.
+	 */
+	ViewEventChange,
+
+	/**
+	 * @brief A Control received mouse button down and mouse button up.
+	 */
+	ViewEventClick,
+
+	/**
+	 * @brief A Control's state has focus.
+	 */
+	ViewEventFocus,
+
+	/**
+	 * @brief User-defined ViewEvents.
+	 */
+	ViewEventUserDefined,
 } ViewEvent;
 
 /**

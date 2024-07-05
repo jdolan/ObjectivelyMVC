@@ -76,24 +76,18 @@ static View *init(View *self) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
+	View *this = (View *) self;
+
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		self->state |= ControlStateHighlighted;
-		SDL_PushEvent((SDL_Event *) &(const SDL_UserEvent) {
-			.type = MVC_VIEW_EVENT,
-			.code = ViewEventMouseButtonDown,
-			.data1 = self,
-		});
 		return true;
 	}
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
-		self->state &= ~ControlStateHighlighted;
-		SDL_PushEvent((SDL_Event *) &(const SDL_UserEvent) {
-			.type = MVC_VIEW_EVENT,
-			.code = ViewEventMouseButtonUp,
-			.data1 = self,
-		});
-		return true;
+		if (this->mouseButtonMask & event->button.button) {
+			self->state &= ~ControlStateHighlighted;
+			return true;
+		}
 	}
 
 	return super(Control, self, captureEvent, event);

@@ -211,6 +211,11 @@ struct View {
 	SDL_Size minSize;
 
 	/**
+	 * @brief The mask of mouse buttons clicked on this View.
+	 */
+	int mouseButtonMask;
+
+	/**
 	 * @brief If true, this View will apply the Theme before it is drawn.
 	 */
 	bool needsApplyTheme;
@@ -530,6 +535,18 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*draw)(View *self, Renderer *renderer);
+
+	/**
+	 * @fn void View::emitViewEvent(View *self, ViewEvent code, ident data)
+	 * @brief Emits a ViewEvent originating from this View.
+	 * @param self The View.
+	 * @param code The ViewEvent code.
+	 * @param data The ViewEvent data.
+	 * @remarks This method is used for emitting events from Views (as opposed to responding to
+	 * user or system generated events). These events are propagated up the View hierarchy.
+	 * @memberof View
+	 */
+	void (*emitViewEvent)(View *self, ViewEvent code, ident data);
 
 	/**
 	 * @fn void View::enumerate(View *self, ViewEnumerator enumerator, ident data)
