@@ -149,7 +149,6 @@ static void mouseMotion_enumerate(View *view, ident data) {
 	const SDL_Point b = MakePoint(event->x, event->y);
 
 	if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
-		view->mouseButtonMask = 0;
 		$(view, emitViewEvent, ViewEventMouseLeave, NULL);
 	} else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
 		$(view, emitViewEvent, ViewEventMouseEnter, NULL);

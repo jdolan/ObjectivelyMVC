@@ -89,7 +89,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 		}
 	}
 	if (event->type == SDL_MOUSEBUTTONUP) {
-		if ($(box, didReceiveEvent, event) && box->mouseButtonMask) {
+		if ($(box, didReceiveEvent, event)) {
 			self->state ^= ControlStateSelected;
 			self->state &= ~ControlStateHighlighted;
 			$(this, emitViewEvent, ViewEventChange, NULL);

@@ -84,8 +84,15 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 	}
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
-		if (this->mouseButtonMask & event->button.button) {
-			self->state &= ~ControlStateHighlighted;
+		self->state &= ~ControlStateHighlighted;
+		if (event->button.clicks) {
+			$(this, emitViewEvent, ViewEventClick, NULL);
+			return true;
+		}
+	}
+
+	if (event->type == SDL_MOUSEMOTION) {
+		if (self->state & ControlStateHighlighted) {
 			return true;
 		}
 	}

@@ -1422,11 +1422,8 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 	if (code != ViewEventNone) {
 		$(self, emitViewEvent, code, NULL);
 
-		if (code == ViewEventMouseButtonDown) {
-			self->mouseButtonMask |= event->button.button;
-		} else if (code == ViewEventMouseButtonUp) {
-			if (self->mouseButtonMask & event->button.button) {
-				self->mouseButtonMask &= ~event->button.button;
+		if (code == ViewEventMouseButtonUp) {
+			if (event->button.clicks) {
 				$(self, emitViewEvent, ViewEventClick, NULL);
 			}
 		}

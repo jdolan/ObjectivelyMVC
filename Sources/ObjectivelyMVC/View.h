@@ -211,11 +211,6 @@ struct View {
 	SDL_Size minSize;
 
 	/**
-	 * @brief The mask of mouse buttons clicked on this View.
-	 */
-	int mouseButtonMask;
-
-	/**
 	 * @brief If true, this View will apply the Theme before it is drawn.
 	 */
 	bool needsApplyTheme;
