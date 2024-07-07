@@ -123,8 +123,6 @@
 		CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE84C6CC1FFC917600F72267 /* DebugViewController.c */; };
 		CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */ = {isa = PBXBuildFile; fileRef = CE862AD71F79FB82005C3B10 /* ProgressBar.c */; };
 		CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */ = {isa = PBXBuildFile; fileRef = CE862AD81F79FB82005C3B10 /* ProgressBar.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE8819661F8AAC00000D5AB7 /* Notification.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819641F8AAC00000D5AB7 /* Notification.c */; };
-		CE8819671F8AAC00000D5AB7 /* Notification.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819651F8AAC00000D5AB7 /* Notification.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE88196A1F8AAC25000D5AB7 /* Window.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819681F8AAC25000D5AB7 /* Window.c */; };
 		CE88196B1F8AAC25000D5AB7 /* Window.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819691F8AAC25000D5AB7 /* Window.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8819821F8CFD60000D5AB7 /* Theme.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819801F8CFD60000D5AB7 /* Theme.c */; };
@@ -372,8 +370,6 @@
 		CE84C6CC1FFC917600F72267 /* DebugViewController.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = DebugViewController.c; sourceTree = "<group>"; };
 		CE862AD71F79FB82005C3B10 /* ProgressBar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ProgressBar.c; sourceTree = "<group>"; };
 		CE862AD81F79FB82005C3B10 /* ProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressBar.h; sourceTree = "<group>"; };
-		CE8819641F8AAC00000D5AB7 /* Notification.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Notification.c; sourceTree = "<group>"; };
-		CE8819651F8AAC00000D5AB7 /* Notification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Notification.h; sourceTree = "<group>"; };
 		CE8819681F8AAC25000D5AB7 /* Window.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Window.c; sourceTree = "<group>"; };
 		CE8819691F8AAC25000D5AB7 /* Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		CE8819801F8CFD60000D5AB7 /* Theme.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Theme.c; sourceTree = "<group>"; };
@@ -536,8 +532,6 @@
 				CE12D4651C4D587E00CD0B13 /* Log.h */,
 				CE562EBA1D6876AB006DF143 /* NavigationViewController.c */,
 				CE562EBB1D6876AB006DF143 /* NavigationViewController.h */,
-				CE8819641F8AAC00000D5AB7 /* Notification.c */,
-				CE8819651F8AAC00000D5AB7 /* Notification.h */,
 				CE14A8CE1C68CE3C00B576FB /* Option.c */,
 				CE14A8CF1C68CE3C00B576FB /* Option.h */,
 				CE5604DF1EADBE9400E42E53 /* PageView.c */,
@@ -774,7 +768,6 @@
 				CE6BC1831D837D550070FB2D /* Label.h in Headers */,
 				CE12D4661C4D587E00CD0B13 /* Log.h in Headers */,
 				CE562EBD1D6876AB006DF143 /* NavigationViewController.h in Headers */,
-				CE8819671F8AAC00000D5AB7 /* Notification.h in Headers */,
 				CE14A8D11C68CE3C00B576FB /* Option.h in Headers */,
 				CE5604E21EADBE9400E42E53 /* PageView.h in Headers */,
 				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
@@ -1039,7 +1032,6 @@
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE6BC1821D837D550070FB2D /* Label.c in Sources */,
 				CE562EBC1D6876AB006DF143 /* NavigationViewController.c in Sources */,
-				CE8819661F8AAC00000D5AB7 /* Notification.c in Sources */,
 				CE14A8D01C68CE3C00B576FB /* Option.c in Sources */,
 				CE5604E11EADBE9400E42E53 /* PageView.c in Sources */,
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,

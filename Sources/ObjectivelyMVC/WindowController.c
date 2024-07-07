@@ -161,22 +161,6 @@ static void mouseMotion_enumerate(View *view, ident data) {
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
-	if (event->type >= SDL_USEREVENT) {
-		if (event->type == MVC_NOTIFICATION_EVENT) {
-			// FIXME: Kill notification struct, respondToNotificationEvent
-			const Notification notification = {
-				.name = event->user.code,
-				.sender = event->user.data1,
-				.data = event->user.data2
-			};
-			$(self->viewController, handleNotification, &notification);
-		} else if (event->type == MVC_VIEW_EVENT) {
-			$(self->soundStage, respondToViewEvent, event);
-		}
-
-		return;
-	}
-
 	if (event->type == SDL_WINDOWEVENT) {
 		switch (event->window.event) {
 			case SDL_WINDOWEVENT_EXPOSED:
@@ -203,6 +187,10 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 		$(firstResponder, respondToEvent, event);
 	}
 
+	if (self->soundStage) {
+		$(self->soundStage, respondToEvent, event);
+	}
+
 	if (event->type == SDL_KEYUP) {
 		if (event->key.keysym.sym == SDLK_d) {
 			if (event->key.keysym.mod & KMOD_CTRL) {
@@ -227,6 +215,8 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 		} else {
 			self->renderer = $(alloc(Renderer), init);
 		}
+
+		assert(self->renderer);
 
 		$(self->viewController->view, renderDeviceDidReset);
 	}

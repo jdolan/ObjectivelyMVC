@@ -100,6 +100,11 @@ typedef enum {
  */
 OBJECTIVELYMVC_EXPORT Uint32 MVC_VIEW_EVENT;
 
+/**
+ * @brief The custom `SDL_event` type for notifications.
+ */
+OBJECTIVELYMVC_EXPORT Uint32 MVC_NOTIFICATION_EVENT;
+
 typedef struct SDL_Size SDL_Size;
 
 /**

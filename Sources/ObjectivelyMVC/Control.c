@@ -24,7 +24,6 @@
 #include <assert.h>
 
 #include "Control.h"
-#include "Notification.h"
 
 const EnumName ControlBevelNames[] = MakeEnumNames(
 	MakeEnumAlias(ControlBevelNone, none),

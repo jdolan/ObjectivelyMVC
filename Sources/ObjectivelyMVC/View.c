@@ -32,6 +32,7 @@
 #include "WindowController.h"
 #include "Window.h"
 
+Uint32 MVC_NOTIFICATION_EVENT;
 Uint32 MVC_VIEW_EVENT;
 
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
@@ -1828,6 +1829,9 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->warn = warn;
 	((ViewInterface *) clazz->interface)->willMoveToWindow = willMoveToWindow;
 
+	MVC_NOTIFICATION_EVENT = SDL_RegisterEvents(1);
+	assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
+	
 	MVC_VIEW_EVENT = SDL_RegisterEvents(1);
 	assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
 }

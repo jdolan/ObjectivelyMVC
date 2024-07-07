@@ -98,16 +98,6 @@ struct ViewControllerInterface {
 	void (*addChildViewController)(ViewController *self, ViewController *childViewController);
 
 	/**
-	 * @fn void ViewController::handleNotification(ViewController *self, const Notification *notification)
-	 * @brief Handles a broadcast notification.
-	 * @param self The ViewController.
-	 * @param notification The Notification.
-	 * @memberof ViewController
-	 * @see MVC_PostNotification
-	 */
-	void (*handleNotification)(ViewController *self, const Notification *notification);
-
-	/**
 	 * @fn ViewController *ViewController::init(ViewController *self)
 	 * @brief Initializes this ViewController.
 	 * @param self The ViewController.
