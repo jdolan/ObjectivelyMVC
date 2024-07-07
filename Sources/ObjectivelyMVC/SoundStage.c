@@ -47,7 +47,7 @@ static void dealloc(Object *self) {
 #pragma mark - SoundStage
 
 /**
- * @fn SoundStage *SoundStage::init(SoundStage *self)
+ * @fn SoundStage *SoundStage::initWithSpec(SoundStage *self, const char *device, const SDL_AudioSpec *spec)
  * @memberof SoundStage
  */
 static SoundStage *initWithSpec(SoundStage *self, const char *device, const SDL_AudioSpec *spec) {
@@ -69,6 +69,33 @@ static SoundStage *initWithSpec(SoundStage *self, const char *device, const SDL_
 }
 
 /**
+ * @fn Sound *SoundStage::load(SoundStage *self, const char *name)
+ * @memberof SoundStage
+ */
+static Sound *load(const SoundStage *self, const char *name) {
+
+	assert(name);
+
+	Sound *sound;
+
+	if (!strcmp("click.wav.h", name)) {
+		sound = $$(Sound, soundWithBytes, click_wav, click_wav_len);
+	} else if (!strcmp("clack.wav.h", name)) {
+		sound = $$(Sound, soundWithBytes, clack_wav, clack_wav_len);
+	} else if (!strcmp("select.wav.h", name)) {
+		sound = $$(Sound, soundWithBytes, select_wav, select_wav_len);
+	} else {
+		sound = $$(Sound, soundWithResourceName, name);
+	}
+
+	if (!sound) {
+		MVC_LogWarn("Failed to load %s\n", name);
+	}
+
+	return sound;
+}
+
+/**
  * @fn void SoundStage::play(const SoundStage *self, const Sound *sound)
  * @memberof SoundStage
  */
@@ -76,17 +103,38 @@ static void play(const SoundStage *self, const Sound *sound) {
 	
 	assert(sound);
 
-	const int err = SDL_QueueAudio(self->device, sound->data->bytes, (int) sound->data->length);
-	if (err) {
-		MVC_LogError("Failed to enqueue audio: %s\n", SDL_GetError());
+	if (instanceof(Data, sound->data)) {
+		const Data *data = (Data *) sound->data;
+		const int err = SDL_QueueAudio(self->device, data->bytes, (int) data->length);
+		if (err) {
+			MVC_LogError("Failed to enqueue audio: %s\n", SDL_GetError());
+		}
+	} else {
+		MVC_LogWarn("Unsupported Sound::data\n");
 	}
 }
 
 /**
- * @fn void SoundStage::respondToViewEvent(const SoundStage *self, const SDL_Event *event)
+ * @fn void SoundStage::respondToEvent(const SoundStage *self, const SDL_Event *event)
  * @memberof SoundStage
  */
-static void respondToViewEvent(const SoundStage *self, const SDL_Event *event) {
+static void respondToEvent(const SoundStage *self, const SDL_Event *event) {
+
+	if (event->type == MVC_VIEW_EVENT) {
+		Sound *sound = $(self, soundForViewEvent, event);
+		if (sound) {
+			$(self, play, sound);
+		}
+	}
+}
+
+/**
+ * @fn Sound* SoundStage::soundForViewEvent(const SoundStage *self, const SDL_Event *event)
+ * @memberof SoundStage
+ */
+static Sound *soundForViewEvent(const SoundStage *self, const SDL_Event *event) {
+
+	assert(event->type == MVC_VIEW_EVENT);
 
 	const View *view = event->user.data1;
 
@@ -114,27 +162,16 @@ static void respondToViewEvent(const SoundStage *self, const SDL_Event *event) {
 			break;
 	}
 
+	Sound *sound = NULL;
+
 	if (attr) {
 		const String *name =  $(view->computedStyle->attributes, objectForKeyPath, attr);
 		if (name) {
-			Sound *sound = NULL;
-			if (!strcmp("click.wav.h", name->chars)) {
-				sound = $$(Sound, soundWithBytes, click_wav, click_wav_len);
-			} else if (!strcmp("clack.wav.h", name->chars)) {
-				sound = $$(Sound, soundWithBytes, clack_wav, clack_wav_len);
-			} else if (!strcmp("select.wav.h", name->chars)) {
-				sound = $$(Sound, soundWithBytes, select_wav, select_wav_len);
-			} else {
-				sound = $$(Sound, soundWithResourceName, name->chars);
-			}
-
-			if (sound) {
-				$(self, play, sound);
-			}
-
-			release(sound);
+			sound = $(self, load, name->chars);
 		}
 	}
+
+	return sound;
 }
 
 #pragma mark - Class lifecycle
@@ -147,8 +184,10 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((SoundStageInterface *) clazz->interface)->initWithSpec = initWithSpec;
+	((SoundStageInterface *) clazz->interface)->load = load;
 	((SoundStageInterface *) clazz->interface)->play = play;
-	((SoundStageInterface *) clazz->interface)->respondToViewEvent = respondToViewEvent;
+	((SoundStageInterface *) clazz->interface)->respondToEvent = respondToEvent;
+	((SoundStageInterface *) clazz->interface)->soundForViewEvent = soundForViewEvent;
 }
 
 /**

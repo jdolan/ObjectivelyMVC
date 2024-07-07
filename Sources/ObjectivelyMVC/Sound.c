@@ -38,7 +38,9 @@ static void dealloc(Object *self) {
 
 	Sound *this = (Sound *) self;
 
-	release(this->data);
+	if (isobject(this->data)) {
+		release(this->data);
+	}
 
 	super(Object, self, dealloc);
 }
@@ -59,6 +61,14 @@ static Sound *soundWithBytes(const uint8_t *bytes, size_t length) {
  */
 static Sound *soundWithData(Data *data) {
 	return $(alloc(Sound), initWithData, data);
+}
+
+/**
+ * @fn Sound *Sound::soundWithOpqeueData(const ident data)
+ * @memberof Sound
+ */
+static Sound *soundWithOpaqueData(ident data) {
+	return $(alloc(Sound), initWithOpaqueData, data);
 }
 
 /**
@@ -120,6 +130,20 @@ static Sound *initWithData(Sound *self, const Data *data) {
 }
 
 /**
+ * @fn Sound *Sound::initWithOpaqueData(Sound *self, ident data)
+ * @memberof Sound
+ */
+static Sound *initWithOpaqueData(Sound *self, ident data) {
+
+	self = (Sound *) super(Object, self, init);
+	if (self) {
+		self->data = data;
+	}
+
+	return self;
+}
+
+/**
  * @fn Sound *Sound::initWithResource(Sound *self, const Resource *resource)
  * @memberof Sound
  */
@@ -160,10 +184,12 @@ static void initialize(Class *clazz) {
 
 	((SoundInterface *) clazz->interface)->soundWithBytes = soundWithBytes;
 	((SoundInterface *) clazz->interface)->soundWithData = soundWithData;
+	((SoundInterface *) clazz->interface)->soundWithOpaqueData = soundWithOpaqueData;
 	((SoundInterface *) clazz->interface)->soundWithResource = soundWithResource;
 	((SoundInterface *) clazz->interface)->soundWithResourceName = soundWithResourceName;
 	((SoundInterface *) clazz->interface)->initWithBytes = initWithBytes;
 	((SoundInterface *) clazz->interface)->initWithData = initWithData;
+	((SoundInterface *) clazz->interface)->initWithOpaqueData = initWithOpaqueData;
 	((SoundInterface *) clazz->interface)->initWithResource = initWithResource;
 	((SoundInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
 }

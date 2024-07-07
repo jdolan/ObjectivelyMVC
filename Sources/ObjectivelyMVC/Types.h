@@ -78,7 +78,7 @@ typedef enum {
 	ViewEventChange,
 
 	/**
-	 * @brief A Control received mouse button down and mouse button up.
+	 * @brief A Control received one or more click events.
 	 */
 	ViewEventClick,
 

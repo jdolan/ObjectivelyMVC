@@ -76,7 +76,7 @@ struct SoundStageInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 * @fn SoundStage *SoundStage::init(SoundStage *self)
+	 * @fn SoundStage *SoundStage::initWithSpec(SoundStage *self, const char *device, const SDL_AudioSpec *spec)
 	 * @brief Initializes this SoundStage.
 	 * @param self The SoundStage.
 	 * @param device The device name, or `NULL` for the default.
@@ -85,6 +85,16 @@ struct SoundStageInterface {
 	 * @memberof SoundStage
 	 */
 	SoundStage *(*initWithSpec)(SoundStage *self, const char *device, const SDL_AudioSpec *spec);
+
+	/**
+	 * @fn Sound *SoundStage::load(SoundStage *self, const char *name)
+	 * @brief Loads a Sound by name.
+	 * @param self The SoundStage.
+	 * @param name The Sound name.
+	 * @return The Sound, or `NULL` on error.
+	 * @memberof SoundStage
+	 */
+	Sound *(*load)(const SoundStage *self, const char *name);
 
 	/**
 	 * @fn void SoundStage::play(const SoundStage *self, const Sound *sound)
@@ -96,13 +106,23 @@ struct SoundStageInterface {
 	void (*play)(const SoundStage *self, const Sound *sound);
 
 	/**
-	 * @fn void SoundStage::respondToViewEvent(const SoundStage *self, const SDL_Event *event)
-	 * @brief Respond to `MVC_VIEW_EVENT`s, playing sounds if appropriate.
+	 * @fn void SoundStage::respondToEvent(const SoundStage *self, const SDL_Event *event)
+	 * @brief Responds to `MVC_VIEW_EVENT`s, playing sounds if appropriate.
 	 * @param self The SoundStage.
 	 * @param event The SDL_Event.
 	 * @memberof SoundStage
 	 */
-	void (*respondToViewEvent)(const SoundStage *self, const SDL_Event *event);
+	void (*respondToEvent)(const SoundStage *self, const SDL_Event *event);
+
+	/**
+	 * @fn Sound* SoundStage::soundForViewEvent(const SoundStage *self, const SDL_Event *event)
+	 * @brief Resolves a Sound to play for the given `MVC_VIEW_EVENT`, if any.
+	 * @param self The SoundStage.
+	 * @param event The SDL_Event.
+	 * @return The Sound to play, if any.
+	 * @memberof SoundStage
+	 */
+	Sound *(*soundForViewEvent)(const SoundStage *self, const SDL_Event *event);
 };
 
 /**

@@ -58,7 +58,7 @@ struct Sound {
 	/**
 	 * @brief The backing data.
 	 */
-	Data *data;
+	ident data;
 };
 
 /**
@@ -91,6 +91,18 @@ struct SoundInterface {
 	 * @memberof Sound
 	 */
 	Sound *(*soundWithData)(Data *data);
+
+	/**
+	 * @static
+	 * @fn Sound *Sound::SoundWithOpaqueData(ident data)
+	 * @brief Initializes this Sound with opaque data.
+	 * @details The data will not be decoded in any way. You must provide a custom
+	 * SoundStage implementation to play Sounds initialized with this method.
+	 * @param data The opaque data.
+	 * @return The new Sound, or `NULL` on error.
+	 * @memberof Sound
+	 */
+	Sound *(*soundWithOpaqueData)(ident data);
 
 	/**
 	 * @static
@@ -132,6 +144,19 @@ struct SoundInterface {
 	 * @memberof Sound
 	 */
 	Sound *(*initWithData)(Sound *self, const Data *data);
+
+	/**
+	 * @fn Sound *Sound::initWithOpaqueData(Sound *self, ident data)
+	 * @brief Initializes this Sound with opaque data.
+	 * @details The data will not be decoded in any way. You must provide a custom
+	 * SoundStage implementation to play Sounds initialized with this method.
+	 * @param self The Sound.
+	 * @param data The application-specific data name.
+	 * @return The initialized Sound, or `NULL` on error.
+	 * @memberof Sound
+	 * @see SoundStage::load(const SoundStage *, const char *)
+	 */
+	Sound *(*initWithOpaqueData)(Sound *self, ident data);
 
 	/**
 	 * @fn Sound *Sound::initWithResource(Sound *self, const Resource *resource)
