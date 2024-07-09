@@ -117,26 +117,15 @@ int main(int argc, char *argv[]) {
 
 static void onViewEvent(SDL_AudioDeviceID device, const SDL_UserEvent *event) {
 
-	SDL_RWops *rw = NULL;
-
 	switch (event->code) {
 		case ViewEventClick:
-			rw = SDL_RWFromConstMem(click_wav, click_wav_len);
+			SDL_QueueAudio(device, click_wav, click_wav_len);
 			break;
 		case ViewEventChange:
-			rw = SDL_RWFromConstMem(clack_wav, clack_wav_len);
+			SDL_QueueAudio(device, clack_wav, clack_wav_len);
 			break;
 		default:
 			break;
-	}
-
-	if (rw) {
-		Uint8 *buf;
-		Uint32 len;
-		SDL_AudioSpec spec;
-		SDL_LoadWAV_RW(rw, 0, &spec, &buf, &len);
-		SDL_QueueAudio(device, buf, len);
-		SDL_FreeRW(rw);
 	}
 }
 

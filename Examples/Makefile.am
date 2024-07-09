@@ -5,6 +5,7 @@ noinst_PROGRAMS = \
 	Hello
 
 CFLAGS += \
+	-I$(top_srcdir)/Assets \
 	-I$(top_srcdir)/Sources \
 	-DEXAMPLES=\"$(abs_srcdir)\" \
 	@HOST_CFLAGS@ \

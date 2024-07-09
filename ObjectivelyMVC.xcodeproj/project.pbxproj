@@ -955,7 +955,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i click.wav click.wav.h\nxxd -i clack.wav clack.wav.h\nxxd -i coda.ttf coda.ttf.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i -s 44 click.wav click.wav.h\nxxd -i -s 44 clack.wav clack.wav.h\nxxd -i coda.ttf coda.ttf.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
