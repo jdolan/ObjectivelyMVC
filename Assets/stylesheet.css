@@ -271,7 +271,7 @@ TextView {
 	bevel: inset;
 	padding: 4 4 4 4;
 	width: 160;
-	sound-on-change: select.wav.h;
+	sound-on-change: clack.wav.h;
 }
 
 TextView > Text {

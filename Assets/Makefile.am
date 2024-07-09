@@ -9,5 +9,4 @@ BUILT_SOURCES = \
 	debug.css.h \
 	debug.json.h \
 	resize.png.h \
-	select.wav.h \
 	stylesheet.css.h
