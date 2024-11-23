@@ -615,10 +615,14 @@
 		CE12D42A1C4C37CD00CD0B13 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				CE89ADB028BAF661002E45C7 /* clack.wav */,
+				CE081BE52C27955C00436CDC /* clack.wav.h */,
+				CE081BE42C27955C00436CDC /* click.wav.h */,
+				CE89AD9E28B99568002E45C7 /* click.wav */,
 				CE12D42B1C4C37E500CD0B13 /* Hello.c */,
-				CE6BC16E1D79B2920070FB2D /* HelloViewController.json */,
 				CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */,
 				CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */,
+				CE6BC16E1D79B2920070FB2D /* HelloViewController.json */,
 				CE12D42D1C4C383D00CD0B13 /* Makefile.am */,
 			);
 			path = Examples;
@@ -629,10 +633,6 @@
 			children = (
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
-				CE89ADB028BAF661002E45C7 /* clack.wav */,
-				CE081BE52C27955C00436CDC /* clack.wav.h */,
-				CE89AD9E28B99568002E45C7 /* click.wav */,
-				CE081BE42C27955C00436CDC /* click.wav.h */,
 				CE7CBD7E202942B300C5316A /* coda.ttf */,
 				CE7CBD7F20294B9B00C5316A /* coda.ttf.h */,
 				CE9FECD5201D5F2A00F954ED /* debug.css */,
@@ -796,6 +796,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE12D4591C4C8E8E00CD0B13 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello" */;
 			buildPhases = (
+				CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */,
 				CE12D4511C4C8E8E00CD0B13 /* Sources */,
 				CE12D4521C4C8E8E00CD0B13 /* Frameworks */,
 				CE12D4531C4C8E8E00CD0B13 /* CopyFiles */,
@@ -955,7 +956,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i -s 44 click.wav click.wav.h\nxxd -i -s 44 clack.wav clack.wav.h\nxxd -i coda.ttf coda.ttf.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i coda.ttf coda.ttf.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
+		};
+		CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Preprocess Sounds";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pushd $SRCROOT/Examples\n\nxxd -i -s 44 click.wav click.wav.h\nxxd -i -s 44 clack.wav clack.wav.h\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

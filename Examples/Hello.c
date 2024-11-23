@@ -115,7 +115,14 @@ int main(int argc, char *argv[]) {
 #include "click.wav.h"
 #include "clack.wav.h"
 
+/**
+ * @brief
+ */
 static void onViewEvent(SDL_AudioDeviceID device, const SDL_UserEvent *event) {
+
+	if (!instanceof(Control, event->data1)) {
+		return;
+	}
 
 	switch (event->code) {
 		case ViewEventClick:

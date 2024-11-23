@@ -1,3 +1,10 @@
+%.wav.h: %
+	xxd -i -s 44 $^ $@
+
+BUILT_SOURCES = \
+	click.wav.h \
+	clack.wav.h
+
 noinst_HEADERS = \
 	HelloViewController.h
 
