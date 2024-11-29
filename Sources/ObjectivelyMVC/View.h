@@ -943,6 +943,14 @@ struct ViewInterface {
 	SDL_Size (*sizeThatFits)(const View *self);
 
 	/**
+	 * @fn SDL_Size View::sizeThatFills(const View *self)
+	 * @param self The View.
+	 * @return An SDL_Size that fills this View's superview.
+	 * @memberof View
+	 */
+	SDL_Size (*sizeThatFills)(const View *self);
+
+	/**
 	 * @fn void View::sizeToContain(View *self)
 	 * @brief Resizes this View to contain its subviews.
 	 * @param self The View.
@@ -950,6 +958,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*sizeToContain)(View *self);
+
+	/**
+	 * @fn void View::sizeToFill(View *self)
+	 * @brief Resizes this View to fill its superview.
+	 * @param self The View.
+	 * @see View::sizeThatFills(const View *)
+	 * @memberof View
+	 */
+	void (*sizeToFill)(View *self);
 
 	/**
 	 * @fn void View::sizeToFit(View *self)

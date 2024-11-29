@@ -95,13 +95,14 @@ static void dealloc(Object *self) {
 static String *description(const Object *self) {
 
 	View *this = (View *) self;
+	const SDL_Rect bounds = $(this, bounds);
 
 	String *classNames = $((Object *) this->classNames, description);
 	String *description = str("%s@%p %s [%d, %d, %d, %d]",
-							  classnameof(self),
+							  this->identifier ?: classnameof(self),
 							  self,
 							  classNames->chars,
-							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
+							  bounds.x, bounds.y, bounds.w, bounds.h);
 
 	release(classNames);
 	return description;
@@ -539,6 +540,10 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
 	if (window) {
 		$(self, attachStylesheet, window);
 
+		if (self->superview == NULL) {
+			$(self, sizeToFill);
+		}
+
 		self->needsLayout = true;
 	}
 }
@@ -927,36 +932,45 @@ static void layoutIfNeeded_recurse(View *subview, ident data) {
  */
 static void layoutIfNeeded(View *self) {
 
-	if (self->needsLayout) {
+	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
+
+	while (self->needsLayout) {
+
 		$(self, layoutSubviews);
 
-		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+		self->needsLayout = false;
 
-			if (self->hidden == false && self->superview && self->superview->clipsSubviews) {
+		if (self->autoresizingMask & ViewAutoresizingFit) {
+			$(self, sizeToFit);
+		}
 
-				const SDL_Rect bounds = $(self, bounds);
-				const SDL_Rect superviewBounds = $(self->superview, bounds);
-
-				if (bounds.x + bounds.w > superviewBounds.w ||
-					bounds.y + bounds.h > superviewBounds.h) {
-
-					String *this = $((Object *) self, description);
-					String *that = $((Object *) self->superview, description);
-
-					MVC_LogDebug("%s exceeds superview bounds %s\n", this->chars, that->chars);
-
-					$(self, warn, "%s exceeds superview bounds %s\n", this->chars, that->chars);
-
-					release(this);
-					release(that);
-				}
-			}
+		if (self->autoresizingMask & ViewAutoresizingContain) {
+			$(self, sizeToContain);
 		}
 	}
 
-	self->needsLayout = false;
+	if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
 
-	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
+		if (self->hidden == false && self->superview && self->superview->clipsSubviews) {
+
+			const SDL_Rect bounds = $(self, bounds);
+			const SDL_Rect superviewBounds = $(self->superview, bounds);
+
+			if (bounds.x + bounds.w > superviewBounds.w ||
+				bounds.y + bounds.h > superviewBounds.h) {
+
+				String *this = $((Object *) self, description);
+				String *that = $((Object *) self->superview, description);
+
+				MVC_LogDebug("%s exceeds superview bounds %s\n", this->chars, that->chars);
+
+				$(self, warn, "%s exceeds superview bounds %s\n", this->chars, that->chars);
+
+				release(this);
+				release(that);
+			}
+		}
+	}
 }
 
 /**
@@ -965,24 +979,6 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	if (self->superview == NULL) {
-		if (self->autoresizingMask & ViewAutoresizingFill) {
-
-			SDL_Size size;
-			SDL_GetWindowSize(self->window, &size.w, &size.h);
-
-			$(self, resize, &size);
-		}
-	}
-
-	if (self->autoresizingMask & ViewAutoresizingFit) {
-		$(self, sizeToFit);
-	}
-
-	if (self->autoresizingMask & ViewAutoresizingContain) {
-		$(self, sizeToContain);
-	}
-
 	const SDL_Rect bounds = $(self, bounds);
 
 	const Array *subviews = (Array *) self->subviews;
@@ -990,12 +986,7 @@ static void layoutSubviews(View *self) {
 
 		View *subview = (View *) $(subviews, objectAtIndex, i);
 
-		SDL_Size subviewSize;
-		if (subview->autoresizingMask & ViewAutoresizingFit) {
-			subviewSize = $(subview, sizeThatFits);
-		} else {
-			subviewSize = $(subview, sizeThatContains);
-		}
+		SDL_Size subviewSize = $(subview, size);
 
 		if (subview->autoresizingMask & ViewAutoresizingWidth) {
 			subviewSize.w = bounds.w;
@@ -1362,16 +1353,15 @@ static void resignFirstResponder(View *self) {
  */
 static void resize(View *self, const SDL_Size *size) {
 
-	if (self->frame.w != size->w || self->frame.h != size->h) {
+	const int w = clamp(size->w, self->minSize.w, self->maxSize.w);
+	const int h = clamp(size->h, self->minSize.h, self->maxSize.h);
 
-		self->frame.w = clamp(size->w, self->minSize.w, self->maxSize.w);
-		self->frame.h = clamp(size->h, self->minSize.h, self->maxSize.h);
+	if (self->frame.w != w || self->frame.h != h) {
+
+		self->frame.w = w;
+		self->frame.h = h;
 
 		self->needsLayout = true;
-
-		if (self->superview) {
-			self->superview->needsLayout = true;
-		}
 	}
 }
 
@@ -1495,6 +1485,22 @@ static SDL_Size sizeThatContains(const View *self) {
 }
 
 /**
+ * @fn SDL_Size View::sizeThastFills(const View *self)
+ * @memberof View
+ */
+static SDL_Size sizeThatFills(const View *self) {
+	SDL_Size size;
+
+	if (self->superview == NULL) {
+		SDL_GetWindowSize(self->window, &size.w, &size.h);
+	} else {
+		size = $(self->superview, size);
+	}
+
+	return size;
+}
+
+/**
  * @fn void View::sizeThatFits(const View *self)
  * @memberof View
  */
@@ -1517,7 +1523,10 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size subviewSize = $(subview, sizeThatContains);
+
+			const SDL_Size subviewSize = $(subview, isContainer)
+				? $(subview, sizeThatContains)
+				: $(subview, size);
 
 			SDL_Point subviewOrigin = MakePoint(0, 0);
 			switch (subview->alignment) {
@@ -1551,6 +1560,17 @@ static SDL_Size sizeThatFits(const View *self) {
 static void sizeToContain(View *self) {
 
 	const SDL_Size size = $(self, sizeThatContains);
+
+	$(self, resize, &size);
+}
+
+/**
+ * @fn void View::sizeToFill(View *self)
+ * @memberof View
+ */
+static void sizeToFill(View *self) {
+
+	const SDL_Size size = $(self, sizeThatFills);
 
 	$(self, resize, &size);
 }
@@ -1814,8 +1834,10 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->setFirstResponder = setFirstResponder;
 	((ViewInterface *) clazz->interface)->size = size;
 	((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
+	((ViewInterface *) clazz->interface)->sizeThatFills = sizeThatFills;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->interface)->sizeToContain = sizeToContain;
+	((ViewInterface *) clazz->interface)->sizeToFill = sizeToFill;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->interface)->subviewWithIdentifier = subviewWithIdentifier;
 	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
