@@ -477,7 +477,7 @@ static bool containsPoint(const View *self, const SDL_Point *point) {
 
 	const SDL_Rect frame = $(self, clippingFrame);
 
-	return (bool) !!SDL_PointInRect(point, &frame);
+	return (bool) SDL_PointInRect(point, &frame);
 }
 
 /**
