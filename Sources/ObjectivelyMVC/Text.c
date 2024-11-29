@@ -55,6 +55,7 @@ static void dealloc(Object *self) {
 static String *description(const Object *self) {
 
 	View *this = (View *) self;
+	const SDL_Rect bounds = $(this, bounds);
 
 	String *classNames = $((Object *) this->classNames, description);
 	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
@@ -62,7 +63,7 @@ static String *description(const Object *self) {
 							  self,
 							  ((Text *) self)->text,
 							  classNames->chars,
-							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
+							  bounds.x, bounds.y, bounds.w, bounds.h);
 
 	release(classNames);
 	return description;
