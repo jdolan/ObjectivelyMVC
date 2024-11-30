@@ -778,6 +778,44 @@ static bool hasClassName(const View *self, const char *className) {
 	return false;
 }
 
+typedef struct {
+	SDL_Rect bounds;
+	bool hasOverflow;
+} Overflow;
+
+/**
+ * @brief ViewEnumerator for hasOverflow.
+ */
+static void hasOverflow_enumerate(View *view, ident data) {
+
+	Overflow *overflow = data;
+
+	const SDL_Rect bounds = $(view, bounds);
+
+	if (bounds.x + bounds.w > overflow->bounds.w ||
+		bounds.y + bounds.h > overflow->bounds.h) {
+
+		overflow->hasOverflow = true;
+
+		$(view, warn, "Exceeds superview bounds");
+	}
+}
+
+/**
+ * @fn bool View::hasOverflow(const View *self)
+ * @memberof View
+ */
+static bool hasOverflow(const View *self) {
+
+	Overflow overflow = {
+		.bounds = $(self, bounds)
+	};
+
+	$(self, enumerateSubviews, hasOverflow_enumerate, (ident) &overflow);
+
+	return overflow.hasOverflow;
+}
+
 /**
  * @fn View *View::hitTest(const View *self, const SDL_Point *point)
  * @memberof View
@@ -934,6 +972,7 @@ static void layoutIfNeeded(View *self) {
 
 	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
 
+	int iterations = 0;
 	while (self->needsLayout) {
 
 		$(self, layoutSubviews);
@@ -947,28 +986,13 @@ static void layoutIfNeeded(View *self) {
 		if (self->autoresizingMask & ViewAutoresizingContain) {
 			$(self, sizeToContain);
 		}
+
+		iterations++;
 	}
 
-	if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
-
-		if (self->hidden == false && self->superview && self->superview->clipsSubviews) {
-
-			const SDL_Rect bounds = $(self, bounds);
-			const SDL_Rect superviewBounds = $(self->superview, bounds);
-
-			if (bounds.x + bounds.w > superviewBounds.w ||
-				bounds.y + bounds.h > superviewBounds.h) {
-
-				String *this = $((Object *) self, description);
-				String *that = $((Object *) self->superview, description);
-
-				MVC_LogDebug("%s exceeds superview bounds %s\n", this->chars, that->chars);
-
-				$(self, warn, "%s exceeds superview bounds %s\n", this->chars, that->chars);
-
-				release(this);
-				release(that);
-			}
+	if (iterations) {
+		if (self->hidden == false && self->clipsSubviews && $(self, hasOverflow)) {
+			$(self, warn, "Clips subviews and has overflow after %d iterations", iterations);
 		}
 	}
 }
@@ -1736,6 +1760,9 @@ static Array *visibleSubviews(const View *self) {
  * @memberof View
  */
 static void warn(View *self, const char *fmt, ...) {
+
+	String *description = $((Object *) self, description);
+
 	va_list args;
 	va_start(args, fmt);
 
@@ -1744,8 +1771,12 @@ static void warn(View *self, const char *fmt, ...) {
 
 	va_end(args);
 
+	MVC_LogWarn("%s :: %s\n", description->chars, warning->chars);
+
 	$(self->warnings, addObject, warning);
+
 	release(warning);
+	release(description);
 }
 
 /**
@@ -1808,6 +1839,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->enumerateVisible = enumerateVisible;
 	((ViewInterface *) clazz->interface)->firstResponder = firstResponder;
 	((ViewInterface *) clazz->interface)->hasClassName = hasClassName;
+	((ViewInterface *) clazz->interface)->hasOverflow = hasOverflow;
 	((ViewInterface *) clazz->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;

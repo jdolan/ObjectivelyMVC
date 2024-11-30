@@ -228,10 +228,6 @@ static void debugEnumerate(View *view, ident data) {
 
 	DebugViewController *this = data;
 
-	if ($(view, isVisible)) {
-		this->visibleViews++;
-	}
-
 	if (view == this->debug) {
 		const SDL_Rect frame = $(view, renderFrame);
 
@@ -241,14 +237,18 @@ static void debugEnumerate(View *view, ident data) {
 		$(this->renderer, setDrawColor, &Colors.White);
 	}
 
-	const Array *warnings = (Array *) view->warnings;
-	if (warnings->count) {
-		const SDL_Rect frame = $(view, renderFrame);
+	if ($(view, isVisible)) {
+		this->visibleViews++;
 
-		$(this->renderer, setClippingFrame, NULL);
-		$(this->renderer, setDrawColor, &Colors.DarkGoldenRod);
-		$(this->renderer, drawRect, &frame);
-		$(this->renderer, setDrawColor, &Colors.White);
+		const Array *warnings = (Array *) view->warnings;
+		if (warnings->count) {
+			const SDL_Rect frame = $(view, renderFrame);
+
+			$(this->renderer, setClippingFrame, NULL);
+			$(this->renderer, setDrawColor, &Colors.DarkGoldenRod);
+			$(this->renderer, drawRect, &frame);
+			$(this->renderer, setDrawColor, &Colors.White);
+		}
 	}
 }
 

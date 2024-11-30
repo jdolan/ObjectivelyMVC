@@ -654,6 +654,14 @@ struct ViewInterface {
 	bool (*hasClassName)(const View *self, const char *className);
 
 	/**
+	 * @fn bool View::hasOverflow(const View *self)
+	 * @param self The View
+	 * @return True if this View's visible subviews exceed this View's bounds.
+	 * @memberof View
+	 */
+	bool (*hasOverflow)(const View *self);
+
+	/**
 	 * @fn View *View::hitTest(const View *self, const SDL_Point *point)
 	 * @brief Performs a hit test against this View and its descendants for the given point.
 	 * @param self The View.
