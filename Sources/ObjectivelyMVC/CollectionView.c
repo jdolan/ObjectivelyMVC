@@ -93,10 +93,10 @@ static void layoutSubviews(View *self) {
 
 		CollectionItemView *item = (CollectionItemView *) $(items, objectAtIndex, i);
 
+		$((View *) item, resize, &this->itemSize);
+
 		item->view.frame.x = x;
 		item->view.frame.y = y;
-		item->view.frame.w = this->itemSize.w;
-		item->view.frame.h = this->itemSize.h;
 
 		switch (this->axis) {
 			case CollectionViewAxisVertical:
