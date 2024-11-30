@@ -1524,9 +1524,14 @@ static SDL_Size sizeThatFits(const View *self) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
 
-			const SDL_Size subviewSize = $(subview, isContainer)
-				? $(subview, sizeThatContains)
-				: $(subview, size);
+			SDL_Size subviewSize;
+			if (subview->autoresizingMask & ViewAutoresizingContain) {
+				subviewSize = $(subview, sizeThatContains);
+			} else if (subview->autoresizingMask & ViewAutoresizingFit) {
+				subviewSize = $(subview, sizeThatFits);
+			} else {
+				subviewSize = $(subview, size);
+			}
 
 			SDL_Point subviewOrigin = MakePoint(0, 0);
 			switch (subview->alignment) {

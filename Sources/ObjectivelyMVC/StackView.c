@@ -108,7 +108,7 @@ static void layoutSubviews(View *self) {
 
 		int pos = 0;
 
-		const float scale = requestedSize ? availableSize / (float) requestedSize : 1.0;
+		const float scale = requestedSize ? availableSize / (float) requestedSize : 1.f;
 
 		for (size_t i = 0; i < subviews->count; i++) {
 
@@ -194,7 +194,15 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size subviewSize = $(subview, sizeThatContains);
+
+			SDL_Size subviewSize;
+			if (subview->autoresizingMask & ViewAutoresizingContain) {
+				subviewSize = $(subview, sizeThatContains);
+			} else if (subview->autoresizingMask & ViewAutoresizingFit) {
+				subviewSize = $(subview, sizeThatFits);
+			} else {
+				subviewSize = $(subview, size);
+			}
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
