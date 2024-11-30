@@ -165,11 +165,11 @@ static ident warnings_valueForColumnAndRow(const TableView *tableView, const Tab
  */
 static TableCellView *warnings_cellForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
 
-	ident value = tableView->dataSource.valueForColumnAndRow(tableView, column, row);
-	assert(value);
+	Warning *warning = tableView->dataSource.valueForColumnAndRow(tableView, column, row);
+	assert(warning);
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
-	$(cell->text, setText, ((String *) value)->chars);
+	$(cell->text, setText, warning->message->chars);
 
 	return cell;
 }

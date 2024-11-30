@@ -83,6 +83,8 @@
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */ = {isa = PBXBuildFile; fileRef = CE1CCDA21D9E859F00891F05 /* View+JSON.c */; };
 		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE3091BD2CFB8F2100E59187 /* Warning.c in Sources */ = {isa = PBXBuildFile; fileRef = CE3091BC2CFB8F2100E59187 /* Warning.c */; };
+		CE3091BE2CFB8F2100E59187 /* Warning.h in Headers */ = {isa = PBXBuildFile; fileRef = CE3091BB2CFB8F2100E59187 /* Warning.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE34C89B1FB29F700025F231 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE34C89C1FB29F700025F231 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE34C89D1FB29F700025F231 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
@@ -322,6 +324,8 @@
 		CE14A8CF1C68CE3C00B576FB /* Option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Option.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE1CCDA21D9E859F00891F05 /* View+JSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "View+JSON.c"; sourceTree = "<group>"; };
 		CE1CCDA31D9E859F00891F05 /* View+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+JSON.h"; sourceTree = "<group>"; };
+		CE3091BB2CFB8F2100E59187 /* Warning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Warning.h; sourceTree = "<group>"; };
+		CE3091BC2CFB8F2100E59187 /* Warning.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Warning.c; sourceTree = "<group>"; };
 		CE34C8941FB29F3A0025F231 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CE34C8A21FB29F700025F231 /* ObjectivelyMVC-Stylesheet */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Stylesheet"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE423A2C1F534127002767E7 /* Makefile.am */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
@@ -583,6 +587,8 @@
 				CE1CCDA31D9E859F00891F05 /* View+JSON.h */,
 				CE12D4251C4C367100CD0B13 /* ViewController.c */,
 				CE12D4261C4C367100CD0B13 /* ViewController.h */,
+				CE3091BB2CFB8F2100E59187 /* Warning.h */,
+				CE3091BC2CFB8F2100E59187 /* Warning.c */,
 				CE8819681F8AAC25000D5AB7 /* Window.c */,
 				CE8819691F8AAC25000D5AB7 /* Window.h */,
 				CEF1D8AA1D4630D20099A857 /* WindowController.c */,
@@ -783,6 +789,7 @@
 				CE12D4461C4C38C700CD0B13 /* View.h in Headers */,
 				CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */,
 				CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */,
+				CE3091BE2CFB8F2100E59187 /* Warning.h in Headers */,
 				CE88196B1F8AAC25000D5AB7 /* Window.h in Headers */,
 				CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */,
 				CE9305C41D9B27F900D62770 /* Config.h in Headers */,
@@ -1064,6 +1071,7 @@
 				CE12D4401C4C38B500CD0B13 /* View.c in Sources */,
 				CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */,
 				CE12D4411C4C38B500CD0B13 /* ViewController.c in Sources */,
+				CE3091BD2CFB8F2100E59187 /* Warning.c in Sources */,
 				CE88196A1F8AAC25000D5AB7 /* Window.c in Sources */,
 				CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */,
 			);

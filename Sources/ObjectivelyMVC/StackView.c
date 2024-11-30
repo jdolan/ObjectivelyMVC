@@ -94,14 +94,14 @@ static void layoutSubviews(View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size size = $(subview, size);
+			const SDL_Size subviewSize = $(subview, size);
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
-					requestedSize += size.h;
+					requestedSize += subviewSize.h;
 					break;
 				case StackViewAxisHorizontal:
-					requestedSize += size.w;
+					requestedSize += subviewSize.w;
 					break;
 			}
 		}

@@ -275,13 +275,16 @@ static void applyThemeIfNeeded(View *self, const Theme *theme) {
 
 	assert(theme);
 
-	if (self->needsApplyTheme) {
-		$(self, applyTheme, theme);
-	}
-
-	self->needsApplyTheme = false;
-
 	$(self, enumerateSubviews, (ViewEnumerator) applyThemeIfNeeded, (ident) theme);
+
+	if (self->needsApplyTheme) {
+
+		$(self, clearWarnings, WarningLevelStyle);
+
+		$(self, applyTheme, theme);
+
+		self->needsApplyTheme = false;
+	}
 }
 
 /**
@@ -425,6 +428,25 @@ static void bringSubviewToFront(View *self, View *subview) {
 			$(self, addSubviewRelativeTo, subview, last, ViewPositionAfter);
 		}
 	}
+}
+
+/**
+ * @brief Filter Predicate for clearWarnings.
+ */
+static bool clearWarnings_predicate(const ident obj, ident data) {
+
+	const Warning *warning = obj;
+	WarningLevel level = *(WarningLevel *) data;
+
+	return (warning->level & level) == 0;
+}
+
+/**
+ * @fn void View::clearWarnings(const View *self, WarningLevel level)
+ * @memberof View
+ */
+static void clearWarnings(const View *self, WarningLevel level) {
+	$(self->warnings, filter, clearWarnings_predicate, &level);
 }
 
 /**
@@ -790,14 +812,18 @@ static void hasOverflow_enumerate(View *view, ident data) {
 
 	Overflow *overflow = data;
 
-	const SDL_Rect bounds = $(view, bounds);
+	if (!view->hidden) {
 
-	if (bounds.x + bounds.w > overflow->bounds.w ||
-		bounds.y + bounds.h > overflow->bounds.h) {
+		const SDL_Rect bounds = $(view, bounds);
 
-		overflow->hasOverflow = true;
+		if (bounds.x + bounds.w > overflow->bounds.w ||
+			bounds.y + bounds.h > overflow->bounds.h) {
 
-		$(view, warn, "Exceeds superview bounds");
+			overflow->hasOverflow = true;
+
+			$(view, warn, WarningLevelLayout, "Exceeds superview bounds [%d %d %d %d]",
+			  overflow->bounds.x, overflow->bounds.y, overflow->bounds.w, overflow->bounds.h);
+		}
 	}
 }
 
@@ -972,27 +998,16 @@ static void layoutIfNeeded(View *self) {
 
 	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
 
-	int iterations = 0;
-	while (self->needsLayout) {
+	if (self->needsLayout) {
+
+		$(self, clearWarnings, WarningLevelLayout);
 
 		$(self, layoutSubviews);
 
 		self->needsLayout = false;
 
-		if (self->autoresizingMask & ViewAutoresizingFit) {
-			$(self, sizeToFit);
-		}
-
-		if (self->autoresizingMask & ViewAutoresizingContain) {
-			$(self, sizeToContain);
-		}
-
-		iterations++;
-	}
-
-	if (iterations) {
-		if (self->hidden == false && self->clipsSubviews && $(self, hasOverflow)) {
-			$(self, warn, "Clips subviews and has overflow after %d iterations", iterations);
+		if (self->clipsSubviews == false && $(self, hasOverflow)) {
+			$(self, warn, WarningLevelLayout, "Unexpected overflow");
 		}
 	}
 }
@@ -1002,6 +1017,14 @@ static void layoutIfNeeded(View *self) {
  * @memberof View
  */
 static void layoutSubviews(View *self) {
+
+	if (self->autoresizingMask & ViewAutoresizingFit) {
+		$(self, sizeToFit);
+	}
+
+	if (self->autoresizingMask & ViewAutoresizingContain) {
+		$(self, sizeToContain);
+	}
 
 	const SDL_Rect bounds = $(self, bounds);
 
@@ -1756,27 +1779,25 @@ static Array *visibleSubviews(const View *self) {
 }
 
 /**
- * @fn void View::warn(View *self, const char *fmt, ...)
+ * @fn void View::warn(View *self, ViewWarningLevel level, const char *fmt, ...)
  * @memberof View
  */
-static void warn(View *self, const char *fmt, ...) {
-
-	String *description = $((Object *) self, description);
+static void warn(View *self, WarningLevel level, const char *fmt, ...) {
 
 	va_list args;
 	va_start(args, fmt);
 
-	String *warning = $(alloc(String), initWithVaList, fmt, args);
-	assert(warning);
+	Warning *warning = $(alloc(Warning), initWithVaList, level, fmt, args);
 
 	va_end(args);
 
-	MVC_LogWarn("%s :: %s\n", description->chars, warning->chars);
+	String *description = $((Object *) self, description);
+	MVC_LogWarn("%s:: %s\n", description->chars, warning->message->chars);
+	release(description);
 
 	$(self->warnings, addObject, warning);
 
 	release(warning);
-	release(description);
 }
 
 /**
@@ -1819,6 +1840,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->bind = _bind;
 	((ViewInterface *) clazz->interface)->bounds = bounds;
 	((ViewInterface *) clazz->interface)->bringSubviewToFront = bringSubviewToFront;
+	((ViewInterface *) clazz->interface)->clearWarnings = clearWarnings;
 	((ViewInterface *) clazz->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->interface)->containsPoint = containsPoint;
 	((ViewInterface *) clazz->interface)->depth = depth;

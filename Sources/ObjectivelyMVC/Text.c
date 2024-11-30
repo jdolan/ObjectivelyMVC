@@ -276,7 +276,9 @@ static void setText(Text *self, const char *text) {
 			self->texture = 0;
 		}
 
-		$((View *) self, sizeToFit);
+		View *this = (View *) self;
+
+		$(this, sizeToFit);
 	}
 }
 
