@@ -101,6 +101,7 @@ static void layoutSubviews(View *self) {
 	const SDL_Size size = $(this, contentSize);
 
 	$((View *) this->contentView, resize, &size);
+	$((View *) this->contentView, layoutIfNeeded);
 
 	super(View, self, layoutSubviews);
 

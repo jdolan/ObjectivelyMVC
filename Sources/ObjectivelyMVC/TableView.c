@@ -109,6 +109,9 @@ static void layoutSubviews(View *self) {
 	}
 
 	scrollView->frame = frame;
+	scrollView->needsLayout = true;
+
+	$(scrollView, layoutIfNeeded);
 }
 
 /**

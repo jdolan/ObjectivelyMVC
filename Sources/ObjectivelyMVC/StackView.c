@@ -153,7 +153,6 @@ static void layoutSubviews(View *self) {
 			}
 
 			$(subview, resize, &subviewSize);
-
 			$(subview, layoutIfNeeded);
 
 			switch (this->axis) {

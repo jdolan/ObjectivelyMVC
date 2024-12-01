@@ -78,6 +78,7 @@ static void layoutSubviews(View *self) {
 		}
 
 		$((View *) this->stackView, sizeToFit);
+		$((View *) this->stackView, layoutIfNeeded);
 	}
 
 	super(View, self, layoutSubviews);

@@ -94,6 +94,7 @@ static void layoutSubviews(View *self) {
 		CollectionItemView *item = (CollectionItemView *) $(items, objectAtIndex, i);
 
 		$((View *) item, resize, &this->itemSize);
+		$((View *) item, layoutIfNeeded);
 
 		item->view.frame.x = x;
 		item->view.frame.y = y;

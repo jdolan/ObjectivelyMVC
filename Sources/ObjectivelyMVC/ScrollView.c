@@ -57,6 +57,7 @@ static void layoutSubviews(View *self) {
 		this->contentView->frame.y = this->contentOffset.y;
 
 		$(this->contentView, sizeToContain);
+		$(this->contentView, layoutIfNeeded);
 	}
 }
 
