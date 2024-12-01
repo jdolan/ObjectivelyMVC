@@ -387,6 +387,7 @@ static bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
 
 	if (inlets) {
 		if (bindInlets(inlets, dictionary)) {
+			self->needsApplyTheme = true;
 			self->needsLayout = true;
 			return true;
 		}
@@ -816,8 +817,7 @@ static void hasOverflow_enumerate(View *view, ident data) {
 
 		const SDL_Rect bounds = $(view, bounds);
 
-		if (bounds.x + bounds.w > overflow->bounds.w ||
-			bounds.y + bounds.h > overflow->bounds.h) {
+		if (bounds.x + bounds.w > overflow->bounds.w || bounds.y + bounds.h > overflow->bounds.h) {
 
 			overflow->hasOverflow = true;
 
@@ -934,7 +934,8 @@ static void invalidateStyle(View *self) {
  * @memberof View
  */
 static bool isContainer(const View *self) {
-	return self->autoresizingMask & (ViewAutoresizingFit | ViewAutoresizingContain);
+	return self->autoresizingMask & ViewAutoresizingFit
+		|| self->autoresizingMask & ViewAutoresizingContain;
 }
 
 /**
@@ -1042,7 +1043,6 @@ static void layoutSubviews(View *self) {
 		}
 
 		$(subview, resize, &subviewSize);
-
 		$(subview, layoutIfNeeded);
 
 		switch (subview->alignment & ViewAlignmentMaskHorizontal) {
