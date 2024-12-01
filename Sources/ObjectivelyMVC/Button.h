@@ -27,11 +27,6 @@
 #include <ObjectivelyMVC/ImageView.h>
 
 /**
- * @brief The `SDL_UserEvent` type for Button click events.
- */
-OBJECTIVELYMVC_EXPORT Uint32 MVC_BUTTON_CLICK;
-
-/**
  * @file
  * @brief Buttons are Controls that respond to click events.
  */
