@@ -125,6 +125,8 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 	);
 
 	$(self, bind, inlets, dictionary);
+
+	$(self, sizeToFit);
 }
 
 /**
@@ -276,9 +278,7 @@ static void setText(Text *self, const char *text) {
 			self->texture = 0;
 		}
 
-		View *this = (View *) self;
-
-		$(this, sizeToFit);
+		$((View *) self, sizeToFit);
 	}
 }
 
