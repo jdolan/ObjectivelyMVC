@@ -117,6 +117,8 @@ static void layoutSubviews(View *self) {
 		}
 	}
 
+	$((View *) this->text, layoutIfNeeded);
+
 	super(View, self, layoutSubviews);
 }
 

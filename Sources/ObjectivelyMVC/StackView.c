@@ -94,21 +94,21 @@ static void layoutSubviews(View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size size = $(subview, size);
+			const SDL_Size subviewSize = $(subview, size);
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
-					requestedSize += size.h;
+					requestedSize += subviewSize.h;
 					break;
 				case StackViewAxisHorizontal:
-					requestedSize += size.w;
+					requestedSize += subviewSize.w;
 					break;
 			}
 		}
 
 		int pos = 0;
 
-		const float scale = requestedSize ? availableSize / (float) requestedSize : 1.0;
+		const float scale = requestedSize ? availableSize / (float) requestedSize : 1.f;
 
 		for (size_t i = 0; i < subviews->count; i++) {
 
@@ -153,6 +153,7 @@ static void layoutSubviews(View *self) {
 			}
 
 			$(subview, resize, &subviewSize);
+			$(subview, layoutIfNeeded);
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
@@ -194,7 +195,15 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size subviewSize = $(subview, sizeThatContains);
+
+			SDL_Size subviewSize;
+			if (subview->autoresizingMask & ViewAutoresizingContain) {
+				subviewSize = $(subview, sizeThatContains);
+			} else if (subview->autoresizingMask & ViewAutoresizingFit) {
+				subviewSize = $(subview, sizeThatFits);
+			} else {
+				subviewSize = $(subview, size);
+			}
 
 			switch (this->axis) {
 				case StackViewAxisVertical:
