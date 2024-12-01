@@ -1018,12 +1018,10 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	if (self->autoresizingMask & ViewAutoresizingFit) {
-		$(self, sizeToFit);
-	}
-
 	if (self->autoresizingMask & ViewAutoresizingContain) {
 		$(self, sizeToContain);
+	} else if (self->autoresizingMask & ViewAutoresizingFit) {
+		$(self, sizeToFit);
 	}
 
 	const SDL_Rect bounds = $(self, bounds);
@@ -1031,7 +1029,7 @@ static void layoutSubviews(View *self) {
 	const Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
 
-		View *subview = (View *) $(subviews, objectAtIndex, i);
+		View *subview = $(subviews, objectAtIndex, i);
 
 		SDL_Size subviewSize = $(subview, size);
 
@@ -1045,12 +1043,14 @@ static void layoutSubviews(View *self) {
 
 		$(subview, resize, &subviewSize);
 
+		$(subview, layoutIfNeeded);
+
 		switch (subview->alignment & ViewAlignmentMaskHorizontal) {
 			case ViewAlignmentLeft:
 				subview->frame.x = 0;
 				break;
 			case ViewAlignmentCenter:
-				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
+				subview->frame.x = (bounds.w - subview->frame.w) * 0.5f;
 				break;
 			case ViewAlignmentRight:
 				subview->frame.x = bounds.w - subview->frame.w;
@@ -1062,7 +1062,7 @@ static void layoutSubviews(View *self) {
 				subview->frame.y = 0;
 				break;
 			case ViewAlignmentMaskMiddle:
-				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
+				subview->frame.y = (bounds.h - subview->frame.h) * 0.5f;
 				break;
 			case ViewAlignmentMaskBottom:
 				subview->frame.y = bounds.h - subview->frame.h;

@@ -154,6 +154,8 @@ static void layoutSubviews(View *self) {
 
 			$(subview, resize, &subviewSize);
 
+			$(subview, layoutIfNeeded);
+
 			switch (this->axis) {
 				case StackViewAxisVertical:
 					pos += subviewSize.h;
