@@ -1409,6 +1409,10 @@ static void resize(View *self, const SDL_Size *size) {
 		self->frame.h = h;
 
 		self->needsLayout = true;
+
+		if (self->superview && $(self->superview, isContainer)) {
+			self->superview->needsLayout = true;
+		}
 	}
 }
 
