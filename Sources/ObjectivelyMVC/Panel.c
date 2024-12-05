@@ -192,8 +192,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 		self->isDraggable = true;
 		self->isResizable = true;
 
-		self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
-
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);
 
