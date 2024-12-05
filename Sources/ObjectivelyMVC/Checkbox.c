@@ -126,8 +126,6 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
 
 	self = (Checkbox *) super(Control, self, initWithFrame, frame);
 	if (self) {
-
-		self->control.view.autoresizingMask = ViewAutoresizingContain;
  
 		self->box = $(alloc(Control), initWithFrame, frame);
 		assert(self->box);

@@ -9,6 +9,9 @@
       "classNames": [
         "container"
       ],
+      "style": {
+        "autoresizing-mask": "fit"
+      },
       "subviews": [
         {
           "class": "Text",

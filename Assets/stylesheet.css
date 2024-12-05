@@ -43,7 +43,12 @@ Button > * {
 	alignment: middle-center;
 }
 
+Checkbox {
+	autoresizing-mask: contain;
+}
+
 Checkbox > Control {
+	autoresizing-mask: contain;
 	background-color: #22222266;
 	bevel: inset;
 	min-width: 18;
