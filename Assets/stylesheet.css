@@ -72,6 +72,7 @@ CollectionView {
 }
 
 CollectionView .contentView {
+	autoresizing-mask: contain;
 	padding: 10 10 10 10;
 }
 
@@ -92,6 +93,10 @@ RGBColorPicker .colorView {
 	autoresizing-mask: width;
 	background-color: none;
 	height: 8;
+}
+
+Input {
+	autoresizing-mask: contain;
 }
 
 Label {
@@ -131,8 +136,12 @@ Panel > StackView {
 }
 
 Panel .accessoryView {
-	alignment: middle-right;
+	autoresizing-mask: contain | width;
 	axis: horizontal;
+}
+
+Panel .accessoryView > * {
+	alignment: middle-right;
 }
 
 ProgressBar {
@@ -163,16 +172,19 @@ ScrollView > .contentView {
 }
 
 Select {
+	autoresizing-mask: contain;
 	background-color: #dedede10;
 	bevel: outset;
 	padding: 4 4 4 4;
 }
 
 Select > StackView {
+	autoresizing-mask: contain;
 	alignment: middle-left;
 }
 
 Slider {
+	autoresizing-mask: contain;
 	width: 140;
 }
 
@@ -260,6 +272,7 @@ TabView > .tabSelectionView > Label > Text {
 }
 
 TextView {
+	autoresizing-mask: contain;
 	background-color: #22222266;
 	bevel: inset;
 	padding: 4 4 4 4;
@@ -272,6 +285,10 @@ TextView > Text {
 
 Text {
 	color: ghostwhite;
+}
+
+.container {
+	autoresizing-mask: contain;
 }
 
 .options {
