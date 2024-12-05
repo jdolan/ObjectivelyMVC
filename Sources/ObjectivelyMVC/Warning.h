@@ -28,12 +28,12 @@
 #include <ObjectivelyMVC/Types.h>
 
 /**
- * @brief Warning levels.
+ * @brief Warning types.
  */
 typedef enum {
-	WarningLevelStyle = 1,
-	WarningLevelLayout,
-} WarningLevel;
+	WarningTypeStyle = 1,
+	WarningTypeLayout,
+} WarningType;
 
 /**
  * @file
@@ -61,9 +61,9 @@ struct Warning {
 	WarningInterface *interface;
 
 	/**
-	 * @brief The WarningLevel.
+	 * @brief The WarningType.
 	 */
-	WarningLevel level;
+	WarningType type;
 
 	/**
 	 * @brief The message.
@@ -82,27 +82,27 @@ struct WarningInterface {
 	ObjectInterface objectInterface;
 
 	/**
-	 * @fn Warning *Warning::initWithFormat(Warning *self, WarningLevel level, const char *fmt, ...)
+	 * @fn Warning *Warning::initWithFormat(Warning *self, WarningType type, const char *fmt, ...)
 	 * @brief Initializes this Warning with the given type and format string.
 	 * @param self The Warning.
-	 * @param level The WarningLevel.
+	 * @param type The WarningType.
 	 * @param fmt The format string.
 	 * @return The initialized Warning, or `NULL` on error.
 	 * @memberof Warning
 	 */
-	Warning *(*initWithFormat)(Warning *self, WarningLevel level, const char *fmt, ...);
+	Warning *(*initWithFormat)(Warning *self, WarningType type, const char *fmt, ...);
 
 	/**
-	 * @fn Warning *Warning::initWithVaList(Warning *self, WarningLevel level, const char *fmt, va_list args)
+	 * @fn Warning *Warning::initWithVaList(Warning *self, WarningType type, const char *fmt, va_list args)
 	 * @brief Initializes this Warning with the given type and format string.
 	 * @param self The Warning.
-	 * @param level The WarningLevel.
+	 * @param type The WarningType.
 	 * @param fmt The format string.
 	 * @param args The format arguments .
 	 * @return The initialized Warning, or `NULL` on error.
 	 * @memberof Warning
 	 */
-	Warning *(*initWithVaList)(Warning *self, WarningLevel level, const char *fmt, va_list args);
+	Warning *(*initWithVaList)(Warning *self, WarningType type, const char *fmt, va_list args);
 };
 
 /**

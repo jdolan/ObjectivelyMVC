@@ -279,7 +279,7 @@ static void applyThemeIfNeeded(View *self, const Theme *theme) {
 
 	if (self->needsApplyTheme) {
 
-		$(self, clearWarnings, WarningLevelStyle);
+		$(self, clearWarnings, WarningTypeStyle);
 
 		$(self, applyTheme, theme);
 
@@ -437,17 +437,17 @@ static void bringSubviewToFront(View *self, View *subview) {
 static bool clearWarnings_predicate(const ident obj, ident data) {
 
 	const Warning *warning = obj;
-	WarningLevel level = *(WarningLevel *) data;
+	const WarningType type = *(WarningType *) data;
 
-	return (warning->level & level) == 0;
+	return (warning->type & type) == 0;
 }
 
 /**
- * @fn void View::clearWarnings(const View *self, WarningLevel level)
+ * @fn void View::clearWarnings(const View *self, WarningType type)
  * @memberof View
  */
-static void clearWarnings(const View *self, WarningLevel level) {
-	$(self->warnings, filter, clearWarnings_predicate, &level);
+static void clearWarnings(const View *self, WarningType type) {
+	$(self->warnings, filter, clearWarnings_predicate, &type);
 }
 
 /**
@@ -821,7 +821,7 @@ static void hasOverflow_enumerate(View *view, ident data) {
 
 			overflow->hasOverflow = true;
 
-			$(view, warn, WarningLevelLayout, "Exceeds superview bounds [%d %d %d %d]",
+			$(view, warn, WarningTypeLayout, "Exceeds superview bounds [%d %d %d %d]",
 			  overflow->bounds.x, overflow->bounds.y, overflow->bounds.w, overflow->bounds.h);
 		}
 	}
@@ -1001,15 +1001,11 @@ static void layoutIfNeeded(View *self) {
 
 	if (self->needsLayout) {
 
-		$(self, clearWarnings, WarningLevelLayout);
+		$(self, clearWarnings, WarningTypeLayout);
 
 		$(self, layoutSubviews);
 
 		self->needsLayout = false;
-
-		if (self->clipsSubviews == false && $(self, hasOverflow)) {
-			$(self, warn, WarningLevelLayout, "Unexpected overflow");
-		}
 	}
 }
 
@@ -1783,15 +1779,15 @@ static Array *visibleSubviews(const View *self) {
 }
 
 /**
- * @fn void View::warn(View *self, ViewWarningLevel level, const char *fmt, ...)
+ * @fn void View::warn(View *self, ViewWarningType type, const char *fmt, ...)
  * @memberof View
  */
-static void warn(View *self, WarningLevel level, const char *fmt, ...) {
+static void warn(View *self, WarningType type, const char *fmt, ...) {
 
 	va_list args;
 	va_start(args, fmt);
 
-	Warning *warning = $(alloc(Warning), initWithVaList, level, fmt, args);
+	Warning *warning = $(alloc(Warning), initWithVaList, type, fmt, args);
 
 	va_end(args);
 

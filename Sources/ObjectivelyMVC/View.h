@@ -458,13 +458,13 @@ struct ViewInterface {
 	void (*bringSubviewToFront)(View *self, View *subview);
 
 	/**
-	 * @fn void View::clearWarnings(const View *self, WarningLevel level)
+	 * @fn void View::clearWarnings(const View *self, WarningType level)
 	 * @brief Clears this View's Warnings matching the given level.
 	 * @param self The View.
-	 * @param type The bitmask of WarningLevels to clear.
+	 * @param type The bitmask of WarningTypes to clear.
 	 * @memberof View
 	 */
-	void (*clearWarnings)(const View *self, WarningLevel level);
+	void (*clearWarnings)(const View *self, WarningType level);
 
 	/**
 	 * @fn SDL_Rect View::clippingFrame(const View *self)
@@ -1089,14 +1089,14 @@ struct ViewInterface {
 	Array *(*visibleSubviews)(const View *self);
 
 	/**
-	 * @fn void View::warn(View *self, WarningLevel level, const char *fmt, ...)
+	 * @fn void View::warn(View *self, WarningType level, const char *fmt, ...)
 	 * @brief Appends a warning for this View.
 	 * @param self The View.
-	 * @param level The WarningLevel.
+	 * @param level The WarningType.
 	 * @param fmt The format string.
 	 * @memberof View
 	 */
-	void (*warn)(View *self, WarningLevel level, const char *fmt, ...);
+	void (*warn)(View *self, WarningType level, const char *fmt, ...);
 
 	/**
 	 * @fn void View::willMoveToWindow(View *self, SDL_Window *window)

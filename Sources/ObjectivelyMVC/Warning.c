@@ -44,15 +44,15 @@ static void dealloc(Object *self) {
 #pragma mark - Warning
 
 /**
- * @fn Warning *Warning::initWithFormat(Warning *self, WarningLevel level, const char *fmt, ...)
+ * @fn Warning *Warning::initWithFormat(Warning *self, WarningType type, const char *fmt, ...)
  * @memberof Warning
  */
-static Warning *initWithFormat(Warning *self, WarningLevel level, const char *fmt, ...) {
+static Warning *initWithFormat(Warning *self, WarningType type, const char *fmt, ...) {
 
 	va_list args;
 	va_start(args, fmt);
 
-	self = $(self, initWithVaList, level, fmt, args);
+	self = $(self, initWithVaList, type, fmt, args);
 
 	va_end(args);
 
@@ -60,15 +60,15 @@ static Warning *initWithFormat(Warning *self, WarningLevel level, const char *fm
 }
 
 /**
- * @fn Warning *Warning::initWithVaList(Warning *self, WarningLevel level, const char *fmt, va_list args)
+ * @fn Warning *Warning::initWithVaList(Warning *self, WarningType type, const char *fmt, va_list args)
  * @memberof Warning
  */
-static Warning *initWithVaList(Warning *self, WarningLevel level, const char *fmt, va_list args) {
+static Warning *initWithVaList(Warning *self, WarningType type, const char *fmt, va_list args) {
 
 	self = (Warning *) super(Object, self, init);
 	if (self) {
-		self->level = level;
-		assert(self->level);
+		self->type = type;
+		assert(self->type);
 
 		self->message = $(alloc(String), initWithVaList, fmt, args);
 		assert(self->message);
