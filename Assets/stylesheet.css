@@ -136,12 +136,9 @@ Panel > StackView {
 }
 
 Panel .accessoryView {
-	autoresizing-mask: contain | width;
-	axis: horizontal;
-}
-
-Panel .accessoryView > * {
 	alignment: middle-right;
+	autoresizing-mask: contain;
+	axis: horizontal;
 }
 
 ProgressBar {
