@@ -240,6 +240,15 @@ static void debugEnumerate(View *view, ident data) {
 	if ($(view, isVisible)) {
 		this->visibleViews++;
 
+		// FIXME: This is a bit gaff. But hasOverflow produces false positives if called at the
+		// FIXME: end of layoutSubviews, because containers have not yet been resized to fill their
+		// FIXME: parent (e.g. autoresizing-mask: contain | width).
+		// FIXME: Ideally, warnings are accumulated during layoutSubviews and applyTheme, instead
+		// FIXME: of attempting to collect them here.
+
+		$(view, clearWarnings, 0xff);
+		$(view, hasOverflow);
+
 		const Array *warnings = (Array *) view->warnings;
 		if (warnings->count) {
 			const SDL_Rect frame = $(view, renderFrame);
