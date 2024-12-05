@@ -25,8 +25,6 @@
 
 #include "Button.h"
 
-Uint32 MVC_BUTTON_CLICK = -1;
-
 #define _Class _Button
 
 #pragma mark - Object
@@ -168,9 +166,6 @@ static void initialize(Class *clazz) {
 	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
 	((ButtonInterface *) clazz->interface)->initWithImage = initWithImage;
 	((ButtonInterface *) clazz->interface)->initWithTitle = initWithTitle;
-
-	MVC_BUTTON_CLICK = SDL_RegisterEvents(1);
-	assert(MVC_BUTTON_CLICK != (Uint32) -1);
 }
 
 /**

@@ -165,11 +165,11 @@ static ident warnings_valueForColumnAndRow(const TableView *tableView, const Tab
  */
 static TableCellView *warnings_cellForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
 
-	ident value = tableView->dataSource.valueForColumnAndRow(tableView, column, row);
-	assert(value);
+	Warning *warning = tableView->dataSource.valueForColumnAndRow(tableView, column, row);
+	assert(warning);
 
 	TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
-	$(cell->text, setText, ((String *) value)->chars);
+	$(cell->text, setText, warning->message->chars);
 
 	return cell;
 }
@@ -228,10 +228,6 @@ static void debugEnumerate(View *view, ident data) {
 
 	DebugViewController *this = data;
 
-	if ($(view, isVisible)) {
-		this->visibleViews++;
-	}
-
 	if (view == this->debug) {
 		const SDL_Rect frame = $(view, renderFrame);
 
@@ -241,14 +237,27 @@ static void debugEnumerate(View *view, ident data) {
 		$(this->renderer, setDrawColor, &Colors.White);
 	}
 
-	const Array *warnings = (Array *) view->warnings;
-	if (warnings->count) {
-		const SDL_Rect frame = $(view, renderFrame);
+	if ($(view, isVisible)) {
+		this->visibleViews++;
 
-		$(this->renderer, setClippingFrame, NULL);
-		$(this->renderer, setDrawColor, &Colors.DarkGoldenRod);
-		$(this->renderer, drawRect, &frame);
-		$(this->renderer, setDrawColor, &Colors.White);
+		// FIXME: This is a bit gaff. But hasOverflow produces false positives if called at the
+		// FIXME: end of layoutSubviews, because containers have not yet been resized to fill their
+		// FIXME: parent (e.g. autoresizing-mask: contain | width).
+		// FIXME: Ideally, warnings are accumulated during layoutSubviews and applyTheme, instead
+		// FIXME: of attempting to collect them here.
+
+		$(view, clearWarnings, 0xff);
+		$(view, hasOverflow);
+
+		const Array *warnings = (Array *) view->warnings;
+		if (warnings->count) {
+			const SDL_Rect frame = $(view, renderFrame);
+
+			$(this->renderer, setClippingFrame, NULL);
+			$(this->renderer, setDrawColor, &Colors.DarkGoldenRod);
+			$(this->renderer, drawRect, &frame);
+			$(this->renderer, setDrawColor, &Colors.White);
+		}
 	}
 }
 

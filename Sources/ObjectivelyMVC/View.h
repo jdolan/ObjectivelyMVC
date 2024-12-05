@@ -34,6 +34,7 @@
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/Theme.h>
 #include <ObjectivelyMVC/View+JSON.h>
+#include <ObjectivelyMVC/Warning.h>
 
 /**
  * @file
@@ -264,7 +265,7 @@ struct View {
 	ViewController *viewController;
 
 	/**
-	 * @brief The warnings this View generated.
+	 * @brief The Warnings this View generated.
 	 * @remarks These are optionally displayed by the DebugViewController.
 	 */
 	MutableArray *warnings;
@@ -455,6 +456,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*bringSubviewToFront)(View *self, View *subview);
+
+	/**
+	 * @fn void View::clearWarnings(const View *self, WarningType level)
+	 * @brief Clears this View's Warnings matching the given level.
+	 * @param self The View.
+	 * @param type The bitmask of WarningTypes to clear.
+	 * @memberof View
+	 */
+	void (*clearWarnings)(const View *self, WarningType level);
 
 	/**
 	 * @fn SDL_Rect View::clippingFrame(const View *self)
@@ -652,6 +662,14 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	bool (*hasClassName)(const View *self, const char *className);
+
+	/**
+	 * @fn bool View::hasOverflow(const View *self)
+	 * @param self The View
+	 * @return True if this View's visible subviews exceed this View's bounds.
+	 * @memberof View
+	 */
+	bool (*hasOverflow)(const View *self);
 
 	/**
 	 * @fn View *View::hitTest(const View *self, const SDL_Point *point)
@@ -943,6 +961,14 @@ struct ViewInterface {
 	SDL_Size (*sizeThatFits)(const View *self);
 
 	/**
+	 * @fn SDL_Size View::sizeThatFills(const View *self)
+	 * @param self The View.
+	 * @return An SDL_Size that fills this View's superview.
+	 * @memberof View
+	 */
+	SDL_Size (*sizeThatFills)(const View *self);
+
+	/**
 	 * @fn void View::sizeToContain(View *self)
 	 * @brief Resizes this View to contain its subviews.
 	 * @param self The View.
@@ -950,6 +976,15 @@ struct ViewInterface {
 	 * @memberof View
 	 */
 	void (*sizeToContain)(View *self);
+
+	/**
+	 * @fn void View::sizeToFill(View *self)
+	 * @brief Resizes this View to fill its superview.
+	 * @param self The View.
+	 * @see View::sizeThatFills(const View *)
+	 * @memberof View
+	 */
+	void (*sizeToFill)(View *self);
 
 	/**
 	 * @fn void View::sizeToFit(View *self)
@@ -1054,13 +1089,14 @@ struct ViewInterface {
 	Array *(*visibleSubviews)(const View *self);
 
 	/**
-	 * @fn void View::warn(View *self, const char *fmt, ...)
+	 * @fn void View::warn(View *self, WarningType level, const char *fmt, ...)
 	 * @brief Appends a warning for this View.
 	 * @param self The View.
+	 * @param level The WarningType.
 	 * @param fmt The format string.
 	 * @memberof View
 	 */
-	void (*warn)(View *self, const char *fmt, ...);
+	void (*warn)(View *self, WarningType level, const char *fmt, ...);
 
 	/**
 	 * @fn void View::willMoveToWindow(View *self, SDL_Window *window)
