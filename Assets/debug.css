@@ -24,7 +24,7 @@
 }
 
 #debug > TableView {
-	autoresizing-mask: width;
+	autoresizing-mask: contain | width;
 }
 
 #debug > #selectors * {
