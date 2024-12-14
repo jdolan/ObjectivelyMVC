@@ -25,7 +25,6 @@
 
 #include <Objectively/MutableArray.h>
 
-#include <ObjectivelyMVC/Notification.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
