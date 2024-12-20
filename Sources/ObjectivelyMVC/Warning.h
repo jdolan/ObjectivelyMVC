@@ -111,4 +111,4 @@ struct WarningInterface {
  * @return The Warning Class.
  * @memberof Warning
  */
-OBJECTIVELY_EXPORT Class *_Warning(void);
+OBJECTIVELYMVC_EXPORT Class *_Warning(void);

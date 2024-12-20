@@ -69,9 +69,6 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\NavigationViewController.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Notification.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Option.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
@@ -189,6 +186,9 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\DebugViewController.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Warning.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c">
@@ -237,9 +237,6 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\NavigationViewController.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Notification.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Option.c">
@@ -339,6 +336,9 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\DebugViewController.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Warning.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
   </ItemGroup>
