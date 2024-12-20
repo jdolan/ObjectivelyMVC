@@ -80,10 +80,10 @@ static SelectorSequence *initWithSequence(SelectorSequence *self, const char *se
 }
 
 /**
- * @fn _Bool SelectorSequence::matchesView(const SelectorSequence *self, const View *view)
+ * @fn bool SelectorSequence::matchesView(const SelectorSequence *self, const View *view)
  * @memberof SelectorSequence
  */
-static _Bool matchesView(const SelectorSequence *self, const View *view) {
+static bool matchesView(const SelectorSequence *self, const View *view) {
 
 	for (size_t i = 0; i < self->simpleSelectors->count; i++) {
 		const SimpleSelector *simpleSelector = $(self->simpleSelectors, objectAtIndex, i);

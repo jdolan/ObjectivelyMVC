@@ -101,6 +101,7 @@ static void layoutSubviews(View *self) {
 	const SDL_Size size = $(this, contentSize);
 
 	$((View *) this->contentView, resize, &size);
+	$((View *) this->contentView, layoutIfNeeded);
 
 	super(View, self, layoutSubviews);
 
@@ -117,7 +118,7 @@ static void layoutSubviews(View *self) {
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
 
 	Panel *this = (Panel *) self;
 
@@ -190,8 +191,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
 		self->isDraggable = true;
 		self->isResizable = true;
-
-		self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
 
 		self->stackView = $(alloc(StackView), initWithFrame, NULL);
 		assert(self->stackView);

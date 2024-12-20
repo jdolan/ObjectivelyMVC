@@ -30,6 +30,7 @@
 # define EXAMPLES "."
 #endif
 
+static void onViewEvent(SDL_AudioDeviceID device, const SDL_UserEvent *event);
 static void drawScene(SDL_Window *window);
 
 /**
@@ -39,7 +40,16 @@ int main(int argc, char *argv[]) {
 
 	MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
 
-	SDL_Init(SDL_INIT_VIDEO);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+
+	SDL_AudioDeviceID device = SDL_OpenAudioDevice(NULL, 0, &(SDL_AudioSpec) {
+		.freq = 22050,
+		.format = AUDIO_S16,
+		.channels = 1,
+		.samples = 1024
+	}, NULL, 0);
+
+	SDL_PauseAudioDevice(device, 0);
 
 	SDL_Window *window = SDL_CreateWindow(__FILE__,
 		SDL_WINDOWPOS_CENTERED,
@@ -67,6 +77,10 @@ int main(int argc, char *argv[]) {
 		while (SDL_PollEvent(&event)) {
 			$(windowController, respondToEvent, &event);
 			
+			if (event.type == MVC_VIEW_EVENT) {
+				onViewEvent(device, &event.user);
+			}
+
 			if (event.type == SDL_QUIT) {
 				break;
 			}
@@ -91,9 +105,35 @@ int main(int argc, char *argv[]) {
 	SDL_GL_DeleteContext(context);
 	SDL_DestroyWindow(window);
 
+	SDL_CloseAudioDevice(device);
+
 	SDL_Quit();
 
 	return 0;
+}
+
+#include "click.wav.h"
+#include "clack.wav.h"
+
+/**
+ * @brief
+ */
+static void onViewEvent(SDL_AudioDeviceID device, const SDL_UserEvent *event) {
+
+	if (!instanceof(Control, event->data1)) {
+		return;
+	}
+
+	switch (event->code) {
+		case ViewEventClick:
+			SDL_QueueAudio(device, click_wav, click_wav_len);
+			break;
+		case ViewEventChange:
+			SDL_QueueAudio(device, clack_wav, clack_wav_len);
+			break;
+		default:
+			break;
+	}
 }
 
 /**

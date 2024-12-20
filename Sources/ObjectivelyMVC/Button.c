@@ -72,7 +72,9 @@ static View *init(View *self) {
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
+
+	View *this = (View *) self;
 
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		self->state |= ControlStateHighlighted;
@@ -81,7 +83,16 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 
 	if (event->type == SDL_MOUSEBUTTONUP) {
 		self->state &= ~ControlStateHighlighted;
-		return true;
+		if (event->button.clicks) {
+			$(this, emitViewEvent, ViewEventClick, NULL);
+			return true;
+		}
+	}
+
+	if (event->type == SDL_MOUSEMOTION) {
+		if (self->state & ControlStateHighlighted) {
+			return true;
+		}
 	}
 
 	return super(Control, self, captureEvent, event);

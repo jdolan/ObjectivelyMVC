@@ -76,7 +76,9 @@ static View *init(View *self) {
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
+
+	View *this = (View *) self;
 
 	const View *box = (View *) ((Checkbox *) self)->box;
 	
@@ -90,6 +92,7 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 		if ($(box, didReceiveEvent, event)) {
 			self->state ^= ControlStateSelected;
 			self->state &= ~ControlStateHighlighted;
+			$(this, emitViewEvent, ViewEventChange, NULL);
 			return true;
 		}
 	}
@@ -123,8 +126,6 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
 
 	self = (Checkbox *) super(Control, self, initWithFrame, frame);
 	if (self) {
-
-		self->control.view.autoresizingMask = ViewAutoresizingContain;
  
 		self->box = $(alloc(Control), initWithFrame, frame);
 		assert(self->box);

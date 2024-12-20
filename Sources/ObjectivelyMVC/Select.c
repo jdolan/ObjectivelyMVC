@@ -78,6 +78,7 @@ static void layoutSubviews(View *self) {
 		}
 
 		$((View *) this->stackView, sizeToFit);
+		$((View *) this->stackView, layoutIfNeeded);
 	}
 
 	super(View, self, layoutSubviews);
@@ -110,7 +111,7 @@ static SDL_Size sizeThatFits(const View *self) {
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
 
 	Select *this = (Select *) self;
 
@@ -254,7 +255,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame) {
 /**
  * @brief Predicate function for optionWithValue.
  */
-static _Bool optionWithValue_predicate(ident obj, ident data) {
+static bool optionWithValue_predicate(ident obj, ident data) {
 	return ((Option *) obj)->value == data;
 }
 
@@ -358,7 +359,7 @@ static void selectOptionWithValue(Select *self, ident value) {
 /**
  * @brief Predicate for selectedOption and selectedOptions.
  */
-static _Bool selectedOptions_predicate(ident obj, ident data) {
+static bool selectedOptions_predicate(ident obj, ident data) {
 	return ((Option *) obj)->isSelected;
 }
 

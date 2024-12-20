@@ -109,6 +109,9 @@ static void layoutSubviews(View *self) {
 	}
 
 	scrollView->frame = frame;
+	scrollView->needsLayout = true;
+
+	$(scrollView, layoutIfNeeded);
 }
 
 /**
@@ -123,10 +126,11 @@ static SDL_Size sizeThatFits(const View *self) {
 
 #pragma mark - Control
 
+
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
 
 	TableView *this = (TableView *) self;
 
@@ -517,7 +521,9 @@ static void selectRowAtIndex(TableView *self, size_t index) {
 	if (index < rows->count) {
 
 		TableRowView *row = $(rows, objectAtIndex, index);
-		$(row, setSelected, true);
+		if (!row->isSelected) {
+			$(row, setSelected, true);
+		}
 	}
 }
 

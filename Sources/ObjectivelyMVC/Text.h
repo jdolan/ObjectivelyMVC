@@ -66,7 +66,7 @@ struct Text {
 	/**
 	 * @brief If true, wrap text along word boundaries to fit this Text's width.
 	 */
-	_Bool lineWrap;
+	bool lineWrap;
 
 	/**
 	 * @brief The text.

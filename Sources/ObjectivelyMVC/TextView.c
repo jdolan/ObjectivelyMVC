@@ -117,6 +117,8 @@ static void layoutSubviews(View *self) {
 		}
 	}
 
+	$((View *) this->text, layoutIfNeeded);
+
 	super(View, self, layoutSubviews);
 }
 
@@ -159,9 +161,9 @@ static void render(View *self, Renderer *renderer) {
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
 
-	_Bool didEdit = false, didCaptureEvent = false;
+	bool didEdit = false, didCaptureEvent = false;
 
 	TextView *this = (TextView *) self;
 	if (this->isEditable) {
@@ -306,6 +308,8 @@ static _Bool captureEvent(Control *self, const SDL_Event *event) {
 			if (this->delegate.didEdit) {
 				this->delegate.didEdit(this);
 			}
+			
+			$((View *) self, emitViewEvent, ViewEventChange, NULL);
 		}
 	}
 

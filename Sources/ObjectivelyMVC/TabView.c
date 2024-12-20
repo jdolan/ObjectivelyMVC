@@ -251,7 +251,7 @@ static void selectTab(TabView *self, TabViewItem *tab) {
 /**
  * @brief NULL-safe Predicate for tabWithIdentifier.
  */
-static _Bool tabWithIdentifier_predicate(const ident obj, ident data) {
+static bool tabWithIdentifier_predicate(const ident obj, ident data) {
 
 	const TabViewItem *tab = obj;
 

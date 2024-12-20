@@ -105,7 +105,7 @@ static TabViewController *init(TabViewController *self) {
 /**
  * @brief Predicate for tabViewItemFor.
  */
-static _Bool tabForViewController_predicate(const ident obj, ident data) {
+static bool tabForViewController_predicate(const ident obj, ident data) {
 	return ((TabViewItem *) obj)->view == data;
 }
 

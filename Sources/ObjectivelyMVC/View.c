@@ -29,7 +29,11 @@
 #include "Log.h"
 #include "View.h"
 #include "ViewController.h"
+#include "WindowController.h"
 #include "Window.h"
+
+Uint32 MVC_NOTIFICATION_EVENT;
+Uint32 MVC_VIEW_EVENT;
 
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
 	MakeEnumAlias(ViewAlignmentNone, none),
@@ -91,13 +95,14 @@ static void dealloc(Object *self) {
 static String *description(const Object *self) {
 
 	View *this = (View *) self;
+	const SDL_Rect bounds = $(this, bounds);
 
 	String *classNames = $((Object *) this->classNames, description);
 	String *description = str("%s@%p %s [%d, %d, %d, %d]",
-							  classnameof(self),
+							  this->identifier ?: classnameof(self),
 							  self,
 							  classNames->chars,
-							  this->frame.x, this->frame.y, this->frame.w, this->frame.h);
+							  bounds.x, bounds.y, bounds.w, bounds.h);
 
 	release(classNames);
 	return description;
@@ -106,10 +111,10 @@ static String *description(const Object *self) {
 #pragma mark - View
 
 /**
- * @fn _Bool View::acceptsFirstResponder(const View *self)
+ * @fn bool View::acceptsFirstResponder(const View *self)
  * @memberof View
  */
-static _Bool acceptsFirstResponder(const View *self) {
+static bool acceptsFirstResponder(const View *self) {
 	return false;
 }
 
@@ -270,13 +275,16 @@ static void applyThemeIfNeeded(View *self, const Theme *theme) {
 
 	assert(theme);
 
-	if (self->needsApplyTheme) {
-		$(self, applyTheme, theme);
-	}
-
-	self->needsApplyTheme = false;
-
 	$(self, enumerateSubviews, (ViewEnumerator) applyThemeIfNeeded, (ident) theme);
+
+	if (self->needsApplyTheme) {
+
+		$(self, clearWarnings, WarningTypeStyle);
+
+		$(self, applyTheme, theme);
+
+		self->needsApplyTheme = false;
+	}
 }
 
 /**
@@ -372,13 +380,14 @@ static void becomeFirstResponder(View *self) {
 }
 
 /**
- * @fn _Bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
+ * @fn bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
  * @memberof View
  */
-static _Bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
+static bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary) {
 
 	if (inlets) {
 		if (bindInlets(inlets, dictionary)) {
+			self->needsApplyTheme = true;
 			self->needsLayout = true;
 			return true;
 		}
@@ -398,8 +407,8 @@ static SDL_Rect bounds(const View *self) {
 	const SDL_Rect bounds = {
 		.x = self->padding.left,
 		.y = self->padding.top,
-		.w = size.w - (self->padding.left + self->padding.right),
-		.h = size.h - (self->padding.top + self->padding.bottom),
+		.w = max(0, size.w - (self->padding.left + self->padding.right)),
+		.h = max(0, size.h - (self->padding.top + self->padding.bottom)),
 	};
 
 	return bounds;
@@ -420,6 +429,25 @@ static void bringSubviewToFront(View *self, View *subview) {
 			$(self, addSubviewRelativeTo, subview, last, ViewPositionAfter);
 		}
 	}
+}
+
+/**
+ * @brief Filter Predicate for clearWarnings.
+ */
+static bool clearWarnings_predicate(const ident obj, ident data) {
+
+	const Warning *warning = obj;
+	const WarningType type = *(WarningType *) data;
+
+	return (warning->type & type) == 0;
+}
+
+/**
+ * @fn void View::clearWarnings(const View *self, WarningType type)
+ * @memberof View
+ */
+static void clearWarnings(const View *self, WarningType type) {
+	$(self->warnings, filter, clearWarnings_predicate, &type);
 }
 
 /**
@@ -466,14 +494,14 @@ static SDL_Rect clippingFrame(const View *self) {
 }
 
 /**
- * @fn _Bool View::containsPoint(const View *self, const SDL_Point *point)
+ * @fn bool View::containsPoint(const View *self, const SDL_Point *point)
  * @memberof View
  */
-static _Bool containsPoint(const View *self, const SDL_Point *point) {
+static bool containsPoint(const View *self, const SDL_Point *point) {
 
 	const SDL_Rect frame = $(self, clippingFrame);
 
-	return (_Bool) !!SDL_PointInRect(point, &frame);
+	return (bool) SDL_PointInRect(point, &frame);
 }
 
 /**
@@ -535,15 +563,19 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
 	if (window) {
 		$(self, attachStylesheet, window);
 
+		if (self->superview == NULL) {
+			$(self, sizeToFill);
+		}
+
 		self->needsLayout = true;
 	}
 }
 
 /**
- * @fn _Bool View::didReceiveEvent(const View *self, const SDL_Event *event)
+ * @fn bool View::didReceiveEvent(const View *self, const SDL_Event *event)
  * @memberof View
  */
-static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
+static bool didReceiveEvent(const View *self, const SDL_Event *event) {
 
 	if ($(self, isVisible)) {
 
@@ -566,7 +598,7 @@ static _Bool didReceiveEvent(const View *self, const SDL_Event *event) {
 }
 
 /**
- * @fn void *View::draw(View *self, Renderer *renderer)
+ * @fn void View::draw(View *self, Renderer *renderer)
  * @memberof View
  */
 static void draw(View *self, Renderer *renderer) {
@@ -579,6 +611,19 @@ static void draw(View *self, Renderer *renderer) {
 
 		$(self, enumerateSubviews, (ViewEnumerator) draw, renderer);
 	}
+}
+
+/**
+ * @fn void View::emitViewEvent(View *self, ViewEvent code, ident data)
+ * @memberof View
+ */
+static void emitViewEvent(View *self, ViewEvent code, ident data) {
+	SDL_PushEvent((SDL_Event *) &(const SDL_UserEvent) {
+		.type = MVC_VIEW_EVENT,
+		.code = code,
+		.data1 = self,
+		.data2 = data
+	});
 }
 
 /**
@@ -706,6 +751,26 @@ static void enumerateSuperview(const View *self, ViewEnumerator enumerator, iden
 }
 
 /**
+ * @fn void View::enumerateVisible(const View *self, ViewEnumerator enumerator, ident data)
+ * @memberof View
+ */
+static void enumerateVisible(View *self, ViewEnumerator enumerator, ident data) {
+
+	if ($(self, isVisible) == false) {
+		return;
+	}
+
+	enumerator(self, data);
+
+	const Array *subviews = (Array *) self->subviews;
+	for (size_t i = 0; i < subviews->count; i++) {
+
+		View *subview = $(subviews, objectAtIndex, i);
+		$(subview, enumerateVisible, enumerator, data);
+	}
+}
+
+/**
  * @fn View *View::firstResponder(SDL_Window *window)
  * @memberof View
  */
@@ -719,21 +784,62 @@ static View *firstResponder(SDL_Window *window) {
 /**
  * @brief Predicate for hasClassName.
  */
-static _Bool hasClassName_predicate(const ident obj, ident data) {
+static bool hasClassName_predicate(const ident obj, ident data) {
 	return strcmp(((String *) obj)->chars, (const char *) data) == 0;
 }
 
 /**
- * @fn _Bool View::hasClassName(const View *self, cosnt char *className)
+ * @fn bool View::hasClassName(const View *self, cosnt char *className)
  * @memberof View
  */
-static _Bool hasClassName(const View *self, const char *className) {
+static bool hasClassName(const View *self, const char *className) {
 
 	if (className) {
 		return $((Set *) self->classNames, containsObjectMatching, hasClassName_predicate, (ident) className);
 	}
 
 	return false;
+}
+
+typedef struct {
+	SDL_Rect bounds;
+	bool hasOverflow;
+} Overflow;
+
+/**
+ * @brief ViewEnumerator for hasOverflow.
+ */
+static void hasOverflow_enumerate(View *view, ident data) {
+
+	Overflow *overflow = data;
+
+	if (!view->hidden) {
+
+		const SDL_Rect bounds = $(view, bounds);
+
+		if (bounds.x + bounds.w > overflow->bounds.w || bounds.y + bounds.h > overflow->bounds.h) {
+
+			overflow->hasOverflow = true;
+
+			$(view, warn, WarningTypeLayout, "Exceeds superview bounds [%d %d %d %d]",
+			  overflow->bounds.x, overflow->bounds.y, overflow->bounds.w, overflow->bounds.h);
+		}
+	}
+}
+
+/**
+ * @fn bool View::hasOverflow(const View *self)
+ * @memberof View
+ */
+static bool hasOverflow(const View *self) {
+
+	Overflow overflow = {
+		.bounds = $(self, bounds)
+	};
+
+	$(self, enumerateSubviews, hasOverflow_enumerate, (ident) &overflow);
+
+	return overflow.hasOverflow;
 }
 
 /**
@@ -824,18 +930,19 @@ static void invalidateStyle(View *self) {
 }
 
 /**
- * @fn _Bool View::isContainer(const View *self)
+ * @fn bool View::isContainer(const View *self)
  * @memberof View
  */
-static _Bool isContainer(const View *self) {
-	return self->autoresizingMask & (ViewAutoresizingFit | ViewAutoresizingContain);
+static bool isContainer(const View *self) {
+	return self->autoresizingMask & ViewAutoresizingFit
+		|| self->autoresizingMask & ViewAutoresizingContain;
 }
 
 /**
- * @fn _Bool View::isDescendantOfView(const View *self, const View *view)
+ * @fn bool View::isDescendantOfView(const View *self, const View *view)
  * @memberof View
  */
-static _Bool isDescendantOfView(const View *self, const View *view) {
+static bool isDescendantOfView(const View *self, const View *view) {
 
 	assert(view);
 
@@ -850,10 +957,10 @@ static _Bool isDescendantOfView(const View *self, const View *view) {
 }
 
 /**
- * @fn _Bool View::isFirstResponder(const View *self)
+ * @fn bool View::isFirstResponder(const View *self)
  * @memberof View
  */
-static _Bool isFirstResponder(const View *self) {
+static bool isFirstResponder(const View *self) {
 
 	if (self->window) {
 		return $$(View, firstResponder, self->window) == self;
@@ -863,10 +970,10 @@ static _Bool isFirstResponder(const View *self) {
 }
 
 /**
- * @fn _Bool View::isVisible(const View *self)
+ * @fn bool View::isVisible(const View *self)
  * @memberof View
  */
-static _Bool isVisible(const View *self) {
+static bool isVisible(const View *self) {
 
 	for (const View *view = self; view; view = view->superview) {
 		if (view->hidden) {
@@ -890,36 +997,16 @@ static void layoutIfNeeded_recurse(View *subview, ident data) {
  */
 static void layoutIfNeeded(View *self) {
 
+	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
+
 	if (self->needsLayout) {
+
+		$(self, clearWarnings, WarningTypeLayout);
+
 		$(self, layoutSubviews);
 
-		if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
-
-			if (self->hidden == false && self->superview && self->superview->clipsSubviews) {
-
-				const SDL_Rect bounds = $(self, bounds);
-				const SDL_Rect superviewBounds = $(self->superview, bounds);
-
-				if (bounds.x + bounds.w > superviewBounds.w ||
-					bounds.y + bounds.h > superviewBounds.h) {
-
-					String *this = $((Object *) self, description);
-					String *that = $((Object *) self->superview, description);
-
-					MVC_LogDebug("%s exceeds superview bounds %s\n", this->chars, that->chars);
-
-					$(self, warn, "%s exceeds superview bounds %s\n", this->chars, that->chars);
-
-					release(this);
-					release(that);
-				}
-			}
-		}
+		self->needsLayout = false;
 	}
-
-	self->needsLayout = false;
-
-	$(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
 }
 
 /**
@@ -928,22 +1015,10 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	if (self->superview == NULL) {
-		if (self->autoresizingMask & ViewAutoresizingFill) {
-
-			SDL_Size size;
-			SDL_GetWindowSize(self->window, &size.w, &size.h);
-
-			$(self, resize, &size);
-		}
-	}
-
-	if (self->autoresizingMask & ViewAutoresizingFit) {
-		$(self, sizeToFit);
-	}
-
 	if (self->autoresizingMask & ViewAutoresizingContain) {
 		$(self, sizeToContain);
+	} else if (self->autoresizingMask & ViewAutoresizingFit) {
+		$(self, sizeToFit);
 	}
 
 	const SDL_Rect bounds = $(self, bounds);
@@ -951,14 +1026,9 @@ static void layoutSubviews(View *self) {
 	const Array *subviews = (Array *) self->subviews;
 	for (size_t i = 0; i < subviews->count; i++) {
 
-		View *subview = (View *) $(subviews, objectAtIndex, i);
+		View *subview = $(subviews, objectAtIndex, i);
 
-		SDL_Size subviewSize;
-		if (subview->autoresizingMask & ViewAutoresizingFit) {
-			subviewSize = $(subview, sizeThatFits);
-		} else {
-			subviewSize = $(subview, sizeThatContains);
-		}
+		SDL_Size subviewSize = $(subview, size);
 
 		if (subview->autoresizingMask & ViewAutoresizingWidth) {
 			subviewSize.w = bounds.w;
@@ -969,13 +1039,14 @@ static void layoutSubviews(View *self) {
 		}
 
 		$(subview, resize, &subviewSize);
+		$(subview, layoutIfNeeded);
 
 		switch (subview->alignment & ViewAlignmentMaskHorizontal) {
 			case ViewAlignmentLeft:
 				subview->frame.x = 0;
 				break;
 			case ViewAlignmentCenter:
-				subview->frame.x = (bounds.w - subview->frame.w) * 0.5;
+				subview->frame.x = (bounds.w - subview->frame.w) * 0.5f;
 				break;
 			case ViewAlignmentRight:
 				subview->frame.x = bounds.w - subview->frame.w;
@@ -987,7 +1058,7 @@ static void layoutSubviews(View *self) {
 				subview->frame.y = 0;
 				break;
 			case ViewAlignmentMaskMiddle:
-				subview->frame.y = (bounds.h - subview->frame.h) * 0.5;
+				subview->frame.y = (bounds.h - subview->frame.h) * 0.5f;
 				break;
 			case ViewAlignmentMaskBottom:
 				subview->frame.y = bounds.h - subview->frame.h;
@@ -997,10 +1068,10 @@ static void layoutSubviews(View *self) {
 }
 
 /**
- * @fn _Bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
+ * @fn bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
  * @memberof View
  */
-static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
 	assert(simpleSelector);
 
@@ -1325,14 +1396,17 @@ static void resignFirstResponder(View *self) {
  */
 static void resize(View *self, const SDL_Size *size) {
 
-	if (self->frame.w != size->w || self->frame.h != size->h) {
+	const int w = clamp(size->w, self->minSize.w, self->maxSize.w);
+	const int h = clamp(size->h, self->minSize.h, self->maxSize.h);
 
-		self->frame.w = clamp(size->w, self->minSize.w, self->maxSize.w);
-		self->frame.h = clamp(size->h, self->minSize.h, self->maxSize.h);
+	if (self->frame.w != w || self->frame.h != h) {
+
+		self->frame.w = w;
+		self->frame.h = h;
 
 		self->needsLayout = true;
 
-		if (self->superview) {
+		if (self->superview && $(self->superview, isContainer)) {
 			self->superview->needsLayout = true;
 		}
 	}
@@ -1362,6 +1436,35 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 	if (self->viewController) {
 		$(self->viewController, respondToEvent, event);
+	}
+
+	ViewEvent code = ViewEventNone;
+
+	switch (event->type) {
+		case SDL_MOUSEBUTTONDOWN:
+			code = ViewEventMouseButtonDown;
+			break;
+		case SDL_MOUSEBUTTONUP:
+			code = ViewEventMouseButtonUp;
+			break;
+		case SDL_KEYDOWN:
+			code = ViewEventKeyDown;
+			break;
+		case SDL_KEYUP:
+			code = ViewEventKeyUp;
+			break;
+		default:
+			break;
+	}
+
+	if (code != ViewEventNone) {
+		$(self, emitViewEvent, code, NULL);
+
+		if (code == ViewEventMouseButtonUp) {
+			if (event->button.clicks) {
+				$(self, emitViewEvent, ViewEventClick, NULL);
+			}
+		}
 	}
 
 	if (self->nextResponder) {
@@ -1429,6 +1532,22 @@ static SDL_Size sizeThatContains(const View *self) {
 }
 
 /**
+ * @fn SDL_Size View::sizeThastFills(const View *self)
+ * @memberof View
+ */
+static SDL_Size sizeThatFills(const View *self) {
+	SDL_Size size;
+
+	if (self->superview == NULL) {
+		SDL_GetWindowSize(self->window, &size.w, &size.h);
+	} else {
+		size = $(self->superview, size);
+	}
+
+	return size;
+}
+
+/**
  * @fn void View::sizeThatFits(const View *self)
  * @memberof View
  */
@@ -1451,7 +1570,15 @@ static SDL_Size sizeThatFits(const View *self) {
 		for (size_t i = 0; i < subviews->count; i++) {
 
 			const View *subview = $(subviews, objectAtIndex, i);
-			const SDL_Size subviewSize = $(subview, sizeThatContains);
+
+			SDL_Size subviewSize;
+			if (subview->autoresizingMask & ViewAutoresizingContain) {
+				subviewSize = $(subview, sizeThatContains);
+			} else if (subview->autoresizingMask & ViewAutoresizingFit) {
+				subviewSize = $(subview, sizeThatFits);
+			} else {
+				subviewSize = $(subview, size);
+			}
 
 			SDL_Point subviewOrigin = MakePoint(0, 0);
 			switch (subview->alignment) {
@@ -1485,6 +1612,17 @@ static SDL_Size sizeThatFits(const View *self) {
 static void sizeToContain(View *self) {
 
 	const SDL_Size size = $(self, sizeThatContains);
+
+	$(self, resize, &size);
+}
+
+/**
+ * @fn void View::sizeToFill(View *self)
+ * @memberof View
+ */
+static void sizeToFill(View *self) {
+
+	const SDL_Size size = $(self, sizeThatFills);
 
 	$(self, resize, &size);
 }
@@ -1625,7 +1763,7 @@ static View *viewWithResourceName(const char *name, Outlet *outlets) {
 /**
  * @brief Predicate for visibleSubviews.
  */
-static _Bool visibleSubviews_filter(ident obj, ident data) {
+static bool visibleSubviews_filter(ident obj, ident data) {
 
 	const View *view = (View *) obj;
 
@@ -1641,19 +1779,24 @@ static Array *visibleSubviews(const View *self) {
 }
 
 /**
- * @fn void View::warn(View *self, const char *fmt, ...)
+ * @fn void View::warn(View *self, ViewWarningType type, const char *fmt, ...)
  * @memberof View
  */
-static void warn(View *self, const char *fmt, ...) {
+static void warn(View *self, WarningType type, const char *fmt, ...) {
+
 	va_list args;
 	va_start(args, fmt);
 
-	String *warning = $(alloc(String), initWithVaList, fmt, args);
-	assert(warning);
+	Warning *warning = $(alloc(Warning), initWithVaList, type, fmt, args);
 
 	va_end(args);
 
+	String *description = $((Object *) self, description);
+	MVC_LogWarn("%s:: %s\n", description->chars, warning->message->chars);
+	release(description);
+
 	$(self->warnings, addObject, warning);
+
 	release(warning);
 }
 
@@ -1697,6 +1840,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->bind = _bind;
 	((ViewInterface *) clazz->interface)->bounds = bounds;
 	((ViewInterface *) clazz->interface)->bringSubviewToFront = bringSubviewToFront;
+	((ViewInterface *) clazz->interface)->clearWarnings = clearWarnings;
 	((ViewInterface *) clazz->interface)->clippingFrame = clippingFrame;
 	((ViewInterface *) clazz->interface)->containsPoint = containsPoint;
 	((ViewInterface *) clazz->interface)->depth = depth;
@@ -1705,6 +1849,7 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->didMoveToWindow = didMoveToWindow;
 	((ViewInterface *) clazz->interface)->didReceiveEvent = didReceiveEvent;
 	((ViewInterface *) clazz->interface)->draw = draw;
+	((ViewInterface *) clazz->interface)->emitViewEvent = emitViewEvent;
 	((ViewInterface *) clazz->interface)->enumerate = enumerate;
 	((ViewInterface *) clazz->interface)->enumerateAdjacent = enumerateAdjacent;
 	((ViewInterface *) clazz->interface)->enumerateAncestors = enumerateAncestors;
@@ -1713,8 +1858,10 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->enumerateSiblings = enumerateSiblings;
 	((ViewInterface *) clazz->interface)->enumerateSubviews = enumerateSubviews;
 	((ViewInterface *) clazz->interface)->enumerateSuperview = enumerateSuperview;
+	((ViewInterface *) clazz->interface)->enumerateVisible = enumerateVisible;
 	((ViewInterface *) clazz->interface)->firstResponder = firstResponder;
 	((ViewInterface *) clazz->interface)->hasClassName = hasClassName;
+	((ViewInterface *) clazz->interface)->hasOverflow = hasOverflow;
 	((ViewInterface *) clazz->interface)->hitTest = hitTest;
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
@@ -1746,8 +1893,10 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->setFirstResponder = setFirstResponder;
 	((ViewInterface *) clazz->interface)->size = size;
 	((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
+	((ViewInterface *) clazz->interface)->sizeThatFills = sizeThatFills;
 	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 	((ViewInterface *) clazz->interface)->sizeToContain = sizeToContain;
+	((ViewInterface *) clazz->interface)->sizeToFill = sizeToFill;
 	((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
 	((ViewInterface *) clazz->interface)->subviewWithIdentifier = subviewWithIdentifier;
 	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
@@ -1760,6 +1909,12 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 	((ViewInterface *) clazz->interface)->warn = warn;
 	((ViewInterface *) clazz->interface)->willMoveToWindow = willMoveToWindow;
+
+	MVC_NOTIFICATION_EVENT = SDL_RegisterEvents(1);
+	assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
+	
+	MVC_VIEW_EVENT = SDL_RegisterEvents(1);
+	assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
 }
 
 /**

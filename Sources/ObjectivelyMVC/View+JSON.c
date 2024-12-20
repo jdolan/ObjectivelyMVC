@@ -29,7 +29,7 @@
  * @brief InletBinding for InletTypeBool.
  */
 static void bindBool(const Inlet *inlet, ident obj) {
-	*((_Bool *) inlet->dest) = cast(Boole, obj)->value;
+	*((bool *) inlet->dest) = cast(Boole, obj)->value;
 }
 
 /**
@@ -323,12 +323,12 @@ const InletBinding inletBindings[] = {
 	bindApplicationDefined,
 };
 
-_Bool bindInlets(const Inlet *inlets, const Dictionary *dictionary) {
+bool bindInlets(const Inlet *inlets, const Dictionary *dictionary) {
 
 	assert(inlets);
 	assert(dictionary);
 
-	_Bool didBindInlets = false;
+	bool didBindInlets = false;
 
 	for (const Inlet *inlet = inlets; inlet->name; inlet++) {
 		const ident obj = $(dictionary, objectForKeyPath, inlet->name);

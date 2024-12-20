@@ -25,7 +25,6 @@
 
 #include <Objectively/String.h>
 
-#include "Log.h"
 #include "WindowController.h"
 
 #define _Class _WindowController
@@ -111,8 +110,8 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 	if (self) {
 		$(self, setWindow, window);
 		$(self, setViewController, NULL);
-		$(self, setTheme, NULL);
 		$(self, setRenderer, NULL);
+		$(self, setTheme, NULL);
 	}
 
 	return self;
@@ -139,57 +138,58 @@ static void render(WindowController *self) {
 }
 
 /**
+ * @brief ViewEnumerator for `SDL_MOUSEMOTION_EVENT` which dispatches `ViewEventMouseEnter`
+ * and `ViewEventMouseLeave`.
+ */
+static void mouseMotion_enumerate(View *view, ident data) {
+	
+	const SDL_MouseMotionEvent *event = data;
+	const SDL_Point a = MakePoint(event->x - event->xrel, event->y - event->yrel);
+	const SDL_Point b = MakePoint(event->x, event->y);
+
+	if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
+		$(view, emitViewEvent, ViewEventMouseLeave, NULL);
+	} else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
+		$(view, emitViewEvent, ViewEventMouseEnter, NULL);
+	}
+}
+
+/**
  * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
  * @memberof WindowController
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
-	if (event->type == SDL_USEREVENT && event->user.type == MVC_NOTIFICATION_EVENT) {
-		$(self->viewController, handleNotification, &(const Notification) {
-			.name = event->user.code,
-			.sender = event->user.data1,
-			.data = event->user.data2
-		});
-	} else {
-
-		if (event->type == SDL_WINDOWEVENT) {
-			switch (event->window.event) {
-				case SDL_WINDOWEVENT_EXPOSED:
-					$(self, setWindow, SDL_GL_GetCurrentWindow());
-					$(self->renderer, renderDeviceDidReset);
-					$(self->viewController->view, renderDeviceDidReset);
-					$(self->viewController->view, updateBindings);
-					break;
-				case SDL_WINDOWEVENT_CLOSE:
-					$(self->renderer, renderDeviceWillReset);
-					$(self->viewController->view, renderDeviceWillReset);
-					break;
-				default:
-					break;
-			}
+	if (event->type == SDL_WINDOWEVENT) {
+		switch (event->window.event) {
+			case SDL_WINDOWEVENT_EXPOSED:
+				$(self, setWindow, SDL_GL_GetCurrentWindow());
+				$(self->renderer, renderDeviceDidReset);
+				$(self->viewController->view, renderDeviceDidReset);
+				$(self->viewController->view, updateBindings);
+				break;
+			case SDL_WINDOWEVENT_CLOSE:
+				$(self->renderer, renderDeviceWillReset);
+				$(self->viewController->view, renderDeviceWillReset);
+				break;
+			default:
+				break;
 		}
+	}
 
-		View *firstResponder = $(self, firstResponder, event);
-		if (firstResponder) {
+	if (event->type == SDL_MOUSEMOTION) {
+		$(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
+	}
 
-			switch (event->type) {
-				case SDL_MOUSEMOTION:
-					break;
-				default: {
-					String *desc = $((Object *) firstResponder, description);
-					MVC_LogMessage(SDL_LOG_PRIORITY_DEBUG, "%d -> %s\n", event->type, desc->chars);
-					release(desc);
-				}
-			}
+	View *firstResponder = $(self, firstResponder, event);
+	if (firstResponder) {
+		$(firstResponder, respondToEvent, event);
+	}
 
-			$(firstResponder, respondToEvent, event);
-		}
-
-		if (event->type == SDL_KEYUP) {
-			if (event->key.keysym.sym == SDLK_d) {
-				if (event->key.keysym.mod & KMOD_CTRL) {
-					$(self, toggleDebugger);
-				}
+	if (event->type == SDL_KEYUP) {
+		if (event->key.keysym.sym == SDLK_d) {
+			if (event->key.keysym.mod & KMOD_CTRL) {
+				$(self, toggleDebugger);
 			}
 		}
 	}
@@ -210,6 +210,8 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 		} else {
 			self->renderer = $(alloc(Renderer), init);
 		}
+
+		assert(self->renderer);
 
 		$(self->viewController->view, renderDeviceDidReset);
 	}

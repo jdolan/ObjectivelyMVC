@@ -143,7 +143,7 @@ static void render(View *self, Renderer *renderer) {
 /**
  * @see Control::captureEvent(Control *, const SDL_Event *)
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
 
 	Slider *this = (Slider *) self;
 

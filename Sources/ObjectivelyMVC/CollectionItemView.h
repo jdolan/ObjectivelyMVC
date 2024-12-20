@@ -61,7 +61,7 @@ struct CollectionItemView {
 	/**
 	 * @brief True when this item is selected, false otherwise.
 	 */
-	_Bool isSelected;
+	bool isSelected;
 
 	/**
 	 * @brief The View drawn over this item when it is selected.
@@ -95,14 +95,14 @@ struct CollectionItemViewInterface {
 	CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn void CollectionItemView::setSelected(CollectionItemView *self, _Bool isSelected)
+	 * @fn void CollectionItemView::setSelected(CollectionItemView *self, bool isSelected)
 	 * @brief Sets the selected state of this item.
 	 * @param self The CollectionItemView.
 	 * @param isSelected The selected state.
 	 * @remarks Subclasses may override this method to change the visual cue for selection.
 	 * @memberof CollectionItemView
 	 */
-	void (*setSelected)(CollectionItemView *self, _Bool isSelected);
+	void (*setSelected)(CollectionItemView *self, bool isSelected);
 };
 
 /**

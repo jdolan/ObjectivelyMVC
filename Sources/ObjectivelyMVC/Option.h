@@ -54,7 +54,7 @@ struct Option {
 	/**
 	 * @brief True if this Option is selected, false otherwise.
 	 */
-	_Bool isSelected;
+	bool isSelected;
 
 	/**
 	 * @brief The title.
@@ -89,13 +89,13 @@ struct OptionInterface {
 	Option *(*initWithTitle)(Option *self, const char *title, ident value);
 
 	/**
-	 * @fn void Option::setSelected(Option *self, _Bool isSelected)
+	 * @fn void Option::setSelected(Option *self, bool isSelected)
 	 * @brief Sets this Option's selected state.
 	 * @param self The Option.
 	 * @param isSelected True if this Option is selected, false otherwise.
 	 * @memberof Option
 	 */
-	void (*setSelected)(Option *self, _Bool isSelected);
+	void (*setSelected)(Option *self, bool isSelected);
 };
 
 /**

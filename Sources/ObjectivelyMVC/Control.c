@@ -65,7 +65,7 @@ static void dealloc(Object *self) {
 /**
  * @see View::acceptsFirstResponder(const View *)
  */
-static _Bool acceptsFirstResponder(const View *self) {
+static bool acceptsFirstResponder(const View *self) {
 	return true;
 }
 
@@ -96,7 +96,7 @@ static View *init(View *self) {
 /**
  * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
-static _Bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
+static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
 	assert(simpleSelector);
 
@@ -216,7 +216,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
 	const ControlState state = this->state;
 
-	const _Bool didCaptureEvent = $(this, captureEvent, event);
+	const bool didCaptureEvent = $(this, captureEvent, event);
 	if (didCaptureEvent) {
 
 		const Array *actions = (Array *) this->actions;
@@ -233,6 +233,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 		$(this, stateDidChange);
 	}
 
+	// FIXME: We want Button events to propagate up, but not motion events..
 	if (didCaptureEvent) {
 		return;
 	}
@@ -245,7 +246,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 /**
  * @brief Predicate for actionsForEvent.
  */
-static _Bool actionsForEvent_predicate(const ident obj, ident data) {
+static bool actionsForEvent_predicate(const ident obj, ident data) {
 	return ((Action *) obj)->eventType == ((SDL_Event *) data)->type;
 }
 
@@ -271,10 +272,10 @@ static void addActionForEventType(Control *self, SDL_EventType eventType, Action
 }
 
 /**
- * @fn _Bool Control::captureEvent(Control *self, const SDL_Event *event)
+ * @fn bool Control::captureEvent(Control *self, const SDL_Event *event)
  * @memberof Control
  */
-static _Bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
 	return false;
 }
 
@@ -295,34 +296,34 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
 }
 
 /**
- * @fn _Bool Control::isDisabled(const Control *self)
+ * @fn bool Control::isDisabled(const Control *self)
  * @memberof Control
  */
-static _Bool isDisabled(const Control *self) {
+static bool isDisabled(const Control *self) {
 	return (self->state & ControlStateDisabled) == ControlStateDisabled;
 }
 
 /**
- * @fn _Bool Control::isFocused(const Control *self)
+ * @fn bool Control::isFocused(const Control *self)
  * @memberof Control
  */
-static _Bool isFocused(const Control *self) {
+static bool isFocused(const Control *self) {
 	return (self->state & ControlStateFocused) == ControlStateFocused;
 }
 
 /**
- * @fn _Bool Control::isHighlighted(const Control *self)
+ * @fn bool Control::isHighlighted(const Control *self)
  * @memberof Control
  */
-static _Bool isHighlighted(const Control *self) {
+static bool isHighlighted(const Control *self) {
 	return (self->state & ControlStateHighlighted) == ControlStateHighlighted;
 }
 
 /**
- * @fn _Bool Control::isSelected(const Control *self)
+ * @fn bool Control::isSelected(const Control *self)
  * @memberof Control
  */
-static _Bool isSelected(const Control *self) {
+static bool isSelected(const Control *self) {
 	return (self->state & ControlStateSelected) == ControlStateSelected;
 }
 
@@ -338,6 +339,12 @@ static void stateDidChange(Control *self) {
 		$(this, becomeFirstResponder);
 	} else {
 		$(this, resignFirstResponder);
+	}
+
+	if (self->state & ControlStateFocused) {
+		$(this, emitViewEvent, ViewEventFocus, NULL);
+	} else {
+		$(this, emitViewEvent, ViewEventBlur, NULL);
 	}
 
 	$(this, invalidateStyle);

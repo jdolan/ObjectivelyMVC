@@ -249,4 +249,4 @@ struct Outlet {
  * @param dictionary The Dictionary from which to bind.
  * @return True if one or more Inlets were bound, false otherwise.
  */
-OBJECTIVELYMVC_EXPORT _Bool bindInlets(const Inlet *inlets, const Dictionary *dictionary);
+OBJECTIVELYMVC_EXPORT bool bindInlets(const Inlet *inlets, const Dictionary *dictionary);

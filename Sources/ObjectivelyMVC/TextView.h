@@ -102,7 +102,7 @@ struct TextView {
 	/**
 	 * @brief True if this TextView supports editing, false otherwise.
 	 */
-	_Bool isEditable;
+	bool isEditable;
 
 	/**
 	 * The editing position.

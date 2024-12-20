@@ -68,14 +68,14 @@ struct ViewController {
 	MutableArray *childViewControllers;
 
 	/**
-	 * @brief The main view.
-	 */
-	View *view;
-
-	/**
 	 * @brief The parent view controller.
 	 */
 	ViewController *parentViewController;
+	
+	/**
+	 * @brief The main view.
+	 */
+	View *view;
 };
 
 /**
@@ -96,16 +96,6 @@ struct ViewControllerInterface {
 	 * @memberof ViewController
 	 */
 	void (*addChildViewController)(ViewController *self, ViewController *childViewController);
-
-	/**
-	 * @fn void ViewController::handleNotification(ViewController *self, const Notification *notification)
-	 * @brief Handles a broadcast notification.
-	 * @param self The ViewController.
-	 * @param notification The Notification.
-	 * @memberof ViewController
-	 * @see MVC_PostNotification
-	 */
-	void (*handleNotification)(ViewController *self, const Notification *notification);
 
 	/**
 	 * @fn ViewController *ViewController::init(ViewController *self)

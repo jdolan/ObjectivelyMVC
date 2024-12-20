@@ -95,14 +95,14 @@ struct StyleInterface {
 	void (*addAttributes)(Style *self, const Dictionary *attributes);
 
 	/**
-	 * @fn void Style::addBoolAttribute(Style *self, const char *attr, _Bool value)
+	 * @fn void Style::addBoolAttribute(Style *self, const char *attr, bool value)
 	 * @brief Adds or replaces the given attribute with `value`.
 	 * @param self The Style.
 	 * @param attr The attribute name.
 	 * @param value The attribute value.
 	 * @memberof Style
 	 */
-	void (*addBoolAttribute)(Style *self, const char *attr, _Bool value);
+	void (*addBoolAttribute)(Style *self, const char *attr, bool value);
 
 	/**
 	 * @fn void Style::addCharactersAttribute(Style *self, const char *attr, const char *value)
@@ -236,7 +236,7 @@ struct StyleInterface {
 	Style *(*initWithRules)(Style *self, const char *rules);
 
 	/**
-	 * @fn _Bool Style::isComputedEqual(const Style *self, const Style *other)
+	 * @fn bool Style::isComputedEqual(const Style *self, const Style *other)
 	 * @brief Performs a fast, rule-based comparison of this Style to the given Style.
 	 * @param self The Style.
 	 * @param other The Style to test for computed equality.
@@ -245,7 +245,7 @@ struct StyleInterface {
 	 * the same attributes based on their Selector rules. For true equality, use `isEqual`.
 	 * @memberof Style
 	 */
-	_Bool (*isComputedEqual)(const Style *self, const Style *other);
+	bool (*isComputedEqual)(const Style *self, const Style *other);
 
 	/**
 	 * @static

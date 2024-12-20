@@ -102,13 +102,13 @@ struct SelectorSequenceInterface {
 	SelectorSequence *(*initWithSequence)(SelectorSequence *self, const char *sequence);
 
 	/**
-	 * @fn _Bool SelectorSequence::matchesView(const SelectorSequence *self, const View *view)
+	 * @fn bool SelectorSequence::matchesView(const SelectorSequence *self, const View *view)
 	 * @param self The SelectorSequence.
 	 * @param view The View.
 	 * @return True if all SimpleSelectors in this SelectorSequence match the given View, false otherwise.
 	 * @memberof SelectorSequence
 	 */
-	_Bool (*matchesView)(const SelectorSequence *self, const View *view);
+	bool (*matchesView)(const SelectorSequence *self, const View *view);
 
 	/**
 	 * @static

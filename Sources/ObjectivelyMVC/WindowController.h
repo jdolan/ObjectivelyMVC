@@ -26,6 +26,7 @@
 #include <Objectively/Object.h>
 
 #include <ObjectivelyMVC/DebugViewController.h>
+#include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/ViewController.h>
 
 /**

@@ -147,7 +147,7 @@ struct ControlInterface {
 	void (*addActionForEventType)(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data);
 
 	/**
-	 * @fn _Bool Control::captureEvent(Control *self, const SDL_Event *event)
+	 * @fn bool Control::captureEvent(Control *self, const SDL_Event *event)
 	 * @brief Captures a given event, potentially altering the state of this Control.
 	 * @param self The Control.
 	 * @param event The event.
@@ -155,7 +155,7 @@ struct ControlInterface {
 	 * @remarks Subclasses should override this method to capture events.
 	 * @memberof Control
 	 */
-	_Bool (*captureEvent)(Control *self, const SDL_Event *event);
+	bool (*captureEvent)(Control *self, const SDL_Event *event);
 
 	/**
 	 * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)
@@ -168,36 +168,36 @@ struct ControlInterface {
 	Control *(*initWithFrame)(Control *self, const SDL_Rect *frame);
 
 	/**
-	 * @fn _Bool Control::isDisabled(const Control *self)
+	 * @fn bool Control::isDisabled(const Control *self)
 	 * @param self The Control.
 	 * @return True if this Control is disabled, false otherwise.
 	 * @memberof Control
 	 */
-	_Bool (*isDisabled)(const Control *self);
+	bool (*isDisabled)(const Control *self);
 
 	/**
-	 * @fn _Bool Control::isFocused(const Control *self)
+	 * @fn bool Control::isFocused(const Control *self)
 	 * @param self The Control.
 	 * @return True if this Control is focused, false otherwise.
 	 * @memberof Control
 	 */
-	_Bool (*isFocused)(const Control *self);
+	bool (*isFocused)(const Control *self);
 
 	/**
-	 * @fn _Bool Control::isHighlighted(const Control *self)
+	 * @fn bool Control::isHighlighted(const Control *self)
 	 * @param self The Control.
 	 * @return True if this Control is highlighted, false otherwise.
 	 * @memberof Control
 	 */
-	_Bool (*isHighlighted)(const Control *self);
+	bool (*isHighlighted)(const Control *self);
 
 	/**
-	 * @fn _Bool Control::isSelected(const Control *self)
+	 * @fn bool Control::isSelected(const Control *self)
 	 * @param self The Control.
 	 * @return True if this Control is selected, false otherwise.
 	 * @memberof Control
 	 */
-	_Bool (*isSelected)(const Control *self);
+	bool (*isSelected)(const Control *self);
 
 	/**
 	 * @fn void Control::stateDidChange(Control *self)

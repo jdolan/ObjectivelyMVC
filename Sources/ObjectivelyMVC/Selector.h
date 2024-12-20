@@ -124,13 +124,13 @@ struct SelectorInterface {
 	Selector *(*initWithRule)(Selector *self, const char *rule);
 
 	/**
-	 * @fn _Bool Selector::matchesView(const Selector *self, View *view)
+	 * @fn bool Selector::matchesView(const Selector *self, View *view)
 	 * @param self The Selector.
 	 * @param view The View.
 	 * @return True if this Selector matches the given View, false otherwise.
 	 * @memberof Selector
 	 */
-	_Bool (*matchesView)(const Selector *self, const View *view);
+	bool (*matchesView)(const Selector *self, const View *view);
 
 	/**
 	 * @static

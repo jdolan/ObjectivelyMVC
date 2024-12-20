@@ -77,21 +77,6 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 }
 
 /**
- * @brief ArrayEnumerator for handleNotification recursion.
- */
-static void handleNotification_recurse(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, handleNotification, data);
-}
-
-/**
- * @fn void ViewController::handleNotification(ViewController *self, const Notification *notification)
- * @memberof ViewController
- */
-static void handleNotification(ViewController *self, const Notification *notification) {
-	$((Array *) self->childViewControllers, enumerateObjects, handleNotification_recurse, (ident) notification);
-}
-
-/**
  * @fn ViewController *ViewController::init(ViewController *self)
  * @memberof ViewController
  */
@@ -283,7 +268,6 @@ static void initialize(Class *clazz) {
 	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
 	((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
-	((ViewControllerInterface *) clazz->interface)->handleNotification = handleNotification;
 	((ViewControllerInterface *) clazz->interface)->init = init;
 	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
 	((ViewControllerInterface *) clazz->interface)->loadViewIfNeeded = loadViewIfNeeded;
