@@ -118,16 +118,6 @@ static void layoutSubviews(View *self) {
 	}
 }
 
-/**
- * @see View::sizeThatFits(const View *)
- */
-static SDL_Size sizeThatFits(const View *self) {
-
-	const CollectionView *this = (CollectionView *) self;
-
-	return $(this, naturalSize);
-}
-
 #pragma mark - Control
 
 /**
@@ -305,8 +295,8 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
 	self = (CollectionView *) super(Control, self, initWithFrame, frame);
 	if (self) {
-
 		self->items = $$(MutableArray, array);
+		assert(self->items);
 
 		self->contentView = $(alloc(View), initWithFrame, NULL);
 		assert(self->contentView);
@@ -318,7 +308,6 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 		assert(self->scrollView);
 
 		$(self->scrollView, setContentView, self->contentView);
-
 		$((View *) self, addSubview, (View *) self->scrollView);
 	}
 
@@ -356,12 +345,20 @@ static SDL_Size naturalSize(const CollectionView *self) {
 
 	SDL_Size size = MakeSize(padding.left + padding.right, padding.top + padding.bottom);
 
-	const SDL_Rect bounds = $((View *) self->scrollView->contentView, bounds);
+	View *scrollView = (View *) self->scrollView;
+	SDL_Size scrollViewSize;
+	if (scrollView->autoresizingMask & ViewAutoresizingContain) {
+		scrollViewSize = $(scrollView, sizeThatContains);
+	} else if (scrollView->autoresizingMask & ViewAutoresizingFit) {
+		scrollViewSize = $(scrollView, sizeThatFits);
+	} else {
+		scrollViewSize = $(scrollView, size);
+	}
 
 	switch (self->axis) {
 		case CollectionViewAxisVertical: {
 			int itemsPerRow = 1;
-			int w = bounds.w;
+			int w = scrollViewSize.w;
 			while (w > 0) {
 				w -= self->itemSize.w;
 				itemsPerRow++;
@@ -371,13 +368,13 @@ static SDL_Size naturalSize(const CollectionView *self) {
 				w -= self->itemSpacing.w;
 			}
 			const int rows = ceilf(self->items->array.count / (float) itemsPerRow);
-			size.w += max(self->itemSize.w, bounds.w);
+			size.w += max(self->itemSize.w, scrollViewSize.w);
 			size.h += rows * (self->itemSize.h + self->itemSpacing.h);
 		}
 			break;
 		case CollectionViewAxisHorizontal:{
 			int itemsPerCol = 1;
-			int h = bounds.h;
+			int h = scrollViewSize.h;
 			while (h > 0) {
 				h -= self->itemSize.h;
 				itemsPerCol++;
@@ -388,7 +385,7 @@ static SDL_Size naturalSize(const CollectionView *self) {
 			}
 			const int cols = ceilf(self->items->array.count / (float) itemsPerCol);
 			size.w += cols * (self->itemSize.w + self->itemSpacing.w);
-			size.h += max(self->itemSize.h, bounds.h);
+			size.h += max(self->itemSize.h, scrollViewSize.h);
 		}
 			break;
 	}
@@ -517,7 +514,6 @@ static void initialize(Class *clazz) {
 	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
 	((ViewInterface *) clazz->interface)->init = init;
 	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
 	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
