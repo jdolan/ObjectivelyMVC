@@ -934,8 +934,7 @@ static void invalidateStyle(View *self) {
  * @memberof View
  */
 static bool isContainer(const View *self) {
-	return self->autoresizingMask & ViewAutoresizingFit
-		|| self->autoresizingMask & ViewAutoresizingContain;
+	return self->autoresizingMask & (ViewAutoresizingFit | ViewAutoresizingContain);
 }
 
 /**
