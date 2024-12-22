@@ -934,8 +934,7 @@ static void invalidateStyle(View *self) {
  * @memberof View
  */
 static bool isContainer(const View *self) {
-	return self->autoresizingMask & ViewAutoresizingFit
-		|| self->autoresizingMask & ViewAutoresizingContain;
+	return self->autoresizingMask & (ViewAutoresizingFit | ViewAutoresizingContain);
 }
 
 /**
@@ -1421,6 +1420,12 @@ static void resolve(View *self, Outlet *outlets) {
 	if (outlets) {
 		for (Outlet *outlet = outlets; outlet->identifier; outlet++) {
 			*outlet->view = $(self, descendantWithIdentifier, outlet->identifier);
+			if (*outlet->view == NULL) {
+				String *desc = $((Object *) self, description);
+				MVC_LogError("Failed to resolve outlet '%s' for %s", outlet->identifier, desc->chars);
+				release(desc);
+			}
+
 			assert(*outlet->view);
 		}
 	}

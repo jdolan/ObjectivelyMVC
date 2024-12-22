@@ -241,7 +241,7 @@ TableRowView:selected {
 	background-color: darkgray;
 }
 
-TableView .contentView {
+TableView > ScrollView > .contentView {
 	autoresizing-mask: contain | width;
 }
 
