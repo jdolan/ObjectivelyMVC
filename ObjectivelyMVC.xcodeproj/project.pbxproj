@@ -137,7 +137,6 @@
 		CE8819981F91B0CE000D5AB7 /* Style.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819891F91B094000D5AB7 /* Style.c */; };
 		CE88199D1F9231AF000D5AB7 /* Selector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE88199B1F9231AE000D5AB7 /* Selector.c */; };
 		CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */ = {isa = PBXBuildFile; fileRef = CE88199C1F9231AF000D5AB7 /* Selector.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE89ADA828BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE89ADA728BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib */; };
 		CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF41C7FAD9100F4C3D4 /* Input.c */; };
 		CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8E7FF51C7FAD9100F4C3D4 /* Input.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8E7FFA1C84E36100F4C3D4 /* TableView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8E7FF81C84E36100F4C3D4 /* TableView.c */; };
@@ -477,7 +476,6 @@
 				CE3A45A0216594D5005ACAD6 /* libObjectively.dylib in Frameworks */,
 				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
 				CEDCFC7520497979008A4252 /* libSDL2_image-2.0.0.dylib in Frameworks */,
-				CE89ADA828BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib in Frameworks */,
 				CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
 				CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */,
 			);
@@ -897,7 +895,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1620;
+				LastUpgradeCheck = 1630;
 				ORGANIZATIONNAME = "https://github.com/jdolan";
 				TargetAttributes = {
 					CE12D4541C4C8E8E00CD0B13 = {
@@ -1230,10 +1228,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/usr/local/include,
-					/usr/local/include/SDL2,
+					"$(SRCROOT)/Sources",
+					"$(WORKSPACE_PREFIX)/Objectively/Sources",
+					"$(HOMEBREW_PREFIX)/include",
+					"$(HOMEBREW_PREFIX)/include/SDL2",
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
 				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = OpenGL;
@@ -1262,10 +1262,12 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/usr/local/include,
-					/usr/local/include/SDL2,
+					"$(SRCROOT)/Sources",
+					"$(WORKSPACE_PREFIX)/Objectively/Sources",
+					"$(HOMEBREW_PREFIX)/include",
+					"$(HOMEBREW_PREFIX)/include/SDL2",
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				ONLY_ACTIVE_ARCH = YES;
 				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = OpenGL;
