@@ -40,16 +40,16 @@ typedef struct TableHeaderViewInterface TableHeaderViewInterface;
  */
 struct TableHeaderView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	TableRowView tableRowView;
+  /**
+   * @brief The superclass.
+   */
+  TableRowView tableRowView;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	TableHeaderViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  TableHeaderViewInterface *interface;
 };
 
 /**
@@ -57,20 +57,20 @@ struct TableHeaderView {
  */
 struct TableHeaderViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	TableRowViewInterface tableRowViewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  TableRowViewInterface tableRowViewInterface;
 
-	/**
-	 * @fn TableHeaderView *TableHeaderView::initWithTableView(TableHeaderView *self, TableView *tableView)
-	 * @brief Initializes this TableHeaderView with the give table.
-	 * @param self The TableHeaderView.
-	 * @param tableView The table.
-	 * @return The initialized TableHeaderView, or `NULL` on error.
-	 * @memberof TableHeaderView
-	 */
-	TableHeaderView *(*initWithTableView)(TableHeaderView *self, TableView *tableView);
+  /**
+   * @fn TableHeaderView *TableHeaderView::initWithTableView(TableHeaderView *self, TableView *tableView)
+   * @brief Initializes this TableHeaderView with the give table.
+   * @param self The TableHeaderView.
+   * @param tableView The table.
+   * @return The initialized TableHeaderView, or `NULL` on error.
+   * @memberof TableHeaderView
+   */
+  TableHeaderView *(*initWithTableView)(TableHeaderView *self, TableView *tableView);
 };
 
 /**

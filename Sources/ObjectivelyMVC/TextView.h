@@ -42,28 +42,28 @@ typedef struct TextViewInterface TextViewInterface;
  */
 struct TextViewDelegate {
 
-	/**
-	 * @brief The delegate self-reference.
-	 */
-	ident self;
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
 
-	/**
-	 * @brief Delegate callback for initiating text editing.
-	 * @param textView The TextView.
-	 */
-	void (*didBeginEditing)(TextView *textView);
+  /**
+   * @brief Delegate callback for initiating text editing.
+   * @param textView The TextView.
+   */
+  void (*didBeginEditing)(TextView *textView);
 
-	/**
-	 * @brief Delegate callback for text input events.
-	 * @param textView The TextView.
-	 */
-	void (*didEdit)(TextView *textView);
+  /**
+   * @brief Delegate callback for text input events.
+   * @param textView The TextView.
+   */
+  void (*didEdit)(TextView *textView);
 
-	/**
-	 * @brief Delegate callback for finalizing text editing.
-	 * @param textView The TextView.
-	 */
-	void (*didEndEditing)(TextView *textView);
+  /**
+   * @brief Delegate callback for finalizing text editing.
+   * @param textView The TextView.
+   */
+  void (*didEndEditing)(TextView *textView);
 };
 
 /**
@@ -73,46 +73,46 @@ struct TextViewDelegate {
  */
 struct TextView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Control control;
+  /**
+   * @brief The superclass.
+   */
+  Control control;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	TextViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  TextViewInterface *interface;
 
-	/**
-	 * @brief The user-provided text.
-	 */
-	MutableString *attributedText;
+  /**
+   * @brief The user-provided text.
+   */
+  MutableString *attributedText;
 
-	/**
-	 * @brief The default text, displayed when no user-provided text is available.
-	 */
-	char *defaultText;
+  /**
+   * @brief The default text, displayed when no user-provided text is available.
+   */
+  char *defaultText;
 
-	/**
-	 * @brief The delegate.
-	 */
-	TextViewDelegate delegate;
+  /**
+   * @brief The delegate.
+   */
+  TextViewDelegate delegate;
 
-	/**
-	 * @brief True if this TextView supports editing, false otherwise.
-	 */
-	bool isEditable;
+  /**
+   * @brief True if this TextView supports editing, false otherwise.
+   */
+  bool isEditable;
 
-	/**
-	 * The editing position.
-	 */
-	size_t position;
+  /**
+   * The editing position.
+   */
+  size_t position;
 
-	/**
-	 * @brief The text.
-	 */
-	Text *text;
+  /**
+   * @brief The text.
+   */
+  Text *text;
 };
 
 /**
@@ -120,29 +120,29 @@ struct TextView {
  */
 struct TextViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ControlInterface controlInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ControlInterface controlInterface;
 
-	/**
-	 * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
-	 * @brief Initializes this TextView with the specified frame and style.
-	 * @param self The TextView.
-	 * @param frame The frame.
-	 * @return The initialized TextView, or `NULL` on error.
-	 * @memberof TextView
-	 */
-	TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame);
+  /**
+   * @fn TextView *TextView::initWithFrame(TextView *self, const SDL_Rect *frame)
+   * @brief Initializes this TextView with the specified frame and style.
+   * @param self The TextView.
+   * @param frame The frame.
+   * @return The initialized TextView, or `NULL` on error.
+   * @memberof TextView
+   */
+  TextView *(*initWithFrame)(TextView *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn void TextView::setDefaultText(TextView *self, const char *defaultText)
-	 * @brief Sets the default text for this TextView.
-	 * @param self The TextView.
-	 * @param defaultText The default text.
-	 * @memberof TextView
-	 */
-	void (*setDefaultText)(TextView *self, const char *defaultText);
+  /**
+   * @fn void TextView::setDefaultText(TextView *self, const char *defaultText)
+   * @brief Sets the default text for this TextView.
+   * @param self The TextView.
+   * @param defaultText The default text.
+   * @memberof TextView
+   */
+  void (*setDefaultText)(TextView *self, const char *defaultText);
 };
 
 /**

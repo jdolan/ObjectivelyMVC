@@ -40,16 +40,16 @@ typedef struct TableHeaderCellViewInterface TableHeaderCellViewInterface;
  */
 struct TableHeaderCellView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	TableCellView tableCellView;
+  /**
+   * @brief The superclass.
+   */
+  TableCellView tableCellView;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	TableHeaderCellViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  TableHeaderCellViewInterface *interface;
 };
 
 /**
@@ -57,20 +57,20 @@ struct TableHeaderCellView {
  */
 struct TableHeaderCellViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	TableCellViewInterface tableCellViewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  TableCellViewInterface tableCellViewInterface;
 
-	/**
-	 * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame)
-	 * @brief Initializes this TableHeaderCellView with the specified frame.
-	 * @param self The TableHeaderCellView.
-	 * @param frame The frame.
-	 * @return The initialized TableHeaderCellView, or `NULL` on error.
-	 * @memberof TableHeaderCellView
-	 */
-	TableHeaderCellView *(*initWithFrame)(TableHeaderCellView *self, const SDL_Rect *frame);
+  /**
+   * @fn TableHeaderCellView *TableHeaderCellView::initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame)
+   * @brief Initializes this TableHeaderCellView with the specified frame.
+   * @param self The TableHeaderCellView.
+   * @param frame The frame.
+   * @return The initialized TableHeaderCellView, or `NULL` on error.
+   * @memberof TableHeaderCellView
+   */
+  TableHeaderCellView *(*initWithFrame)(TableHeaderCellView *self, const SDL_Rect *frame);
 };
 
 /**

@@ -17,11 +17,11 @@
           "class": "Text",
           "identifier": "statistics"
         },
-		{
-		  "class": "Text",
-		  "identifier": "path",
-		  "lineWrap": true
-		},
+    {
+      "class": "Text",
+      "identifier": "path",
+      "lineWrap": true
+    },
         {
           "class": "Text",
           "identifier": "description"
@@ -47,15 +47,15 @@
             }
           ]
         },
-		{
-		  "class": "TableView",
-		  "identifier": "warnings",
-		  "columns": [
-			{
-			  "identifier": "Warnings"
-			}
-		  ]
-		}
+    {
+      "class": "TableView",
+      "identifier": "warnings",
+      "columns": [
+      {
+        "identifier": "Warnings"
+      }
+      ]
+    }
       ]
     }
   ]

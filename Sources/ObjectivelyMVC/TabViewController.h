@@ -44,21 +44,21 @@ typedef struct TabViewControllerInterface TabViewControllerInterface;
  */
 struct TabViewController {
 
-	/**
-	 * @brief The superclass.
-	 */
-	ViewController viewController;
+  /**
+   * @brief The superclass.
+   */
+  ViewController viewController;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	TabViewControllerInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  TabViewControllerInterface *interface;
 
-	/**
-	 * @brief The TabView.
-	 */
-	TabView *tabView;
+  /**
+   * @brief The TabView.
+   */
+  TabView *tabView;
 };
 
 /**
@@ -66,29 +66,29 @@ struct TabViewController {
  */
 struct TabViewControllerInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewControllerInterface viewControllerInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewControllerInterface viewControllerInterface;
 
-	/**
-	 * @fn TabViewController *TabViewController::init(TabViewController *self)
-	 * @brief Initializes this TabViewController.
-	 * @param self The TabViewController.
-	 * @return The initialized TabViewController, or `NULL` on error.
-	 * @memberof TabViewController
-	 */
-	TabViewController *(*init)(TabViewController *self);
+  /**
+   * @fn TabViewController *TabViewController::init(TabViewController *self)
+   * @brief Initializes this TabViewController.
+   * @param self The TabViewController.
+   * @return The initialized TabViewController, or `NULL` on error.
+   * @memberof TabViewController
+   */
+  TabViewController *(*init)(TabViewController *self);
 
-	/**
-	 * @fn TabViewItem *TabViewController::tabForViewController(const TabViewController *self, const ViewController *viewController)
-	 * @brief Returns the TabViewItem for the specified child ViewController, or `NULL`.
-	 * @param self The TabViewController.
-	 * @param viewController The child ViewController.
-	 * @return The TabViewItem associated with the specified child ViewController.
-	 * @memberof TabViewController
-	 */
-	TabViewItem *(*tabForViewController)(const TabViewController *self, const ViewController *viewController);
+  /**
+   * @fn TabViewItem *TabViewController::tabForViewController(const TabViewController *self, const ViewController *viewController)
+   * @brief Returns the TabViewItem for the specified child ViewController, or `NULL`.
+   * @param self The TabViewController.
+   * @param viewController The child ViewController.
+   * @return The TabViewItem associated with the specified child ViewController.
+   * @memberof TabViewController
+   */
+  TabViewItem *(*tabForViewController)(const TabViewController *self, const ViewController *viewController);
 };
 
 /**

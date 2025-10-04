@@ -33,15 +33,15 @@
  */
 static void didSetHue(Slider *slider, double value) {
 
-	HueColorPicker *this = (HueColorPicker *) slider->delegate.self;
+  HueColorPicker *this = (HueColorPicker *) slider->delegate.self;
 
-	this->hue = value;
+  this->hue = value;
 
-	$((View *) this, updateBindings);
+  $((View *) this, updateBindings);
 
-	if (this->delegate.didPickColor) {
-		this->delegate.didPickColor(this, this->hue, this->saturation, this->value);
-	}
+  if (this->delegate.didPickColor) {
+    this->delegate.didPickColor(this, this->hue, this->saturation, this->value);
+  }
 }
 
 #pragma mark - Object
@@ -51,14 +51,14 @@ static void didSetHue(Slider *slider, double value) {
  */
 static void dealloc(Object *self) {
 
-	HueColorPicker *this = (HueColorPicker *) self;
+  HueColorPicker *this = (HueColorPicker *) self;
 
-	release(this->colorView);
-	release(this->hueInput);
-	release(this->hueSlider);
-	release(this->stackView);
+  release(this->colorView);
+  release(this->hueInput);
+  release(this->hueSlider);
+  release(this->stackView);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -68,28 +68,28 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	HueColorPicker *this = (HueColorPicker *) self;
+  HueColorPicker *this = (HueColorPicker *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("colorView", InletTypeView, &this->colorView, NULL),
-		MakeInlet("hue", InletTypeDouble, &this->hue, NULL),
-		MakeInlet("saturation", InletTypeDouble, &this->saturation, NULL),
-		MakeInlet("value", InletTypeDouble, &this->value, NULL),
-		MakeInlet("hueInput", InletTypeView, &this->hueInput, NULL),
-		MakeInlet("hueSlider", InletTypeView, &this->hueSlider, NULL),
-		MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
-	);
-	
-	$(self, bind, inlets, dictionary);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("colorView", InletTypeView, &this->colorView, NULL),
+    MakeInlet("hue", InletTypeDouble, &this->hue, NULL),
+    MakeInlet("saturation", InletTypeDouble, &this->saturation, NULL),
+    MakeInlet("value", InletTypeDouble, &this->value, NULL),
+    MakeInlet("hueInput", InletTypeView, &this->hueInput, NULL),
+    MakeInlet("hueSlider", InletTypeView, &this->hueSlider, NULL),
+    MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
+  );
+  
+  $(self, bind, inlets, dictionary);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((HueColorPicker *) self, initWithFrame, NULL);
+  return (View *) $((HueColorPicker *) self, initWithFrame, NULL);
 }
 
 /**
@@ -97,13 +97,13 @@ static View *init(View *self) {
  */
 static void updateBindings(View *self) {
 
-	super(View, self, updateBindings);
+  super(View, self, updateBindings);
 
-	HueColorPicker *this = (HueColorPicker *) self;
+  HueColorPicker *this = (HueColorPicker *) self;
 
-	$(this->hueSlider, setValue, this->hue);
+  $(this->hueSlider, setValue, this->hue);
 
-	this->colorView->backgroundColor = $(this, rgbColor);
+  this->colorView->backgroundColor = $(this, rgbColor);
 }
 
 #pragma mark - HueColorPicker
@@ -114,40 +114,40 @@ static void updateBindings(View *self) {
  */
 static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame) {
 
-	self = (HueColorPicker *) super(Control, self, initWithFrame, frame);
-	if (self) {
+  self = (HueColorPicker *) super(Control, self, initWithFrame, frame);
+  if (self) {
 
-		self->stackView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->stackView);
+    self->stackView = $(alloc(StackView), initWithFrame, NULL);
+    assert(self->stackView);
 
-		$((View *) self, addSubview, (View *) self->stackView);
+    $((View *) self, addSubview, (View *) self->stackView);
 
-		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
-		assert(self->colorView);
+    self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
+    assert(self->colorView);
 
-		$(self->colorView, addClassName, "colorView");
-		$((View *) self->stackView, addSubview, self->colorView);
+    $(self->colorView, addClassName, "colorView");
+    $((View *) self->stackView, addSubview, self->colorView);
 
-		self->hueSlider = $(alloc(Slider), initWithFrame, NULL);
-		assert(self->hueSlider);
+    self->hueSlider = $(alloc(Slider), initWithFrame, NULL);
+    assert(self->hueSlider);
 
-		self->hueSlider->delegate.self = self;
-		self->hueSlider->delegate.didSetValue = didSetHue;
-		self->hueSlider->max = 360.0;
-		$(self->hueSlider, setLabelFormat, "%.0lf");
+    self->hueSlider->delegate.self = self;
+    self->hueSlider->delegate.didSetValue = didSetHue;
+    self->hueSlider->max = 360.0;
+    $(self->hueSlider, setLabelFormat, "%.0lf");
 
-		self->hueInput = $(alloc(Input), initWithFrame, NULL);
-		assert(self->hueInput);
+    self->hueInput = $(alloc(Input), initWithFrame, NULL);
+    assert(self->hueInput);
 
-		$(self->hueInput, setControl, (Control *) self->hueSlider);
-		$(self->hueInput->label->text, setText, "H");
+    $(self->hueInput, setControl, (Control *) self->hueSlider);
+    $(self->hueInput->label->text, setText, "H");
 
-		$((View *) self->stackView, addSubview, (View *) self->hueInput);
+    $((View *) self->stackView, addSubview, (View *) self->hueInput);
 
-		$(self, setColor, 0.0, 1.0, 1.0);
-	}
+    $(self, setColor, 0.0, 1.0, 1.0);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -155,7 +155,7 @@ static HueColorPicker *initWithFrame(HueColorPicker *self, const SDL_Rect *frame
  * @memberof HueColorPicker
  */
 static SDL_Color rgbColor(const HueColorPicker *self) {
-	return MVC_HSVToRGB(self->hue, self->saturation, self->value);
+  return MVC_HSVToRGB(self->hue, self->saturation, self->value);
 }
 
 /**
@@ -164,11 +164,11 @@ static SDL_Color rgbColor(const HueColorPicker *self) {
  */
 static void setColor(HueColorPicker *self, double hue, double saturation, double value) {
 
-	self->hue = hue;
-	self->saturation = saturation;
-	self->value = value;
+  self->hue = hue;
+  self->saturation = saturation;
+  self->value = value;
 
-	$((View *) self, updateBindings);
+  $((View *) self, updateBindings);
 }
 
 /**
@@ -177,9 +177,9 @@ static void setColor(HueColorPicker *self, double hue, double saturation, double
  */
 static void setRGBColor(HueColorPicker *self, const SDL_Color *color) {
 
-	MVC_RGBToHSV(color, &self->hue, &self->saturation, &self->value);
+  MVC_RGBToHSV(color, &self->hue, &self->saturation, &self->value);
 
-	$((View *) self, updateBindings);
+  $((View *) self, updateBindings);
 }
 
 #pragma mark - Class lifecycle
@@ -189,16 +189,16 @@ static void setRGBColor(HueColorPicker *self, const SDL_Color *color) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 
-	((HueColorPickerInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((HueColorPickerInterface *) clazz->interface)->rgbColor = rgbColor;
-	((HueColorPickerInterface *) clazz->interface)->setColor = setColor;
-	((HueColorPickerInterface *) clazz->interface)->setRGBColor = setRGBColor;
+  ((HueColorPickerInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((HueColorPickerInterface *) clazz->interface)->rgbColor = rgbColor;
+  ((HueColorPickerInterface *) clazz->interface)->setColor = setColor;
+  ((HueColorPickerInterface *) clazz->interface)->setRGBColor = setRGBColor;
 }
 
 /**
@@ -206,21 +206,21 @@ static void initialize(Class *clazz) {
  * @memberof HueColorPicker
  */
 Class *_HueColorPicker(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "HueColorPicker",
-			.superclass = _Control(),
-			.instanceSize = sizeof(HueColorPicker),
-			.interfaceOffset = offsetof(HueColorPicker, interface),
-			.interfaceSize = sizeof(HueColorPickerInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "HueColorPicker",
+      .superclass = _Control(),
+      .instanceSize = sizeof(HueColorPicker),
+      .interfaceOffset = offsetof(HueColorPicker, interface),
+      .interfaceSize = sizeof(HueColorPickerInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

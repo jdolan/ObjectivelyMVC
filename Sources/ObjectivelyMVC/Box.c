@@ -34,12 +34,12 @@
  */
 static void dealloc(Object *self) {
 
-	Box *this = (Box *) self;
+  Box *this = (Box *) self;
 
-	release(this->contentView);
-	release(this->label);
+  release(this->contentView);
+  release(this->label);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -49,23 +49,23 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	Box *this = (Box *) self;
+  Box *this = (Box *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
-		MakeInlet("label", InletTypeView, &this->label, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
+    MakeInlet("label", InletTypeView, &this->label, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Box *) self, initWithFrame, NULL);
+  return (View *) $((Box *) self, initWithFrame, NULL);
 }
 
 /**
@@ -73,14 +73,14 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	super(View, self, layoutSubviews);
+  super(View, self, layoutSubviews);
 
-	View *label = (View *) ((Box *) self)->label;
-	if (label->hidden == false) {
+  View *label = (View *) ((Box *) self)->label;
+  if (label->hidden == false) {
 
-		const SDL_Size size = $(label, sizeThatContains);
-		label->frame.y = -size.h * 0.5;
-	}
+    const SDL_Size size = $(label, sizeThatContains);
+    label->frame.y = -size.h * 0.5;
+  }
 }
 
 #pragma mark - Box
@@ -91,28 +91,28 @@ static void layoutSubviews(View *self) {
  */
 static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 
-	self = (Box *) super(View, self, initWithFrame, frame);
-	if (self) {
+  self = (Box *) super(View, self, initWithFrame, frame);
+  if (self) {
 
-		self->contentView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->contentView);
+    self->contentView = $(alloc(StackView), initWithFrame, NULL);
+    assert(self->contentView);
 
-		$((View *) self->contentView, addClassName, "contentView");
-		$((View *) self->contentView, addClassName, "container");
+    $((View *) self->contentView, addClassName, "contentView");
+    $((View *) self->contentView, addClassName, "container");
 
-		$((View *) self, addSubview, (View *) self->contentView);
+    $((View *) self, addSubview, (View *) self->contentView);
 
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
-		assert(self->label);
+    self->label = $(alloc(Label), initWithText, NULL, NULL);
+    assert(self->label);
 
-		View *label = (View *) self->label;
+    View *label = (View *) self->label;
 
-		label->alignment = ViewAlignmentInternal;
+    label->alignment = ViewAlignmentInternal;
 
-		$((View *) self, addSubview, (View *) self->label);
-	}
+    $((View *) self, addSubview, (View *) self->label);
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -122,13 +122,13 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
-	((BoxInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((BoxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 /**
@@ -136,21 +136,21 @@ static void initialize(Class *clazz) {
  * @memberof Box
  */
 Class *_Box(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Box",
-			.superclass = _View(),
-			.instanceSize = sizeof(Box),
-			.interfaceOffset = offsetof(Box, interface),
-			.interfaceSize = sizeof(BoxInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Box",
+      .superclass = _View(),
+      .instanceSize = sizeof(Box),
+      .interfaceOffset = offsetof(Box, interface),
+      .interfaceSize = sizeof(BoxInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

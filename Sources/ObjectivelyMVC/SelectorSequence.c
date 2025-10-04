@@ -38,12 +38,12 @@
  */
 static void dealloc(Object *self) {
 
-	SelectorSequence *this = (SelectorSequence *) self;
+  SelectorSequence *this = (SelectorSequence *) self;
 
-	free(this->sequence);
-	release(this->simpleSelectors);
+  free(this->sequence);
+  release(this->simpleSelectors);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 /**
@@ -51,9 +51,9 @@ static void dealloc(Object *self) {
  */
 static String *description(const Object *self) {
 
-	const SelectorSequence *this = (SelectorSequence *) self;
+  const SelectorSequence *this = (SelectorSequence *) self;
 
-	return str(this->sequence);
+  return str(this->sequence);
 }
 
 #pragma mark - SelectorSequence
@@ -64,19 +64,19 @@ static String *description(const Object *self) {
  */
 static SelectorSequence *initWithSequence(SelectorSequence *self, const char *sequence) {
 
-	self = (SelectorSequence *) super(Object, self, init);
-	if (self) {
+  self = (SelectorSequence *) super(Object, self, init);
+  if (self) {
 
-		self->sequence = strtrim(sequence);
-		assert(self->sequence);
+    self->sequence = strtrim(sequence);
+    assert(self->sequence);
 
-		assert(strlen(self->sequence));
+    assert(strlen(self->sequence));
 
-		self->simpleSelectors = $$(SimpleSelector, parse, self->sequence);
-		assert(self->simpleSelectors->count);
-	}
+    self->simpleSelectors = $$(SimpleSelector, parse, self->sequence);
+    assert(self->simpleSelectors->count);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -85,14 +85,14 @@ static SelectorSequence *initWithSequence(SelectorSequence *self, const char *se
  */
 static bool matchesView(const SelectorSequence *self, const View *view) {
 
-	for (size_t i = 0; i < self->simpleSelectors->count; i++) {
-		const SimpleSelector *simpleSelector = $(self->simpleSelectors, objectAtIndex, i);
-		if ($(view, matchesSelector, simpleSelector) == false) {
-			return false;
-		}
-	}
+  for (size_t i = 0; i < self->simpleSelectors->count; i++) {
+    const SimpleSelector *simpleSelector = $(self->simpleSelectors, objectAtIndex, i);
+    if ($(view, matchesSelector, simpleSelector) == false) {
+      return false;
+    }
+  }
 
-	return true;
+  return true;
 }
 
 /**
@@ -100,27 +100,27 @@ static bool matchesView(const SelectorSequence *self, const View *view) {
  */
 static SequenceCombinator sequenceCombinator(const char *c) {
 
-	SequenceCombinator combinator = SequenceCombinatorNone;
+  SequenceCombinator combinator = SequenceCombinatorNone;
 
-	while (isspace(*c)) {
-		combinator = SequenceCombinatorDescendent;
-		c++;
-	}
+  while (isspace(*c)) {
+    combinator = SequenceCombinatorDescendent;
+    c++;
+  }
 
-	switch (*c) {
-		case '>':
-			return SequenceCombinatorChild;
-		case '~':
-			return SequenceCombinatorSibling;
-		case '+':
-			return SequenceCombinatorAdjacent;
-		case '\0':
-			return SequenceCombinatorTerminal;
-		default:
-			break;
-	}
+  switch (*c) {
+    case '>':
+      return SequenceCombinatorChild;
+    case '~':
+      return SequenceCombinatorSibling;
+    case '+':
+      return SequenceCombinatorAdjacent;
+    case '\0':
+      return SequenceCombinatorTerminal;
+    default:
+      break;
+  }
 
-	return combinator;
+  return combinator;
 }
 
 /**
@@ -129,42 +129,42 @@ static SequenceCombinator sequenceCombinator(const char *c) {
  */
 static Array *parse(const char *rule) {
 
-	assert(rule);
+  assert(rule);
 
-	MutableArray *selectorSequences = $$(MutableArray, arrayWithCapacity, 8);
-	assert(selectorSequences);
+  MutableArray *selectorSequences = $$(MutableArray, arrayWithCapacity, 8);
+  assert(selectorSequences);
 
-	SequenceCombinator left = SequenceCombinatorNone;
+  SequenceCombinator left = SequenceCombinatorNone;
 
-	const char *c = rule;
-	while (*c) {
-		const size_t size = strcspn(c, " \n\t>+~");
-		if (size) {
-			char *sequence = calloc(1, size + 1);
-			assert(sequence);
+  const char *c = rule;
+  while (*c) {
+    const size_t size = strcspn(c, " \n\t>+~");
+    if (size) {
+      char *sequence = calloc(1, size + 1);
+      assert(sequence);
 
-			strncpy(sequence, c, size);
+      strncpy(sequence, c, size);
 
-			SelectorSequence *selectorSequence = $(alloc(SelectorSequence), initWithSequence, sequence);
-			assert(selectorSequence);
+      SelectorSequence *selectorSequence = $(alloc(SelectorSequence), initWithSequence, sequence);
+      assert(selectorSequence);
 
-			selectorSequence->right = sequenceCombinator(c + size);
-			assert(selectorSequence->right);
+      selectorSequence->right = sequenceCombinator(c + size);
+      assert(selectorSequence->right);
 
-			selectorSequence->left = left;
-			left = selectorSequence->right;
+      selectorSequence->left = left;
+      left = selectorSequence->right;
 
-			$(selectorSequences, addObject, selectorSequence);
+      $(selectorSequences, addObject, selectorSequence);
 
-			release(selectorSequence);
-			free(sequence);
-		}
+      release(selectorSequence);
+      free(sequence);
+    }
 
-		c += size;
-		c += strspn(c, " \n\t>+~");
-	}
+    c += size;
+    c += strspn(c, " \n\t>+~");
+  }
 
-	return (Array *) selectorSequences;
+  return (Array *) selectorSequences;
 }
 
 #pragma mark - Class lifecycle
@@ -174,12 +174,12 @@ static Array *parse(const char *rule) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->interface)->description = description;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->description = description;
 
-	((SelectorSequenceInterface *) clazz->interface)->initWithSequence = initWithSequence;
-	((SelectorSequenceInterface *) clazz->interface)->matchesView = matchesView;
-	((SelectorSequenceInterface *) clazz->interface)->parse = parse;
+  ((SelectorSequenceInterface *) clazz->interface)->initWithSequence = initWithSequence;
+  ((SelectorSequenceInterface *) clazz->interface)->matchesView = matchesView;
+  ((SelectorSequenceInterface *) clazz->interface)->parse = parse;
 }
 
 /**
@@ -187,21 +187,21 @@ static void initialize(Class *clazz) {
  * @memberof SelectorSequence
  */
 Class *_SelectorSequence(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "SelectorSequence",
-			.superclass = _Object(),
-			.instanceSize = sizeof(SelectorSequence),
-			.interfaceOffset = offsetof(SelectorSequence, interface),
-			.interfaceSize = sizeof(SelectorSequenceInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "SelectorSequence",
+      .superclass = _Object(),
+      .instanceSize = sizeof(SelectorSequence),
+      .interfaceOffset = offsetof(SelectorSequence, interface),
+      .interfaceSize = sizeof(SelectorSequenceInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

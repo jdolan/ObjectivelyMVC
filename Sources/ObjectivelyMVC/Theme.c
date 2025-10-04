@@ -39,11 +39,11 @@
  */
 static void dealloc(Object *self) {
 
-	Theme *this = (Theme *) self;
+  Theme *this = (Theme *) self;
 
-	release(this->stylesheets);
+  release(this->stylesheets);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - Theme
@@ -53,7 +53,7 @@ static void dealloc(Object *self) {
  * @memberof Theme
  */
 static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
-	$((MutableArray *) self->stylesheets, addObject, stylesheet);
+  $((MutableArray *) self->stylesheets, addObject, stylesheet);
 }
 
 /**
@@ -61,39 +61,39 @@ static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
  */
 static ident computeStyle_reduce(const ident obj, ident accumulator, ident data) {
 
-	const Stylesheet *stylesheet = obj;
+  const Stylesheet *stylesheet = obj;
 
-	const View *view = data;
+  const View *view = data;
 
-	const Array *selectors = (Array *) stylesheet->selectors;
-	for (size_t i = 0; i < selectors->count; i++) {
+  const Array *selectors = (Array *) stylesheet->selectors;
+  for (size_t i = 0; i < selectors->count; i++) {
 
-		Selector *selector = $(selectors, objectAtIndex, i);
-		if ($(selector, matchesView, view)) {
+    Selector *selector = $(selectors, objectAtIndex, i);
+    if ($(selector, matchesView, view)) {
 
-			assert(selector->style);
+      assert(selector->style);
 
-			if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
+      if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
 
-				String *this = $((Object *) selector, description);
-				String *that = $((Object *) view, description);
+        String *this = $((Object *) selector, description);
+        String *that = $((Object *) view, description);
 
-				MVC_LogVerbose("%s -> %s\n", this->chars, that->chars);
+        MVC_LogVerbose("%s -> %s\n", this->chars, that->chars);
 
-				release(this);
-				release(that);
-			}
+        release(this);
+        release(that);
+      }
 
-			if ($(selector->style, attributeValue, "debug")) {
-				SDL_TriggerBreakpoint();
-			}
+      if ($(selector->style, attributeValue, "debug")) {
+        SDL_TriggerBreakpoint();
+      }
 
-			$((Style *) accumulator, addSelector, selector);
-			$((Style *) accumulator, addAttributes, selector->style->attributes);
-		}
-	}
+      $((Style *) accumulator, addSelector, selector);
+      $((Style *) accumulator, addAttributes, selector->style->attributes);
+    }
+  }
 
-	return accumulator;
+  return accumulator;
 }
 
 /**
@@ -102,12 +102,12 @@ static ident computeStyle_reduce(const ident obj, ident accumulator, ident data)
  */
 static Style *computeStyle(const Theme *self, const View *view) {
 
-	assert(view);
+  assert(view);
 
-	Style *style = $(alloc(Style), initWithAttributes, NULL);
-	assert(style);
+  Style *style = $(alloc(Style), initWithAttributes, NULL);
+  assert(style);
 
-	return $((Array *) self->stylesheets, reduce, computeStyle_reduce, style, (ident) view);
+  return $((Array *) self->stylesheets, reduce, computeStyle_reduce, style, (ident) view);
 }
 
 /**
@@ -116,16 +116,16 @@ static Style *computeStyle(const Theme *self, const View *view) {
  */
 static Theme *init(Theme *self) {
 
-	self = (Theme *) super(Object, self, init);
-	if (self) {
+  self = (Theme *) super(Object, self, init);
+  if (self) {
 
-		self->stylesheets = $$(MutableArray, arrayWithCapacity, 8);
-		assert(self->stylesheets);
+    self->stylesheets = $$(MutableArray, arrayWithCapacity, 8);
+    assert(self->stylesheets);
 
-		$(self, addStylesheet, $$(Stylesheet, defaultStylesheet));
-	}
+    $(self, addStylesheet, $$(Stylesheet, defaultStylesheet));
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -133,7 +133,7 @@ static Theme *init(Theme *self) {
  * @memberof Theme
  */
 static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
-	$((MutableArray *) self->stylesheets, removeObject, stylesheet);
+  $((MutableArray *) self->stylesheets, removeObject, stylesheet);
 }
 
 /**
@@ -142,14 +142,14 @@ static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
  */
 static Theme *theme(SDL_Window *window) {
 
-	assert(window);
+  assert(window);
 
-	WindowController *windowController = $$(WindowController, windowController, window);
-	if (windowController) {
-		return windowController->theme;
-	}
+  WindowController *windowController = $$(WindowController, windowController, window);
+  if (windowController) {
+    return windowController->theme;
+  }
 
-	return NULL;
+  return NULL;
 }
 
 #pragma mark - Class lifecycle
@@ -159,13 +159,13 @@ static Theme *theme(SDL_Window *window) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ThemeInterface *) clazz->interface)->addStylesheet = addStylesheet;
-	((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
-	((ThemeInterface *) clazz->interface)->init = init;
-	((ThemeInterface *) clazz->interface)->removeStylesheet = removeStylesheet;
-	((ThemeInterface *) clazz->interface)->theme = theme;
+  ((ThemeInterface *) clazz->interface)->addStylesheet = addStylesheet;
+  ((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
+  ((ThemeInterface *) clazz->interface)->init = init;
+  ((ThemeInterface *) clazz->interface)->removeStylesheet = removeStylesheet;
+  ((ThemeInterface *) clazz->interface)->theme = theme;
 }
 
 /**
@@ -173,21 +173,21 @@ static void initialize(Class *clazz) {
  * @memberof Theme
  */
 Class *_Theme(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Theme",
-			.superclass = _Object(),
-			.instanceSize = sizeof(Theme),
-			.interfaceOffset = offsetof(Theme, interface),
-			.interfaceSize = sizeof(ThemeInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Theme",
+      .superclass = _Object(),
+      .instanceSize = sizeof(Theme),
+      .interfaceOffset = offsetof(Theme, interface),
+      .interfaceSize = sizeof(ThemeInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

@@ -36,13 +36,13 @@
  */
 static void dealloc(Object *self) {
 
-	WindowController *this = (WindowController *) self;
+  WindowController *this = (WindowController *) self;
 
-	release(this->debugViewController);
-	release(this->renderer);
-	release(this->viewController);
+  release(this->debugViewController);
+  release(this->renderer);
+  release(this->viewController);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - WindowController
@@ -53,22 +53,22 @@ static void dealloc(Object *self) {
  */
 static void debug(WindowController *self) {
 
-	if (self->viewController && self->debugViewController) {
+  if (self->viewController && self->debugViewController) {
 
-		ViewController *debugViewController = (ViewController *) self->debugViewController;
+    ViewController *debugViewController = (ViewController *) self->debugViewController;
 
-		SDL_Point point = MakePoint(0, 0);
-		SDL_GetMouseState(&point.x, &point.y);
+    SDL_Point point = MakePoint(0, 0);
+    SDL_GetMouseState(&point.x, &point.y);
 
-		View *view = $(self->viewController->view, hitTest, &point);
-		if (view) {
-			$(self->debugViewController, debug, view, self->renderer);
-		}
+    View *view = $(self->viewController->view, hitTest, &point);
+    if (view) {
+      $(self->debugViewController, debug, view, self->renderer);
+    }
 
-		$(debugViewController->view, applyThemeIfNeeded, self->theme);
-		$(debugViewController->view, layoutIfNeeded);
-		$(debugViewController->view, draw, self->renderer);
-	}
+    $(debugViewController->view, applyThemeIfNeeded, self->theme);
+    $(debugViewController->view, layoutIfNeeded);
+    $(debugViewController->view, draw, self->renderer);
+  }
 }
 
 /**
@@ -77,19 +77,19 @@ static void debug(WindowController *self) {
  */
 static View *eventTarget(const WindowController *self, const SDL_Event *event) {
 
-	SDL_Point point;
+  SDL_Point point;
 
-	if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-		point = MakePoint(event->button.x, event->button.y);
-	} else if (event->type == SDL_MOUSEMOTION) {
-		point = MakePoint(event->motion.x, event->motion.y);
-	} else if (event->type == SDL_MOUSEWHEEL) {
-		SDL_GetMouseState(&point.x, &point.y);
-	} else {
-		return NULL;
-	}
+  if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
+    point = MakePoint(event->button.x, event->button.y);
+  } else if (event->type == SDL_MOUSEMOTION) {
+    point = MakePoint(event->motion.x, event->motion.y);
+  } else if (event->type == SDL_MOUSEWHEEL) {
+    SDL_GetMouseState(&point.x, &point.y);
+  } else {
+    return NULL;
+  }
 
-	return $(self->viewController->view, hitTest, &point);
+  return $(self->viewController->view, hitTest, &point);
 }
 
 /**
@@ -97,7 +97,7 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
  * @memberof WindowController
  */
 static View *firstResponder(const WindowController *self, const SDL_Event *event) {
-	return $$(View, firstResponder, self->window) ?: $(self, eventTarget, event);
+  return $$(View, firstResponder, self->window) ?: $(self, eventTarget, event);
 }
 
 /**
@@ -106,15 +106,15 @@ static View *firstResponder(const WindowController *self, const SDL_Event *event
  */
 static WindowController *initWithWindow(WindowController *self, SDL_Window *window) {
 
-	self = (WindowController *) super(Object, self, init);
-	if (self) {
-		$(self, setWindow, window);
-		$(self, setViewController, NULL);
-		$(self, setRenderer, NULL);
-		$(self, setTheme, NULL);
-	}
+  self = (WindowController *) super(Object, self, init);
+  if (self) {
+    $(self, setWindow, window);
+    $(self, setViewController, NULL);
+    $(self, setRenderer, NULL);
+    $(self, setTheme, NULL);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -123,18 +123,18 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
  */
 static void render(WindowController *self) {
 
-	assert(self->renderer);
+  assert(self->renderer);
 
-	$(self->renderer, beginFrame);
+  $(self->renderer, beginFrame);
 
-	$(self->viewController->view, applyThemeIfNeeded, self->theme);
-	$(self->viewController->view, layoutIfNeeded);
+  $(self->viewController->view, applyThemeIfNeeded, self->theme);
+  $(self->viewController->view, layoutIfNeeded);
 
-	$(self->viewController->view, draw, self->renderer);
+  $(self->viewController->view, draw, self->renderer);
 
-	$(self, debug);
+  $(self, debug);
 
-	$(self->renderer, endFrame);
+  $(self->renderer, endFrame);
 }
 
 /**
@@ -142,16 +142,16 @@ static void render(WindowController *self) {
  * and `ViewEventMouseLeave`.
  */
 static void mouseMotion_enumerate(View *view, ident data) {
-	
-	const SDL_MouseMotionEvent *event = data;
-	const SDL_Point a = MakePoint(event->x - event->xrel, event->y - event->yrel);
-	const SDL_Point b = MakePoint(event->x, event->y);
+  
+  const SDL_MouseMotionEvent *event = data;
+  const SDL_Point a = MakePoint(event->x - event->xrel, event->y - event->yrel);
+  const SDL_Point b = MakePoint(event->x, event->y);
 
-	if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
-		$(view, emitViewEvent, ViewEventMouseLeave, NULL);
-	} else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
-		$(view, emitViewEvent, ViewEventMouseEnter, NULL);
-	}
+  if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
+    $(view, emitViewEvent, ViewEventMouseLeave, NULL);
+  } else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
+    $(view, emitViewEvent, ViewEventMouseEnter, NULL);
+  }
 }
 
 /**
@@ -160,39 +160,39 @@ static void mouseMotion_enumerate(View *view, ident data) {
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
-	if (event->type == SDL_WINDOWEVENT) {
-		switch (event->window.event) {
-			case SDL_WINDOWEVENT_EXPOSED:
-				$(self, setWindow, SDL_GL_GetCurrentWindow());
-				$(self->renderer, renderDeviceDidReset);
-				$(self->viewController->view, renderDeviceDidReset);
-				$(self->viewController->view, updateBindings);
-				break;
-			case SDL_WINDOWEVENT_CLOSE:
-				$(self->renderer, renderDeviceWillReset);
-				$(self->viewController->view, renderDeviceWillReset);
-				break;
-			default:
-				break;
-		}
-	}
+  if (event->type == SDL_WINDOWEVENT) {
+    switch (event->window.event) {
+      case SDL_WINDOWEVENT_EXPOSED:
+        $(self, setWindow, SDL_GL_GetCurrentWindow());
+        $(self->renderer, renderDeviceDidReset);
+        $(self->viewController->view, renderDeviceDidReset);
+        $(self->viewController->view, updateBindings);
+        break;
+      case SDL_WINDOWEVENT_CLOSE:
+        $(self->renderer, renderDeviceWillReset);
+        $(self->viewController->view, renderDeviceWillReset);
+        break;
+      default:
+        break;
+    }
+  }
 
-	if (event->type == SDL_MOUSEMOTION) {
-		$(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
-	}
+  if (event->type == SDL_MOUSEMOTION) {
+    $(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
+  }
 
-	View *firstResponder = $(self, firstResponder, event);
-	if (firstResponder) {
-		$(firstResponder, respondToEvent, event);
-	}
+  View *firstResponder = $(self, firstResponder, event);
+  if (firstResponder) {
+    $(firstResponder, respondToEvent, event);
+  }
 
-	if (event->type == SDL_KEYUP) {
-		if (event->key.keysym.sym == SDLK_d) {
-			if (event->key.keysym.mod & KMOD_CTRL) {
-				$(self, toggleDebugger);
-			}
-		}
-	}
+  if (event->type == SDL_KEYUP) {
+    if (event->key.keysym.sym == SDLK_d) {
+      if (event->key.keysym.mod & KMOD_CTRL) {
+        $(self, toggleDebugger);
+      }
+    }
+  }
 }
 
 /**
@@ -201,20 +201,20 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
  */
 static void setRenderer(WindowController *self, Renderer *renderer) {
 
-	if (self->renderer != renderer || self->renderer == NULL) {
+  if (self->renderer != renderer || self->renderer == NULL) {
 
-		release(self->renderer);
+    release(self->renderer);
 
-		if (renderer) {
-			self->renderer = retain(renderer);
-		} else {
-			self->renderer = $(alloc(Renderer), init);
-		}
+    if (renderer) {
+      self->renderer = retain(renderer);
+    } else {
+      self->renderer = $(alloc(Renderer), init);
+    }
 
-		assert(self->renderer);
+    assert(self->renderer);
 
-		$(self->viewController->view, renderDeviceDidReset);
-	}
+    $(self->viewController->view, renderDeviceDidReset);
+  }
 }
 
 /**
@@ -223,18 +223,18 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
  */
 static void setTheme(WindowController *self, Theme *theme) {
 
-	if (self->theme != theme || self->theme == NULL) {
+  if (self->theme != theme || self->theme == NULL) {
 
-		release(self->theme);
+    release(self->theme);
 
-		if (theme) {
-			self->theme = retain(theme);
-		} else {
-			self->theme = $(alloc(Theme), init);
-		}
-	}
+    if (theme) {
+      self->theme = retain(theme);
+    } else {
+      self->theme = $(alloc(Theme), init);
+    }
+  }
 
-	$(self->viewController->view, invalidateStyle);
+  $(self->viewController->view, invalidateStyle);
 }
 
 /**
@@ -243,28 +243,28 @@ static void setTheme(WindowController *self, Theme *theme) {
  */
 static void setViewController(WindowController *self, ViewController *viewController) {
 
-	if (self->viewController != viewController || self->viewController == NULL) {
+  if (self->viewController != viewController || self->viewController == NULL) {
 
-		if (self->viewController) {
-			$(self->viewController, viewWillDisappear);
-			$(self->viewController->view, moveToWindow, NULL);
-			$(self->viewController, viewDidDisappear);
-		}
+    if (self->viewController) {
+      $(self->viewController, viewWillDisappear);
+      $(self->viewController->view, moveToWindow, NULL);
+      $(self->viewController, viewDidDisappear);
+    }
 
-		release(self->viewController);
+    release(self->viewController);
 
-		if (viewController) {
-			self->viewController = retain(viewController);
-		} else {
-			self->viewController = $(alloc(ViewController), init);
-		}
+    if (viewController) {
+      self->viewController = retain(viewController);
+    } else {
+      self->viewController = $(alloc(ViewController), init);
+    }
 
-		$(self->viewController, loadViewIfNeeded);
+    $(self->viewController, loadViewIfNeeded);
 
-		$(self->viewController, viewWillAppear);
-		$(self->viewController->view, moveToWindow, self->window);
-		$(self->viewController, viewDidAppear);
-	}
+    $(self->viewController, viewWillAppear);
+    $(self->viewController->view, moveToWindow, self->window);
+    $(self->viewController, viewDidAppear);
+  }
 }
 
 /**
@@ -273,22 +273,22 @@ static void setViewController(WindowController *self, ViewController *viewContro
  */
 static void setWindow(WindowController *self, SDL_Window *window) {
 
-	self->window = window;
-	assert(self->window);
+  self->window = window;
+  assert(self->window);
 
-	const Uint32 flags = SDL_GetWindowFlags(self->window);
-	assert(flags & SDL_WINDOW_OPENGL);
+  const Uint32 flags = SDL_GetWindowFlags(self->window);
+  assert(flags & SDL_WINDOW_OPENGL);
 
-	SDL_SetWindowData(self->window, "windowController", self);
-	assert(SDL_GetWindowData(self->window, "windowController") == self);
+  SDL_SetWindowData(self->window, "windowController", self);
+  assert(SDL_GetWindowData(self->window, "windowController") == self);
 
-	if (self->viewController) {
-		$(self->viewController->view, moveToWindow, self->window);
-	}
+  if (self->viewController) {
+    $(self->viewController->view, moveToWindow, self->window);
+  }
 
-	if (self->debugViewController) {
-		$(self->debugViewController->viewController.view, moveToWindow, self->window);
-	}
+  if (self->debugViewController) {
+    $(self->debugViewController->viewController.view, moveToWindow, self->window);
+  }
 }
 
 /**
@@ -297,28 +297,28 @@ static void setWindow(WindowController *self, SDL_Window *window) {
  */
 static void toggleDebugger(WindowController *self) {
 
-	if (self->debugViewController == NULL) {
+  if (self->debugViewController == NULL) {
 
-		self->debugViewController = $(alloc(DebugViewController), init);
-		assert(self->debugViewController);
+    self->debugViewController = $(alloc(DebugViewController), init);
+    assert(self->debugViewController);
 
-		ViewController *debugViewController = (ViewController *) self->debugViewController;
+    ViewController *debugViewController = (ViewController *) self->debugViewController;
 
-		$(debugViewController, loadView);
-		$(debugViewController, viewWillAppear);
-		$(debugViewController->view, moveToWindow, self->window);
-		$(debugViewController, viewDidAppear);
+    $(debugViewController, loadView);
+    $(debugViewController, viewWillAppear);
+    $(debugViewController->view, moveToWindow, self->window);
+    $(debugViewController, viewDidAppear);
 
-		if (self->viewController) {
-			$(self->viewController->view, addClassName, "debug");
-		}
-	} else {
-		self->debugViewController = release(self->debugViewController);
+    if (self->viewController) {
+      $(self->viewController->view, addClassName, "debug");
+    }
+  } else {
+    self->debugViewController = release(self->debugViewController);
 
-		if (self->viewController) {
-			$(self->viewController->view, removeClassName, "debug");
-		}
-	}
+    if (self->viewController) {
+      $(self->viewController->view, removeClassName, "debug");
+    }
+  }
 }
 
 /**
@@ -327,9 +327,9 @@ static void toggleDebugger(WindowController *self) {
  */
 static WindowController *windowController(SDL_Window *window) {
 
-	assert(window);
+  assert(window);
 
-	return SDL_GetWindowData(window, "windowController");
+  return SDL_GetWindowData(window, "windowController");
 }
 
 #pragma mark - Class lifecycle
@@ -339,20 +339,20 @@ static WindowController *windowController(SDL_Window *window) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((WindowControllerInterface *) clazz->interface)->debug = debug;
-	((WindowControllerInterface *) clazz->interface)->eventTarget = eventTarget;
-	((WindowControllerInterface *) clazz->interface)->firstResponder = firstResponder;
-	((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
-	((WindowControllerInterface *) clazz->interface)->render = render;
-	((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
-	((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
-	((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
-	((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
-	((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;
-	((WindowControllerInterface *) clazz->interface)->toggleDebugger = toggleDebugger;
-	((WindowControllerInterface *) clazz->interface)->windowController = windowController;
+  ((WindowControllerInterface *) clazz->interface)->debug = debug;
+  ((WindowControllerInterface *) clazz->interface)->eventTarget = eventTarget;
+  ((WindowControllerInterface *) clazz->interface)->firstResponder = firstResponder;
+  ((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
+  ((WindowControllerInterface *) clazz->interface)->render = render;
+  ((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
+  ((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
+  ((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
+  ((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
+  ((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;
+  ((WindowControllerInterface *) clazz->interface)->toggleDebugger = toggleDebugger;
+  ((WindowControllerInterface *) clazz->interface)->windowController = windowController;
 }
 
 /**
@@ -360,21 +360,21 @@ static void initialize(Class *clazz) {
  * @memberof WindowController
  */
 Class *_WindowController(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "WindowController",
-			.superclass = _Object(),
-			.instanceSize = sizeof(WindowController),
-			.interfaceOffset = offsetof(WindowController, interface),
-			.interfaceSize = sizeof(WindowControllerInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "WindowController",
+      .superclass = _Object(),
+      .instanceSize = sizeof(WindowController),
+      .interfaceOffset = offsetof(WindowController, interface),
+      .interfaceSize = sizeof(WindowControllerInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

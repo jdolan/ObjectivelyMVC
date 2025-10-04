@@ -34,23 +34,23 @@
  */
 static void render(View *self, Renderer *renderer) {
 
-	super(View, self, render, renderer);
+  super(View, self, render, renderer);
 
-	const SDL_Rect frame = $(self, renderFrame);
+  const SDL_Rect frame = $(self, renderFrame);
 
-	$(renderer, setDrawColor, &self->borderColor);
+  $(renderer, setDrawColor, &self->borderColor);
 
-	SDL_Point points[2];
+  SDL_Point points[2];
 
-	points[0].x = frame.x;
-	points[0].y = frame.y + frame.h;
+  points[0].x = frame.x;
+  points[0].y = frame.y + frame.h;
 
-	points[1].x = frame.x + frame.w;
-	points[1].y = frame.y + frame.h;
+  points[1].x = frame.x + frame.w;
+  points[1].y = frame.y + frame.h;
 
-	$(renderer, drawLine, points);
+  $(renderer, drawLine, points);
 
-	$(renderer, setDrawColor, &Colors.White);
+  $(renderer, setDrawColor, &Colors.White);
 }
 
 #pragma mark - TableHeaderView
@@ -60,7 +60,7 @@ static void render(View *self, Renderer *renderer) {
  * @memberof TableHeaderView
  */
 static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tableView) {
-	return (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
+  return (TableHeaderView *) super(TableRowView, self, initWithTableView, tableView);
 }
 
 #pragma mark - Class lifecycle
@@ -70,9 +70,9 @@ static TableHeaderView *initWithTableView(TableHeaderView *self, TableView *tabl
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->interface)->render = render;
+  ((ViewInterface *) clazz->interface)->render = render;
 
-	((TableHeaderViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
+  ((TableHeaderViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
 }
 
 /**
@@ -80,21 +80,21 @@ static void initialize(Class *clazz) {
  * @memberof TableHeaderView
  */
 Class *_TableHeaderView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TableHeaderView",
-			.superclass = _TableRowView(),
-			.instanceSize = sizeof(TableHeaderView),
-			.interfaceOffset = offsetof(TableHeaderView, interface),
-			.interfaceSize = sizeof(TableHeaderViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TableHeaderView",
+      .superclass = _TableRowView(),
+      .instanceSize = sizeof(TableHeaderView),
+      .interfaceOffset = offsetof(TableHeaderView, interface),
+      .interfaceSize = sizeof(TableHeaderViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

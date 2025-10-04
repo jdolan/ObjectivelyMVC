@@ -40,21 +40,21 @@ typedef struct TableCellViewInterface TableCellViewInterface;
  */
 struct TableCellView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	TableCellViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  TableCellViewInterface *interface;
 
-	/**
-	 * @brief The text.
-	 */
-	Text *text;
+  /**
+   * @brief The text.
+   */
+  Text *text;
 };
 
 /**
@@ -62,20 +62,20 @@ struct TableCellView {
  */
 struct TableCellViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn TableCellView *TableCellView::initWithFrame(TableCellView *self, const SDL_Rect *frame)
-	 * @brief Initializes this TableCellView with the specified frame.
-	 * @param self The TableCellView.
-	 * @param frame The frame.
-	 * @return The initialized TableCellView, or `NULL` on error.
-	 * @memberof TableCellView
-	 */
-	TableCellView *(*initWithFrame)(TableCellView *self, const SDL_Rect *frame);
+  /**
+   * @fn TableCellView *TableCellView::initWithFrame(TableCellView *self, const SDL_Rect *frame)
+   * @brief Initializes this TableCellView with the specified frame.
+   * @param self The TableCellView.
+   * @param frame The frame.
+   * @return The initialized TableCellView, or `NULL` on error.
+   * @memberof TableCellView
+   */
+  TableCellView *(*initWithFrame)(TableCellView *self, const SDL_Rect *frame);
 };
 
 /**

@@ -35,14 +35,14 @@
  */
 static void dealloc(Object *self) {
 
-	TabViewItem *this = (TabViewItem *) self;
+  TabViewItem *this = (TabViewItem *) self;
 
-	free(this->identifier);
+  free(this->identifier);
 
-	release(this->label);
-	release(this->view);
+  release(this->label);
+  release(this->view);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - TabViewItem
@@ -53,21 +53,21 @@ static void dealloc(Object *self) {
  */
 static TabViewItem *initWithIdentifier(TabViewItem *self, const char *identifier) {
 
-	self = (TabViewItem *) super(Object, self, init);
-	if (self) {
-		self->identifier = strdup(identifier);
-		assert(self->identifier);
+  self = (TabViewItem *) super(Object, self, init);
+  if (self) {
+    self->identifier = strdup(identifier);
+    assert(self->identifier);
 
-		self->label = $(alloc(Label), initWithText, self->identifier, NULL);
-		assert(self->label);
+    self->label = $(alloc(Label), initWithText, self->identifier, NULL);
+    assert(self->label);
 
-		self->view = $(alloc(View), initWithFrame, NULL);
-		assert(self->view);
+    self->view = $(alloc(View), initWithFrame, NULL);
+    assert(self->view);
 
-		$(self, setState, TabStateDefault);
-	}
+    $(self, setState, TabStateDefault);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -76,13 +76,13 @@ static TabViewItem *initWithIdentifier(TabViewItem *self, const char *identifier
  */
 static TabViewItem *initWithView(TabViewItem *self, View *view) {
 
-	self = $(self, initWithIdentifier, view->identifier ?: classnameof(self));
-	if (self) {
-		release(self->view);
-		self->view = retain(view);
-	}
+  self = $(self, initWithIdentifier, view->identifier ?: classnameof(self));
+  if (self) {
+    release(self->view);
+    self->view = retain(view);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -91,13 +91,13 @@ static TabViewItem *initWithView(TabViewItem *self, View *view) {
  */
 static void setState(TabViewItem *self, int state) {
 
-	self->state = state;
+  self->state = state;
 
-	if (self->state & TabStateSelected) {
-		$((View *) self->label, addClassName, "selected");
-	} else {
-		$((View *) self->label, removeClassName, "selected");
-	}
+  if (self->state & TabStateSelected) {
+    $((View *) self->label, addClassName, "selected");
+  } else {
+    $((View *) self->label, removeClassName, "selected");
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -107,11 +107,11 @@ static void setState(TabViewItem *self, int state) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((TabViewItemInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
-	((TabViewItemInterface *) clazz->interface)->initWithView = initWithView;
-	((TabViewItemInterface *) clazz->interface)->setState = setState;
+  ((TabViewItemInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
+  ((TabViewItemInterface *) clazz->interface)->initWithView = initWithView;
+  ((TabViewItemInterface *) clazz->interface)->setState = setState;
 }
 
 /**
@@ -119,21 +119,21 @@ static void initialize(Class *clazz) {
  * @memberof TabViewItem
  */
 Class *_TabViewItem(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TabViewItem",
-			.superclass = _Object(),
-			.instanceSize = sizeof(TabViewItem),
-			.interfaceOffset = offsetof(TabViewItem, interface),
-			.interfaceSize = sizeof(TabViewItemInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TabViewItem",
+      .superclass = _Object(),
+      .instanceSize = sizeof(TabViewItem),
+      .interfaceOffset = offsetof(TabViewItem, interface),
+      .interfaceSize = sizeof(TabViewItemInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

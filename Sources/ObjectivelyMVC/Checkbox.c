@@ -38,12 +38,12 @@ static Image *_check;
  */
 static void dealloc(Object *self) {
 
-	Checkbox *this = (Checkbox *) self;
+  Checkbox *this = (Checkbox *) self;
 
-	release(this->box);
-	release(this->check);
+  release(this->box);
+  release(this->check);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -53,22 +53,22 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	Checkbox *this = (Checkbox *) self;
+  Checkbox *this = (Checkbox *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("check", InletTypeView, &this->check, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("check", InletTypeView, &this->check, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Checkbox *) self, initWithFrame, NULL);
+  return (View *) $((Checkbox *) self, initWithFrame, NULL);
 }
 
 #pragma mark - Control
@@ -78,26 +78,26 @@ static View *init(View *self) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-	View *this = (View *) self;
+  View *this = (View *) self;
 
-	const View *box = (View *) ((Checkbox *) self)->box;
-	
-	if (event->type == SDL_MOUSEBUTTONDOWN) {
-		if ($(box, didReceiveEvent, event)) {
-			self->state |= ControlStateHighlighted;
-			return true;
-		}
-	}
-	if (event->type == SDL_MOUSEBUTTONUP) {
-		if ($(box, didReceiveEvent, event)) {
-			self->state ^= ControlStateSelected;
-			self->state &= ~ControlStateHighlighted;
-			$(this, emitViewEvent, ViewEventChange, NULL);
-			return true;
-		}
-	}
+  const View *box = (View *) ((Checkbox *) self)->box;
+  
+  if (event->type == SDL_MOUSEBUTTONDOWN) {
+    if ($(box, didReceiveEvent, event)) {
+      self->state |= ControlStateHighlighted;
+      return true;
+    }
+  }
+  if (event->type == SDL_MOUSEBUTTONUP) {
+    if ($(box, didReceiveEvent, event)) {
+      self->state ^= ControlStateSelected;
+      self->state &= ~ControlStateHighlighted;
+      $(this, emitViewEvent, ViewEventChange, NULL);
+      return true;
+    }
+  }
 
-	return super(Control, self, captureEvent, event);
+  return super(Control, self, captureEvent, event);
 }
 
 /**
@@ -105,15 +105,15 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
  */
 static void stateDidChange(Control *self) {
 
-	super(Control, self, stateDidChange);
+  super(Control, self, stateDidChange);
 
-	Checkbox *this = (Checkbox *) self;
+  Checkbox *this = (Checkbox *) self;
 
-	if (self->state & ControlStateSelected) {
-		this->check->view.hidden = false;
-	} else {
-		this->check->view.hidden = true;
-	}
+  if (self->state & ControlStateSelected) {
+    this->check->view.hidden = false;
+  } else {
+    this->check->view.hidden = true;
+  }
 }
 
 #pragma mark - Checkbox
@@ -124,25 +124,25 @@ static void stateDidChange(Control *self) {
  */
 static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
 
-	self = (Checkbox *) super(Control, self, initWithFrame, frame);
-	if (self) {
+  self = (Checkbox *) super(Control, self, initWithFrame, frame);
+  if (self) {
  
-		self->box = $(alloc(Control), initWithFrame, frame);
-		assert(self->box);
+    self->box = $(alloc(Control), initWithFrame, frame);
+    assert(self->box);
 
-		self->box->view.alignment = ViewAlignmentMiddleCenter;
+    self->box->view.alignment = ViewAlignmentMiddleCenter;
 
-		self->check = $(alloc(ImageView), initWithImage, _check);
-		assert(self->check);
+    self->check = $(alloc(ImageView), initWithImage, _check);
+    assert(self->check);
 
-		self->check->view.autoresizingMask = ViewAutoresizingFill;
-		self->check->view.hidden = true;
+    self->check->view.autoresizingMask = ViewAutoresizingFill;
+    self->check->view.hidden = true;
 
-		$((View *) self->box, addSubview, (View *) self->check);
-		$((View *) self, addSubview, (View *) self->box);
-	}
+    $((View *) self->box, addSubview, (View *) self->check);
+    $((View *) self, addSubview, (View *) self->box);
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -152,24 +152,24 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
-	((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
+  ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+  ((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
 
-	((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
-	_check = $(alloc(Image), initWithBytes, check_png, check_png_len);
+  _check = $(alloc(Image), initWithBytes, check_png, check_png_len);
 }
 
 /**
  * @see Class::destroy(Class *)
  */
 static void destroy(Class *clazz) {
-	release(_check);
+  release(_check);
 }
 
 /**
@@ -177,22 +177,22 @@ static void destroy(Class *clazz) {
  * @memberof Checkbox
  */
 Class *_Checkbox(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Checkbox",
-			.superclass = _Control(),
-			.instanceSize = sizeof(Checkbox),
-			.interfaceOffset = offsetof(Checkbox, interface),
-			.interfaceSize = sizeof(CheckboxInterface),
-			.initialize = initialize,
-			.destroy = destroy,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Checkbox",
+      .superclass = _Control(),
+      .instanceSize = sizeof(Checkbox),
+      .interfaceOffset = offsetof(Checkbox, interface),
+      .interfaceSize = sizeof(CheckboxInterface),
+      .initialize = initialize,
+      .destroy = destroy,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

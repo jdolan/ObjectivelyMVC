@@ -35,15 +35,15 @@
  */
 static void dealloc(Object *self) {
 
-	ProgressBar *this = (ProgressBar *) self;
+  ProgressBar *this = (ProgressBar *) self;
 
-	release(this->background);
-	release(this->foreground);
-	release(this->label);
+  release(this->background);
+  release(this->foreground);
+  release(this->label);
 
-	free(this->labelFormat);
+  free(this->labelFormat);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -53,32 +53,32 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	ProgressBar *this = (ProgressBar *) self;
+  ProgressBar *this = (ProgressBar *) self;
 
-	double value = this->value;
+  double value = this->value;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("background", InletTypeView, &this->background, NULL),
-		MakeInlet("foreground", InletTypeView, &this->foreground, NULL),
-		MakeInlet("label", InletTypeView, &this->label, NULL),
-		MakeInlet("labelFormat", InletTypeCharacters, &this->labelFormat, NULL),
-		MakeInlet("min", InletTypeDouble, &this->min, NULL),
-		MakeInlet("max", InletTypeDouble, &this->max, NULL),
-		MakeInlet("value", InletTypeDouble, &value, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("background", InletTypeView, &this->background, NULL),
+    MakeInlet("foreground", InletTypeView, &this->foreground, NULL),
+    MakeInlet("label", InletTypeView, &this->label, NULL),
+    MakeInlet("labelFormat", InletTypeCharacters, &this->labelFormat, NULL),
+    MakeInlet("min", InletTypeDouble, &this->min, NULL),
+    MakeInlet("max", InletTypeDouble, &this->max, NULL),
+    MakeInlet("value", InletTypeDouble, &value, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 
-	$(this, setValue, value);
+  $(this, setValue, value);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((ProgressBar *) self, initWithFrame, NULL);
+  return (View *) $((ProgressBar *) self, initWithFrame, NULL);
 }
 
 #pragma mark - ProgressBar
@@ -89,10 +89,10 @@ static View *init(View *self) {
  */
 static void formatLabel(ProgressBar *self) {
 
-	char text[128];
-	snprintf(text, sizeof(text), self->labelFormat, self->value);
+  char text[128];
+  snprintf(text, sizeof(text), self->labelFormat, self->value);
 
-	$(self->label, setText, text);
+  $(self->label, setText, text);
 }
 
 /**
@@ -101,33 +101,33 @@ static void formatLabel(ProgressBar *self) {
  */
 static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
 
-	self = (ProgressBar *) super(View, self, initWithFrame, frame);
-	if (self) {
+  self = (ProgressBar *) super(View, self, initWithFrame, frame);
+  if (self) {
 
-		self->background = $(alloc(ImageView), initWithFrame, NULL);
-		assert(self->background);
+    self->background = $(alloc(ImageView), initWithFrame, NULL);
+    assert(self->background);
 
-		$((View *) self->background, addClassName, "background");
-		$((View *) self, addSubview, (View *) self->background);
+    $((View *) self->background, addClassName, "background");
+    $((View *) self, addSubview, (View *) self->background);
 
-		self->foreground = $(alloc(ImageView), initWithFrame, NULL);
-		assert(self->foreground);
+    self->foreground = $(alloc(ImageView), initWithFrame, NULL);
+    assert(self->foreground);
 
-		$((View *) self->foreground, addClassName, "foreground");
-		$((View *) self, addSubview, (View *) self->foreground);
+    $((View *) self->foreground, addClassName, "foreground");
+    $((View *) self, addSubview, (View *) self->foreground);
 
-		self->label = $(alloc(Text), initWithText, NULL, NULL);
-		assert(self->label);
+    self->label = $(alloc(Text), initWithText, NULL, NULL);
+    assert(self->label);
 
-		$((View *) self, addSubview, (View *) self->label);
+    $((View *) self, addSubview, (View *) self->label);
 
-		$(self, setLabelFormat, "%0.0lf%%");
+    $(self, setLabelFormat, "%0.0lf%%");
 
-		self->value = -1.0;
-		self->max = 100.0;
-	}
+    self->value = -1.0;
+    self->max = 100.0;
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -135,7 +135,7 @@ static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
  * @memberof ProgressBar
  */
 static double progress(const ProgressBar *self) {
-	return 100.0 * self->value / (self->max - self->min);
+  return 100.0 * self->value / (self->max - self->min);
 }
 
 /**
@@ -144,12 +144,12 @@ static double progress(const ProgressBar *self) {
  */
 static void setLabelFormat(ProgressBar *self, const char *labelFormat) {
 
-	if (self->labelFormat) {
-		free(self->labelFormat);
-	}
+  if (self->labelFormat) {
+    free(self->labelFormat);
+  }
 
-	self->labelFormat = strdup(labelFormat);
-	$(self, formatLabel);
+  self->labelFormat = strdup(labelFormat);
+  $(self, formatLabel);
 }
 
 /**
@@ -158,24 +158,24 @@ static void setLabelFormat(ProgressBar *self, const char *labelFormat) {
  */
 static void setValue(ProgressBar *self, double value) {
 
-	value = clamp(value, self->min, self->max);
+  value = clamp(value, self->min, self->max);
 
-	const double delta = fabs(self->value - value);
-	if (delta > __DBL_EPSILON__) {
-		self->value = value;
+  const double delta = fabs(self->value - value);
+  if (delta > __DBL_EPSILON__) {
+    self->value = value;
 
-		const SDL_Rect bounds = $((View *) self, bounds);
-		const double frac = self->value / (self->max - self->min);
+    const SDL_Rect bounds = $((View *) self, bounds);
+    const double frac = self->value / (self->max - self->min);
 
-		self->foreground->view.frame.w = bounds.w * frac;
-		self->view.needsLayout = true;
+    self->foreground->view.frame.w = bounds.w * frac;
+    self->view.needsLayout = true;
 
-		$(self, formatLabel);
+    $(self, formatLabel);
 
-		if (self->delegate.didSetValue) {
-			self->delegate.didSetValue(self, self->value);
-		}
-	}
+    if (self->delegate.didSetValue) {
+      self->delegate.didSetValue(self, self->value);
+    }
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -185,16 +185,16 @@ static void setValue(ProgressBar *self, double value) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
 
-	((ProgressBarInterface *) clazz->interface)->formatLabel = formatLabel;
-	((ProgressBarInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((ProgressBarInterface *) clazz->interface)->progress = progress;
-	((ProgressBarInterface *) clazz->interface)->setLabelFormat = setLabelFormat;
-	((ProgressBarInterface *) clazz->interface)->setValue = setValue;
+  ((ProgressBarInterface *) clazz->interface)->formatLabel = formatLabel;
+  ((ProgressBarInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((ProgressBarInterface *) clazz->interface)->progress = progress;
+  ((ProgressBarInterface *) clazz->interface)->setLabelFormat = setLabelFormat;
+  ((ProgressBarInterface *) clazz->interface)->setValue = setValue;
 }
 
 /**
@@ -202,21 +202,21 @@ static void initialize(Class *clazz) {
  * @memberof ProgressBar
  */
 Class *_ProgressBar(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "ProgressBar",
-			.superclass = _View(),
-			.instanceSize = sizeof(ProgressBar),
-			.interfaceOffset = offsetof(ProgressBar, interface),
-			.interfaceSize = sizeof(ProgressBarInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "ProgressBar",
+      .superclass = _View(),
+      .instanceSize = sizeof(ProgressBar),
+      .interfaceOffset = offsetof(ProgressBar, interface),
+      .interfaceSize = sizeof(ProgressBarInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

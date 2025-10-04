@@ -38,13 +38,13 @@
  */
 static void dealloc(Object *self) {
 
-	TableColumn *this = (TableColumn *) self;
+  TableColumn *this = (TableColumn *) self;
 
-	release(this->headerCell);
-	
-	free(this->identifier);
+  release(this->headerCell);
+  
+  free(this->identifier);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - TableColumn
@@ -55,21 +55,21 @@ static void dealloc(Object *self) {
  */
 static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier) {
 
-	self = (TableColumn *) super(Object, self, init);
-	if (self) {
+  self = (TableColumn *) super(Object, self, init);
+  if (self) {
 
-		self->headerCell = $(alloc(TableHeaderCellView), initWithFrame, NULL);
-		assert(self->headerCell);
+    self->headerCell = $(alloc(TableHeaderCellView), initWithFrame, NULL);
+    assert(self->headerCell);
 
-		self->identifier = strdup(identifier);
-		assert(self->identifier);
+    self->identifier = strdup(identifier);
+    assert(self->identifier);
 
-		self->headerCell->tableCellView.view.identifier = strdup(self->identifier);
+    self->headerCell->tableCellView.view.identifier = strdup(self->identifier);
 
-		$(((TableCellView *) self->headerCell)->text, setText, self->identifier);
-	}
+    $(((TableCellView *) self->headerCell)->text, setText, self->identifier);
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -79,9 +79,9 @@ static TableColumn *initWithIdentifier(TableColumn *self, const char *identifier
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((TableColumnInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
+  ((TableColumnInterface *) clazz->interface)->initWithIdentifier = initWithIdentifier;
 }
 
 /**
@@ -89,21 +89,21 @@ static void initialize(Class *clazz) {
  * @memberof TableColumn
  */
 Class *_TableColumn(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TableColumn",
-			.superclass = _Object(),
-			.instanceSize = sizeof(TableColumn),
-			.interfaceOffset = offsetof(TableColumn, interface),
-			.interfaceSize = sizeof(TableColumnInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TableColumn",
+      .superclass = _Object(),
+      .instanceSize = sizeof(TableColumn),
+      .interfaceOffset = offsetof(TableColumn, interface),
+      .interfaceSize = sizeof(TableColumnInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

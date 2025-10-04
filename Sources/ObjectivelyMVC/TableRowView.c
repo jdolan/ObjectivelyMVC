@@ -35,11 +35,11 @@
  */
 static void dealloc(Object *self) {
 
-	TableRowView *this = (TableRowView *) self;
+  TableRowView *this = (TableRowView *) self;
 
-	release(this->cells);
+  release(this->cells);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -49,15 +49,15 @@ static void dealloc(Object *self) {
  */
 static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
-	TableRowView *this = (TableRowView *) self;
+  TableRowView *this = (TableRowView *) self;
 
-	if (simpleSelector->type == SimpleSelectorTypePseudo) {
-		if (strcmp("selected", simpleSelector->pattern) == 0) {
-			return this->isSelected;
-		}
-	}
+  if (simpleSelector->type == SimpleSelectorTypePseudo) {
+    if (strcmp("selected", simpleSelector->pattern) == 0) {
+      return this->isSelected;
+    }
+  }
 
-	return super(View, self, matchesSelector, simpleSelector);
+  return super(View, self, matchesSelector, simpleSelector);
 }
 
 #pragma mark - TableRowView
@@ -68,11 +68,11 @@ static bool matchesSelector(const View *self, const SimpleSelector *simpleSelect
  */
 static void addCell(TableRowView *self, TableCellView *cell) {
 
-	assert(cell);
+  assert(cell);
 
-	$(self->cells, addObject, cell);
+  $(self->cells, addObject, cell);
 
-	$((View *) self, addSubview, (View *) cell);
+  $((View *) self, addSubview, (View *) cell);
 }
 
 /**
@@ -81,26 +81,26 @@ static void addCell(TableRowView *self, TableCellView *cell) {
  */
 static TableRowView *initWithTableView(TableRowView *self, TableView *tableView) {
 
-	self = (TableRowView *) super(StackView, self, initWithFrame, NULL);
-	if (self) {
+  self = (TableRowView *) super(StackView, self, initWithFrame, NULL);
+  if (self) {
 
-		const Array *columns = (Array *) tableView->columns;
-		
-		self->cells = $$(MutableArray, arrayWithCapacity, columns->count);
-		assert(self->cells);
+    const Array *columns = (Array *) tableView->columns;
+    
+    self->cells = $$(MutableArray, arrayWithCapacity, columns->count);
+    assert(self->cells);
 
-		self->tableView = tableView;
-		assert(self->tableView);
-	}
+    self->tableView = tableView;
+    assert(self->tableView);
+  }
 
-	return self;
+  return self;
 }
 
 /**
  * @brief ArrayEnumerator to remove TableCellViews from the row.
  */
 static void removeAllCells_enumerate(const Array *array, ident obj, ident data) {
-	$((View *) obj, removeFromSuperview);
+  $((View *) obj, removeFromSuperview);
 }
 
 /**
@@ -109,7 +109,7 @@ static void removeAllCells_enumerate(const Array *array, ident obj, ident data) 
  * @memberof TableRowView
  */
 static void removeAllCells(TableRowView *self) {
-	$(self->cells, removeAllObjectsWithEnumerator, removeAllCells_enumerate, NULL);
+  $(self->cells, removeAllObjectsWithEnumerator, removeAllCells_enumerate, NULL);
 }
 
 /**
@@ -118,11 +118,11 @@ static void removeAllCells(TableRowView *self) {
  */
 static void removeCell(TableRowView *self, TableCellView *cell) {
 
-	assert(cell);
+  assert(cell);
 
-	$(self->cells, removeObject, cell);
+  $(self->cells, removeObject, cell);
 
-	$((View *) self, removeSubview, (View *) cell);
+  $((View *) self, removeSubview, (View *) cell);
 }
 
 /**
@@ -131,10 +131,10 @@ static void removeCell(TableRowView *self, TableCellView *cell) {
  */
 static void setSelected(TableRowView *self, bool isSelected) {
 
-	if (isSelected != self->isSelected) {
-		self->isSelected = isSelected;
-		$((View *) self, invalidateStyle);
-	}
+  if (isSelected != self->isSelected) {
+    self->isSelected = isSelected;
+    $((View *) self, invalidateStyle);
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -144,15 +144,15 @@ static void setSelected(TableRowView *self, bool isSelected) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
+  ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
 
-	((TableRowViewInterface *) clazz->interface)->addCell = addCell;
-	((TableRowViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
-	((TableRowViewInterface *) clazz->interface)->removeAllCells = removeAllCells;
-	((TableRowViewInterface *) clazz->interface)->removeCell = removeCell;
-	((TableRowViewInterface *) clazz->interface)->setSelected = setSelected;
+  ((TableRowViewInterface *) clazz->interface)->addCell = addCell;
+  ((TableRowViewInterface *) clazz->interface)->initWithTableView = initWithTableView;
+  ((TableRowViewInterface *) clazz->interface)->removeAllCells = removeAllCells;
+  ((TableRowViewInterface *) clazz->interface)->removeCell = removeCell;
+  ((TableRowViewInterface *) clazz->interface)->setSelected = setSelected;
 }
 
 /**
@@ -160,21 +160,21 @@ static void initialize(Class *clazz) {
  * @memberof TableRowView
  */
 Class *_TableRowView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TableRowView",
-			.superclass = _StackView(),
-			.instanceSize = sizeof(TableRowView),
-			.interfaceOffset = offsetof(TableRowView, interface),
-			.interfaceSize = sizeof(TableRowViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TableRowView",
+      .superclass = _StackView(),
+      .instanceSize = sizeof(TableRowView),
+      .interfaceOffset = offsetof(TableRowView, interface),
+      .interfaceSize = sizeof(TableRowViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 #undef _Class
 

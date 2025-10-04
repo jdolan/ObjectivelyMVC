@@ -34,23 +34,23 @@
  */
 static void didSetComponent(Slider *slider, double value) {
 
-	HSVColorPicker *this = (HSVColorPicker *) slider->delegate.self;
+  HSVColorPicker *this = (HSVColorPicker *) slider->delegate.self;
 
-	if (slider == this->hueSlider) {
-		this->hue = value;
-	} else if (slider == this->saturationSlider) {
-		this->saturation = value;
-	} else if (slider == this->valueSlider) {
-		this->value = value;
-	} else {
-		assert(false);
-	}
+  if (slider == this->hueSlider) {
+    this->hue = value;
+  } else if (slider == this->saturationSlider) {
+    this->saturation = value;
+  } else if (slider == this->valueSlider) {
+    this->value = value;
+  } else {
+    assert(false);
+  }
 
-	$((View *) this, updateBindings);
+  $((View *) this, updateBindings);
 
-	if (this->delegate.didPickColor) {
-		this->delegate.didPickColor(this, this->hue, this->saturation, this->value);
-	}
+  if (this->delegate.didPickColor) {
+    this->delegate.didPickColor(this, this->hue, this->saturation, this->value);
+  }
 }
 
 #pragma mark - Object
@@ -60,18 +60,18 @@ static void didSetComponent(Slider *slider, double value) {
  */
 static void dealloc(Object *self) {
 
-	HSVColorPicker *this = (HSVColorPicker *) self;
+  HSVColorPicker *this = (HSVColorPicker *) self;
 
-	release(this->colorView);
-	release(this->hueSlider);
-	release(this->hueInput);
-	release(this->saturationSlider);
-	release(this->saturationInput);
-	release(this->valueSlider);
-	release(this->valueInput);
-	release(this->stackView);
+  release(this->colorView);
+  release(this->hueSlider);
+  release(this->hueInput);
+  release(this->saturationSlider);
+  release(this->saturationInput);
+  release(this->valueSlider);
+  release(this->valueInput);
+  release(this->stackView);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -81,32 +81,32 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	HSVColorPicker *this = (HSVColorPicker *) self;
+  HSVColorPicker *this = (HSVColorPicker *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("colorView", InletTypeView, &this->colorView, NULL),
-		MakeInlet("hue", InletTypeDouble, &this->hue, NULL),
-		MakeInlet("saturation", InletTypeDouble, &this->saturation, NULL),
-		MakeInlet("value", InletTypeDouble, &this->value, NULL),
-		MakeInlet("hueSlider", InletTypeView, &this->hueSlider, NULL),
-		MakeInlet("hueInput", InletTypeView, &this->hueInput, NULL),
-		MakeInlet("saturationSlider", InletTypeView, &this->saturationSlider, NULL),
-		MakeInlet("saturationInput", InletTypeView, &this->saturationInput, NULL),
-		MakeInlet("valueSlider", InletTypeView, &this->valueSlider, NULL),
-		MakeInlet("valueInput", InletTypeView, &this->valueInput, NULL),
-		MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("colorView", InletTypeView, &this->colorView, NULL),
+    MakeInlet("hue", InletTypeDouble, &this->hue, NULL),
+    MakeInlet("saturation", InletTypeDouble, &this->saturation, NULL),
+    MakeInlet("value", InletTypeDouble, &this->value, NULL),
+    MakeInlet("hueSlider", InletTypeView, &this->hueSlider, NULL),
+    MakeInlet("hueInput", InletTypeView, &this->hueInput, NULL),
+    MakeInlet("saturationSlider", InletTypeView, &this->saturationSlider, NULL),
+    MakeInlet("saturationInput", InletTypeView, &this->saturationInput, NULL),
+    MakeInlet("valueSlider", InletTypeView, &this->valueSlider, NULL),
+    MakeInlet("valueInput", InletTypeView, &this->valueInput, NULL),
+    MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((HSVColorPicker *) self, initWithFrame, NULL);
+  return (View *) $((HSVColorPicker *) self, initWithFrame, NULL);
 }
 
 /**
@@ -114,15 +114,15 @@ static View *init(View *self) {
  */
 static void updateBindings(View *self) {
 
-	super(View, self, updateBindings);
+  super(View, self, updateBindings);
 
-	HSVColorPicker *this = (HSVColorPicker *) self;
+  HSVColorPicker *this = (HSVColorPicker *) self;
 
-	$(this->hueSlider, setValue, this->hue);
-	$(this->saturationSlider, setValue, this->saturation);
-	$(this->valueSlider, setValue, this->value);
+  $(this->hueSlider, setValue, this->hue);
+  $(this->saturationSlider, setValue, this->saturation);
+  $(this->valueSlider, setValue, this->value);
 
-	this->colorView->backgroundColor = $(this, rgbColor);
+  this->colorView->backgroundColor = $(this, rgbColor);
 }
 
 #pragma mark - HSVColorPicker
@@ -133,72 +133,72 @@ static void updateBindings(View *self) {
  */
 static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame) {
 
-	self = (HSVColorPicker *) super(Control, self, initWithFrame, frame);
-	if (self) {
+  self = (HSVColorPicker *) super(Control, self, initWithFrame, frame);
+  if (self) {
 
-		self->stackView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->stackView);
+    self->stackView = $(alloc(StackView), initWithFrame, NULL);
+    assert(self->stackView);
 
-		$((View *) self, addSubview, (View *) self->stackView);
+    $((View *) self, addSubview, (View *) self->stackView);
 
-		self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
-		assert(self->colorView);
+    self->colorView = $(alloc(View), initWithFrame, &MakeRect(0, 0, 0, 24));
+    assert(self->colorView);
 
-		$(self->colorView, addClassName, "colorView");
-		$((View *) self->stackView, addSubview, self->colorView);
+    $(self->colorView, addClassName, "colorView");
+    $((View *) self->stackView, addSubview, self->colorView);
 
-		self->hueSlider = $(alloc(Slider), initWithFrame, NULL);
-		assert(self->hueSlider);
+    self->hueSlider = $(alloc(Slider), initWithFrame, NULL);
+    assert(self->hueSlider);
 
-		self->hueSlider->delegate.self = self;
-		self->hueSlider->delegate.didSetValue = didSetComponent;
-		self->hueSlider->max = 360.0;
-		$(self->hueSlider, setLabelFormat, "%.0lf");
+    self->hueSlider->delegate.self = self;
+    self->hueSlider->delegate.didSetValue = didSetComponent;
+    self->hueSlider->max = 360.0;
+    $(self->hueSlider, setLabelFormat, "%.0lf");
 
-		self->hueInput = $(alloc(Input), initWithFrame, NULL);
-		assert(self->hueInput);
+    self->hueInput = $(alloc(Input), initWithFrame, NULL);
+    assert(self->hueInput);
 
-		$(self->hueInput, setControl, (Control *) self->hueSlider);
-		$(self->hueInput->label->text, setText, "H");
+    $(self->hueInput, setControl, (Control *) self->hueSlider);
+    $(self->hueInput->label->text, setText, "H");
 
-		$((View *) self->stackView, addSubview, (View *) self->hueInput);
+    $((View *) self->stackView, addSubview, (View *) self->hueInput);
 
-		self->saturationSlider = $(alloc(Slider), initWithFrame, NULL);
-		assert(self->saturationSlider);
+    self->saturationSlider = $(alloc(Slider), initWithFrame, NULL);
+    assert(self->saturationSlider);
 
-		self->saturationSlider->delegate.self = self;
-		self->saturationSlider->delegate.didSetValue = didSetComponent;
-		self->saturationSlider->max = 1.0;
-		$(self->saturationSlider, setLabelFormat, "%.3f");
+    self->saturationSlider->delegate.self = self;
+    self->saturationSlider->delegate.didSetValue = didSetComponent;
+    self->saturationSlider->max = 1.0;
+    $(self->saturationSlider, setLabelFormat, "%.3f");
 
-		self->saturationInput = $(alloc(Input), initWithFrame, NULL);
-		assert(self->saturationInput);
+    self->saturationInput = $(alloc(Input), initWithFrame, NULL);
+    assert(self->saturationInput);
 
-		$(self->saturationInput, setControl, (Control *) self->saturationSlider);
-		$(self->saturationInput->label->text, setText, "S");
+    $(self->saturationInput, setControl, (Control *) self->saturationSlider);
+    $(self->saturationInput->label->text, setText, "S");
 
-		$((View *) self->stackView, addSubview, (View *) self->saturationInput);
+    $((View *) self->stackView, addSubview, (View *) self->saturationInput);
 
-		self->valueSlider = $(alloc(Slider), initWithFrame, NULL);
-		assert(self->valueSlider);
+    self->valueSlider = $(alloc(Slider), initWithFrame, NULL);
+    assert(self->valueSlider);
 
-		self->valueSlider->delegate.self = self;
-		self->valueSlider->delegate.didSetValue = didSetComponent;
-		self->valueSlider->max = 1.0;
-		$(self->valueSlider, setLabelFormat, "%.3f");
+    self->valueSlider->delegate.self = self;
+    self->valueSlider->delegate.didSetValue = didSetComponent;
+    self->valueSlider->max = 1.0;
+    $(self->valueSlider, setLabelFormat, "%.3f");
 
-		self->valueInput = $(alloc(Input), initWithFrame, NULL);
-		assert(self->valueInput);
+    self->valueInput = $(alloc(Input), initWithFrame, NULL);
+    assert(self->valueInput);
 
-		$(self->valueInput, setControl, (Control *) self->valueSlider);
-		$(self->valueInput->label->text, setText, "V");
+    $(self->valueInput, setControl, (Control *) self->valueSlider);
+    $(self->valueInput->label->text, setText, "V");
 
-		$((View *) self->stackView, addSubview, (View *) self->valueInput);
+    $((View *) self->stackView, addSubview, (View *) self->valueInput);
 
-		$(self, setColor, 0.0, 1.0, 1.0);
-	}
+    $(self, setColor, 0.0, 1.0, 1.0);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -206,7 +206,7 @@ static HSVColorPicker *initWithFrame(HSVColorPicker *self, const SDL_Rect *frame
  * @memberof HSVColorPicker
  */
 static SDL_Color rgbColor(const HSVColorPicker *self) {
-	return MVC_HSVToRGB(self->hue, self->saturation, self->value);
+  return MVC_HSVToRGB(self->hue, self->saturation, self->value);
 }
 
 /**
@@ -215,11 +215,11 @@ static SDL_Color rgbColor(const HSVColorPicker *self) {
  */
 static void setColor(HSVColorPicker *self, double hue, double saturation, double value) {
 
-	self->hue = hue;
-	self->saturation = saturation;
-	self->value = value;
+  self->hue = hue;
+  self->saturation = saturation;
+  self->value = value;
 
-	$((View *) self, updateBindings);
+  $((View *) self, updateBindings);
 }
 
 /**
@@ -228,9 +228,9 @@ static void setColor(HSVColorPicker *self, double hue, double saturation, double
  */
 static void setRGBColor(HSVColorPicker *self, const SDL_Color *color) {
 
-	MVC_RGBToHSV(color, &self->hue, &self->saturation, &self->value);
+  MVC_RGBToHSV(color, &self->hue, &self->saturation, &self->value);
 
-	$((View *) self, updateBindings);
+  $((View *) self, updateBindings);
 }
 
 #pragma mark - Class lifecycle
@@ -240,16 +240,16 @@ static void setRGBColor(HSVColorPicker *self, const SDL_Color *color) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
 
-	((HSVColorPickerInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((HSVColorPickerInterface *) clazz->interface)->rgbColor = rgbColor;
-	((HSVColorPickerInterface *) clazz->interface)->setColor = setColor;
-	((HSVColorPickerInterface *) clazz->interface)->setRGBColor = setRGBColor;
+  ((HSVColorPickerInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((HSVColorPickerInterface *) clazz->interface)->rgbColor = rgbColor;
+  ((HSVColorPickerInterface *) clazz->interface)->setColor = setColor;
+  ((HSVColorPickerInterface *) clazz->interface)->setRGBColor = setRGBColor;
 }
 
 /**
@@ -257,21 +257,21 @@ static void initialize(Class *clazz) {
  * @memberof HSVColorPicker
  */
 Class *_HSVColorPicker(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "HSVColorPicker",
-			.superclass = _Control(),
-			.instanceSize = sizeof(HSVColorPicker),
-			.interfaceOffset = offsetof(HSVColorPicker, interface),
-			.interfaceSize = sizeof(HSVColorPickerInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "HSVColorPicker",
+      .superclass = _Control(),
+      .instanceSize = sizeof(HSVColorPicker),
+      .interfaceOffset = offsetof(HSVColorPicker, interface),
+      .interfaceSize = sizeof(HSVColorPickerInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

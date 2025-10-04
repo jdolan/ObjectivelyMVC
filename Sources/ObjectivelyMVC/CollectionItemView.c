@@ -34,13 +34,13 @@
  */
 static void dealloc(Object *self) {
 
-	CollectionItemView *this = (CollectionItemView *) self;
+  CollectionItemView *this = (CollectionItemView *) self;
 
-	release(this->imageView);
-	release(this->selectionOverlay);
-	release(this->text);
+  release(this->imageView);
+  release(this->selectionOverlay);
+  release(this->text);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -50,22 +50,22 @@ static void dealloc(Object *self) {
  */
 static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
-	assert(simpleSelector);
+  assert(simpleSelector);
 
-	const CollectionItemView *this = (CollectionItemView *) self;
-	const char *pattern = simpleSelector->pattern;
+  const CollectionItemView *this = (CollectionItemView *) self;
+  const char *pattern = simpleSelector->pattern;
 
-	switch (simpleSelector->type) {
-		case SimpleSelectorTypePseudo:
-			if (strcmp("selected", pattern) == 0) {
-				return this->isSelected;
-			}
-			break;
-		default:
-			break;
-	}
+  switch (simpleSelector->type) {
+    case SimpleSelectorTypePseudo:
+      if (strcmp("selected", pattern) == 0) {
+        return this->isSelected;
+      }
+      break;
+    default:
+      break;
+  }
 
-	return super(View, self, matchesSelector, simpleSelector);
+  return super(View, self, matchesSelector, simpleSelector);
 }
 
 #pragma mark - CollectionItemView
@@ -76,35 +76,35 @@ static bool matchesSelector(const View *self, const SimpleSelector *simpleSelect
  */
 static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rect *frame) {
 
-	self = (CollectionItemView *) super(View, self, initWithFrame, frame);
-	if (self) {
-		self->imageView = $(alloc(ImageView), initWithFrame, frame);
-		assert(self->imageView);
+  self = (CollectionItemView *) super(View, self, initWithFrame, frame);
+  if (self) {
+    self->imageView = $(alloc(ImageView), initWithFrame, frame);
+    assert(self->imageView);
 
-		self->imageView->view.autoresizingMask = ViewAutoresizingFill;
+    self->imageView->view.autoresizingMask = ViewAutoresizingFill;
 
-		$((View *) self, addSubview, (View *) self->imageView);
+    $((View *) self, addSubview, (View *) self->imageView);
 
-		self->text = $(alloc(Text), initWithText, NULL, NULL);
-		assert(self->text);
+    self->text = $(alloc(Text), initWithText, NULL, NULL);
+    assert(self->text);
 
-		self->text->view.alignment = ViewAlignmentMiddleCenter;
+    self->text->view.alignment = ViewAlignmentMiddleCenter;
 
-		$((View *) self, addSubview, (View *) self->text);
+    $((View *) self, addSubview, (View *) self->text);
 
-		self->selectionOverlay = $(alloc(View), initWithFrame, NULL);
-		assert(self->selectionOverlay);
+    self->selectionOverlay = $(alloc(View), initWithFrame, NULL);
+    assert(self->selectionOverlay);
 
-		$(self->selectionOverlay, addClassName, "selectionOverlay");
+    $(self->selectionOverlay, addClassName, "selectionOverlay");
 
-		self->selectionOverlay->autoresizingMask = ViewAutoresizingFill;
+    self->selectionOverlay->autoresizingMask = ViewAutoresizingFill;
 
-		$((View *) self, addSubview, self->selectionOverlay);
+    $((View *) self, addSubview, self->selectionOverlay);
 
-		self->view.clipsSubviews = true;
-	}
+    self->view.clipsSubviews = true;
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -112,7 +112,7 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
  * @memberof CollectionItemView
  */
 static void setSelected(CollectionItemView *self, bool isSelected) {
-	self->isSelected = isSelected;
+  self->isSelected = isSelected;
 }
 
 #pragma mark - Class lifecycle
@@ -122,12 +122,12 @@ static void setSelected(CollectionItemView *self, bool isSelected) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
-	
-	((CollectionItemViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((CollectionItemViewInterface *) clazz->interface)->setSelected = setSelected;
+  ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
+  
+  ((CollectionItemViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((CollectionItemViewInterface *) clazz->interface)->setSelected = setSelected;
 }
 
 /**
@@ -135,21 +135,21 @@ static void initialize(Class *clazz) {
  * @memberof CollectionItemView
  */
 Class *_CollectionItemView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "CollectionItemView",
-			.superclass = _View(),
-			.instanceSize = sizeof(CollectionItemView),
-			.interfaceOffset = offsetof(CollectionItemView, interface),
-			.interfaceSize = sizeof(CollectionItemViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "CollectionItemView",
+      .superclass = _View(),
+      .instanceSize = sizeof(CollectionItemView),
+      .interfaceOffset = offsetof(CollectionItemView, interface),
+      .interfaceSize = sizeof(CollectionItemViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

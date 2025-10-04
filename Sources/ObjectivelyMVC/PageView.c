@@ -34,22 +34,22 @@
  */
 static void addSubview(View *self, View *subview) {
 
-	super(View, self, addSubview, subview);
+  super(View, self, addSubview, subview);
 
-	PageView *this = (PageView *) self;
+  PageView *this = (PageView *) self;
 
-	subview->hidden = true;
+  subview->hidden = true;
 
-	if (this->currentPage == NULL) {
-		$(this, setCurrentPage, subview);
-	}
+  if (this->currentPage == NULL) {
+    $(this, setCurrentPage, subview);
+  }
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((PageView *) self, initWithFrame, NULL);
+  return (View *) $((PageView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -57,26 +57,26 @@ static View *init(View *self) {
  */
 static void removeSubview(View *self, View *subview) {
 
-	PageView *this = (PageView *) self;
+  PageView *this = (PageView *) self;
 
-	retain(subview);
+  retain(subview);
 
-	super(View, self, removeSubview, subview);
+  super(View, self, removeSubview, subview);
 
-	subview->hidden = false;
+  subview->hidden = false;
 
-	if (subview == this->currentPage) {
-		$(this, setCurrentPage, NULL);
-	}
+  if (subview == this->currentPage) {
+    $(this, setCurrentPage, NULL);
+  }
 
-	release(subview);
+  release(subview);
 }
 
 /**
  * @see View::visibleSubviews(const View *)
  */
 static Array *visibleSubviews(const View *self) {
-	return $$(Array, arrayWithArray, (Array *) self->subviews);
+  return $$(Array, arrayWithArray, (Array *) self->subviews);
 }
 
 #pragma mark - PageView
@@ -87,12 +87,12 @@ static Array *visibleSubviews(const View *self) {
  */
 static PageView *initWithFrame(PageView *self, const SDL_Rect *frame) {
 
-	self = (PageView *) super(View, self, initWithFrame, frame);
-	if (self) {
-		$((View *) self, addClassName, "container");
-	}
+  self = (PageView *) super(View, self, initWithFrame, frame);
+  if (self) {
+    $((View *) self, addClassName, "container");
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -100,13 +100,13 @@ static PageView *initWithFrame(PageView *self, const SDL_Rect *frame) {
  */
 static void setCurrentPage_enumerate(const Array *array, ident obj, ident data) {
 
-	View *subview = obj;
+  View *subview = obj;
 
-	if (subview == ((PageView *) data)->currentPage) {
-		subview->hidden = false;
-	} else {
-		subview->hidden = true;
-	}
+  if (subview == ((PageView *) data)->currentPage) {
+    subview->hidden = false;
+  } else {
+    subview->hidden = true;
+  }
 }
 
 /**
@@ -115,27 +115,27 @@ static void setCurrentPage_enumerate(const Array *array, ident obj, ident data) 
  */
 static void setCurrentPage(PageView *self, View *currentPage) {
 
-	if (currentPage != self->currentPage) {
+  if (currentPage != self->currentPage) {
 
-		const Array *subviews = (Array *) self->view.subviews;
+    const Array *subviews = (Array *) self->view.subviews;
 
-		if (currentPage) {
-			self->currentPage = currentPage;
-		} else {
-			self->currentPage = $(subviews, firstObject);
-		}
+    if (currentPage) {
+      self->currentPage = currentPage;
+    } else {
+      self->currentPage = $(subviews, firstObject);
+    }
 
-		$(subviews, enumerateObjects, setCurrentPage_enumerate, self);
+    $(subviews, enumerateObjects, setCurrentPage_enumerate, self);
 
-		if (self->currentPage) {
+    if (self->currentPage) {
 
-			if (self->delegate.didSetCurrentPage) {
-				self->delegate.didSetCurrentPage(self);
-			}
-		}
+      if (self->delegate.didSetCurrentPage) {
+        self->delegate.didSetCurrentPage(self);
+      }
+    }
 
-		self->view.needsLayout = true;
-	}
+    self->view.needsLayout = true;
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -145,13 +145,13 @@ static void setCurrentPage(PageView *self, View *currentPage) {
  */
 static void initialize(Class *clazz) {
 
-	((ViewInterface *) clazz->interface)->addSubview = addSubview;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->removeSubview = removeSubview;
-	((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
+  ((ViewInterface *) clazz->interface)->addSubview = addSubview;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->removeSubview = removeSubview;
+  ((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 
-	((PageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((PageViewInterface *) clazz->interface)->setCurrentPage = setCurrentPage;
+  ((PageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((PageViewInterface *) clazz->interface)->setCurrentPage = setCurrentPage;
 }
 
 /**
@@ -159,21 +159,21 @@ static void initialize(Class *clazz) {
  * @memberof PageView
  */
 Class *_PageView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "PageView",
-			.superclass = _View(),
-			.instanceSize = sizeof(PageView),
-			.interfaceOffset = offsetof(PageView, interface),
-			.interfaceSize = sizeof(PageViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "PageView",
+      .superclass = _View(),
+      .instanceSize = sizeof(PageView),
+      .interfaceOffset = offsetof(PageView, interface),
+      .interfaceSize = sizeof(PageViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

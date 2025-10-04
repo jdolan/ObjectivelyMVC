@@ -31,8 +31,8 @@
  * @brief Warning types.
  */
 typedef enum {
-	WarningTypeStyle = 1,
-	WarningTypeLayout,
+  WarningTypeStyle = 1,
+  WarningTypeLayout,
 } WarningType;
 
 /**
@@ -49,26 +49,26 @@ typedef struct WarningInterface WarningInterface;
  */
 struct Warning {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	WarningInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  WarningInterface *interface;
 
-	/**
-	 * @brief The WarningType.
-	 */
-	WarningType type;
+  /**
+   * @brief The WarningType.
+   */
+  WarningType type;
 
-	/**
-	 * @brief The message.
-	 */
-	String *message;
+  /**
+   * @brief The message.
+   */
+  String *message;
 };
 
 /**
@@ -76,33 +76,33 @@ struct Warning {
  */
 struct WarningInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface objectInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface objectInterface;
 
-	/**
-	 * @fn Warning *Warning::initWithFormat(Warning *self, WarningType type, const char *fmt, ...)
-	 * @brief Initializes this Warning with the given type and format string.
-	 * @param self The Warning.
-	 * @param type The WarningType.
-	 * @param fmt The format string.
-	 * @return The initialized Warning, or `NULL` on error.
-	 * @memberof Warning
-	 */
-	Warning *(*initWithFormat)(Warning *self, WarningType type, const char *fmt, ...);
+  /**
+   * @fn Warning *Warning::initWithFormat(Warning *self, WarningType type, const char *fmt, ...)
+   * @brief Initializes this Warning with the given type and format string.
+   * @param self The Warning.
+   * @param type The WarningType.
+   * @param fmt The format string.
+   * @return The initialized Warning, or `NULL` on error.
+   * @memberof Warning
+   */
+  Warning *(*initWithFormat)(Warning *self, WarningType type, const char *fmt, ...);
 
-	/**
-	 * @fn Warning *Warning::initWithVaList(Warning *self, WarningType type, const char *fmt, va_list args)
-	 * @brief Initializes this Warning with the given type and format string.
-	 * @param self The Warning.
-	 * @param type The WarningType.
-	 * @param fmt The format string.
-	 * @param args The format arguments .
-	 * @return The initialized Warning, or `NULL` on error.
-	 * @memberof Warning
-	 */
-	Warning *(*initWithVaList)(Warning *self, WarningType type, const char *fmt, va_list args);
+  /**
+   * @fn Warning *Warning::initWithVaList(Warning *self, WarningType type, const char *fmt, va_list args)
+   * @brief Initializes this Warning with the given type and format string.
+   * @param self The Warning.
+   * @param type The WarningType.
+   * @param fmt The format string.
+   * @param args The format arguments .
+   * @return The initialized Warning, or `NULL` on error.
+   * @memberof Warning
+   */
+  Warning *(*initWithVaList)(Warning *self, WarningType type, const char *fmt, va_list args);
 };
 
 /**

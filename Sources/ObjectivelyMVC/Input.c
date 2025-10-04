@@ -26,10 +26,10 @@
 #include "Input.h"
 
 const EnumName InputOrientationNames[] = MakeEnumNames(
-	MakeEnumName(InputOrientationLeft),
-	MakeEnumName(InputOrientationRight),
-	MakeEnumName(InputOrientationAbove),
-	MakeEnumName(InputOrientationBelow)
+  MakeEnumName(InputOrientationLeft),
+  MakeEnumName(InputOrientationRight),
+  MakeEnumName(InputOrientationAbove),
+  MakeEnumName(InputOrientationBelow)
 );
 
 #define _Class _Input
@@ -41,12 +41,12 @@ const EnumName InputOrientationNames[] = MakeEnumNames(
  */
 static void dealloc(Object *self) {
 
-	Input *this = (Input *) self;
+  Input *this = (Input *) self;
 
-	release(this->control);
-	release(this->label);
+  release(this->control);
+  release(this->label);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -56,26 +56,26 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	Input *this = (Input *) self;
+  Input *this = (Input *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("control", InletTypeView, &this->control, NULL),
-		MakeInlet("label", InletTypeView, &this->label, NULL),
-		MakeInlet("orientation", InletTypeEnum, &this->orientation, (ident) InputOrientationNames)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("control", InletTypeView, &this->control, NULL),
+    MakeInlet("label", InletTypeView, &this->label, NULL),
+    MakeInlet("orientation", InletTypeEnum, &this->orientation, (ident) InputOrientationNames)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 
-	$(this, setOrientation, this->orientation);
+  $(this, setOrientation, this->orientation);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Input *) self, initWithFrame, NULL);
+  return (View *) $((Input *) self, initWithFrame, NULL);
 }
 
 #pragma mark - Input
@@ -86,24 +86,24 @@ static View *init(View *self) {
  */
 static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
 
-	self = (Input *) super(StackView, self, initWithFrame, frame);
-	if (self) {
+  self = (Input *) super(StackView, self, initWithFrame, frame);
+  if (self) {
 
-		self->control = $(alloc(Control), initWithFrame, NULL);
-		assert(self->control);
+    self->control = $(alloc(Control), initWithFrame, NULL);
+    assert(self->control);
 
-		self->label = $(alloc(Label), initWithText, NULL, NULL);
-		assert(self->label);
+    self->label = $(alloc(Label), initWithText, NULL, NULL);
+    assert(self->label);
 
-		$((View *) self, addSubview, (View *) self->control);
-		$((View *) self, addSubview, (View *) self->label);
+    $((View *) self, addSubview, (View *) self->control);
+    $((View *) self, addSubview, (View *) self->label);
 
-		$((View *) self, addClassName, "container");
+    $((View *) self, addClassName, "container");
 
-		$(self, setOrientation, InputOrientationLeft);
-	}
+    $(self, setOrientation, InputOrientationLeft);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -112,15 +112,15 @@ static Input *initWithFrame(Input *self, const SDL_Rect *frame) {
  */
 static void setControl(Input *self, Control *control) {
 
-	assert(control);
+  assert(control);
 
-	$((View *) self, removeSubview, (View *) self->control);
-	release(self->control);
+  $((View *) self, removeSubview, (View *) self->control);
+  release(self->control);
 
-	self->control = retain(control);
-	$((View *) self, addSubview, (View *) self->control);
+  self->control = retain(control);
+  $((View *) self, addSubview, (View *) self->control);
 
-	$(self, setOrientation, self->orientation);
+  $(self, setOrientation, self->orientation);
 }
 
 /**
@@ -129,15 +129,15 @@ static void setControl(Input *self, Control *control) {
  */
 static void setLabel(Input *self, Label *label) {
 
-	assert(label);
+  assert(label);
 
-	$((View *) self, removeSubview, (View *) self->label);
-	release(self->label);
+  $((View *) self, removeSubview, (View *) self->label);
+  release(self->label);
 
-	self->label = retain(label);
-	$((View *) self, addSubview, (View *) self->label);
+  self->label = retain(label);
+  $((View *) self, addSubview, (View *) self->label);
 
-	$(self, setOrientation, self->orientation);
+  $(self, setOrientation, self->orientation);
 }
 
 /**
@@ -146,45 +146,45 @@ static void setLabel(Input *self, Label *label) {
  */
 static void setOrientation(Input *self, InputOrientation orientation) {
 
-	self->orientation = orientation;
+  self->orientation = orientation;
 
-	$((View *) self->control, removeFromSuperview);
-	$((View *) self->label, removeFromSuperview);
+  $((View *) self->control, removeFromSuperview);
+  $((View *) self->label, removeFromSuperview);
 
-	switch (self->orientation) {
-		case InputOrientationLeft:
-		case InputOrientationAbove:
-			$((View *) self, addSubview, (View *) self->label);
-			$((View *) self, addSubview, (View *) self->control);
-			break;
+  switch (self->orientation) {
+    case InputOrientationLeft:
+    case InputOrientationAbove:
+      $((View *) self, addSubview, (View *) self->label);
+      $((View *) self, addSubview, (View *) self->control);
+      break;
 
-		case InputOrientationRight:
-		case InputOrientationBelow:
-			$((View *) self, addSubview, (View *) self->control);
-			$((View *) self, addSubview, (View *) self->label);
-			break;
-	}
+    case InputOrientationRight:
+    case InputOrientationBelow:
+      $((View *) self, addSubview, (View *) self->control);
+      $((View *) self, addSubview, (View *) self->label);
+      break;
+  }
 
-	switch (self->orientation) {
-		case InputOrientationLeft:
-			self->stackView.axis = StackViewAxisHorizontal;
-			self->label->view.alignment = ViewAlignmentMiddleLeft;
-			self->control->view.alignment = ViewAlignmentMiddleRight;
-			break;
+  switch (self->orientation) {
+    case InputOrientationLeft:
+      self->stackView.axis = StackViewAxisHorizontal;
+      self->label->view.alignment = ViewAlignmentMiddleLeft;
+      self->control->view.alignment = ViewAlignmentMiddleRight;
+      break;
 
-		case InputOrientationRight:
-			self->stackView.axis = StackViewAxisHorizontal;
-			self->label->view.alignment = ViewAlignmentMiddleRight;
-			self->control->view.alignment = ViewAlignmentMiddleLeft;
-			break;
+    case InputOrientationRight:
+      self->stackView.axis = StackViewAxisHorizontal;
+      self->label->view.alignment = ViewAlignmentMiddleRight;
+      self->control->view.alignment = ViewAlignmentMiddleLeft;
+      break;
 
-		case InputOrientationAbove:
-		case InputOrientationBelow:
-			self->stackView.axis = StackViewAxisVertical;
-			self->label->view.alignment = ViewAlignmentMiddleCenter;
-			self->control->view.alignment = ViewAlignmentMiddleCenter;
-			break;
-	}
+    case InputOrientationAbove:
+    case InputOrientationBelow:
+      self->stackView.axis = StackViewAxisVertical;
+      self->label->view.alignment = ViewAlignmentMiddleCenter;
+      self->control->view.alignment = ViewAlignmentMiddleCenter;
+      break;
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -194,15 +194,15 @@ static void setOrientation(Input *self, InputOrientation orientation) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
 
-	((InputInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((InputInterface *) clazz->interface)->setControl = setControl;
-	((InputInterface *) clazz->interface)->setLabel = setLabel;
-	((InputInterface *) clazz->interface)->setOrientation = setOrientation;
+  ((InputInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((InputInterface *) clazz->interface)->setControl = setControl;
+  ((InputInterface *) clazz->interface)->setLabel = setLabel;
+  ((InputInterface *) clazz->interface)->setOrientation = setOrientation;
 }
 
 /**
@@ -210,21 +210,21 @@ static void initialize(Class *clazz) {
  * @memberof Input
  */
 Class *_Input(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Input",
-			.superclass = _StackView(),
-			.instanceSize = sizeof(Input),
-			.interfaceOffset = offsetof(Input, interface),
-			.interfaceSize = sizeof(InputInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Input",
+      .superclass = _StackView(),
+      .instanceSize = sizeof(Input),
+      .interfaceOffset = offsetof(Input, interface),
+      .interfaceSize = sizeof(InputInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

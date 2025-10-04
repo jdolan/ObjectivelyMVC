@@ -1,314 +1,314 @@
 * {
-	background-color: transparent;
-	border-width: 0;
+  background-color: transparent;
+  border-width: 0;
 }
 
 Box {
-	autoresizing-mask: contain;
-	border-color: #dededeaa;
-	border-width: 1;
-	padding: 10 10 10 10;
+  autoresizing-mask: contain;
+  border-color: #dededeaa;
+  border-width: 1;
+  padding: 10 10 10 10;
 }
 
 Box > Label {
-	background-color: #888888;
-	padding: 0 8 0 8;
-	left: 20;
+  background-color: #888888;
+  padding: 0 8 0 8;
+  left: 20;
 }
 
 Box > Label > Text {
-	font-size: 12;
+  font-size: 12;
 }
 
 Box > .contentView {
-	autoresizing-mask: contain | width;
-	padding-top: 4;
-	spacing: 4;
+  autoresizing-mask: contain | width;
+  padding-top: 4;
+  spacing: 4;
 }
 
 Button {
-	autoresizing-mask: contain;
-	background-color: #88888822;
-	border-color: ghostwhite;
-	bevel: outset;
-	min-width: 100;
-	padding: 8 8 8 8;
+  autoresizing-mask: contain;
+  background-color: #88888822;
+  border-color: ghostwhite;
+  bevel: outset;
+  min-width: 100;
+  padding: 8 8 8 8;
 }
 
 Button:highlighted {
-	bevel: inset;
+  bevel: inset;
 }
 
 Button > * {
-	alignment: middle-center;
+  alignment: middle-center;
 }
 
 Checkbox {
-	autoresizing-mask: contain;
+  autoresizing-mask: contain;
 }
 
 Checkbox > Control {
-	autoresizing-mask: contain;
-	background-color: #22222266;
-	bevel: inset;
-	min-width: 18;
-	min-height: 18;
-	padding: 4 4 4 4;
+  autoresizing-mask: contain;
+  background-color: #22222266;
+  bevel: inset;
+  min-width: 18;
+  min-height: 18;
+  padding: 4 4 4 4;
 }
 
 CollectionItemView {
-	background-color: #22222266;
-	border-color: #999999aa;
+  background-color: #22222266;
+  border-color: #999999aa;
 }
 
 CollectionItemView > .selectionOverlay {
-	background-color: #ffffff22;
-	hidden: true;
+  background-color: #ffffff22;
+  hidden: true;
 }
 
 CollectionItemView:selected > .selectionOverlay {
-	hidden: false;
+  hidden: false;
 }
 
 CollectionView {
-	background-color: #22222266;
-	item-size: 64 64;
-	item-spacing: 10 10;
+  background-color: #22222266;
+  item-size: 64 64;
+  item-spacing: 10 10;
 }
 
 CollectionView .contentView {
-	autoresizing-mask: contain;
-	padding: 10 10 10 10;
+  autoresizing-mask: contain;
+  padding: 10 10 10 10;
 }
 
 Control {
-	min-height: 32;
-	selection: single;
+  min-height: 32;
+  selection: single;
 }
 
 HSVColorPicker,
 HueColorPicker,
 RGBColorPicker {
-	autoresizing-mask: contain;
+  autoresizing-mask: contain;
 }
 
 HSVColorPicker .colorView,
 HueColorPicker .colorView,
 RGBColorPicker .colorView {
-	autoresizing-mask: width;
-	background-color: none;
-	height: 8;
+  autoresizing-mask: width;
+  background-color: none;
+  height: 8;
 }
 
 Input {
-	autoresizing-mask: contain;
+  autoresizing-mask: contain;
 }
 
 Label {
-	autoresizing-mask: contain;
+  autoresizing-mask: contain;
 }
 
 Label > Text {
-	alignment: middle-left;
+  alignment: middle-left;
 }
 
 Option {
-	autoresizing-mask: contain | width;
-	min-width: 100;
-	padding: 2 2 2 2;
+  autoresizing-mask: contain | width;
+  min-width: 100;
+  padding: 2 2 2 2;
 }
 
 Option > Text {
-	alignment: middle-left;
+  alignment: middle-left;
 }
 
 PageView {
-	autoresizing-mask: contain;
-	border-color: #888888;
-	padding: 12 12 12 12;
+  autoresizing-mask: contain;
+  border-color: #888888;
+  padding: 12 12 12 12;
 }
 
 Panel {
-	autoresizing-mask: contain;
-	background-color: #444444dd;
-	border-color: #dedede;
-	border-width: 1;
-	padding: 12 12 12 12;
+  autoresizing-mask: contain;
+  background-color: #444444dd;
+  border-color: #dedede;
+  border-width: 1;
+  padding: 12 12 12 12;
 }
 
 Panel > StackView {
-	spacing: 12;
+  spacing: 12;
 }
 
 Panel .accessoryView {
-	alignment: middle-right;
-	autoresizing-mask: contain;
-	axis: horizontal;
+  alignment: middle-right;
+  autoresizing-mask: contain;
+  axis: horizontal;
 }
 
 ProgressBar {
-	autoresizing-mask: contain | width;
+  autoresizing-mask: contain | width;
 }
 
 ProgressBar > .background {
-	autoresizing-mask: fill;
-	background-color: silver;
+  autoresizing-mask: fill;
+  background-color: silver;
 }
 
 ProgressBar > .foreground {
-	autoresizing-mask: height;
-	background-color: darkgray;
+  autoresizing-mask: height;
+  background-color: darkgray;
 }
 
 ProgressBar > Label {
-	alignment: middle-center;
+  alignment: middle-center;
 }
 
 ScrollView {
-	autoresizing-mask: fill;
-	clips-subviews: true;
+  autoresizing-mask: fill;
+  clips-subviews: true;
 }
 
 ScrollView > .contentView {
-	autoresizing-mask: fit;
+  autoresizing-mask: fit;
 }
 
 Select {
-	autoresizing-mask: contain;
-	background-color: #dedede10;
-	bevel: outset;
-	padding: 4 4 4 4;
+  autoresizing-mask: contain;
+  background-color: #dedede10;
+  bevel: outset;
+  padding: 4 4 4 4;
 }
 
 Select > StackView {
-	autoresizing-mask: contain;
-	alignment: middle-left;
+  autoresizing-mask: contain;
+  alignment: middle-left;
 }
 
 Slider {
-	autoresizing-mask: contain;
-	width: 140;
+  autoresizing-mask: contain;
+  width: 140;
 }
 
 Slider > .bar {
-	alignment: middle-left;
-	autoresizing-mask: fill;
+  alignment: middle-left;
+  autoresizing-mask: fill;
 }
 
 Slider > .bar > .handle {
-	alignment: middle;
-	background-color: #444444dd;
-	bevel: outset;
-	min-width: 8;
-	max-height: 16;
+  alignment: middle;
+  background-color: #444444dd;
+  bevel: outset;
+  min-width: 8;
+  max-height: 16;
 }
 
 Slider > .label {
-	alignment: middle-right;
-	padding: 0 0 0 18;
+  alignment: middle-right;
+  padding: 0 0 0 18;
 }
 
 StackView.container {
-	spacing: 12;
+  spacing: 12;
 }
 
 TableCellView {
-	autoresizing-mask: contain;
-	padding: 0 2 0 2;
-	min-width: 80;
-	min-height: 24;
+  autoresizing-mask: contain;
+  padding: 0 2 0 2;
+  min-width: 80;
+  min-height: 24;
 }
 
 TableCellView > Text {
-	alignment: middle-left;
+  alignment: middle-left;
 }
 
 TableHeaderView {
-	background-color: #ffffff22;
+  background-color: #ffffff22;
 }
 
 TableRowView {
-	autoresizing-mask: contain | width;
-	axis: horizontal;
-	distribution: fill;
+  autoresizing-mask: contain | width;
+  axis: horizontal;
+  distribution: fill;
 }
 
 TableRowView:nth-child(even) TableCellView {
-	background-color: #ffffff11;
+  background-color: #ffffff11;
 }
 
 TableRowView:selected {
-	background-color: darkgray;
+  background-color: darkgray;
 }
 
 TableView > ScrollView > .contentView {
-	autoresizing-mask: contain | width;
+  autoresizing-mask: contain | width;
 }
 
 TabView {
-	spacing: 4;
+  spacing: 4;
 }
 
 TabView > .tabPageView {
-	border-color: silver;
-	border-width: 1;
+  border-color: silver;
+  border-width: 1;
 }
 
 TabView > .tabSelectionView {
-	autoresizing-mask: contain | width;
-	axis: horizontal;
-	distribution: fill-equally;
-	spacing: 4;
+  autoresizing-mask: contain | width;
+  axis: horizontal;
+  distribution: fill-equally;
+  spacing: 4;
 }
 
 TabView > .tabSelectionView > Label {
-	padding: 2 2 2 2;
+  padding: 2 2 2 2;
 }
 
 TabView > .tabSelectionView > Label.selected {
-	background-color: darkgray;
+  background-color: darkgray;
 }
 
 TabView > .tabSelectionView > Label > Text {
-	alignment: middle-center;
+  alignment: middle-center;
 }
 
 TextView {
-	autoresizing-mask: contain;
-	background-color: #22222266;
-	bevel: inset;
-	padding: 4 4 4 4;
-	width: 160;
+  autoresizing-mask: contain;
+  background-color: #22222266;
+  bevel: inset;
+  padding: 4 4 4 4;
+  width: 160;
 }
 
 TextView > Text {
-	alignment: middle-left;
+  alignment: middle-left;
 }
 
 Text {
-	color: ghostwhite;
+  color: ghostwhite;
 }
 
 .container {
-	autoresizing-mask: contain;
+  autoresizing-mask: contain;
 }
 
 .options {
-	alignment: internal;
-	border-color: #dededeaa;
-	border-width: 1;
-	padding: 1;
+  alignment: internal;
+  border-color: #dededeaa;
+  border-width: 1;
+  padding: 1;
 }
 
 .options > Option {
-	background-color: charcoal;
-	padding: 0 4 0 4;
+  background-color: charcoal;
+  padding: 0 4 0 4;
 }
 
 .options > Option:hover {
-	background-color: darkgray;
+  background-color: darkgray;
 }
 
 .options > Option:selected {
-	background-color: dimgray;
+  background-color: dimgray;
 }

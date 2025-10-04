@@ -58,39 +58,39 @@ typedef void (*ViewEnumerator)(View *view, ident data);
  * @brief View event relay codes.
  */
 typedef enum {
-	ViewEventNone,
-	ViewEventKeyDown,
-	ViewEventKeyUp,
-	ViewEventMouseButtonDown,
-	ViewEventMouseButtonUp,
-	ViewEventMouseEnter,
-	ViewEventMouseLeave,
-	ViewEventMouseMotion,
+  ViewEventNone,
+  ViewEventKeyDown,
+  ViewEventKeyUp,
+  ViewEventMouseButtonDown,
+  ViewEventMouseButtonUp,
+  ViewEventMouseEnter,
+  ViewEventMouseLeave,
+  ViewEventMouseMotion,
 
-	/**
-	 * @brief A Control has lost focus.
-	 */
-	ViewEventBlur,
+  /**
+   * @brief A Control has lost focus.
+   */
+  ViewEventBlur,
 
-	/**
-	 * @brief A Control's input value has changed.
-	 */
-	ViewEventChange,
+  /**
+   * @brief A Control's input value has changed.
+   */
+  ViewEventChange,
 
-	/**
-	 * @brief A Control received one or more click events.
-	 */
-	ViewEventClick,
+  /**
+   * @brief A Control received one or more click events.
+   */
+  ViewEventClick,
 
-	/**
-	 * @brief A Control's state has focus.
-	 */
-	ViewEventFocus,
+  /**
+   * @brief A Control's state has focus.
+   */
+  ViewEventFocus,
 
-	/**
-	 * @brief User-defined ViewEvents.
-	 */
-	ViewEventUserDefined,
+  /**
+   * @brief User-defined ViewEvents.
+   */
+  ViewEventUserDefined,
 } ViewEvent;
 
 /**
@@ -111,7 +111,7 @@ typedef struct SDL_Size SDL_Size;
  * @brief The SDL_Size type.
  */
 struct SDL_Size {
-	int w, h;
+  int w, h;
 };
 
 /**

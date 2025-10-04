@@ -40,31 +40,31 @@ typedef struct OptionInterface OptionInterface;
  */
 struct Option {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	OptionInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  OptionInterface *interface;
 
-	/**
-	 * @brief True if this Option is selected, false otherwise.
-	 */
-	bool isSelected;
+  /**
+   * @brief True if this Option is selected, false otherwise.
+   */
+  bool isSelected;
 
-	/**
-	 * @brief The title.
-	 */
-	Text *title;
+  /**
+   * @brief The title.
+   */
+  Text *title;
 
-	/**
-	 * @brief The value.
-	 */
-	ident value;
+  /**
+   * @brief The value.
+   */
+  ident value;
 };
 
 /**
@@ -72,30 +72,30 @@ struct Option {
  */
 struct OptionInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn Option *Option::initWithTitle(Option *self, const char *title, ident value)
-	 * @brief Initializes this Option with the given title and value.
-	 * @param self The Option.
-	 * @param title The title.
-	 * @param value The value.
-	 * @return The initialized Option, or `NULL` on error.
-	 * @memberof Option
-	 */
-	Option *(*initWithTitle)(Option *self, const char *title, ident value);
+  /**
+   * @fn Option *Option::initWithTitle(Option *self, const char *title, ident value)
+   * @brief Initializes this Option with the given title and value.
+   * @param self The Option.
+   * @param title The title.
+   * @param value The value.
+   * @return The initialized Option, or `NULL` on error.
+   * @memberof Option
+   */
+  Option *(*initWithTitle)(Option *self, const char *title, ident value);
 
-	/**
-	 * @fn void Option::setSelected(Option *self, bool isSelected)
-	 * @brief Sets this Option's selected state.
-	 * @param self The Option.
-	 * @param isSelected True if this Option is selected, false otherwise.
-	 * @memberof Option
-	 */
-	void (*setSelected)(Option *self, bool isSelected);
+  /**
+   * @fn void Option::setSelected(Option *self, bool isSelected)
+   * @brief Sets this Option's selected state.
+   * @param self The Option.
+   * @param isSelected True if this Option is selected, false otherwise.
+   * @memberof Option
+   */
+  void (*setSelected)(Option *self, bool isSelected);
 };
 
 /**

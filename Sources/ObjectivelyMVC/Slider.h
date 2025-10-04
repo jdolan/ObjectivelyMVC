@@ -41,17 +41,17 @@ typedef struct SliderInterface SliderInterface;
  */
 struct SliderDelegate {
 
-	/**
-	 * @brief The delegate self-reference.
-	 */
-	ident self;
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
 
-	/**
-	 * @brief Delegate callback for Slider value modification.
-	 * @param slider The Slider.
-	 * @param value The value.
-	 */
-	void (*didSetValue)(Slider *slider, double value);
+  /**
+   * @brief Delegate callback for Slider value modification.
+   * @param slider The Slider.
+   * @param value The value.
+   */
+  void (*didSetValue)(Slider *slider, double value);
 };
 
 /**
@@ -61,62 +61,62 @@ struct SliderDelegate {
  */
 struct Slider {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Control control;
+  /**
+   * @brief The superclass.
+   */
+  Control control;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	SliderInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  SliderInterface *interface;
 
-	/**
-	 * @brief The slider bar.
-	 */
-	View *bar;
+  /**
+   * @brief The slider bar.
+   */
+  View *bar;
 
-	/**
-	 * @brief The delegate.
-	 */
-	SliderDelegate delegate;
+  /**
+   * @brief The delegate.
+   */
+  SliderDelegate delegate;
 
-	/**
-	 * @brief The slider handle.
-	 * @private
-	 */
-	Control *handle;
+  /**
+   * @brief The slider handle.
+   * @private
+   */
+  Control *handle;
 
-	/**
-	 * @brief The Text displaying the current value.
-	 */
-	Text *label;
+  /**
+   * @brief The Text displaying the current value.
+   */
+  Text *label;
 
-	/**
-	 * @brief The label format, e.g. `"%0.01f"`.
-	 */
-	char *labelFormat;
+  /**
+   * @brief The label format, e.g. `"%0.01f"`.
+   */
+  char *labelFormat;
 
-	/**
-	 * @brief The slider bounds.
-	 */
-	double min, max;
+  /**
+   * @brief The slider bounds.
+   */
+  double min, max;
 
-	/**
-	 * @brief The step to increment on key events.
-	 */
-	double step;
+  /**
+   * @brief The step to increment on key events.
+   */
+  double step;
 
-	/**
-	 * @brief Enable snapping the slider handle to the step
-	 */
-	bool snapToStep;
+  /**
+   * @brief Enable snapping the slider handle to the step
+   */
+  bool snapToStep;
 
-	/**
-	 * @brief The slider value.
-	 */
-	double value;
+  /**
+   * @brief The slider value.
+   */
+  double value;
 };
 
 /**
@@ -124,45 +124,45 @@ struct Slider {
  */
 struct SliderInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ControlInterface controlInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ControlInterface controlInterface;
 
-	/**
-	 * @fn void Slider::formatLabel(Slider *self)
-	 * @brief Forces an update on this Slider's label.
-	 * @param self The Slider.
-	 * @memberof Slider
-	 */
-	void (*formatLabel)(Slider *self);
+  /**
+   * @fn void Slider::formatLabel(Slider *self)
+   * @brief Forces an update on this Slider's label.
+   * @param self The Slider.
+   * @memberof Slider
+   */
+  void (*formatLabel)(Slider *self);
 
-	/**
-	 * @fn Slider *Slider::init(Slider *self)
-	 * @brief Initializes this Slider.
-	 * @param self The Slider.
-	 * @return The initialized Slider, or `NULL` on error.
-	 * @memberof Slider
-	 */
-	Slider *(*initWithFrame)(Slider *self, const SDL_Rect *frame);
+  /**
+   * @fn Slider *Slider::init(Slider *self)
+   * @brief Initializes this Slider.
+   * @param self The Slider.
+   * @return The initialized Slider, or `NULL` on error.
+   * @memberof Slider
+   */
+  Slider *(*initWithFrame)(Slider *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn void Slider::setLabelFormat(Slider *self, const char *labelFormat)
-	 * @brief Changes this Slider's label format and calls appropriate update functions
-	 * @param self The Slider.
-	 * @param labelFormat The new label format.
-	 * @memberof Slider
-	 */
-	void (*setLabelFormat)(Slider *self, const char *labelFormat);
+  /**
+   * @fn void Slider::setLabelFormat(Slider *self, const char *labelFormat)
+   * @brief Changes this Slider's label format and calls appropriate update functions
+   * @param self The Slider.
+   * @param labelFormat The new label format.
+   * @memberof Slider
+   */
+  void (*setLabelFormat)(Slider *self, const char *labelFormat);
 
-	/**
-	 * @fn void Slider::setValue(Slider *self, double value)
-	 * @brief Sets this Slider's value, invalidating its layout and notifying the delegate.
-	 * @param self The Slider.
-	 * @param value The value.
-	 * @memberof Slider
-	 */
-	void (*setValue)(Slider *self, double value);
+  /**
+   * @fn void Slider::setValue(Slider *self, double value)
+   * @brief Sets this Slider's value, invalidating its layout and notifying the delegate.
+   * @param self The Slider.
+   * @param value The value.
+   * @memberof Slider
+   */
+  void (*setValue)(Slider *self, double value);
 };
 
 /**

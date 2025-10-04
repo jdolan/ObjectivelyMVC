@@ -34,11 +34,11 @@
  */
 static void dealloc(Object *self) {
 
-	ScrollView *this = (ScrollView *) self;
+  ScrollView *this = (ScrollView *) self;
 
-	release(this->contentView);
+  release(this->contentView);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -48,14 +48,14 @@ static void dealloc(Object *self) {
  */
 static void layoutSubviews(View *self) {
 
-	super(View, self, layoutSubviews);
+  super(View, self, layoutSubviews);
 
-	ScrollView *this = (ScrollView *) self;
+  ScrollView *this = (ScrollView *) self;
 
-	if (this->contentView) {
-		this->contentView->frame.x = this->contentOffset.x;
-		this->contentView->frame.y = this->contentOffset.y;
-	}
+  if (this->contentView) {
+    this->contentView->frame.x = this->contentOffset.x;
+    this->contentView->frame.y = this->contentOffset.y;
+  }
 }
 
 #pragma mark - Control
@@ -65,35 +65,35 @@ static void layoutSubviews(View *self) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-	ScrollView *this = (ScrollView *) self;
+  ScrollView *this = (ScrollView *) self;
 
-	if (event->type == SDL_MOUSEMOTION && (event->motion.state & SDL_BUTTON_LMASK)) {
-		self->state |= ControlStateHighlighted;
+  if (event->type == SDL_MOUSEMOTION && (event->motion.state & SDL_BUTTON_LMASK)) {
+    self->state |= ControlStateHighlighted;
 
-		SDL_Point offset = this->contentOffset;
+    SDL_Point offset = this->contentOffset;
 
-		offset.x += event->motion.xrel;
-		offset.y += event->motion.yrel;
+    offset.x += event->motion.xrel;
+    offset.y += event->motion.yrel;
 
-		$(this, scrollToOffset, &offset);
-		return true;
-	} else if (event->type == SDL_MOUSEWHEEL) {
-		SDL_Point offset = this->contentOffset;
+    $(this, scrollToOffset, &offset);
+    return true;
+  } else if (event->type == SDL_MOUSEWHEEL) {
+    SDL_Point offset = this->contentOffset;
 
-		offset.x -= event->wheel.x * this->step;
-		offset.y += event->wheel.y * this->step;
+    offset.x -= event->wheel.x * this->step;
+    offset.y += event->wheel.y * this->step;
 
-		$(this, scrollToOffset, &offset);
-		return true;
-	} else if (event->type == SDL_MOUSEBUTTONUP && (event->button.button & SDL_BUTTON_LMASK)) {
+    $(this, scrollToOffset, &offset);
+    return true;
+  } else if (event->type == SDL_MOUSEBUTTONUP && (event->button.button & SDL_BUTTON_LMASK)) {
 
-		if ($(self, isHighlighted)) {
-			self->state &= ~ControlStateHighlighted;
-			return true;
-		}
-	}
+    if ($(self, isHighlighted)) {
+      self->state &= ~ControlStateHighlighted;
+      return true;
+    }
+  }
 
-	return super(Control, self, captureEvent, event);
+  return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - ScrollView
@@ -104,12 +104,12 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
  */
 static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
 
-	self = (ScrollView *) super(Control, self, initWithFrame, frame);
-	if (self) {
-		self->step = DEFAULT_SCROLL_VIEW_STEP;
-	}
+  self = (ScrollView *) super(Control, self, initWithFrame, frame);
+  if (self) {
+    self->step = DEFAULT_SCROLL_VIEW_STEP;
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -118,27 +118,27 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
  */
 static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
 
-	if (self->contentView) {
-		const SDL_Size contentSize = $(self->contentView, size);
-		const SDL_Rect bounds = $((View *) self, bounds);
+  if (self->contentView) {
+    const SDL_Size contentSize = $(self->contentView, size);
+    const SDL_Rect bounds = $((View *) self, bounds);
 
-		if (contentSize.w > bounds.w) {
-			self->contentOffset.x = clamp(offset->x, -(contentSize.w - bounds.w), 0);
-		} else {
-			self->contentOffset.x = 0;
-		}
+    if (contentSize.w > bounds.w) {
+      self->contentOffset.x = clamp(offset->x, -(contentSize.w - bounds.w), 0);
+    } else {
+      self->contentOffset.x = 0;
+    }
 
-		if (contentSize.h > bounds.h) {
-			self->contentOffset.y = clamp(offset->y, -(contentSize.h - bounds.h), 0);
-		} else {
-			self->contentOffset.y = 0;
-		}
+    if (contentSize.h > bounds.h) {
+      self->contentOffset.y = clamp(offset->y, -(contentSize.h - bounds.h), 0);
+    } else {
+      self->contentOffset.y = 0;
+    }
 
-	} else {
-		self->contentOffset.x = self->contentOffset.y = 0;
-	}
+  } else {
+    self->contentOffset.x = self->contentOffset.y = 0;
+  }
 
-	self->control.view.needsLayout = true;
+  self->control.view.needsLayout = true;
 }
 
 /**
@@ -147,22 +147,22 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
  */
 static void setContentView(ScrollView *self, View *contentView) {
 
-	if (contentView != self->contentView) {
+  if (contentView != self->contentView) {
 
-		if (self->contentView) {
-			$(self->contentView, removeClassName, "contentView");
-			$((View *) self, removeSubview, self->contentView);
-			self->contentView = release(self->contentView);
-		}
+    if (self->contentView) {
+      $(self->contentView, removeClassName, "contentView");
+      $((View *) self, removeSubview, self->contentView);
+      self->contentView = release(self->contentView);
+    }
 
-		if (contentView) {
-			$(contentView, addClassName, "contentView");
-			$((View *) self, addSubview, contentView);
-			self->contentView = retain(contentView);
-		}
+    if (contentView) {
+      $(contentView, addClassName, "contentView");
+      $((View *) self, addSubview, contentView);
+      self->contentView = retain(contentView);
+    }
 
-		$(self, scrollToOffset, &MakePoint(0, 0));
-	}
+    $(self, scrollToOffset, &MakePoint(0, 0));
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -172,15 +172,15 @@ static void setContentView(ScrollView *self, View *contentView) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+  ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((ScrollViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
-	((ScrollViewInterface *) clazz->interface)->setContentView = setContentView;
+  ((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((ScrollViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
+  ((ScrollViewInterface *) clazz->interface)->setContentView = setContentView;
 }
 
 /**
@@ -188,21 +188,21 @@ static void initialize(Class *clazz) {
  * @memberof ScrollView
  */
 Class *_ScrollView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "ScrollView",
-			.superclass = _Control(),
-			.instanceSize = sizeof(ScrollView),
-			.interfaceOffset = offsetof(ScrollView, interface),
-			.interfaceSize = sizeof(ScrollViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "ScrollView",
+      .superclass = _Control(),
+      .instanceSize = sizeof(ScrollView),
+      .interfaceOffset = offsetof(ScrollView, interface),
+      .interfaceSize = sizeof(ScrollViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

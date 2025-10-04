@@ -34,12 +34,12 @@
  */
 static void dealloc(Object *self) {
 
-	ViewController *this = (ViewController *) self;
+  ViewController *this = (ViewController *) self;
 
-	release(this->childViewControllers);
-	release(this->view);
+  release(this->childViewControllers);
+  release(this->view);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - ViewController
@@ -50,30 +50,30 @@ static void dealloc(Object *self) {
  */
 static void addChildViewController(ViewController *self, ViewController *childViewController) {
 
-	assert(childViewController);
+  assert(childViewController);
 
-	ViewController *that = retain(childViewController);
+  ViewController *that = retain(childViewController);
 
-	$(childViewController, removeFromParentViewController);
+  $(childViewController, removeFromParentViewController);
 
-	$(self->childViewControllers, addObject, childViewController);
-	childViewController->parentViewController = self;
+  $(self->childViewControllers, addObject, childViewController);
+  childViewController->parentViewController = self;
 
-	$(self, loadViewIfNeeded);
-	$(childViewController, loadViewIfNeeded);
+  $(self, loadViewIfNeeded);
+  $(childViewController, loadViewIfNeeded);
 
-	if (self->view->window) {
-		$(childViewController, viewWillAppear);
-	}
+  if (self->view->window) {
+    $(childViewController, viewWillAppear);
+  }
 
-	$(self->view, addSubview, childViewController->view);
-	$(childViewController->view, updateBindings);
+  $(self->view, addSubview, childViewController->view);
+  $(childViewController->view, updateBindings);
 
-	if (self->view->window) {
-		$(childViewController, viewDidAppear);
-	}
+  if (self->view->window) {
+    $(childViewController, viewDidAppear);
+  }
 
-	release(that);
+  release(that);
 }
 
 /**
@@ -82,13 +82,13 @@ static void addChildViewController(ViewController *self, ViewController *childVi
  */
 static ViewController *init(ViewController *self) {
 
-	self = (ViewController *) super(Object, self, init);
-	if (self) {
-		self->childViewControllers = $$(MutableArray, arrayWithCapacity, 0);
-		assert(self->childViewControllers);
-	}
+  self = (ViewController *) super(Object, self, init);
+  if (self) {
+    self->childViewControllers = $$(MutableArray, arrayWithCapacity, 0);
+    assert(self->childViewControllers);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -97,13 +97,13 @@ static ViewController *init(ViewController *self) {
  */
 static void loadView(ViewController *self) {
 
-	View *view = $(alloc(View), initWithFrame, NULL);
-	assert(view);
+  View *view = $(alloc(View), initWithFrame, NULL);
+  assert(view);
 
-	view->autoresizingMask = ViewAutoresizingFill;
+  view->autoresizingMask = ViewAutoresizingFill;
 
-	$(self, setView, view);
-	release(view);
+  $(self, setView, view);
+  release(view);
 }
 
 /**
@@ -112,11 +112,11 @@ static void loadView(ViewController *self) {
  */
 static void loadViewIfNeeded(ViewController *self) {
 
-	if (self->view == NULL) {
-		$(self, loadView);
-	}
+  if (self->view == NULL) {
+    $(self, loadView);
+  }
 
-	assert(self->view);
+  assert(self->view);
 }
 
 /**
@@ -125,15 +125,15 @@ static void loadViewIfNeeded(ViewController *self) {
  */
 static void moveToParentViewController(ViewController *self, ViewController *parentViewController) {
 
-	ViewController *this = retain(self);
+  ViewController *this = retain(self);
 
-	$(self, removeFromParentViewController);
+  $(self, removeFromParentViewController);
 
-	if (parentViewController) {
-		$(parentViewController, addChildViewController, self);
-	}
+  if (parentViewController) {
+    $(parentViewController, addChildViewController, self);
+  }
 
-	release(this);
+  release(this);
 }
 
 /**
@@ -142,19 +142,19 @@ static void moveToParentViewController(ViewController *self, ViewController *par
  */
 static void removeChildViewController(ViewController *self, ViewController *childViewController) {
 
-	assert(childViewController);
-	assert(childViewController->parentViewController == self);
+  assert(childViewController);
+  assert(childViewController->parentViewController == self);
 
-	ViewController *that = retain(childViewController);
+  ViewController *that = retain(childViewController);
 
-	$(self->childViewControllers, removeObject, childViewController);
-	childViewController->parentViewController = NULL;
+  $(self->childViewControllers, removeObject, childViewController);
+  childViewController->parentViewController = NULL;
 
-	$(childViewController, viewWillDisappear);
-	$(childViewController->view, removeFromSuperview);
-	$(childViewController, viewDidDisappear);
+  $(childViewController, viewWillDisappear);
+  $(childViewController->view, removeFromSuperview);
+  $(childViewController, viewDidDisappear);
 
-	release(that);
+  release(that);
 }
 
 /**
@@ -163,9 +163,9 @@ static void removeChildViewController(ViewController *self, ViewController *chil
  */
 static void removeFromParentViewController(ViewController *self) {
 
-	if (self->parentViewController) {
-		$(self->parentViewController, removeChildViewController, self);
-	}
+  if (self->parentViewController) {
+    $(self->parentViewController, removeChildViewController, self);
+  }
 }
 
 /**
@@ -182,27 +182,27 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
  */
 static void setView(ViewController *self, View *view) {
 
-	if (view != self->view) {
+  if (view != self->view) {
 
-		if (self->view) {
-			self->view->viewController = NULL;
-			release(self->view);
-		}
+    if (self->view) {
+      self->view->viewController = NULL;
+      release(self->view);
+    }
 
-		if (view) {
-			self->view = retain(view);
-			self->view->viewController = self;
-		} else {
-			self->view = NULL;
-		}
-	}
+    if (view) {
+      self->view = retain(view);
+      self->view->viewController = self;
+    } else {
+      self->view = NULL;
+    }
+  }
 }
 
 /**
  * @brief ArrayEnumerator for viewDidAppear recursion.
  */
 static void viewDidAppear_recurse(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, viewDidAppear);
+  $((ViewController *) obj, viewDidAppear);
 }
 
 /**
@@ -210,14 +210,14 @@ static void viewDidAppear_recurse(const Array *array, ident obj, ident data) {
  * @memberof ViewController
  */
 static void viewDidAppear(ViewController *self) {
-	$((Array *) self->childViewControllers, enumerateObjects, viewDidAppear_recurse, NULL);
+  $((Array *) self->childViewControllers, enumerateObjects, viewDidAppear_recurse, NULL);
 }
 
 /**
  * @brief ArrayEnumerator for viewDidDisappear recursion.
  */
 static void viewDidDisappear_recurse(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, viewDidAppear);
+  $((ViewController *) obj, viewDidAppear);
 }
 
 /**
@@ -225,14 +225,14 @@ static void viewDidDisappear_recurse(const Array *array, ident obj, ident data) 
  * @memberof ViewController
  */
 static void viewDidDisappear(ViewController *self) {
-	$((Array *) self->childViewControllers, enumerateObjects, viewDidDisappear_recurse, NULL);
+  $((Array *) self->childViewControllers, enumerateObjects, viewDidDisappear_recurse, NULL);
 }
 
 /**
  * @brief ArrayEnumerator for viewWillAppear recursion.
  */
 static void viewWillAppear_recurse(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, viewWillAppear);
+  $((ViewController *) obj, viewWillAppear);
 }
 
 /**
@@ -240,14 +240,14 @@ static void viewWillAppear_recurse(const Array *array, ident obj, ident data) {
  * @memberof ViewController
  */
 static void viewWillAppear(ViewController *self) {
-	$((Array *) self->childViewControllers, enumerateObjects, viewWillAppear_recurse, NULL);
+  $((Array *) self->childViewControllers, enumerateObjects, viewWillAppear_recurse, NULL);
 }
 
 /**
  * @brief ArrayEnumerator for viewWillDisappear recursion.
  */
 static void viewWillDisappear_recurse(const Array *array, ident obj, ident data) {
-	$((ViewController *) obj, viewWillDisappear);
+  $((ViewController *) obj, viewWillDisappear);
 }
 
 /**
@@ -255,7 +255,7 @@ static void viewWillDisappear_recurse(const Array *array, ident obj, ident data)
  * @memberof ViewController
  */
 static void viewWillDisappear(ViewController *self) {
-	$((Array *) self->childViewControllers, enumerateObjects, viewWillDisappear_recurse, NULL);
+  $((Array *) self->childViewControllers, enumerateObjects, viewWillDisappear_recurse, NULL);
 }
 
 #pragma mark - Class lifecycle
@@ -265,21 +265,21 @@ static void viewWillDisappear(ViewController *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
-	((ViewControllerInterface *) clazz->interface)->init = init;
-	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
-	((ViewControllerInterface *) clazz->interface)->loadViewIfNeeded = loadViewIfNeeded;
-	((ViewControllerInterface *) clazz->interface)->moveToParentViewController = moveToParentViewController;
-	((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
-	((ViewControllerInterface *) clazz->interface)->removeFromParentViewController = removeFromParentViewController;
-	((ViewControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
-	((ViewControllerInterface *) clazz->interface)->setView = setView;
-	((ViewControllerInterface *) clazz->interface)->viewDidAppear = viewDidAppear;
-	((ViewControllerInterface *) clazz->interface)->viewDidDisappear = viewDidDisappear;
-	((ViewControllerInterface *) clazz->interface)->viewWillAppear = viewWillAppear;
-	((ViewControllerInterface *) clazz->interface)->viewWillDisappear = viewWillDisappear;
+  ((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
+  ((ViewControllerInterface *) clazz->interface)->init = init;
+  ((ViewControllerInterface *) clazz->interface)->loadView = loadView;
+  ((ViewControllerInterface *) clazz->interface)->loadViewIfNeeded = loadViewIfNeeded;
+  ((ViewControllerInterface *) clazz->interface)->moveToParentViewController = moveToParentViewController;
+  ((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
+  ((ViewControllerInterface *) clazz->interface)->removeFromParentViewController = removeFromParentViewController;
+  ((ViewControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
+  ((ViewControllerInterface *) clazz->interface)->setView = setView;
+  ((ViewControllerInterface *) clazz->interface)->viewDidAppear = viewDidAppear;
+  ((ViewControllerInterface *) clazz->interface)->viewDidDisappear = viewDidDisappear;
+  ((ViewControllerInterface *) clazz->interface)->viewWillAppear = viewWillAppear;
+  ((ViewControllerInterface *) clazz->interface)->viewWillDisappear = viewWillDisappear;
 }
 
 /**
@@ -287,21 +287,21 @@ static void initialize(Class *clazz) {
  * @memberof ViewController
  */
 Class *_ViewController(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "ViewController",
-			.superclass = _Object(),
-			.instanceSize = sizeof(ViewController),
-			.interfaceOffset = offsetof(ViewController, interface),
-			.interfaceSize = sizeof(ViewControllerInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "ViewController",
+      .superclass = _Object(),
+      .instanceSize = sizeof(ViewController),
+      .interfaceOffset = offsetof(ViewController, interface),
+      .interfaceSize = sizeof(ViewControllerInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

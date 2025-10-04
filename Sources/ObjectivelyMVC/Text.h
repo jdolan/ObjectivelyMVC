@@ -40,46 +40,46 @@ typedef struct TextInterface TextInterface;
  */
 struct Text {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	TextInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  TextInterface *interface;
 
-	/**
-	 * @brief The text color.
-	 */
-	SDL_Color color;
+  /**
+   * @brief The text color.
+   */
+  SDL_Color color;
 
-	/**
-	 * @brief The Font.
-	 * @remarks Do not set this property directly.
-	 * @see Text::setFont(Text *, Font *)
-	 */
-	Font *font;
+  /**
+   * @brief The Font.
+   * @remarks Do not set this property directly.
+   * @see Text::setFont(Text *, Font *)
+   */
+  Font *font;
 
-	/**
-	 * @brief If true, wrap text along word boundaries to fit this Text's width.
-	 */
-	bool lineWrap;
+  /**
+   * @brief If true, wrap text along word boundaries to fit this Text's width.
+   */
+  bool lineWrap;
 
-	/**
-	 * @brief The text.
-	 * @remarks Do not set this property directly.
-	 * @see Text::setText(Text *, const char *)
-	 */
-	char *text;
+  /**
+   * @brief The text.
+   * @remarks Do not set this property directly.
+   * @see Text::setText(Text *, const char *)
+   */
+  char *text;
 
-	/**
-	 * @brief The rendered texture.
-	 * @protected
-	 */
-	GLuint texture;
+  /**
+   * @brief The rendered texture.
+   * @protected
+   */
+  GLuint texture;
 };
 
 /**
@@ -87,56 +87,56 @@ struct Text {
  */
 struct TextInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn Text *Text::initWithText(Text *self, const char *text, Font *font)
-	 * @brief Initializes this Text with the given text and Font.
-	 * @param self The Text.
-	 * @param text The text.
-	 * @param font The Font (optional).
-	 * @return The initialized Text, or `NULL` on error.
-	 * @memberof Text
-	 */
-	Text *(*initWithText)(Text *self, const char *text, Font *font);
+  /**
+   * @fn Text *Text::initWithText(Text *self, const char *text, Font *font)
+   * @brief Initializes this Text with the given text and Font.
+   * @param self The Text.
+   * @param text The text.
+   * @param font The Font (optional).
+   * @return The initialized Text, or `NULL` on error.
+   * @memberof Text
+   */
+  Text *(*initWithText)(Text *self, const char *text, Font *font);
 
-	/**
-	 * @fn SDL_Size Text::naturalSize(const Text *self)
-	 * @brief Resolves the rendered size of this Text.
-	 * @param self The Text.
-	 * @memberof Text
-	 */
-	SDL_Size (*naturalSize)(const Text *self);
+  /**
+   * @fn SDL_Size Text::naturalSize(const Text *self)
+   * @brief Resolves the rendered size of this Text.
+   * @param self The Text.
+   * @memberof Text
+   */
+  SDL_Size (*naturalSize)(const Text *self);
 
-	/**
-	 * @fn void Text::setFont(Text *self, Font *font)
-	 * @brief Sets this Text's font.
-	 * @param self The Text.
-	 * @param font The Font to set.
-	 * @memberof Text
-	 */
-	void (*setFont)(Text *self, Font *font);
+  /**
+   * @fn void Text::setFont(Text *self, Font *font)
+   * @brief Sets this Text's font.
+   * @param self The Text.
+   * @param font The Font to set.
+   * @memberof Text
+   */
+  void (*setFont)(Text *self, Font *font);
 
-	/**
-	 * @fn void Text::setText(Text *self, const char *text)
-	 * @brief Sets this Text's text.
-	 * @param self The Text.
-	 * @param text The text to set.
-	 * @memberof Text
-	 */
-	void (*setText)(Text *self, const char *text);
+  /**
+   * @fn void Text::setText(Text *self, const char *text)
+   * @brief Sets this Text's text.
+   * @param self The Text.
+   * @param text The text to set.
+   * @memberof Text
+   */
+  void (*setText)(Text *self, const char *text);
 
-	/**
-	 * @fn void Text::setTextWithFormat(Text *self, const char *fmt, ...)
-	 * @brief Sets this Text's text with the given format string.
-	 * @param self The Text.
-	 * @param fmt The format string.
-	 * @memberof Text
-	 */
-	void (*setTextWithFormat)(Text *self, const char *fmt, ...);
+  /**
+   * @fn void Text::setTextWithFormat(Text *self, const char *fmt, ...)
+   * @brief Sets this Text's text with the given format string.
+   * @param self The Text.
+   * @param fmt The format string.
+   * @memberof Text
+   */
+  void (*setTextWithFormat)(Text *self, const char *fmt, ...);
 };
 
 OBJECTIVELYMVC_EXPORT Class *_Text(void);

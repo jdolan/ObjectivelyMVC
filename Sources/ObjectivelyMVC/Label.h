@@ -39,21 +39,21 @@ typedef struct LabelInterface LabelInterface;
  */
 struct Label {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	LabelInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  LabelInterface *interface;
 
-	/**
-	 * @brief The Label Text.
-	 */
-	Text *text;
+  /**
+   * @brief The Label Text.
+   */
+  Text *text;
 };
 
 /**
@@ -61,21 +61,21 @@ struct Label {
  */
 struct LabelInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
-	 * @brief Initializes this Label with the given text and Font.
-	 * @param self The Label.
-	 * @param text The text.
-	 * @param font The Font.
-	 * @return The initialized Label, or `NULL` on error.
-	 * @memberof Label
-	 */
-	Label *(*initWithText)(Label *self, const char *text, Font *font);
+  /**
+   * @fn Label *Label::initWithText(Label *self, const char *text, Font *font)
+   * @brief Initializes this Label with the given text and Font.
+   * @param self The Label.
+   * @param text The text.
+   * @param font The Font.
+   * @return The initialized Label, or `NULL` on error.
+   * @memberof Label
+   */
+  Label *(*initWithText)(Label *self, const char *text, Font *font);
 };
 
 /**

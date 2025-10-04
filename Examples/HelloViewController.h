@@ -39,84 +39,84 @@ typedef struct HelloViewControllerInterface HelloViewControllerInterface;
  */
 struct HelloViewController {
 
-	/**
-	 * @brief The superclass.
-	 *
-	 * @private
-	 */
-	ViewController viewController;
+  /**
+   * @brief The superclass.
+   *
+   * @private
+   */
+  ViewController viewController;
 
-	/**
-	 * @brief The interface.
-	 *
-	 * @private
-	 */
-	HelloViewControllerInterface *interface;
+  /**
+   * @brief The interface.
+   *
+   * @private
+   */
+  HelloViewControllerInterface *interface;
 
-	/**
-	 * @brief A Panel.
-	 */
-	Panel *panel;
+  /**
+   * @brief A Panel.
+   */
+  Panel *panel;
 
-	/**
-	 * @brief The cancel Button.
-	 */
-	Button *cancel;
+  /**
+   * @brief The cancel Button.
+   */
+  Button *cancel;
 
-	/**
-	 * @brief The apply Button.
-	 */
-	Button *apply;
+  /**
+   * @brief The apply Button.
+   */
+  Button *apply;
 
-	/**
-	 * @brief A Button
-	 */
-	Button *button;
+  /**
+   * @brief A Button
+   */
+  Button *button;
 
-	/**
-	 * @brief A TextView.
-	 */
-	TextView *textView;
+  /**
+   * @brief A TextView.
+   */
+  TextView *textView;
 
-	/**
-	 * @brief A Checkbox.
-	 */
-	Checkbox *checkbox;
+  /**
+   * @brief A Checkbox.
+   */
+  Checkbox *checkbox;
 
-	/**
-	 * @brief A Select.
-	 */
-	Select *select;
+  /**
+   * @brief A Select.
+   */
+  Select *select;
 
-	/**
-	 * @brief A Slider.
-	 */
-	Slider *slider;
+  /**
+   * @brief A Slider.
+   */
+  Slider *slider;
 
-	/**
-	 * @brief A TableView.
-	 */
-	TableView *tableView;
+  /**
+   * @brief A TableView.
+   */
+  TableView *tableView;
 
-	/**
-	 * @brief A CollectionView.
-	 */
-	CollectionView *collectionView;
+  /**
+   * @brief A CollectionView.
+   */
+  CollectionView *collectionView;
 
-	/**
-	 * @brief An RGBColorPicker.
-	 */
-	RGBColorPicker *rgbColorPicker;
+  /**
+   * @brief An RGBColorPicker.
+   */
+  RGBColorPicker *rgbColorPicker;
 
-	/**
-	 * @brief An HSVColorPicker.
-	 */
-	HSVColorPicker *hsvColorPicker;
+  /**
+   * @brief An HSVColorPicker.
+   */
+  HSVColorPicker *hsvColorPicker;
 
-	/**
-	 * @brief A HueColorPicker.
-	 */
-	HueColorPicker *hueColorPicker;
+  /**
+   * @brief A HueColorPicker.
+   */
+  HueColorPicker *hueColorPicker;
 };
 
 /**
@@ -124,19 +124,19 @@ struct HelloViewController {
  */
 struct HelloViewControllerInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewControllerInterface viewControllerInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewControllerInterface viewControllerInterface;
 
-	/**
-	 * @fn HelloViewController *HelloViewController::init(HelloViewController *self)
-	 * @brief Initializes this HelloViewController.
-	 * @param self The HelloViewController.
-	 * @return The initialized HelloViewController, or `NULL` on error.
-	 * @memberof HelloViewController
-	 */
-	HelloViewController *(*init)(HelloViewController *self);
+  /**
+   * @fn HelloViewController *HelloViewController::init(HelloViewController *self)
+   * @brief Initializes this HelloViewController.
+   * @param self The HelloViewController.
+   * @return The initialized HelloViewController, or `NULL` on error.
+   * @memberof HelloViewController
+   */
+  HelloViewController *(*init)(HelloViewController *self);
 };
 
 /**

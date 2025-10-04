@@ -34,11 +34,11 @@
  */
 static void dealloc(Object *self) {
 
-	Warning *this = (Warning *) self;
+  Warning *this = (Warning *) self;
 
-	release(this->message);
+  release(this->message);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - Warning
@@ -49,14 +49,14 @@ static void dealloc(Object *self) {
  */
 static Warning *initWithFormat(Warning *self, WarningType type, const char *fmt, ...) {
 
-	va_list args;
-	va_start(args, fmt);
+  va_list args;
+  va_start(args, fmt);
 
-	self = $(self, initWithVaList, type, fmt, args);
+  self = $(self, initWithVaList, type, fmt, args);
 
-	va_end(args);
+  va_end(args);
 
-	return self;
+  return self;
 }
 
 /**
@@ -65,16 +65,16 @@ static Warning *initWithFormat(Warning *self, WarningType type, const char *fmt,
  */
 static Warning *initWithVaList(Warning *self, WarningType type, const char *fmt, va_list args) {
 
-	self = (Warning *) super(Object, self, init);
-	if (self) {
-		self->type = type;
-		assert(self->type);
+  self = (Warning *) super(Object, self, init);
+  if (self) {
+    self->type = type;
+    assert(self->type);
 
-		self->message = $(alloc(String), initWithVaList, fmt, args);
-		assert(self->message);
-	}
+    self->message = $(alloc(String), initWithVaList, fmt, args);
+    assert(self->message);
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -84,10 +84,10 @@ static Warning *initWithVaList(Warning *self, WarningType type, const char *fmt,
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((WarningInterface *) clazz->interface)->initWithFormat = initWithFormat;
-	((WarningInterface *) clazz->interface)->initWithVaList = initWithVaList;
+  ((WarningInterface *) clazz->interface)->initWithFormat = initWithFormat;
+  ((WarningInterface *) clazz->interface)->initWithVaList = initWithVaList;
 }
 
 /**
@@ -95,21 +95,21 @@ static void initialize(Class *clazz) {
  * @memberof Warning
  */
 Class *_Warning(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Warning",
-			.superclass = _Object(),
-			.instanceSize = sizeof(Warning),
-			.interfaceOffset = offsetof(Warning, interface),
-			.interfaceSize = sizeof(WarningInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Warning",
+      .superclass = _Object(),
+      .instanceSize = sizeof(Warning),
+      .interfaceOffset = offsetof(Warning, interface),
+      .interfaceSize = sizeof(WarningInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

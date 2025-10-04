@@ -37,7 +37,7 @@
  */
 static NavigationViewController *init(NavigationViewController *self) {
 
-	return (NavigationViewController *) super(ViewController, self, init);
+  return (NavigationViewController *) super(ViewController, self, init);
 }
 
 /**
@@ -46,19 +46,19 @@ static NavigationViewController *init(NavigationViewController *self) {
  */
 static void pushViewController(NavigationViewController *self, ViewController *viewController) {
 
-	assert(viewController);
+  assert(viewController);
 
-	ViewController *this = (ViewController *) self;
+  ViewController *this = (ViewController *) self;
 
-	ViewController *topViewController = $(self, topViewController);
-	if (topViewController) {
+  ViewController *topViewController = $(self, topViewController);
+  if (topViewController) {
 
-		$(topViewController, viewWillDisappear);
-		$(this->view, removeSubview, topViewController->view);
-		$(topViewController, viewDidDisappear);
-	}
+    $(topViewController, viewWillDisappear);
+    $(this->view, removeSubview, topViewController->view);
+    $(topViewController, viewDidDisappear);
+  }
 
-	$(this, addChildViewController, viewController);
+  $(this, addChildViewController, viewController);
 }
 
 /**
@@ -67,10 +67,10 @@ static void pushViewController(NavigationViewController *self, ViewController *v
  */
 static void popToRootViewController(NavigationViewController *self) {
 
-	const ViewController *rootViewController = $(self, rootViewController);
-	if (rootViewController) {
-		$(self, popToViewController, rootViewController);
-	}
+  const ViewController *rootViewController = $(self, rootViewController);
+  if (rootViewController) {
+    $(self, popToViewController, rootViewController);
+  }
 }
 
 /**
@@ -79,15 +79,15 @@ static void popToRootViewController(NavigationViewController *self) {
  */
 static void popToViewController(NavigationViewController *self, const ViewController *viewController) {
 
-	ViewController *topViewController;
-	while ((topViewController = $(self, topViewController))) {
+  ViewController *topViewController;
+  while ((topViewController = $(self, topViewController))) {
 
-		if (topViewController == viewController) {
-			break;
-		}
+    if (topViewController == viewController) {
+      break;
+    }
 
-		$(self, popViewController);
-	}
+    $(self, popViewController);
+  }
 }
 
 /**
@@ -96,19 +96,19 @@ static void popToViewController(NavigationViewController *self, const ViewContro
  */
 static void popViewController(NavigationViewController *self) {
 
-	ViewController *topViewController = $(self, topViewController);
-	if (topViewController) {
-		$((ViewController *) self, removeChildViewController, topViewController);
-	}
+  ViewController *topViewController = $(self, topViewController);
+  if (topViewController) {
+    $((ViewController *) self, removeChildViewController, topViewController);
+  }
 
-	ViewController *this = (ViewController *) self;
-	ViewController *that = $(self, topViewController);
+  ViewController *this = (ViewController *) self;
+  ViewController *that = $(self, topViewController);
 
-	if (that) {
-		$(that, viewWillAppear);
-		$(this->view, addSubview, that->view);
-		$(that, viewDidAppear);
-	}
+  if (that) {
+    $(that, viewWillAppear);
+    $(this->view, addSubview, that->view);
+    $(that, viewDidAppear);
+  }
 }
 
 /**
@@ -116,7 +116,7 @@ static void popViewController(NavigationViewController *self) {
  * @memberof NavigationViewController
  */
 static ViewController *rootViewController(const NavigationViewController *self) {
-	return (ViewController *) $((Array *) self->viewController.childViewControllers, firstObject);
+  return (ViewController *) $((Array *) self->viewController.childViewControllers, firstObject);
 }
 
 /**
@@ -124,7 +124,7 @@ static ViewController *rootViewController(const NavigationViewController *self) 
  * @memberof NavigationViewController
  */
 static ViewController *topViewController(const NavigationViewController *self) {
-	return (ViewController *) $((Array *) self->viewController.childViewControllers, lastObject);
+  return (ViewController *) $((Array *) self->viewController.childViewControllers, lastObject);
 }
 
 #pragma mark - Class lifecycle
@@ -134,13 +134,13 @@ static ViewController *topViewController(const NavigationViewController *self) {
  */
 static void initialize(Class *clazz) {
 
-	((NavigationViewControllerInterface *) clazz->interface)->init = init;
-	((NavigationViewControllerInterface *) clazz->interface)->pushViewController = pushViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->popToRootViewController = popToRootViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->popToViewController = popToViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->popViewController = popViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->rootViewController = rootViewController;
-	((NavigationViewControllerInterface *) clazz->interface)->topViewController = topViewController;
+  ((NavigationViewControllerInterface *) clazz->interface)->init = init;
+  ((NavigationViewControllerInterface *) clazz->interface)->pushViewController = pushViewController;
+  ((NavigationViewControllerInterface *) clazz->interface)->popToRootViewController = popToRootViewController;
+  ((NavigationViewControllerInterface *) clazz->interface)->popToViewController = popToViewController;
+  ((NavigationViewControllerInterface *) clazz->interface)->popViewController = popViewController;
+  ((NavigationViewControllerInterface *) clazz->interface)->rootViewController = rootViewController;
+  ((NavigationViewControllerInterface *) clazz->interface)->topViewController = topViewController;
 }
 
 /**
@@ -148,21 +148,21 @@ static void initialize(Class *clazz) {
  * @memberof NavigationViewController
  */
 Class *_NavigationViewController(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "NavigationViewController",
-			.superclass = _ViewController(),
-			.instanceSize = sizeof(NavigationViewController),
-			.interfaceOffset = offsetof(NavigationViewController, interface),
-			.interfaceSize = sizeof(NavigationViewControllerInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "NavigationViewController",
+      .superclass = _ViewController(),
+      .instanceSize = sizeof(NavigationViewController),
+      .interfaceOffset = offsetof(NavigationViewController, interface),
+      .interfaceSize = sizeof(NavigationViewControllerInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

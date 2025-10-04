@@ -37,13 +37,13 @@
  */
 static void dealloc(Object *self) {
 
-	TabView *this = (TabView *) self;
+  TabView *this = (TabView *) self;
 
-	release(this->tabPageView);
-	release(this->tabSelectionView);
-	release(this->tabs);
+  release(this->tabPageView);
+  release(this->tabSelectionView);
+  release(this->tabs);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -53,21 +53,21 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary_tabs(const Array *array, ident obj, ident data) {
 
-	const String *identifier = $((Dictionary *) obj, objectForKeyPath, "identifier");
-	assert(identifier);
+  const String *identifier = $((Dictionary *) obj, objectForKeyPath, "identifier");
+  assert(identifier);
 
-	TabViewItem *tab = $(alloc(TabViewItem), initWithIdentifier, identifier->chars);
-	assert(tab);
+  TabViewItem *tab = $(alloc(TabViewItem), initWithIdentifier, identifier->chars);
+  assert(tab);
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("label", InletTypeView, &tab->label, NULL),
-		MakeInlet("view", InletTypeView, &tab->view, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("label", InletTypeView, &tab->label, NULL),
+    MakeInlet("view", InletTypeView, &tab->view, NULL)
+  );
 
-	$((View *) data, bind, inlets, obj);
-	$((TabView *) data, addTab, tab);
+  $((View *) data, bind, inlets, obj);
+  $((TabView *) data, addTab, tab);
 
-	release(tab);
+  release(tab);
 }
 
 /**
@@ -75,28 +75,28 @@ static void awakeWithDictionary_tabs(const Array *array, ident obj, ident data) 
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	TabView *this = (TabView *) self;
+  TabView *this = (TabView *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("tabPageView", InletTypeView, &this->tabPageView, NULL),
-		MakeInlet("tabSelectionView", InletTypeView, &this->tabSelectionView, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("tabPageView", InletTypeView, &this->tabPageView, NULL),
+    MakeInlet("tabSelectionView", InletTypeView, &this->tabSelectionView, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 
-	const Array *tabs = $(dictionary, objectForKeyPath, "tabs");
-	if (tabs) {
-		$(tabs, enumerateObjects, awakeWithDictionary_tabs, self);
-	}
+  const Array *tabs = $(dictionary, objectForKeyPath, "tabs");
+  if (tabs) {
+    $(tabs, enumerateObjects, awakeWithDictionary_tabs, self);
+  }
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((TabView *) self, initWithFrame, NULL);
+  return (View *) $((TabView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -104,22 +104,22 @@ static View *init(View *self) {
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
-	if (event->type == SDL_MOUSEBUTTONUP) {
+  if (event->type == SDL_MOUSEBUTTONUP) {
 
-		TabView *this = (TabView *) self;
+    TabView *this = (TabView *) self;
 
-		const Array *tabs = (Array *) this->tabs;
-		for (size_t i = 0; i < tabs->count; i++) {
+    const Array *tabs = (Array *) this->tabs;
+    for (size_t i = 0; i < tabs->count; i++) {
 
-			TabViewItem *tab = $(tabs, objectAtIndex, i);
+      TabViewItem *tab = $(tabs, objectAtIndex, i);
 
-			if ($((View *) tab->label, didReceiveEvent, event)) {
-				$(this, selectTab, tab);
-			}
-		}
-	}
+      if ($((View *) tab->label, didReceiveEvent, event)) {
+        $(this, selectTab, tab);
+      }
+    }
+  }
 
-	super(View, self, respondToEvent, event);
+  super(View, self, respondToEvent, event);
 }
 
 #pragma mark - TabView
@@ -130,20 +130,20 @@ static void respondToEvent(View *self, const SDL_Event *event) {
  */
 static void addTab(TabView *self, TabViewItem *tab) {
 
-	assert(tab);
+  assert(tab);
 
-	$(self->tabs, addObject, tab);
+  $(self->tabs, addObject, tab);
 
-	$((View *) self->tabSelectionView, addSubview, (View *) tab->label);
-	$((View *) self->tabPageView, addSubview, tab->view);
+  $((View *) self->tabSelectionView, addSubview, (View *) tab->label);
+  $((View *) self->tabPageView, addSubview, tab->view);
 
-	if (self->delegate.didAddTab) {
-		self->delegate.didAddTab(self, tab);
-	}
+  if (self->delegate.didAddTab) {
+    self->delegate.didAddTab(self, tab);
+  }
 
-	if (self->selectedTab == NULL) {
-		$(self, selectTab, tab);
-	}
+  if (self->selectedTab == NULL) {
+    $(self, selectTab, tab);
+  }
 }
 
 /**
@@ -152,26 +152,26 @@ static void addTab(TabView *self, TabViewItem *tab) {
  */
 static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
 
-	self = (TabView *) super(StackView, self, initWithFrame, frame);
-	if (self) {
+  self = (TabView *) super(StackView, self, initWithFrame, frame);
+  if (self) {
 
-		self->tabPageView = $(alloc(PageView), initWithFrame, NULL);
-		assert(self->tabPageView);
+    self->tabPageView = $(alloc(PageView), initWithFrame, NULL);
+    assert(self->tabPageView);
 
-		self->tabs = $$(MutableArray, array);
-		assert(self->tabs);
+    self->tabs = $$(MutableArray, array);
+    assert(self->tabs);
 
-		self->tabSelectionView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->tabSelectionView);
+    self->tabSelectionView = $(alloc(StackView), initWithFrame, NULL);
+    assert(self->tabSelectionView);
 
-		$((View *) self->tabSelectionView, addClassName, "tabSelectionView");
-		$((View *) self, addSubview, (View *) self->tabSelectionView);
+    $((View *) self->tabSelectionView, addClassName, "tabSelectionView");
+    $((View *) self, addSubview, (View *) self->tabSelectionView);
 
-		$((View *) self->tabPageView, addClassName, "tabPageView");
-		$((View *) self, addSubview, (View *) self->tabPageView);
-	}
+    $((View *) self->tabPageView, addClassName, "tabPageView");
+    $((View *) self, addSubview, (View *) self->tabPageView);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -180,24 +180,24 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
  */
 static void removeTab(TabView *self, TabViewItem *tab) {
 
-	assert(tab);
+  assert(tab);
 
-	if (self->delegate.willRemoveTab) {
-		self->delegate.willRemoveTab(self, tab);
-	}
+  if (self->delegate.willRemoveTab) {
+    self->delegate.willRemoveTab(self, tab);
+  }
 
-	retain(tab);
+  retain(tab);
 
-	$(self->tabs, removeObject, tab);
+  $(self->tabs, removeObject, tab);
 
-	$((View *) self->tabSelectionView, removeSubview, (View *) tab->label);
-	$((View *) self->tabPageView, removeSubview, tab->view);
+  $((View *) self->tabSelectionView, removeSubview, (View *) tab->label);
+  $((View *) self->tabPageView, removeSubview, tab->view);
 
-	if (self->selectedTab == tab) {
-		$(self, selectTab, NULL);
-	}
+  if (self->selectedTab == tab) {
+    $(self, selectTab, NULL);
+  }
 
-	release(tab);
+  release(tab);
 }
 
 /**
@@ -205,17 +205,17 @@ static void removeTab(TabView *self, TabViewItem *tab) {
  */
 static void selectTab_enumerate(const Array *array, ident obj, ident data) {
 
-	TabViewItem *tab = obj;
+  TabViewItem *tab = obj;
 
-	int state = tab->state;
+  int state = tab->state;
 
-	if (tab == ((TabView *) data)->selectedTab) {
-		state |= TabStateSelected;
-	} else {
-		state &= ~TabStateSelected;
-	}
+  if (tab == ((TabView *) data)->selectedTab) {
+    state |= TabStateSelected;
+  } else {
+    state &= ~TabStateSelected;
+  }
 
-	$(tab, setState, state);
+  $(tab, setState, state);
 }
 
 /**
@@ -224,28 +224,28 @@ static void selectTab_enumerate(const Array *array, ident obj, ident data) {
  */
 static void selectTab(TabView *self, TabViewItem *tab) {
 
-	if (self->selectedTab != tab) {
+  if (self->selectedTab != tab) {
 
-		const Array *tabs = (Array *) self->tabs;
+    const Array *tabs = (Array *) self->tabs;
 
-		if (tab) {
-			self->selectedTab = tab;
-		} else {
-			self->selectedTab = $(tabs, firstObject);
-		}
+    if (tab) {
+      self->selectedTab = tab;
+    } else {
+      self->selectedTab = $(tabs, firstObject);
+    }
 
-		$(tabs, enumerateObjects, selectTab_enumerate, self);
+    $(tabs, enumerateObjects, selectTab_enumerate, self);
 
-		if (self->selectedTab) {
-			$(self->tabPageView, setCurrentPage, self->selectedTab->view);
+    if (self->selectedTab) {
+      $(self->tabPageView, setCurrentPage, self->selectedTab->view);
 
-			if (self->delegate.didSelectTab) {
-				self->delegate.didSelectTab(self, self->selectedTab);
-			}
-		}
+      if (self->delegate.didSelectTab) {
+        self->delegate.didSelectTab(self, self->selectedTab);
+      }
+    }
 
-		self->stackView.view.needsLayout = true;
-	}
+    self->stackView.view.needsLayout = true;
+  }
 }
 
 /**
@@ -253,17 +253,17 @@ static void selectTab(TabView *self, TabViewItem *tab) {
  */
 static bool tabWithIdentifier_predicate(const ident obj, ident data) {
 
-	const TabViewItem *tab = obj;
+  const TabViewItem *tab = obj;
 
-	if (tab->identifier) {
-		if (data) {
-			return !strcmp(tab->identifier, data);
-		} else {
-			return false;
-		}
-	} else {
-		return data == NULL;
-	}
+  if (tab->identifier) {
+    if (data) {
+      return !strcmp(tab->identifier, data);
+    } else {
+      return false;
+    }
+  } else {
+    return data == NULL;
+  }
 }
 
 /**
@@ -271,7 +271,7 @@ static bool tabWithIdentifier_predicate(const ident obj, ident data) {
  * @memberof TabView
  */
 static TabViewItem *tabWithIdentifier(const TabView *self, const char *identifier) {
-	return $((Array *) self->tabs, findObject, tabWithIdentifier_predicate, (ident) identifier);
+  return $((Array *) self->tabs, findObject, tabWithIdentifier_predicate, (ident) identifier);
 }
 
 #pragma mark - Class lifecycle
@@ -281,17 +281,17 @@ static TabViewItem *tabWithIdentifier(const TabView *self, const char *identifie
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
-	((TabViewInterface *) clazz->interface)->addTab = addTab;
-	((TabViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((TabViewInterface *) clazz->interface)->removeTab = removeTab;
-	((TabViewInterface *) clazz->interface)->selectTab = selectTab;
-	((TabViewInterface *) clazz->interface)->tabWithIdentifier = tabWithIdentifier;
+  ((TabViewInterface *) clazz->interface)->addTab = addTab;
+  ((TabViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((TabViewInterface *) clazz->interface)->removeTab = removeTab;
+  ((TabViewInterface *) clazz->interface)->selectTab = selectTab;
+  ((TabViewInterface *) clazz->interface)->tabWithIdentifier = tabWithIdentifier;
 }
 
 /**
@@ -299,21 +299,21 @@ static void initialize(Class *clazz) {
  * @memberof TabView
  */
 Class *_TabView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TabView",
-			.superclass = _StackView(),
-			.instanceSize = sizeof(TabView),
-			.interfaceOffset = offsetof(TabView, interface),
-			.interfaceSize = sizeof(TabViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TabView",
+      .superclass = _StackView(),
+      .instanceSize = sizeof(TabView),
+      .interfaceOffset = offsetof(TabView, interface),
+      .interfaceSize = sizeof(TabViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

@@ -49,36 +49,36 @@ typedef void (*ActionFunction)(Control *control, const SDL_Event *event, ident s
  */
 struct Action {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	ActionInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  ActionInterface *interface;
 
-	/**
-	 * @brief The user data.
-	 */
-	ident data;
+  /**
+   * @brief The user data.
+   */
+  ident data;
 
-	/**
-	 * @brief The event type.
-	 */
-	SDL_EventType eventType;
+  /**
+   * @brief The event type.
+   */
+  SDL_EventType eventType;
 
-	/**
-	 * @brief The function.
-	 */
-	ActionFunction function;
+  /**
+   * @brief The function.
+   */
+  ActionFunction function;
 
-	/**
-	 * @brief The sender.
-	 */
-	ident sender;
+  /**
+   * @brief The sender.
+   */
+  ident sender;
 };
 
 /**
@@ -86,23 +86,23 @@ struct Action {
  */
 struct ActionInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface objectInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface objectInterface;
 
-	/**
-	 * @fn Action *Action::initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
-	 * @brief Initializes this Action with the given function and data.
-	 * @param self The Action.
-	 * @param eventType The event type.
-	 * @param function The ActionFunction.
-	 * @param sender The sender.
-	 * @param data User data.
-	 * @return The initialized Action, or `NULL` on error.
-	 * @memberof Action
-	 */
-	Action *(*initWithEventType)(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data);
+  /**
+   * @fn Action *Action::initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
+   * @brief Initializes this Action with the given function and data.
+   * @param self The Action.
+   * @param eventType The event type.
+   * @param function The ActionFunction.
+   * @param sender The sender.
+   * @param data User data.
+   * @return The initialized Action, or `NULL` on error.
+   * @memberof Action
+   */
+  Action *(*initWithEventType)(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data);
 };
 
 /**

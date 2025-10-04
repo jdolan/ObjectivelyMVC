@@ -40,11 +40,11 @@
  */
 static void dealloc(Object *self) {
 
-	SimpleSelector *this = (SimpleSelector *) self;
+  SimpleSelector *this = (SimpleSelector *) self;
 
-	free(this->pattern);
+  free(this->pattern);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 /**
@@ -52,9 +52,9 @@ static void dealloc(Object *self) {
  */
 static String *description(const Object *self) {
 
-	const SimpleSelector *this = (SimpleSelector *) self;
+  const SimpleSelector *this = (SimpleSelector *) self;
 
-	return str(this->pattern);
+  return str(this->pattern);
 }
 
 /**
@@ -62,9 +62,9 @@ static String *description(const Object *self) {
  */
 static int hash(const Object *self) {
 
-	SimpleSelector *this = (SimpleSelector *) self;
+  SimpleSelector *this = (SimpleSelector *) self;
 
-	return HashForCString(HASH_SEED, this->pattern);
+  return HashForCString(HASH_SEED, this->pattern);
 }
 
 /**
@@ -72,19 +72,19 @@ static int hash(const Object *self) {
  */
 static bool isEqual(const Object *self, const Object *other) {
 
-	if (super(Object, self, isEqual, other)) {
-		return true;
-	}
+  if (super(Object, self, isEqual, other)) {
+    return true;
+  }
 
-	if (other && $(other, isKindOfClass, _SimpleSelector())) {
+  if (other && $(other, isKindOfClass, _SimpleSelector())) {
 
-		const SimpleSelector *this = (SimpleSelector *) self;
-		const SimpleSelector *that = (SimpleSelector *) other;
+    const SimpleSelector *this = (SimpleSelector *) self;
+    const SimpleSelector *that = (SimpleSelector *) other;
 
-		return strcmp(this->pattern, that->pattern) == 0;
-	}
+    return strcmp(this->pattern, that->pattern) == 0;
+  }
 
-	return false;
+  return false;
 }
 
 #pragma mark - SimpleSelector
@@ -95,36 +95,36 @@ static bool isEqual(const Object *self, const Object *other) {
  */
 static SimpleSelector *initWithPattern(SimpleSelector *self, const char *pattern) {
 
-	self = (SimpleSelector *) super(Object, self, init);
-	if (self) {
+  self = (SimpleSelector *) super(Object, self, init);
+  if (self) {
 
-		self->pattern = strtrim(pattern);
-		assert(self->pattern);
+    self->pattern = strtrim(pattern);
+    assert(self->pattern);
 
-		assert(strlen(self->pattern));
-	}
+    assert(strlen(self->pattern));
+  }
 
-	return self;
+  return self;
 }
 
 /**
  * @return The SimpleSelectorType for the given character.
  */
 static SimpleSelectorType simpleSelectorType(const char c) {
-	switch (c) {
-		case '\0':
-			return SimpleSelectorTypeNone;
-		case '*':
-			return SimpleSelectorTypeUniversal;
-		case '#':
-			return SimpleSelectorTypeId;
-		case '.':
-			return SimpleSelectorTypeClass;
-		case ':':
-			return SimpleSelectorTypePseudo;
-		default:
-			return SimpleSelectorTypeType;
-	}
+  switch (c) {
+    case '\0':
+      return SimpleSelectorTypeNone;
+    case '*':
+      return SimpleSelectorTypeUniversal;
+    case '#':
+      return SimpleSelectorTypeId;
+    case '.':
+      return SimpleSelectorTypeClass;
+    case ':':
+      return SimpleSelectorTypePseudo;
+    default:
+      return SimpleSelectorTypeType;
+  }
 }
 
 /**
@@ -133,48 +133,48 @@ static SimpleSelectorType simpleSelectorType(const char c) {
  */
 static Array *parse(const char *sequence) {
 
-	MutableArray *simpleSelectors = $$(MutableArray, arrayWithCapacity, 4);
-	assert(simpleSelectors);
+  MutableArray *simpleSelectors = $$(MutableArray, arrayWithCapacity, 4);
+  assert(simpleSelectors);
 
-	if (sequence) {
+  if (sequence) {
 
-		const char *c = sequence;
-		const char *delim = sequence;
-		while (*c) {
-			const size_t size = strcspn(c, "*.#:");
-			if (size || *c == '*') {
+    const char *c = sequence;
+    const char *delim = sequence;
+    while (*c) {
+      const size_t size = strcspn(c, "*.#:");
+      if (size || *c == '*') {
 
-				char *pattern;
-				if (*c == '*') {
-					pattern = strdup("*");
-					assert(pattern);
-				} else {
-					pattern = calloc(1, size + 1);
-					assert(pattern);
+        char *pattern;
+        if (*c == '*') {
+          pattern = strdup("*");
+          assert(pattern);
+        } else {
+          pattern = calloc(1, size + 1);
+          assert(pattern);
 
-					strncpy(pattern, c, size);
-				}
+          strncpy(pattern, c, size);
+        }
 
-				SimpleSelector *simpleSelector = $(alloc(SimpleSelector), initWithPattern, pattern);
-				assert(simpleSelector);
+        SimpleSelector *simpleSelector = $(alloc(SimpleSelector), initWithPattern, pattern);
+        assert(simpleSelector);
 
-				simpleSelector->type = simpleSelectorType(*delim);
-				assert(simpleSelector->type);
+        simpleSelector->type = simpleSelectorType(*delim);
+        assert(simpleSelector->type);
 
-				delim = c + size;
+        delim = c + size;
 
-				$(simpleSelectors, addObject, simpleSelector);
+        $(simpleSelectors, addObject, simpleSelector);
 
-				release(simpleSelector);
-				free(pattern);
-			}
+        release(simpleSelector);
+        free(pattern);
+      }
 
-			c += size;
-			c += strspn(c, "*.#:");
-		}
-	}
+      c += size;
+      c += strspn(c, "*.#:");
+    }
+  }
 
-	return (Array *) simpleSelectors;
+  return (Array *) simpleSelectors;
 }
 
 #pragma mark - Class lifecycle
@@ -184,13 +184,13 @@ static Array *parse(const char *sequence) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->interface)->description = description;
-	((ObjectInterface *) clazz->interface)->hash = hash;
-	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->description = description;
+  ((ObjectInterface *) clazz->interface)->hash = hash;
+  ((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((SimpleSelectorInterface *) clazz->interface)->initWithPattern = initWithPattern;
-	((SimpleSelectorInterface *) clazz->interface)->parse = parse;
+  ((SimpleSelectorInterface *) clazz->interface)->initWithPattern = initWithPattern;
+  ((SimpleSelectorInterface *) clazz->interface)->parse = parse;
 }
 
 /**
@@ -198,21 +198,21 @@ static void initialize(Class *clazz) {
  * @memberof SimpleSelector
  */
 Class *_SimpleSelector(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "SimpleSelector",
-			.superclass = _Object(),
-			.instanceSize = sizeof(SimpleSelector),
-			.interfaceOffset = offsetof(SimpleSelector, interface),
-			.interfaceSize = sizeof(SimpleSelectorInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "SimpleSelector",
+      .superclass = _Object(),
+      .instanceSize = sizeof(SimpleSelector),
+      .interfaceOffset = offsetof(SimpleSelector, interface),
+      .interfaceSize = sizeof(SimpleSelectorInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

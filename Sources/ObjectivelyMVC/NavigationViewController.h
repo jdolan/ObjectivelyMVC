@@ -42,16 +42,16 @@ typedef struct NavigationViewControllerInterface NavigationViewControllerInterfa
  */
 struct NavigationViewController {
 
-	/**
-	 * @brief The superclass.
-	 */
-	ViewController viewController;
+  /**
+   * @brief The superclass.
+   */
+  ViewController viewController;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	NavigationViewControllerInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  NavigationViewControllerInterface *interface;
 };
 
 /**
@@ -59,69 +59,69 @@ struct NavigationViewController {
  */
 struct NavigationViewControllerInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewControllerInterface viewControllerInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewControllerInterface viewControllerInterface;
 
-	/**
-	 * @fn NavigationViewController *NavigationViewController::init(NavigationViewController *self)
-	 * @brief Initializes this NavigationViewController.
-	 * @param self The NavigationViewController.
-	 * @return The initialized NavigationViewController, or `NULL` on error.
-	 * @memberof NavigationViewController
-	 */
-	NavigationViewController *(*init)(NavigationViewController *self);
+  /**
+   * @fn NavigationViewController *NavigationViewController::init(NavigationViewController *self)
+   * @brief Initializes this NavigationViewController.
+   * @param self The NavigationViewController.
+   * @return The initialized NavigationViewController, or `NULL` on error.
+   * @memberof NavigationViewController
+   */
+  NavigationViewController *(*init)(NavigationViewController *self);
 
-	/**
-	 * @fn void NavigationViewController::pushViewController(NavigationViewController *self, ViewController *viewController)
-	 * @brief Pushes the specified ViewController to the top of the stack.
-	 * @param self The NavigationViewController.
-	 * @param viewController The ViewController.
-	 * @memberof NavigationViewController
-	 */
-	void (*pushViewController)(NavigationViewController *self, ViewController *viewController);
+  /**
+   * @fn void NavigationViewController::pushViewController(NavigationViewController *self, ViewController *viewController)
+   * @brief Pushes the specified ViewController to the top of the stack.
+   * @param self The NavigationViewController.
+   * @param viewController The ViewController.
+   * @memberof NavigationViewController
+   */
+  void (*pushViewController)(NavigationViewController *self, ViewController *viewController);
 
-	/**
-	 * @fn void NavigationViewController::popToRootViewController(NavigationViewController *self)
-	 * @brief Pops all ViewControllers on the stack except for the root ViewController.
-	 * @param self The NavigationViewController.
-	 * @memberof NavigationViewController
-	 */
-	void (*popToRootViewController)(NavigationViewController *self);
+  /**
+   * @fn void NavigationViewController::popToRootViewController(NavigationViewController *self)
+   * @brief Pops all ViewControllers on the stack except for the root ViewController.
+   * @param self The NavigationViewController.
+   * @memberof NavigationViewController
+   */
+  void (*popToRootViewController)(NavigationViewController *self);
 
-	/**
-	 * @fn void NavigationViewController::popToViewController(NavigationViewController *self, const ViewController *viewController)
-	 * @brief Pops the top ViewController from the stack until the specified ViewController is visible.
-	 * @param self The NavigationViewController.
-	 * @param viewController The ViewController to remain at the top of the stack.
-	 * @memberof NavigationViewController
-	 */
-	void (*popToViewController)(NavigationViewController *self, const ViewController *viewController);
+  /**
+   * @fn void NavigationViewController::popToViewController(NavigationViewController *self, const ViewController *viewController)
+   * @brief Pops the top ViewController from the stack until the specified ViewController is visible.
+   * @param self The NavigationViewController.
+   * @param viewController The ViewController to remain at the top of the stack.
+   * @memberof NavigationViewController
+   */
+  void (*popToViewController)(NavigationViewController *self, const ViewController *viewController);
 
-	/**
-	 * @fn void NavigationViewController::popViewController(NavigationViewController *self)
-	 * @brief Pops the top ViewController from the stack.
-	 * @param self The NavigationViewController.
-	 * @memberof NavigationViewController
-	 */
-	void (*popViewController)(NavigationViewController *self);
+  /**
+   * @fn void NavigationViewController::popViewController(NavigationViewController *self)
+   * @brief Pops the top ViewController from the stack.
+   * @param self The NavigationViewController.
+   * @memberof NavigationViewController
+   */
+  void (*popViewController)(NavigationViewController *self);
 
-	/**
-	 * @fn ViewController NavigationViewController::rootViewController(const NavigationViewController *self)
-	 * @param self The NavigationViewController.
-	 * @return The root ViewController on the stack.
-	 * @memberof NavigationViewController
-	 */
-	ViewController *(*rootViewController)(const NavigationViewController *self);
+  /**
+   * @fn ViewController NavigationViewController::rootViewController(const NavigationViewController *self)
+   * @param self The NavigationViewController.
+   * @return The root ViewController on the stack.
+   * @memberof NavigationViewController
+   */
+  ViewController *(*rootViewController)(const NavigationViewController *self);
 
-	/**
-	 * @fn ViewController NavigationViewController::topViewController(const NavigationViewController *self)
-	 * @param self The NavigationViewController.
-	 * @return The top ViewController on the stack.
-	 * @memberof NavigationViewController
-	 */
-	ViewController *(*topViewController)(const NavigationViewController *self);
+  /**
+   * @fn ViewController NavigationViewController::topViewController(const NavigationViewController *self)
+   * @param self The NavigationViewController.
+   * @return The top ViewController on the stack.
+   * @memberof NavigationViewController
+   */
+  ViewController *(*topViewController)(const NavigationViewController *self);
 };
 
 /**

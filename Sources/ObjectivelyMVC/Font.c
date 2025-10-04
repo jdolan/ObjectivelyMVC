@@ -36,11 +36,11 @@
 #include "coda.ttf.h"
 
 const EnumName FontStyleNames[] = MakeEnumNames(
-	MakeEnumAlias(FontStyleRegular, regular),
-	MakeEnumAlias(FontStyleBold, bold),
-	MakeEnumAlias(FontStyleItalic, italic),
-	MakeEnumAlias(FontStyleUnderline, underline),
-	MakeEnumAlias(FontStyleStrikeThrough, strikethrough)
+  MakeEnumAlias(FontStyleRegular, regular),
+  MakeEnumAlias(FontStyleBold, bold),
+  MakeEnumAlias(FontStyleItalic, italic),
+  MakeEnumAlias(FontStyleUnderline, underline),
+  MakeEnumAlias(FontStyleStrikeThrough, strikethrough)
 );
 
 #define _Class _Font
@@ -52,15 +52,15 @@ const EnumName FontStyleNames[] = MakeEnumNames(
  */
 static void dealloc(Object *self) {
 
-	Font *this = (Font *) self;
+  Font *this = (Font *) self;
 
-	free(this->family);
+  free(this->family);
 
-	release(this->data);
-	
-	TTF_CloseFont(this->font);
+  release(this->data);
+  
+  TTF_CloseFont(this->font);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 /**
@@ -68,15 +68,15 @@ static void dealloc(Object *self) {
  */
 static int hash(const Object *self) {
 
-	Font *this = (Font *) self;
+  Font *this = (Font *) self;
 
-	int hash = HASH_SEED;
-	hash = HashForCString(hash, this->family);
-	hash = HashForInteger(hash, this->size);
-	hash = HashForInteger(hash, this->style);
-	hash = HashForInteger(hash, this->renderSize);
+  int hash = HASH_SEED;
+  hash = HashForCString(hash, this->family);
+  hash = HashForInteger(hash, this->size);
+  hash = HashForInteger(hash, this->style);
+  hash = HashForInteger(hash, this->renderSize);
 
-	return hash;
+  return hash;
 }
 
 /**
@@ -84,24 +84,24 @@ static int hash(const Object *self) {
  */
 static bool isEqual(const Object *self, const Object *other) {
 
-	if (super(Object, self, isEqual, other)) {
-		return true;
-	}
+  if (super(Object, self, isEqual, other)) {
+    return true;
+  }
 
-	if (other && $(other, isKindOfClass, _Font())) {
+  if (other && $(other, isKindOfClass, _Font())) {
 
-		const Font *this = (Font *) self;
-		const Font *that = (Font *) other;
+    const Font *this = (Font *) self;
+    const Font *that = (Font *) other;
 
-		if (!strcmp(this->family, that->family) &&
-				this->size == that->size &&
-				this->style == that->style &&
-				this->renderSize == that->renderSize) {
-			return true;
-		}
-	}
+    if (!strcmp(this->family, that->family) &&
+        this->size == that->size &&
+        this->style == that->style &&
+        this->renderSize == that->renderSize) {
+      return true;
+    }
+  }
 
-	return false;
+  return false;
 }
 
 #pragma mark - Font
@@ -114,7 +114,7 @@ static MutableArray *_fonts;
  * @memberof Font
  */
 static void cacheFont(Data *data, const char *family) {
-	$(_cache, setObjectForKeyPath, data, family);
+  $(_cache, setObjectForKeyPath, data, family);
 }
 
 /**
@@ -123,44 +123,44 @@ static void cacheFont(Data *data, const char *family) {
  */
 static Font *cachedFont(const char *family, int size, int style) {
 
-	if (family == NULL) {
-		family = DEFAULT_FONT_FAMILY;
-	}
-	if (size < 1) {
-		size = DEFAULT_FONT_SIZE;
-	}
-	if (style < FontStyleRegular || style > FontStyleStrikeThrough) {
-		style = DEFAULT_FONT_STYLE;
-	}
+  if (family == NULL) {
+    family = DEFAULT_FONT_FAMILY;
+  }
+  if (size < 1) {
+    size = DEFAULT_FONT_SIZE;
+  }
+  if (style < FontStyleRegular || style > FontStyleStrikeThrough) {
+    style = DEFAULT_FONT_STYLE;
+  }
 
-	const int renderSize = size * MVC_WindowScale(NULL, NULL, NULL);
+  const int renderSize = size * MVC_WindowScale(NULL, NULL, NULL);
 
-	const Array *fonts = (Array *) _fonts;
-	for (size_t i = 0; i < fonts->count; i++) {
+  const Array *fonts = (Array *) _fonts;
+  for (size_t i = 0; i < fonts->count; i++) {
 
-		Font *font = $(fonts, objectAtIndex, i);
+    Font *font = $(fonts, objectAtIndex, i);
 
-		if (!strcmp(font->family, family) &&
-				font->size == size &&
-				font->style == style &&
-				font->renderSize == renderSize) {
-			return font;
-		}
-	}
+    if (!strcmp(font->family, family) &&
+        font->size == size &&
+        font->style == style &&
+        font->renderSize == renderSize) {
+      return font;
+    }
+  }
 
-	Data *data = $((Dictionary *) _cache, objectForKeyPath, family);
-	if (data) {
-		Font *font = $(alloc(Font), initWithData, data, family, size, style);
-		assert(font);
+  Data *data = $((Dictionary *) _cache, objectForKeyPath, family);
+  if (data) {
+    Font *font = $(alloc(Font), initWithData, data, family, size, style);
+    assert(font);
 
-		$(_fonts, addObject, font);
-		release(font);
+    $(_fonts, addObject, font);
+    release(font);
 
-		return font;
-	}
+    return font;
+  }
 
-	MVC_LogWarn("%s-%d-%d not found\n", family, size, style);
-	return $$(Font, defaultFont);
+  MVC_LogWarn("%s-%d-%d not found\n", family, size, style);
+  return $$(Font, defaultFont);
 }
 
 /**
@@ -168,7 +168,7 @@ static Font *cachedFont(const char *family, int size, int style) {
  * @memberof Font
  */
 static void clearCache(void) {
-	$(_cache, removeAllObjects);
+  $(_cache, removeAllObjects);
 }
 
 /**
@@ -176,18 +176,18 @@ static void clearCache(void) {
 omg  * @memberof Font
  */
 static Font *defaultFont(void) {
-	static Once once;
+  static Once once;
 
-	do_once(&once, {
-		Data *data = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len);
-		assert(data);
+  do_once(&once, {
+    Data *data = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len);
+    assert(data);
 
-		$$(Font, cacheFont, data, DEFAULT_FONT_FAMILY);
+    $$(Font, cacheFont, data, DEFAULT_FONT_FAMILY);
 
-		release(data);
-	});
+    release(data);
+  });
 
-	return $$(Font, cachedFont, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE);
+  return $$(Font, cachedFont, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE);
 }
 
 /**
@@ -196,24 +196,24 @@ static Font *defaultFont(void) {
  */
 static Font *initWithData(Font *self, Data *data, const char *family, int size, int style) {
 
-	self = (Font *) super(Object, self, init);
-	if (self) {
+  self = (Font *) super(Object, self, init);
+  if (self) {
 
-		self->data = retain(data);
-		assert(self->data);
+    self->data = retain(data);
+    assert(self->data);
 
-		self->family = strdup(family);
-		assert(self->family);
+    self->family = strdup(family);
+    assert(self->family);
 
-		self->size = size;
-		assert(self->size);
+    self->size = size;
+    assert(self->size);
 
-		self->style = style;
+    self->style = style;
 
-		$(self, renderDeviceDidReset);
-	}
+    $(self, renderDeviceDidReset);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -222,22 +222,22 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
  */
 static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth) {
 
-	SDL_Surface *surface;
-	if (wrapWidth) {
-		surface = TTF_RenderUTF8_Blended_Wrapped(self->font, chars, color, wrapWidth * MVC_WindowScale(NULL, NULL, NULL));
-	} else {
-		surface = TTF_RenderUTF8_Blended(self->font, chars, color);
-	}
+  SDL_Surface *surface;
+  if (wrapWidth) {
+    surface = TTF_RenderUTF8_Blended_Wrapped(self->font, chars, color, wrapWidth * MVC_WindowScale(NULL, NULL, NULL));
+  } else {
+    surface = TTF_RenderUTF8_Blended(self->font, chars, color);
+  }
 
-	SDL_Surface *converted = NULL;
-	if (surface) {
-		converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
-		SDL_FreeSurface(surface);
-	} else {
-		MVC_LogError("%s\n", TTF_GetError());
-	}
+  SDL_Surface *converted = NULL;
+  if (surface) {
+    converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
+    SDL_FreeSurface(surface);
+  } else {
+    MVC_LogError("%s\n", TTF_GetError());
+  }
 
-	return converted;
+  return converted;
 }
 
 /**
@@ -246,23 +246,23 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
  */
 static void renderDeviceDidReset(Font *self) {
 
-	const int renderSize = self->size * MVC_WindowScale(NULL, NULL, NULL);
-	if (renderSize != self->renderSize) {
+  const int renderSize = self->size * MVC_WindowScale(NULL, NULL, NULL);
+  if (renderSize != self->renderSize) {
 
-		self->renderSize = renderSize;
+    self->renderSize = renderSize;
 
-		if (self->font) {
-			TTF_CloseFont(self->font);
-		}
+    if (self->font) {
+      TTF_CloseFont(self->font);
+    }
 
-		SDL_RWops *buffer = SDL_RWFromConstMem(self->data->bytes, (int) self->data->length);
-		assert(buffer);
+    SDL_RWops *buffer = SDL_RWFromConstMem(self->data->bytes, (int) self->data->length);
+    assert(buffer);
 
-		self->font = TTF_OpenFontRW(buffer, 1, self->renderSize);
-		assert(self->font);
+    self->font = TTF_OpenFontRW(buffer, 1, self->renderSize);
+    assert(self->font);
 
-		TTF_SetFontStyle(self->font, self->style);
-	}
+    TTF_SetFontStyle(self->font, self->style);
+  }
 }
 
 /**
@@ -271,38 +271,38 @@ static void renderDeviceDidReset(Font *self) {
  */
 static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
 
-	if (w) {
-		*w = 0;
-	}
-	if (h) {
-		*h = 0;
-	}
+  if (w) {
+    *w = 0;
+  }
+  if (h) {
+    *h = 0;
+  }
 
-	if (chars) {
-		char *lines = strdup(chars);
+  if (chars) {
+    char *lines = strdup(chars);
 
-		for (char *line = strtok(lines, "\n\r"); line; line = strtok(NULL, "\n\r")) {
+    for (char *line = strtok(lines, "\n\r"); line; line = strtok(NULL, "\n\r")) {
 
-			int line_w, line_h;
-			TTF_SizeUTF8(self->font, line, &line_w, &line_h);
+      int line_w, line_h;
+      TTF_SizeUTF8(self->font, line, &line_w, &line_h);
 
-			if (w) {
-				*w = max(*w, line_w);
-			}
-			if (h) {
-				*h += line_h;
-			}
-		}
-		free(lines);
+      if (w) {
+        *w = max(*w, line_w);
+      }
+      if (h) {
+        *h += line_h;
+      }
+    }
+    free(lines);
 
-		const float scale = MVC_WindowScale(NULL, NULL, NULL);
-		if (w) {
-			*w = ceil(*w / scale);
-		}
-		if (h) {
-			*h = ceil(*h / scale);
-		}
-	}
+    const float scale = MVC_WindowScale(NULL, NULL, NULL);
+    if (w) {
+      *w = ceil(*w / scale);
+    }
+    if (h) {
+      *h = ceil(*h / scale);
+    }
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -312,27 +312,27 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->interface)->hash = hash;
-	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->hash = hash;
+  ((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((FontInterface *) clazz->interface)->cachedFont = cachedFont;
-	((FontInterface *) clazz->interface)->cacheFont = cacheFont;
-	((FontInterface *) clazz->interface)->clearCache = clearCache;
-	((FontInterface *) clazz->interface)->defaultFont = defaultFont;
-	((FontInterface *) clazz->interface)->initWithData = initWithData;
-	((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
-	((FontInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
-	((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
+  ((FontInterface *) clazz->interface)->cachedFont = cachedFont;
+  ((FontInterface *) clazz->interface)->cacheFont = cacheFont;
+  ((FontInterface *) clazz->interface)->clearCache = clearCache;
+  ((FontInterface *) clazz->interface)->defaultFont = defaultFont;
+  ((FontInterface *) clazz->interface)->initWithData = initWithData;
+  ((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
+  ((FontInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+  ((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
 
-	const int err = TTF_Init();
-	assert(err == 0);
+  const int err = TTF_Init();
+  assert(err == 0);
 
-	_cache = $$(MutableDictionary, dictionary);
-	assert(_cache);
+  _cache = $$(MutableDictionary, dictionary);
+  assert(_cache);
 
-	_fonts = $$(MutableArray, array);
-	assert(_fonts);
+  _fonts = $$(MutableArray, array);
+  assert(_fonts);
 }
 
 /**
@@ -340,10 +340,10 @@ static void initialize(Class *clazz) {
  */
 static void destroy(Class *clazz) {
 
-	release(_cache);
-	release(_fonts);
+  release(_cache);
+  release(_fonts);
 
-	TTF_Quit();
+  TTF_Quit();
 }
 
 /**
@@ -351,22 +351,22 @@ static void destroy(Class *clazz) {
  * @memberof Font
  */
 Class *_Font(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Font",
-			.superclass = _Object(),
-			.instanceSize = sizeof(Font),
-			.interfaceOffset = offsetof(Font, interface),
-			.interfaceSize = sizeof(FontInterface),
-			.initialize = initialize,
-			.destroy = destroy,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Font",
+      .superclass = _Object(),
+      .instanceSize = sizeof(Font),
+      .interfaceOffset = offsetof(Font, interface),
+      .interfaceSize = sizeof(FontInterface),
+      .initialize = initialize,
+      .destroy = destroy,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

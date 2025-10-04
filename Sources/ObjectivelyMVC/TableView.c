@@ -37,15 +37,15 @@
  */
 static void dealloc(Object *self) {
 
-	TableView *this = (TableView *) self;
+  TableView *this = (TableView *) self;
 
-	release(this->columns);
-	release(this->contentView);
-	release(this->headerView);
-	release(this->rows);
-	release(this->scrollView);
+  release(this->columns);
+  release(this->contentView);
+  release(this->headerView);
+  release(this->rows);
+  release(this->scrollView);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -55,15 +55,15 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
 
-	const String *identifier = $((Dictionary *) obj, objectForKeyPath, "identifier");
-	assert(identifier);
+  const String *identifier = $((Dictionary *) obj, objectForKeyPath, "identifier");
+  assert(identifier);
 
-	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);
-	assert(column);
+  TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);
+  assert(column);
 
-	$((TableView *) data, addColumn, column);
+  $((TableView *) data, addColumn, column);
 
-	release(column);
+  release(column);
 }
 
 /**
@@ -71,19 +71,19 @@ static void awakeWithDictionary_columns(const Array *array, ident obj, ident dat
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	const Array *columns = $(dictionary, objectForKeyPath, "columns");
-	if (columns) {
-		$(columns, enumerateObjects, awakeWithDictionary_columns, self);
-	}
+  const Array *columns = $(dictionary, objectForKeyPath, "columns");
+  if (columns) {
+    $(columns, enumerateObjects, awakeWithDictionary_columns, self);
+  }
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((TableView *) self, initWithFrame, NULL);
+  return (View *) $((TableView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -91,27 +91,27 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	super(View, self, layoutSubviews);
+  super(View, self, layoutSubviews);
 
-	TableView *this = (TableView *) self;
+  TableView *this = (TableView *) self;
 
-	View *scrollView = (View *) this->scrollView;
-	View *headerView = (View *) this->headerView;
+  View *scrollView = (View *) this->scrollView;
+  View *headerView = (View *) this->headerView;
 
-	SDL_Rect frame = $(self, bounds);
+  SDL_Rect frame = $(self, bounds);
 
-	if (headerView->hidden == false) {
+  if (headerView->hidden == false) {
 
-		const SDL_Size size = $(headerView, sizeThatFits);
+    const SDL_Size size = $(headerView, sizeThatFits);
 
-		frame.y += size.h;
-		frame.h -= size.h;
-	}
+    frame.y += size.h;
+    frame.h -= size.h;
+  }
 
-	scrollView->frame = frame;
-	scrollView->needsLayout = true;
+  scrollView->frame = frame;
+  scrollView->needsLayout = true;
 
-	$(scrollView, layoutIfNeeded);
+  $(scrollView, layoutIfNeeded);
 }
 
 /**
@@ -119,9 +119,9 @@ static void layoutSubviews(View *self) {
  */
 static SDL_Size sizeThatFits(const View *self) {
 
-	const TableView *this = (TableView *) self;
+  const TableView *this = (TableView *) self;
 
-	return $(this, naturalSize);
+  return $(this, naturalSize);
 }
 
 #pragma mark - Control
@@ -132,78 +132,78 @@ static SDL_Size sizeThatFits(const View *self) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-	TableView *this = (TableView *) self;
+  TableView *this = (TableView *) self;
 
-	if (event->type == SDL_MOUSEBUTTONUP) {
+  if (event->type == SDL_MOUSEBUTTONUP) {
 
-		if ($((View *) this->headerView, didReceiveEvent, event)) {
+    if ($((View *) this->headerView, didReceiveEvent, event)) {
 
-			const SDL_Point point = {
-				.x = event->button.x,
-				.y = event->button.y
-			};
+      const SDL_Point point = {
+        .x = event->button.x,
+        .y = event->button.y
+      };
 
-			TableColumn *column = $(this, columnAtPoint, &point);
-			if (column) {
-				$(this, setSortColumn, column);
-			}
+      TableColumn *column = $(this, columnAtPoint, &point);
+      if (column) {
+        $(this, setSortColumn, column);
+      }
 
-			return true;
-		}
+      return true;
+    }
 
-		if ($((Control *) this->scrollView, isHighlighted) == false) {
-			if ($((View *) this->contentView, didReceiveEvent, event)) {
+    if ($((Control *) this->scrollView, isHighlighted) == false) {
+      if ($((View *) this->contentView, didReceiveEvent, event)) {
 
-				const SDL_Point point = {
-					.x = event->button.x,
-					.y = event->button.y
-				};
+        const SDL_Point point = {
+          .x = event->button.x,
+          .y = event->button.y
+        };
 
-				const ssize_t index = $(this, rowAtPoint, &point);
+        const ssize_t index = $(this, rowAtPoint, &point);
 
-				const Array *rows = (Array *) this->rows;
-				if (index > -1 && index < (ssize_t) rows->count) {
+        const Array *rows = (Array *) this->rows;
+        if (index > -1 && index < (ssize_t) rows->count) {
 
-					TableRowView *row = $(rows, objectAtIndex, index);
+          TableRowView *row = $(rows, objectAtIndex, index);
 
-					switch (this->control.selection) {
-						case ControlSelectionNone:
-							break;
-						case ControlSelectionSingle:
-							if (row->isSelected == false) {
-								$(this, deselectAll);
-								$(this, selectRowAtIndex, index);
-							}
-							break;
-						case ControlSelectionMultiple:
-							if (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) {
-								if (row->isSelected) {
-									$(this, deselectRowAtIndex, index);
-								} else {
-									$(this, selectRowAtIndex, index);
-								}
-							} else {
-								$(this, deselectAll);
-								$(this, selectRowAtIndex, index);
-							}
-							break;
-					}
+          switch (this->control.selection) {
+            case ControlSelectionNone:
+              break;
+            case ControlSelectionSingle:
+              if (row->isSelected == false) {
+                $(this, deselectAll);
+                $(this, selectRowAtIndex, index);
+              }
+              break;
+            case ControlSelectionMultiple:
+              if (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) {
+                if (row->isSelected) {
+                  $(this, deselectRowAtIndex, index);
+                } else {
+                  $(this, selectRowAtIndex, index);
+                }
+              } else {
+                $(this, deselectAll);
+                $(this, selectRowAtIndex, index);
+              }
+              break;
+          }
 
-					if (this->delegate.didSelectRowsAtIndexes) {
-						IndexSet *selectedRowIndexes = $(this, selectedRowIndexes);
+          if (this->delegate.didSelectRowsAtIndexes) {
+            IndexSet *selectedRowIndexes = $(this, selectedRowIndexes);
 
-						this->delegate.didSelectRowsAtIndexes(this, selectedRowIndexes);
+            this->delegate.didSelectRowsAtIndexes(this, selectedRowIndexes);
 
-						release(selectedRowIndexes);
-					}
-				}
+            release(selectedRowIndexes);
+          }
+        }
 
-				return true;
-			}
-		}
-	}
+        return true;
+      }
+    }
+  }
 
-	return super(Control, self, captureEvent, event);
+  return super(Control, self, captureEvent, event);
 }
 
 
@@ -215,11 +215,11 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
  */
 static void addColumn(TableView *self, TableColumn *column) {
 
-	assert(column);
+  assert(column);
 
-	$(self->columns, addObject, column);
+  $(self->columns, addObject, column);
 
-	$((TableRowView *) self->headerView, addCell, (TableCellView *) column->headerCell);
+  $((TableRowView *) self->headerView, addCell, (TableCellView *) column->headerCell);
 }
 
 /**
@@ -228,12 +228,12 @@ static void addColumn(TableView *self, TableColumn *column) {
  */
 static void addColumnWithIdentifier(TableView *self, const char *identifier) {
 
-	TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier);
-	assert(column);
+  TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier);
+  assert(column);
 
-	$(self, addColumn, column);
+  $(self, addColumn, column);
 
-	release(column);
+  release(column);
 }
 
 /**
@@ -242,26 +242,26 @@ static void addColumnWithIdentifier(TableView *self, const char *identifier) {
  */
 static TableColumn *columnAtPoint(const TableView *self, const SDL_Point *point) {
 
-	const SDL_Rect frame = $((View *) self, renderFrame);
-	if (SDL_PointInRect(point, &frame)) {
+  const SDL_Rect frame = $((View *) self, renderFrame);
+  if (SDL_PointInRect(point, &frame)) {
 
-		const Array *cells = (Array *) self->headerView->tableRowView.cells;
-		const Array *columns = (Array *) self->columns;
+    const Array *cells = (Array *) self->headerView->tableRowView.cells;
+    const Array *columns = (Array *) self->columns;
 
-		assert(cells->count == columns->count);
+    assert(cells->count == columns->count);
 
-		for (size_t i = 0; i < cells->count; i++) {
+    for (size_t i = 0; i < cells->count; i++) {
 
-			const View *cell = $(cells, objectAtIndex, i);
-			const SDL_Rect renderFrame = $(cell, renderFrame);
+      const View *cell = $(cells, objectAtIndex, i);
+      const SDL_Rect renderFrame = $(cell, renderFrame);
 
-			if (renderFrame.x + renderFrame.w >= point->x) {
-				return $(columns, objectAtIndex, i);
-			}
-		}
-	}
+      if (renderFrame.x + renderFrame.w >= point->x) {
+        return $(columns, objectAtIndex, i);
+      }
+    }
+  }
 
-	return NULL;
+  return NULL;
 }
 
 /**
@@ -270,25 +270,25 @@ static TableColumn *columnAtPoint(const TableView *self, const SDL_Point *point)
  */
 static TableColumn *columnWithIdentifier(const TableView *self, const char *identifier) {
 
-	assert(identifier);
+  assert(identifier);
 
-	const Array *columns = (Array *) self->columns;
-	for (size_t i = 0; i < columns->count; i++) {
+  const Array *columns = (Array *) self->columns;
+  for (size_t i = 0; i < columns->count; i++) {
 
-		TableColumn *column = $(columns, objectAtIndex, i);
-		if (strcmp(identifier, column->identifier) == 0) {
-			return column;
-		}
-	}
+    TableColumn *column = $(columns, objectAtIndex, i);
+    if (strcmp(identifier, column->identifier) == 0) {
+      return column;
+    }
+  }
 
-	return NULL;
+  return NULL;
 }
 
 /**
  * @brief ArrayEnumerator for all Row deselection.
  */
 static void deselectAll_enumerate(const Array *array, ident obj, ident data) {
-	$((TableRowView *) obj, setSelected, false);
+  $((TableRowView *) obj, setSelected, false);
 }
 
 /**
@@ -296,7 +296,7 @@ static void deselectAll_enumerate(const Array *array, ident obj, ident data) {
  * @memberof TableView
  */
 static void deselectAll(TableView *self) {
-	$((Array *) self->rows, enumerateObjects, deselectAll_enumerate, NULL);
+  $((Array *) self->rows, enumerateObjects, deselectAll_enumerate, NULL);
 }
 
 /**
@@ -305,12 +305,12 @@ static void deselectAll(TableView *self) {
  */
 static void deselectRowAtIndex(TableView *self, size_t index) {
 
-	const Array *rows = (Array *) self->rows;
-	if (index < rows->count) {
+  const Array *rows = (Array *) self->rows;
+  if (index < rows->count) {
 
-		TableRowView *row = $(rows, objectAtIndex, index);
-		$(row, setSelected, false);
-	}
+    TableRowView *row = $(rows, objectAtIndex, index);
+    $(row, setSelected, false);
+  }
 }
 
 /**
@@ -319,11 +319,11 @@ static void deselectRowAtIndex(TableView *self, size_t index) {
  */
 static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
 
-	if (indexes) {
-		for (size_t i = 0; i < indexes->count; i++) {
-			$(self, deselectRowAtIndex, indexes->indexes[i]);
-		}
-	}
+  if (indexes) {
+    for (size_t i = 0; i < indexes->count; i++) {
+      $(self, deselectRowAtIndex, indexes->indexes[i]);
+    }
+  }
 }
 
 /**
@@ -332,33 +332,33 @@ static void deselectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
  */
 static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
-	self = (TableView *) super(Control, self, initWithFrame, frame);
-	if (self) {
-		self->columns = $$(MutableArray, array);
-		assert(self->columns);
+  self = (TableView *) super(Control, self, initWithFrame, frame);
+  if (self) {
+    self->columns = $$(MutableArray, array);
+    assert(self->columns);
 
-		self->rows = $$(MutableArray, array);
-		assert(self->rows);
+    self->rows = $$(MutableArray, array);
+    assert(self->rows);
 
-		self->headerView = $(alloc(TableHeaderView), initWithTableView, self);
-		assert(self->headerView);
+    self->headerView = $(alloc(TableHeaderView), initWithTableView, self);
+    assert(self->headerView);
 
-		$((View *) self, addSubview, (View *) self->headerView);
+    $((View *) self, addSubview, (View *) self->headerView);
 
-		self->contentView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->contentView);
+    self->contentView = $(alloc(StackView), initWithFrame, NULL);
+    assert(self->contentView);
 
-		$((View *) self->contentView, addClassName, "contentView");
+    $((View *) self->contentView, addClassName, "contentView");
 
-		self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
-		assert(self->scrollView);
+    self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
+    assert(self->scrollView);
 
-		$(self->scrollView, setContentView, (View *) self->contentView);
+    $(self->scrollView, setContentView, (View *) self->contentView);
 
-		$((View *) self, addSubview, (View *) self->scrollView);
-	}
+    $((View *) self, addSubview, (View *) self->scrollView);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -367,24 +367,24 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
  */
 static SDL_Size naturalSize(const TableView *self) {
 
-	const SDL_Size headerSize = $((View *) self->headerView, sizeThatFits);
-	const SDL_Size contentSize = $((View *) self->contentView, sizeThatFits);
+  const SDL_Size headerSize = $((View *) self->headerView, sizeThatFits);
+  const SDL_Size contentSize = $((View *) self->contentView, sizeThatFits);
 
-	SDL_Size size = MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
+  SDL_Size size = MakeSize(max(headerSize.w, contentSize.w), headerSize.h + contentSize.h);
 
-	View *this = (View *) self;
+  View *this = (View *) self;
 
-	size.w += this->padding.left + this->padding.right;
-	size.h += this->padding.top + this->padding.bottom;
+  size.w += this->padding.left + this->padding.right;
+  size.h += this->padding.top + this->padding.bottom;
 
-	return size;
+  return size;
 }
 
 /**
  * @brief ArrayEnumerator to remove TableRowViews from the table's contentView.
  */
 static void reloadData_removeRows(const Array *array, ident obj, ident data) {
-	$((View *) data, removeSubview, (View *) obj);
+  $((View *) data, removeSubview, (View *) obj);
 }
 
 /**
@@ -393,46 +393,46 @@ static void reloadData_removeRows(const Array *array, ident obj, ident data) {
  */
 static void reloadData(TableView *self) {
 
-	assert(self->dataSource.numberOfRows);
-	assert(self->delegate.cellForColumnAndRow);
+  assert(self->dataSource.numberOfRows);
+  assert(self->delegate.cellForColumnAndRow);
 
-	$(self->rows, removeAllObjectsWithEnumerator, reloadData_removeRows, self->contentView);
+  $(self->rows, removeAllObjectsWithEnumerator, reloadData_removeRows, self->contentView);
 
-	TableRowView *headerView = (TableRowView *) self->headerView;
-	$(headerView, removeAllCells);
+  TableRowView *headerView = (TableRowView *) self->headerView;
+  $(headerView, removeAllCells);
 
-	const Array *columns = (Array *) self->columns;
-	for (size_t i = 0; i < columns->count; i++) {
+  const Array *columns = (Array *) self->columns;
+  for (size_t i = 0; i < columns->count; i++) {
 
-		const TableColumn *column = $(columns, objectAtIndex, i);
-		$(headerView, addCell, (TableCellView *) column->headerCell);
-	}
+    const TableColumn *column = $(columns, objectAtIndex, i);
+    $(headerView, addCell, (TableCellView *) column->headerCell);
+  }
 
-	const size_t numberOfRows = self->dataSource.numberOfRows(self);
-	for (size_t i = 0; i < numberOfRows; i++) {
+  const size_t numberOfRows = self->dataSource.numberOfRows(self);
+  for (size_t i = 0; i < numberOfRows; i++) {
 
-		TableRowView *row = $(alloc(TableRowView), initWithTableView, self);
-		assert(row);
+    TableRowView *row = $(alloc(TableRowView), initWithTableView, self);
+    assert(row);
 
-		for (size_t j = 0; j < columns->count; j++) {
-			const TableColumn *column = $(columns, objectAtIndex, j);
+    for (size_t j = 0; j < columns->count; j++) {
+      const TableColumn *column = $(columns, objectAtIndex, j);
 
-			TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i);
-			assert(cell);
+      TableCellView *cell = self->delegate.cellForColumnAndRow(self, column, i);
+      assert(cell);
 
-			cell->view.identifier = strdup(column->identifier);
+      cell->view.identifier = strdup(column->identifier);
 
-			$(row, addCell, cell);
-			release(cell);
-		}
+      $(row, addCell, cell);
+      release(cell);
+    }
 
-		$(self->rows, addObject, row);
-		release(row);
+    $(self->rows, addObject, row);
+    release(row);
 
-		$((View *) self->contentView, addSubview, (View *) row);
-	}
+    $((View *) self->contentView, addSubview, (View *) row);
+  }
 
-	self->control.view.needsLayout = true;
+  self->control.view.needsLayout = true;
 }
 
 /**
@@ -441,16 +441,16 @@ static void reloadData(TableView *self) {
  */
 static void removeColumn(TableView *self, TableColumn *column) {
 
-	assert(column);
+  assert(column);
 
-	if (self->sortColumn == column) {
-		self->sortColumn->order = OrderSame;
-		self->sortColumn = NULL;
-	}
+  if (self->sortColumn == column) {
+    self->sortColumn->order = OrderSame;
+    self->sortColumn = NULL;
+  }
 
-	$(self->columns, removeObject, column);
+  $(self->columns, removeObject, column);
 
-	$((TableRowView *) self->headerView, removeCell, (TableCellView *) column->headerCell);
+  $((TableRowView *) self->headerView, removeCell, (TableCellView *) column->headerCell);
 }
 
 /**
@@ -459,27 +459,27 @@ static void removeColumn(TableView *self, TableColumn *column) {
  */
 static ssize_t rowAtPoint(const TableView *self, const SDL_Point *point) {
 
-	const SDL_Rect scrollFrame = $((View *) self->scrollView, renderFrame);
-	if (SDL_PointInRect(point, &scrollFrame)) {
+  const SDL_Rect scrollFrame = $((View *) self->scrollView, renderFrame);
+  if (SDL_PointInRect(point, &scrollFrame)) {
 
-		const Array *rows = (Array *) self->rows;
-		for (size_t i = 0; i < rows->count; i++) {
+    const Array *rows = (Array *) self->rows;
+    for (size_t i = 0; i < rows->count; i++) {
 
-			const View *row = $(rows, objectAtIndex, i);
-			if ($(row, containsPoint, point)) {
-				return i;
-			}
-		}
-	}
+      const View *row = $(rows, objectAtIndex, i);
+      if ($(row, containsPoint, point)) {
+        return i;
+      }
+    }
+  }
 
-	return -1;
+  return -1;
 }
 
 /**
  * @brief ArrayEnumerator for all row selection.
  */
 static void selectAll_enumerate(const Array *array, ident obj, ident data) {
-	$((TableRowView *) obj, setSelected, true);
+  $((TableRowView *) obj, setSelected, true);
 }
 
 /**
@@ -487,7 +487,7 @@ static void selectAll_enumerate(const Array *array, ident obj, ident data) {
  * @memberof TableView
  */
 static void selectAll(TableView *self) {
-	$((Array *) self->rows, enumerateObjects, selectAll_enumerate, NULL);
+  $((Array *) self->rows, enumerateObjects, selectAll_enumerate, NULL);
 }
 
 /**
@@ -496,19 +496,19 @@ static void selectAll(TableView *self) {
  */
 static IndexSet *selectedRowIndexes(const TableView *self) {
 
-	size_t indexes[self->rows->array.count];
-	size_t count = 0;
+  size_t indexes[self->rows->array.count];
+  size_t count = 0;
 
-	const Array *rows = (Array *) self->rows;
-	for (size_t i = 0; i < rows->count; i++) {
+  const Array *rows = (Array *) self->rows;
+  for (size_t i = 0; i < rows->count; i++) {
 
-		const TableRowView *row = $(rows, objectAtIndex, i);
-		if (row->isSelected) {
-			indexes[count++] = i;
-		}
-	}
+    const TableRowView *row = $(rows, objectAtIndex, i);
+    if (row->isSelected) {
+      indexes[count++] = i;
+    }
+  }
 
-	return $(alloc(IndexSet), initWithIndexes, indexes, count);
+  return $(alloc(IndexSet), initWithIndexes, indexes, count);
 }
 
 /**
@@ -517,14 +517,14 @@ static IndexSet *selectedRowIndexes(const TableView *self) {
  */
 static void selectRowAtIndex(TableView *self, size_t index) {
 
-	const Array *rows = (Array *) self->rows;
-	if (index < rows->count) {
+  const Array *rows = (Array *) self->rows;
+  if (index < rows->count) {
 
-		TableRowView *row = $(rows, objectAtIndex, index);
-		if (!row->isSelected) {
-			$(row, setSelected, true);
-		}
-	}
+    TableRowView *row = $(rows, objectAtIndex, index);
+    if (!row->isSelected) {
+      $(row, setSelected, true);
+    }
+  }
 }
 
 /**
@@ -533,11 +533,11 @@ static void selectRowAtIndex(TableView *self, size_t index) {
  */
 static void selectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
 
-	if (indexes) {
-		for (size_t i = 0; i < indexes->count; i++) {
-			$(self, selectRowAtIndex, indexes->indexes[i]);
-		}
-	}
+  if (indexes) {
+    for (size_t i = 0; i < indexes->count; i++) {
+      $(self, selectRowAtIndex, indexes->indexes[i]);
+    }
+  }
 }
 
 /**
@@ -546,28 +546,28 @@ static void selectRowsAtIndexes(TableView *self, const IndexSet *indexes) {
  */
 static void setSortColumn(TableView *self, TableColumn *column) {
 
-	if (self->sortColumn != column) {
+  if (self->sortColumn != column) {
 
-		if (self->sortColumn) {
-			self->sortColumn->order = OrderSame;
-			self->sortColumn = NULL;
-		}
+    if (self->sortColumn) {
+      self->sortColumn->order = OrderSame;
+      self->sortColumn = NULL;
+    }
 
-		if (column) {
-			assert($((Array *) self->columns, containsObject, column));
+    if (column) {
+      assert($((Array *) self->columns, containsObject, column));
 
-			self->sortColumn = column;
-			self->sortColumn->order = OrderAscending;
-		}
-	} else {
-		if (self->sortColumn) {
-			self->sortColumn->order = -self->sortColumn->order;
-		}
-	}
+      self->sortColumn = column;
+      self->sortColumn->order = OrderAscending;
+    }
+  } else {
+    if (self->sortColumn) {
+      self->sortColumn->order = -self->sortColumn->order;
+    }
+  }
 
-	if (self->delegate.didSetSortColumn) {
-		self->delegate.didSetSortColumn(self);
-	}
+  if (self->delegate.didSetSortColumn) {
+    self->delegate.didSetSortColumn(self);
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -577,32 +577,32 @@ static void setSortColumn(TableView *self, TableColumn *column) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+  ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((TableViewInterface *) clazz->interface)->addColumn = addColumn;
-	((TableViewInterface *) clazz->interface)->addColumnWithIdentifier = addColumnWithIdentifier;
-	((TableViewInterface *) clazz->interface)->columnAtPoint = columnAtPoint;
-	((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;
-	((TableViewInterface *) clazz->interface)->deselectAll = deselectAll;
-	((TableViewInterface *) clazz->interface)->deselectRowAtIndex = deselectRowAtIndex;
-	((TableViewInterface *) clazz->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
-	((TableViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((TableViewInterface *) clazz->interface)->naturalSize = naturalSize;
-	((TableViewInterface *) clazz->interface)->reloadData = reloadData;
-	((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
-	((TableViewInterface *) clazz->interface)->rowAtPoint = rowAtPoint;
-	((TableViewInterface *) clazz->interface)->selectedRowIndexes = selectedRowIndexes;
-	((TableViewInterface *) clazz->interface)->selectAll = selectAll;
-	((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
-	((TableViewInterface *) clazz->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
-	((TableViewInterface *) clazz->interface)->setSortColumn = setSortColumn;
+  ((TableViewInterface *) clazz->interface)->addColumn = addColumn;
+  ((TableViewInterface *) clazz->interface)->addColumnWithIdentifier = addColumnWithIdentifier;
+  ((TableViewInterface *) clazz->interface)->columnAtPoint = columnAtPoint;
+  ((TableViewInterface *) clazz->interface)->columnWithIdentifier = columnWithIdentifier;
+  ((TableViewInterface *) clazz->interface)->deselectAll = deselectAll;
+  ((TableViewInterface *) clazz->interface)->deselectRowAtIndex = deselectRowAtIndex;
+  ((TableViewInterface *) clazz->interface)->deselectRowsAtIndexes = deselectRowsAtIndexes;
+  ((TableViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((TableViewInterface *) clazz->interface)->naturalSize = naturalSize;
+  ((TableViewInterface *) clazz->interface)->reloadData = reloadData;
+  ((TableViewInterface *) clazz->interface)->removeColumn = removeColumn;
+  ((TableViewInterface *) clazz->interface)->rowAtPoint = rowAtPoint;
+  ((TableViewInterface *) clazz->interface)->selectedRowIndexes = selectedRowIndexes;
+  ((TableViewInterface *) clazz->interface)->selectAll = selectAll;
+  ((TableViewInterface *) clazz->interface)->selectRowAtIndex = selectRowAtIndex;
+  ((TableViewInterface *) clazz->interface)->selectRowsAtIndexes = selectRowsAtIndexes;
+  ((TableViewInterface *) clazz->interface)->setSortColumn = setSortColumn;
 }
 
 /**
@@ -610,21 +610,21 @@ static void initialize(Class *clazz) {
  * @memberof TableView
  */
 Class *_TableView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TableView",
-			.superclass = _Control(),
-			.instanceSize = sizeof(TableView),
-			.interfaceOffset = offsetof(TableView, interface),
-			.interfaceSize = sizeof(TableViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TableView",
+      .superclass = _Control(),
+      .instanceSize = sizeof(TableView),
+      .interfaceOffset = offsetof(TableView, interface),
+      .interfaceSize = sizeof(TableViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

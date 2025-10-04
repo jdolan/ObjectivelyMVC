@@ -34,11 +34,11 @@
  */
 static void dealloc(Object *self) {
 
-	Option *this = (Option *) self;
+  Option *this = (Option *) self;
 
-	release(this->title);
+  release(this->title);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 /**
@@ -46,19 +46,19 @@ static void dealloc(Object *self) {
  */
 static String *description(const Object *self) {
 
-	View *this = (View *) self;
-	const SDL_Rect bounds = $(this, bounds);
+  View *this = (View *) self;
+  const SDL_Rect bounds = $(this, bounds);
 
-	String *classNames = $((Object *) this->classNames, description);
-	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
-							  this->identifier ?: classnameof(self),
-							  self,
-							  ((Option *) self)->title->text,
-							  classNames->chars,
-							  bounds.x, bounds.y, bounds.w, bounds.h);
+  String *classNames = $((Object *) this->classNames, description);
+  String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
+                this->identifier ?: classnameof(self),
+                self,
+                ((Option *) self)->title->text,
+                classNames->chars,
+                bounds.x, bounds.y, bounds.w, bounds.h);
 
-	release(classNames);
-	return description;
+  release(classNames);
+  return description;
 }
 
 #pragma mark - View
@@ -67,7 +67,7 @@ static String *description(const Object *self) {
  * @see View::acceptsFirstResponder(const View *)
  */
 static bool acceptsFirstResponder(const View *self) {
-	return true;
+  return true;
 }
 
 /**
@@ -75,21 +75,21 @@ static bool acceptsFirstResponder(const View *self) {
  */
 static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
 
-	assert(simpleSelector);
+  assert(simpleSelector);
 
-	const Option *this = (Option *) self;
+  const Option *this = (Option *) self;
 
-	switch (simpleSelector->type) {
-		case SimpleSelectorTypePseudo:
-			if (strcmp("selected", simpleSelector->pattern) == 0) {
-				return this->isSelected;
-			}
-			break;
-		default:
-			break;
-	}
+  switch (simpleSelector->type) {
+    case SimpleSelectorTypePseudo:
+      if (strcmp("selected", simpleSelector->pattern) == 0) {
+        return this->isSelected;
+      }
+      break;
+    default:
+      break;
+  }
 
-	return super(View, self, matchesSelector, simpleSelector);
+  return super(View, self, matchesSelector, simpleSelector);
 }
 
 #pragma mark - Option
@@ -100,18 +100,18 @@ static bool matchesSelector(const View *self, const SimpleSelector *simpleSelect
  */
 static Option *initWithTitle(Option *self, const char *title, ident value) {
 
-	self = (Option *) super(View, self, initWithFrame, NULL);
-	if (self) {
+  self = (Option *) super(View, self, initWithFrame, NULL);
+  if (self) {
 
-		self->title = $(alloc(Text), initWithText, title, NULL);
-		assert(self->title);
+    self->title = $(alloc(Text), initWithText, title, NULL);
+    assert(self->title);
 
-		self->value = value;
+    self->value = value;
 
-		$((View *) self, addSubview, (View *) self->title);
-	}
+    $((View *) self, addSubview, (View *) self->title);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -120,11 +120,11 @@ static Option *initWithTitle(Option *self, const char *title, ident value) {
  */
 static void setSelected(Option *self, bool isSelected) {
 
-	if (self->isSelected != isSelected) {
-		self->isSelected = isSelected;
+  if (self->isSelected != isSelected) {
+    self->isSelected = isSelected;
 
-		self->view.needsLayout = true;
-	}
+    self->view.needsLayout = true;
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -134,14 +134,14 @@ static void setSelected(Option *self, bool isSelected) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->interface)->description = description;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->description = description;
 
-	((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
-	((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
+  ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
+  ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
 
-	((OptionInterface *) clazz->interface)->initWithTitle = initWithTitle;
-	((OptionInterface *) clazz->interface)->setSelected = setSelected;
+  ((OptionInterface *) clazz->interface)->initWithTitle = initWithTitle;
+  ((OptionInterface *) clazz->interface)->setSelected = setSelected;
 
 }
 
@@ -150,21 +150,21 @@ static void initialize(Class *clazz) {
  * @memberof Option
  */
 Class *_Option(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Option",
-			.superclass = _View(),
-			.instanceSize = sizeof(Option),
-			.interfaceOffset = offsetof(Option, interface),
-			.interfaceSize = sizeof(OptionInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Option",
+      .superclass = _View(),
+      .instanceSize = sizeof(Option),
+      .interfaceOffset = offsetof(Option, interface),
+      .interfaceSize = sizeof(OptionInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

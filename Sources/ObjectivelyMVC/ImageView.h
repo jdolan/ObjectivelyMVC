@@ -42,38 +42,38 @@ typedef struct ImageViewInterface ImageViewInterface;
  */
 struct ImageView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	ImageViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  ImageViewInterface *interface;
 
-	/**
-	 * @brief The blend function.
-	 */
-	struct {
-		GLenum src, dst;
-	} blend;
+  /**
+   * @brief The blend function.
+   */
+  struct {
+    GLenum src, dst;
+  } blend;
 
-	/**
-	 * @brief The drawing color.
-	 */
-	SDL_Color color;
+  /**
+   * @brief The drawing color.
+   */
+  SDL_Color color;
 
-	/**
-	 * @brief The image.
-	 */
-	Image *image;
+  /**
+   * @brief The image.
+   */
+  Image *image;
 
-	/**
-	 * @brief The texture.
-	 */
-	GLuint texture;
+  /**
+   * @brief The texture.
+   */
+  GLuint texture;
 };
 
 /**
@@ -81,66 +81,66 @@ struct ImageView {
  */
 struct ImageViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn ImageView *ImageView::initWithFrame(ImageView *self, const SDL_Rect *frame)
-	 * @brief Initializes this ImageView with the specified frame.
-	 * @param self The ImageView.
-	 * @param frame The frame.
-	 * @return The initialized ImageView, or `NULL` on error.
-	 * @memberof ImageView
-	 */
-	ImageView *(*initWithFrame)(ImageView *self, const SDL_Rect *frame);
+  /**
+   * @fn ImageView *ImageView::initWithFrame(ImageView *self, const SDL_Rect *frame)
+   * @brief Initializes this ImageView with the specified frame.
+   * @param self The ImageView.
+   * @param frame The frame.
+   * @return The initialized ImageView, or `NULL` on error.
+   * @memberof ImageView
+   */
+  ImageView *(*initWithFrame)(ImageView *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
-	 * @brief Initializes this ImageView with the specified image.
-	 * @param self The ImageView.
-	 * @param image The Image.
-	 * @return The initialized ImageView, or `NULL` on error.
-	 * @memberof ImageView
-	 */
-	ImageView *(*initWithImage)(ImageView *self, Image *image);
+  /**
+   * @fn ImageView *ImageView::initWithImage(ImageView *self, Image *image)
+   * @brief Initializes this ImageView with the specified image.
+   * @param self The ImageView.
+   * @param image The Image.
+   * @return The initialized ImageView, or `NULL` on error.
+   * @memberof ImageView
+   */
+  ImageView *(*initWithImage)(ImageView *self, Image *image);
 
-	/**
-	 * @fn void ImageView::setImage(ImageView *self, Image *image);
-	 * @brief Sets the Image for this ImageView.
-	 * @param self The ImageView.
-	 * @param image An Image.
-	 * @memberof ImageView
-	 */
-	void (*setImage)(ImageView *self, Image *image);
+  /**
+   * @fn void ImageView::setImage(ImageView *self, Image *image);
+   * @brief Sets the Image for this ImageView.
+   * @param self The ImageView.
+   * @param image An Image.
+   * @memberof ImageView
+   */
+  void (*setImage)(ImageView *self, Image *image);
 
-	/**
-	 * @fn void ImageView::setImageWithResource(ImageView *self, const Resource *resource);
-	 * @brief Sets the Image for this ImageView with the given Resource.
-	 * @param self The ImageView.
-	 * @param resource An Image Resource.
-	 * @memberof ImageView
-	 */
-	void (*setImageWithResource)(ImageView *self, const Resource *resource);
+  /**
+   * @fn void ImageView::setImageWithResource(ImageView *self, const Resource *resource);
+   * @brief Sets the Image for this ImageView with the given Resource.
+   * @param self The ImageView.
+   * @param resource An Image Resource.
+   * @memberof ImageView
+   */
+  void (*setImageWithResource)(ImageView *self, const Resource *resource);
 
-	/**
-	 * @fn void ImageView::setImageWithResourceName(ImageView *self, const char *name);
-	 * @brief Sets the Image for this ImageView with the Resource by the given name.
-	 * @param self The ImageView.
-	 * @param name An Image Resource name.
-	 * @memberof ImageView
-	 */
-	void (*setImageWithResourceName)(ImageView *self, const char *name);
+  /**
+   * @fn void ImageView::setImageWithResourceName(ImageView *self, const char *name);
+   * @brief Sets the Image for this ImageView with the Resource by the given name.
+   * @param self The ImageView.
+   * @param name An Image Resource name.
+   * @memberof ImageView
+   */
+  void (*setImageWithResourceName)(ImageView *self, const char *name);
 
-	/**
-	 * @fn void ImageView::setImageWithSurface(ImageView *self, SDL_Surface *surface)
-	 * @brief A convenience method to set this view's Image with a surface.
-	 * @param self The ImageView.
-	 * @param surface The surface.
-	 * @memberof ImageView
-	 */
-	void (*setImageWithSurface)(ImageView *image, SDL_Surface *surface);
+  /**
+   * @fn void ImageView::setImageWithSurface(ImageView *self, SDL_Surface *surface)
+   * @brief A convenience method to set this view's Image with a surface.
+   * @param self The ImageView.
+   * @param surface The surface.
+   * @memberof ImageView
+   */
+  void (*setImageWithSurface)(ImageView *image, SDL_Surface *surface);
 };
 
 OBJECTIVELYMVC_EXPORT Class *_ImageView(void);

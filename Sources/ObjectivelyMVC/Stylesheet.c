@@ -39,12 +39,12 @@
  */
 static void dealloc(Object *self) {
 
-	Stylesheet *this = (Stylesheet *) self;
+  Stylesheet *this = (Stylesheet *) self;
 
-	release(this->selectors);
-	release(this->styles);
+  release(this->selectors);
+  release(this->styles);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 /**
@@ -52,14 +52,14 @@ static void dealloc(Object *self) {
  */
 static int hash(const Object *self) {
 
-	Stylesheet *this = (Stylesheet *) self;
+  Stylesheet *this = (Stylesheet *) self;
 
-	int hash = HASH_SEED;
+  int hash = HASH_SEED;
 
-	hash = HashForObject(hash, this->selectors);
-	hash = HashForObject(hash, this->styles);
+  hash = HashForObject(hash, this->selectors);
+  hash = HashForObject(hash, this->styles);
 
-	return hash;
+  return hash;
 }
 
 /**
@@ -67,21 +67,21 @@ static int hash(const Object *self) {
  */
 static bool isEqual(const Object *self, const Object *other) {
 
-	if (super(Object, self, isEqual, other)) {
-		return true;
-	}
+  if (super(Object, self, isEqual, other)) {
+    return true;
+  }
 
-	if (other && $(other, isKindOfClass, _Stylesheet())) {
+  if (other && $(other, isKindOfClass, _Stylesheet())) {
 
-		const Stylesheet *this = (Stylesheet *) self;
-		const Stylesheet *that = (Stylesheet *) other;
+    const Stylesheet *this = (Stylesheet *) self;
+    const Stylesheet *that = (Stylesheet *) other;
 
-		if ($((Object *) this->selectors, isEqual, (Object *) that->selectors)) {
-			return $((Object *) this->styles, isEqual, (Object *) that->styles);
-		}
-	}
+    if ($((Object *) this->selectors, isEqual, (Object *) that->selectors)) {
+      return $((Object *) this->styles, isEqual, (Object *) that->styles);
+    }
+  }
 
-	return false;
+  return false;
 }
 
 #pragma mark - Stylesheet
@@ -93,28 +93,28 @@ static Stylesheet *_defaultStylesheet;
  * @memberof Stylesheet
  */
 static Stylesheet *defaultStylesheet(void) {
-	static Once once;
+  static Once once;
 
-	do_once(&once, {
-		_defaultStylesheet = $$(Stylesheet, stylesheetWithCharacters, (char *) stylesheet_css);
-		assert(_defaultStylesheet);
-	});
+  do_once(&once, {
+    _defaultStylesheet = $$(Stylesheet, stylesheetWithCharacters, (char *) stylesheet_css);
+    assert(_defaultStylesheet);
+  });
 
-	return _defaultStylesheet;
+  return _defaultStylesheet;
 }
 
 static ident selectorsReducer(const ident obj, ident accumulator, ident data) {
 
-	$((MutableArray *) accumulator, addObjectsFromArray, ((Style *) obj)->selectors);
+  $((MutableArray *) accumulator, addObjectsFromArray, ((Style *) obj)->selectors);
 
-	return accumulator;
+  return accumulator;
 }
 
 /**
  * @brief Comparator for Selector sorting.
  */
 static Order selectorsComparator(const ident a, const ident b) {
-	return $((Selector *) a, compareTo, (Selector *) b);
+  return $((Selector *) a, compareTo, (Selector *) b);
 }
 
 /**
@@ -123,24 +123,24 @@ static Order selectorsComparator(const ident a, const ident b) {
  */
 static Stylesheet *initWithCharacters(Stylesheet *self, const char *chars) {
 
-	self = (Stylesheet *) super(Object, self, init);
-	if (self) {
+  self = (Stylesheet *) super(Object, self, init);
+  if (self) {
 
-		self->styles = $$(Style, parse, chars);
-		assert(self->styles);
+    self->styles = $$(Style, parse, chars);
+    assert(self->styles);
 
-		MutableArray *selectors = $$(MutableArray, array);
-		assert(selectors);
+    MutableArray *selectors = $$(MutableArray, array);
+    assert(selectors);
 
-		$(self->styles, reduce, selectorsReducer, selectors, NULL);
+    $(self->styles, reduce, selectorsReducer, selectors, NULL);
 
-		self->selectors = $((Array *) selectors, sortedArray, selectorsComparator);
-		assert(self->selectors);
+    self->selectors = $((Array *) selectors, sortedArray, selectorsComparator);
+    assert(self->selectors);
 
-		release(selectors);
-	}
+    release(selectors);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -149,15 +149,15 @@ static Stylesheet *initWithCharacters(Stylesheet *self, const char *chars) {
  */
 static Stylesheet *initWithData(Stylesheet *self, const Data *data) {
 
-	assert(data);
+  assert(data);
 
-	String *string = $$(String, stringWithData, data, STRING_ENCODING_UTF8);
-	assert(string);
+  String *string = $$(String, stringWithData, data, STRING_ENCODING_UTF8);
+  assert(string);
 
-	self = $(self, initWithString, string);
+  self = $(self, initWithString, string);
 
-	release(string);
-	return self;
+  release(string);
+  return self;
 }
 
 /**
@@ -166,9 +166,9 @@ static Stylesheet *initWithData(Stylesheet *self, const Data *data) {
  */
 static Stylesheet *initWithResource(Stylesheet *self, const Resource *resource) {
 
-	assert(resource);
+  assert(resource);
 
-	return $(self, initWithData, resource->data);
+  return $(self, initWithData, resource->data);
 }
 
 /**
@@ -177,15 +177,15 @@ static Stylesheet *initWithResource(Stylesheet *self, const Resource *resource) 
  */
 static Stylesheet *initWithResourceName(Stylesheet *self, const char *name) {
 
-	assert(name);
+  assert(name);
 
-	Resource *resource = $$(Resource, resourceWithName, name);
-	assert(resource);
+  Resource *resource = $$(Resource, resourceWithName, name);
+  assert(resource);
 
-	self = $(self, initWithResource, resource);
+  self = $(self, initWithResource, resource);
 
-	release(resource);
-	return self;
+  release(resource);
+  return self;
 }
 
 /**
@@ -194,9 +194,9 @@ static Stylesheet *initWithResourceName(Stylesheet *self, const char *name) {
  */
 static Stylesheet *initWithString(Stylesheet *self, const String *string) {
 
-	assert(string);
+  assert(string);
 
-	return $(self, initWithCharacters, string->chars);
+  return $(self, initWithCharacters, string->chars);
 }
 
 /**
@@ -204,7 +204,7 @@ static Stylesheet *initWithString(Stylesheet *self, const String *string) {
  * @memberof Stylesheet
  */
 static Stylesheet *stylesheetWithCharacters(const char *chars) {
-	return $(alloc(Stylesheet), initWithCharacters, chars);
+  return $(alloc(Stylesheet), initWithCharacters, chars);
 }
 
 /**
@@ -212,7 +212,7 @@ static Stylesheet *stylesheetWithCharacters(const char *chars) {
  * @memberof Stylesheet
  */
 static Stylesheet *stylesheetWithData(const Data *data) {
-	return $(alloc(Stylesheet), initWithData, data);
+  return $(alloc(Stylesheet), initWithData, data);
 }
 
 /**
@@ -220,7 +220,7 @@ static Stylesheet *stylesheetWithData(const Data *data) {
  * @memberof Stylesheet
  */
 static Stylesheet *stylesheetWithResource(const Resource *resource) {
-	return $(alloc(Stylesheet), initWithResource, resource);
+  return $(alloc(Stylesheet), initWithResource, resource);
 }
 
 /**
@@ -228,7 +228,7 @@ static Stylesheet *stylesheetWithResource(const Resource *resource) {
  * @memberof Stylesheet
  */
 static Stylesheet *stylesheetWithResourceName(const char *name) {
-	return $(alloc(Stylesheet), initWithResourceName, name);
+  return $(alloc(Stylesheet), initWithResourceName, name);
 }
 
 /**
@@ -236,7 +236,7 @@ static Stylesheet *stylesheetWithResourceName(const char *name) {
  * @memberof Stylesheet
  */
 static Stylesheet *stylesheetWithString(const String *string) {
-	return $(alloc(Stylesheet), initWithString, string);
+  return $(alloc(Stylesheet), initWithString, string);
 }
 
 #pragma mark - Class lifecycle
@@ -246,28 +246,28 @@ static Stylesheet *stylesheetWithString(const String *string) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->interface)->hash = hash;
-	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->hash = hash;
+  ((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((StylesheetInterface *) clazz->interface)->defaultStylesheet = defaultStylesheet;
-	((StylesheetInterface *) clazz->interface)->initWithCharacters = initWithCharacters;
-	((StylesheetInterface *) clazz->interface)->initWithData = initWithData;
-	((StylesheetInterface *) clazz->interface)->initWithResource = initWithResource;
-	((StylesheetInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
-	((StylesheetInterface *) clazz->interface)->initWithString = initWithString;
-	((StylesheetInterface *) clazz->interface)->stylesheetWithCharacters = stylesheetWithCharacters;
-	((StylesheetInterface *) clazz->interface)->stylesheetWithData = stylesheetWithData;
-	((StylesheetInterface *) clazz->interface)->stylesheetWithResource = stylesheetWithResource;
-	((StylesheetInterface *) clazz->interface)->stylesheetWithResourceName = stylesheetWithResourceName;
-	((StylesheetInterface *) clazz->interface)->stylesheetWithString = stylesheetWithString;
+  ((StylesheetInterface *) clazz->interface)->defaultStylesheet = defaultStylesheet;
+  ((StylesheetInterface *) clazz->interface)->initWithCharacters = initWithCharacters;
+  ((StylesheetInterface *) clazz->interface)->initWithData = initWithData;
+  ((StylesheetInterface *) clazz->interface)->initWithResource = initWithResource;
+  ((StylesheetInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
+  ((StylesheetInterface *) clazz->interface)->initWithString = initWithString;
+  ((StylesheetInterface *) clazz->interface)->stylesheetWithCharacters = stylesheetWithCharacters;
+  ((StylesheetInterface *) clazz->interface)->stylesheetWithData = stylesheetWithData;
+  ((StylesheetInterface *) clazz->interface)->stylesheetWithResource = stylesheetWithResource;
+  ((StylesheetInterface *) clazz->interface)->stylesheetWithResourceName = stylesheetWithResourceName;
+  ((StylesheetInterface *) clazz->interface)->stylesheetWithString = stylesheetWithString;
 }
 
 /**
  * @see Class::destroy(Class *)
  */
 static void destroy(Class *clazz) {
-	release(_defaultStylesheet);
+  release(_defaultStylesheet);
 }
 
 /**
@@ -275,22 +275,22 @@ static void destroy(Class *clazz) {
  * @memberof Stylesheet
  */
 Class *_Stylesheet(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Stylesheet",
-			.superclass = _Object(),
-			.instanceSize = sizeof(Stylesheet),
-			.interfaceOffset = offsetof(Stylesheet, interface),
-			.interfaceSize = sizeof(StylesheetInterface),
-			.initialize = initialize,
-			.destroy = destroy,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Stylesheet",
+      .superclass = _Object(),
+      .instanceSize = sizeof(Stylesheet),
+      .interfaceOffset = offsetof(Stylesheet, interface),
+      .interfaceSize = sizeof(StylesheetInterface),
+      .initialize = initialize,
+      .destroy = destroy,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

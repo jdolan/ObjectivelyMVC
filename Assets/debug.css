@@ -1,52 +1,52 @@
 #debug {
-	alignment: middle-right;
-	autoresizing-mask: fit;
-	background-color: #6688aacc;
-	border-color: #6080a0;
-	border-width 1;
-	padding: 4 4 4 4;
+  alignment: middle-right;
+  autoresizing-mask: fit;
+  background-color: #6688aacc;
+  border-color: #6080a0;
+  border-width 1;
+  padding: 4 4 4 4;
 }
 
 #debug * {
-	font-size: 12;
+  font-size: 12;
 }
 
 #debug > #statistics {
-	color: darkblue;
+  color: darkblue;
 }
 
 #debug > #path {
-	color: darkslateblue;
+  color: darkslateblue;
 }
 
 #debug > #description {
-	color: purple;
+  color: purple;
 }
 
 #debug > TableView {
-	autoresizing-mask: contain | width;
+  autoresizing-mask: contain | width;
 }
 
 #debug > #selectors * {
-	color: darkviolet;
+  color: darkviolet;
 }
 
 #debug > #selectors #Selector {
-	min-width: 400;
+  min-width: 400;
 }
 
 #debug > #computedStyle * {
-	color: mediumvioletred;
+  color: mediumvioletred;
 }
 
 #debug > #computedStyle #Attribute {
-	min-width: 160;
+  min-width: 160;
 }
 
 #debug > #computedStyle #Value {
-	min-width: 240;
+  min-width: 240;
 }
 
 #debug > #warnings * {
-	color: yellow;
+  color: yellow;
 }

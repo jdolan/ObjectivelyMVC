@@ -26,18 +26,18 @@
 #include "ImageView.h"
 
 const EnumName GLBlendNames[] = MakeEnumNames(
-	MakeEnumName(GL_CONSTANT_ALPHA),
-	MakeEnumName(GL_CONSTANT_COLOR),
-	MakeEnumName(GL_DST_ALPHA),
-	MakeEnumName(GL_DST_COLOR),
-	MakeEnumName(GL_ONE),
-	MakeEnumName(GL_ONE_MINUS_DST_ALPHA),
-	MakeEnumName(GL_ONE_MINUS_DST_COLOR),
-	MakeEnumName(GL_ONE_MINUS_SRC_ALPHA),
-	MakeEnumName(GL_ONE_MINUS_SRC_COLOR),
-	MakeEnumName(GL_SRC_ALPHA),
-	MakeEnumName(GL_SRC_COLOR),
-	MakeEnumName(GL_ZERO)
+  MakeEnumName(GL_CONSTANT_ALPHA),
+  MakeEnumName(GL_CONSTANT_COLOR),
+  MakeEnumName(GL_DST_ALPHA),
+  MakeEnumName(GL_DST_COLOR),
+  MakeEnumName(GL_ONE),
+  MakeEnumName(GL_ONE_MINUS_DST_ALPHA),
+  MakeEnumName(GL_ONE_MINUS_DST_COLOR),
+  MakeEnumName(GL_ONE_MINUS_SRC_ALPHA),
+  MakeEnumName(GL_ONE_MINUS_SRC_COLOR),
+  MakeEnumName(GL_SRC_ALPHA),
+  MakeEnumName(GL_SRC_COLOR),
+  MakeEnumName(GL_ZERO)
 );
 
 #define _Class _ImageView
@@ -49,15 +49,15 @@ const EnumName GLBlendNames[] = MakeEnumNames(
  */
 static void dealloc(Object *self) {
 
-	ImageView *this = (ImageView *) self;
+  ImageView *this = (ImageView *) self;
 
-	release(this->image);
+  release(this->image);
 
-	if (this->texture) {
-		glDeleteTextures(1, &this->texture);
-	}
+  if (this->texture) {
+    glDeleteTextures(1, &this->texture);
+  }
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -67,25 +67,25 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	ImageView *this = (ImageView *) self;
+  ImageView *this = (ImageView *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) GLBlendNames),
-		MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) GLBlendNames),
-		MakeInlet("color", InletTypeColor, &this->color, NULL),
-		MakeInlet("image", InletTypeImage, &this->image, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) GLBlendNames),
+    MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) GLBlendNames),
+    MakeInlet("color", InletTypeColor, &this->color, NULL),
+    MakeInlet("image", InletTypeImage, &this->image, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((ImageView *) self, initWithImage, NULL);
+  return (View *) $((ImageView *) self, initWithImage, NULL);
 }
 
 /**
@@ -93,26 +93,26 @@ static View *init(View *self) {
  */
 static void render(View *self, Renderer *renderer) {
 
-	super(View, self, render, renderer);
+  super(View, self, render, renderer);
 
-	ImageView *this = (ImageView *) self;
+  ImageView *this = (ImageView *) self;
 
-	if (this->texture == 0) {
-		if (this->image) {
-			this->texture = $(renderer, createTexture, this->image->surface);
-			assert(this->texture);
-		}
-	}
+  if (this->texture == 0) {
+    if (this->image) {
+      this->texture = $(renderer, createTexture, this->image->surface);
+      assert(this->texture);
+    }
+  }
 
-	if (this->texture) {
+  if (this->texture) {
 
-		// TODO: Actually use self->blend
+    // TODO: Actually use self->blend
 
-		$(renderer, setDrawColor, &this->color);
-		const SDL_Rect frame = $(self, renderFrame);
-		$(renderer, drawTexture, this->texture, &frame);
-		$(renderer, setDrawColor, &Colors.White);
-	}
+    $(renderer, setDrawColor, &this->color);
+    const SDL_Rect frame = $(self, renderFrame);
+    $(renderer, drawTexture, this->texture, &frame);
+    $(renderer, setDrawColor, &Colors.White);
+  }
 }
 
 /**
@@ -120,15 +120,15 @@ static void render(View *self, Renderer *renderer) {
  */
 static void renderDeviceWillReset(View *self) {
 
-	ImageView *this = (ImageView *) self;
+  ImageView *this = (ImageView *) self;
 
-	if (this->texture) {
-		glDeleteTextures(1, &this->texture);
-	}
+  if (this->texture) {
+    glDeleteTextures(1, &this->texture);
+  }
 
-	this->texture = 0;
+  this->texture = 0;
 
-	super(View, self, renderDeviceWillReset);
+  super(View, self, renderDeviceWillReset);
 }
 
 #pragma mark - ImageView
@@ -139,15 +139,15 @@ static void renderDeviceWillReset(View *self) {
  */
 static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
 
-	self = (ImageView *) super(View, self, initWithFrame, frame);
-	if (self) {
-		self->blend.src = GL_SRC_ALPHA;
-		self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
+  self = (ImageView *) super(View, self, initWithFrame, frame);
+  if (self) {
+    self->blend.src = GL_SRC_ALPHA;
+    self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
 
-		self->color = Colors.White;
-	}
+    self->color = Colors.White;
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -156,12 +156,12 @@ static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
  */
 static ImageView *initWithImage(ImageView *self, Image *image) {
 
-	self = (ImageView *) $(self, initWithFrame, NULL);
-	if (self) {
-		$(self, setImage, image);
-	}
+  self = (ImageView *) $(self, initWithFrame, NULL);
+  if (self) {
+    $(self, setImage, image);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -170,22 +170,22 @@ static ImageView *initWithImage(ImageView *self, Image *image) {
  */
 static void setImage(ImageView *self, Image *image) {
 
-	release(self->image);
+  release(self->image);
 
-	if (image) {
-		self->image = retain(image);
+  if (image) {
+    self->image = retain(image);
 
-		const SDL_Size size = $((View *) self, size);
-		const SDL_Size imageSize = $(image, size);
+    const SDL_Size size = $((View *) self, size);
+    const SDL_Size imageSize = $(image, size);
 
-		if (size.w == 0 && size.h == 0) {
-			$((View *) self, resize, &imageSize);
-		}
-	} else {
-		self->image = NULL;
-	}
+    if (size.w == 0 && size.h == 0) {
+      $((View *) self, resize, &imageSize);
+    }
+  } else {
+    self->image = NULL;
+  }
 
-	self->texture = 0;
+  self->texture = 0;
 }
 
 /**
@@ -194,11 +194,11 @@ static void setImage(ImageView *self, Image *image) {
  */
 static void setImageWithResource(ImageView *self, const Resource *resource) {
 
-	Image *image = $$(Image, imageWithResource, resource);
+  Image *image = $$(Image, imageWithResource, resource);
 
-	$(self, setImage, image);
+  $(self, setImage, image);
 
-	release(image);
+  release(image);
 }
 
 /**
@@ -207,11 +207,11 @@ static void setImageWithResource(ImageView *self, const Resource *resource) {
  */
 static void setImageWithResourceName(ImageView *self, const char *name) {
 
-	Resource *resource = $$(Resource, resourceWithName, name);
+  Resource *resource = $$(Resource, resourceWithName, name);
 
-	$(self, setImageWithResource, resource);
+  $(self, setImageWithResource, resource);
 
-	release(resource);
+  release(resource);
 }
 
 /**
@@ -220,16 +220,16 @@ static void setImageWithResourceName(ImageView *self, const char *name) {
  */
 static void setImageWithSurface(ImageView *self, SDL_Surface *surface) {
 
-	$(self, setImage, NULL);
+  $(self, setImage, NULL);
 
-	if (surface) {
-		Image *image = $(alloc(Image), initWithSurface, surface);
-		assert(image);
+  if (surface) {
+    Image *image = $(alloc(Image), initWithSurface, surface);
+    assert(image);
 
-		$(self, setImage, image);
+    $(self, setImage, image);
 
-		release(image);
-	}
+    release(image);
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -239,19 +239,19 @@ static void setImageWithSurface(ImageView *self, SDL_Surface *surface) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->render = render;
-	((ViewInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->render = render;
+  ((ViewInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
 
-	((ImageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((ImageViewInterface *) clazz->interface)->initWithImage = initWithImage;
-	((ImageViewInterface *) clazz->interface)->setImage = setImage;
-	((ImageViewInterface *) clazz->interface)->setImageWithResource = setImageWithResource;
-	((ImageViewInterface *) clazz->interface)->setImageWithResourceName = setImageWithResourceName;
-	((ImageViewInterface *) clazz->interface)->setImageWithSurface = setImageWithSurface;
+  ((ImageViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((ImageViewInterface *) clazz->interface)->initWithImage = initWithImage;
+  ((ImageViewInterface *) clazz->interface)->setImage = setImage;
+  ((ImageViewInterface *) clazz->interface)->setImageWithResource = setImageWithResource;
+  ((ImageViewInterface *) clazz->interface)->setImageWithResourceName = setImageWithResourceName;
+  ((ImageViewInterface *) clazz->interface)->setImageWithSurface = setImageWithSurface;
 }
 
 /**
@@ -259,21 +259,21 @@ static void initialize(Class *clazz) {
  * @memberof ImageView
  */
 Class *_ImageView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "ImageView",
-			.superclass = _View(),
-			.instanceSize = sizeof(ImageView),
-			.interfaceOffset = offsetof(ImageView, interface),
-			.interfaceSize = sizeof(ImageViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "ImageView",
+      .superclass = _View(),
+      .instanceSize = sizeof(ImageView),
+      .interfaceOffset = offsetof(ImageView, interface),
+      .interfaceSize = sizeof(ImageViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

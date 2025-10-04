@@ -41,26 +41,26 @@ typedef struct ButtonInterface ButtonInterface;
  */
 struct Button {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Control control;
+  /**
+   * @brief The superclass.
+   */
+  Control control;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	ButtonInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  ButtonInterface *interface;
 
-	/**
-	 * @brief The image.
-	 */
-	ImageView *image;
+  /**
+   * @brief The image.
+   */
+  ImageView *image;
 
-	/**
-	 * @brief The title.
-	 */
-	Text *title;
+  /**
+   * @brief The title.
+   */
+  Text *title;
 };
 
 /**
@@ -68,40 +68,40 @@ struct Button {
  */
 struct ButtonInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ControlInterface controlInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ControlInterface controlInterface;
 
-	/**
-	 * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
-	 * @brief Initializes this Button with the specified frame and style.
-	 * @param self The Button.
-	 * @param frame The frame.
-	 * @return The initialized Button, or `NULL` on error.
-	 * @memberof Button
-	 */
-	Button *(*initWithFrame)(Button *self, const SDL_Rect *frame);
+  /**
+   * @fn Button *Button::initWithFrame(Button *self, const SDL_Rect *frame)
+   * @brief Initializes this Button with the specified frame and style.
+   * @param self The Button.
+   * @param frame The frame.
+   * @return The initialized Button, or `NULL` on error.
+   * @memberof Button
+   */
+  Button *(*initWithFrame)(Button *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn Button *Button::initWithImage(Button *self, Image *image)
-	 * @brief Initializes this Button with the sopecified Image.
-	 * @param self The Button.
-	 * @param image The Image.
-	 * @return The initialized Button, or `NULL` on error.
-	 * @memberof Button
-	 */
-	Button *(*initWithImage)(Button *self, Image *image);
+  /**
+   * @fn Button *Button::initWithImage(Button *self, Image *image)
+   * @brief Initializes this Button with the sopecified Image.
+   * @param self The Button.
+   * @param image The Image.
+   * @return The initialized Button, or `NULL` on error.
+   * @memberof Button
+   */
+  Button *(*initWithImage)(Button *self, Image *image);
 
-	/**
-	 * @fn Button *Button::initWithTitle(Button *self, const char *title)
-	 * @brief Initializes this Button with the specified title.
-	 * @param self The Button.
-	 * @param title The title text.
-	 * @return The initialized Button, or `NULL` on error.
-	 * @memberof Button
-	 */
-	Button *(*initWithTitle)(Button *self, const char *title);
+  /**
+   * @fn Button *Button::initWithTitle(Button *self, const char *title)
+   * @brief Initializes this Button with the specified title.
+   * @param self The Button.
+   * @param title The title text.
+   * @return The initialized Button, or `NULL` on error.
+   * @memberof Button
+   */
+  Button *(*initWithTitle)(Button *self, const char *title);
 };
 
 /**

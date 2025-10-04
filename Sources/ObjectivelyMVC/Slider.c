@@ -36,15 +36,15 @@
  */
 static void dealloc(Object *self) {
 
-	Slider *this = (Slider *) self;
+  Slider *this = (Slider *) self;
 
-	release(this->bar);
-	release(this->handle);
-	release(this->label);
+  release(this->bar);
+  release(this->handle);
+  release(this->label);
 
-	free(this->labelFormat);
+  free(this->labelFormat);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -54,33 +54,33 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	Slider *this = (Slider *) self;
+  Slider *this = (Slider *) self;
 
-	double value = this->value;
+  double value = this->value;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("bar", InletTypeView, &this->bar, NULL),
-		MakeInlet("handle", InletTypeView, &this->handle, NULL),
-		MakeInlet("label", InletTypeView, &this->label, NULL),
-		MakeInlet("labelFormat", InletTypeCharacters, &this->labelFormat, NULL),
-		MakeInlet("min", InletTypeDouble, &this->min, NULL),
-		MakeInlet("max", InletTypeDouble, &this->max, NULL),
-		MakeInlet("step", InletTypeDouble, &this->step, NULL),
-		MakeInlet("value", InletTypeDouble, &value, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("bar", InletTypeView, &this->bar, NULL),
+    MakeInlet("handle", InletTypeView, &this->handle, NULL),
+    MakeInlet("label", InletTypeView, &this->label, NULL),
+    MakeInlet("labelFormat", InletTypeCharacters, &this->labelFormat, NULL),
+    MakeInlet("min", InletTypeDouble, &this->min, NULL),
+    MakeInlet("max", InletTypeDouble, &this->max, NULL),
+    MakeInlet("step", InletTypeDouble, &this->step, NULL),
+    MakeInlet("value", InletTypeDouble, &value, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 
-	$(this, setValue, value);
+  $(this, setValue, value);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Slider *) self, initWithFrame, NULL);
+  return (View *) $((Slider *) self, initWithFrame, NULL);
 }
 
 /**
@@ -88,35 +88,35 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	super(View, self, layoutSubviews);
+  super(View, self, layoutSubviews);
 
-	Slider *this = (Slider *) self;
+  Slider *this = (Slider *) self;
 
-	if (this->max > this->min) {
+  if (this->max > this->min) {
 
-		if (((View *) this->label)->hidden == false) {
-			int minWidth, maxWidth;
-			char text[64];
+    if (((View *) this->label)->hidden == false) {
+      int minWidth, maxWidth;
+      char text[64];
 
-			Text *label = (Text *) this->label;
+      Text *label = (Text *) this->label;
 
-			snprintf(text, sizeof(text), this->labelFormat, this->min);
-			$(label->font, sizeCharacters, text, &minWidth, NULL);
+      snprintf(text, sizeof(text), this->labelFormat, this->min);
+      $(label->font, sizeCharacters, text, &minWidth, NULL);
 
-			snprintf(text, sizeof(text), this->labelFormat, this->max);
-			$(label->font, sizeCharacters, text, &maxWidth, NULL);
+      snprintf(text, sizeof(text), this->labelFormat, this->max);
+      $(label->font, sizeCharacters, text, &maxWidth, NULL);
 
-			this->bar->frame.w -= max(minWidth, maxWidth) + label->view.padding.left;
-		}
+      this->bar->frame.w -= max(minWidth, maxWidth) + label->view.padding.left;
+    }
 
-		const double fraction = clamp((this->value - this->min) / (this->max - this->min), 0.0, 1.0);
-		const SDL_Rect bounds = $(this->bar, bounds);
+    const double fraction = clamp((this->value - this->min) / (this->max - this->min), 0.0, 1.0);
+    const SDL_Rect bounds = $(this->bar, bounds);
 
-		View *handle = (View *) this->handle;
-		handle->frame.x = (bounds.w * fraction) - handle->frame.w * 0.5;
-	} else {
-		MVC_LogWarn("max > min");
-	}
+    View *handle = (View *) this->handle;
+    handle->frame.x = (bounds.w * fraction) - handle->frame.w * 0.5;
+  } else {
+    MVC_LogWarn("max > min");
+  }
 }
 
 /**
@@ -124,18 +124,18 @@ static void layoutSubviews(View *self) {
  */
 static void render(View *self, Renderer *renderer) {
 
-	super(View, self, render, renderer);
+  super(View, self, render, renderer);
 
-	Slider *this = (Slider *) self;
+  Slider *this = (Slider *) self;
 
-	const SDL_Rect frame = $(this->bar, renderFrame);
+  const SDL_Rect frame = $(this->bar, renderFrame);
 
-	const SDL_Point points[] = {
-		{ frame.x, frame.y + frame.h * 0.5 },
-		{ frame.x + frame.w, frame.y + frame.h * 0.5 }
-	};
+  const SDL_Point points[] = {
+    { frame.x, frame.y + frame.h * 0.5 },
+    { frame.x + frame.w, frame.y + frame.h * 0.5 }
+  };
 
-	$(renderer, drawLine, points);
+  $(renderer, drawLine, points);
 }
 
 #pragma mark - Control
@@ -145,47 +145,47 @@ static void render(View *self, Renderer *renderer) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-	Slider *this = (Slider *) self;
+  Slider *this = (Slider *) self;
 
-	if (event->type == SDL_MOUSEBUTTONDOWN) {
-		if ($((View *) this->handle, didReceiveEvent, event)) {
-			self->state |= ControlStateHighlighted;
-		}
-	}
+  if (event->type == SDL_MOUSEBUTTONDOWN) {
+    if ($((View *) this->handle, didReceiveEvent, event)) {
+      self->state |= ControlStateHighlighted;
+    }
+  }
 
-	else if (event->type == SDL_MOUSEBUTTONUP) {
-		if (self->state & ControlStateHighlighted) {
-			self->state &= ~ControlStateHighlighted;
-		}
-	}
+  else if (event->type == SDL_MOUSEBUTTONUP) {
+    if (self->state & ControlStateHighlighted) {
+      self->state &= ~ControlStateHighlighted;
+    }
+  }
 
-	else if (event->type == SDL_MOUSEMOTION) {
-		if (self->state & ControlStateHighlighted) {
-			const SDL_Rect frame = $((View *) this->bar, renderFrame);
-			if (frame.w) {
+  else if (event->type == SDL_MOUSEMOTION) {
+    if (self->state & ControlStateHighlighted) {
+      const SDL_Rect frame = $((View *) this->bar, renderFrame);
+      if (frame.w) {
 
-				const double fraction = (event->motion.x - frame.x) / (double) frame.w;
-				double value = this->min + (this->max - this->min) * clamp(fraction, 0.0, 1.0);
+        const double fraction = (event->motion.x - frame.x) / (double) frame.w;
+        double value = this->min + (this->max - this->min) * clamp(fraction, 0.0, 1.0);
 
-				if (this->snapToStep && this->step) {
-					value = clamp(round(value / this->step) * this->step, this->min, this->max);
-				}
+        if (this->snapToStep && this->step) {
+          value = clamp(round(value / this->step) * this->step, this->min, this->max);
+        }
 
-				const double delta = fabs(this->value - value);
-				if (delta > __DBL_EPSILON__) {
-					$(this, setValue, value);
+        const double delta = fabs(this->value - value);
+        if (delta > __DBL_EPSILON__) {
+          $(this, setValue, value);
 
-					if (this->delegate.didSetValue) {
-						this->delegate.didSetValue(this, this->value);
-					}
-				}
+          if (this->delegate.didSetValue) {
+            this->delegate.didSetValue(this, this->value);
+          }
+        }
 
-				return true;
-			}
-		}
-	}
+        return true;
+      }
+    }
+  }
 
-	return super(Control, self, captureEvent, event);
+  return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - Slider
@@ -196,10 +196,10 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
  */
 static void formatLabel(Slider *self) {
 
-	char text[64];
-	snprintf(text, sizeof(text), self->labelFormat, self->value);
+  char text[64];
+  snprintf(text, sizeof(text), self->labelFormat, self->value);
 
-	$(self->label, setText, text);
+  $(self->label, setText, text);
 }
 
 /**
@@ -208,34 +208,34 @@ static void formatLabel(Slider *self) {
  */
 static Slider *initWithFrame(Slider *self, const SDL_Rect *frame) {
 
-	self = (Slider *) super(Control, self, initWithFrame, frame);
-	if (self) {
+  self = (Slider *) super(Control, self, initWithFrame, frame);
+  if (self) {
 
-		self->bar = $(alloc(View), initWithFrame, frame);
-		assert(self->bar);
+    self->bar = $(alloc(View), initWithFrame, frame);
+    assert(self->bar);
 
-		$(self->bar, addClassName, "bar");
+    $(self->bar, addClassName, "bar");
 
-		$((View *) self, addSubview, self->bar);
+    $((View *) self, addSubview, self->bar);
 
-		self->handle = $(alloc(Control), initWithFrame, NULL);
-		assert(self->handle);
+    self->handle = $(alloc(Control), initWithFrame, NULL);
+    assert(self->handle);
 
-		$((View *) self->handle, addClassName, "handle");
+    $((View *) self->handle, addClassName, "handle");
 
-		$(self->bar, addSubview, (View *) self->handle);
+    $(self->bar, addSubview, (View *) self->handle);
 
-		self->label = $(alloc(Text), initWithText, NULL, NULL);
-		assert(self->label);
+    self->label = $(alloc(Text), initWithText, NULL, NULL);
+    assert(self->label);
 
-		$((View *) self->label, addClassName, "label");
+    $((View *) self->label, addClassName, "label");
 
-		$((View *) self, addSubview, (View *) self->label);
+    $((View *) self, addSubview, (View *) self->label);
 
-		$(self, setLabelFormat, "%0.1f");
-	}
+    $(self, setLabelFormat, "%0.1f");
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -244,12 +244,12 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame) {
  */
 static void setLabelFormat(Slider *self, const char *labelFormat) {
 
-	if (self->labelFormat) {
-		free(self->labelFormat);
-	}
+  if (self->labelFormat) {
+    free(self->labelFormat);
+  }
 
-	self->labelFormat = strdup(labelFormat);
-	$(self, formatLabel);
+  self->labelFormat = strdup(labelFormat);
+  $(self, formatLabel);
 }
 
 /**
@@ -258,15 +258,15 @@ static void setLabelFormat(Slider *self, const char *labelFormat) {
  */
 static void setValue(Slider *self, double value) {
 
-	value = clamp(value, self->min, self->max);
+  value = clamp(value, self->min, self->max);
 
-	const double delta = fabs(self->value - value);
-	if (delta > __DBL_EPSILON__) {
-		self->value = value;
-		self->control.view.needsLayout = true;
+  const double delta = fabs(self->value - value);
+  if (delta > __DBL_EPSILON__) {
+    self->value = value;
+    self->control.view.needsLayout = true;
 
-		$(self, formatLabel);
-	}
+    $(self, formatLabel);
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -276,19 +276,19 @@ static void setValue(Slider *self, double value) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->render = render;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->render = render;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+  ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((SliderInterface *) clazz->interface)->formatLabel = formatLabel;
-	((SliderInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((SliderInterface *) clazz->interface)->setValue = setValue;
-	((SliderInterface *) clazz->interface)->setLabelFormat = setLabelFormat;
+  ((SliderInterface *) clazz->interface)->formatLabel = formatLabel;
+  ((SliderInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((SliderInterface *) clazz->interface)->setValue = setValue;
+  ((SliderInterface *) clazz->interface)->setLabelFormat = setLabelFormat;
 }
 
 /**
@@ -296,21 +296,21 @@ static void initialize(Class *clazz) {
  * @memberof Slider
  */
 Class *_Slider(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Slider",
-			.superclass = _Control(),
-			.instanceSize = sizeof(Slider),
-			.interfaceOffset = offsetof(Slider, interface),
-			.interfaceSize = sizeof(SliderInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Slider",
+      .superclass = _Control(),
+      .instanceSize = sizeof(Slider),
+      .interfaceOffset = offsetof(Slider, interface),
+      .interfaceSize = sizeof(SliderInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

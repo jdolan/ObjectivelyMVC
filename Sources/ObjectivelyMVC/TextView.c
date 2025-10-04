@@ -37,15 +37,15 @@
  */
 static void dealloc(Object *self) {
 
-	TextView *this = (TextView *) self;
+  TextView *this = (TextView *) self;
 
-	free(this->defaultText);
+  free(this->defaultText);
 
-	release(this->text);
+  release(this->text);
 
-	release(this->attributedText);
+  release(this->attributedText);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -56,15 +56,15 @@ static void dealloc(Object *self) {
  */
 static void applyStyle(View *self, const Style *style) {
 
-	super(View, self, applyStyle, style);
+  super(View, self, applyStyle, style);
 
-	TextView *this = (TextView *) self;
+  TextView *this = (TextView *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("editable", InletTypeBool, &this->isEditable, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("editable", InletTypeBool, &this->isEditable, NULL)
+  );
 
-	$(self, bind, inlets, style->attributes);
+  $(self, bind, inlets, style->attributes);
 }
 
 /**
@@ -72,22 +72,22 @@ static void applyStyle(View *self, const Style *style) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	TextView *this = (TextView *) self;
+  TextView *this = (TextView *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("defaultText", InletTypeCharacters, &this->defaultText, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("defaultText", InletTypeCharacters, &this->defaultText, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((TextView *) self, initWithFrame, NULL);
+  return (View *) $((TextView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -95,31 +95,31 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	TextView *this = (TextView *) self;
+  TextView *this = (TextView *) self;
 
-	const char *text = this->attributedText->string.chars;
+  const char *text = this->attributedText->string.chars;
 
-	if (text == NULL || strlen(text) == 0) {
-		if ($((Control *) this, isFocused) == false) {
-			text = this->defaultText;
-		}
-	}
+  if (text == NULL || strlen(text) == 0) {
+    if ($((Control *) this, isFocused) == false) {
+      text = this->defaultText;
+    }
+  }
 
-	if (text == NULL) {
-		$(this->text, setText, NULL);
-	} else {
-		if (this->text->text) {
-			if (strcmp(text, this->text->text)) {
-				$(this->text, setText, text);
-			}
-		} else {
-			$(this->text, setText, text);
-		}
-	}
+  if (text == NULL) {
+    $(this->text, setText, NULL);
+  } else {
+    if (this->text->text) {
+      if (strcmp(text, this->text->text)) {
+        $(this->text, setText, text);
+      }
+    } else {
+      $(this->text, setText, text);
+    }
+  }
 
-	$((View *) this->text, layoutIfNeeded);
+  $((View *) this->text, layoutIfNeeded);
 
-	super(View, self, layoutSubviews);
+  super(View, self, layoutSubviews);
 }
 
 /**
@@ -127,33 +127,33 @@ static void layoutSubviews(View *self) {
  */
 static void render(View *self, Renderer *renderer) {
 
-	super(View, self, render, renderer);
+  super(View, self, render, renderer);
 
-	TextView *this = (TextView *) self;
+  TextView *this = (TextView *) self;
 
-	if ($((Control *) this, isFocused)) {
-		const char *text = this->text->text ?: "";
+  if ($((Control *) this, isFocused)) {
+    const char *text = this->text->text ?: "";
 
-		int w, h;
-		if (this->position == strlen(text)) {
-			$(this->text->font, sizeCharacters, text, &w, &h);
-		} else {
-			char *chars = calloc(this->position + 1, sizeof(char));
-			strncpy(chars, text, this->position);
+    int w, h;
+    if (this->position == strlen(text)) {
+      $(this->text->font, sizeCharacters, text, &w, &h);
+    } else {
+      char *chars = calloc(this->position + 1, sizeof(char));
+      strncpy(chars, text, this->position);
 
-			$(this->text->font, sizeCharacters, chars, &w, &h);
-			free(chars);
-		}
+      $(this->text->font, sizeCharacters, chars, &w, &h);
+      free(chars);
+    }
 
-		SDL_Rect frame = $((View *) this->text, renderFrame);
+    SDL_Rect frame = $((View *) this->text, renderFrame);
 
-		const SDL_Point points[] = {
-			{ frame.x + w, frame.y },
-			{ frame.x + w, frame.y + h }
-		};
+    const SDL_Point points[] = {
+      { frame.x + w, frame.y },
+      { frame.x + w, frame.y + h }
+    };
 
-		$(renderer, drawLine, points);
-	}
+    $(renderer, drawLine, points);
+  }
 }
 
 #pragma mark - Control
@@ -163,157 +163,157 @@ static void render(View *self, Renderer *renderer) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-	bool didEdit = false, didCaptureEvent = false;
+  bool didEdit = false, didCaptureEvent = false;
 
-	TextView *this = (TextView *) self;
-	if (this->isEditable) {
-		if (event->type == SDL_MOUSEBUTTONDOWN) {
-			if ($((View *) self, didReceiveEvent, event)) {
-				if ((self->state & ControlStateFocused) == 0) {
-					self->state |= ControlStateFocused;
-					SDL_StartTextInput();
-					if (this->delegate.didBeginEditing) {
-						this->delegate.didBeginEditing(this);
-					}
-				}
-				didCaptureEvent = true;
-			} else {
-				if (self->state & ControlStateFocused) {
-					self->state &= ~ControlStateFocused;
-					SDL_StopTextInput();
-					if (this->delegate.didEndEditing) {
-						this->delegate.didEndEditing(this);
-					}
-					didCaptureEvent = true;
-				}
-			}
-		} else if (event->type == SDL_TEXTINPUT) {
-			if (self->state & ControlStateFocused) {
-				if (this->position == this->attributedText->string.length) {
-					$(this->attributedText, appendCharacters, event->text.text);
-				} else {
-					$(this->attributedText, insertCharactersAtIndex, event->text.text, this->position);
-				}
-				this->position += strlen(event->text.text);
-				didEdit = didCaptureEvent = true;
-			}
-		} else if (event->type == SDL_KEYDOWN) {
-			if (self->state & ControlStateFocused) {
-				didCaptureEvent = true;
+  TextView *this = (TextView *) self;
+  if (this->isEditable) {
+    if (event->type == SDL_MOUSEBUTTONDOWN) {
+      if ($((View *) self, didReceiveEvent, event)) {
+        if ((self->state & ControlStateFocused) == 0) {
+          self->state |= ControlStateFocused;
+          SDL_StartTextInput();
+          if (this->delegate.didBeginEditing) {
+            this->delegate.didBeginEditing(this);
+          }
+        }
+        didCaptureEvent = true;
+      } else {
+        if (self->state & ControlStateFocused) {
+          self->state &= ~ControlStateFocused;
+          SDL_StopTextInput();
+          if (this->delegate.didEndEditing) {
+            this->delegate.didEndEditing(this);
+          }
+          didCaptureEvent = true;
+        }
+      }
+    } else if (event->type == SDL_TEXTINPUT) {
+      if (self->state & ControlStateFocused) {
+        if (this->position == this->attributedText->string.length) {
+          $(this->attributedText, appendCharacters, event->text.text);
+        } else {
+          $(this->attributedText, insertCharactersAtIndex, event->text.text, this->position);
+        }
+        this->position += strlen(event->text.text);
+        didEdit = didCaptureEvent = true;
+      }
+    } else if (event->type == SDL_KEYDOWN) {
+      if (self->state & ControlStateFocused) {
+        didCaptureEvent = true;
 
-				const char *chars = this->attributedText->string.chars;
-				const size_t len = this->attributedText->string.length;
+        const char *chars = this->attributedText->string.chars;
+        const size_t len = this->attributedText->string.length;
 
-				switch (event->key.keysym.sym) {
+        switch (event->key.keysym.sym) {
 
-					case SDLK_ESCAPE:
-					case SDLK_KP_ENTER:
-					case SDLK_KP_TAB:
-					case SDLK_RETURN:
-					case SDLK_TAB:
-						self->state &= ~ControlStateFocused;
-						SDL_StopTextInput();
-						if (this->delegate.didEndEditing) {
-							this->delegate.didEndEditing(this);
-						}
-						break;
+          case SDLK_ESCAPE:
+          case SDLK_KP_ENTER:
+          case SDLK_KP_TAB:
+          case SDLK_RETURN:
+          case SDLK_TAB:
+            self->state &= ~ControlStateFocused;
+            SDL_StopTextInput();
+            if (this->delegate.didEndEditing) {
+              this->delegate.didEndEditing(this);
+            }
+            break;
 
-					case SDLK_BACKSPACE:
-					case SDLK_KP_BACKSPACE:
-						if (this->position > 0) {
-							const Range range = { .location = this->position - 1, .length = 1 };
-							$(this->attributedText, deleteCharactersInRange, range);
-							this->position--;
-							didEdit = true;
-						}
-						break;
+          case SDLK_BACKSPACE:
+          case SDLK_KP_BACKSPACE:
+            if (this->position > 0) {
+              const Range range = { .location = this->position - 1, .length = 1 };
+              $(this->attributedText, deleteCharactersInRange, range);
+              this->position--;
+              didEdit = true;
+            }
+            break;
 
-					case SDLK_DELETE:
-						if (this->position < len) {
-							const Range range = { .location = this->position, .length = 1 };
-							$(this->attributedText, deleteCharactersInRange, range);
-							didEdit = true;
-						}
-						break;
+          case SDLK_DELETE:
+            if (this->position < len) {
+              const Range range = { .location = this->position, .length = 1 };
+              $(this->attributedText, deleteCharactersInRange, range);
+              didEdit = true;
+            }
+            break;
 
-					case SDLK_LEFT:
-						if (SDL_GetModState() & KMOD_CTRL) {
-							while (this->position > 0 && chars[this->position] == ' ') {
-								this->position--;
-							}
-							while (this->position > 0 && chars[this->position] != ' ') {
-								this->position--;
-							}
-						} else if (this->position > 0) {
-							this->position--;
-						}
-						break;
+          case SDLK_LEFT:
+            if (SDL_GetModState() & KMOD_CTRL) {
+              while (this->position > 0 && chars[this->position] == ' ') {
+                this->position--;
+              }
+              while (this->position > 0 && chars[this->position] != ' ') {
+                this->position--;
+              }
+            } else if (this->position > 0) {
+              this->position--;
+            }
+            break;
 
-					case SDLK_RIGHT:
-						if (SDL_GetModState() & KMOD_CTRL) {
-							while (this->position < len && chars[this->position] == ' ') {
-								this->position++;
-							}
-							while (this->position < len && chars[this->position] != ' ') {
-								this->position++;
-							}
-							if (this->position < len) {
-								this->position++;
-							}
-						} else if (this->position < len) {
-							this->position++;
-						}
-						break;
+          case SDLK_RIGHT:
+            if (SDL_GetModState() & KMOD_CTRL) {
+              while (this->position < len && chars[this->position] == ' ') {
+                this->position++;
+              }
+              while (this->position < len && chars[this->position] != ' ') {
+                this->position++;
+              }
+              if (this->position < len) {
+                this->position++;
+              }
+            } else if (this->position < len) {
+              this->position++;
+            }
+            break;
 
-					case SDLK_HOME:
-						this->position = 0;
-						break;
+          case SDLK_HOME:
+            this->position = 0;
+            break;
 
-					case SDLK_END:
-						this->position = len;
-						break;
+          case SDLK_END:
+            this->position = len;
+            break;
 
-					case SDLK_a:
-						if (SDL_GetModState() & KMOD_CTRL) {
-							this->position = 0;
-						}
-						break;
-					case SDLK_e:
-						if (SDL_GetModState() & KMOD_CTRL) {
-							this->position = len;
-						}
-						break;
+          case SDLK_a:
+            if (SDL_GetModState() & KMOD_CTRL) {
+              this->position = 0;
+            }
+            break;
+          case SDLK_e:
+            if (SDL_GetModState() & KMOD_CTRL) {
+              this->position = len;
+            }
+            break;
 
-					case SDLK_v:
-						if ((SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) && SDL_HasClipboardText()) {
-							const char *text = SDL_GetClipboardText();
-							if (this->position == len) {
-								$(this->attributedText, appendCharacters, text);
-							} else {
-								$(this->attributedText, insertCharactersAtIndex, text, this->position);
-							}
-							this->position += strlen(text);
-							didEdit = true;
-						}
-						break;
+          case SDLK_v:
+            if ((SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) && SDL_HasClipboardText()) {
+              const char *text = SDL_GetClipboardText();
+              if (this->position == len) {
+                $(this->attributedText, appendCharacters, text);
+              } else {
+                $(this->attributedText, insertCharactersAtIndex, text, this->position);
+              }
+              this->position += strlen(text);
+              didEdit = true;
+            }
+            break;
 
-					default:
-						break;
-				}
-			}
-		}
+          default:
+            break;
+        }
+      }
+    }
 
-		if (didEdit) {
-			self->view.needsLayout = true;
-			if (this->delegate.didEdit) {
-				this->delegate.didEdit(this);
-			}
-			
-			$((View *) self, emitViewEvent, ViewEventChange, NULL);
-		}
-	}
+    if (didEdit) {
+      self->view.needsLayout = true;
+      if (this->delegate.didEdit) {
+        this->delegate.didEdit(this);
+      }
+      
+      $((View *) self, emitViewEvent, ViewEventChange, NULL);
+    }
+  }
 
-	return didCaptureEvent;
+  return didCaptureEvent;
 }
 
 #pragma mark - TextView
@@ -324,22 +324,22 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
  */
 static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
 
-	self = (TextView *) super(Control, self, initWithFrame, frame);
-	if (self) {
-		self->attributedText = $$(MutableString, string);
-		assert(self->attributedText);
+  self = (TextView *) super(Control, self, initWithFrame, frame);
+  if (self) {
+    self->attributedText = $$(MutableString, string);
+    assert(self->attributedText);
 
-		self->isEditable = true;
+    self->isEditable = true;
 
-		self->text = $(alloc(Text), initWithText, NULL, NULL);
-		assert(self->text);
+    self->text = $(alloc(Text), initWithText, NULL, NULL);
+    assert(self->text);
 
-		$((View *) self, addSubview, (View *) self->text);
+    $((View *) self, addSubview, (View *) self->text);
 
-		self->control.view.clipsSubviews = true;
-	}
+    self->control.view.clipsSubviews = true;
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -348,18 +348,18 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
  */
 static void setDefaultText(TextView *self, const char *defaultText) {
 
-	if (strcmp(self->defaultText ?: "", defaultText ?: "")) {
+  if (strcmp(self->defaultText ?: "", defaultText ?: "")) {
 
-		free(self->defaultText);
+    free(self->defaultText);
 
-		if (defaultText) {
-			self->defaultText = strdup(defaultText);
-		} else {
-			self->defaultText = NULL;
-		}
+    if (defaultText) {
+      self->defaultText = strdup(defaultText);
+    } else {
+      self->defaultText = NULL;
+    }
 
-		self->control.view.needsLayout = true;
-	}
+    self->control.view.needsLayout = true;
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -369,18 +369,18 @@ static void setDefaultText(TextView *self, const char *defaultText) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
-	((ViewInterface *) clazz->interface)->render = render;
+  ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->render = render;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+  ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((TextViewInterface *) clazz->interface)->setDefaultText = setDefaultText;
+  ((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((TextViewInterface *) clazz->interface)->setDefaultText = setDefaultText;
 }
 
 /**
@@ -388,21 +388,21 @@ static void initialize(Class *clazz) {
  * @memberof TextView
  */
 Class *_TextView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TextView",
-			.superclass = _Control(),
-			.instanceSize = sizeof(TextView),
-			.interfaceOffset = offsetof(TextView, interface),
-			.interfaceSize = sizeof(TextViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TextView",
+      .superclass = _Control(),
+      .instanceSize = sizeof(TextView),
+      .interfaceOffset = offsetof(TextView, interface),
+      .interfaceSize = sizeof(TextViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

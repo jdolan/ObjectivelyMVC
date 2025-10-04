@@ -44,11 +44,11 @@
  * @brief Font styles.
  */
 typedef enum {
-	FontStyleRegular = TTF_STYLE_NORMAL,
-	FontStyleBold = TTF_STYLE_BOLD,
-	FontStyleItalic = TTF_STYLE_ITALIC,
-	FontStyleUnderline = TTF_STYLE_UNDERLINE,
-	FontStyleStrikeThrough = TTF_STYLE_STRIKETHROUGH
+  FontStyleRegular = TTF_STYLE_NORMAL,
+  FontStyleBold = TTF_STYLE_BOLD,
+  FontStyleItalic = TTF_STYLE_ITALIC,
+  FontStyleUnderline = TTF_STYLE_UNDERLINE,
+  FontStyleStrikeThrough = TTF_STYLE_STRIKETHROUGH
 } FontStyle;
 
 OBJECTIVELYMVC_EXPORT const EnumName FontStyleNames[];
@@ -62,46 +62,46 @@ typedef struct FontInterface FontInterface;
  */
 struct Font {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	FontInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  FontInterface *interface;
 
-	/**
-	 * @brief The raw font data.
-	 */
-	Data *data;
+  /**
+   * @brief The raw font data.
+   */
+  Data *data;
 
-	/**
-	 * @brief The family name.
-	 */
-	char *family;
+  /**
+   * @brief The family name.
+   */
+  char *family;
 
-	/**
-	 * @brief The backing font.
-	 */
-	ident font;
+  /**
+   * @brief The backing font.
+   */
+  ident font;
 
-	/**
-	 * @brief The render size, adjusted for display density.
-	 */
-	int renderSize;
+  /**
+   * @brief The render size, adjusted for display density.
+   */
+  int renderSize;
 
-	/**
-	 * @brief The point size.
-	 */
-	int size;
+  /**
+   * @brief The point size.
+   */
+  int size;
 
-	/**
-	 * @brief The style.
-	 */
-	int style;
+  /**
+   * @brief The style.
+   */
+  int style;
 };
 
 /**
@@ -109,91 +109,91 @@ struct Font {
  */
 struct FontInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface objectInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface objectInterface;
 
-	/**
-	 * @static
-	 * @fn Font *Font::cachedFont(const char *family, int size, int style)
-	 * @brief Resolves the cached Font with the given attributes.
-	 * @param family The family.
-	 * @param size The size.
-	 * @param style The style.
-	 * @return The cached Font, or the default Font if not found.
-	 * @memberof Font
-	 */
-	Font *(*cachedFont)(const char *family, int size, int style);
+  /**
+   * @static
+   * @fn Font *Font::cachedFont(const char *family, int size, int style)
+   * @brief Resolves the cached Font with the given attributes.
+   * @param family The family.
+   * @param size The size.
+   * @param style The style.
+   * @return The cached Font, or the default Font if not found.
+   * @memberof Font
+   */
+  Font *(*cachedFont)(const char *family, int size, int style);
 
-	/**
-	 * @static
-	 * @brief Caches the specified font Data.
-	 * @param data The TTF Data.
-	 * @param family The family.
-	 * @memberof Font
-	 */
-	void (*cacheFont)(Data *data, const char *family);
+  /**
+   * @static
+   * @brief Caches the specified font Data.
+   * @param data The TTF Data.
+   * @param family The family.
+   * @memberof Font
+   */
+  void (*cacheFont)(Data *data, const char *family);
 
-	/**
-	 * @static
-	 * @fn void Font::clearCache(void)
-	 * @brief Clears the Font cache.
-	 * @memberof Font
-	 */
-	void (*clearCache)(void);
+  /**
+   * @static
+   * @fn void Font::clearCache(void)
+   * @brief Clears the Font cache.
+   * @memberof Font
+   */
+  void (*clearCache)(void);
 
-	/**
-	 * @static
-	 * @fn Font *Font::defaultFont(void)
-	 * @return The default Font.
-	 * @memberof Font
-	 */
-	Font *(*defaultFont)(void);
+  /**
+   * @static
+   * @fn Font *Font::defaultFont(void)
+   * @return The default Font.
+   * @memberof Font
+   */
+  Font *(*defaultFont)(void);
 
-	/**
-	 * @fn Font *Font::initWithData(Font *self, Data *data, const char *family, int size, int style)
-	 * @brief Initializes this Font with the given TTF Data and attributes.
-	 * @param self The Font.
-	 * @param data The Data.
-	 * @param family The family.
-	 * @param size The size.
-	 * @param style The style.
-	 * @return The initialized Font, or `NULL` on error.
-	 * @memberof Font
-	 */
-	Font *(*initWithData)(Font *self, Data *data, const char *family, int size, int style);
+  /**
+   * @fn Font *Font::initWithData(Font *self, Data *data, const char *family, int size, int style)
+   * @brief Initializes this Font with the given TTF Data and attributes.
+   * @param self The Font.
+   * @param data The Data.
+   * @param family The family.
+   * @param size The size.
+   * @param style The style.
+   * @return The initialized Font, or `NULL` on error.
+   * @memberof Font
+   */
+  Font *(*initWithData)(Font *self, Data *data, const char *family, int size, int style);
 
-	/**
-	 * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
-	 * @brief Renders the given characters in this Font.
-	 * @param self The Font.
-	 * @param chars The null-terminated UTF-8 encoded C string to render.
-	 * @param color The color.
-	 * @param wrapWidth The maximum line width, in pixels, where wrapping should occur.
-	 * @return The rendered surface, or `NULL` on error.
-	 * @memberof Font
-	 */
-	SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color, int wrapWidth);
+  /**
+   * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
+   * @brief Renders the given characters in this Font.
+   * @param self The Font.
+   * @param chars The null-terminated UTF-8 encoded C string to render.
+   * @param color The color.
+   * @param wrapWidth The maximum line width, in pixels, where wrapping should occur.
+   * @return The rendered surface, or `NULL` on error.
+   * @memberof Font
+   */
+  SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color, int wrapWidth);
 
-	/**
-	 * @fn void Font::renderDeviceDidReset(Font *self)
-	 * @brief This method should be invoked when the render context is invalidated.
-	 * @param self The Font.
-	 * @memberof Font
-	 */
-	void (*renderDeviceDidReset)(Font *self);
+  /**
+   * @fn void Font::renderDeviceDidReset(Font *self)
+   * @brief This method should be invoked when the render context is invalidated.
+   * @param self The Font.
+   * @memberof Font
+   */
+  void (*renderDeviceDidReset)(Font *self);
 
-	/**
-	 * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
-	 * @param self The Font.
-	 * @param chars The null-terminated UTF-8 encoded C string to size.
-	 * @param w The width to return.
-	 * @param h The height to return.
-	 * @return The size of the rendered characters in pixels.
-	 * @memberof Font
-	 */
-	void (*sizeCharacters)(const Font *self, const char *chars, int *w, int *h);
+  /**
+   * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
+   * @param self The Font.
+   * @param chars The null-terminated UTF-8 encoded C string to size.
+   * @param w The width to return.
+   * @param h The height to return.
+   * @return The size of the rendered characters in pixels.
+   * @memberof Font
+   */
+  void (*sizeCharacters)(const Font *self, const char *chars, int *w, int *h);
 };
 
 /**

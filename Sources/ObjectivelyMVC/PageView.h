@@ -40,16 +40,16 @@ typedef struct PageViewInterface PageViewInterface;
  */
 struct PageViewDelegate {
 
-	/**
-	 * @brief The delegate self-reference.
-	 */
-	ident self;
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
 
-	/**
-	 * @brief Called when the current page is set.
-	 * @param pageView The PageView.
-	 */
-	void (*didSetCurrentPage)(PageView *pageView);
+  /**
+   * @brief Called when the current page is set.
+   * @param pageView The PageView.
+   */
+  void (*didSetCurrentPage)(PageView *pageView);
 };
 
 /**
@@ -59,26 +59,26 @@ struct PageViewDelegate {
  */
 struct PageView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	PageViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  PageViewInterface *interface;
 
-	/**
-	 * @brief The index of the current page.
-	 */
-	View *currentPage;
+  /**
+   * @brief The index of the current page.
+   */
+  View *currentPage;
 
-	/**
-	 * @brief The delegate.
-	 */
-	PageViewDelegate delegate;
+  /**
+   * @brief The delegate.
+   */
+  PageViewDelegate delegate;
 };
 
 /**
@@ -86,29 +86,29 @@ struct PageView {
  */
 struct PageViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn PageView *PageView::initWithFrame(PageView *self, const SDL_Rect *frame)
-	 * @brief Initializes this PageView with the specified frame.
-	 * @param self The PageView.
-	 * @param frame The frame.
-	 * @return The initialized PageView, or `NULL` on error.
-	 * @memberof PageView
-	 */
-	PageView *(*initWithFrame)(PageView *self, const SDL_Rect *frame);
+  /**
+   * @fn PageView *PageView::initWithFrame(PageView *self, const SDL_Rect *frame)
+   * @brief Initializes this PageView with the specified frame.
+   * @param self The PageView.
+   * @param frame The frame.
+   * @return The initialized PageView, or `NULL` on error.
+   * @memberof PageView
+   */
+  PageView *(*initWithFrame)(PageView *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn void PageView::setCurrentPage(PageView *self, View *currentPage)
-	 * @brief Presents the specified subview as the current page of this PageView.
-	 * @param self The PageView.
-	 * @param currentPage The subview to present.
-	 * @memberof PageView
-	 */
-	void (*setCurrentPage)(PageView *self, View *currentPage);
+  /**
+   * @fn void PageView::setCurrentPage(PageView *self, View *currentPage)
+   * @brief Presents the specified subview as the current page of this PageView.
+   * @param self The PageView.
+   * @param currentPage The subview to present.
+   * @memberof PageView
+   */
+  void (*setCurrentPage)(PageView *self, View *currentPage);
 };
 
 /**

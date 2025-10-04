@@ -38,13 +38,13 @@ static Image *_resize;
  */
 static void dealloc(Object *self) {
 
-	Panel *this = (Panel *) self;
+  Panel *this = (Panel *) self;
 
-	release(this->accessoryView);
-	release(this->contentView);
-	release(this->resizeHandle);
+  release(this->accessoryView);
+  release(this->contentView);
+  release(this->resizeHandle);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -54,16 +54,16 @@ static void dealloc(Object *self) {
  */
 static void applyStyle(View *self, const Style *style) {
 
-	super(View, self, applyStyle, style);
+  super(View, self, applyStyle, style);
 
-	Panel *this = (Panel *) self;
+  Panel *this = (Panel *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("draggable", InletTypeBool, &this->isDraggable, NULL),
-		MakeInlet("resizable", InletTypeBool, &this->isResizable, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("draggable", InletTypeBool, &this->isDraggable, NULL),
+    MakeInlet("resizable", InletTypeBool, &this->isResizable, NULL)
+  );
 
-	$(self, bind, inlets, (Dictionary *) style->attributes);
+  $(self, bind, inlets, (Dictionary *) style->attributes);
 }
 
 /**
@@ -71,24 +71,24 @@ static void applyStyle(View *self, const Style *style) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	Panel *this = (Panel *) self;
+  Panel *this = (Panel *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("accessoryView", InletTypeView, &this->accessoryView, NULL),
-		MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
-		MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("accessoryView", InletTypeView, &this->accessoryView, NULL),
+    MakeInlet("contentView", InletTypeView, &this->contentView, NULL),
+    MakeInlet("stackView", InletTypeView, &this->stackView, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Panel *) self, initWithFrame, NULL);
+  return (View *) $((Panel *) self, initWithFrame, NULL);
 }
 
 /**
@@ -96,21 +96,21 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-	const Panel *this = (Panel *) self;
+  const Panel *this = (Panel *) self;
 
-	const SDL_Size size = $(this, contentSize);
+  const SDL_Size size = $(this, contentSize);
 
-	$((View *) this->contentView, resize, &size);
-	$((View *) this->contentView, layoutIfNeeded);
+  $((View *) this->contentView, resize, &size);
+  $((View *) this->contentView, layoutIfNeeded);
 
-	super(View, self, layoutSubviews);
+  super(View, self, layoutSubviews);
 
-	View *resizeHandle = (View *) this->resizeHandle;
+  View *resizeHandle = (View *) this->resizeHandle;
 
-	resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
-	resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
+  resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
+  resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
 
-	resizeHandle->hidden = !this->isResizable;
+  resizeHandle->hidden = !this->isResizable;
 }
 
 #pragma mark - Control
@@ -120,42 +120,42 @@ static void layoutSubviews(View *self) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-	Panel *this = (Panel *) self;
+  Panel *this = (Panel *) self;
 
-	if (event->type == SDL_MOUSEMOTION && (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON_LMASK)) {
+  if (event->type == SDL_MOUSEMOTION && (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON_LMASK)) {
 
-		if ((self->state & ControlStateHighlighted) == 0) {
-			if ($((View *) this->resizeHandle, didReceiveEvent, event)) {
-				self->state |= ControlStateHighlighted;
-				this->isResizing = true;
-			} else if (this->isDraggable) {
-				self->state |= ControlStateHighlighted;
-				this->isDragging = true;
-			}
-		}
+    if ((self->state & ControlStateHighlighted) == 0) {
+      if ($((View *) this->resizeHandle, didReceiveEvent, event)) {
+        self->state |= ControlStateHighlighted;
+        this->isResizing = true;
+      } else if (this->isDraggable) {
+        self->state |= ControlStateHighlighted;
+        this->isDragging = true;
+      }
+    }
 
-		if (this->isResizing) {
-			SDL_Size size = $((View *) self, size);
+    if (this->isResizing) {
+      SDL_Size size = $((View *) self, size);
 
-			size.w = clamp(size.w + event->motion.xrel, this->minSize.w, this->maxSize.w);
-			size.h = clamp(size.h + event->motion.yrel, this->minSize.h, this->maxSize.h);
+      size.w = clamp(size.w + event->motion.xrel, this->minSize.w, this->maxSize.w);
+      size.h = clamp(size.h + event->motion.yrel, this->minSize.h, this->maxSize.h);
 
-			$((View *) self, resize, &size);
-		} else if (this->isDragging) {
-			self->view.frame.x += event->motion.xrel;
-			self->view.frame.y += event->motion.yrel;
-		}
+      $((View *) self, resize, &size);
+    } else if (this->isDragging) {
+      self->view.frame.x += event->motion.xrel;
+      self->view.frame.y += event->motion.yrel;
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
-		self->state &= ~ControlStateHighlighted;
-		this->isResizing = this->isDragging = false;
-		return true;
-	}
+  if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
+    self->state &= ~ControlStateHighlighted;
+    this->isResizing = this->isDragging = false;
+    return true;
+  }
 
-	return super(Control, self, captureEvent, event);
+  return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - Panel
@@ -166,17 +166,17 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
  */
 static SDL_Size contentSize(const Panel *self) {
 
-	const View *accessoryView = (View *) self->accessoryView;
-	const View *contentView = (View *) self->contentView;
+  const View *accessoryView = (View *) self->accessoryView;
+  const View *contentView = (View *) self->contentView;
 
-	SDL_Size size = $(contentView, sizeThatContains);
+  SDL_Size size = $(contentView, sizeThatContains);
 
-	if (accessoryView->hidden == false) {
-		const SDL_Size accessorySize = $(accessoryView, sizeThatContains);
-		size.h -= accessorySize.h + self->stackView->spacing;
-	}
+  if (accessoryView->hidden == false) {
+    const SDL_Size accessorySize = $(accessoryView, sizeThatContains);
+    size.h -= accessorySize.h + self->stackView->spacing;
+  }
 
-	return size;
+  return size;
 }
 
 /**
@@ -185,50 +185,50 @@ static SDL_Size contentSize(const Panel *self) {
  */
 static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
-	self = (Panel *) super(Control, self, initWithFrame, frame);
-	if (self) {
-		View *this = (View *) self;
+  self = (Panel *) super(Control, self, initWithFrame, frame);
+  if (self) {
+    View *this = (View *) self;
 
-		self->isDraggable = true;
-		self->isResizable = true;
+    self->isDraggable = true;
+    self->isResizable = true;
 
-		self->stackView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->stackView);
+    self->stackView = $(alloc(StackView), initWithFrame, NULL);
+    assert(self->stackView);
 
-		$(this, addSubview, (View *) self->stackView);
+    $(this, addSubview, (View *) self->stackView);
 
-		self->contentView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->contentView);
+    self->contentView = $(alloc(StackView), initWithFrame, NULL);
+    assert(self->contentView);
 
-		$((View *) self->contentView, addClassName, "contentView");
-		$((View *) self->contentView, addClassName, "container");
+    $((View *) self->contentView, addClassName, "contentView");
+    $((View *) self->contentView, addClassName, "container");
 
-		self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
+    self->contentView->view.autoresizingMask |= ViewAutoresizingWidth;
 
-		$((View *) self->stackView, addSubview, (View *) self->contentView);
+    $((View *) self->stackView, addSubview, (View *) self->contentView);
 
-		self->accessoryView = $(alloc(StackView), initWithFrame, NULL);
-		assert(self->accessoryView);
+    self->accessoryView = $(alloc(StackView), initWithFrame, NULL);
+    assert(self->accessoryView);
 
-		$((View *) self->accessoryView, addClassName, "accessoryView");
-		$((View *) self->accessoryView, addClassName, "container");
+    $((View *) self->accessoryView, addClassName, "accessoryView");
+    $((View *) self->accessoryView, addClassName, "container");
 
-		self->accessoryView->view.hidden = true;
+    self->accessoryView->view.hidden = true;
 
-		$((View *) self->stackView, addSubview, (View *) self->accessoryView);
+    $((View *) self->stackView, addSubview, (View *) self->accessoryView);
 
-		self->resizeHandle = $(alloc(ImageView), initWithImage, _resize);
-		assert(self->resizeHandle);
+    self->resizeHandle = $(alloc(ImageView), initWithImage, _resize);
+    assert(self->resizeHandle);
 
-		self->resizeHandle->view.alignment = ViewAlignmentInternal;
+    self->resizeHandle->view.alignment = ViewAlignmentInternal;
 
-		self->resizeHandle->view.frame.w = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
-		self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
+    self->resizeHandle->view.frame.w = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
+    self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 
-		$((View *) self, addSubview, (View *) self->resizeHandle);
-	}
+    $((View *) self, addSubview, (View *) self->resizeHandle);
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -238,26 +238,26 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
-	((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+  ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((PanelInterface *) clazz->interface)->contentSize = contentSize;
-	((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((PanelInterface *) clazz->interface)->contentSize = contentSize;
+  ((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
-	_resize = $(alloc(Image), initWithBytes, resize_png, resize_png_len);
+  _resize = $(alloc(Image), initWithBytes, resize_png, resize_png_len);
 }
 
 /**
  * @see Class::destroy(Class *)
  */
 static void destroy(Class *clazz) {
-	release(_resize);
+  release(_resize);
 }
 
 /**
@@ -265,22 +265,22 @@ static void destroy(Class *clazz) {
  * @memberof Panel
  */
 Class *_Panel(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Panel",
-			.superclass = _Control(),
-			.instanceSize = sizeof(Panel),
-			.interfaceOffset = offsetof(Panel, interface),
-			.interfaceSize = sizeof(PanelInterface),
-			.initialize = initialize,
-			.destroy = destroy,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Panel",
+      .superclass = _Control(),
+      .instanceSize = sizeof(Panel),
+      .interfaceOffset = offsetof(Panel, interface),
+      .interfaceSize = sizeof(PanelInterface),
+      .initialize = initialize,
+      .destroy = destroy,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

@@ -34,11 +34,11 @@
  */
 static void dealloc(Object *self) {
 
-	Label *this = (Label *) self;
+  Label *this = (Label *) self;
 
-	release(this->text);
+  release(this->text);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 /**
@@ -46,19 +46,19 @@ static void dealloc(Object *self) {
  */
 static String *description(const Object *self) {
 
-	View *this = (View *) self;
-	const SDL_Rect bounds = $(this, bounds);
+  View *this = (View *) self;
+  const SDL_Rect bounds = $(this, bounds);
 
-	String *classNames = $((Object *) this->classNames, description);
-	String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
-							  this->identifier ?: classnameof(self),
-							  self,
-							  ((Label *) self)->text->text,
-							  classNames->chars,
-							  bounds.x, bounds.y, bounds.w, bounds.h);
+  String *classNames = $((Object *) this->classNames, description);
+  String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
+                this->identifier ?: classnameof(self),
+                self,
+                ((Label *) self)->text->text,
+                classNames->chars,
+                bounds.x, bounds.y, bounds.w, bounds.h);
 
-	release(classNames);
-	return description;
+  release(classNames);
+  return description;
 }
 
 #pragma mark - View
@@ -68,24 +68,24 @@ static String *description(const Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	Label *this = (Label *) self;
+  Label *this = (Label *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("text", InletTypeView, &this->text, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("text", InletTypeView, &this->text, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 
-	self->needsLayout = true;
+  self->needsLayout = true;
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Label *) self, initWithText, NULL, NULL);
+  return (View *) $((Label *) self, initWithText, NULL, NULL);
 }
 
 #pragma mark - Label
@@ -96,16 +96,16 @@ static View *init(View *self) {
  */
 static Label *initWithText(Label *self, const char *text, Font *font) {
 
-	self = (Label *) super(View, self, initWithFrame, NULL);
-	if (self) {
+  self = (Label *) super(View, self, initWithFrame, NULL);
+  if (self) {
 
-		self->text = $(alloc(Text), initWithText, text, font);
-		assert(self->text);
+    self->text = $(alloc(Text), initWithText, text, font);
+    assert(self->text);
 
-		$((View *) self, addSubview, (View *) self->text);
-	}
+    $((View *) self, addSubview, (View *) self->text);
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -115,13 +115,13 @@ static Label *initWithText(Label *self, const char *text, Font *font) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->interface)->description = description;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->description = description;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
 
-	((LabelInterface *) clazz->interface)->initWithText = initWithText;
+  ((LabelInterface *) clazz->interface)->initWithText = initWithText;
 }
 
 /**
@@ -129,21 +129,21 @@ static void initialize(Class *clazz) {
  * @memberof Label
  */
 Class *_Label(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Label",
-			.superclass = _View(),
-			.instanceSize = sizeof(Label),
-			.interfaceOffset = offsetof(Label, interface),
-			.interfaceSize = sizeof(LabelInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Label",
+      .superclass = _View(),
+      .instanceSize = sizeof(Label),
+      .interfaceOffset = offsetof(Label, interface),
+      .interfaceSize = sizeof(LabelInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

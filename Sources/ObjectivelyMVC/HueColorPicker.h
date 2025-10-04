@@ -42,19 +42,19 @@ typedef struct HueColorPickerInterface HueColorPickerInterface;
  */
 struct HueColorPickerDelegate {
 
-	/**
-	 * @brief The delegate self-reference.
-	 */
-	ident self;
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
 
-	/**
-	 * @brief Called by the HueColorPicker when hue selection changes.
-	 * @param hueColorPicker The HueColorPicker.
-	 * @param hue The hue (0.0 - 360.0).
-	 * @param saturation The saturation (0.0 - 1.0).
-	 * @param value The brightness value (0.0 - 1.0).
-	 */
-	void (*didPickColor)(HueColorPicker *hueColorPicker, double hue, double saturation, double value);
+  /**
+   * @brief Called by the HueColorPicker when hue selection changes.
+   * @param hueColorPicker The HueColorPicker.
+   * @param hue The hue (0.0 - 360.0).
+   * @param saturation The saturation (0.0 - 1.0).
+   * @param value The brightness value (0.0 - 1.0).
+   */
+  void (*didPickColor)(HueColorPicker *hueColorPicker, double hue, double saturation, double value);
 };
 
 /**
@@ -64,47 +64,47 @@ struct HueColorPickerDelegate {
  */
 struct HueColorPicker {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Control control;
+  /**
+   * @brief The superclass.
+   */
+  Control control;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	HueColorPickerInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  HueColorPickerInterface *interface;
 
-	/**
-	 * @brief The hue preview.
-	 */
-	View *colorView;
+  /**
+   * @brief The hue preview.
+   */
+  View *colorView;
 
-	/**
-	 * @brief The delegate.
-	 */
-	HueColorPickerDelegate delegate;
+  /**
+   * @brief The delegate.
+   */
+  HueColorPickerDelegate delegate;
 
-	/**
-	 * @brief The Input.
-	 */
-	Input *hueInput;
+  /**
+   * @brief The Input.
+   */
+  Input *hueInput;
 
-	/**
-	 * @brief The Slider.
-	 */
-	Slider *hueSlider;
+  /**
+   * @brief The Slider.
+   */
+  Slider *hueSlider;
 
-	/**
-	 * @brief The color componenets.
-	 * @remarks Only `hue` is mutable via the interface.
-	 */
-	double hue, saturation, value;
+  /**
+   * @brief The color componenets.
+   * @remarks Only `hue` is mutable via the interface.
+   */
+  double hue, saturation, value;
 
-	/**
-	 * @brief The StackView.
-	 */
-	StackView *stackView;
+  /**
+   * @brief The StackView.
+   */
+  StackView *stackView;
 };
 
 /**
@@ -112,48 +112,48 @@ struct HueColorPicker {
  */
 struct HueColorPickerInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ControlInterface controlInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ControlInterface controlInterface;
 
-	/**
-	 * @fn HueColorPicker *HueColorPicker::initWithFrame(HueColorPicker *self, const SDL_Rect *frame)
-	 * @brief Initializes this HueColorPicker with the specified frame.
-	 * @param self The HueColorPicker.
-	 * @param frame The frame.
-	 * @return The initialized HueColorPicker, or `NULL` on error.
-	 * @memberof HueColorPicker
-	 */
-	HueColorPicker *(*initWithFrame)(HueColorPicker *self, const SDL_Rect *frame);
+  /**
+   * @fn HueColorPicker *HueColorPicker::initWithFrame(HueColorPicker *self, const SDL_Rect *frame)
+   * @brief Initializes this HueColorPicker with the specified frame.
+   * @param self The HueColorPicker.
+   * @param frame The frame.
+   * @return The initialized HueColorPicker, or `NULL` on error.
+   * @memberof HueColorPicker
+   */
+  HueColorPicker *(*initWithFrame)(HueColorPicker *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn SDL_Color HueColorPicker::rgbColor(const HueColorPicker *self);
-	 * @param self The HueColorPicker.
-	 * @return The RGB color.
-	 * @memberof HueColorPicker
-	 */
-	SDL_Color (*rgbColor)(const HueColorPicker *self);
+  /**
+   * @fn SDL_Color HueColorPicker::rgbColor(const HueColorPicker *self);
+   * @param self The HueColorPicker.
+   * @return The RGB color.
+   * @memberof HueColorPicker
+   */
+  SDL_Color (*rgbColor)(const HueColorPicker *self);
 
-	/**
-	 * @fn void HueColorPicker::setColor(HueColorPicker *self, double hue, double saturation, double value)
-	 * @brief Sets the color of the HueColorPicker.
-	 * @param self The HueColorPicker.
-	 * @param hue The hue.
-	 * @param saturation The saturation.
-	 * @param value The brightness value.
-	 * @memberof HueColorPicker
-	 */
-	void (*setColor)(HueColorPicker *self, double hue, double saturation, double value);
+  /**
+   * @fn void HueColorPicker::setColor(HueColorPicker *self, double hue, double saturation, double value)
+   * @brief Sets the color of the HueColorPicker.
+   * @param self The HueColorPicker.
+   * @param hue The hue.
+   * @param saturation The saturation.
+   * @param value The brightness value.
+   * @memberof HueColorPicker
+   */
+  void (*setColor)(HueColorPicker *self, double hue, double saturation, double value);
 
-	/**
-	 * @fn void HueColorPicker::setRGBColor(HueColorPicker *self, const SDL_Color *color)
-	 * @brief Sets the color of the HueColorPicker.
-	 * @param self The HueColorPicker.
-	 * @param color The RGB color.
-	 * @memberof HueColorPicker
-	 */
-	void (*setRGBColor)(HueColorPicker *self, const SDL_Color *color);
+  /**
+   * @fn void HueColorPicker::setRGBColor(HueColorPicker *self, const SDL_Color *color)
+   * @brief Sets the color of the HueColorPicker.
+   * @param self The HueColorPicker.
+   * @param color The RGB color.
+   * @memberof HueColorPicker
+   */
+  void (*setRGBColor)(HueColorPicker *self, const SDL_Color *color);
 };
 
 /**

@@ -35,114 +35,114 @@
  */
 typedef enum {
 
-	/**
-	 * @remarks Special end-of-list value for an inlet list
-	 */
-	InitTypeEnd = -1,
+  /**
+   * @remarks Special end-of-list value for an inlet list
+   */
+  InitTypeEnd = -1,
 
-	/**
-	 * @remarks Inlet destination must be of type `Bool *`.
-	 */
-	InletTypeBool,
+  /**
+   * @remarks Inlet destination must be of type `Bool *`.
+   */
+  InletTypeBool,
 
-	/**
-	 * @remarks Inlet destination must be of type `char **`. The inbound C string is copied via
-	 * `strdup`, and thus the receiver should `free` it when it is no longer needed.
-	 */
-	InletTypeCharacters,
+  /**
+   * @remarks Inlet destination must be of type `char **`. The inbound C string is copied via
+   * `strdup`, and thus the receiver should `free` it when it is no longer needed.
+   */
+  InletTypeCharacters,
 
-	/**
-	 * @remarks Inlet destination must be of type `View **`.
-	 */
-	InletTypeClassNames,
+  /**
+   * @remarks Inlet destination must be of type `View **`.
+   */
+  InletTypeClassNames,
 
-	/**
-	 * @remarks Inlet destination must be of type `SDL_Color *`.
-	 */
-	InletTypeColor,
+  /**
+   * @remarks Inlet destination must be of type `SDL_Color *`.
+   */
+  InletTypeColor,
 
-	/**
-	 * @remarks Inlet destination must be of type `double *`.
-	 */
-	InletTypeDouble,
+  /**
+   * @remarks Inlet destination must be of type `double *`.
+   */
+  InletTypeDouble,
 
-	/**
-	 * @remarks Inlet destination must be of an `enum *` type. Inlet data must provide a null-
-	 * terminated array of EnumNames.
-	 * @see valueof
-	 * @see MakeEnumNames
-	 */
-	InletTypeEnum,
+  /**
+   * @remarks Inlet destination must be of an `enum *` type. Inlet data must provide a null-
+   * terminated array of EnumNames.
+   * @see valueof
+   * @see MakeEnumNames
+   */
+  InletTypeEnum,
 
-	/**
-	 * @remarks Inlet destination must be of type `float *`.
-	 */
-	InletTypeFloat,
+  /**
+   * @remarks Inlet destination must be of type `float *`.
+   */
+  InletTypeFloat,
 
-	/**
-	 * @remarks Inlet destination must be of type `Font **`.
-	 */
-	InletTypeFont,
+  /**
+   * @remarks Inlet destination must be of type `Font **`.
+   */
+  InletTypeFont,
 
-	/**
-	 * @remarks Inlet destination must be of type `Image **`.
-	 */
-	InletTypeImage,
+  /**
+   * @remarks Inlet destination must be of type `Image **`.
+   */
+  InletTypeImage,
 
-	/**
-	 * @remarks Inlet destination must be of type `int *`.
-	 */
-	InletTypeInteger,
+  /**
+   * @remarks Inlet destination must be of type `int *`.
+   */
+  InletTypeInteger,
 
-	/**
-	 * @remarks Inlet destination must be of type `SDL_Point *`.
-	 */
-	InletTypePoint,
+  /**
+   * @remarks Inlet destination must be of type `SDL_Point *`.
+   */
+  InletTypePoint,
 
-	/**
-	 * @remarks Inlet destination must be of type `SDL_Rect *`.
-	 */
-	InletTypeRectangle,
+  /**
+   * @remarks Inlet destination must be of type `SDL_Rect *`.
+   */
+  InletTypeRectangle,
 
-	/**
-	 * @remarks Inlet destination must be of type `SDL_Size *`.
-	 */
-	InletTypeSize,
+  /**
+   * @remarks Inlet destination must be of type `SDL_Size *`.
+   */
+  InletTypeSize,
 
-	/**
-	 * @remarks Inlet destination must be of type `View **`. The Style of the specified View is
-	 * populated with the attributes of the bound Dictionary.
-	 */
-	InletTypeStyle,
+  /**
+   * @remarks Inlet destination must be of type `View **`. The Style of the specified View is
+   * populated with the attributes of the bound Dictionary.
+   */
+  InletTypeStyle,
 
-	/**
-	 * @remarks Inlet destination must be of type `View **`. The subviews of the specified View are
-	 * populated from the bound Array of View definitions.
-	 */
-	InletTypeSubviews,
+  /**
+   * @remarks Inlet destination must be of type `View **`. The subviews of the specified View are
+   * populated from the bound Array of View definitions.
+   */
+  InletTypeSubviews,
 
-	/**
-	 * @remarks Inlet destination must be of type `View **`.
-	 * @remarks By default, the destination View is awoken with the inbound View definition.
-	 * There are two notable exceptions to this behavior:
-	 *  * `"class"` - If the inbound View definition includes a `"class"` directive, a new View of
-	 *      the specified type is initialized, and the existing View is replaced and released. The
-	 *      type must be initialized in order for the class to be resolved. Use this behavior to
-	 *      substitute a specialized or custom View implementation.
-	 *  * `"include"` - If the inbound View definition specifies an `"include"` directive, the
-	 *      specified JSON file will be recursively processed. The existing View is replaced with 
-	 *      the resulting View, and subsequently released.
-	 * @see _initialize(Clazz *)
-	 * @see View::awakeWithDictionary(View *, const Dictionary *)
-	 * @see View::viewWithContentsOfFile(const char *path)
-	 */
-	InletTypeView,
+  /**
+   * @remarks Inlet destination must be of type `View **`.
+   * @remarks By default, the destination View is awoken with the inbound View definition.
+   * There are two notable exceptions to this behavior:
+   *  * `"class"` - If the inbound View definition includes a `"class"` directive, a new View of
+   *      the specified type is initialized, and the existing View is replaced and released. The
+   *      type must be initialized in order for the class to be resolved. Use this behavior to
+   *      substitute a specialized or custom View implementation.
+   *  * `"include"` - If the inbound View definition specifies an `"include"` directive, the
+   *      specified JSON file will be recursively processed. The existing View is replaced with 
+   *      the resulting View, and subsequently released.
+   * @see _initialize(Clazz *)
+   * @see View::awakeWithDictionary(View *, const Dictionary *)
+   * @see View::viewWithContentsOfFile(const char *path)
+   */
+  InletTypeView,
 
-	/**
-	 * @remarks Inlet destination is of an application-defined type. The Inlet data must provide
-	 * an InletBinding function. That function is responsible for populating the Inlet destination.
-	 */
-	InletTypeApplicationDefined,
+  /**
+   * @remarks Inlet destination is of an application-defined type. The Inlet data must provide
+   * an InletBinding function. That function is responsible for populating the Inlet destination.
+   */
+  InletTypeApplicationDefined,
 
 } InletType;
 
@@ -154,25 +154,25 @@ typedef struct Inlet Inlet;
  */
 struct Inlet {
 
-	/**
-	 * @brief The Inlet name, e.g. `"alignment"`.
-	 */
-	const char *name;
+  /**
+   * @brief The Inlet name, e.g. `"alignment"`.
+   */
+  const char *name;
 
-	/**
-	 * @brief The InletType, e.g. InletTypeEnum.
-	 */
-	InletType type;
+  /**
+   * @brief The InletType, e.g. InletTypeEnum.
+   */
+  InletType type;
 
-	/**
-	 * @brief The Inlet destination.
-	 */
-	ident dest;
+  /**
+   * @brief The Inlet destination.
+   */
+  ident dest;
 
-	/**
-	 * @brief Type-specific data, e.g. an array of EnumNames.
-	 */
-	ident data;
+  /**
+   * @brief Type-specific data, e.g. an array of EnumNames.
+   */
+  ident data;
 };
 
 /**
@@ -199,15 +199,15 @@ typedef struct Outlet Outlet;
  */
 struct Outlet {
 
-	/**
-	 * @brief The View identifier.
-	 */
-	const char *identifier;
+  /**
+   * @brief The View identifier.
+   */
+  const char *identifier;
 
-	/**
-	 * @brief The output storage for the resolved View.
-	 */
-	View **view;
+  /**
+   * @brief The output storage for the resolved View.
+   */
+  View **view;
 };
 
 /**
@@ -219,10 +219,10 @@ struct Outlet {
  * @brief Creates a null-termianted array of Inlets.
  */
 #define MakeInlets(...) \
-	{ \
-		__VA_ARGS__, \
-		MakeInlet(NULL, InitTypeEnd, NULL, NULL) \
-	}
+  { \
+    __VA_ARGS__, \
+    MakeInlet(NULL, InitTypeEnd, NULL, NULL) \
+  }
 
 /**
  * @brief Creates an Outlet with the specified parameters.
@@ -233,10 +233,10 @@ struct Outlet {
  * @brief Creates a `NULL`-termianted array of Outlets.
  */
 #define MakeOutlets(...) \
-	{ \
-		__VA_ARGS__, \
-		MakeOutlet(NULL, NULL) \
-	}
+  { \
+    __VA_ARGS__, \
+    MakeOutlet(NULL, NULL) \
+  }
 
 /**
  * @brief Binds the Inlet to `obj` by invoking the appropriate InletBinding function.

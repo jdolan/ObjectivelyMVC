@@ -42,17 +42,17 @@ typedef struct SelectInterface SelectInterface;
  */
 struct SelectDelegate {
 
-	/**
-	 * @brief The delegate self-reference.
-	 */
-	ident self;
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
 
-	/**
-	 * @brief Called when a selection is made.
-	 * @param select The Select.
-	 * @param option The selected Option.
-	 */
-	void (*didSelectOption)(Select *select, Option *option);
+  /**
+   * @brief Called when a selection is made.
+   * @param select The Select.
+   * @param option The selected Option.
+   */
+  void (*didSelectOption)(Select *select, Option *option);
 };
 
 /**
@@ -62,36 +62,36 @@ struct SelectDelegate {
  */
 struct Select {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Control control;
+  /**
+   * @brief The superclass.
+   */
+  Control control;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	SelectInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  SelectInterface *interface;
 
-	/**
-	 * @brief An optional Comparator to sort Options.
-	 */
-	Comparator comparator;
+  /**
+   * @brief An optional Comparator to sort Options.
+   */
+  Comparator comparator;
 
-	/**
-	 * @brief The SelectDelegate.
-	 */
-	SelectDelegate delegate;
+  /**
+   * @brief The SelectDelegate.
+   */
+  SelectDelegate delegate;
 
-	/**
-	 * @brief The Options.
-	 */
-	MutableArray *options;
+  /**
+   * @brief The Options.
+   */
+  MutableArray *options;
 
-	/**
-	 * @brief The StackView for rendering the Options.
-	 */
-	StackView *stackView;
+  /**
+   * @brief The StackView for rendering the Options.
+   */
+  StackView *stackView;
 };
 
 /**
@@ -99,101 +99,101 @@ struct Select {
  */
 struct SelectInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ControlInterface controlInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ControlInterface controlInterface;
 
-	/**
-	 * @fn void Select::addOption(Select *self, const char *title, ident value)
-	 * @brief Creates and adds a new Option to this Select.
-	 * @param self The Select.
-	 * @param title The Option title.
-	 * @param value The Option value.
-	 * @memberof Select
-	 */
-	void (*addOption)(Select *self, const char *title, ident value);
+  /**
+   * @fn void Select::addOption(Select *self, const char *title, ident value)
+   * @brief Creates and adds a new Option to this Select.
+   * @param self The Select.
+   * @param title The Option title.
+   * @param value The Option value.
+   * @memberof Select
+   */
+  void (*addOption)(Select *self, const char *title, ident value);
 
-	/**
-	 * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame)
-	 * @brief Initializes this Select with the specified frame and style.
-	 * @param self The Select.
-	 * @param frame The frame.
-	 * @return The initialized Select, or `NULL` on error.
-	 * @memberof Select
-	 */
-	Select *(*initWithFrame)(Select *self, const SDL_Rect *frame);
+  /**
+   * @fn Select *Select::initWithFrame(Select *self, const SDL_Rect *frame)
+   * @brief Initializes this Select with the specified frame and style.
+   * @param self The Select.
+   * @param frame The frame.
+   * @return The initialized Select, or `NULL` on error.
+   * @memberof Select
+   */
+  Select *(*initWithFrame)(Select *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn Option *Select::optionWithValue(const Select *self, ident value)
-	 * @param self The Select.
-	 * @param value The Option value.
-	 * @return The first Option with the given value.
-	 * @memberof Select
-	 */
-	Option *(*optionWithValue)(const Select *self, ident value);
+  /**
+   * @fn Option *Select::optionWithValue(const Select *self, ident value)
+   * @param self The Select.
+   * @param value The Option value.
+   * @return The first Option with the given value.
+   * @memberof Select
+   */
+  Option *(*optionWithValue)(const Select *self, ident value);
 
-	/**
-	 * @fn void Select::removeAllOptions(Select *self)
-	 * @brief Removes all Options from this Select.
-	 * @param self The Select.
-	 * @memberof Select
-	 */
-	void (*removeAllOptions)(Select *self);
+  /**
+   * @fn void Select::removeAllOptions(Select *self)
+   * @brief Removes all Options from this Select.
+   * @param self The Select.
+   * @memberof Select
+   */
+  void (*removeAllOptions)(Select *self);
 
-	/**
-	 * @fn void Select::removeOption(Select *self, Option *option)
-	 * @brief Removes the specified Option.
-	 * @param self The Select.
-	 * @param option The Option to remove.
-	 * @memberof Select
-	 */
-	void (*removeOption)(Select *self, Option *option);
+  /**
+   * @fn void Select::removeOption(Select *self, Option *option)
+   * @brief Removes the specified Option.
+   * @param self The Select.
+   * @param option The Option to remove.
+   * @memberof Select
+   */
+  void (*removeOption)(Select *self, Option *option);
 
-	/**
-	 * @fn void Select::removeOptionWithValue(Select *self, ident value)
-	 * @brief Removes first the Option with the given value.
-	 * @param self The Select.
-	 * @param value The Option value.
-	 * @memberof Select
-	 */
-	void (*removeOptionWithValue)(Select *self, ident value);
+  /**
+   * @fn void Select::removeOptionWithValue(Select *self, ident value)
+   * @brief Removes first the Option with the given value.
+   * @param self The Select.
+   * @param value The Option value.
+   * @memberof Select
+   */
+  void (*removeOptionWithValue)(Select *self, ident value);
 
-	/**
-	 * @fn void Select::selectOption(Select *self, Option *option)
-	 * @brief Selects the given Option.
-	 * @param self The Select.
-	 * @param option The Option to select.
-	 * @memberof Select
-	 */
-	void (*selectOption)(Select *self, Option *option);
+  /**
+   * @fn void Select::selectOption(Select *self, Option *option)
+   * @brief Selects the given Option.
+   * @param self The Select.
+   * @param option The Option to select.
+   * @memberof Select
+   */
+  void (*selectOption)(Select *self, Option *option);
 
-	/**
-	 * @fn void Select::selectOptionWithValue(Select *self, ident value)
-	 * @brief Selects the first Option with the given value.
-	 * @param self The Select.
-	 * @param value The Option value.
-	 * @memberof Select
-	 */
-	void (*selectOptionWithValue)(Select *self, ident value);
+  /**
+   * @fn void Select::selectOptionWithValue(Select *self, ident value)
+   * @brief Selects the first Option with the given value.
+   * @param self The Select.
+   * @param value The Option value.
+   * @memberof Select
+   */
+  void (*selectOptionWithValue)(Select *self, ident value);
 
-	/**
-	 * @fn Option *Select::selectedOption(const Select *self)
-	 * @param self The Select.
-	 * @return The first selected Option, or `NULL`.
-	 * @remarks This is a convenience method for ControlSelectionSingle. For
-	 * ControlSelectionMultiple, use Select::selectedOptions.
-	 * @memberof Select
-	 */
-	Option *(*selectedOption)(const Select *self);
+  /**
+   * @fn Option *Select::selectedOption(const Select *self)
+   * @param self The Select.
+   * @return The first selected Option, or `NULL`.
+   * @remarks This is a convenience method for ControlSelectionSingle. For
+   * ControlSelectionMultiple, use Select::selectedOptions.
+   * @memberof Select
+   */
+  Option *(*selectedOption)(const Select *self);
 
-	/**
-	 * @fn Array *Select::selectedOptions(const Select *self)
-	 * @param self The Select.
-	 * @return An Array containing the selected Options.
-	 * @memberof Select
-	 */
-	Array *(*selectedOptions)(const Select *self);
+  /**
+   * @fn Array *Select::selectedOptions(const Select *self)
+   * @param self The Select.
+   * @return An Array containing the selected Options.
+   * @memberof Select
+   */
+  Array *(*selectedOptions)(const Select *self);
 };
 
 /**

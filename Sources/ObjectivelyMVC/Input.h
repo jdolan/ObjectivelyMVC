@@ -36,10 +36,10 @@
  * @brief Input orientation defines the relative positioning of the Label.
  */
 typedef enum {
-	InputOrientationLeft,
-	InputOrientationRight,
-	InputOrientationAbove,
-	InputOrientationBelow
+  InputOrientationLeft,
+  InputOrientationRight,
+  InputOrientationAbove,
+  InputOrientationBelow
 } InputOrientation;
 
 OBJECTIVELYMVC_EXPORT const EnumName InputOrientationNames[];
@@ -56,31 +56,31 @@ typedef struct InputInterface InputInterface;
  */
 struct Input {
 
-	/**
-	 * @brief The superclass.
-	 */
-	StackView stackView;
+  /**
+   * @brief The superclass.
+   */
+  StackView stackView;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	InputInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  InputInterface *interface;
 
-	/**
-	 * @brief The Control.
-	 */
-	Control *control;
+  /**
+   * @brief The Control.
+   */
+  Control *control;
 
-	/**
-	 * @brief The Label.
-	 */
-	Label *label;
+  /**
+   * @brief The Label.
+   */
+  Label *label;
 
-	/**
-	 * @brief The Label orientation.
-	 */
-	InputOrientation orientation;
+  /**
+   * @brief The Label orientation.
+   */
+  InputOrientation orientation;
 };
 
 /**
@@ -88,47 +88,47 @@ struct Input {
  */
 struct InputInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	StackViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  StackViewInterface viewInterface;
 
-	/**
-	 * @fn Input *Input::initWithFrame(Input *self, const SDL_Rect *frame)
-	 * @brief Initializes this Input with the specified frame.
-	 * @param self The Input.
-	 * @param frame The frame.
-	 * @return The initialized Input, or `NULL` on error.
-	 * @memberof Input
-	 */
-	Input *(*initWithFrame)(Input *self, const SDL_Rect *frame);
+  /**
+   * @fn Input *Input::initWithFrame(Input *self, const SDL_Rect *frame)
+   * @brief Initializes this Input with the specified frame.
+   * @param self The Input.
+   * @param frame The frame.
+   * @return The initialized Input, or `NULL` on error.
+   * @memberof Input
+   */
+  Input *(*initWithFrame)(Input *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn void Input::setControl(Input *self, Control *control)
-	 * @brief Sets this Input's Control.
-	 * @param self The Input.
-	 * @param control The Control.
-	 * @memberof Input
-	 */
-	void (*setControl)(Input *self, Control *control);
+  /**
+   * @fn void Input::setControl(Input *self, Control *control)
+   * @brief Sets this Input's Control.
+   * @param self The Input.
+   * @param control The Control.
+   * @memberof Input
+   */
+  void (*setControl)(Input *self, Control *control);
 
-	/**
-	 * @fn void Input::setLabel(Input *self, Label *label)
-	 * @brief Sets this Input's Label.
-	 * @param self The Input.
-	 * @param label The Label.
-	 * @memberof Input
-	 */
-	void (*setLabel)(Input *self, Label *label);
+  /**
+   * @fn void Input::setLabel(Input *self, Label *label)
+   * @brief Sets this Input's Label.
+   * @param self The Input.
+   * @param label The Label.
+   * @memberof Input
+   */
+  void (*setLabel)(Input *self, Label *label);
 
-	/**
-	 * @fn void Input::setOrientation(Input *self, InputOrientation orientation)
-	 * @brief Sets this Input's orientation.
-	 * @param self The Input.
-	 * @param orientation The InputOrientation.
-	 * @memberof Input
-	 */
-	void (*setOrientation)(Input *self, InputOrientation orientation);
+  /**
+   * @fn void Input::setOrientation(Input *self, InputOrientation orientation)
+   * @brief Sets this Input's orientation.
+   * @param self The Input.
+   * @param orientation The InputOrientation.
+   * @memberof Input
+   */
+  void (*setOrientation)(Input *self, InputOrientation orientation);
 };
 
 /**

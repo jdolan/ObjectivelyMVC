@@ -42,36 +42,36 @@ typedef struct CollectionItemViewInterface CollectionItemViewInterface;
  */
 struct CollectionItemView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	CollectionItemViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  CollectionItemViewInterface *interface;
 
-	/**
-	 * @brief The ImageView.
-	 */
-	ImageView *imageView;
+  /**
+   * @brief The ImageView.
+   */
+  ImageView *imageView;
 
-	/**
-	 * @brief True when this item is selected, false otherwise.
-	 */
-	bool isSelected;
+  /**
+   * @brief True when this item is selected, false otherwise.
+   */
+  bool isSelected;
 
-	/**
-	 * @brief The View drawn over this item when it is selected.
-	 */
-	View *selectionOverlay;
+  /**
+   * @brief The View drawn over this item when it is selected.
+   */
+  View *selectionOverlay;
 
-	/**
-	 * @brief The text.
-	 */
-	Text *text;
+  /**
+   * @brief The text.
+   */
+  Text *text;
 };
 
 /**
@@ -79,30 +79,30 @@ struct CollectionItemView {
  */
 struct CollectionItemViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn CollectionItemView *CollectionItemView::initWithFrame(CollectionItemView *self, const SDL_Rect *frame)
-	 * @brief Initializes this CollectionItemView with the specified frame.
-	 * @param self The CollectionItemView.
-	 * @param frame The frame.
-	 * @return The initialized CollectionItemView, or `NULL` on error.
-	 * @memberof CollectionItemView
-	 */
-	CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);
+  /**
+   * @fn CollectionItemView *CollectionItemView::initWithFrame(CollectionItemView *self, const SDL_Rect *frame)
+   * @brief Initializes this CollectionItemView with the specified frame.
+   * @param self The CollectionItemView.
+   * @param frame The frame.
+   * @return The initialized CollectionItemView, or `NULL` on error.
+   * @memberof CollectionItemView
+   */
+  CollectionItemView *(*initWithFrame)(CollectionItemView *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn void CollectionItemView::setSelected(CollectionItemView *self, bool isSelected)
-	 * @brief Sets the selected state of this item.
-	 * @param self The CollectionItemView.
-	 * @param isSelected The selected state.
-	 * @remarks Subclasses may override this method to change the visual cue for selection.
-	 * @memberof CollectionItemView
-	 */
-	void (*setSelected)(CollectionItemView *self, bool isSelected);
+  /**
+   * @fn void CollectionItemView::setSelected(CollectionItemView *self, bool isSelected)
+   * @brief Sets the selected state of this item.
+   * @param self The CollectionItemView.
+   * @param isSelected The selected state.
+   * @remarks Subclasses may override this method to change the visual cue for selection.
+   * @memberof CollectionItemView
+   */
+  void (*setSelected)(CollectionItemView *self, bool isSelected);
 };
 
 /**

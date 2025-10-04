@@ -36,12 +36,12 @@
  * @brief Combinators are operators for chaining SelectorSequences.
  */
 typedef enum {
-	SequenceCombinatorNone,
-	SequenceCombinatorDescendent,
-	SequenceCombinatorChild,
-	SequenceCombinatorSibling,
-	SequenceCombinatorAdjacent,
-	SequenceCombinatorTerminal
+  SequenceCombinatorNone,
+  SequenceCombinatorDescendent,
+  SequenceCombinatorChild,
+  SequenceCombinatorSibling,
+  SequenceCombinatorAdjacent,
+  SequenceCombinatorTerminal
 } SequenceCombinator;
 
 typedef struct SelectorSequence SelectorSequence;
@@ -54,31 +54,31 @@ typedef struct SelectorSequenceInterface SelectorSequenceInterface;
  */
 struct SelectorSequence {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	SelectorSequenceInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  SelectorSequenceInterface *interface;
 
-	/**
-	 * @brief The combinators.
-	 */
-	SequenceCombinator left, right;
+  /**
+   * @brief The combinators.
+   */
+  SequenceCombinator left, right;
 
-	/**
-	 * @brief The SimpleSelectors comprising this SelectorSequence.
-	 */
-	Array *simpleSelectors;
+  /**
+   * @brief The SimpleSelectors comprising this SelectorSequence.
+   */
+  Array *simpleSelectors;
 
-	/**
-	 * @brief The sequence, as provided by the user.
-	 */
-	char *sequence;
+  /**
+   * @brief The sequence, as provided by the user.
+   */
+  char *sequence;
 };
 
 /**
@@ -86,38 +86,38 @@ struct SelectorSequence {
  */
 struct SelectorSequenceInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface objectInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface objectInterface;
 
-	/**
-	 * @fn SelectorSequence *SelectorSequence::initWithSequence(SelectorSequence *self, const char *sequence)
-	 * @brief Initializes this SelectorSequence with the given sequence.
-	 * @param self The SelectorSequence.
-	 * @param sequence A C-string specifying a sequence of SimpleSelectors.
-	 * @return The initialized SelectorSequence, or `NULL` on error.
-	 * @memberof SelectorSequence
-	 */
-	SelectorSequence *(*initWithSequence)(SelectorSequence *self, const char *sequence);
+  /**
+   * @fn SelectorSequence *SelectorSequence::initWithSequence(SelectorSequence *self, const char *sequence)
+   * @brief Initializes this SelectorSequence with the given sequence.
+   * @param self The SelectorSequence.
+   * @param sequence A C-string specifying a sequence of SimpleSelectors.
+   * @return The initialized SelectorSequence, or `NULL` on error.
+   * @memberof SelectorSequence
+   */
+  SelectorSequence *(*initWithSequence)(SelectorSequence *self, const char *sequence);
 
-	/**
-	 * @fn bool SelectorSequence::matchesView(const SelectorSequence *self, const View *view)
-	 * @param self The SelectorSequence.
-	 * @param view The View.
-	 * @return True if all SimpleSelectors in this SelectorSequence match the given View, false otherwise.
-	 * @memberof SelectorSequence
-	 */
-	bool (*matchesView)(const SelectorSequence *self, const View *view);
+  /**
+   * @fn bool SelectorSequence::matchesView(const SelectorSequence *self, const View *view)
+   * @param self The SelectorSequence.
+   * @param view The View.
+   * @return True if all SimpleSelectors in this SelectorSequence match the given View, false otherwise.
+   * @memberof SelectorSequence
+   */
+  bool (*matchesView)(const SelectorSequence *self, const View *view);
 
-	/**
-	 * @static
-	 * @fn Array *SelectorSequence::parse(const char *rule)
-	 * @param rule A C-string specifying a Selector rule.
-	 * @return The parsed SelectorSequences.
-	 * @memberof SelectorSequence
-	 */
-	Array *(*parse)(const char *rule);
+  /**
+   * @static
+   * @fn Array *SelectorSequence::parse(const char *rule)
+   * @param rule A C-string specifying a Selector rule.
+   * @return The parsed SelectorSequences.
+   * @memberof SelectorSequence
+   */
+  Array *(*parse)(const char *rule);
 };
 
 /**

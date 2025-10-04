@@ -42,16 +42,16 @@ typedef struct ScrollViewInterface ScrollViewInterface;
  */
 struct ScrollViewDelegate {
 
-	/**
-	 * @brief The delegate self-reference.
-	 */
-	ident self;
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
 
-	/**
-	 * @brief Delegate callback for view contents scrolling.
-	 * @param scrollView The ScrollView.
-	 */
-	void (*didScroll)(ScrollView *scrollView);
+  /**
+   * @brief Delegate callback for view contents scrolling.
+   * @param scrollView The ScrollView.
+   */
+  void (*didScroll)(ScrollView *scrollView);
 };
 
 /**
@@ -61,31 +61,31 @@ struct ScrollViewDelegate {
  */
 struct ScrollView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Control control;
+  /**
+   * @brief The superclass.
+   */
+  Control control;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	ScrollViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  ScrollViewInterface *interface;
 
-	/**
-	 * @brief The content View offset.
-	 */
-	SDL_Point contentOffset;
+  /**
+   * @brief The content View offset.
+   */
+  SDL_Point contentOffset;
 
-	/**
-	 * @brief The content View.
-	 */
-	View *contentView;
+  /**
+   * @brief The content View.
+   */
+  View *contentView;
 
-	/**
-	 * @brief The scroll step, in pixels.
-	 */
-	float step;
+  /**
+   * @brief The scroll step, in pixels.
+   */
+  float step;
 };
 
 /**
@@ -93,38 +93,38 @@ struct ScrollView {
  */
 struct ScrollViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ControlInterface controlInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ControlInterface controlInterface;
 
-	/**
-	 * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame)
-	 * @brief Initializes this ScrollView with the specified frame and style.
-	 * @param self The ScrollView.
-	 * @param frame The frame.
-	 * @return The initialized ScrollView, or `NULL` on error.
-	 * @memberof ScrollView
-	 */
-	ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame);
+  /**
+   * @fn ScrollView *ScrollView::initWithFrame(ScrollView *self, const SDL_Rect *frame)
+   * @brief Initializes this ScrollView with the specified frame and style.
+   * @param self The ScrollView.
+   * @param frame The frame.
+   * @return The initialized ScrollView, or `NULL` on error.
+   * @memberof ScrollView
+   */
+  ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn void ScrollView::scrollToOffset(ScrollView *self, const SDL_Point offset);
-	 * @brief Scrolls the content View to the specified offset.
-	 * @param self The ScrollView.
-	 * @param offset The offset.
-	 * @memberof ScrollView
-	 */
-	void (*scrollToOffset)(ScrollView *self, const SDL_Point *offset);
+  /**
+   * @fn void ScrollView::scrollToOffset(ScrollView *self, const SDL_Point offset);
+   * @brief Scrolls the content View to the specified offset.
+   * @param self The ScrollView.
+   * @param offset The offset.
+   * @memberof ScrollView
+   */
+  void (*scrollToOffset)(ScrollView *self, const SDL_Point *offset);
 
-	/**
-	 * @fn void ScrollView::setContentView(ScrollView *self, View *contentView)
-	 * @brief Sets the content view of this ScrollView.
-	 * @param self The ScrollView.
-	 * @param contentView The content view.
-	 * @memberof ScrollView
-	 */
-	void (*setContentView)(ScrollView *self, View *contentView);
+  /**
+   * @fn void ScrollView::setContentView(ScrollView *self, View *contentView)
+   * @brief Sets the content view of this ScrollView.
+   * @param self The ScrollView.
+   * @param contentView The content view.
+   * @memberof ScrollView
+   */
+  void (*setContentView)(ScrollView *self, View *contentView);
 };
 
 /**

@@ -41,17 +41,17 @@ typedef struct ProgressBarInterface ProgressBarInterface;
  */
 struct ProgressBarDelegate {
 
-	/**
-	 * @brief The delegate self-reference.
-	 */
-	ident self;
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
 
-	/**
-	 * @brief Delegate callback for ProgressBar value modification.
-	 * @param progressBar The ProgressBar.
-	 * @param value The value.
-	 */
-	void (*didSetValue)(ProgressBar *progressBar, double value);
+  /**
+   * @brief Delegate callback for ProgressBar value modification.
+   * @param progressBar The ProgressBar.
+   * @param value The value.
+   */
+  void (*didSetValue)(ProgressBar *progressBar, double value);
 };
 
 /**
@@ -60,53 +60,53 @@ struct ProgressBarDelegate {
  */
 struct ProgressBar {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	ProgressBarInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  ProgressBarInterface *interface;
 
-	/**
-	 * @brief The background ImageView.
-	 * @remarks Set a background color if you do not wish to provide an ImageView.
-	 */
-	ImageView *background;
+  /**
+   * @brief The background ImageView.
+   * @remarks Set a background color if you do not wish to provide an ImageView.
+   */
+  ImageView *background;
 
-	/**
-	 * @brief The delegate.
-	 */
-	ProgressBarDelegate delegate;
+  /**
+   * @brief The delegate.
+   */
+  ProgressBarDelegate delegate;
 
-	/**
-	 * @brief The foreground ImageView.
-	 * @remarks Set a background color if you do not wish to provide an ImageView.
-	 */
-	ImageView *foreground;
+  /**
+   * @brief The foreground ImageView.
+   * @remarks Set a background color if you do not wish to provide an ImageView.
+   */
+  ImageView *foreground;
 
-	/**
-	 * @brief The progress Text.
-	 */
-	Text *label;
+  /**
+   * @brief The progress Text.
+   */
+  Text *label;
 
-	/**
-	 * @brief The Label format, e.g. `"%0.0lf"`.
-	 */
-	char *labelFormat;
+  /**
+   * @brief The Label format, e.g. `"%0.0lf"`.
+   */
+  char *labelFormat;
 
-	/**
-	 * @brief The progress bounds.
-	 */
-	double min, max;
+  /**
+   * @brief The progress bounds.
+   */
+  double min, max;
 
-	/**
-	 * @brief The progress value.
-	 */
-	double value;
+  /**
+   * @brief The progress value.
+   */
+  double value;
 };
 
 /**
@@ -114,54 +114,54 @@ struct ProgressBar {
  */
 struct ProgressBarInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn void ProgressBar::formatLabel(ProgressBar *self)
-	 * @brief Forces an update on this ProgressBar's label.
-	 * @param self The ProgressBar.
-	 * @memberof ProgressBar
-	 */
-	void (*formatLabel)(ProgressBar *self);
+  /**
+   * @fn void ProgressBar::formatLabel(ProgressBar *self)
+   * @brief Forces an update on this ProgressBar's label.
+   * @param self The ProgressBar.
+   * @memberof ProgressBar
+   */
+  void (*formatLabel)(ProgressBar *self);
 
-	/**
-	 * @fn ProgressBar *ProgressBar::init(ProgressBar *self, const SDL_Rect *frame)
-	 * @brief Initializes this ProgressBar with the specified frame.
-	 * @param self The ProgressBar.
-	 * @param frame The frame.
-	 * @return The initialized ProgressBar, or `NULL` on error.
-	 * @memberof ProgressBar
-	 */
-	ProgressBar *(*initWithFrame)(ProgressBar *self, const SDL_Rect *frame);
+  /**
+   * @fn ProgressBar *ProgressBar::init(ProgressBar *self, const SDL_Rect *frame)
+   * @brief Initializes this ProgressBar with the specified frame.
+   * @param self The ProgressBar.
+   * @param frame The frame.
+   * @return The initialized ProgressBar, or `NULL` on error.
+   * @memberof ProgressBar
+   */
+  ProgressBar *(*initWithFrame)(ProgressBar *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn int ProgressBar::progress(const ProgressBar *self)
-	 * @param self The ProgressBar.
-	 * @return The progress as a percentage value.
-	 * @memberof ProgressBar
-	 */
-	double (*progress)(const ProgressBar *self);
+  /**
+   * @fn int ProgressBar::progress(const ProgressBar *self)
+   * @param self The ProgressBar.
+   * @return The progress as a percentage value.
+   * @memberof ProgressBar
+   */
+  double (*progress)(const ProgressBar *self);
 
-	/**
-	 * @fn void ProgressBar::setLabelFormat(ProgressBar *self, const char *labelFormat)
-	 * @brief Changes this ProgressBar's label format and calls appropriate update functions
-	 * @param self The ProgressBar.
-	 * @param labelFormat The new label format.
-	 * @memberof ProgressBar
-	 */
-	void (*setLabelFormat)(ProgressBar *self, const char *labelFormat);
+  /**
+   * @fn void ProgressBar::setLabelFormat(ProgressBar *self, const char *labelFormat)
+   * @brief Changes this ProgressBar's label format and calls appropriate update functions
+   * @param self The ProgressBar.
+   * @param labelFormat The new label format.
+   * @memberof ProgressBar
+   */
+  void (*setLabelFormat)(ProgressBar *self, const char *labelFormat);
 
-	/**
-	 * @fn void ProgressBar::setValue(const ProgressBar *self, double value)
-	 * @brief Sets the value, which is clamped to `min` and `max`.
-	 * @param self The ProgressBar.
-	 * @param value The value.
-	 * @memberof ProgressBar
-	 */
-	void (*setValue)(ProgressBar *self, double value);
+  /**
+   * @fn void ProgressBar::setValue(const ProgressBar *self, double value)
+   * @brief Sets the value, which is clamped to `min` and `max`.
+   * @param self The ProgressBar.
+   * @param value The value.
+   * @memberof ProgressBar
+   */
+  void (*setValue)(ProgressBar *self, double value);
 };
 
 /**

@@ -44,31 +44,31 @@ typedef struct TableColumnInterface TableColumnInterface;
  */
 struct TableColumn {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	TableColumnInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  TableColumnInterface *interface;
 
-	/**
-	 * @brief The header cell.
-	 */
-	TableHeaderCellView *headerCell;
+  /**
+   * @brief The header cell.
+   */
+  TableHeaderCellView *headerCell;
 
-	/**
-	 * @brief The identifier.
-	 */
-	char *identifier;
+  /**
+   * @brief The identifier.
+   */
+  char *identifier;
 
-	/**
-	 * @brief The sort order.
-	 */
-	Order order;
+  /**
+   * @brief The sort order.
+   */
+  Order order;
 };
 
 /**
@@ -76,20 +76,20 @@ struct TableColumn {
  */
 struct TableColumnInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface objectInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface objectInterface;
 
-	/**
-	 * @fn TableColumn *TableColumn::initWithIdentifier(TableColumn *self, const char *identifier)
-	 * @brief Initializes this TableColumn with the given identifier.
-	 * @param self The TableColumn.
-	 * @param identifier The column identifier.
-	 * @return The initialized TableColumn, or `NULL` on error.
-	 * @memberof TableColumn
-	 */
-	TableColumn *(*initWithIdentifier)(TableColumn *self, const char *identifier);
+  /**
+   * @fn TableColumn *TableColumn::initWithIdentifier(TableColumn *self, const char *identifier)
+   * @brief Initializes this TableColumn with the given identifier.
+   * @param self The TableColumn.
+   * @param identifier The column identifier.
+   * @return The initialized TableColumn, or `NULL` on error.
+   * @memberof TableColumn
+   */
+  TableColumn *(*initWithIdentifier)(TableColumn *self, const char *identifier);
 };
 
 /**

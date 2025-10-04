@@ -43,26 +43,26 @@ typedef struct StylesheetInterface StylesheetInterface;
  */
 struct Stylesheet {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	StylesheetInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  StylesheetInterface *interface;
 
-	/**
-	 * @brief The Selectors, ordered by specificity.
-	 */
-	Array *selectors;
+  /**
+   * @brief The Selectors, ordered by specificity.
+   */
+  Array *selectors;
 
-	/**
-	 * @brief The Styles, keyed by Selector.
-	 */
-	Array *styles;
+  /**
+   * @brief The Styles, keyed by Selector.
+   */
+  Array *styles;
 };
 
 /**
@@ -70,119 +70,119 @@ struct Stylesheet {
  */
 struct StylesheetInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface objectInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface objectInterface;
 
-	/**
-	 * @static
-	 * @fn Stylesheet *Stylesheet::defaultStylesheet(void)
-	 * @return The default Stylesheet.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*defaultStylesheet)(void);
+  /**
+   * @static
+   * @fn Stylesheet *Stylesheet::defaultStylesheet(void)
+   * @return The default Stylesheet.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*defaultStylesheet)(void);
 
-	/**
-	 * @fn Stylesheet *Stylesheet::initWithCharacters(Stylesheet *self, const char *chars)
-	 * @brief Initializes this Stylesheet with the given CSS definitions.
-	 * @param self The Stylesheet.
-	 * @param chars The null-terminated C string of CSS definitions.
-	 * @return The initialized Stylesheet, or `NULL` on error.
-	 * @remarks Designated initializer.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*initWithCharacters)(Stylesheet *self, const char *chars);
+  /**
+   * @fn Stylesheet *Stylesheet::initWithCharacters(Stylesheet *self, const char *chars)
+   * @brief Initializes this Stylesheet with the given CSS definitions.
+   * @param self The Stylesheet.
+   * @param chars The null-terminated C string of CSS definitions.
+   * @return The initialized Stylesheet, or `NULL` on error.
+   * @remarks Designated initializer.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*initWithCharacters)(Stylesheet *self, const char *chars);
 
-	/**
-	 * @fn Stylesheet *Stylesheet::initWithData(Stylesheet *self, const Data *data)
-	 * @brief Initializes this Stylesheet with the CSS definitions in `data`.
-	 * @param self The Stylesheet.
-	 * @param data The Data containing CSS definitions.
-	 * @return The initialized Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*initWithData)(Stylesheet *self, const Data *data);
+  /**
+   * @fn Stylesheet *Stylesheet::initWithData(Stylesheet *self, const Data *data)
+   * @brief Initializes this Stylesheet with the CSS definitions in `data`.
+   * @param self The Stylesheet.
+   * @param data The Data containing CSS definitions.
+   * @return The initialized Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*initWithData)(Stylesheet *self, const Data *data);
 
-	/**
-	 * @fn Stylesheet *Stylesheet::initWithResource(Stylsheet *self, const Resource *resource)
-	 * @brief Initializes this Stylsheet with the CSS definitions in `resource`.
-	 * @param self The Stylesheet.
-	 * @param resource The Resource containing CSS definitions.
-	 * @return The initialized Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*initWithResource)(Stylesheet *self, const Resource *resource);
+  /**
+   * @fn Stylesheet *Stylesheet::initWithResource(Stylsheet *self, const Resource *resource)
+   * @brief Initializes this Stylsheet with the CSS definitions in `resource`.
+   * @param self The Stylesheet.
+   * @param resource The Resource containing CSS definitions.
+   * @return The initialized Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*initWithResource)(Stylesheet *self, const Resource *resource);
 
-	/**
-	 * @fn Stylesheet *Stylesheet::initWithResourceName(Stylsheet *self, const char *name)
-	 * @brief Initializes this Stylsheet with the Resource by the specified `name`.
-	 * @param self The Stylesheet.
-	 * @param name The name of a Resource containing CSS definitions.
-	 * @return The initialized Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*initWithResourceName)(Stylesheet *self, const char *name);
+  /**
+   * @fn Stylesheet *Stylesheet::initWithResourceName(Stylsheet *self, const char *name)
+   * @brief Initializes this Stylsheet with the Resource by the specified `name`.
+   * @param self The Stylesheet.
+   * @param name The name of a Resource containing CSS definitions.
+   * @return The initialized Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*initWithResourceName)(Stylesheet *self, const char *name);
 
-	/**
-	 * @fn Stylesheet *Stylesheet::initWithString(Stylesheet *self, const String *string)
-	 * @brief Initializes this Stylesheet with the CSS definitions in `string`.
-	 * @param self The Stylesheet.
-	 * @param string The String containing CSS definitions.
-	 * @return The initialized Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*initWithString)(Stylesheet *self, const String *string);
+  /**
+   * @fn Stylesheet *Stylesheet::initWithString(Stylesheet *self, const String *string)
+   * @brief Initializes this Stylesheet with the CSS definitions in `string`.
+   * @param self The Stylesheet.
+   * @param string The String containing CSS definitions.
+   * @return The initialized Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*initWithString)(Stylesheet *self, const String *string);
 
-	/**
-	 * @static
-	 * @fn Stylesheet *Stylesheet::stylesheetWithCharacters(const char *chars)
-	 * @brief Instantiates a new Stylesheet with the given CSS definitions.
-	 * @param chars The null-terminated C string of CSS definitions.
-	 * @return The new Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*stylesheetWithCharacters)(const char *chars);
+  /**
+   * @static
+   * @fn Stylesheet *Stylesheet::stylesheetWithCharacters(const char *chars)
+   * @brief Instantiates a new Stylesheet with the given CSS definitions.
+   * @param chars The null-terminated C string of CSS definitions.
+   * @return The new Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*stylesheetWithCharacters)(const char *chars);
 
-	/**
-	 * @static
-	 * @fn Stylesheet *Stylesheet::stylesheetWithCharacters(const Data *data)
-	 * @brief Instantiates a new Stylesheet with the given CSS Data.
-	 * @param data The Data containing CSS definitions.
-	 * @return The new Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*stylesheetWithData)(const Data *data);
+  /**
+   * @static
+   * @fn Stylesheet *Stylesheet::stylesheetWithCharacters(const Data *data)
+   * @brief Instantiates a new Stylesheet with the given CSS Data.
+   * @param data The Data containing CSS definitions.
+   * @return The new Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*stylesheetWithData)(const Data *data);
 
-	/**
-	 * @static
-	 * @fn Stylesheet *Stylesheet::stylesheetWithResource(const Resource *resource)
-	 * @brief Instantiates a new Stylesheet with the given CSS Resource.
-	 * @param resource The Resource containing CSS definitions.
-	 * @return The new Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*stylesheetWithResource)(const Resource *resource);
+  /**
+   * @static
+   * @fn Stylesheet *Stylesheet::stylesheetWithResource(const Resource *resource)
+   * @brief Instantiates a new Stylesheet with the given CSS Resource.
+   * @param resource The Resource containing CSS definitions.
+   * @return The new Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*stylesheetWithResource)(const Resource *resource);
 
-	/**
-	 * @static
-	 * @fn Stylesheet *Stylesheet::stylesheetWithResourceName(const char *name)
-	 * @brief Instantiates a new Stylesheet with the CSS Resource by the specified `name`.
-	 * @param name The name of a Resource containing CSS definitions.
-	 * @return The new Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*stylesheetWithResourceName)(const char *name);
+  /**
+   * @static
+   * @fn Stylesheet *Stylesheet::stylesheetWithResourceName(const char *name)
+   * @brief Instantiates a new Stylesheet with the CSS Resource by the specified `name`.
+   * @param name The name of a Resource containing CSS definitions.
+   * @return The new Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*stylesheetWithResourceName)(const char *name);
 
-	/**
-	 * @static
-	 * @fn Stylesheet *Stylesheet::stylesheetWithString(const String *string)
-	 * @brief Instantiates a new Stylesheet with the given CSS String.
-	 * @param string The String of containing CSS definitions.
-	 * @return The new Stylesheet, or `NULL` on error.
-	 * @memberof Stylesheet
-	 */
-	Stylesheet *(*stylesheetWithString)(const String *string);
+  /**
+   * @static
+   * @fn Stylesheet *Stylesheet::stylesheetWithString(const String *string)
+   * @brief Instantiates a new Stylesheet with the given CSS String.
+   * @param string The String of containing CSS definitions.
+   * @return The new Stylesheet, or `NULL` on error.
+   * @memberof Stylesheet
+   */
+  Stylesheet *(*stylesheetWithString)(const String *string);
 };
 
 /**

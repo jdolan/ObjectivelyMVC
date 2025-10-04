@@ -34,11 +34,11 @@
  */
 static void dealloc(Object *self) {
 
-	TableCellView *this = (TableCellView *) self;
+  TableCellView *this = (TableCellView *) self;
 
-	release(this->text);
+  release(this->text);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - TableCellView
@@ -49,15 +49,15 @@ static void dealloc(Object *self) {
  */
 static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) {
 
-	self = (TableCellView *) super(View, self, initWithFrame, frame);
-	if (self) {
-		self->text = $(alloc(Text), initWithText, NULL, NULL);
-		assert(self->text);
+  self = (TableCellView *) super(View, self, initWithFrame, frame);
+  if (self) {
+    self->text = $(alloc(Text), initWithText, NULL, NULL);
+    assert(self->text);
 
-		$((View *) self, addSubview, (View *) self->text);
-	}
+    $((View *) self, addSubview, (View *) self->text);
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -67,9 +67,9 @@ static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) 
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((TableCellViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((TableCellViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 /**
@@ -77,21 +77,21 @@ static void initialize(Class *clazz) {
  * @memberof TableCellView
  */
 Class *_TableCellView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TableCellView",
-			.superclass = _View(),
-			.instanceSize = sizeof(TableCellView),
-			.interfaceOffset = offsetof(TableCellView, interface),
-			.interfaceSize = sizeof(TableCellViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TableCellView",
+      .superclass = _View(),
+      .instanceSize = sizeof(TableCellView),
+      .interfaceOffset = offsetof(TableCellView, interface),
+      .interfaceSize = sizeof(TableCellViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

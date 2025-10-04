@@ -43,26 +43,26 @@ typedef struct BoxInterface BoxInterface;
  */
 struct Box {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	BoxInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  BoxInterface *interface;
 
-	/**
-	 * @brief The internal container.
-	 */
-	StackView *contentView;
+  /**
+   * @brief The internal container.
+   */
+  StackView *contentView;
 
-	/**
-	 * @brief The Label.
-	 */
-	Label *label;
+  /**
+   * @brief The Label.
+   */
+  Label *label;
 };
 
 /**
@@ -70,20 +70,20 @@ struct Box {
  */
 struct BoxInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn Box *Box::initWithFrame(Box *self, const SDL_Rect *frame)
-	 * @brief Initializes this Box with the given frame.
-	 * @param self The Box.
-	 * @param frame The frame.
-	 * @return The initialized Box, or `NULL` on error.
-	 * @memberof Box
-	 */
-	Box *(*initWithFrame)(Box *self, const SDL_Rect *frame);
+  /**
+   * @fn Box *Box::initWithFrame(Box *self, const SDL_Rect *frame)
+   * @brief Initializes this Box with the given frame.
+   * @param self The Box.
+   * @param frame The frame.
+   * @return The initialized Box, or `NULL` on error.
+   * @memberof Box
+   */
+  Box *(*initWithFrame)(Box *self, const SDL_Rect *frame);
 };
 
 /**

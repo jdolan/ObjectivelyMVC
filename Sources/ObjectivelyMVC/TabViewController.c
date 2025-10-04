@@ -34,11 +34,11 @@
  */
 static void dealloc(Object *self) {
 
-	TabViewController *this = (TabViewController *) self;
+  TabViewController *this = (TabViewController *) self;
 
-	release(this->tabView);
+  release(this->tabView);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - ViewController
@@ -48,18 +48,18 @@ static void dealloc(Object *self) {
  */
 static void loadView(ViewController *self) {
 
-	super(ViewController, self, loadView);
+  super(ViewController, self, loadView);
 
-	self->view->autoresizingMask = ViewAutoresizingContain;
+  self->view->autoresizingMask = ViewAutoresizingContain;
 
-	TabViewController *this = (TabViewController *) self;
+  TabViewController *this = (TabViewController *) self;
 
-	this->tabView = $(alloc(TabView), initWithFrame, NULL);
-	assert(this->tabView);
+  this->tabView = $(alloc(TabView), initWithFrame, NULL);
+  assert(this->tabView);
 
-	this->tabView->delegate.self = this;
+  this->tabView->delegate.self = this;
 
-	$(self->view, addSubview, (View *) this->tabView);
+  $(self->view, addSubview, (View *) this->tabView);
 }
 
 /**
@@ -67,15 +67,15 @@ static void loadView(ViewController *self) {
  */
 static void addChildViewController(ViewController *self, ViewController *childViewController) {
 
-	super(ViewController, self, addChildViewController, childViewController);
+  super(ViewController, self, addChildViewController, childViewController);
 
-	TabViewController *this = (TabViewController *) self;
+  TabViewController *this = (TabViewController *) self;
 
-	TabViewItem *tab = $(alloc(TabViewItem), initWithView, childViewController->view);
+  TabViewItem *tab = $(alloc(TabViewItem), initWithView, childViewController->view);
 
-	$(this->tabView, addTab, tab);
+  $(this->tabView, addTab, tab);
 
-	release(tab);
+  release(tab);
 }
 
 /**
@@ -83,13 +83,13 @@ static void addChildViewController(ViewController *self, ViewController *childVi
  */
 static void removeChildViewController(ViewController *self, ViewController *childViewController) {
 
-	super(ViewController, self, removeChildViewController, childViewController);
+  super(ViewController, self, removeChildViewController, childViewController);
 
-	TabViewController *this = (TabViewController *) self;
+  TabViewController *this = (TabViewController *) self;
 
-	TabViewItem *tab = $(this, tabForViewController, childViewController);
+  TabViewItem *tab = $(this, tabForViewController, childViewController);
 
-	$(this->tabView, removeTab, tab);
+  $(this->tabView, removeTab, tab);
 }
 
 #pragma mark - TabViewController
@@ -99,14 +99,14 @@ static void removeChildViewController(ViewController *self, ViewController *chil
  * @memberof TabViewController
  */
 static TabViewController *init(TabViewController *self) {
-	return (TabViewController *) super(ViewController, self, init);
+  return (TabViewController *) super(ViewController, self, init);
 }
 
 /**
  * @brief Predicate for tabViewItemFor.
  */
 static bool tabForViewController_predicate(const ident obj, ident data) {
-	return ((TabViewItem *) obj)->view == data;
+  return ((TabViewItem *) obj)->view == data;
 }
 
 /**
@@ -115,13 +115,13 @@ static bool tabForViewController_predicate(const ident obj, ident data) {
  */
 static TabViewItem *tabForViewController(const TabViewController *self, const ViewController *viewController) {
 
-	assert(viewController);
+  assert(viewController);
 
-	if (viewController->view) {
-		return $((Array *) self->tabView->tabs, findObject, tabForViewController_predicate, (ident) viewController->view);
-	}
+  if (viewController->view) {
+    return $((Array *) self->tabView->tabs, findObject, tabForViewController_predicate, (ident) viewController->view);
+  }
 
-	return NULL;
+  return NULL;
 }
 
 #pragma mark - Class lifecycle
@@ -131,14 +131,14 @@ static TabViewItem *tabForViewController(const TabViewController *self, const Vi
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewControllerInterface *) clazz->interface)->loadView = loadView;
-	((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
-	((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
+  ((ViewControllerInterface *) clazz->interface)->loadView = loadView;
+  ((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
+  ((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
 
-	((TabViewControllerInterface *) clazz->interface)->init = init;
-	((TabViewControllerInterface *) clazz->interface)->tabForViewController = tabForViewController;
+  ((TabViewControllerInterface *) clazz->interface)->init = init;
+  ((TabViewControllerInterface *) clazz->interface)->tabForViewController = tabForViewController;
 }
 
 /**
@@ -146,21 +146,21 @@ static void initialize(Class *clazz) {
  * @memberof TabViewController
  */
 Class *_TabViewController(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TabViewController",
-			.superclass = _ViewController(),
-			.instanceSize = sizeof(TabViewController),
-			.interfaceOffset = offsetof(TabViewController, interface),
-			.interfaceSize = sizeof(TabViewControllerInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TabViewController",
+      .superclass = _ViewController(),
+      .instanceSize = sizeof(TabViewController),
+      .interfaceOffset = offsetof(TabViewController, interface),
+      .interfaceSize = sizeof(TabViewControllerInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

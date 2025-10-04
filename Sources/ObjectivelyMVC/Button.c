@@ -34,12 +34,12 @@
  */
 static void dealloc(Object *self) {
 
-	Button *this = (Button *) self;
+  Button *this = (Button *) self;
 
-	release(this->image);
-	release(this->title);
+  release(this->image);
+  release(this->title);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
@@ -49,22 +49,22 @@ static void dealloc(Object *self) {
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
-	super(View, self, awakeWithDictionary, dictionary);
+  super(View, self, awakeWithDictionary, dictionary);
 
-	Button *this = (Button *) self;
+  Button *this = (Button *) self;
 
-	const Inlet inlets[] = MakeInlets(
-		MakeInlet("title", InletTypeView, &this->title, NULL)
-	);
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("title", InletTypeView, &this->title, NULL)
+  );
 
-	$(self, bind, inlets, dictionary);
+  $(self, bind, inlets, dictionary);
 }
 
 /**
  * @see View::init(View *)
  */
 static View *init(View *self) {
-	return (View *) $((Button *) self, initWithFrame, NULL);
+  return (View *) $((Button *) self, initWithFrame, NULL);
 }
 
 #pragma mark - Control
@@ -74,28 +74,28 @@ static View *init(View *self) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-	View *this = (View *) self;
+  View *this = (View *) self;
 
-	if (event->type == SDL_MOUSEBUTTONDOWN) {
-		self->state |= ControlStateHighlighted;
-		return true;
-	}
+  if (event->type == SDL_MOUSEBUTTONDOWN) {
+    self->state |= ControlStateHighlighted;
+    return true;
+  }
 
-	if (event->type == SDL_MOUSEBUTTONUP) {
-		self->state &= ~ControlStateHighlighted;
-		if (event->button.clicks) {
-			$(this, emitViewEvent, ViewEventClick, NULL);
-			return true;
-		}
-	}
+  if (event->type == SDL_MOUSEBUTTONUP) {
+    self->state &= ~ControlStateHighlighted;
+    if (event->button.clicks) {
+      $(this, emitViewEvent, ViewEventClick, NULL);
+      return true;
+    }
+  }
 
-	if (event->type == SDL_MOUSEMOTION) {
-		if (self->state & ControlStateHighlighted) {
-			return true;
-		}
-	}
+  if (event->type == SDL_MOUSEMOTION) {
+    if (self->state & ControlStateHighlighted) {
+      return true;
+    }
+  }
 
-	return super(Control, self, captureEvent, event);
+  return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - Button
@@ -106,21 +106,21 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
  */
 static Button *initWithFrame(Button *self, const SDL_Rect *frame) {
 
-	self = (Button *) super(Control, self, initWithFrame, frame);
-	if (self) {
+  self = (Button *) super(Control, self, initWithFrame, frame);
+  if (self) {
 
-		self->image = $(alloc(ImageView), initWithFrame, frame);
-		assert(self->image);
+    self->image = $(alloc(ImageView), initWithFrame, frame);
+    assert(self->image);
 
-		$((View *) self, addSubview, (View *) self->image);
+    $((View *) self, addSubview, (View *) self->image);
 
-		self->title = $(alloc(Text), initWithText, NULL, NULL);
-		assert(self->title);
+    self->title = $(alloc(Text), initWithText, NULL, NULL);
+    assert(self->title);
 
-		$((View *) self, addSubview, (View *) self->title);
-	}
+    $((View *) self, addSubview, (View *) self->title);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -129,11 +129,11 @@ static Button *initWithFrame(Button *self, const SDL_Rect *frame) {
  */
 static Button *initWithImage(Button *self, Image *image) {
 
-	self = $(self, initWithFrame, NULL);
-	if (self) {
-		$(self->image, setImage, image);
-	}
-	return self;
+  self = $(self, initWithFrame, NULL);
+  if (self) {
+    $(self->image, setImage, image);
+  }
+  return self;
 }
 
 /**
@@ -142,11 +142,11 @@ static Button *initWithImage(Button *self, Image *image) {
  */
 static Button *initWithTitle(Button *self, const char *title) {
 
-	self = $(self, initWithFrame, NULL);
-	if (self) {
-		$(self->title, setText, title);
-	}
-	return self;
+  self = $(self, initWithFrame, NULL);
+  if (self) {
+    $(self->title, setText, title);
+  }
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -156,16 +156,16 @@ static Button *initWithTitle(Button *self, const char *title) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-	((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
 
-	((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+  ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
-	((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
-	((ButtonInterface *) clazz->interface)->initWithImage = initWithImage;
-	((ButtonInterface *) clazz->interface)->initWithTitle = initWithTitle;
+  ((ButtonInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((ButtonInterface *) clazz->interface)->initWithImage = initWithImage;
+  ((ButtonInterface *) clazz->interface)->initWithTitle = initWithTitle;
 }
 
 /**
@@ -173,21 +173,21 @@ static void initialize(Class *clazz) {
  * @memberof Button
  */
 Class *_Button(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Button",
-			.superclass = _Control(),
-			.instanceSize = sizeof(Button),
-			.interfaceOffset = offsetof(Button, interface),
-			.interfaceSize = sizeof(ButtonInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Button",
+      .superclass = _Control(),
+      .instanceSize = sizeof(Button),
+      .interfaceOffset = offsetof(Button, interface),
+      .interfaceSize = sizeof(ButtonInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

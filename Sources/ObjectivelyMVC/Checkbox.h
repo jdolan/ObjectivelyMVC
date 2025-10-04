@@ -42,26 +42,26 @@ typedef struct CheckboxInterface CheckboxInterface;
  */
 struct Checkbox {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Control control;
+  /**
+   * @brief The superclass.
+   */
+  Control control;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	CheckboxInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  CheckboxInterface *interface;
 
-	/**
-	 * @brief The box.
-	 */
-	Control *box;
+  /**
+   * @brief The box.
+   */
+  Control *box;
 
-	/**
-	 * @brief The check.
-	 */
-	ImageView *check;
+  /**
+   * @brief The check.
+   */
+  ImageView *check;
 };
 
 /**
@@ -69,20 +69,20 @@ struct Checkbox {
  */
 struct CheckboxInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ControlInterface controltInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ControlInterface controltInterface;
 
-	/**
-	 * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame)
-	 * @brief Initializes this Checkbox with the specified frame and style.
-	 * @param self The Checkbox.
-	 * @param frame The frame.
-	 * @return The initialized Checkbox, or `NULL` on error.
-	 * @memberof Checkbox
-	 */
-	Checkbox *(*initWithFrame)(Checkbox *self, const SDL_Rect *frame);
+  /**
+   * @fn Checkbox *Checkbox::initWithFrame(Checkbox *self, const SDL_Frame *frame)
+   * @brief Initializes this Checkbox with the specified frame and style.
+   * @param self The Checkbox.
+   * @param frame The frame.
+   * @return The initialized Checkbox, or `NULL` on error.
+   * @memberof Checkbox
+   */
+  Checkbox *(*initWithFrame)(Checkbox *self, const SDL_Rect *frame);
 };
 
 /**

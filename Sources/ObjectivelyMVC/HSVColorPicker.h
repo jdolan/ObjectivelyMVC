@@ -42,19 +42,19 @@ typedef struct HSVColorPickerInterface HSVColorPickerInterface;
  */
 struct HSVColorPickerDelegate {
 
-	/**
-	 * @brief The delegate self-reference.
-	 */
-	ident self;
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
 
-	/**
-	 * @brief Called by the HSVColorPicker when color selection changes.
-	 * @param hsvColorPicker The HSVColorPicker.
-	 * @param hue The hue (0.0 - 360.0).
-	 * @param saturation The saturation (0.0 - 1.0).
-	 * @param value The brightness value (0.0 - 1.0).
-	 */
-	void (*didPickColor)(HSVColorPicker *hsvColorPicker, double hue, double saturation, double value);
+  /**
+   * @brief Called by the HSVColorPicker when color selection changes.
+   * @param hsvColorPicker The HSVColorPicker.
+   * @param hue The hue (0.0 - 360.0).
+   * @param saturation The saturation (0.0 - 1.0).
+   * @param value The brightness value (0.0 - 1.0).
+   */
+  void (*didPickColor)(HSVColorPicker *hsvColorPicker, double hue, double saturation, double value);
 };
 
 /**
@@ -64,46 +64,46 @@ struct HSVColorPickerDelegate {
  */
 struct HSVColorPicker {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Control control;
+  /**
+   * @brief The superclass.
+   */
+  Control control;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	HSVColorPickerInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  HSVColorPickerInterface *interface;
 
-	/**
-	 * @brief The color preview.
-	 */
-	View *colorView;
+  /**
+   * @brief The color preview.
+   */
+  View *colorView;
 
-	/**
-	 * @brief The delegate.
-	 */
-	HSVColorPickerDelegate delegate;
+  /**
+   * @brief The delegate.
+   */
+  HSVColorPickerDelegate delegate;
 
-	/**
-	 * @brief The color components.
-	 */
-	double hue, saturation, value;
+  /**
+   * @brief The color components.
+   */
+  double hue, saturation, value;
 
-	/**
-	 * @brief The Sliders.
-	 */
-	Slider *hueSlider, *saturationSlider, *valueSlider;
+  /**
+   * @brief The Sliders.
+   */
+  Slider *hueSlider, *saturationSlider, *valueSlider;
 
-	/**
-	 * @brief The Inputs containing the Sliders.
-	 */
-	Input *hueInput, *saturationInput, *valueInput;
+  /**
+   * @brief The Inputs containing the Sliders.
+   */
+  Input *hueInput, *saturationInput, *valueInput;
 
-	/**
-	 * @brief The StackView.
-	 */
-	StackView *stackView;
+  /**
+   * @brief The StackView.
+   */
+  StackView *stackView;
 };
 
 /**
@@ -111,48 +111,48 @@ struct HSVColorPicker {
  */
 struct HSVColorPickerInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ControlInterface controlInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ControlInterface controlInterface;
 
-	/**
-	 * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame)
-	 * @brief Initializes this HSVColorPicker with the specified frame and style.
-	 * @param self The HSVColorPicker.
-	 * @param frame The frame.
-	 * @return The initialized HSVColorPicker, or `NULL` on error.
-	 * @memberof HSVColorPicker
-	 */
-	HSVColorPicker *(*initWithFrame)(HSVColorPicker *self, const SDL_Rect *frame);
+  /**
+   * @fn HSVColorPicker *HSVColorPicker::initWithFrame(HSVColorPicker *self, const SDL_Rect *frame)
+   * @brief Initializes this HSVColorPicker with the specified frame and style.
+   * @param self The HSVColorPicker.
+   * @param frame The frame.
+   * @return The initialized HSVColorPicker, or `NULL` on error.
+   * @memberof HSVColorPicker
+   */
+  HSVColorPicker *(*initWithFrame)(HSVColorPicker *self, const SDL_Rect *frame);
 
-	/**
-	 * @fn SDL_Color HSVColorPicker::rgbColor(const HSVColorPicker *self);
-	 * @param self The HSVColorPicker.
-	 * @return The RGB color.
-	 * @memberof HSVColorPicker
-	 */
-	SDL_Color (*rgbColor)(const HSVColorPicker *self);
+  /**
+   * @fn SDL_Color HSVColorPicker::rgbColor(const HSVColorPicker *self);
+   * @param self The HSVColorPicker.
+   * @return The RGB color.
+   * @memberof HSVColorPicker
+   */
+  SDL_Color (*rgbColor)(const HSVColorPicker *self);
 
-	/**
-	 * @fn void HSVColorPicker::setColor(HSVColorPicker *self, double hue, double saturation, double value)
-	 * @brief Sets the color of the HSVColorPicker.
-	 * @param self The HSVColorPicker.
-	 * @param hue The hue.
-	 * @param saturation The saturation.
-	 * @param value The brightness value.
-	 * @memberof HSVColorPicker
-	 */
-	void (*setColor)(HSVColorPicker *self, double hue, double saturation, double value);
+  /**
+   * @fn void HSVColorPicker::setColor(HSVColorPicker *self, double hue, double saturation, double value)
+   * @brief Sets the color of the HSVColorPicker.
+   * @param self The HSVColorPicker.
+   * @param hue The hue.
+   * @param saturation The saturation.
+   * @param value The brightness value.
+   * @memberof HSVColorPicker
+   */
+  void (*setColor)(HSVColorPicker *self, double hue, double saturation, double value);
 
-	/**
-	 * @fn void HSVColorPicker::setRGBColor(HSVColorPicker *self, const SDL_Color *color)
-	 * @brief Sets the color of the HSVColorPicker.
-	 * @param self The HSVColorPicker.
-	 * @param color The RGB color.
-	 * @memberof HSVColorPicker
-	 */
-	void (*setRGBColor)(HSVColorPicker *self, const SDL_Color *color);
+  /**
+   * @fn void HSVColorPicker::setRGBColor(HSVColorPicker *self, const SDL_Color *color)
+   * @brief Sets the color of the HSVColorPicker.
+   * @param self The HSVColorPicker.
+   * @param color The RGB color.
+   * @memberof HSVColorPicker
+   */
+  void (*setRGBColor)(HSVColorPicker *self, const SDL_Color *color);
 };
 
 /**

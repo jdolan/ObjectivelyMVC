@@ -34,7 +34,7 @@
  * @memberof TableHeaderCellView
  */
 static TableHeaderCellView *initWithFrame(TableHeaderCellView *self, const SDL_Rect *frame) {
-	return (TableHeaderCellView *) super(TableCellView, self, initWithFrame, frame);
+  return (TableHeaderCellView *) super(TableCellView, self, initWithFrame, frame);
 }
 
 #pragma mark - Class lifecycle
@@ -43,7 +43,7 @@ static TableHeaderCellView *initWithFrame(TableHeaderCellView *self, const SDL_R
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-	((TableHeaderCellViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((TableHeaderCellViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 /**
@@ -51,21 +51,21 @@ static void initialize(Class *clazz) {
  * @memberof TableHeaderCellView
  */
 Class *_TableHeaderCellView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "TableHeaderCellView",
-			.superclass = _TableCellView(),
-			.instanceSize = sizeof(TableHeaderCellView),
-			.interfaceOffset = offsetof(TableHeaderCellView, interface),
-			.interfaceSize = sizeof(TableHeaderCellViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "TableHeaderCellView",
+      .superclass = _TableCellView(),
+      .instanceSize = sizeof(TableHeaderCellView),
+      .interfaceOffset = offsetof(TableHeaderCellView, interface),
+      .interfaceSize = sizeof(TableHeaderCellViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

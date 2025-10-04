@@ -35,19 +35,19 @@
  */
 static Action *initWithEventType(Action *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data) {
 
-	self = (Action *) super(Object, self, init);
-	if (self) {
-		self->eventType = eventType;
-		assert(self->eventType);
+  self = (Action *) super(Object, self, init);
+  if (self) {
+    self->eventType = eventType;
+    assert(self->eventType);
 
-		self->function = function;
-		assert(self->function);
+    self->function = function;
+    assert(self->function);
 
-		self->sender = sender;
-		self->data = data;
-	}
+    self->sender = sender;
+    self->data = data;
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -57,7 +57,7 @@ static Action *initWithEventType(Action *self, SDL_EventType eventType, ActionFu
  */
 static void initialize(Class *clazz) {
 
-	((ActionInterface *) clazz->interface)->initWithEventType = initWithEventType;
+  ((ActionInterface *) clazz->interface)->initWithEventType = initWithEventType;
 }
 
 /**
@@ -65,21 +65,21 @@ static void initialize(Class *clazz) {
  * @memberof Action
  */
 Class *_Action(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Action",
-			.superclass = _Object(),
-			.instanceSize = sizeof(Action),
-			.interfaceOffset = offsetof(Action, interface),
-			.interfaceSize = sizeof(ActionInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Action",
+      .superclass = _Object(),
+      .instanceSize = sizeof(Action),
+      .interfaceOffset = offsetof(Action, interface),
+      .interfaceSize = sizeof(ActionInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

@@ -50,21 +50,21 @@ typedef struct ThemeInterface ThemeInterface;
  */
 struct Theme {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	ThemeInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  ThemeInterface *interface;
 
-	/**
-	 * @brief The Stylesheets, in order of priority.
-	 */
-	MutableArray *stylesheets;
+  /**
+   * @brief The Stylesheets, in order of priority.
+   */
+  MutableArray *stylesheets;
 };
 
 /**
@@ -72,55 +72,55 @@ struct Theme {
  */
 struct ThemeInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface objectInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface objectInterface;
 
-	/**
-	 * @fn void Theme::addStylesheet(Theme *self, Stylesheet *stylesheet)
-	 * @brief Adds the specified Stylesheet to this Theme.
-	 * @param self The Theme.
-	 * @param stylesheet The Stylesheet.
-	 * @memberof Theme
-	 */
-	void (*addStylesheet)(Theme *self, Stylesheet *stylesheet);
+  /**
+   * @fn void Theme::addStylesheet(Theme *self, Stylesheet *stylesheet)
+   * @brief Adds the specified Stylesheet to this Theme.
+   * @param self The Theme.
+   * @param stylesheet The Stylesheet.
+   * @memberof Theme
+   */
+  void (*addStylesheet)(Theme *self, Stylesheet *stylesheet);
 
-	/**
-	 * @fn void Theme::apply(const Theme *self, const View *view)
-	 * @brief Applies this Theme to the given View.
-	 * @param self The Theme.
-	 * @param view The View.
-	 * @memberof Theme
-	 */
-	Style *(*computeStyle)(const Theme *self, const View *view);
+  /**
+   * @fn void Theme::apply(const Theme *self, const View *view)
+   * @brief Applies this Theme to the given View.
+   * @param self The Theme.
+   * @param view The View.
+   * @memberof Theme
+   */
+  Style *(*computeStyle)(const Theme *self, const View *view);
 
-	/**
-	 * @fn Theme *Theme::init(Theme *self)
-	 * @brief Initializes this Theme.
-	 * @param self The Theme.
-	 * @return The initialized Theme, or `NULL` on error.
-	 * @memberof Theme
-	 */
-	Theme *(*init)(Theme *self);
+  /**
+   * @fn Theme *Theme::init(Theme *self)
+   * @brief Initializes this Theme.
+   * @param self The Theme.
+   * @return The initialized Theme, or `NULL` on error.
+   * @memberof Theme
+   */
+  Theme *(*init)(Theme *self);
 
-	/**
-	 * @fn void Theme::removeStylesheet(Theme *self, Stylesheet *stylesheet)
-	 * @brief Removes the given Stylesheet from this Theme.
-	 * @param self The Theme.
-	 * @param stylesheet The Stylesheet.
-	 * @memberof Theme
-	 */
-	void (*removeStylesheet)(Theme *self, Stylesheet *stylesheet);
+  /**
+   * @fn void Theme::removeStylesheet(Theme *self, Stylesheet *stylesheet)
+   * @brief Removes the given Stylesheet from this Theme.
+   * @param self The Theme.
+   * @param stylesheet The Stylesheet.
+   * @memberof Theme
+   */
+  void (*removeStylesheet)(Theme *self, Stylesheet *stylesheet);
 
-	/**
-	 * @static
-	 * @fn Theme *Theme::theme(SDL_Window *window)
-	 * @param window The window.
-	 * @return The Theme for the given window.
-	 * @memberof Theme
-	 */
-	Theme *(*theme)(SDL_Window *window);
+  /**
+   * @static
+   * @fn Theme *Theme::theme(SDL_Window *window)
+   * @param window The window.
+   * @return The Theme for the given window.
+   * @memberof Theme
+   */
+  Theme *(*theme)(SDL_Window *window);
 };
 
 /**

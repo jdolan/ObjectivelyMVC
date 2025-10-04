@@ -51,30 +51,30 @@ typedef struct ViewControllerInterface ViewControllerInterface;
  */
 struct ViewController {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 */
-	ViewControllerInterface *interface;
+  /**
+   * @brief The interface.
+   */
+  ViewControllerInterface *interface;
 
-	/**
-	 * @brief The child view controllers.
-	 */
-	MutableArray *childViewControllers;
+  /**
+   * @brief The child view controllers.
+   */
+  MutableArray *childViewControllers;
 
-	/**
-	 * @brief The parent view controller.
-	 */
-	ViewController *parentViewController;
-	
-	/**
-	 * @brief The main view.
-	 */
-	View *view;
+  /**
+   * @brief The parent view controller.
+   */
+  ViewController *parentViewController;
+  
+  /**
+   * @brief The main view.
+   */
+  View *view;
 };
 
 /**
@@ -82,125 +82,125 @@ struct ViewController {
  */
 struct ViewControllerInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface parentInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface parentInterface;
 
-	/**
-	 * @fn void ViewController::addChildViewController(ViewController *self, ViewController *childViewController)
-	 * @brief Adds the specified child ViewController to this ViewController.
-	 * @param self The ViewController.
-	 * @param childViewController The child ViewController.
-	 * @memberof ViewController
-	 */
-	void (*addChildViewController)(ViewController *self, ViewController *childViewController);
+  /**
+   * @fn void ViewController::addChildViewController(ViewController *self, ViewController *childViewController)
+   * @brief Adds the specified child ViewController to this ViewController.
+   * @param self The ViewController.
+   * @param childViewController The child ViewController.
+   * @memberof ViewController
+   */
+  void (*addChildViewController)(ViewController *self, ViewController *childViewController);
 
-	/**
-	 * @fn ViewController *ViewController::init(ViewController *self)
-	 * @brief Initializes this ViewController.
-	 * @param self The ViewController.
-	 * @return The intialized ViewController, or `NULL` on error.
-	 * @memberof ViewController
-	 */
-	ViewController *(*init)(ViewController *self);
+  /**
+   * @fn ViewController *ViewController::init(ViewController *self)
+   * @brief Initializes this ViewController.
+   * @param self The ViewController.
+   * @return The intialized ViewController, or `NULL` on error.
+   * @memberof ViewController
+   */
+  ViewController *(*init)(ViewController *self);
 
-	/**
-	 * @fn void ViewController::loadView(ViewController *self)
-	 * @brief Loads this ViewController's View.
-	 * @param self The ViewController.
-	 * @remarks Override this method to populate this ViewController's view.
-	 * @memberof ViewController
-	 */
-	void (*loadView)(ViewController *self);
+  /**
+   * @fn void ViewController::loadView(ViewController *self)
+   * @brief Loads this ViewController's View.
+   * @param self The ViewController.
+   * @remarks Override this method to populate this ViewController's view.
+   * @memberof ViewController
+   */
+  void (*loadView)(ViewController *self);
 
-	/**
-	 * @fn void ViewController::loadViewIfNeeded(ViewController *self)
-	 * @brief Loads this ViewController's View if it is not already loaded.
-	 * @param self The ViewController.
-	 * @memberof ViewController
-	 */
-	void (*loadViewIfNeeded)(ViewController *self);
+  /**
+   * @fn void ViewController::loadViewIfNeeded(ViewController *self)
+   * @brief Loads this ViewController's View if it is not already loaded.
+   * @param self The ViewController.
+   * @memberof ViewController
+   */
+  void (*loadViewIfNeeded)(ViewController *self);
 
-	/**
-	 * @fn void ViewController::moveToParentViewController(ViewController *self, ViewController *parentViewController)
-	 * @brief Moves this ViewController to the specified parent.
-	 * @param self The ViewController.
-	 * @param parentViewController The parent ViewController, or `NULL`.
-	 * @memberof ViewController
-	 */
-	void (*moveToParentViewController)(ViewController *self, ViewController *parentViewController);
+  /**
+   * @fn void ViewController::moveToParentViewController(ViewController *self, ViewController *parentViewController)
+   * @brief Moves this ViewController to the specified parent.
+   * @param self The ViewController.
+   * @param parentViewController The parent ViewController, or `NULL`.
+   * @memberof ViewController
+   */
+  void (*moveToParentViewController)(ViewController *self, ViewController *parentViewController);
 
-	/**
-	 * @fn void ViewController::removeChildViewController(ViewController *self, ViewController *childViewController)
-	 * @brief Removes the specified child ViewController from this ViewController.
-	 * @param self The ViewController.
-	 * @param childViewController The child ViewController.
-	 * @memberof ViewController
-	 */
-	void (*removeChildViewController)(ViewController *self, ViewController *childViewController);
+  /**
+   * @fn void ViewController::removeChildViewController(ViewController *self, ViewController *childViewController)
+   * @brief Removes the specified child ViewController from this ViewController.
+   * @param self The ViewController.
+   * @param childViewController The child ViewController.
+   * @memberof ViewController
+   */
+  void (*removeChildViewController)(ViewController *self, ViewController *childViewController);
 
-	/**
-	 * @fn void ViewController::removeFromParentViewController(ViewController *self)
-	 * @brief Removes this ViewController from its parent.
-	 * @param self The ViewController.
-	 * @memberof ViewController
-	 */
-	void (*removeFromParentViewController)(ViewController *self);
+  /**
+   * @fn void ViewController::removeFromParentViewController(ViewController *self)
+   * @brief Removes this ViewController from its parent.
+   * @param self The ViewController.
+   * @memberof ViewController
+   */
+  void (*removeFromParentViewController)(ViewController *self);
 
-	/**
-	 * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
-	 * @brief Responds to the given event.
-	 * @param self The ViewController.
-	 * @param event The event.
-	 * @memberof ViewController
-	 */
-	void (*respondToEvent)(ViewController *self, const SDL_Event *event);
+  /**
+   * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
+   * @brief Responds to the given event.
+   * @param self The ViewController.
+   * @param event The event.
+   * @memberof ViewController
+   */
+  void (*respondToEvent)(ViewController *self, const SDL_Event *event);
 
-	/**
-	 * @fn void ViewController::setView(ViewController *self, View *view)
-	 * @brief Sets this ViewController's View.
-	 * @param self The ViewController.
-	 * @param view The View.
-	 * @memberof ViewController
-	 */
-	void (*setView)(ViewController *self, View *view);
+  /**
+   * @fn void ViewController::setView(ViewController *self, View *view)
+   * @brief Sets this ViewController's View.
+   * @param self The ViewController.
+   * @param view The View.
+   * @memberof ViewController
+   */
+  void (*setView)(ViewController *self, View *view);
 
-	/**
-	 * @fn void ViewController::viewDidAppear(ViewController *self)
-	 * @brief This method is invoked after this ViewController's View is added to the View hierarchy.
-	 * @param self The ViewController.
-	 * @memberof ViewController
-	 * @remarks The default implementation of this method does nothing.
-	 */
-	void (*viewDidAppear)(ViewController *self);
+  /**
+   * @fn void ViewController::viewDidAppear(ViewController *self)
+   * @brief This method is invoked after this ViewController's View is added to the View hierarchy.
+   * @param self The ViewController.
+   * @memberof ViewController
+   * @remarks The default implementation of this method does nothing.
+   */
+  void (*viewDidAppear)(ViewController *self);
 
-	/**
-	 * @fn void ViewController::viewDidDisappear(ViewController *self)
-	 * @brief This method is invoked after this ViewController's View is removed to the View hierarchy.
-	 * @param self The ViewController.
-	 * @memberof ViewController
-	 * @remarks The default implementation of this method does nothing.
-	 */
-	void (*viewDidDisappear)(ViewController *self);
+  /**
+   * @fn void ViewController::viewDidDisappear(ViewController *self)
+   * @brief This method is invoked after this ViewController's View is removed to the View hierarchy.
+   * @param self The ViewController.
+   * @memberof ViewController
+   * @remarks The default implementation of this method does nothing.
+   */
+  void (*viewDidDisappear)(ViewController *self);
 
-	/**
-	 * @fn void ViewController::viewWillAppear(ViewController *self)
-	 * @brief This method is invoked before this ViewController's View is added to the View hierarchy.
-	 * @param self The ViewController.
-	 * @memberof ViewController
-	 * @remarks The default implementation of this method does nothing.
-	 */
-	void (*viewWillAppear)(ViewController *self);
+  /**
+   * @fn void ViewController::viewWillAppear(ViewController *self)
+   * @brief This method is invoked before this ViewController's View is added to the View hierarchy.
+   * @param self The ViewController.
+   * @memberof ViewController
+   * @remarks The default implementation of this method does nothing.
+   */
+  void (*viewWillAppear)(ViewController *self);
 
-	/**
-	 * @fn void ViewController::viewWillDisappear(ViewController *self)
-	 * @brief This method is invoked before this ViewController's View is removed from the View hierarchy.
-	 * @param self The ViewController.
-	 * @memberof ViewController
-	 * @remarks The default implementation of this method does nothing.
-	 */
-	void (*viewWillDisappear)(ViewController *self);
+  /**
+   * @fn void ViewController::viewWillDisappear(ViewController *self)
+   * @brief This method is invoked before this ViewController's View is removed from the View hierarchy.
+   * @param self The ViewController.
+   * @memberof ViewController
+   * @remarks The default implementation of this method does nothing.
+   */
+  void (*viewWillDisappear)(ViewController *self);
 };
 
 /**

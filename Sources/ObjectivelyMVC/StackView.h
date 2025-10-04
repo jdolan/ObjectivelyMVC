@@ -40,8 +40,8 @@
  * @brief Axis constants for specifying a StackView's primary layout direction.
  */
 typedef enum {
-	StackViewAxisVertical,
-	StackViewAxisHorizontal
+  StackViewAxisVertical,
+  StackViewAxisHorizontal
 } StackViewAxis;
 
 OBJECTIVELYMVC_EXPORT const EnumName StackViewAxisNames[];
@@ -50,9 +50,9 @@ OBJECTIVELYMVC_EXPORT const EnumName StackViewAxisNames[];
  * @brief Distribution models for filling a StackView's frame.
  */
 typedef enum {
-	StackViewDistributionDefault,
-	StackViewDistributionFill,
-	StackViewDistributionFillEqually,
+  StackViewDistributionDefault,
+  StackViewDistributionFill,
+  StackViewDistributionFillEqually,
 } StackViewDistribution;
 
 OBJECTIVELYMVC_EXPORT const EnumName StackViewDistributionNames[];
@@ -67,31 +67,31 @@ typedef struct StackViewInterface StackViewInterface;
  */
 struct StackView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	StackViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  StackViewInterface *interface;
 
-	/**
-	 * @brief The axis.
-	 */
-	StackViewAxis axis;
+  /**
+   * @brief The axis.
+   */
+  StackViewAxis axis;
 
-	/**
-	 * @brief The distribution.
-	 */
-	StackViewDistribution distribution;
+  /**
+   * @brief The distribution.
+   */
+  StackViewDistribution distribution;
 
-	/**
-	 * @brief The subview spacing.
-	 */
-	int spacing;
+  /**
+   * @brief The subview spacing.
+   */
+  int spacing;
 };
 
 /**
@@ -99,20 +99,20 @@ struct StackView {
  */
 struct StackViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn StackView *StackView::initWithFrame(StackView *self, const SDL_Rect *frame)
-	 * @brief Initializes this StackView with the specified frame.
-	 * @param self The StackView.
-	 * @param frame The frame.
-	 * @return The initialized StackView, or `NULL` on error.
-	 * @memberof StackView
-	 */
-	StackView *(*initWithFrame)(StackView *self, const SDL_Rect *frame);
+  /**
+   * @fn StackView *StackView::initWithFrame(StackView *self, const SDL_Rect *frame)
+   * @brief Initializes this StackView with the specified frame.
+   * @param self The StackView.
+   * @param frame The frame.
+   * @return The initialized StackView, or `NULL` on error.
+   * @memberof StackView
+   */
+  StackView *(*initWithFrame)(StackView *self, const SDL_Rect *frame);
 };
 
 /**

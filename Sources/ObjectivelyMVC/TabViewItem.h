@@ -37,8 +37,8 @@
  * @brief Tab states, which are bit-masked.
  */
 typedef enum {
-	TabStateDefault = 0x0,
-	TabStateSelected = 0x1
+  TabStateDefault = 0x0,
+  TabStateSelected = 0x1
 } TabState;
 
 typedef struct TabViewItem TabViewItem;
@@ -50,36 +50,36 @@ typedef struct TabViewItemInterface TabViewItemInterface;
  */
 struct TabViewItem {
 
-	/**
-	 * @brief The superclass.
-	 */
-	Object object;
+  /**
+   * @brief The superclass.
+   */
+  Object object;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	TabViewItemInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  TabViewItemInterface *interface;
 
-	/**
-	 * @brief The identifier.
-	 */
-	char *identifier;
+  /**
+   * @brief The identifier.
+   */
+  char *identifier;
 
-	/**
-	 * @brief The Label used to select this tab.
-	 */
-	Label *label;
+  /**
+   * @brief The Label used to select this tab.
+   */
+  Label *label;
 
-	/**
-	 * @brief The bit mask of TabState.
-	 */
-	int state;
+  /**
+   * @brief The bit mask of TabState.
+   */
+  int state;
 
-	/**
-	 * @brief The View this TabViewItem embeds.
-	 */
-	View *view;
+  /**
+   * @brief The View this TabViewItem embeds.
+   */
+  View *view;
 };
 
 /**
@@ -87,41 +87,41 @@ struct TabViewItem {
  */
 struct TabViewItemInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ObjectInterface objectInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ObjectInterface objectInterface;
 
-	/**
-	 * @fn TabViewItem *TabViewItem::initWithIdentifier(TabViewItem *self, const char *identifier)
-	 * @brief Initializes this TabViewItem with the specified identifier.
-	 * @param self The TabViewItem.
-	 * @param identifier The identifier.
-	 * @return The initialized TabViewItem, or `NULL` on error.
-	 * @remarks Designated initializer.
-	 * @memberof TabViewItem
-	 */
-	TabViewItem *(*initWithIdentifier)(TabViewItem *self, const char *identifier);
+  /**
+   * @fn TabViewItem *TabViewItem::initWithIdentifier(TabViewItem *self, const char *identifier)
+   * @brief Initializes this TabViewItem with the specified identifier.
+   * @param self The TabViewItem.
+   * @param identifier The identifier.
+   * @return The initialized TabViewItem, or `NULL` on error.
+   * @remarks Designated initializer.
+   * @memberof TabViewItem
+   */
+  TabViewItem *(*initWithIdentifier)(TabViewItem *self, const char *identifier);
 
-	/**
-	 * @fn TabViewItem *TabViewItem::initWithView(TabViewItem *self, View *view)
-	 * @brief Initializes this TabViewItem with the specified View.
-	 * @param self The TabViewItem.
-	 * @param view The View to embed.
-	 * @return The initialized TabViewItem, or `NULL` on error.
-	 * @memberof TabViewItem
-	 */
-	TabViewItem *(*initWithView)(TabViewItem *self, View *view);
+  /**
+   * @fn TabViewItem *TabViewItem::initWithView(TabViewItem *self, View *view)
+   * @brief Initializes this TabViewItem with the specified View.
+   * @param self The TabViewItem.
+   * @param view The View to embed.
+   * @return The initialized TabViewItem, or `NULL` on error.
+   * @memberof TabViewItem
+   */
+  TabViewItem *(*initWithView)(TabViewItem *self, View *view);
 
-	/**
-	 * @fn TabViewItem::setState(TabViewItem *self, int state)
-	 * @brief Sets this TabViewItem's state, which may alter its appearance.
-	 * @param self The TabViewItem.
-	 * @param state The state.
-	 * @remarks Subclasses may override this method to apply custom styling.
-	 * @memberof TabViewItem
-	 */
-	void (*setState)(TabViewItem *self, int state);
+  /**
+   * @fn TabViewItem::setState(TabViewItem *self, int state)
+   * @brief Sets this TabViewItem's state, which may alter its appearance.
+   * @param self The TabViewItem.
+   * @param state The state.
+   * @remarks Subclasses may override this method to apply custom styling.
+   * @memberof TabViewItem
+   */
+  void (*setState)(TabViewItem *self, int state);
 };
 
 /**

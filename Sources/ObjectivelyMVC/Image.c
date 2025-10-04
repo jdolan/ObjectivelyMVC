@@ -32,11 +32,11 @@
  */
 static void dealloc(Object *self) {
 
-	Image *this = (Image *) self;
+  Image *this = (Image *) self;
 
-	SDL_FreeSurface(this->surface);
+  SDL_FreeSurface(this->surface);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - Image
@@ -46,7 +46,7 @@ static void dealloc(Object *self) {
  * @memberof Image
  */
 static Image *imageWithBytes(const uint8_t *bytes, size_t length) {
-	return $(alloc(Image), initWithBytes, bytes, length);
+  return $(alloc(Image), initWithBytes, bytes, length);
 }
 
 /**
@@ -54,7 +54,7 @@ static Image *imageWithBytes(const uint8_t *bytes, size_t length) {
  * @memberof Image
  */
 static Image *imageWithData(const Data *data) {
-	return $(alloc(Image), initWithData, data);
+  return $(alloc(Image), initWithData, data);
 }
 
 /**
@@ -62,7 +62,7 @@ static Image *imageWithData(const Data *data) {
  * @memberof Image
  */
 static Image *imageWithResource(const Resource *resource) {
-	return $(alloc(Image), initWithResource, resource);
+  return $(alloc(Image), initWithResource, resource);
 }
 
 /**
@@ -70,7 +70,7 @@ static Image *imageWithResource(const Resource *resource) {
  * @memberof Image
  */
 static Image *imageWithResourceName(const char *name) {
-	return $(alloc(Image), initWithResourceName, name);
+  return $(alloc(Image), initWithResourceName, name);
 }
 
 /**
@@ -78,7 +78,7 @@ static Image *imageWithResourceName(const char *name) {
  * @memberof Image
  */
 static Image *imageWithSurface(SDL_Surface *surface) {
-	return $(alloc(Image), initWithSurface, surface);
+  return $(alloc(Image), initWithSurface, surface);
 }
 
 /**
@@ -87,21 +87,21 @@ static Image *imageWithSurface(SDL_Surface *surface) {
  */
 static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
 
-	SDL_RWops *ops = SDL_RWFromConstMem(bytes, (int) length);
-	if (ops) {
-		SDL_Surface *surface = IMG_LoadTyped_RW(ops, 0, self->type);
-		if (surface) {
-			self = $(self, initWithSurface, surface);
-			SDL_FreeSurface(surface);
-		} else {
-			self = release(self);
-		}
-	} else {
-		self = release(self);
-	}
+  SDL_RWops *ops = SDL_RWFromConstMem(bytes, (int) length);
+  if (ops) {
+    SDL_Surface *surface = IMG_LoadTyped_RW(ops, 0, self->type);
+    if (surface) {
+      self = $(self, initWithSurface, surface);
+      SDL_FreeSurface(surface);
+    } else {
+      self = release(self);
+    }
+  } else {
+    self = release(self);
+  }
 
-	SDL_FreeRW(ops);
-	return self;
+  SDL_FreeRW(ops);
+  return self;
 }
 
 /**
@@ -110,13 +110,13 @@ static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
  */
 static Image *initWithData(Image *self, const Data *data) {
 
-	if (data) {
-		self = $(self, initWithBytes, data->bytes, data->length);
-	} else {
-		self = release(self);
-	}
+  if (data) {
+    self = $(self, initWithBytes, data->bytes, data->length);
+  } else {
+    self = release(self);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -125,14 +125,14 @@ static Image *initWithData(Image *self, const Data *data) {
  */
 static Image *initWithResource(Image *self, const Resource *resource) {
 
-	if (resource) {
-		self->type = strrchr(resource->name, '.') ? strrchr(resource->name, '.') + 1 : NULL;
-		self = $(self, initWithData, resource->data);
-	} else {
-		self = release(self);
-	}
+  if (resource) {
+    self->type = strrchr(resource->name, '.') ? strrchr(resource->name, '.') + 1 : NULL;
+    self = $(self, initWithData, resource->data);
+  } else {
+    self = release(self);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -141,13 +141,13 @@ static Image *initWithResource(Image *self, const Resource *resource) {
  */
 static Image *initWithResourceName(Image *self, const char *name) {
 
-	Resource *resource = $$(Resource, resourceWithName, name);
+  Resource *resource = $$(Resource, resourceWithName, name);
 
-	self = $(self, initWithResource, resource);
+  self = $(self, initWithResource, resource);
 
-	release(resource);
+  release(resource);
 
-	return self;
+  return self;
 }
 
 /**
@@ -156,22 +156,22 @@ static Image *initWithResourceName(Image *self, const char *name) {
  */
 static Image *initWithSurface(Image *self, SDL_Surface *surface) {
 
-	self = (Image *) super(Object, self, init);
-	if (self) {
+  self = (Image *) super(Object, self, init);
+  if (self) {
 
-		if (surface) {
-			if (surface->format->format != SDL_PIXELFORMAT_ABGR8888) {
-				self->surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
-			} else {
-				self->surface = surface;
-				self->surface->refcount++;
-			}
+    if (surface) {
+      if (surface->format->format != SDL_PIXELFORMAT_ABGR8888) {
+        self->surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+      } else {
+        self->surface = surface;
+        self->surface->refcount++;
+      }
 
-			assert(self->surface);
-		}
-	}
+      assert(self->surface);
+    }
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -179,7 +179,7 @@ static Image *initWithSurface(Image *self, SDL_Surface *surface) {
  * @memberof Image
  */
 static SDL_Size size(const Image *self) {
-	return MakeSize(self->surface->w, self->surface->h);
+  return MakeSize(self->surface->w, self->surface->h);
 }
 
 #pragma mark - Class lifecycle
@@ -189,19 +189,19 @@ static SDL_Size size(const Image *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ImageInterface *) clazz->interface)->imageWithBytes = imageWithBytes;
-	((ImageInterface *) clazz->interface)->imageWithData = imageWithData;
-	((ImageInterface *) clazz->interface)->imageWithResource = imageWithResource;
-	((ImageInterface *) clazz->interface)->imageWithResourceName = imageWithResourceName;
-	((ImageInterface *) clazz->interface)->imageWithSurface = imageWithSurface;
-	((ImageInterface *) clazz->interface)->initWithBytes = initWithBytes;
-	((ImageInterface *) clazz->interface)->initWithData = initWithData;
-	((ImageInterface *) clazz->interface)->initWithResource = initWithResource;
-	((ImageInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
-	((ImageInterface *) clazz->interface)->initWithSurface = initWithSurface;
-	((ImageInterface *) clazz->interface)->size = size;
+  ((ImageInterface *) clazz->interface)->imageWithBytes = imageWithBytes;
+  ((ImageInterface *) clazz->interface)->imageWithData = imageWithData;
+  ((ImageInterface *) clazz->interface)->imageWithResource = imageWithResource;
+  ((ImageInterface *) clazz->interface)->imageWithResourceName = imageWithResourceName;
+  ((ImageInterface *) clazz->interface)->imageWithSurface = imageWithSurface;
+  ((ImageInterface *) clazz->interface)->initWithBytes = initWithBytes;
+  ((ImageInterface *) clazz->interface)->initWithData = initWithData;
+  ((ImageInterface *) clazz->interface)->initWithResource = initWithResource;
+  ((ImageInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
+  ((ImageInterface *) clazz->interface)->initWithSurface = initWithSurface;
+  ((ImageInterface *) clazz->interface)->size = size;
 }
 
 /**
@@ -209,21 +209,21 @@ static void initialize(Class *clazz) {
  * @memberof Image
  */
 Class *_Image(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Image",
-			.superclass = _Object(),
-			.instanceSize = sizeof(Image),
-			.interfaceOffset = offsetof(Image, interface),
-			.interfaceSize = sizeof(ImageInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Image",
+      .superclass = _Object(),
+      .instanceSize = sizeof(Image),
+      .interfaceOffset = offsetof(Image, interface),
+      .interfaceSize = sizeof(ImageInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

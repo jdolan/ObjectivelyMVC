@@ -38,12 +38,12 @@
  */
 static void dealloc(Object *self) {
 
-	Style *this = (Style *) self;
+  Style *this = (Style *) self;
 
-	release(this->attributes);
-	release(this->selectors);
+  release(this->attributes);
+  release(this->selectors);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 /**
@@ -51,9 +51,9 @@ static void dealloc(Object *self) {
  */
 static String *description(const Object *self) {
 
-	const Style *this = (Style *) self;
+  const Style *this = (Style *) self;
 
-	return $((Array *) this->selectors, componentsJoinedByCharacters, ", ");
+  return $((Array *) this->selectors, componentsJoinedByCharacters, ", ");
 }
 
 /**
@@ -61,14 +61,14 @@ static String *description(const Object *self) {
  */
 static int hash(const Object *self) {
 
-	Style *this = (Style *) self;
+  Style *this = (Style *) self;
 
-	int hash = HASH_SEED;
+  int hash = HASH_SEED;
 
-	hash = HashForObject(hash, this->attributes);
-	hash = HashForObject(hash, this->selectors);
+  hash = HashForObject(hash, this->attributes);
+  hash = HashForObject(hash, this->selectors);
 
-	return hash;
+  return hash;
 }
 
 /**
@@ -76,21 +76,21 @@ static int hash(const Object *self) {
  */
 static bool isEqual(const Object *self, const Object *other) {
 
-	if (super(Object, self, isEqual, other)) {
-		return true;
-	}
+  if (super(Object, self, isEqual, other)) {
+    return true;
+  }
 
-	if (other && $(other, isKindOfClass, _Style())) {
+  if (other && $(other, isKindOfClass, _Style())) {
 
-		const Style *this = (Style *) self;
-		const Style *that = (Style *) other;
+    const Style *this = (Style *) self;
+    const Style *that = (Style *) other;
 
-		if ($((Object *) this->selectors, isEqual, (Object *) that->selectors)) {
-			return $((Object *) this->attributes, isEqual, (Object *) that->attributes);
-		}
-	}
+    if ($((Object *) this->selectors, isEqual, (Object *) that->selectors)) {
+      return $((Object *) this->attributes, isEqual, (Object *) that->attributes);
+    }
+  }
 
-	return false;
+  return false;
 }
 
 #pragma mark - Style
@@ -101,15 +101,15 @@ static bool isEqual(const Object *self, const Object *other) {
  */
 static void addAttribute(Style *self, const char *attr, ident value) {
 
-	assert(attr);
-	assert(value);
+  assert(attr);
+  assert(value);
 
-	char *key = strtrim(attr);
-	assert(key);
+  char *key = strtrim(attr);
+  assert(key);
 
-	$((MutableDictionary *) self->attributes, setObjectForKeyPath, value, key);
+  $((MutableDictionary *) self->attributes, setObjectForKeyPath, value, key);
 
-	free(key);
+  free(key);
 }
 
 /**
@@ -118,9 +118,9 @@ static void addAttribute(Style *self, const char *attr, ident value) {
  */
 static void addAttributes(Style *self, const Dictionary *attributes) {
 
-	assert(attributes);
+  assert(attributes);
 
-	$((MutableDictionary *) self->attributes, addEntriesFromDictionary, attributes);
+  $((MutableDictionary *) self->attributes, addEntriesFromDictionary, attributes);
 }
 
 /**
@@ -128,7 +128,7 @@ static void addAttributes(Style *self, const Dictionary *attributes) {
  * @memberof Style
  */
 static void addBoolAttribute(Style *self, const char *attr, bool value) {
-	$(self, addAttribute, attr, $$(Boole, valueof, value));
+  $(self, addAttribute, attr, $$(Boole, valueof, value));
 }
 
 /**
@@ -137,11 +137,11 @@ static void addBoolAttribute(Style *self, const char *attr, bool value) {
  */
 static void addCharactersAttribute(Style *self, const char *attr, const char *value) {
 
-	String *string = $$(String, stringWithCharacters, value);
+  String *string = $$(String, stringWithCharacters, value);
 
-	$(self, addAttribute, attr, string);
+  $(self, addAttribute, attr, string);
 
-	release(string);
+  release(string);
 }
 
 /**
@@ -150,20 +150,20 @@ static void addCharactersAttribute(Style *self, const char *attr, const char *va
  */
 static void addColorAttribute(Style *self, const char *attr, const SDL_Color *color) {
 
-	Number *r = $$(Number, numberWithValue, color->r);
-	Number *g = $$(Number, numberWithValue, color->g);
-	Number *b = $$(Number, numberWithValue, color->b);
-	Number *a = $$(Number, numberWithValue, color->a);
+  Number *r = $$(Number, numberWithValue, color->r);
+  Number *g = $$(Number, numberWithValue, color->g);
+  Number *b = $$(Number, numberWithValue, color->b);
+  Number *a = $$(Number, numberWithValue, color->a);
 
-	Array *array = $$(Array, arrayWithObjects, r, g, b, a, NULL);
+  Array *array = $$(Array, arrayWithObjects, r, g, b, a, NULL);
 
-	$(self, addAttribute, attr, array);
+  $(self, addAttribute, attr, array);
 
-	release(array);
-	release(r);
-	release(g);
-	release(b);
-	release(a);
+  release(array);
+  release(r);
+  release(g);
+  release(b);
+  release(a);
 }
 
 /**
@@ -172,11 +172,11 @@ static void addColorAttribute(Style *self, const char *attr, const SDL_Color *co
  */
 static void addDoubleAttribute(Style *self, const char *attr, double value) {
 
-	Number *number = $$(Number, numberWithValue, value);
+  Number *number = $$(Number, numberWithValue, value);
 
-	$(self, addAttribute, attr, number);
+  $(self, addAttribute, attr, number);
 
-	release(number);
+  release(number);
 }
 
 /**
@@ -185,11 +185,11 @@ static void addDoubleAttribute(Style *self, const char *attr, double value) {
  */
 static void addEnumAttribute(Style *self, const char *attr, const EnumName *names, int value) {
 
-	String *string = nameof(names, value);
+  String *string = nameof(names, value);
 
-	$(self, addAttribute, attr, string);
+  $(self, addAttribute, attr, string);
 
-	release(string);
+  release(string);
 }
 
 /**
@@ -197,7 +197,7 @@ static void addEnumAttribute(Style *self, const char *attr, const EnumName *name
  * @memberof Style
  */
 static void addFloatAttribute(Style *self, const char *attr, float value) {
-	$(self, addDoubleAttribute, attr, value);
+  $(self, addDoubleAttribute, attr, value);
 }
 
 /**
@@ -205,7 +205,7 @@ static void addFloatAttribute(Style *self, const char *attr, float value) {
  * @memberof Style
  */
 static void addIntegerAttribute(Style *self, const char *attr, int value) {
-	$(self, addDoubleAttribute, attr, value);
+  $(self, addDoubleAttribute, attr, value);
 }
 
 /**
@@ -214,16 +214,16 @@ static void addIntegerAttribute(Style *self, const char *attr, int value) {
  */
 static void addPointAttribute(Style *self, const char *attr, const SDL_Point *value) {
 
-	Number *x = $$(Number, numberWithValue, value->x);
-	Number *y = $$(Number, numberWithValue, value->y);
+  Number *x = $$(Number, numberWithValue, value->x);
+  Number *y = $$(Number, numberWithValue, value->y);
 
-	Array *array = $$(Array, arrayWithObjects, x, y, NULL);
+  Array *array = $$(Array, arrayWithObjects, x, y, NULL);
 
-	$(self, addAttribute, attr, array);
+  $(self, addAttribute, attr, array);
 
-	release(array);
-	release(x);
-	release(y);
+  release(array);
+  release(x);
+  release(y);
 }
 
 /**
@@ -232,20 +232,20 @@ static void addPointAttribute(Style *self, const char *attr, const SDL_Point *va
  */
 static void addRectangleAttribute(Style *self, const char *attr, const SDL_Rect *value) {
 
-	Number *x = $$(Number, numberWithValue, value->x);
-	Number *y = $$(Number, numberWithValue, value->y);
-	Number *w = $$(Number, numberWithValue, value->w);
-	Number *h = $$(Number, numberWithValue, value->h);
+  Number *x = $$(Number, numberWithValue, value->x);
+  Number *y = $$(Number, numberWithValue, value->y);
+  Number *w = $$(Number, numberWithValue, value->w);
+  Number *h = $$(Number, numberWithValue, value->h);
 
-	Array *array = $$(Array, arrayWithObjects, x, y, w, h, NULL);
+  Array *array = $$(Array, arrayWithObjects, x, y, w, h, NULL);
 
-	$(self, addAttribute, attr, array);
+  $(self, addAttribute, attr, array);
 
-	release(array);
-	release(x);
-	release(y);
-	release(w);
-	release(h);
+  release(array);
+  release(x);
+  release(y);
+  release(w);
+  release(h);
 }
 
 /**
@@ -254,9 +254,9 @@ static void addRectangleAttribute(Style *self, const char *attr, const SDL_Rect 
  */
 static void addSelector(Style *self, Selector *selector) {
 
-	assert(selector);
+  assert(selector);
 
-	$((MutableArray *) self->selectors, addObject, selector);
+  $((MutableArray *) self->selectors, addObject, selector);
 }
 
 /**
@@ -265,16 +265,16 @@ static void addSelector(Style *self, Selector *selector) {
  */
 static void addSizeAttribute(Style *self, const char *attr, const SDL_Size *value) {
 
-	Number *w = $$(Number, numberWithValue, value->w);
-	Number *h = $$(Number, numberWithValue, value->h);
+  Number *w = $$(Number, numberWithValue, value->w);
+  Number *h = $$(Number, numberWithValue, value->h);
 
-	Array *array = $$(Array, arrayWithObjects, w, h, NULL);
+  Array *array = $$(Array, arrayWithObjects, w, h, NULL);
 
-	$(self, addAttribute, attr, array);
+  $(self, addAttribute, attr, array);
 
-	release(array);
-	release(w);
-	release(h);
+  release(array);
+  release(w);
+  release(h);
 }
 
 /**
@@ -282,7 +282,7 @@ static void addSizeAttribute(Style *self, const char *attr, const SDL_Size *valu
  * @memberof Style
  */
 static ident attributeValue(const Style *self, const char *attr) {
-	return $((Dictionary *) self->attributes, objectForKeyPath, attr);
+  return $((Dictionary *) self->attributes, objectForKeyPath, attr);
 }
 
 /**
@@ -291,14 +291,14 @@ static ident attributeValue(const Style *self, const char *attr) {
  */
 static Style *initWithAttributes(Style *self, const Dictionary *attributes) {
 
-	self = $(self, initWithRules, NULL);
-	if (self) {
-		if (attributes) {
-			$(self, addAttributes, attributes);
-		}
-	}
+  self = $(self, initWithRules, NULL);
+  if (self) {
+    if (attributes) {
+      $(self, addAttributes, attributes);
+    }
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -307,21 +307,21 @@ static Style *initWithAttributes(Style *self, const Dictionary *attributes) {
  */
 static Style *initWithRules(Style *self, const char *rules) {
 
-	self = (Style *) super(Object, self, init);
-	if (self) {
+  self = (Style *) super(Object, self, init);
+  if (self) {
 
-		self->selectors = $$(Selector, parse, rules);
-		assert(self->selectors);
+    self->selectors = $$(Selector, parse, rules);
+    assert(self->selectors);
 
-		for (size_t i = 0; i < self->selectors->count; i++) {
-			((Selector *) self->selectors->elements[i])->style = self;
-		}
+    for (size_t i = 0; i < self->selectors->count; i++) {
+      ((Selector *) self->selectors->elements[i])->style = self;
+    }
 
-		self->attributes = (Dictionary *) $$(MutableDictionary, dictionaryWithCapacity, 4);
-		assert(self->attributes);
-	}
+    self->attributes = (Dictionary *) $$(MutableDictionary, dictionaryWithCapacity, 4);
+    assert(self->attributes);
+  }
 
-	return self;
+  return self;
 }
 
 /**
@@ -330,24 +330,24 @@ static Style *initWithRules(Style *self, const char *rules) {
  */
 static bool isComputedEqual(const Style *self, const Style *other) {
 
-	assert(other);
+  assert(other);
 
-	if (self->selectors->count == other->selectors->count) {
+  if (self->selectors->count == other->selectors->count) {
 
-		for (size_t i = 0; i < self->selectors->count; i++) {
+    for (size_t i = 0; i < self->selectors->count; i++) {
 
-			const Selector *this = $(self->selectors, objectAtIndex, i);
-			const Selector *that = $(other->selectors, objectAtIndex, i);
+      const Selector *this = $(self->selectors, objectAtIndex, i);
+      const Selector *that = $(other->selectors, objectAtIndex, i);
 
-			if (strcmp(this->rule, that->rule)) {
-				return false;
-			}
-		}
+      if (strcmp(this->rule, that->rule)) {
+        return false;
+      }
+    }
 
-		return true;
-	}
+    return true;
+  }
 
-	return false;
+  return false;
 }
 
 /**
@@ -355,62 +355,62 @@ static bool isComputedEqual(const Style *self, const Style *other) {
  */
 static ident parseValue(String *string) {
 
-	ident value = NULL;
+  ident value = NULL;
 
-	assert(string);
+  assert(string);
 
-	String *trimmed = $(string, trimmedString);
-	assert(trimmed);
+  String *trimmed = $(string, trimmedString);
+  assert(trimmed);
 
-	StringReader *reader = $(alloc(StringReader), initWithString, trimmed);
-	assert(reader);
+  StringReader *reader = $(alloc(StringReader), initWithString, trimmed);
+  assert(reader);
 
-	const Unicode *charset = L", \n\t";
-	Unicode stop;
+  const Unicode *charset = L", \n\t";
+  Unicode stop;
 
-	String *token = $(reader, readToken, charset, &stop);
-	if (token) {
+  String *token = $(reader, readToken, charset, &stop);
+  if (token) {
 
-		NumberFormatter *formatter = $(alloc(NumberFormatter), initWithFormat, NULL);
-		assert(formatter);
+    NumberFormatter *formatter = $(alloc(NumberFormatter), initWithFormat, NULL);
+    assert(formatter);
 
-		Number *number = $(formatter, numberFromString, token);
+    Number *number = $(formatter, numberFromString, token);
 
-		if (stop == READER_EOF) {
+    if (stop == READER_EOF) {
 
-			if (number) {
-				value = retain(number);
-			} else if (strcmp("true", token->chars) == 0) {
-				value = $$(Boole, True);
-			} else if (strcmp("false", token->chars) == 0) {
-				value = $$(Boole, False);
-			} else {
-				value = $((Object *) token, copy);
-			}
+      if (number) {
+        value = retain(number);
+      } else if (strcmp("true", token->chars) == 0) {
+        value = $$(Boole, True);
+      } else if (strcmp("false", token->chars) == 0) {
+        value = $$(Boole, False);
+      } else {
+        value = $((Object *) token, copy);
+      }
 
-		} else if (number) {
-			value = $$(MutableArray, arrayWithCapacity, 4);
+    } else if (number) {
+      value = $$(MutableArray, arrayWithCapacity, 4);
 
-			while (token) {
+      while (token) {
 
-				$((MutableArray *) value, addObject, parseValue(token));
-				release(token);
+        $((MutableArray *) value, addObject, parseValue(token));
+        release(token);
 
-				token = $(reader, readToken, charset, NULL);
-			}
-		} else {
-			value = retain(trimmed);
-		}
+        token = $(reader, readToken, charset, NULL);
+      }
+    } else {
+      value = retain(trimmed);
+    }
 
-		release(number);
-		release(formatter);
-		release(token);
-	}
+    release(number);
+    release(formatter);
+    release(token);
+  }
 
-	release(reader);
-	release(trimmed);
+  release(reader);
+  release(trimmed);
 
-	return value;
+  return value;
 }
 
 /**
@@ -419,65 +419,65 @@ static ident parseValue(String *string) {
  */
 static Array *parse(const char *css) {
 
-	MutableArray *styles = $$(MutableArray, array);
-	assert(styles);
+  MutableArray *styles = $$(MutableArray, array);
+  assert(styles);
 
-	if (css) {
+  if (css) {
 
-		StringReader *reader = $(alloc(StringReader), initWithCharacters, css);
-		assert(reader);
+    StringReader *reader = $(alloc(StringReader), initWithCharacters, css);
+    assert(reader);
 
-		Style *style = NULL;
-		char *attr = NULL;
+    Style *style = NULL;
+    char *attr = NULL;
 
-		while (true) {
+    while (true) {
 
-			const Unicode *charset = style ? L"{:;}" : L"{}";
-			Unicode stop;
+      const Unicode *charset = style ? L"{:;}" : L"{}";
+      Unicode stop;
 
-			String *token = $(reader, readToken, charset, &stop);
-			if (token) {
-				switch (stop) {
-					case '{':
-						style = $(alloc(Style), initWithRules, token->chars);
-						assert(style);
-						break;
-					case ':':
-						if (style) {
-							attr = strtrim(token->chars);
-							assert(attr);
-						}
-						break;
-					case ';':
-						if (style && attr) {
+      String *token = $(reader, readToken, charset, &stop);
+      if (token) {
+        switch (stop) {
+          case '{':
+            style = $(alloc(Style), initWithRules, token->chars);
+            assert(style);
+            break;
+          case ':':
+            if (style) {
+              attr = strtrim(token->chars);
+              assert(attr);
+            }
+            break;
+          case ';':
+            if (style && attr) {
 
-							ident value = parseValue(token);
-							$(style, addAttribute, attr, value);
+              ident value = parseValue(token);
+              $(style, addAttribute, attr, value);
 
-							free(attr);
-							attr = NULL;
+              free(attr);
+              attr = NULL;
 
-							release(value);
-						}
-						break;
-					case '}':
-						if (style) {
-							$(styles, addObject, style);
-							style = release(style);
-						}
-						break;
-				}
+              release(value);
+            }
+            break;
+          case '}':
+            if (style) {
+              $(styles, addObject, style);
+              style = release(style);
+            }
+            break;
+        }
 
-				release(token);
-			} else {
-				break;
-			}
-		}
+        release(token);
+      } else {
+        break;
+      }
+    }
 
-		release(reader);
-	}
+    release(reader);
+  }
 
-	return (Array *) styles;
+  return (Array *) styles;
 }
 
 /**
@@ -485,7 +485,7 @@ static Array *parse(const char *css) {
  * @memberof Style
  */
 static void removeAttribute(Style *self, const char *attr) {
-	$((MutableDictionary *) self->attributes, removeObjectForKeyPath, attr);
+  $((MutableDictionary *) self->attributes, removeObjectForKeyPath, attr);
 }
 
 /**
@@ -493,7 +493,7 @@ static void removeAttribute(Style *self, const char *attr) {
  * @memberof Style
  */
 static void removeAllAttributes(Style *self) {
-	$((MutableDictionary *) self->attributes, removeAllObjects);
+  $((MutableDictionary *) self->attributes, removeAllObjects);
 }
 
 #pragma mark - Class lifecycle
@@ -503,31 +503,31 @@ static void removeAllAttributes(Style *self) {
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-	((ObjectInterface *) clazz->interface)->description = description;
-	((ObjectInterface *) clazz->interface)->hash = hash;
-	((ObjectInterface *) clazz->interface)->isEqual = isEqual;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->description = description;
+  ((ObjectInterface *) clazz->interface)->hash = hash;
+  ((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-	((StyleInterface *) clazz->interface)->addAttribute = addAttribute;
-	((StyleInterface *) clazz->interface)->addAttributes = addAttributes;
-	((StyleInterface *) clazz->interface)->addBoolAttribute = addBoolAttribute;
-	((StyleInterface *) clazz->interface)->addCharactersAttribute = addCharactersAttribute;
-	((StyleInterface *) clazz->interface)->addColorAttribute = addColorAttribute;
-	((StyleInterface *) clazz->interface)->addDoubleAttribute = addDoubleAttribute;
-	((StyleInterface *) clazz->interface)->addEnumAttribute = addEnumAttribute;
-	((StyleInterface *) clazz->interface)->addFloatAttribute = addFloatAttribute;
-	((StyleInterface *) clazz->interface)->addIntegerAttribute = addIntegerAttribute;
-	((StyleInterface *) clazz->interface)->addPointAttribute = addPointAttribute;
-	((StyleInterface *) clazz->interface)->addRectangleAttribute = addRectangleAttribute;
-	((StyleInterface *) clazz->interface)->addSelector = addSelector;
-	((StyleInterface *) clazz->interface)->addSizeAttribute = addSizeAttribute;
-	((StyleInterface *) clazz->interface)->attributeValue = attributeValue;
-	((StyleInterface *) clazz->interface)->initWithAttributes = initWithAttributes;
-	((StyleInterface *) clazz->interface)->initWithRules = initWithRules;
-	((StyleInterface *) clazz->interface)->isComputedEqual = isComputedEqual;
-	((StyleInterface *) clazz->interface)->parse = parse;
-	((StyleInterface *) clazz->interface)->removeAllAttributes = removeAllAttributes;
-	((StyleInterface *) clazz->interface)->removeAttribute = removeAttribute;
+  ((StyleInterface *) clazz->interface)->addAttribute = addAttribute;
+  ((StyleInterface *) clazz->interface)->addAttributes = addAttributes;
+  ((StyleInterface *) clazz->interface)->addBoolAttribute = addBoolAttribute;
+  ((StyleInterface *) clazz->interface)->addCharactersAttribute = addCharactersAttribute;
+  ((StyleInterface *) clazz->interface)->addColorAttribute = addColorAttribute;
+  ((StyleInterface *) clazz->interface)->addDoubleAttribute = addDoubleAttribute;
+  ((StyleInterface *) clazz->interface)->addEnumAttribute = addEnumAttribute;
+  ((StyleInterface *) clazz->interface)->addFloatAttribute = addFloatAttribute;
+  ((StyleInterface *) clazz->interface)->addIntegerAttribute = addIntegerAttribute;
+  ((StyleInterface *) clazz->interface)->addPointAttribute = addPointAttribute;
+  ((StyleInterface *) clazz->interface)->addRectangleAttribute = addRectangleAttribute;
+  ((StyleInterface *) clazz->interface)->addSelector = addSelector;
+  ((StyleInterface *) clazz->interface)->addSizeAttribute = addSizeAttribute;
+  ((StyleInterface *) clazz->interface)->attributeValue = attributeValue;
+  ((StyleInterface *) clazz->interface)->initWithAttributes = initWithAttributes;
+  ((StyleInterface *) clazz->interface)->initWithRules = initWithRules;
+  ((StyleInterface *) clazz->interface)->isComputedEqual = isComputedEqual;
+  ((StyleInterface *) clazz->interface)->parse = parse;
+  ((StyleInterface *) clazz->interface)->removeAllAttributes = removeAllAttributes;
+  ((StyleInterface *) clazz->interface)->removeAttribute = removeAttribute;
 }
 
 /**
@@ -535,21 +535,21 @@ static void initialize(Class *clazz) {
  * @memberof Style
  */
 Class *_Style(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "Style",
-			.superclass = _Object(),
-			.instanceSize = sizeof(Style),
-			.interfaceOffset = offsetof(Style, interface),
-			.interfaceSize = sizeof(StyleInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "Style",
+      .superclass = _Object(),
+      .instanceSize = sizeof(Style),
+      .interfaceOffset = offsetof(Style, interface),
+      .interfaceSize = sizeof(StyleInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class
