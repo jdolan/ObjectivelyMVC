@@ -75,9 +75,7 @@ static void dealloc(Object *self) {
 
   View *this = (View *) self;
 
-  if ($(this, isFirstResponder)) {
-    $$(View, setFirstResponder, this->window, NULL);
-  }
+  $(this, resignFirstResponder);
 
   free(this->identifier);
 
