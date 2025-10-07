@@ -923,6 +923,17 @@ struct ViewInterface {
    */
   Set *(*select)(View *self, const char *rule);
 
+
+  /**
+   * @fn View *View::selectFirst(View *self, const char *rule)
+   * @brief Resolves the first descendant View that matches the given Selector rule.
+   * @param self The View.
+   * @param rule The Selector rule.
+   * @return The matched View, or NULL.
+   * @memberof View
+   */
+  View *(*selectFirst)(View *self, const char *rule);
+
   /**
    * @static
    * @fn void View::setFirstResponder(SDL_Window *window, View *view)

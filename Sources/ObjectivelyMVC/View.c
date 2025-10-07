@@ -1497,6 +1497,21 @@ static Set *_select(View *self, const char *rule) {
 }
 
 /**
+ * @fn View *View::selectFirst(View *self, const char *rule)
+ * @memberof View
+ */
+static View *selectFirst(View *self, const char *rule) {
+
+  Selector *selector = $(alloc(Selector), initWithRule, rule);
+  assert(selector);
+
+  View *first = $(selector, selectFirst, self);
+
+  release(selector);
+  return first;
+}
+
+/**
  * @fn void View::setFirstResponder(SDL_Window *window, View *view)
  * @memberof View
  */
@@ -1897,6 +1912,7 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->resolve = resolve;
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((ViewInterface *) clazz->interface)->select = _select;
+  ((ViewInterface *) clazz->interface)->selectFirst = selectFirst;
   ((ViewInterface *) clazz->interface)->setFirstResponder = setFirstResponder;
   ((ViewInterface *) clazz->interface)->size = size;
   ((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;

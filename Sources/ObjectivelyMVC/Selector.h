@@ -150,6 +150,15 @@ struct SelectorInterface {
    * @memberof Selector
    */
   Set *(*select)(const Selector *self, View *view);
+
+  /**
+   * @fn View *Selector::selectFirst(const Selector *self, View *view)
+   * @param self The Selector.
+   * @param view The View.
+   * @return The first of `view`'s descendants that matches this Selector.
+   * @memberof Selector
+   */
+  View *(*selectFirst)(const Selector *self, View *view);
 };
 
 /**

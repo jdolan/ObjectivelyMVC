@@ -310,6 +310,7 @@ typedef struct {
   const Array *sequences;
   size_t sequence;
   MutableSet *selection;
+  View *first;
 } Selection;
 
 /**
@@ -356,9 +357,8 @@ static Set *__select(View *view, Selection *selection) {
   return (Set *) selection->selection;
 }
 
-
 /**
- * @fn Array *Selector::select(const Selector *self, View *view)
+ * @fn Set *Selector::select(const Selector *self, View *view)
  * @memberof Selector
  */
 static Set *_select(const Selector *self, View *view) {
@@ -367,8 +367,66 @@ static Set *_select(const Selector *self, View *view) {
 
   return __select(view, &(Selection) {
     .sequences = self->sequences,
-    .selection = $$(MutableSet, set)
+    .selection = $$(MutableSet, set),
   });
+}
+
+/**
+ * @brief Recursively selects the first View by iterating the SelectorSequences in the given Selection.
+ */
+static void _selectFirst(Selection *selection, View *view) {
+
+  const SelectorSequence *sequence = $(selection->sequences, objectAtIndex, selection->sequence);
+
+  if ($(sequence, matchesView, view)) {
+
+    switch (sequence->right) {
+      case SequenceCombinatorNone:
+        break;
+
+      case SequenceCombinatorDescendent:
+        selection->sequence++;
+        $(view, enumerateDescendants, (ViewEnumerator) __select, selection);
+        break;
+
+      case SequenceCombinatorChild:
+        selection->sequence++;
+        $(view, enumerateSubviews, (ViewEnumerator) __select, selection);
+        break;
+
+      case SequenceCombinatorSibling:
+        selection->sequence++;
+        $(view, enumerateSiblings, (ViewEnumerator) __select, selection);
+        break;
+
+      case SequenceCombinatorAdjacent:
+        selection->sequence++;
+        $(view, enumerateAdjacent, (ViewEnumerator) __select, selection);
+        break;
+
+      case SequenceCombinatorTerminal:
+        selection->first = view;
+        return;
+    }
+  }
+
+  $(view, enumerateSubviews, (ViewEnumerator) _selectFirst, selection);
+}
+
+/**
+ * @fn Set *Selector::selectFirst(const Selector *self, View *view)
+ * @memberof Selector
+ */
+static View *selectFirst(const Selector *self, View *view) {
+
+  assert(view);
+
+  Selection selection = {
+    .sequences = self->sequences,
+  };
+
+  _selectFirst(&selection, view);
+  return selection.first;
 }
 
 #pragma mark - Class lifecycle
@@ -389,6 +447,7 @@ static void initialize(Class *clazz) {
   ((SelectorInterface *) clazz->interface)->matchesView = matchesView;
   ((SelectorInterface *) clazz->interface)->parse = parse;
   ((SelectorInterface *) clazz->interface)->select = _select;
+  ((SelectorInterface *) clazz->interface)->selectFirst = selectFirst;
 }
 
 /**
