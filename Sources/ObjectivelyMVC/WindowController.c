@@ -178,7 +178,7 @@ static View *nextFirstResponder(const WindowController *self, View *firstRespond
   if (array->count) {
     if (firstResponder && $(array, containsObject, firstResponder)) {
       const ssize_t index = $(array, indexOfObject, firstResponder);
-      next = $(array, objectAtIndex, index + 1 % array->count);
+      next = $(array, objectAtIndex, (index + 1) % array->count);
     } else {
       next = $(array, firstObject);
     }
