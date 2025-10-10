@@ -354,11 +354,14 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
  */
 static void setAttributedText(TextView *self, const char *attributedText) {
 
-  $(self->attributedText, setCharacters, attributedText);
+  if (strcmp(self->attributedText->string.chars ?: "", attributedText ?: "")) {
 
-  self->position = self->attributedText->string.length;
+    $(self->attributedText, setCharacters, attributedText);
 
-  self->control.view.needsLayout = true;
+    self->position = self->attributedText->string.length;
+
+    self->control.view.needsLayout = true;
+  }
 }
 
 /**
