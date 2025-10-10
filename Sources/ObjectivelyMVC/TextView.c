@@ -163,7 +163,7 @@ static void render(View *self, Renderer *renderer) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-  bool didEdit = false, didCaptureEvent = false;
+  bool didEdit = false, didBeginEditing = false, didEndEditing = false, didCaptureEvent = false;
 
   TextView *this = (TextView *) self;
   if (this->isEditable) {
@@ -172,18 +172,14 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         if ((self->state & ControlStateFocused) == 0) {
           self->state |= ControlStateFocused;
           SDL_StartTextInput();
-          if (this->delegate.didBeginEditing) {
-            this->delegate.didBeginEditing(this);
-          }
+          didBeginEditing = true;
         }
         didCaptureEvent = true;
       } else {
         if (self->state & ControlStateFocused) {
           self->state &= ~ControlStateFocused;
           SDL_StopTextInput();
-          if (this->delegate.didEndEditing) {
-            this->delegate.didEndEditing(this);
-          }
+          didEndEditing = true;
           didCaptureEvent = true;
         }
       }
@@ -213,9 +209,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
           case SDLK_TAB:
             self->state &= ~ControlStateFocused;
             SDL_StopTextInput();
-            if (this->delegate.didEndEditing) {
-              this->delegate.didEndEditing(this);
-            }
+            didEndEditing = true;
             break;
 
           case SDLK_BACKSPACE:
@@ -303,6 +297,12 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
       }
     }
 
+    if (didBeginEditing) {
+      if (this->delegate.didBeginEditing) {
+        this->delegate.didBeginEditing(this);
+      }
+    }
+
     if (didEdit) {
       self->view.needsLayout = true;
       if (this->delegate.didEdit) {
@@ -310,6 +310,12 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
       }
       
       $((View *) self, emitViewEvent, ViewEventChange, NULL);
+    }
+
+    if (didEndEditing) {
+      if (this->delegate.didEndEditing) {
+        this->delegate.didEndEditing(this);
+      }
     }
   }
 
@@ -340,6 +346,19 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
   }
 
   return self;
+}
+
+/**
+ * @fn void TextView::setAttributedText(TextView *self, const char *attributedText)
+ * @memberof TextView
+ */
+static void setAttributedText(TextView *self, const char *attributedText) {
+
+  $(self->attributedText, setCharacters, attributedText);
+
+  self->position = self->attributedText->string.length;
+
+  self->control.view.needsLayout = true;
 }
 
 /**
@@ -380,6 +399,7 @@ static void initialize(Class *clazz) {
   ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
 
   ((TextViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((TextViewInterface *) clazz->interface)->setAttributedText = setAttributedText;
   ((TextViewInterface *) clazz->interface)->setDefaultText = setDefaultText;
 }
 
