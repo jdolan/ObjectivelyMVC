@@ -155,6 +155,40 @@ static void mouseMotion_enumerate(View *view, ident data) {
 }
 
 /**
+ * @brief ViewEnumerator for finding the next first responder.
+ */
+static void enumerateFirstResponders(View *view, ident data) {
+
+  if ($(view, acceptsFirstResponder) && $(view, isVisible)) {
+    $((MutableArray *) data, addObject, view);
+  }
+}
+
+/**
+ * @fn View *WindowController::nextFirstResponder(const WindowController *self, View *firstResponder)
+ * @memberof WindowController
+ */
+static View *nextFirstResponder(const WindowController *self, View *firstResponder) {
+
+  View *next = NULL;
+
+  Array *array = (Array *) $(alloc(MutableArray), init);
+  $(self->viewController->view, enumerateDescendants, enumerateFirstResponders, array);
+
+  if (array->count) {
+    if (firstResponder && $(array, containsObject, firstResponder)) {
+      const ssize_t index = $(array, indexOfObject, firstResponder);
+      next = $(array, objectAtIndex, index + 1 % array->count);
+    } else {
+      next = $(array, firstObject);
+    }
+  }
+
+  release(array);
+  return next;
+}
+
+/**
  * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
  * @memberof WindowController
  */
@@ -186,7 +220,25 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     $(firstResponder, respondToEvent, event);
   }
 
-  if (event->type == SDL_KEYUP) {
+  if (event->type == SDL_KEYDOWN) {
+    if (event->key.keysym.sym == SDLK_TAB) {
+
+      View *nextFirstResponder = $(self, nextFirstResponder, firstResponder);
+      if (nextFirstResponder) {
+
+        const SDL_Rect frame = $(nextFirstResponder, clippingFrame);
+
+        SDL_PushEvent(&(SDL_Event) {
+          .button = {
+            .type = SDL_MOUSEBUTTONDOWN,
+            .button = 1,
+            .x = frame.x,
+            .y = frame.y
+          }
+        });
+      }
+    }
+
     if (event->key.keysym.sym == SDLK_d) {
       if (event->key.keysym.mod & KMOD_CTRL) {
         $(self, toggleDebugger);
@@ -345,6 +397,7 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->eventTarget = eventTarget;
   ((WindowControllerInterface *) clazz->interface)->firstResponder = firstResponder;
   ((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
+  ((WindowControllerInterface *) clazz->interface)->nextFirstResponder = nextFirstResponder;
   ((WindowControllerInterface *) clazz->interface)->render = render;
   ((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;

@@ -142,7 +142,6 @@ static void initialize(Class *clazz) {
 
   ((OptionInterface *) clazz->interface)->initWithTitle = initWithTitle;
   ((OptionInterface *) clazz->interface)->setSelected = setSelected;
-
 }
 
 /**

@@ -131,6 +131,16 @@ struct WindowControllerInterface {
   WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
 
   /**
+   * @fn View *WindowController::nextFirstResponder(const WindowController *self, View *firstResponder)
+   * @brief Finds the next available firstResponder from the given `firstResponder`.
+   * @param self The WindowController.
+   * @param firstResponder The current firstResponder.
+   * @return The next firstResponder, or NULL.
+   * @memberof WindowController
+   */
+  View *(*nextFirstResponder)(const WindowController *self, View *firstResponder);
+
+  /**
    * @fn void WindowController::render(WindowController *self)
    * @brief Renders the ViewController's View.
    * @param self The WindowController.

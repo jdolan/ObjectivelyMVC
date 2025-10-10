@@ -292,6 +292,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
             break;
 
           default:
+            didCaptureEvent = false;
             break;
         }
       }
@@ -319,7 +320,11 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     }
   }
 
-  return didCaptureEvent;
+  if (didCaptureEvent) {
+    return true;
+  }
+  
+  return super(Control, self, captureEvent, event);
 }
 
 #pragma mark - TextView
