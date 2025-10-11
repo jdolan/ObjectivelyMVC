@@ -26,7 +26,7 @@
 
 #define _Class _HueColorPicker
 
-#pragma mark - Actions & delegates
+#pragma mark - Delegates
 
 /**
  * @brief SliderDelegate callback for hue modification.

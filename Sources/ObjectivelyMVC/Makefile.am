@@ -7,7 +7,6 @@ noinst_HEADERS = \
 pkgincludedir = $(includedir)/$(PACKAGE_NAME)
 
 pkginclude_HEADERS = \
-	Action.h \
 	Box.h \
 	Button.h \
 	Checkbox.h \
@@ -64,7 +63,6 @@ lib_LTLIBRARIES = \
 	libObjectivelyMVC.la
 
 libObjectivelyMVC_la_SOURCES = \
-	Action.c \
 	Box.c \
 	Button.c \
 	Checkbox.c \

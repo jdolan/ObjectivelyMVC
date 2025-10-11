@@ -46,20 +46,6 @@ const EnumName ControlStateNames[] = MakeEnumNames(
 
 #define _Class _Control
 
-#pragma mark - Object
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-
-  Control *this = (Control *) self;
-
-  release(this->actions);
-
-  super(Object, self, dealloc);
-}
-
 #pragma mark - View
 
 /**
@@ -217,17 +203,6 @@ static void respondToEvent(View *self, const SDL_Event *event) {
   const ControlState state = this->state;
 
   const bool didCaptureEvent = $(this, captureEvent, event);
-  if (didCaptureEvent) {
-
-    const Array *actions = (Array *) this->actions;
-    for (size_t i = 0; i < actions->count; i++) {
-
-      const Action *action = $(actions, objectAtIndex, i);
-      if (action->eventType == event->type) {
-        action->function(this, event, action->sender, action->data);
-      }
-    }
-  }
 
   if (this->state != state) {
     $(this, stateDidChange);
@@ -242,34 +217,6 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 }
 
 #pragma mark - Control
-
-/**
- * @brief Predicate for actionsForEvent.
- */
-static bool actionsForEvent_predicate(const ident obj, ident data) {
-  return ((Action *) obj)->eventType == ((SDL_Event *) data)->type;
-}
-
-/**
- * @fn Array *Control::actionsForEvent(const Control *self, const SDL_Event *event)
- * @memberof Control
- */
-static Array *actionsForEvent(const Control *self, const SDL_Event *event) {
-  return $((Array *) self->actions, filteredArray, actionsForEvent_predicate, (ident) event);
-}
-
-/**
- * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
- * @memberof Control
- */
-static void addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data) {
-
-  Action *action = $(alloc(Action), initWithEventType, eventType, function, sender, data);
-
-  $(self->actions, addObject, action);
-
-  release(action);
-}
 
 /**
  * @fn bool Control::captureEvent(Control *self, const SDL_Event *event)
@@ -288,8 +235,6 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
   self = (Control *) super(View, self, initWithFrame, frame);
   if (self) {
 
-    self->actions = $$(MutableArray, arrayWithCapacity, 0);
-    assert(self->actions);
   }
 
   return self;
@@ -359,8 +304,6 @@ static void stateDidChange(Control *self) {
  */
 static void initialize(Class *clazz) {
 
-  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
-
   ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
   ((ViewInterface *) clazz->interface)->init = init;
@@ -368,8 +311,6 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->render = render;
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
-  ((ControlInterface *) clazz->interface)->actionsForEvent = actionsForEvent;
-  ((ControlInterface *) clazz->interface)->addActionForEventType = addActionForEventType;
   ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
   ((ControlInterface *) clazz->interface)->initWithFrame = initWithFrame;
   ((ControlInterface *) clazz->interface)->isDisabled = isDisabled;

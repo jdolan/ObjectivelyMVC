@@ -28,7 +28,6 @@
  * @brief ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
  */
 
-#include <ObjectivelyMVC/Action.h>
 #include <ObjectivelyMVC/Box.h>
 #include <ObjectivelyMVC/Button.h>
 #include <ObjectivelyMVC/Checkbox.h>

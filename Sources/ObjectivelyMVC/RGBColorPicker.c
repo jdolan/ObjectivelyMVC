@@ -27,7 +27,7 @@
 
 #define _Class _RGBColorPicker
 
-#pragma mark - Actions & delegates
+#pragma mark - Delegates
 
 /**
  * @brief SliderDelegate callback for color component modification.

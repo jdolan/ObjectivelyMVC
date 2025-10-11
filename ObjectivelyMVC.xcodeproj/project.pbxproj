@@ -64,8 +64,6 @@
 		CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46A1C4D810F00CD0B13 /* Button.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D46D1C4D82AF00CD0B13 /* Control.c */; };
 		CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46E1C4D82AF00CD0B13 /* Control.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4711C4DAF6100CD0B13 /* Action.c */; };
-		CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4721C4DAF6100CD0B13 /* Action.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D47A1C4EAD3C00CD0B13 /* HelloViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */; };
 		CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D47C1C4F35DF00CD0B13 /* Checkbox.c */; };
 		CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -298,8 +296,6 @@
 		CE12D46A1C4D810F00CD0B13 /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Button.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE12D46D1C4D82AF00CD0B13 /* Control.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Control.c; sourceTree = "<group>"; };
 		CE12D46E1C4D82AF00CD0B13 /* Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Control.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		CE12D4711C4DAF6100CD0B13 /* Action.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Action.c; sourceTree = "<group>"; };
-		CE12D4721C4DAF6100CD0B13 /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Action.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HelloViewController.c; sourceTree = "<group>"; };
 		CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelloViewController.h; sourceTree = "<group>"; };
 		CE12D47C1C4F35DF00CD0B13 /* Checkbox.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Checkbox.c; sourceTree = "<group>"; };
@@ -487,8 +483,6 @@
 		CE12D3DE1C4C367100CD0B13 /* ObjectivelyMVC */ = {
 			isa = PBXGroup;
 			children = (
-				CE12D4711C4DAF6100CD0B13 /* Action.c */,
-				CE12D4721C4DAF6100CD0B13 /* Action.h */,
 				CEF1D89E1D440C7B0099A857 /* Box.c */,
 				CEF1D89F1D440C7B0099A857 /* Box.h */,
 				CE12D4691C4D810F00CD0B13 /* Button.c */,
@@ -738,7 +732,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
-				CE12D4741C4DAF6100CD0B13 /* Action.h in Headers */,
 				CEF1D8A11D440C7B0099A857 /* Box.h in Headers */,
 				CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */,
 				CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */,
@@ -1022,7 +1015,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE12D4731C4DAF6100CD0B13 /* Action.c in Sources */,
 				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,

@@ -45,11 +45,8 @@ Font *verdana = $$(Font, cachedFont, "Verdana", 24, FontStyleRegular); // will r
 
 ### Full suite of Views and Controls
 
-ObjectivelyMVC provides a robust set of containers, views and controls. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular data or a thumbnail gallery with `TableView` and `CollectionView`. Split complex interfaces into multiple tabs with `TabView` and `TabViewController`. Bind `Actions` to `SDL_Event` types, or use the specialized _delegate_ callbacks for convenience.
+ObjectivelyMVC provides a robust set of containers, views and controls. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular data or a thumbnail gallery with `TableView` and `CollectionView`. Split complex interfaces into multiple tabs with `TabView` and `TabViewController`. Use the _delegate_ callbacks to respond to events.
 
-```c
-$(button, addActionForEventType, SDL_MOUSEBUTTONUP, my_callback, my_sender, my_data);
-```
 
 ```c
 Select *select = $(alloc(Select), initWithFrame, NULL);

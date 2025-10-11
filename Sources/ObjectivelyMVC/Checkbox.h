@@ -32,8 +32,32 @@
  * @brief Checkboxes are toggle Controls that respond to click events.
  */
 
+typedef struct CheckboxDelegate CheckboxDelegate;
+
 typedef struct Checkbox Checkbox;
 typedef struct CheckboxInterface CheckboxInterface;
+
+/**
+ * @brief The Checkbox delegate protocol.
+ */
+struct CheckboxDelegate {
+
+  /**
+   * @brief The delgate self reference.
+   */
+  ident self;
+
+  /**
+   * @brief The user data.
+   */
+  ident data;
+
+  /**
+   * @brief Called when the Checkbox is toggled.
+   * @param checkbox The Checkbox.
+   */
+  void (*didToggle)(Checkbox *checkbox);
+};
 
 /**
  * @brief Checkboxes are toggle Controls that respond to click events.
@@ -52,6 +76,11 @@ struct Checkbox {
    * @protected
    */
   CheckboxInterface *interface;
+
+  /**
+   * @brief The CheckBoxDelegate.
+   */
+  CheckboxDelegate delegate;
 
   /**
    * @brief The box.

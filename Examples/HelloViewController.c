@@ -29,20 +29,20 @@
 
 #define _Class _HelloViewController
 
-#pragma mark - Actions
+#pragma mark - Delegates
 
 /**
- * @brief ActionFunction for Button.
+ * @brief ButtonDelegate.
  */
 static void didClickButton(Button *button) {
   printf("%s: %s\n", __func__, ((View *) button)->identifier);
 }
 
 /**
- * @brief ActionFunction for Checkbox.
+ * @brief CheckboxDelegate.
  */
-static void checkboxAction(Control *control, const SDL_Event *event, ident sender, ident data) {
-  printf("%s: %s\n", __func__, $(control, isSelected) ? "checked": "unchecked");
+static void didToggleCheckbox(Checkbox *checkbox) {
+  printf("%s: %s\n", __func__, $((Control *) checkbox, isSelected) ? "checked": "unchecked");
 }
 
 #pragma mark - TextViewDelegate
@@ -278,9 +278,7 @@ static void loadView(ViewController *self) {
   this->cancel->delegate.didClick = didClickButton;
   this->apply->delegate.didClick = didClickButton;
   this->button->delegate.didClick = didClickButton;
-
-  $((Control *) this->checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
-
+  this->checkbox->delegate.didToggle = didToggleCheckbox;
   this->textView->delegate.didEndEditing = didEndEditing;
 
   $(this->select, addOption, "This is a select", (ident) 1);

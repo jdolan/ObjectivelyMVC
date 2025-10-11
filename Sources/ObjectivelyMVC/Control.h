@@ -25,17 +25,16 @@
 
 #include <Objectively/MutableArray.h>
 
-#include <ObjectivelyMVC/Action.h>
 #include <ObjectivelyMVC/Text.h>
 
 /**
  * @file
- * @brief Controls are Views which capture events and dispatch Actions.
+ * @brief Controls are Views which capture and respond to events.
  */
 
 /**
  * @defgroup Controls Controls
- * @brief Controls capture input events and dispatch Actions.
+ * @brief Controls are Views which capture and respond to events.
  */
 
 /**
@@ -73,10 +72,11 @@ typedef enum {
 
 OBJECTIVELYMVC_EXPORT const EnumName ControlStateNames[];
 
+typedef struct Control Control;
 typedef struct ControlInterface ControlInterface;
 
 /**
- * @brief Controls are Views which capture events and dispatch Actions.
+ * @brief Controls are Views which capture and respond to events.
  * @extends View
  * @ingroup Controls
  */
@@ -92,12 +92,6 @@ struct Control {
    * @protected
    */
   ControlInterface *interface;
-
-  /**
-   * @brief The Actions bound to this Control.
-   * @private
-   */
-  MutableArray *actions;
 
   /**
    * @brief The ControlBevel.
@@ -124,27 +118,6 @@ struct ControlInterface {
    * @brief The superclass interface.
    */
   ViewInterface viewInterface;
-
-  /**
-   * @fn Array *Control::actionsForEvent(const Control *self, const SDL_Event *event)
-   * @param self The Control.
-   * @param event The event.
-   * @return An Array of all Actions bound to the given event.
-   * @memberof Control
-   */
-  Array *(*actionsForEvent)(const Control *self, const SDL_Event *event);
-
-  /**
-   * @fn void Control::addActionForEventType(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data)
-   * @brief Adds an Action for the given event type to this Control.
-   * @param self The Control.
-   * @param eventType The event type.
-   * @param function The ActionFunction.
-   * @param sender The sender.
-   * @param data User data.
-   * @memberof Control
-   */
-  void (*addActionForEventType)(Control *self, SDL_EventType eventType, ActionFunction function, ident sender, ident data);
 
   /**
    * @fn bool Control::captureEvent(Control *self, const SDL_Event *event)
