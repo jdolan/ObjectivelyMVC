@@ -194,6 +194,8 @@ static View *nextFirstResponder(const WindowController *self, View *firstRespond
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
+  SDL_SetWindowData(self->window, "event", (ident) event);
+
   if (event->type == SDL_WINDOWEVENT) {
     switch (event->window.event) {
       case SDL_WINDOWEVENT_EXPOSED:
@@ -245,6 +247,8 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
       }
     }
   }
+
+  SDL_SetWindowData(self->window, "event", NULL);
 }
 
 /**
