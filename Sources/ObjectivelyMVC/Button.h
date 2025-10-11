@@ -31,8 +31,34 @@
  * @brief Buttons are Controls that respond to click events.
  */
 
+typedef struct ButtonDelegate ButtonDelegate;
+
 typedef struct Button Button;
 typedef struct ButtonInterface ButtonInterface;
+
+typedef void (*ButtonDelegateFunction)(Button *button);
+
+/**
+ * @brief The Button delegate protocol.
+ */
+struct ButtonDelegate {
+
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
+
+  /**
+   * @brief The user data.
+   */
+  ident data;
+
+  /**
+   * @brief Called when the Button is clicked.
+   * @param button The Button.
+   */
+  void (*didClick)(Button *);
+};
 
 /**
  * @brief Buttons are Controls that respond to click events.
@@ -51,6 +77,11 @@ struct Button {
    * @protected
    */
   ButtonInterface *interface;
+
+  /**
+   * @brief The ButtonDelegate.
+   */
+  ButtonDelegate delegate;
 
   /**
    * @brief The image.

@@ -34,8 +34,8 @@
 /**
  * @brief ActionFunction for Button.
  */
-static void buttonAction(Control *control, const SDL_Event *event, ident sender, ident data) {
-  printf("%s: %s\n", __func__, ((View *) control)->identifier);
+static void didClickButton(Button *button) {
+  printf("%s: %s\n", __func__, ((View *) button)->identifier);
 }
 
 /**
@@ -275,9 +275,10 @@ static void loadView(ViewController *self) {
 
   $(self->view, addSubview, (View *) this->panel);
 
-  $((Control *) this->cancel, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
-  $((Control *) this->apply, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
-  $((Control *) this->button, addActionForEventType, SDL_MOUSEBUTTONUP, buttonAction, self, NULL);
+  this->cancel->delegate.didClick = didClickButton;
+  this->apply->delegate.didClick = didClickButton;
+  this->button->delegate.didClick = didClickButton;
+
   $((Control *) this->checkbox, addActionForEventType, SDL_MOUSEBUTTONUP, checkboxAction, self, NULL);
 
   this->textView->delegate.didEndEditing = didEndEditing;
