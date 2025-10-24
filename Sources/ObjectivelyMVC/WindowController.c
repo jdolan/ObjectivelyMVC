@@ -97,7 +97,17 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
  * @memberof WindowController
  */
 static View *firstResponder(const WindowController *self, const SDL_Event *event) {
-  return $$(View, firstResponder, self->window) ?: $(self, eventTarget, event);
+
+  View *firstResponder = $$(View, firstResponder, self->window);
+  if (firstResponder == NULL) {
+
+    firstResponder = $(self, eventTarget, event);
+    if (firstResponder == NULL) {
+
+      firstResponder = self->viewController->view;
+    }
+  }
+  return firstResponder;
 }
 
 /**
