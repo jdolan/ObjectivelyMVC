@@ -217,7 +217,7 @@ static void viewDidAppear(ViewController *self) {
  * @brief ArrayEnumerator for viewDidDisappear recursion.
  */
 static void viewDidDisappear_recurse(const Array *array, ident obj, ident data) {
-  $((ViewController *) obj, viewDidAppear);
+  $((ViewController *) obj, viewDidDisappear);
 }
 
 /**
