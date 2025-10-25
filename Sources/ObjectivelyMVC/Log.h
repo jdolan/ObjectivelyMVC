@@ -27,7 +27,7 @@
 
 /**
  * @file
- * @brief View logging facilities via SDL_Log.
+ * @brief View logging facilities via `SDL_Log`.
  */
 
 #define LOG_CATEGORY_MVC (SDL_LOG_CATEGORY_CUSTOM + 69)

@@ -25,6 +25,7 @@
 
 #include <Objectively/String.h>
 
+#include "Log.h"
 #include "WindowController.h"
 
 #define _Class _WindowController
@@ -100,12 +101,7 @@ static View *firstResponder(const WindowController *self, const SDL_Event *event
 
   View *firstResponder = $$(View, firstResponder, self->window);
   if (firstResponder == NULL) {
-
     firstResponder = $(self, eventTarget, event);
-    if (firstResponder == NULL) {
-
-      firstResponder = self->viewController->view;
-    }
   }
   return firstResponder;
 }
@@ -229,6 +225,13 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
   View *firstResponder = $(self, firstResponder, event);
   if (firstResponder) {
+
+    if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
+      String *path = $(firstResponder, path);
+      MVC_LogDebug("Dispatching %d to %s\n", event->type, path->chars);
+      release(path);
+    }
+
     $(firstResponder, respondToEvent, event);
   }
 

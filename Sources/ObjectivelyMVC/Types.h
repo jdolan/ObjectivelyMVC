@@ -58,13 +58,44 @@ typedef void (*ViewEnumerator)(View *view, ident data);
  * @brief View event relay codes.
  */
 typedef enum {
+  /**
+   * @brief No event.
+   */
   ViewEventNone,
+
+  /**
+   * @brief A View has received a key down event.
+   */
   ViewEventKeyDown,
+
+  /**
+   * @brief A View has received a key up event.
+   */
   ViewEventKeyUp,
+
+  /**
+   * @brief A View has received a mouse button down event.
+   */
   ViewEventMouseButtonDown,
+
+  /**
+   * @brief A View has received a mouse button up event.
+   */
   ViewEventMouseButtonUp,
+
+  /**
+   * @brief The mouse has entered a View's frame.
+   */
   ViewEventMouseEnter,
+
+  /**
+   * @brief The mouse has left a View's frame.
+   */
   ViewEventMouseLeave,
+
+  /**
+   * @brief The mouse has moved within a View's frame.
+   */
   ViewEventMouseMotion,
 
   /**

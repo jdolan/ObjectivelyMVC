@@ -1522,14 +1522,12 @@ static void setFirstResponder(SDL_Window *window, View *view) {
   if (view) {
     assert(view->window == window);
     SDL_SetWindowData(window, "firstResponder", view);
-    if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
-      String *desc = $((Object *) view, description);
-      SDL_LogDebug(LOG_CATEGORY_MVC, "%s: %s\n", __func__, desc->chars);
-      release(desc);
-    }
+    String *path = $(view, path);
+    MVC_LogDebug("%s\n", path->chars);
+    release(path);
   } else {
     SDL_SetWindowData(window, "firstResponder", NULL);
-    SDL_LogDebug(LOG_CATEGORY_MVC, "%s: NULL\n", __func__);
+    MVC_LogDebug("NULL\n");
   }
 }
 
