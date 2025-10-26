@@ -378,7 +378,10 @@ static void awakeWithResourceName(View *self, const char *name) {
  * @memberof View
  */
 static void becomeFirstResponder(View *self) {
-  $$(View, setFirstResponder, self->window, self);
+
+  assert(self->window);
+
+  SDL_SetWindowData(self->window, "firstResponder", self);
 }
 
 /**
@@ -773,17 +776,6 @@ static void enumerateVisible(View *self, ViewEnumerator enumerator, ident data) 
 }
 
 /**
- * @fn View *View::firstResponder(SDL_Window *window)
- * @memberof View
- */
-static View *firstResponder(SDL_Window *window) {
-
-  assert(window);
-
-  return SDL_GetWindowData(window, "firstResponder");
-}
-
-/**
  * @brief Predicate for hasClassName.
  */
 static bool hasClassName_predicate(const ident obj, ident data) {
@@ -964,7 +956,7 @@ static bool isDescendantOfView(const View *self, const View *view) {
 static bool isFirstResponder(const View *self) {
 
   if (self->window) {
-    return $$(View, firstResponder, self->window) == self;
+    return SDL_GetWindowData(self->window, "firstResponder") == self;
   } else {
     return false;
   }
@@ -1387,7 +1379,7 @@ static void replaceSubview(View *self, View *subview, View *replacement) {
 static void resignFirstResponder(View *self) {
 
   if ($(self, isFirstResponder)) {
-    $$(View, setFirstResponder, self->window, NULL);
+    SDL_SetWindowData(self->window, "firstResponder", NULL);
   }
 }
 
@@ -1509,26 +1501,6 @@ static View *selectFirst(View *self, const char *rule) {
 
   release(selector);
   return first;
-}
-
-/**
- * @fn void View::setFirstResponder(SDL_Window *window, View *view)
- * @memberof View
- */
-static void setFirstResponder(SDL_Window *window, View *view) {
-
-  assert(window);
-
-  if (view) {
-    assert(view->window == window);
-    SDL_SetWindowData(window, "firstResponder", view);
-    String *path = $(view, path);
-    MVC_LogDebug("%s\n", path->chars);
-    release(path);
-  } else {
-    SDL_SetWindowData(window, "firstResponder", NULL);
-    MVC_LogDebug("NULL\n");
-  }
 }
 
 /**
@@ -1879,7 +1851,6 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->enumerateSubviews = enumerateSubviews;
   ((ViewInterface *) clazz->interface)->enumerateSuperview = enumerateSuperview;
   ((ViewInterface *) clazz->interface)->enumerateVisible = enumerateVisible;
-  ((ViewInterface *) clazz->interface)->firstResponder = firstResponder;
   ((ViewInterface *) clazz->interface)->hasClassName = hasClassName;
   ((ViewInterface *) clazz->interface)->hasOverflow = hasOverflow;
   ((ViewInterface *) clazz->interface)->hitTest = hitTest;
@@ -1911,7 +1882,6 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((ViewInterface *) clazz->interface)->select = _select;
   ((ViewInterface *) clazz->interface)->selectFirst = selectFirst;
-  ((ViewInterface *) clazz->interface)->setFirstResponder = setFirstResponder;
   ((ViewInterface *) clazz->interface)->size = size;
   ((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
   ((ViewInterface *) clazz->interface)->sizeThatFills = sizeThatFills;

@@ -90,7 +90,10 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
     return NULL;
   }
 
-  return $(self->viewController->view, hitTest, &point);
+  View *view = $(self->viewController->view, hitTest, &point);
+  SDL_SetWindowData(self->window, "eventTarget", view);
+
+  return view;
 }
 
 /**
@@ -98,7 +101,7 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
  * @memberof WindowController
  */
 static View *firstResponder(const WindowController *self, const SDL_Event *event) {
-  return $$(View, firstResponder, self->window) ?: self->viewController->view;
+  return SDL_GetWindowData(self->window, "firstResponder");
 }
 
 /**
@@ -218,9 +221,12 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     $(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
   }
 
-  View *view = $(self, eventTarget, event);
+  View *view = $(self, firstResponder, event);
   if (view == NULL) {
-    view = $(self, firstResponder, event);
+    view = $(self, eventTarget, event);
+    if (view == NULL) {
+      view = self->viewController->view;
+    }
   }
 
   assert(view);
@@ -254,6 +260,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   }
 
   SDL_SetWindowData(self->window, "event", NULL);
+  SDL_SetWindowData(self->window, "eventTarget", NULL);
 }
 
 /**

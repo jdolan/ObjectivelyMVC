@@ -208,7 +208,6 @@ static void respondToEvent(View *self, const SDL_Event *event) {
     $(this, stateDidChange);
   }
 
-  // FIXME: We want Button events to propagate up, but not motion events..
   if (didCaptureEvent) {
     return;
   }

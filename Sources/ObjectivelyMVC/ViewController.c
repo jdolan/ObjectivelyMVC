@@ -189,12 +189,10 @@ static void respondToEvent_enumerate(const Array *array, ident obj, ident data) 
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
 
   /*
-   * Key event handling is a special case, because if there is no firstResponder, there is also no
-   * implied event target (i.e., nothing was clicked on, and the pointer position is irrelevant).
-   * So, in this scenario, delegate key events _down_ the ViewController tree to give each visible
-   * ViewController the ability to respond to the event.
+   * If no View received the event, give each visible ViewController in the hierarchy an opportunity
+   * to handle the event.
    */
-  if (event->type == SDL_KEYUP || event->type == SDL_KEYDOWN) {
+  if (SDL_GetWindowData(self->view->window, "eventTarget") == NULL) {
     $((Array *) self->childViewControllers, enumerateObjects, respondToEvent_enumerate, (ident) event);
   }
 }

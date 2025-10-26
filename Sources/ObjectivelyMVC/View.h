@@ -646,15 +646,6 @@ struct ViewInterface {
   void (*enumerateVisible)(View *self, ViewEnumerator enumerator, ident data);
 
   /**
-   * @static
-   * @fn View *View::firstResponder(SDL_Window *window)
-   * @param window The window.
-   * @return The first responder for the given window, or `NULL` if none.
-   * @memberof View
-   */
-  View *(*firstResponder)(SDL_Window *window);
-
-  /**
    * @fn bool View::hasClassName(const View *self, cosnt char *className)
    * @param self The View
    * @param className The class name.
@@ -923,7 +914,6 @@ struct ViewInterface {
    */
   Set *(*select)(View *self, const char *rule);
 
-
   /**
    * @fn View *View::selectFirst(View *self, const char *rule)
    * @brief Resolves the first descendant View that matches the given Selector rule.
@@ -933,16 +923,6 @@ struct ViewInterface {
    * @memberof View
    */
   View *(*selectFirst)(View *self, const char *rule);
-
-  /**
-   * @static
-   * @fn void View::setFirstResponder(SDL_Window *window, View *view)
-   * @brief Sets the first responder for the given window.
-   * @param window The window.
-   * @param view The View.
-   * @memberof View
-   */
-  void (*setFirstResponder)(SDL_Window *window, View *view);
 
   /**
    * @fn SDL_Size View::size(const View *self)
