@@ -117,6 +117,7 @@ static void loadViewIfNeeded(ViewController *self) {
   }
 
   assert(self->view);
+  assert(self->view->viewController == self);
 }
 
 /**
