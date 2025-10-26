@@ -290,10 +290,6 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
               didEdit = true;
             }
             break;
-
-          default:
-            didCaptureEvent = false;
-            break;
         }
       }
     }
