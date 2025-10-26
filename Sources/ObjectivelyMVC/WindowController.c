@@ -98,12 +98,7 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
  * @memberof WindowController
  */
 static View *firstResponder(const WindowController *self, const SDL_Event *event) {
-
-  View *firstResponder = $$(View, firstResponder, self->window);
-  if (firstResponder == NULL) {
-    firstResponder = $(self, eventTarget, event);
-  }
-  return firstResponder;
+  return $$(View, firstResponder, self->window) ?: self->viewController->view;
 }
 
 /**
@@ -223,25 +218,22 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     $(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
   }
 
-  View *firstResponder = $(self, firstResponder, event);
-  if (firstResponder) {
-
-    if (MVC_LogEnabled(SDL_LOG_PRIORITY_DEBUG)) {
-      String *path = $(firstResponder, path);
-      MVC_LogDebug("Dispatching %d to %s\n", event->type, path->chars);
-      release(path);
-    }
-
-    $(firstResponder, respondToEvent, event);
+  View *view = $(self, eventTarget, event);
+  if (view == NULL) {
+    view = $(self, firstResponder, event);
   }
+
+  assert(view);
+
+  $(view, respondToEvent, event);
 
   if (event->type == SDL_KEYDOWN) {
     if (event->key.keysym.sym == SDLK_TAB) {
 
-      View *nextFirstResponder = $(self, nextFirstResponder, firstResponder);
-      if (nextFirstResponder) {
+      view = $(self, nextFirstResponder, view);
+      if (view) {
 
-        const SDL_Rect frame = $(nextFirstResponder, clippingFrame);
+        const SDL_Rect frame = $(view, clippingFrame);
 
         SDL_PushEvent(&(SDL_Event) {
           .button = {

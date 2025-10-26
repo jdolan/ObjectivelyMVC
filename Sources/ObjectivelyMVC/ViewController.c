@@ -170,11 +170,33 @@ static void removeFromParentViewController(ViewController *self) {
 }
 
 /**
+ * @brief ArrayEnumerator for respondToEvent recursion.
+ */
+static void respondToEvent_enumerate(const Array *array, ident obj, ident data) {
+
+  ViewController *viewController = obj;
+  const SDL_Event *event = data;
+
+  if ($(viewController->view, isVisible)) {
+    $(viewController, respondToEvent, event);
+  }
+}
+
+/**
  * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
  * @memberof ViewController
  */
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
 
+  /*
+   * Key event handling is a special case, because if there is no firstResponder, there is also no
+   * implied event target (i.e., nothing was clicked on, and the pointer position is irrelevant).
+   * So, in this scenario, delegate key events _down_ the ViewController tree to give each visible
+   * ViewController the ability to respond to the event.
+   */
+  if (event->type == SDL_KEYUP || event->type == SDL_KEYDOWN) {
+    $((Array *) self->childViewControllers, enumerateObjects, respondToEvent_enumerate, (ident) event);
+  }
 }
 
 /**
