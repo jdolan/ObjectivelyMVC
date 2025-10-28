@@ -115,10 +115,17 @@ struct WindowControllerInterface {
    * @param self The WindowController.
    * @param event The event.
    * @return The first responder for the given event.
-   * @see MVC_FirstResponder(SDL_Window *)
    * @memberof WindowController
    */
   View *(*firstResponder)(const WindowController *self, const SDL_Event *event);
+
+  /**
+   * @fn Array *WindowController::firstResponders(const WindowController *self)
+   * @param self The WindowController.
+   * @return An Array of all first responders in the WindowController's View hierarchy.
+   * @memberof WindowController
+   */
+  Array *(*firstResponders)(const WindowController *self);
 
   /**
    * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
@@ -139,6 +146,16 @@ struct WindowControllerInterface {
    * @memberof WindowController
    */
   View *(*nextFirstResponder)(const WindowController *self, View *firstResponder);
+
+  /**
+   * @fn View *WindowController::previousFirstResponder(const WindowController *self, View *firstResponder)
+   * @brief Finds the previous available firstResponder from the given `firstResponder`.
+   * @param self The WindowController.
+   * @param firstResponder The current firstResponder.
+   * @return The previous firstResponder, or NULL.
+   * @memberof WindowController
+   */
+  View *(*previousFirstResponder)(const WindowController *self, View *firstResponder);
 
   /**
    * @fn void WindowController::render(WindowController *self)

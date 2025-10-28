@@ -169,6 +169,18 @@ static void enumerateFirstResponders(View *view, ident data) {
 }
 
 /**
+ * @fn Array *WindowController::firstResponders(const WindowController *self)
+ * @memberof WindowController
+ */
+static Array *firstResponders(const WindowController *self) {
+
+  Array *array = (Array *) $(alloc(MutableArray), init);
+  $(self->viewController->view, enumerateDescendants, enumerateFirstResponders, array);
+
+  return array;
+}
+
+/**
  * @fn View *WindowController::nextFirstResponder(const WindowController *self, View *firstResponder)
  * @memberof WindowController
  */
@@ -176,8 +188,7 @@ static View *nextFirstResponder(const WindowController *self, View *firstRespond
 
   View *next = NULL;
 
-  Array *array = (Array *) $(alloc(MutableArray), init);
-  $(self->viewController->view, enumerateDescendants, enumerateFirstResponders, array);
+  Array *array = $(self, firstResponders);
 
   if (array->count) {
     if (firstResponder && $(array, containsObject, firstResponder)) {
@@ -190,6 +201,29 @@ static View *nextFirstResponder(const WindowController *self, View *firstRespond
 
   release(array);
   return next;
+}
+
+/**
+ * @fn View *WindowController::previousFirstResponder(const WindowController *self, View *firstResponder)
+ * @memberof WindowController
+ */
+static View *previousFirstResponder(const WindowController *self, View *firstResponder) {
+
+  View *prev = NULL;
+
+  Array *array = $(self, firstResponders);
+
+  if (array->count) {
+    if (firstResponder && $(array, containsObject, firstResponder)) {
+      const ssize_t index = $(array, indexOfObject, firstResponder);
+      prev = $(array, objectAtIndex, (index + array->count - 1) % array->count);
+    } else {
+      prev = $(array, firstObject);
+    }
+  }
+
+  release(array);
+  return prev;
 }
 
 /**
@@ -236,19 +270,20 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   if (event->type == SDL_KEYDOWN) {
     if (event->key.keysym.sym == SDLK_TAB) {
 
-      view = $(self, nextFirstResponder, view);
+      if (event->key.keysym.mod & KMOD_SHIFT) {
+        view = $(self, previousFirstResponder, view);
+      } else {
+        view = $(self, nextFirstResponder, view);
+      }
+
       if (view) {
-
-        const SDL_Rect frame = $(view, clippingFrame);
-
-        SDL_PushEvent(&(SDL_Event) {
-          .button = {
-            .type = SDL_MOUSEBUTTONDOWN,
-            .button = 1,
-            .x = frame.x,
-            .y = frame.y
-          }
-        });
+        if (instanceof(Control, view)) {
+          Control *control = (Control *) view;
+          control->state |= (ControlStateHighlighted | ControlStateFocused);
+          $(control, stateDidChange);
+        } else {
+          $(view, becomeFirstResponder);
+        }
       }
     }
 
@@ -412,8 +447,10 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->debug = debug;
   ((WindowControllerInterface *) clazz->interface)->eventTarget = eventTarget;
   ((WindowControllerInterface *) clazz->interface)->firstResponder = firstResponder;
+  ((WindowControllerInterface *) clazz->interface)->firstResponders = firstResponders;
   ((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
   ((WindowControllerInterface *) clazz->interface)->nextFirstResponder = nextFirstResponder;
+  ((WindowControllerInterface *) clazz->interface)->previousFirstResponder = previousFirstResponder;
   ((WindowControllerInterface *) clazz->interface)->render = render;
   ((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
