@@ -100,6 +100,22 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     }
   }
 
+  if (event->type == SDL_KEYDOWN) {
+    switch (event->key.keysym.sym) {
+      case SDLK_SPACE:
+      case SDLK_KP_SPACE:
+      case SDLK_RETURN:
+      case SDLK_KP_ENTER:
+        if (this->delegate.didClick) {
+          this->delegate.didClick(this);
+        }
+        $(view, emitViewEvent, ViewEventClick, NULL);
+        return true;
+      default:
+        break;
+    }
+  }
+
   return super(Control, self, captureEvent, event);
 }
 
