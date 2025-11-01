@@ -175,7 +175,7 @@ static void removeFromParentViewController(ViewController *self) {
 static void respondToEvent_enumerate(const Array *array, ident obj, ident data) {
 
   ViewController *viewController = obj;
-  const SDL_Event *event = data;
+  SDL_Event *event = data;
 
   if ($(viewController->view, isVisible)) {
     $(viewController, respondToEvent, event);
@@ -183,10 +183,10 @@ static void respondToEvent_enumerate(const Array *array, ident obj, ident data) 
 }
 
 /**
- * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
+ * @fn void ViewController::respondToEvent(ViewController *self, SDL_Event *event)
  * @memberof ViewController
  */
-static void respondToEvent(ViewController *self, const SDL_Event *event) {
+static void respondToEvent(ViewController *self, SDL_Event *event) {
 
   /*
    * If no View received the event, give each visible ViewController in the hierarchy an opportunity

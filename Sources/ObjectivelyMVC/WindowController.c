@@ -73,10 +73,10 @@ static void debug(WindowController *self) {
 }
 
 /**
- * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
+ * @fn View *WindowController::eventTarget(const WindowController *self, SDL_Event *event)
  * @memberof WindowController
  */
-static View *eventTarget(const WindowController *self, const SDL_Event *event) {
+static View *eventTarget(const WindowController *self, SDL_Event *event) {
 
   SDL_Point point;
 
@@ -97,10 +97,10 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
 }
 
 /**
- * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
+ * @fn View *WindowController::firstResponder(const WindowController *self, SDL_Event *event)
  * @memberof WindowController
  */
-static View *firstResponder(const WindowController *self, const SDL_Event *event) {
+static View *firstResponder(const WindowController *self, SDL_Event *event) {
   return SDL_GetWindowData(self->window, "firstResponder");
 }
 
@@ -227,10 +227,10 @@ static View *previousFirstResponder(const WindowController *self, View *firstRes
 }
 
 /**
- * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
+ * @fn void WindowController::respondToEvent(WindowController *self, SDL_Event *event)
  * @memberof WindowController
  */
-static void respondToEvent(WindowController *self, const SDL_Event *event) {
+static void respondToEvent(WindowController *self, SDL_Event *event) {
 
   SDL_SetWindowData(self->window, "event", (ident) event);
 

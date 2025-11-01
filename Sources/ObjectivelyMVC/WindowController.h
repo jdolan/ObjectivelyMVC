@@ -101,23 +101,23 @@ struct WindowControllerInterface {
   void (*debug)(WindowController *self);
 
   /**
-   * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
+   * @fn View *WindowController::eventTarget(const WindowController *self, SDL_Event *event)
    * @param self The WindowController.
    * @param event The event.
    * @return The View that was targeted by the given event.
    * @see View::hitTest(const View *, const SDL_Point *)
    * @memberof WindowController
    */
-  View *(*eventTarget)(const WindowController *self, const SDL_Event *event);
+  View *(*eventTarget)(const WindowController *self, SDL_Event *event);
 
   /**
-   * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
+   * @fn View *WindowController::firstResponder(const WindowController *self, SDL_Event *event)
    * @param self The WindowController.
    * @param event The event.
    * @return The first responder for the given event.
    * @memberof WindowController
    */
-  View *(*firstResponder)(const WindowController *self, const SDL_Event *event);
+  View *(*firstResponder)(const WindowController *self, SDL_Event *event);
 
   /**
    * @fn Array *WindowController::firstResponders(const WindowController *self)
@@ -167,7 +167,7 @@ struct WindowControllerInterface {
   void (*render)(WindowController *self);
 
   /**
-   * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
+   * @fn void WindowController::respondToEvent(WindowController *self, SDL_Event *event)
    * @brief Responds to the given event.
    * @param self The WindowController.
    * @param event The event.
@@ -184,7 +184,7 @@ struct WindowControllerInterface {
    * adequately responded to.
    * @memberof WindowController
    */
-  void (*respondToEvent)(WindowController * self, const SDL_Event *event);
+  void (*respondToEvent)(WindowController * self, SDL_Event *event);
 
   /**
    * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)

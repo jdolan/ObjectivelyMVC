@@ -149,13 +149,13 @@ struct ViewControllerInterface {
   void (*removeFromParentViewController)(ViewController *self);
 
   /**
-   * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
+   * @fn void ViewController::respondToEvent(ViewController *self, SDL_Event *event)
    * @brief Responds to the given event.
    * @param self The ViewController.
    * @param event The event.
    * @memberof ViewController
    */
-  void (*respondToEvent)(ViewController *self, const SDL_Event *event);
+  void (*respondToEvent)(ViewController *self, SDL_Event *event);
 
   /**
    * @fn void ViewController::setView(ViewController *self, View *view)

@@ -521,13 +521,13 @@ struct ViewInterface {
   void (*didMoveToWindow)(View *self, SDL_Window *window);
 
   /**
-   * @fn bool View::didReceiveEvent(const View *self, const SDL_Event *event)
+   * @fn bool View::didReceiveEvent(const View *self, SDL_Event *event)
    * @param self The View.
    * @param event The event.
    * @return True if this View received the event, false otherwise.
    * @memberof View
    */
-  bool (*didReceiveEvent)(const View *self, const SDL_Event *event);
+  bool (*didReceiveEvent)(const View *self, SDL_Event *event);
 
   /**
    * @fn void View::draw(View *self, Renderer *renderer)
@@ -896,13 +896,13 @@ struct ViewInterface {
   void (*resolve)(View *self, Outlet *outlets);
 
   /**
-   * @fn void View::respondToEvent(View *self, const SDL_Event *event)
+   * @fn void View::respondToEvent(View *self, SDL_Event *event)
    * @brief Responds to the specified event.
    * @param self The View.
    * @param event The event.
    * @memberof View
    */
-  void (*respondToEvent)(View *self, const SDL_Event *event);
+  void (*respondToEvent)(View *self, SDL_Event *event);
 
   /**
    * @fn Set *View::select(View *self, const char *rule)

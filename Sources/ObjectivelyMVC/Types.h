@@ -136,6 +136,13 @@ OBJECTIVELYMVC_EXPORT Uint32 MVC_VIEW_EVENT;
  */
 OBJECTIVELYMVC_EXPORT Uint32 MVC_NOTIFICATION_EVENT;
 
+/**
+ * @brief The custom `SDL_event` type indicating that an event has been canceled.
+ * @details This is typically set when a View or Control has captured the event, and so no
+ * additional processing or event propagation should be performed.
+ */
+OBJECTIVELYMVC_EXPORT Uint32 MVC_EVENT_CANCELED;
+
 typedef struct SDL_Size SDL_Size;
 
 /**

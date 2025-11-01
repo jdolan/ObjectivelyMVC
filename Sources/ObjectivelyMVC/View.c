@@ -34,6 +34,7 @@
 
 Uint32 MVC_NOTIFICATION_EVENT;
 Uint32 MVC_VIEW_EVENT;
+Uint32 MVC_EVENT_CANCELED = -1;
 
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
   MakeEnumAlias(ViewAlignmentNone, none),
@@ -577,10 +578,10 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
 }
 
 /**
- * @fn bool View::didReceiveEvent(const View *self, const SDL_Event *event)
+ * @fn bool View::didReceiveEvent(const View *self, SDL_Event *event)
  * @memberof View
  */
-static bool didReceiveEvent(const View *self, const SDL_Event *event) {
+static bool didReceiveEvent(const View *self, SDL_Event *event) {
 
   if ($(self, isVisible)) {
 
@@ -1426,10 +1427,10 @@ static void resolve(View *self, Outlet *outlets) {
 }
 
 /**
- * @fn void View::respondToEvent(View *self, const SDL_Event *event)
+ * @fn void View::respondToEvent(View *self, SDL_Event *event)
  * @memberof View
  */
-static void respondToEvent(View *self, const SDL_Event *event) {
+static void respondToEvent(View *self, SDL_Event *event) {
 
   assert(event);
 

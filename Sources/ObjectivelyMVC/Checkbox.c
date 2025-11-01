@@ -74,9 +74,9 @@ static View *init(View *self) {
 #pragma mark - Control
 
 /**
- * @see Control::captureEvent(Control *, const SDL_Event *)
+ * @see Control::captureEvent(Control *, SDL_Event *)
  */
-static bool captureEvent(Control *self, const SDL_Event *event) {
+static bool captureEvent(Control *self, SDL_Event *event) {
 
   Checkbox *this = (Checkbox *) self;
 
