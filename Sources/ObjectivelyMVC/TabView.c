@@ -100,9 +100,9 @@ static View *init(View *self) {
 }
 
 /**
- * @see View::respondToEvent(View *, SDL_Event *)
+ * @see View::respondToEvent(View *, const SDL_Event *)
  */
-static void respondToEvent(View *self, SDL_Event *event) {
+static void respondToEvent(View *self, const SDL_Event *event) {
 
   if (event->type == SDL_MOUSEBUTTONUP) {
 

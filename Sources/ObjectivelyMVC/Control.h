@@ -120,7 +120,7 @@ struct ControlInterface {
   ViewInterface viewInterface;
 
   /**
-   * @fn bool Control::captureEvent(Control *self, SDL_Event *event)
+   * @fn bool Control::captureEvent(Control *self, const SDL_Event *event)
    * @brief Captures a given event, potentially altering the state of this Control.
    * @param self The Control.
    * @param event The event.
@@ -128,7 +128,7 @@ struct ControlInterface {
    * @remarks Subclasses should override this method to capture events.
    * @memberof Control
    */
-  bool (*captureEvent)(Control *self, SDL_Event *event);
+  bool (*captureEvent)(Control *self, const SDL_Event *event);
 
   /**
    * @fn Control Control::initWithFrame(Control *self, const SDL_Rect *frame)

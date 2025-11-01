@@ -194,9 +194,9 @@ static void render(View *self, Renderer *renderer) {
 }
 
 /**
- * @see View::respondToEvent(View *, SDL_Event *)
+ * @see View::respondToEvent(View *, const SDL_Event *)
  */
-static void respondToEvent(View *self, SDL_Event *event) {
+static void respondToEvent(View *self, const SDL_Event *event) {
 
   Control *this = (Control *) self;
 
@@ -218,10 +218,10 @@ static void respondToEvent(View *self, SDL_Event *event) {
 #pragma mark - Control
 
 /**
- * @fn bool Control::captureEvent(Control *self, SDL_Event *event)
+ * @fn bool Control::captureEvent(Control *self, const SDL_Event *event)
  * @memberof Control
  */
-static bool captureEvent(Control *self, SDL_Event *event) {
+static bool captureEvent(Control *self, const SDL_Event *event) {
   return false;
 }
 
