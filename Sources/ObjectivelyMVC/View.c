@@ -382,7 +382,15 @@ static void becomeFirstResponder(View *self) {
 
   assert(self->window);
 
-  SDL_SetWindowData(self->window, "firstResponder", self);
+  if (!$(self, isFirstResponder)) {
+
+    View *firstResponder = SDL_GetWindowData(self->window, "firstResponder");
+    if (firstResponder) {
+      $(firstResponder, resignFirstResponder);
+    }
+
+    SDL_SetWindowData(self->window, "firstResponder", self);
+  }
 }
 
 /**
@@ -1378,6 +1386,8 @@ static void replaceSubview(View *self, View *subview, View *replacement) {
  * @memberof View
  */
 static void resignFirstResponder(View *self) {
+
+  assert(self->window);
 
   if ($(self, isFirstResponder)) {
     SDL_SetWindowData(self->window, "firstResponder", NULL);
