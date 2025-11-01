@@ -21,6 +21,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <unistd.h>
+
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
@@ -37,6 +39,12 @@ static void drawScene(SDL_Window *window);
  * @brief Program entry point.
  */
 int main(int argc, char *argv[]) {
+
+#if __APPLE__
+  // Stop Xcode from launching multiple instances of the application
+  // https://developer.apple.com/forums/thread/765445
+  usleep(500000);
+#endif
 
   MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
 
