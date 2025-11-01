@@ -947,10 +947,24 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
+				"$(SRCROOT)/Assets/check.png",
+				"$(SRCROOT)/Assets/coda.ttf",
+				"$(SRCROOT)/Assets/debug.css",
+				"$(SRCROOT)/Assets/debug.json",
+				"$(SRCROOT)/Assets/resize.png",
+				"$(SRCROOT)/Assets/stylesheet.css",
 			);
 			name = "Preprocess Assets";
 			outputPaths = (
+				"$(SRCROOT)/Assets/check.png.h",
+				"$(SRCROOT)/Assets/coda.ttf.h",
+				"$(SRCROOT)/Assets/debug.css.h",
+				"$(SRCROOT)/Assets/debug.json.h",
+				"$(SRCROOT)/Assets/resize.png.h",
+				"$(SRCROOT)/Assets/stylesheet.css.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1269,6 +1283,7 @@
 		CED157D01C4BF3AC00FBA2DE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				EXECUTABLE_PREFIX = lib;
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
@@ -1278,6 +1293,7 @@
 		CED157D11C4BF3AC00FBA2DE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				EXECUTABLE_PREFIX = lib;
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
