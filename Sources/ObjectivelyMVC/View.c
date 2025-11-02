@@ -635,6 +635,11 @@ static void draw(View *self, Renderer *renderer) {
  * @memberof View
  */
 static void emitViewEvent(View *self, ViewEvent code, ident data) {
+
+  // FIXME: There's an edge case where we are released before these events are processed
+  // resulting in a segfault. Maybe we should emit our path or identifier so that event
+  // listeners can attempt to look the View up and bail out if not found?
+
   SDL_PushEvent((SDL_Event *) &(const SDL_UserEvent) {
     .type = MVC_VIEW_EVENT,
     .code = code,
