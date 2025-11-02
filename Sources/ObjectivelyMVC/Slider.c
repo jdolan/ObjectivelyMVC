@@ -218,7 +218,7 @@ static Slider *initWithFrame(Slider *self, const SDL_Rect *frame) {
 
     $((View *) self, addSubview, self->bar);
 
-    self->handle = $(alloc(Control), initWithFrame, NULL);
+    self->handle = $(alloc(View), initWithFrame, NULL);
     assert(self->handle);
 
     $((View *) self->handle, addClassName, "handle");

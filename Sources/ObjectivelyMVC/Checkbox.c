@@ -84,22 +84,38 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   const View *box = (View *) this->box;
 
-  if (event->type == SDL_MOUSEBUTTONDOWN) {
-    if ($(box, didReceiveEvent, event)) {
-      self->state |= ControlStateHighlighted;
-      return true;
-    }
-  }
-  if (event->type == SDL_MOUSEBUTTONUP) {
-    if ($(box, didReceiveEvent, event)) {
-      self->state ^= ControlStateSelected;
-      self->state &= ~ControlStateHighlighted;
-      if (this->delegate.didToggle) {
-        this->delegate.didToggle(this);
+  switch (event->type) {
+    case SDL_MOUSEBUTTONDOWN:
+      if ($(box, didReceiveEvent, event)) {
+        self->state |= ControlStateHighlighted;
+        return true;
       }
-      $(view, emitViewEvent, ViewEventChange, NULL);
-      return true;
-    }
+      break;
+    case SDL_MOUSEBUTTONUP:
+      if ($(box, didReceiveEvent, event)) {
+        self->state ^= ControlStateSelected;
+        self->state &= ~ControlStateHighlighted;
+        if (this->delegate.didToggle) {
+          this->delegate.didToggle(this);
+        }
+        $(view, emitViewEvent, ViewEventChange, NULL);
+        return true;
+      }
+      break;
+    case SDL_KEYDOWN:
+      switch (event->key.keysym.sym) {
+        case SDLK_SPACE:
+        case SDLK_KP_SPACE:
+        case SDLK_RETURN:
+        case SDLK_KP_ENTER:
+          self->state ^= ControlStateSelected;
+          self->state &= ~ControlStateHighlighted;
+          if (this->delegate.didToggle) {
+            this->delegate.didToggle(this);
+          }
+          $(view, emitViewEvent, ViewEventChange, NULL);
+          return true;
+      }
   }
 
   return super(Control, self, captureEvent, event);

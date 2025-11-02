@@ -80,6 +80,23 @@ static View *init(View *self) {
 }
 
 /**
+ * @fn View::becomeFirstResponder(View *)
+ */
+static void becomeFirstResponder(View *self) {
+
+  Control *this = (Control *) self;
+
+  if (!$(this, isFocused)) {
+
+    this->state |= ControlStateFocused;
+
+    $(this, stateDidChange);
+  }
+
+  super(View, self, becomeFirstResponder);
+}
+
+/**
  * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
 static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
@@ -194,25 +211,37 @@ static void render(View *self, Renderer *renderer) {
 }
 
 /**
- * @see View::respondToEvent(View *, const SDL_Event *)
+ * @see View::resignFirstResponder(View *)
+ */
+static void resignFirstResponder(View *self) {
+
+  Control *this = (Control *) self;
+
+  if ($(this, isFocused)) {
+
+    this->state &= ~ControlStateFocused;
+
+    $(this, stateDidChange);
+  }
+
+  super(View, self, resignFirstResponder);
+}
+
+/**
+ * @see View::respondToEvent(View *, SDL_Event *)
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
   Control *this = (Control *) self;
 
   const ControlState state = this->state;
-
-  const bool didCaptureEvent = $(this, captureEvent, event);
-
-  if (this->state != state) {
-    $(this, stateDidChange);
+  if ($(this, captureEvent, event)) {
+    if (this->state != state) {
+      $(this, stateDidChange);
+    }
+  } else {
+    super(View, self, respondToEvent, event);
   }
-
-  if (didCaptureEvent) {
-    return;
-  }
-
-  super(View, self, respondToEvent, event);
 }
 
 #pragma mark - Control
@@ -279,12 +308,6 @@ static void stateDidChange(Control *self) {
 
   View *this = (View *) self;
 
-  if (self->state & (ControlStateHighlighted | ControlStateFocused)) {
-    $(this, becomeFirstResponder);
-  } else {
-    $(this, resignFirstResponder);
-  }
-
   if (self->state & ControlStateFocused) {
     $(this, emitViewEvent, ViewEventFocus, NULL);
   } else {
@@ -305,9 +328,11 @@ static void initialize(Class *clazz) {
 
   ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+  ((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
   ((ViewInterface *) clazz->interface)->init = init;
   ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
   ((ViewInterface *) clazz->interface)->render = render;
+  ((ViewInterface *) clazz->interface)->resignFirstResponder = resignFirstResponder;
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
   ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;

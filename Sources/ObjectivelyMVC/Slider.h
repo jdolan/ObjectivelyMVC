@@ -86,7 +86,7 @@ struct Slider {
    * @brief The slider handle.
    * @private
    */
-  Control *handle;
+  View *handle;
 
   /**
    * @brief The Text displaying the current value.

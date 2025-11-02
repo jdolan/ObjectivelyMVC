@@ -197,10 +197,11 @@ Slider > .bar {
 
 Slider > .bar > .handle {
   alignment: middle;
-  background-color: #444444dd;
-  bevel: outset;
+  background-color: #444444ff;
+  border-width: 1;
+  border-color: #aaaaaaff;
   min-width: 8;
-  max-height: 16;
+  min-height: 16;
 }
 
 Slider > .label {

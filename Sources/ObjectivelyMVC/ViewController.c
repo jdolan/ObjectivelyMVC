@@ -173,13 +173,7 @@ static void removeFromParentViewController(ViewController *self) {
  * @brief ArrayEnumerator for respondToEvent recursion.
  */
 static void respondToEvent_enumerate(const Array *array, ident obj, ident data) {
-
-  ViewController *viewController = obj;
-  const SDL_Event *event = data;
-
-  if ($(viewController->view, isVisible)) {
-    $(viewController, respondToEvent, event);
-  }
+  $((ViewController *) obj, respondToEvent, (const SDL_Event *) data);
 }
 
 /**
@@ -187,14 +181,7 @@ static void respondToEvent_enumerate(const Array *array, ident obj, ident data) 
  * @memberof ViewController
  */
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
-
-  /*
-   * If no View received the event, give each visible ViewController in the hierarchy an opportunity
-   * to handle the event.
-   */
-  if (SDL_GetWindowData(self->view->window, "eventTarget") == NULL) {
-    $((Array *) self->childViewControllers, enumerateObjects, respondToEvent_enumerate, (ident) event);
-  }
+  $((Array *) self->childViewControllers, enumerateObjects, respondToEvent_enumerate, (ident) event);
 }
 
 /**

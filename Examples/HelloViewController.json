@@ -44,6 +44,11 @@
                   "defaultText": "This is a TextView"
                 },
                 {
+                  "class": "TextView",
+                  "identifier": "textView2",
+                  "defaultText": "This is another TextView"
+                },
+                {
                   "class": "Select",
                   "identifier": "select"
                 },

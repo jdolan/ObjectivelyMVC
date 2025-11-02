@@ -88,6 +88,8 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
   }
 
   if (event->type == SDL_MOUSEBUTTONUP) {
+    $(view, resignFirstResponder);
+
     self->state &= ~ControlStateHighlighted;
     if (didReceiveEvent) {
       if (event->button.clicks) {

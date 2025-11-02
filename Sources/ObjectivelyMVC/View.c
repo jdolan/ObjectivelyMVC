@@ -388,6 +388,10 @@ static void becomeFirstResponder(View *self) {
       $(firstResponder, resignFirstResponder);
     }
 
+    String *path = $(self, path);
+    MVC_LogDebug("%s\n", path->chars);
+    release(path);
+
     SDL_SetWindowData(self->window, "firstResponder", self);
   }
 }
@@ -1386,9 +1390,12 @@ static void replaceSubview(View *self, View *subview, View *replacement) {
  */
 static void resignFirstResponder(View *self) {
 
-  assert(self->window);
+  if (self->window && $(self, isFirstResponder)) {
 
-  if ($(self, isFirstResponder)) {
+    String *path = $(self, path);
+    MVC_LogDebug("%s\n", path->chars);
+    release(path);
+
     SDL_SetWindowData(self->window, "firstResponder", NULL);
   }
 }
@@ -1443,10 +1450,6 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
   assert(event);
 
-  if (self->viewController) {
-    $(self->viewController, respondToEvent, event);
-  }
-
   ViewEvent code = ViewEventNone;
 
   switch (event->type) {
@@ -1473,6 +1476,13 @@ static void respondToEvent(View *self, const SDL_Event *event) {
       if (event->button.clicks) {
         $(self, emitViewEvent, ViewEventClick, NULL);
       }
+    }
+  }
+
+  if (event->type == SDL_MOUSEBUTTONDOWN) {
+    if ($(self, acceptsFirstResponder)) {
+      $(self, becomeFirstResponder);
+      return;
     }
   }
 

@@ -91,8 +91,6 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
   }
 
   View *view = $(self->viewController->view, hitTest, &point);
-  SDL_SetWindowData(self->window, "eventTarget", view);
-
   return view;
 }
 
@@ -101,7 +99,37 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
  * @memberof WindowController
  */
 static View *firstResponder(const WindowController *self, const SDL_Event *event) {
-  return SDL_GetWindowData(self->window, "firstResponder");
+
+  switch (event->type) {
+    case SDL_KEYUP:
+    case SDL_KEYDOWN:
+    case SDL_TEXTINPUT:
+      return SDL_GetWindowData(self->window, "firstResponder");
+    default:
+      return NULL;
+  }
+}
+
+/**
+ * @brief ViewEnumerator for finding the next first responder.
+ */
+static void enumerateFirstResponders(View *view, ident data) {
+
+  if ($(view, acceptsFirstResponder) && $(view, isVisible)) {
+    $((MutableArray *) data, addObject, view);
+  }
+}
+
+/**
+ * @fn Array *WindowController::firstResponders(const WindowController *self)
+ * @memberof WindowController
+ */
+static Array *firstResponders(const WindowController *self) {
+
+  Array *array = (Array *) $(alloc(MutableArray), init);
+  $(self->viewController->view, enumerateDescendants, enumerateFirstResponders, array);
+
+  return array;
 }
 
 /**
@@ -154,30 +182,9 @@ static void mouseMotion_enumerate(View *view, ident data) {
   if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
     $(view, emitViewEvent, ViewEventMouseLeave, NULL);
   } else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
+  } else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
     $(view, emitViewEvent, ViewEventMouseEnter, NULL);
   }
-}
-
-/**
- * @brief ViewEnumerator for finding the next first responder.
- */
-static void enumerateFirstResponders(View *view, ident data) {
-
-  if ($(view, acceptsFirstResponder) && $(view, isVisible)) {
-    $((MutableArray *) data, addObject, view);
-  }
-}
-
-/**
- * @fn Array *WindowController::firstResponders(const WindowController *self)
- * @memberof WindowController
- */
-static Array *firstResponders(const WindowController *self) {
-
-  Array *array = (Array *) $(alloc(MutableArray), init);
-  $(self->viewController->view, enumerateDescendants, enumerateFirstResponders, array);
-
-  return array;
 }
 
 /**
@@ -255,17 +262,12 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     $(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
   }
 
-  View *view = $(self, firstResponder, event);
-  if (view == NULL) {
-    view = $(self, eventTarget, event);
-    if (view == NULL) {
-      view = self->viewController->view;
-    }
+  View *view = view = $(self, eventTarget, event) ?: $(self, firstResponder, event);
+  if (view) {
+    $(view, respondToEvent, event);
+  } else {
+    $(self->viewController, respondToEvent, event);
   }
-
-  assert(view);
-
-  $(view, respondToEvent, event);
 
   if (event->type == SDL_KEYDOWN) {
     if (event->key.keysym.sym == SDLK_TAB) {
@@ -277,13 +279,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
       }
 
       if (view) {
-        if (instanceof(Control, view)) {
-          Control *control = (Control *) view;
-          control->state |= (ControlStateHighlighted | ControlStateFocused);
-          $(control, stateDidChange);
-        } else {
-          $(view, becomeFirstResponder);
-        }
+        $(view, becomeFirstResponder);
       }
     }
 
@@ -295,7 +291,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   }
 
   SDL_SetWindowData(self->window, "event", NULL);
-  SDL_SetWindowData(self->window, "eventTarget", NULL);
 }
 
 /**
