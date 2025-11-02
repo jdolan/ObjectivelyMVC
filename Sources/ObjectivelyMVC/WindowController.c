@@ -91,6 +91,13 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
   }
 
   View *view = $(self->viewController->view, hitTest, &point);
+  for (View *v = view; v; v = v->superview) {
+    if ($(v, acceptsFirstResponder)) {
+      view = v;
+      break;
+    }
+  }
+
   return view;
 }
 
