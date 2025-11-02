@@ -66,7 +66,19 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 
 #define _Class _View
 
-#pragma mark - ObjectInterface
+#pragma mark - Object
+
+/**
+ * `SDL_EventFilter` to purge any `MVC_VIEW_EVENT`s for this View.
+ */
+static int filterViewEvents(void *data, SDL_Event *event) {
+
+  if (event->type == MVC_VIEW_EVENT && event->user.data1 == data) {
+    return 0;
+  }
+
+  return 1;
+}
 
 /**
  * @see Object::dealloc(Object *)
@@ -74,6 +86,8 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 static void dealloc(Object *self) {
 
   View *this = (View *) self;
+
+  SDL_FilterEvents(filterViewEvents, this);
 
   release(this->subviews);
 
