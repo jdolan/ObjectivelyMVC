@@ -40,6 +40,8 @@ static void dealloc(Object *self) {
 
   Checkbox *this = (Checkbox *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->box);
   release(this->check);
 

@@ -27,6 +27,20 @@
 
 #define _Class _PageView
 
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+  PageView *this = (PageView *) self;
+
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
+  super(Object, self, dealloc);
+}
+
 #pragma mark - View
 
 /**
@@ -144,6 +158,8 @@ static void setCurrentPage(PageView *self, View *currentPage) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
+
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((ViewInterface *) clazz->interface)->addSubview = addSubview;
   ((ViewInterface *) clazz->interface)->init = init;

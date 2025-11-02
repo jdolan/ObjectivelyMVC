@@ -38,6 +38,8 @@ static void dealloc(Object *self) {
 
   Slider *this = (Slider *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->bar);
   release(this->handle);
   release(this->label);

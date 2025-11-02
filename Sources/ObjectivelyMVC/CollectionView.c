@@ -41,6 +41,8 @@ static void dealloc(Object *self) {
 
   CollectionView *this = (CollectionView *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->contentView);
   release(this->items);
   release(this->scrollView);

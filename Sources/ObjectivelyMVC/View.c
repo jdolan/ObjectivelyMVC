@@ -75,6 +75,8 @@ static void dealloc(Object *self) {
 
   View *this = (View *) self;
 
+  release(this->subviews);
+
   $(this, resignFirstResponder);
 
   free(this->identifier);
@@ -83,7 +85,6 @@ static void dealloc(Object *self) {
   release(this->computedStyle);
   release(this->style);
   release(this->stylesheet);
-  release(this->subviews);
   release(this->warnings);
 
   this->superview = NULL;

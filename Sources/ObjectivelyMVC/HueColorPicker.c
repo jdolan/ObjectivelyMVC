@@ -53,6 +53,8 @@ static void dealloc(Object *self) {
 
   HueColorPicker *this = (HueColorPicker *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->colorView);
   release(this->hueInput);
   release(this->hueSlider);

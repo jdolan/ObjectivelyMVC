@@ -39,6 +39,8 @@ static void dealloc(Object *self) {
 
   TableView *this = (TableView *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->columns);
   release(this->contentView);
   release(this->headerView);

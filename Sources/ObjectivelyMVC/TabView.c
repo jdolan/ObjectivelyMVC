@@ -39,6 +39,8 @@ static void dealloc(Object *self) {
 
   TabView *this = (TabView *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->tabPageView);
   release(this->tabSelectionView);
   release(this->tabs);

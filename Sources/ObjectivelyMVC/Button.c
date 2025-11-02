@@ -36,6 +36,8 @@ static void dealloc(Object *self) {
 
   Button *this = (Button *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->image);
   release(this->title);
 

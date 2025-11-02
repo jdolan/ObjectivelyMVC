@@ -37,6 +37,8 @@ static void dealloc(Object *self) {
 
   ProgressBar *this = (ProgressBar *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->background);
   release(this->foreground);
   release(this->label);

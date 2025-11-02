@@ -38,6 +38,8 @@ static void dealloc(Object *self) {
 
   Select *this = (Select *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->options);
   release(this->stackView);
 

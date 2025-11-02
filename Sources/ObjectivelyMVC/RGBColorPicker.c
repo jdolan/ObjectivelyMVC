@@ -66,6 +66,8 @@ static void dealloc(Object *self) {
 
   RGBColorPicker *this = (RGBColorPicker *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   release(this->colorView);
   release(this->redSlider);
   release(this->redInput);

@@ -39,6 +39,8 @@ static void dealloc(Object *self) {
 
   TextView *this = (TextView *) self;
 
+  memset(&this->delegate, 0, sizeof(this->delegate));
+
   free(this->defaultText);
 
   release(this->text);
