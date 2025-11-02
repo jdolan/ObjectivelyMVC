@@ -90,9 +90,9 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
  */
 static void becomeFirstResponder(View *self) {
 
-  SDL_StartTextInput();
-
   super(View, self, becomeFirstResponder);
+
+  SDL_StartTextInput();
 }
 
 /**
@@ -173,9 +173,9 @@ static void render(View *self, Renderer *renderer) {
  */
 static void resignFirstResponder(View *self) {
 
-  SDL_StopTextInput();
-
   super(View, self, resignFirstResponder);
+
+  SDL_StopTextInput();
 }
 
 #pragma mark - Control
