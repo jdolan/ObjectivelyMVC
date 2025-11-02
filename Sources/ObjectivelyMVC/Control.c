@@ -46,6 +46,20 @@ const EnumName ControlStateNames[] = MakeEnumNames(
 
 #define _Class _Control
 
+#pragma mark - Object
+
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+  Control *this = (Control *) self;
+
+  this->state = ControlStateDefault;
+
+  super(Object, self, dealloc);
+}
+
 #pragma mark - View
 
 /**
@@ -325,6 +339,8 @@ static void stateDidChange(Control *self) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
+
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
