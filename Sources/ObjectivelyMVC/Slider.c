@@ -204,6 +204,28 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     return true;
   }
 
+  if (event->type == SDL_KEYDOWN) {
+
+    double step = 0.0;
+    switch (event->key.keysym.sym) {
+      case SDLK_LEFT:
+        step = -this->step ?: -(this->max - this->min) / 20.0;
+        break;
+      case SDLK_RIGHT:
+        step = this->step ?: (this->max - this->min) / 20.0;
+        break;
+    }
+
+    if (step) {
+      $(this, setValue, this->value + step);
+
+      if (this->delegate.didSetValue) {
+        this->delegate.didSetValue(this, this->value);
+      }
+      return true;
+    }
+  }
+
   return super(Control, self, captureEvent, event);
 }
 
