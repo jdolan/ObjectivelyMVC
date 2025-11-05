@@ -149,21 +149,38 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   Slider *this = (Slider *) self;
 
+  const SDL_Rect frame = $((View *) this->bar, renderFrame);
+
   if (event->type == SDL_MOUSEBUTTONDOWN) {
+
+    // The handle captures mouse motion events allowing the user to drag it
+    // However, the user may also click left or right of the handle to decrement
+    // or increment the value
+
     if ($((View *) this->handle, didReceiveEvent, event)) {
       self->state |= ControlStateHighlighted;
+    } else {
+      const int x = event->button.x - frame.x;
+      const double step = this->step ?: (this->max - this->min) / 20.0;
+
+      $(this, setValue, this->value + (x > this->handle->frame.x ? step : -step));
+
+      if (this->delegate.didSetValue) {
+        this->delegate.didSetValue(this, this->value);
+      }
     }
+    return true;
   }
 
   else if (event->type == SDL_MOUSEBUTTONUP) {
     if (self->state & ControlStateHighlighted) {
       self->state &= ~ControlStateHighlighted;
     }
+    return true;
   }
 
   else if (event->type == SDL_MOUSEMOTION) {
     if (self->state & ControlStateHighlighted) {
-      const SDL_Rect frame = $((View *) this->bar, renderFrame);
       if (frame.w) {
 
         const double fraction = (event->motion.x - frame.x) / (double) frame.w;
@@ -182,9 +199,9 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
           }
         }
 
-        return true;
       }
     }
+    return true;
   }
 
   return super(Control, self, captureEvent, event);
