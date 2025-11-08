@@ -64,13 +64,6 @@ static String *description(const Object *self) {
 #pragma mark - View
 
 /**
- * @see View::acceptsFirstResponder(const View *)
- */
-static bool acceptsFirstResponder(const View *self) {
-  return true;
-}
-
-/**
  * @see View::matchesSelector(const View *, const SimpleSelector *)
  */
 static bool matchesSelector(const View *self, const SimpleSelector *simpleSelector) {
@@ -137,7 +130,6 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
   ((ObjectInterface *) clazz->interface)->description = description;
 
-  ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
   ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
 
   ((OptionInterface *) clazz->interface)->initWithTitle = initWithTitle;
