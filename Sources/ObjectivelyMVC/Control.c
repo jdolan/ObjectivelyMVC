@@ -231,8 +231,9 @@ static void resignFirstResponder(View *self) {
 
   Control *this = (Control *) self;
 
-  if ($(this, isFocused)) {
+  if ($(this, isHighlighted) || $(this, isFocused)) {
 
+    this->state &= ~ControlStateHighlighted;
     this->state &= ~ControlStateFocused;
 
     $(this, stateDidChange);
