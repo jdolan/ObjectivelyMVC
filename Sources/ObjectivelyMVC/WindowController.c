@@ -270,24 +270,20 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     case SDL_KEYDOWN:
     case SDL_TEXTINPUT:
       view = $(self, firstResponder);
-      break;
-    case SDL_MOUSEBUTTONDOWN:
-    case SDL_MOUSEBUTTONUP:
-    case SDL_MOUSEMOTION:
-    case SDL_MOUSEWHEEL:
-    case SDL_FINGERDOWN:
-    case SDL_FINGERUP:
-      view = $(self, eventTarget, event);
+      if (view) {
+        $(view, respondToEvent, event);
+      } else {
+        $(self->viewController, respondToEvent, event);
+      }
       break;
     default:
+      view = $(self, eventTarget, event);
+      if (view) {
+        $(view, respondToEvent, event);
+      }
+      $(self->viewController, respondToEvent, event);
       break;
   }
-
-  if (view) {
-    $(view, respondToEvent, event);
-  }
-
-  $(self->viewController, respondToEvent, event);
 
   if (event->type == SDL_KEYDOWN) {
     if (event->key.keysym.sym == SDLK_TAB) {
