@@ -226,6 +226,8 @@ static void addOption(Select *self, const char *title, ident value) {
     }
   }
 
+  option->view.nextResponder = (View *) self;
+
   release(option);
 
   self->control.view.needsLayout = true;
