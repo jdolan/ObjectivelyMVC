@@ -609,18 +609,36 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
  */
 static bool didReceiveEvent(const View *self, const SDL_Event *event) {
 
+  if ($(self, isFirstResponder)) {
+    switch (event->type) {
+      case SDL_KEYDOWN:
+      case SDL_KEYUP:
+      case SDL_TEXTINPUT:
+        return true;
+    }
+  }
+
   if ($(self, isVisible)) {
 
     SDL_Point point;
 
-    if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-      point = MakePoint(event->button.x, event->button.y);
-    } else if (event->type == SDL_MOUSEMOTION) {
-      point = MakePoint(event->motion.x, event->motion.y);
-    } else if (event->type == SDL_MOUSEWHEEL) {
-      SDL_GetMouseState(&point.x, &point.y);
-    } else {
-      return false;
+    switch (event->type) {
+      case SDL_MOUSEBUTTONDOWN:
+      case SDL_MOUSEBUTTONUP:
+        point = MakePoint(event->button.x, event->button.y);
+        break;
+      case SDL_MOUSEMOTION:
+        point = MakePoint(event->motion.x, event->motion.y);
+        break;
+      case SDL_MOUSEWHEEL:
+        SDL_GetMouseState(&point.x, &point.y);
+        break;
+      case SDL_FINGERDOWN:
+      case SDL_FINGERUP:
+        point = MakePoint(event->tfinger.x, event->tfinger.y);
+        break;
+      default:
+        return false;
     }
 
     return $(self, containsPoint, &point);

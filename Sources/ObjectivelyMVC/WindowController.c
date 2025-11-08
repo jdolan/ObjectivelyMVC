@@ -80,14 +80,23 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
 
   SDL_Point point;
 
-  if (event->type == SDL_MOUSEBUTTONDOWN || event->type == SDL_MOUSEBUTTONUP) {
-    point = MakePoint(event->button.x, event->button.y);
-  } else if (event->type == SDL_MOUSEMOTION) {
-    point = MakePoint(event->motion.x, event->motion.y);
-  } else if (event->type == SDL_MOUSEWHEEL) {
-    SDL_GetMouseState(&point.x, &point.y);
-  } else {
-    return NULL;
+  switch (event->type) {
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+      point = MakePoint(event->button.x, event->button.y);
+      break;
+    case SDL_MOUSEMOTION:
+      point = MakePoint(event->motion.x, event->motion.y);
+      break;
+    case SDL_MOUSEWHEEL:
+      SDL_GetMouseState(&point.x, &point.y);
+      break;
+    case SDL_FINGERDOWN:
+    case SDL_FINGERUP:
+      point = MakePoint(event->tfinger.x, event->tfinger.y);
+      break;
+    default:
+      return NULL;
   }
 
   View *view = $(self->viewController->view, hitTest, &point);
@@ -95,19 +104,11 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
 }
 
 /**
- * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
+ * @fn View *WindowController::firstResponder(const WindowController *self)
  * @memberof WindowController
  */
-static View *firstResponder(const WindowController *self, const SDL_Event *event) {
-
-  switch (event->type) {
-    case SDL_KEYUP:
-    case SDL_KEYDOWN:
-    case SDL_TEXTINPUT:
-      return SDL_GetWindowData(self->window, "firstResponder");
-    default:
-      return NULL;
-  }
+static View *firstResponder(const WindowController *self) {
+  return SDL_GetWindowData(self->window, "firstResponder");
 }
 
 /**
@@ -262,12 +263,31 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     $(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
   }
 
-  View *view = view = $(self, eventTarget, event) ?: $(self, firstResponder, event);
+  View *view = NULL;
+
+  switch (event->type) {
+    case SDL_KEYUP:
+    case SDL_KEYDOWN:
+    case SDL_TEXTINPUT:
+      view = $(self, firstResponder);
+      break;
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEWHEEL:
+    case SDL_FINGERDOWN:
+    case SDL_FINGERUP:
+      view = $(self, eventTarget, event);
+      break;
+    default:
+      break;
+  }
+
   if (view) {
     $(view, respondToEvent, event);
-  } else {
-    $(self->viewController, respondToEvent, event);
   }
+
+  $(self->viewController, respondToEvent, event);
 
   if (event->type == SDL_KEYDOWN) {
     if (event->key.keysym.sym == SDLK_TAB) {

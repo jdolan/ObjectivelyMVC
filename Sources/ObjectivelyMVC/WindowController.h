@@ -111,13 +111,12 @@ struct WindowControllerInterface {
   View *(*eventTarget)(const WindowController *self, const SDL_Event *event);
 
   /**
-   * @fn View *WindowController::firstResponder(const WindowController *self, const SDL_Event *event)
+   * @fn View *WindowController::firstResponder(const WindowController *self)
    * @param self The WindowController.
-   * @param event The event.
-   * @return The first responder for the given event.
+   * @return The first responder or NULL.
    * @memberof WindowController
    */
-  View *(*firstResponder)(const WindowController *self, const SDL_Event *event);
+  View *(*firstResponder)(const WindowController *self);
 
   /**
    * @fn Array *WindowController::firstResponders(const WindowController *self)
