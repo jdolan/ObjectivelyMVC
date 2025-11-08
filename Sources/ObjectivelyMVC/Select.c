@@ -117,11 +117,12 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   Select *this = (Select *) self;
 
+  const Array *options = (Array *) this->options;
+
   if (event->type == SDL_MOUSEBUTTONUP) {
-    if (self->state == ControlStateHighlighted) {
+    if (self->state & ControlStateHighlighted) {
       self->state &= ~ControlStateHighlighted;
 
-      const Array *options = (Array *) this->options;
       for (size_t i = 0; i < options->count; i++) {
 
         Option *option = $(options, objectAtIndex, i);
@@ -133,7 +134,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
           return true;
         }
       }
-    } else if ($((View *) self, didReceiveEvent, event)) {
+    } else {
       self->state |= ControlStateHighlighted;
       return true;
     }
