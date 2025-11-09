@@ -65,9 +65,9 @@ OBJECTIVELYMVC_EXPORT const EnumName ControlSelectionNames[];
 typedef enum {
   ControlStateDefault = 0x0,
   ControlStateHighlighted = 0x1,
-  ControlStateDisabled = 0x2,
-  ControlStateSelected = 0x4,
-  ControlStateFocused = 0x8,
+  ControlStateSelected = 0x2,
+  ControlStateFocused = 0x4,
+  ControlStateDisabled = 0x10,
 } ControlState;
 
 OBJECTIVELYMVC_EXPORT const EnumName ControlStateNames[];

@@ -41,7 +41,8 @@ const EnumName ControlStateNames[] = MakeEnumNames(
   MakeEnumAlias(ControlStateDefault, default),
   MakeEnumAlias(ControlStateHighlighted, highlighted),
   MakeEnumAlias(ControlStateSelected, selected),
-  MakeEnumAlias(ControlStateFocused, focused)
+  MakeEnumAlias(ControlStateFocused, focused),
+  MakeEnumAlias(ControlStateDisabled, disabled)
 );
 
 #define _Class _Control
