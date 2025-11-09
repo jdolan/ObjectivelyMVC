@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
 #include "clack.wav.h"
 
 /**
- * @brief
+ * @brief `ViewEvent` callback to play click sounds when interacting with `Control`s.
  */
 static void onViewEvent(SDL_AudioDeviceID device, const SDL_UserEvent *event) {
 
