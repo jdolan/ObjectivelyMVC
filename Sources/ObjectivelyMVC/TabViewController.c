@@ -27,6 +27,36 @@
 
 #define _Class _TabViewController
 
+#pragma mark - TabViewDelegate
+
+static void didSelectTab_enumerate(const Array *array, ident obj, ident data) {
+
+  ViewController *viewController = obj;
+
+  if (viewController == data) {
+    $(viewController, viewWillAppear);
+    $(viewController, viewDidAppear);
+  } else {
+    $(viewController, viewWillDisappear);
+    $(viewController, viewDidDisappear);
+  }
+}
+
+/**
+ * @see TabViewDelegate::didSelectTab(TabView *, TabViewItem *)
+ */
+static void didSelectTab(TabView *tabView, TabViewItem *tab) {
+
+  TabViewController *this = tabView->delegate.self;
+
+  ViewController *viewController = $(this, viewControllerForTab, tab);
+  assert(viewController);
+
+  const Array *viewControllers = (Array *) this->viewController.childViewControllers;
+
+  $(viewControllers, enumerateObjects, didSelectTab_enumerate, viewController);
+}
+
 #pragma mark - Object
 
 /**
@@ -56,6 +86,9 @@ static void loadView(ViewController *self) {
 
   this->tabView = $(alloc(TabView), initWithFrame, NULL);
   assert(this->tabView);
+
+  this->tabView->delegate.self = this;
+  this->tabView->delegate.didSelectTab = didSelectTab;
 
   $(self->view, addSubview, (View *) this->tabView);
 }
@@ -93,7 +126,7 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 #pragma mark - TabViewController
 
 /**
- * @fn TabViewController *TabViewController::init(TabViewController *self)
+ * @fn TabViewController *TabViewController::init(TabViewController *)
  * @memberof TabViewController
  */
 static TabViewController *init(TabViewController *self) {
@@ -108,7 +141,7 @@ static bool tabForViewController_predicate(const ident obj, ident data) {
 }
 
 /**
- * @fn TabViewItem *TabViewController::tabForViewController(const TabViewController *self, const ViewController *viewController)
+ * @fn TabViewItem *TabViewController::tabForViewController(const TabViewController *, const ViewController *)
  * @memberof TabViewController
  */
 static TabViewItem *tabForViewController(const TabViewController *self, const ViewController *viewController) {
@@ -117,6 +150,28 @@ static TabViewItem *tabForViewController(const TabViewController *self, const Vi
 
   if (viewController->view) {
     return $((Array *) self->tabView->tabs, findObject, tabForViewController_predicate, (ident) viewController->view);
+  }
+
+  return NULL;
+}
+
+/**
+ * @brief Predicate for viewControllerForTab.
+ */
+static bool viewControllerForTab_predicate(const ident obj, ident data) {
+  return ((ViewController *) obj)->view == data;
+}
+
+/**
+ * @fn ViewController *TabViewController::viewControllerForTab(const TabViewController *, const TabViewItem *)
+ * @memberof TabViewController
+ */
+static ViewController *viewControllerForTab(const TabViewController *self, const TabViewItem *tab) {
+
+  assert(tab);
+
+  if (tab->view) {
+    return $((Array *) self->viewController.childViewControllers, findObject, viewControllerForTab_predicate, tab->view);
   }
 
   return NULL;
@@ -137,6 +192,7 @@ static void initialize(Class *clazz) {
 
   ((TabViewControllerInterface *) clazz->interface)->init = init;
   ((TabViewControllerInterface *) clazz->interface)->tabForViewController = tabForViewController;
+  ((TabViewControllerInterface *) clazz->interface)->viewControllerForTab = viewControllerForTab;
 }
 
 /**
