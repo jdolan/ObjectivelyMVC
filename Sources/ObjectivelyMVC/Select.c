@@ -140,6 +140,43 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     }
   }
 
+  if (event->type == SDL_KEYDOWN) {
+
+    switch (event->key.keysym.sym) {
+
+      case SDLK_ESCAPE:
+        self->state &= ~ControlStateHighlighted;
+        return true;
+
+      case SDLK_RETURN:
+      case SDLK_KP_ENTER:
+        self->state ^= ControlStateHighlighted;
+        return true;
+
+      case SDLK_UP:
+      case SDLK_DOWN: {
+        Option *option = $(this, selectedOption);
+        if (option) {
+
+          ssize_t index = $(options, indexOfObject, option);
+          if (event->key.keysym.sym == SDLK_UP) {
+            index = (index - 1 + options->count) % options->count;
+          } else {
+            index = (index + 1) % options->count;
+          }
+
+          option = $(options, objectAtIndex, index);
+
+          $(this, selectOption, option);
+          if (this->delegate.didSelectOption) {
+            this->delegate.didSelectOption(this, option);
+          }
+        }
+        return true;
+      }
+    }
+  }
+
   return super(Control, self, captureEvent, event);
 }
 

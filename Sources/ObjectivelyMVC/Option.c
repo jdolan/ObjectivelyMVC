@@ -116,6 +116,8 @@ static void setSelected(Option *self, bool isSelected) {
   if (self->isSelected != isSelected) {
     self->isSelected = isSelected;
 
+    $((View *) self, invalidateStyle);
+
     self->view.needsLayout = true;
   }
 }
