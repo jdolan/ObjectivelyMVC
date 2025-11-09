@@ -57,8 +57,6 @@ static void loadView(ViewController *self) {
   this->tabView = $(alloc(TabView), initWithFrame, NULL);
   assert(this->tabView);
 
-  this->tabView->delegate.self = this;
-
   $(self->view, addSubview, (View *) this->tabView);
 }
 
