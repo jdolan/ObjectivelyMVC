@@ -560,7 +560,8 @@ static View *descendantWithIdentifier(const View *self, const char *identifier) 
 
   const Array *subviews = (Array *) self->subviews;
   for (size_t i = 0; i < subviews->count; i++) {
-    const View *subview = $(subviews, objectAtIndex, i);
+
+    const View *subview = subviews->elements[i];
     View *descendant = $(subview, descendantWithIdentifier, identifier);
     if (descendant) {
       return descendant;
@@ -746,7 +747,7 @@ static void enumerateDescendants(const View *self, ViewEnumerator enumerator, id
   const Array *subviews = (Array *) self->subviews;
   for (size_t i = 0; i < subviews->count; i++) {
 
-    View *subview = $(subviews, objectAtIndex, i);
+    View *subview = subviews->elements[i];
     enumerator(subview, data);
 
     $(subview, enumerateDescendants, enumerator, data);
@@ -765,7 +766,7 @@ static void enumerateSiblings(const View *self, ViewEnumerator enumerator, ident
 
     const Array *siblings = (Array *) self->superview->subviews;
     for (size_t i = 0; i < siblings->count; i++) {
-      View *sibling = $(siblings, objectAtIndex, i);
+      View *sibling = siblings->elements[i];
       if (sibling != self) {
         enumerator(sibling, data);
       }
@@ -815,7 +816,7 @@ static void enumerateVisible(View *self, ViewEnumerator enumerator, ident data) 
   const Array *subviews = (Array *) self->subviews;
   for (size_t i = 0; i < subviews->count; i++) {
 
-    View *subview = $(subviews, objectAtIndex, i);
+    View *subview = subviews->elements[i];
     $(subview, enumerateVisible, enumerator, data);
   }
 }
@@ -894,7 +895,7 @@ static View *hitTest(const View *self, const SDL_Point *point) {
       const Array *subviews = (Array *) self->subviews;
       for (size_t i = subviews->count; i; i--) {
 
-        const View *subview = $(subviews, objectAtIndex, i - 1);
+        const View *subview = subviews->elements[i - 1];
         const View *view = $(subview, hitTest, point);
         if (view) {
           return (View *) view;
@@ -1064,7 +1065,7 @@ static void layoutSubviews(View *self) {
   const Array *subviews = (Array *) self->subviews;
   for (size_t i = 0; i < subviews->count; i++) {
 
-    View *subview = $(subviews, objectAtIndex, i);
+    View *subview = subviews->elements[i];
 
     SDL_Size subviewSize = $(subview, size);
 
@@ -1614,7 +1615,7 @@ static SDL_Size sizeThatFits(const View *self) {
     Array *subviews = $(self, visibleSubviews);
     for (size_t i = 0; i < subviews->count; i++) {
 
-      const View *subview = $(subviews, objectAtIndex, i);
+      const View *subview = subviews->elements[i];
 
       SDL_Size subviewSize;
       if (subview->autoresizingMask & ViewAutoresizingContain) {
@@ -1694,7 +1695,7 @@ static View *subviewWithIdentifier(const View *self, const char *identifier) {
   const Array *subviews = (Array *) self->subviews;
   for (size_t i = 0; i < subviews->count; i++) {
 
-    View *subview = $(subviews, objectAtIndex, i);
+    View *subview = subviews->elements[i];
     if (subview->identifier) {
 
       if (strcmp(identifier, subview->identifier) == 0) {
