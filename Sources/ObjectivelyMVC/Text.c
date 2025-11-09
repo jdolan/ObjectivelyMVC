@@ -80,11 +80,16 @@ static void applyStyle(View *self, const Style *style) {
 
   Text *this = (Text *) self;
 
-  const Inlet inlets[] = MakeInlets(
+  const Inlet colorInlets[] = MakeInlets(
     MakeInlet("color", InletTypeColor, &this->color, NULL)
   );
 
-  $(self, bind, inlets, style->attributes);
+  if ($(self, bind, colorInlets, style->attributes)) {
+    if (this->texture) {
+      glDeleteTextures(1, &this->texture);
+      this->texture = 0;
+    }
+  }
 
   char *fontFamily = NULL;
   int fontSize = -1, fontStyle = -1;
