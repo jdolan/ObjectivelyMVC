@@ -119,8 +119,7 @@ static View *eventTarget(const WindowController *self, const SDL_Event *event) {
       return NULL;
   }
 
-  View *view = $(self->viewController->view, hitTest, &point);
-  return view;
+  return $(self->viewController->view, hitTest, &point);
 }
 
 /**
@@ -361,6 +360,8 @@ static void setViewController(WindowController *self, ViewController *viewContro
 
   if (self->viewController != viewController || self->viewController == NULL) {
 
+    SDL_SetWindowData(self->window, "firstResponder", NULL);
+
     if (self->viewController) {
       $(self->viewController, viewWillDisappear);
       $(self->viewController->view, moveToWindow, NULL);
@@ -397,6 +398,8 @@ static void setWindow(WindowController *self, SDL_Window *window) {
 
   SDL_SetWindowData(self->window, "windowController", self);
   assert(SDL_GetWindowData(self->window, "windowController") == self);
+
+  SDL_SetWindowData(self->window, "firstResponder", NULL);
 
   if (self->viewController) {
     $(self->viewController->view, moveToWindow, self->window);
