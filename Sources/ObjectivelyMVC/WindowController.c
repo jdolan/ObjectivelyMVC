@@ -30,6 +30,26 @@
 
 #define _Class _WindowController
 
+#pragma mark - Delegates
+
+/**
+ * @brief ViewEnumerator for `SDL_MOUSEMOTION_EVENT`.
+ */
+static void mouseMotion_enumerate(View *view, ident data) {
+
+  const SDL_MouseMotionEvent *event = data;
+  const SDL_Point a = MakePoint(event->x - event->xrel, event->y - event->yrel);
+  const SDL_Point b = MakePoint(event->x, event->y);
+
+  if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
+    $(view, emitViewEvent, ViewEventMouseLeave, NULL);
+    $(view, invalidateStyle);
+  } else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
+    $(view, emitViewEvent, ViewEventMouseEnter, NULL);
+    $(view, invalidateStyle);
+  }
+}
+
 #pragma mark - Object
 
 /**
@@ -168,24 +188,6 @@ static void render(WindowController *self) {
   $(self, debug);
 
   $(self->renderer, endFrame);
-}
-
-/**
- * @brief ViewEnumerator for `SDL_MOUSEMOTION_EVENT` which dispatches `ViewEventMouseEnter`
- * and `ViewEventMouseLeave`.
- */
-static void mouseMotion_enumerate(View *view, ident data) {
-  
-  const SDL_MouseMotionEvent *event = data;
-  const SDL_Point a = MakePoint(event->x - event->xrel, event->y - event->yrel);
-  const SDL_Point b = MakePoint(event->x, event->y);
-
-  if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
-    $(view, emitViewEvent, ViewEventMouseLeave, NULL);
-  } else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
-  } else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
-    $(view, emitViewEvent, ViewEventMouseEnter, NULL);
-  }
 }
 
 /**
