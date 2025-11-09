@@ -86,6 +86,10 @@ Control {
   selection: single;
 }
 
+Control:disabled Text {
+  color: grey;
+}
+
 HSVColorPicker,
 HueColorPicker,
 RGBColorPicker {
