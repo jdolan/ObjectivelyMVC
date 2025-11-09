@@ -67,7 +67,9 @@ static void dealloc(Object *self) {
  * @see View::acceptsFirstResponder(const View *)
  */
 static bool acceptsFirstResponder(const View *self) {
-  return true;
+
+  Control *this = (Control *) self;
+
   return (this->state & ControlStateDisabled) == 0;
 }
 
@@ -269,13 +271,16 @@ static void respondToEvent(View *self, const SDL_Event *event) {
   Control *this = (Control *) self;
 
   const ControlState state = this->state;
-  if ($(this, captureEvent, event)) {
-    if (this->state != state) {
-      $(this, stateDidChange);
+  if (!(state & ControlStateDisabled)) {
+    if ($(this, captureEvent, event)) {
+      if (this->state != state) {
+        $(this, stateDidChange);
+      }
+      return;
     }
-  } else {
-    super(View, self, respondToEvent, event);
   }
+
+  super(View, self, respondToEvent, event);
 }
 
 #pragma mark - Control
