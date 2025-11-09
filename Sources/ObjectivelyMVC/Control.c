@@ -68,6 +68,7 @@ static void dealloc(Object *self) {
  */
 static bool acceptsFirstResponder(const View *self) {
   return true;
+  return (this->state & ControlStateDisabled) == 0;
 }
 
 /**
@@ -80,11 +81,28 @@ static void applyStyle(View *self, const Style *style) {
   Control *this = (Control *) self;
 
   const Inlet inlets[] = MakeInlets(
-    MakeInlet("bevel", InletTypeEnum, &this->bevel, (ident) (ControlBevelNames)),
+    MakeInlet("bevel", InletTypeEnum, &this->bevel, (ident) ControlBevelNames),
     MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames)
   );
 
   $(self, bind, inlets, (Dictionary *) style->attributes);
+}
+
+/**
+ * @fn void Viem::awakeWithDictionary(View *, const Dictionary *)
+ * @memberof View
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+  super(View, self, awakeWithDictionary, dictionary);
+
+  Control *this = (Control *) self;
+
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("state", InletTypeEnum, &this->state, (ident) ControlStateNames)
+  );
+
+  $(self, bind, inlets, dictionary);
 }
 
 /**
@@ -346,6 +364,7 @@ static void initialize(Class *clazz) {
 
   ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
   ((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
   ((ViewInterface *) clazz->interface)->init = init;
   ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
