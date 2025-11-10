@@ -50,6 +50,13 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::acceptsFirstResponder(View *)
+ */
+static bool acceptsFirstResponder(const View *self) {
+  return false;
+}
+
+/**
  * @see View::applyStyle(View *, const Style *)
  */
 static void applyStyle(View *self, const Style *style) {
@@ -240,6 +247,7 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+  ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
   ((ViewInterface *) clazz->interface)->init = init;
