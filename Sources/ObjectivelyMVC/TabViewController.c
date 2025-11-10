@@ -27,36 +27,6 @@
 
 #define _Class _TabViewController
 
-#pragma mark - TabViewDelegate
-
-static void didSelectTab_enumerate(const Array *array, ident obj, ident data) {
-
-  ViewController *viewController = obj;
-
-  if (viewController == data) {
-    $(viewController, viewWillAppear);
-    $(viewController, viewDidAppear);
-  } else {
-    $(viewController, viewWillDisappear);
-    $(viewController, viewDidDisappear);
-  }
-}
-
-/**
- * @see TabViewDelegate::didSelectTab(TabView *, TabViewItem *)
- */
-static void didSelectTab(TabView *tabView, TabViewItem *tab) {
-
-  TabViewController *this = tabView->delegate.self;
-
-  ViewController *viewController = $(this, viewControllerForTab, tab);
-  assert(viewController);
-
-  const Array *viewControllers = (Array *) this->viewController.childViewControllers;
-
-  $(viewControllers, enumerateObjects, didSelectTab_enumerate, viewController);
-}
-
 #pragma mark - Object
 
 /**
@@ -86,9 +56,6 @@ static void loadView(ViewController *self) {
 
   this->tabView = $(alloc(TabView), initWithFrame, NULL);
   assert(this->tabView);
-
-  this->tabView->delegate.self = this;
-  this->tabView->delegate.didSelectTab = didSelectTab;
 
   $(self->view, addSubview, (View *) this->tabView);
 }
