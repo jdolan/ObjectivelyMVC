@@ -288,12 +288,20 @@ struct ViewInterface {
   ObjectInterface parentInterface;
 
   /**
-   * @fn bool View::acceptsFirstResponder(const View *self)
+   * @fn bool View::acceptsKeyResponder(const View *self)
    * @param self The View.
-   * @return True if this View can become the first responder, false otherwise.
+   * @return True if this View can become the key responder, false otherwise.
    * @memberof View
    */
-  bool (*acceptsFirstResponder)(const View *self);
+  bool (*acceptsKeyResponder)(const View *self);
+
+  /**
+   * @fn bool View::acceptsTouchResponder(const View *self)
+   * @param self The View.
+   * @return True if this View can become the touch responder, false otherwise.
+   * @memberof View
+   */
+  bool (*acceptsTouchResponder)(const View *self);
 
   /**
    * @fn void View::addClassName(View *self, const char *className)
@@ -420,13 +428,22 @@ struct ViewInterface {
   void (*awakeWithResourceName)(View *self, const char *name);
 
   /**
-   * @fn void View::becomeFirstResponder(View *self)
-   * @brief Become the first responder in the View hierarchy.
+   * @fn void View::becomeKeyResponder(View *self)
+   * @brief Become the key responder in the View hierarchy.
    * @param self The View.
-   * @remarks Becoming the first responder gives a View priority when handling events.
+   * @remarks Becoming the key responder gives a View priority when handling key events.
    * @memberof View
    */
-  void (*becomeFirstResponder)(View *self);
+  void (*becomeKeyResponder)(View *self);
+
+  /**
+   * @fn void View::becomeTouchResponder(View *self)
+   * @brief Become the touch responder in the View hierarchy.
+   * @param self The View.
+   * @remarks Becoming the touch responder gives a View priority when handling touch events.
+   * @memberof View
+   */
+  void (*becomeTouchResponder)(View *self);
 
   /**
    * @fn bool View::bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
@@ -721,12 +738,20 @@ struct ViewInterface {
   bool (*isDescendantOfView)(const View *self, const View *view);
 
   /**
-   * @fn bool View::isFirstResponder(const View *self)
+   * @fn bool View::isKeyResponder(const View *self)
    * @param self The View.
    * @return True if this View is the first responder, false otherwise.
    * @memberof View
    */
-  bool (*isFirstResponder)(const View *self);
+  bool (*isKeyResponder)(const View *self);
+
+  /**
+   * @fn bool View::isTouchResponder(const View *self)
+   * @param self The View.
+   * @return True if this View is responding to mouse and touch events, false otherwise.
+   * @memberof View
+   */
+  bool (*isTouchResponder)(const View *self);
 
   /**
    * @fn bool View::isVisible(const View *self)
@@ -870,12 +895,20 @@ struct ViewInterface {
   void (*replaceSubview)(View *self, View *subview, View *replacement);
 
   /**
-   * @fn void View::resignFirstResponder(View *self)
-   * @brief Resigns first responder priority.
+   * @fn void View::resignKeyResponder(View *self)
+   * @brief Resigns key responder priority.
    * @param self The View.
    * @memberof View
    */
-  void (*resignFirstResponder)(View *self);
+  void (*resignKeyResponder)(View *self);
+
+  /**
+   * @fn void View::resignTouchResponder(View *self)
+   * @brief Resigns touch responder priority.
+   * @param self The View.
+   * @memberof View
+   */
+  void (*resignTouchResponder)(View *self);
 
   /**
    * @fn void View::resize(View *self, const SDL_Size *size)

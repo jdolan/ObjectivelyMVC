@@ -91,7 +91,8 @@ static void dealloc(Object *self) {
 
   release(this->subviews);
 
-  $(this, resignFirstResponder);
+  $(this, resignKeyResponder);
+  $(this, resignTouchResponder);
 
   free(this->identifier);
 
@@ -128,10 +129,18 @@ static String *description(const Object *self) {
 #pragma mark - View
 
 /**
- * @fn bool View::acceptsFirstResponder(const View *self)
+ * @fn bool View::acceptsKeyResponder(const View *self)
  * @memberof View
  */
-static bool acceptsFirstResponder(const View *self) {
+static bool acceptsKeyResponder(const View *self) {
+  return false;
+}
+
+/**
+ * @fn bool View::acceptsTouchResponder(const View *self)
+ * @memberof View
+ */
+static bool acceptsTouchResponder(const View *self) {
   return false;
 }
 
@@ -389,25 +398,48 @@ static void awakeWithResourceName(View *self, const char *name) {
 }
 
 /**
- * @fn void View::becomeFirstResponder(View *self)
+ * @fn void View::becomeKeyResponder(View *self)
  * @memberof View
  */
-static void becomeFirstResponder(View *self) {
+static void becomeKeyResponder(View *self) {
 
   assert(self->window);
 
-  if (!$(self, isFirstResponder)) {
+  if (!$(self, isKeyResponder)) {
 
-    View *firstResponder = SDL_GetWindowData(self->window, "firstResponder");
-    if (firstResponder) {
-      $(firstResponder, resignFirstResponder);
+    View *keyResponder = SDL_GetWindowData(self->window, "keyResponder");
+    if (keyResponder) {
+      $(keyResponder, resignKeyResponder);
     }
 
     String *path = $(self, path);
     MVC_LogDebug("%s\n", path->chars);
     release(path);
 
-    SDL_SetWindowData(self->window, "firstResponder", self);
+    SDL_SetWindowData(self->window, "keyResponder", self);
+  }
+}
+
+/**
+ * @fn void View::becomeTouchResponder(View *self)
+ * @memberof View
+ */
+static void becomeTouchResponder(View *self) {
+
+  assert(self->window);
+
+  if (!$(self, isTouchResponder)) {
+
+    View *touchResponder = SDL_GetWindowData(self->window, "touchResonder");
+    if (touchResponder) {
+      $(touchResponder, resignTouchResponder);
+    }
+
+    String *path = $(self, path);
+    MVC_LogDebug("%s\n", path->chars);
+    release(path);
+
+    SDL_SetWindowData(self->window, "touchResponder", self);
   }
 }
 
@@ -610,7 +642,7 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
  */
 static bool didReceiveEvent(const View *self, const SDL_Event *event) {
 
-  if ($(self, isFirstResponder)) {
+  if ($(self, isKeyResponder)) {
     switch (event->type) {
       case SDL_KEYDOWN:
       case SDL_KEYUP:
@@ -633,10 +665,6 @@ static bool didReceiveEvent(const View *self, const SDL_Event *event) {
         break;
       case SDL_MOUSEWHEEL:
         SDL_GetMouseState(&point.x, &point.y);
-        break;
-      case SDL_FINGERDOWN:
-      case SDL_FINGERUP:
-        point = MakePoint(event->tfinger.x, event->tfinger.y);
         break;
       default:
         return false;
@@ -996,13 +1024,26 @@ static bool isDescendantOfView(const View *self, const View *view) {
 }
 
 /**
- * @fn bool View::isFirstResponder(const View *self)
+ * @fn bool View::isKeyResponder(const View *self)
  * @memberof View
  */
-static bool isFirstResponder(const View *self) {
+static bool isKeyResponder(const View *self) {
 
   if (self->window) {
-    return SDL_GetWindowData(self->window, "firstResponder") == self;
+    return SDL_GetWindowData(self->window, "keyResponder") == self;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * @fn bool View::isTouchResponder(const View *self)
+ * @memberof View
+ */
+static bool isTouchResponder(const View *self) {
+
+  if (self->window) {
+    return SDL_GetWindowData(self->window, "touchResponder") == self;
   } else {
     return false;
   }
@@ -1419,18 +1460,34 @@ static void replaceSubview(View *self, View *subview, View *replacement) {
 }
 
 /**
- * @fn void View::resignFirstResponder(View *self)
+ * @fn void View::resignKeyResponder(View *self)
  * @memberof View
  */
-static void resignFirstResponder(View *self) {
+static void resignKeyResponder(View *self) {
 
-  if (self->window && $(self, isFirstResponder)) {
+  if (self->window && $(self, isKeyResponder)) {
 
     String *path = $(self, path);
     MVC_LogDebug("%s\n", path->chars);
     release(path);
 
-    SDL_SetWindowData(self->window, "firstResponder", NULL);
+    SDL_SetWindowData(self->window, "keyResponder", NULL);
+  }
+}
+
+/**
+ * @fn void View::resignTouchResponder(View *self)
+ * @memberof View
+ */
+static void resignTouchResponder(View *self) {
+
+  if (self->window && $(self, isTouchResponder)) {
+
+    String *path = $(self, path);
+    MVC_LogDebug("%s\n", path->chars);
+    release(path);
+
+    SDL_SetWindowData(self->window, "touchResponder", NULL);
   }
 }
 
@@ -1492,6 +1549,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
       break;
     case SDL_MOUSEBUTTONUP:
       code = ViewEventMouseButtonUp;
+      $(self, resignTouchResponder);
       break;
     case SDL_KEYDOWN:
       code = ViewEventKeyDown;
@@ -1514,8 +1572,8 @@ static void respondToEvent(View *self, const SDL_Event *event) {
   }
 
   if (event->type == SDL_MOUSEBUTTONDOWN) {
-    if ($(self, acceptsFirstResponder)) {
-      $(self, becomeFirstResponder);
+    if ($(self, acceptsKeyResponder)) {
+      $(self, becomeKeyResponder);
       return;
     }
   }
@@ -1853,7 +1911,7 @@ static void warn(View *self, WarningType type, const char *fmt, ...) {
 static void willMoveToWindow(View *self, SDL_Window *window) {
 
   if (self->window) {
-    $(self, resignFirstResponder);
+    $(self, resignKeyResponder);
     $(self, detachStylesheet, self->window);
   }
 }
@@ -1868,7 +1926,8 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
   ((ObjectInterface *) clazz->interface)->description = description;
 
-  ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
+  ((ViewInterface *) clazz->interface)->acceptsKeyResponder = acceptsKeyResponder;
+  ((ViewInterface *) clazz->interface)->acceptsTouchResponder = acceptsTouchResponder;
   ((ViewInterface *) clazz->interface)->addClassName = addClassName;
   ((ViewInterface *) clazz->interface)->addSubview = addSubview;
   ((ViewInterface *) clazz->interface)->addSubviewRelativeTo = addSubviewRelativeTo;
@@ -1882,7 +1941,8 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
   ((ViewInterface *) clazz->interface)->awakeWithResource = awakeWithResource;
   ((ViewInterface *) clazz->interface)->awakeWithResourceName = awakeWithResourceName;
-  ((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
+  ((ViewInterface *) clazz->interface)->becomeKeyResponder = becomeKeyResponder;
+  ((ViewInterface *) clazz->interface)->becomeTouchResponder = becomeTouchResponder;
   ((ViewInterface *) clazz->interface)->bind = _bind;
   ((ViewInterface *) clazz->interface)->bounds = bounds;
   ((ViewInterface *) clazz->interface)->bringSubviewToFront = bringSubviewToFront;
@@ -1913,7 +1973,8 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->invalidateStyle = invalidateStyle;
   ((ViewInterface *) clazz->interface)->isContainer = isContainer;
   ((ViewInterface *) clazz->interface)->isDescendantOfView = isDescendantOfView;
-  ((ViewInterface *) clazz->interface)->isFirstResponder = isFirstResponder;
+  ((ViewInterface *) clazz->interface)->isKeyResponder = isKeyResponder;
+  ((ViewInterface *) clazz->interface)->isTouchResponder = isTouchResponder;
   ((ViewInterface *) clazz->interface)->isVisible = isVisible;
   ((ViewInterface *) clazz->interface)->layoutIfNeeded = layoutIfNeeded;
   ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
@@ -1930,7 +1991,8 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((ViewInterface *) clazz->interface)->renderFrame = renderFrame;
   ((ViewInterface *) clazz->interface)->replaceSubview = replaceSubview;
-  ((ViewInterface *) clazz->interface)->resignFirstResponder = resignFirstResponder;
+  ((ViewInterface *) clazz->interface)->resignKeyResponder = resignKeyResponder;
+  ((ViewInterface *) clazz->interface)->resignTouchResponder = resignTouchResponder;
   ((ViewInterface *) clazz->interface)->resize = resize;
   ((ViewInterface *) clazz->interface)->resolve = resolve;
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;

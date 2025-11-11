@@ -86,11 +86,11 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 }
 
 /**
- * @see View::becomeFirstResponder
+ * @see View::becomeKeyResponder
  */
-static void becomeFirstResponder(View *self) {
+static void becomeKeyResponder(View *self) {
 
-  super(View, self, becomeFirstResponder);
+  super(View, self, becomeKeyResponder);
 
   SDL_StartTextInput();
 }
@@ -169,11 +169,11 @@ static void render(View *self, Renderer *renderer) {
 }
 
 /**
- * @see View::resignFirstResponder
+ * @see View::resignKeyResponder
  */
-static void resignFirstResponder(View *self) {
+static void resignKeyResponder(View *self) {
 
-  super(View, self, resignFirstResponder);
+  super(View, self, resignKeyResponder);
 
   SDL_StopTextInput();
 }
@@ -216,7 +216,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         case SDLK_RETURN:
         case SDLK_TAB:
         case SDLK_KP_TAB:
-          $(view, resignFirstResponder);
+          $(view, resignKeyResponder);
           break;
 
         case SDLK_BACKSPACE:
@@ -415,12 +415,12 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
-  ((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
+  ((ViewInterface *) clazz->interface)->becomeKeyResponder = becomeKeyResponder;
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
   ((ViewInterface *) clazz->interface)->init = init;
   ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
   ((ViewInterface *) clazz->interface)->render = render;
-  ((ViewInterface *) clazz->interface)->resignFirstResponder = resignFirstResponder;
+  ((ViewInterface *) clazz->interface)->resignKeyResponder = resignKeyResponder;
 
   ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
   ((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;

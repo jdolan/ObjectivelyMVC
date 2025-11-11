@@ -101,30 +101,30 @@ struct WindowControllerInterface {
   void (*debug)(WindowController *self);
 
   /**
-   * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
+   * @fn View *WindowController::touchResponder(const WindowController *self, const SDL_Event *event)
    * @param self The WindowController.
    * @param event The event.
-   * @return The View that was targeted by the given event.
+   * @return The touch responder or NULL.
    * @see View::hitTest(const View *, const SDL_Point *)
    * @memberof WindowController
    */
-  View *(*eventTarget)(const WindowController *self, const SDL_Event *event);
+  View *(*touchResponder)(const WindowController *self, const SDL_Event *event);
 
   /**
-   * @fn View *WindowController::firstResponder(const WindowController *self)
+   * @fn View *WindowController::keyResponder(const WindowController *self)
    * @param self The WindowController.
-   * @return The first responder or NULL.
+   * @return The key responder or NULL.
    * @memberof WindowController
    */
-  View *(*firstResponder)(const WindowController *self);
+  View *(*keyResponder)(const WindowController *self);
 
   /**
-   * @fn Array *WindowController::firstResponders(const WindowController *self)
+   * @fn Array *WindowController::keyResponders(const WindowController *self)
    * @param self The WindowController.
    * @return An Array of all first responders in the WindowController's View hierarchy.
    * @memberof WindowController
    */
-  Array *(*firstResponders)(const WindowController *self);
+  Array *(*keyResponders)(const WindowController *self);
 
   /**
    * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
@@ -137,24 +137,24 @@ struct WindowControllerInterface {
   WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
 
   /**
-   * @fn View *WindowController::nextFirstResponder(const WindowController *self, View *firstResponder)
-   * @brief Finds the next available firstResponder from the given `firstResponder`.
+   * @fn View *WindowController::nextKeyResponder(const WindowController *self, View *keyResponder)
+   * @brief Finds the next available keyResponder from the given `keyResponder`.
    * @param self The WindowController.
-   * @param firstResponder The current firstResponder.
-   * @return The next firstResponder, or NULL.
+   * @param keyResponder The current keyResponder.
+   * @return The next keyResponder, or NULL.
    * @memberof WindowController
    */
-  View *(*nextFirstResponder)(const WindowController *self, View *firstResponder);
+  View *(*nextKeyResponder)(const WindowController *self, View *keyResponder);
 
   /**
-   * @fn View *WindowController::previousFirstResponder(const WindowController *self, View *firstResponder)
-   * @brief Finds the previous available firstResponder from the given `firstResponder`.
+   * @fn View *WindowController::previousKeyResponder(const WindowController *self, View *keyResponder)
+   * @brief Finds the previous available keyResponder from the given `keyResponder`.
    * @param self The WindowController.
-   * @param firstResponder The current firstResponder.
-   * @return The previous firstResponder, or NULL.
+   * @param keyResponder The current keyResponder.
+   * @return The previous keyResponder, or NULL.
    * @memberof WindowController
    */
-  View *(*previousFirstResponder)(const WindowController *self, View *firstResponder);
+  View *(*previousKeyResponder)(const WindowController *self, View *keyResponder);
 
   /**
    * @fn void WindowController::render(WindowController *self)
@@ -171,10 +171,10 @@ struct WindowControllerInterface {
    * @param self The WindowController.
    * @param event The event.
    * @remarks Your application should call this method for each event that the View hierarchy is
-   * expected to respond to. The event will be dispatched to WindowController::firstResponder,
+   * expected to respond to. The event will be dispatched to WindowController::keyResponder,
    * which is the first of:
    *  * The View that has claimed first responder status for the window via
-   *    View::becomeFirstResponder
+   *    View::becomeKeyResponder
    *  * The inner-most descendant in the View hierarchy that received the event, according to
    *    View::hitTest
    *  * This WindowController's ViewController

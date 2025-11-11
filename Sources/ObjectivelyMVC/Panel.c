@@ -50,9 +50,9 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::acceptsFirstResponder(View *)
+ * @see View::acceptsKeyResponder(View *)
  */
-static bool acceptsFirstResponder(const View *self) {
+static bool acceptsKeyResponder(const View *self) {
   return false;
 }
 
@@ -129,37 +129,41 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   Panel *this = (Panel *) self;
 
-  if (event->type == SDL_MOUSEMOTION && (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON_LMASK)) {
-
-    if ((self->state & ControlStateHighlighted) == 0) {
-      if ($((View *) this->resizeHandle, didReceiveEvent, event)) {
-        self->state |= ControlStateHighlighted;
+  if (event->type == SDL_MOUSEBUTTONDOWN) {
+    if ($((View *) this->resizeHandle, didReceiveEvent, event)) {
+      if (this->isResizable && !this->isDragging) {
         this->isResizing = true;
-      } else if (this->isDraggable) {
-        self->state |= ControlStateHighlighted;
-        this->isDragging = true;
       }
+      return true;
     }
-
-    if (this->isResizing) {
-      SDL_Size size = $((View *) self, size);
-
-      size.w = clamp(size.w + event->motion.xrel, this->minSize.w, this->maxSize.w);
-      size.h = clamp(size.h + event->motion.yrel, this->minSize.h, this->maxSize.h);
-
-      $((View *) self, resize, &size);
-    } else if (this->isDragging) {
-      self->view.frame.x += event->motion.xrel;
-      self->view.frame.y += event->motion.yrel;
-    }
-
-    return true;
   }
 
-  if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
-    self->state &= ~ControlStateHighlighted;
-    this->isResizing = this->isDragging = false;
-    return true;
+  if (event->type == SDL_MOUSEMOTION) {
+
+    if (event->motion.state & SDL_BUTTON_LEFT) {
+      self->state |= ControlStateHighlighted;
+
+      if (this->isResizing) {
+        SDL_Size size = $((View *) self, size);
+
+        size.w += event->motion.xrel;
+        size.h += event->motion.yrel;
+
+        $((View *) self, resize, &size);
+        return true;
+
+      } else if (this->isDraggable) {
+        this->isDragging = true;
+
+        self->view.frame.x += event->motion.xrel;
+        self->view.frame.y += event->motion.yrel;
+
+        return true;
+      }
+    } else {
+      self->state &= ~ControlStateHighlighted;
+      this->isResizing = this->isDragging = false;
+    }
   }
 
   return super(Control, self, captureEvent, event);
@@ -247,7 +251,7 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-  ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
+  ((ViewInterface *) clazz->interface)->acceptsKeyResponder = acceptsKeyResponder;
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
   ((ViewInterface *) clazz->interface)->init = init;

@@ -64,9 +64,19 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @see View::acceptsFirstResponder(const View *)
+ * @see View::acceptsKeyResponder(const View *)
  */
-static bool acceptsFirstResponder(const View *self) {
+static bool acceptsKeyResponder(const View *self) {
+
+  Control *this = (Control *) self;
+
+  return (this->state & ControlStateDisabled) == 0;
+}
+
+/**
+ * @see View::acceptsTouchResponder(const View *)
+ */
+static bool acceptsTouchResponder(const View *self) {
 
   Control *this = (Control *) self;
 
@@ -115,9 +125,9 @@ static View *init(View *self) {
 }
 
 /**
- * @fn View::becomeFirstResponder(View *)
+ * @fn View::becomeKeyResponder(View *)
  */
-static void becomeFirstResponder(View *self) {
+static void becomeKeyResponder(View *self) {
 
   Control *this = (Control *) self;
 
@@ -128,7 +138,7 @@ static void becomeFirstResponder(View *self) {
     $(this, stateDidChange);
   }
 
-  super(View, self, becomeFirstResponder);
+  super(View, self, becomeKeyResponder);
 }
 
 /**
@@ -246,9 +256,9 @@ static void render(View *self, Renderer *renderer) {
 }
 
 /**
- * @see View::resignFirstResponder(View *)
+ * @see View::resignKeyResponder(View *)
  */
-static void resignFirstResponder(View *self) {
+static void resignKeyResponder(View *self) {
 
   Control *this = (Control *) self;
 
@@ -260,7 +270,7 @@ static void resignFirstResponder(View *self) {
     $(this, stateDidChange);
   }
 
-  super(View, self, resignFirstResponder);
+  super(View, self, resignKeyResponder);
 }
 
 /**
@@ -367,14 +377,15 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-  ((ViewInterface *) clazz->interface)->acceptsFirstResponder = acceptsFirstResponder;
+  ((ViewInterface *) clazz->interface)->acceptsKeyResponder = acceptsKeyResponder;
+  ((ViewInterface *) clazz->interface)->acceptsTouchResponder = acceptsTouchResponder;
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
-  ((ViewInterface *) clazz->interface)->becomeFirstResponder = becomeFirstResponder;
+  ((ViewInterface *) clazz->interface)->becomeKeyResponder = becomeKeyResponder;
   ((ViewInterface *) clazz->interface)->init = init;
   ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
   ((ViewInterface *) clazz->interface)->render = render;
-  ((ViewInterface *) clazz->interface)->resignFirstResponder = resignFirstResponder;
+  ((ViewInterface *) clazz->interface)->resignKeyResponder = resignKeyResponder;
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
   ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;

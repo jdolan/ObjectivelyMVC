@@ -89,16 +89,6 @@ struct Panel {
   bool isResizing;
 
   /**
-   * @brief The minimum size to which this Panel's frame can be resized.
-   */
-  SDL_Size minSize;
-
-  /**
-   * @brief The maximum size to which this Panel's frame can be resized.
-   */
-  SDL_Size maxSize;
-
-  /**
    * @brief The resize handle.
    * @private
    */

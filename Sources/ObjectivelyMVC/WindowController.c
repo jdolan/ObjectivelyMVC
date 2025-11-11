@@ -93,61 +93,31 @@ static void debug(WindowController *self) {
 }
 
 /**
- * @fn View *WindowController::eventTarget(const WindowController *self, const SDL_Event *event)
+ * @fn View *WindowController::keyResponder(const WindowController *self)
  * @memberof WindowController
  */
-static View *eventTarget(const WindowController *self, const SDL_Event *event) {
-
-  SDL_Point point;
-
-  switch (event->type) {
-    case SDL_MOUSEBUTTONDOWN:
-    case SDL_MOUSEBUTTONUP:
-      point = MakePoint(event->button.x, event->button.y);
-      break;
-    case SDL_MOUSEMOTION:
-      point = MakePoint(event->motion.x, event->motion.y);
-      break;
-    case SDL_MOUSEWHEEL:
-      SDL_GetMouseState(&point.x, &point.y);
-      break;
-    case SDL_FINGERDOWN:
-    case SDL_FINGERUP:
-      point = MakePoint(event->tfinger.x, event->tfinger.y);
-      break;
-    default:
-      return NULL;
-  }
-
-  return $(self->viewController->view, hitTest, &point);
+static View *keyResponder(const WindowController *self) {
+  return SDL_GetWindowData(self->window, "keyResponder");
 }
 
 /**
- * @fn View *WindowController::firstResponder(const WindowController *self)
- * @memberof WindowController
+ * @brief ViewEnumerator for finding the next key responder.
  */
-static View *firstResponder(const WindowController *self) {
-  return SDL_GetWindowData(self->window, "firstResponder");
-}
+static void enumerateKeyResponders(View *view, ident data) {
 
-/**
- * @brief ViewEnumerator for finding the next first responder.
- */
-static void enumerateFirstResponders(View *view, ident data) {
-
-  if ($(view, acceptsFirstResponder) && $(view, isVisible)) {
+  if ($(view, acceptsKeyResponder) && $(view, isVisible)) {
     $((MutableArray *) data, addObject, view);
   }
 }
 
 /**
- * @fn Array *WindowController::firstResponders(const WindowController *self)
+ * @fn Array *WindowController::keyResponders(const WindowController *self)
  * @memberof WindowController
  */
-static Array *firstResponders(const WindowController *self) {
+static Array *keyResponders(const WindowController *self) {
 
   Array *array = (Array *) $(alloc(MutableArray), init);
-  $(self->viewController->view, enumerateDescendants, enumerateFirstResponders, array);
+  $(self->viewController->view, enumerateDescendants, enumerateKeyResponders, array);
 
   return array;
 }
@@ -190,18 +160,18 @@ static void render(WindowController *self) {
 }
 
 /**
- * @fn View *WindowController::nextFirstResponder(const WindowController *self, View *firstResponder)
+ * @fn View *WindowController::nextKeyResponder(const WindowController *self, View *keyResponder)
  * @memberof WindowController
  */
-static View *nextFirstResponder(const WindowController *self, View *firstResponder) {
+static View *nextKeyResponder(const WindowController *self, View *keyResponder) {
 
   View *next = NULL;
 
-  Array *array = $(self, firstResponders);
+  Array *array = $(self, keyResponders);
 
   if (array->count) {
-    if (firstResponder && $(array, containsObject, firstResponder)) {
-      const ssize_t index = $(array, indexOfObject, firstResponder);
+    if (keyResponder && $(array, containsObject, keyResponder)) {
+      const ssize_t index = $(array, indexOfObject, keyResponder);
       next = $(array, objectAtIndex, (index + 1) % array->count);
     } else {
       next = $(array, firstObject);
@@ -213,18 +183,18 @@ static View *nextFirstResponder(const WindowController *self, View *firstRespond
 }
 
 /**
- * @fn View *WindowController::previousFirstResponder(const WindowController *self, View *firstResponder)
+ * @fn View *WindowController::previousKeyResponder(const WindowController *self, View *keyResponder)
  * @memberof WindowController
  */
-static View *previousFirstResponder(const WindowController *self, View *firstResponder) {
+static View *previousKeyResponder(const WindowController *self, View *keyResponder) {
 
   View *prev = NULL;
 
-  Array *array = $(self, firstResponders);
+  Array *array = $(self, keyResponders);
 
   if (array->count) {
-    if (firstResponder && $(array, containsObject, firstResponder)) {
-      const ssize_t index = $(array, indexOfObject, firstResponder);
+    if (keyResponder && $(array, containsObject, keyResponder)) {
+      const ssize_t index = $(array, indexOfObject, keyResponder);
       prev = $(array, objectAtIndex, (index + array->count - 1) % array->count);
     } else {
       prev = $(array, firstObject);
@@ -270,33 +240,35 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     case SDL_KEYUP:
     case SDL_KEYDOWN:
     case SDL_TEXTINPUT:
-      view = $(self, firstResponder);
-      if (view) {
-        $(view, respondToEvent, event);
-      } else {
-        $(self->viewController, respondToEvent, event);
-      }
+      view = $(self, keyResponder);
       break;
-    default:
-      view = $(self, eventTarget, event);
-      if (view) {
-        $(view, respondToEvent, event);
-      }
-      $(self->viewController, respondToEvent, event);
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEWHEEL:
+    case SDL_FINGERDOWN:
+    case SDL_FINGERUP:
+      view = $(self, touchResponder, event);
       break;
+  }
+
+  if (view) {
+    $(view, respondToEvent, event);
+  } else {
+    $(self->viewController, respondToEvent, event);
   }
 
   if (event->type == SDL_KEYDOWN) {
     if (event->key.keysym.sym == SDLK_TAB) {
 
       if (event->key.keysym.mod & KMOD_SHIFT) {
-        view = $(self, previousFirstResponder, view);
+        view = $(self, previousKeyResponder, view);
       } else {
-        view = $(self, nextFirstResponder, view);
+        view = $(self, nextKeyResponder, view);
       }
 
       if (view) {
-        $(view, becomeFirstResponder);
+        $(view, becomeKeyResponder);
       }
     }
 
@@ -360,7 +332,7 @@ static void setViewController(WindowController *self, ViewController *viewContro
 
   if (self->viewController != viewController || self->viewController == NULL) {
 
-    SDL_SetWindowData(self->window, "firstResponder", NULL);
+    SDL_SetWindowData(self->window, "keyResponder", NULL);
 
     if (self->viewController) {
       $(self->viewController, viewWillDisappear);
@@ -399,7 +371,8 @@ static void setWindow(WindowController *self, SDL_Window *window) {
   SDL_SetWindowData(self->window, "windowController", self);
   assert(SDL_GetWindowData(self->window, "windowController") == self);
 
-  SDL_SetWindowData(self->window, "firstResponder", NULL);
+  SDL_SetWindowData(self->window, "keyResponder", NULL);
+  SDL_SetWindowData(self->window, "touchResponder", NULL);
 
   if (self->viewController) {
     $(self->viewController->view, moveToWindow, self->window);
@@ -441,6 +414,61 @@ static void toggleDebugger(WindowController *self) {
 }
 
 /**
+ * @fn View *WindowController::touchResponder(const WindowController *self, const SDL_Event *event)
+ * @memberof WindowController
+ */
+static View *touchResponder(const WindowController *self, const SDL_Event *event) {
+
+  SDL_Point point;
+
+  View *touchResponder = SDL_GetWindowData(self->window, "touchResponder");
+
+  switch (event->type) {
+    case SDL_MOUSEBUTTONDOWN:
+      point = MakePoint(event->button.x, event->button.y);
+      break;
+    case SDL_MOUSEBUTTONUP:
+      if (touchResponder) {
+        return touchResponder;
+      }
+      point = MakePoint(event->button.x, event->button.y);
+      break;
+    case SDL_MOUSEMOTION:
+      if (touchResponder) {
+        return touchResponder;
+      }
+      point = MakePoint(event->motion.x, event->motion.y);
+      break;
+    case SDL_MOUSEWHEEL:
+      if (touchResponder) {
+        return touchResponder;
+      }
+      SDL_GetMouseState(&point.x, &point.y);
+      break;
+    default:
+      return NULL;
+  }
+
+  touchResponder = $(self->viewController->view, hitTest, &point);
+  if (touchResponder) {
+    switch (event->type) {
+      case SDL_MOUSEBUTTONDOWN:
+        $(touchResponder, becomeTouchResponder);
+        View *keyResponder = $(self, keyResponder);
+        if (keyResponder && keyResponder != touchResponder) {
+          $(keyResponder, resignKeyResponder);
+        }
+        break;
+      case SDL_MOUSEBUTTONUP:
+        $(touchResponder, resignTouchResponder);
+        break;
+    }
+  }
+
+  return touchResponder;
+}
+
+/**
  * @fn WindowController *WindowController::windowController(SDL_Window *window)
  * @memberof WindowController
  */
@@ -461,12 +489,11 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((WindowControllerInterface *) clazz->interface)->debug = debug;
-  ((WindowControllerInterface *) clazz->interface)->eventTarget = eventTarget;
-  ((WindowControllerInterface *) clazz->interface)->firstResponder = firstResponder;
-  ((WindowControllerInterface *) clazz->interface)->firstResponders = firstResponders;
+  ((WindowControllerInterface *) clazz->interface)->keyResponder = keyResponder;
+  ((WindowControllerInterface *) clazz->interface)->keyResponders = keyResponders;
   ((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
-  ((WindowControllerInterface *) clazz->interface)->nextFirstResponder = nextFirstResponder;
-  ((WindowControllerInterface *) clazz->interface)->previousFirstResponder = previousFirstResponder;
+  ((WindowControllerInterface *) clazz->interface)->nextKeyResponder = nextKeyResponder;
+  ((WindowControllerInterface *) clazz->interface)->previousKeyResponder = previousKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->render = render;
   ((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
@@ -474,6 +501,7 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
   ((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;
   ((WindowControllerInterface *) clazz->interface)->toggleDebugger = toggleDebugger;
+  ((WindowControllerInterface *) clazz->interface)->touchResponder = touchResponder;
   ((WindowControllerInterface *) clazz->interface)->windowController = windowController;
 }
 
