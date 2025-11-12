@@ -99,17 +99,7 @@ struct WindowControllerInterface {
    * @memberof WindowController
    */
   void (*debug)(WindowController *self);
-
-  /**
-   * @fn View *WindowController::touchResponder(const WindowController *self, const SDL_Event *event)
-   * @param self The WindowController.
-   * @param event The event.
-   * @return The touch responder or NULL.
-   * @see View::hitTest(const View *, const SDL_Point *)
-   * @memberof WindowController
-   */
-  View *(*touchResponder)(const WindowController *self, const SDL_Event *event);
-
+  
   /**
    * @fn View *WindowController::keyResponder(const WindowController *self)
    * @param self The WindowController.
@@ -173,14 +163,14 @@ struct WindowControllerInterface {
    * @remarks Your application should call this method for each event that the View hierarchy is
    * expected to respond to. The event will be dispatched to WindowController::keyResponder,
    * which is the first of:
-   *  * The View that has claimed first responder status for the window via
+   *  * The View that has claimed key responder status for the window via
    *    View::becomeKeyResponder
    *  * The inner-most descendant in the View hierarchy that received the event, according to
    *    View::hitTest
    *  * This WindowController's ViewController
    * @remarks By default, the event is passed up the View hierarchy by View::respondToEvent.
    * Subclasses of View, such as Control, may stop event propagation if an event has been
-   * adequately responded to.
+   * captured.
    * @memberof WindowController
    */
   void (*respondToEvent)(WindowController * self, const SDL_Event *event);
@@ -228,6 +218,24 @@ struct WindowControllerInterface {
    * @memberof WindowController
    */
   void (*toggleDebugger)(WindowController *self);
+  
+  /**
+   * @fn View *WindowController::touchResponder(const WindowController *self)
+   * @param self The WindowController.
+   * @return The touch responder or NULL.
+   * @see View::hitTest(const View *, const SDL_Point *)
+   * @memberof WindowController
+   */
+  View *(*touchResponder)(const WindowController *self);
+
+  /**
+   * @fn View *WindowController::touchTarget(const WindowController *self, const SDL_Event *event))
+   * @brief Returns the touch event target, or NULL.
+   * @param self The WindowController.
+   * @return The touch event target, or NULL.
+   * @memberof WindowController
+   */
+  View *(*touchTarget)(const WindowController *self, const SDL_Event *event);
 
   /**
    * @static
