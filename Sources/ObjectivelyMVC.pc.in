@@ -4,7 +4,7 @@ includedir=@includedir@
 libdir=@libdir@
 
 Name: ObjectivelyMVC
-Description: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+Description: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
 URL: https://github.com/jdolan/ObjectivelyMVC
 Version: @PACKAGE_VERSION@
 Cflags: -I${includedir}

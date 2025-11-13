@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -59,7 +59,7 @@ double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight) {
   if (h) {
 
     int dh;
-    SDL_GL_GetDrawableSize(window, NULL, &dh);
+    SDL_GetWindowSizeInPixels(window, NULL, &dh);
 
     if (drawableHeight) {
       *drawableHeight = dh;

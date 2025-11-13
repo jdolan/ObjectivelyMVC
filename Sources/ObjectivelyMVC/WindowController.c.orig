@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -33,7 +33,7 @@
 #pragma mark - Delegates
 
 /**
- * @brief ViewEnumerator for `SDL_EVENT_MOUSE_MOTION`.
+ * @brief ViewEnumerator for `SDL_MOUSEMOTION_EVENT`.
  */
 static void mouseMotion_enumerate(View *view, ident data) {
 
@@ -78,9 +78,8 @@ static void debug(WindowController *self) {
 
     ViewController *debugViewController = (ViewController *) self->debugViewController;
 
-    float mx, my;
-    SDL_GetMouseState(&mx, &my);
-    SDL_Point point = MakePoint(mx, my);
+    SDL_Point point = MakePoint(0, 0);
+    SDL_GetMouseState(&point.x, &point.y);
 
     View *view = $(self->viewController->view, hitTest, &point);
     if (view) {
@@ -98,7 +97,7 @@ static void debug(WindowController *self) {
  * @memberof WindowController
  */
 static View *keyResponder(const WindowController *self) {
-  return SDL_GetPointerProperty(SDL_GetWindowProperties(self->window), "keyResponder", NULL);
+  return SDL_GetWindowData(self->window, "keyResponder");
 }
 
 /**
@@ -212,104 +211,75 @@ static View *previousKeyResponder(const WindowController *self, View *keyRespond
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
-  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", (ident) event);
+  SDL_SetWindowData(self->window, "event", (ident) event);
 
-  switch (event->type) {
-    case SDL_EVENT_WINDOW_EXPOSED:
-      $(self, setWindow, SDL_GL_GetCurrentWindow());
-      $(self->renderer, renderDeviceDidReset);
-      $(self->viewController->view, renderDeviceDidReset);
-      $(self->viewController->view, updateBindings);
-      break;
-    case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-      $(self->renderer, renderDeviceWillReset);
-      $(self->viewController->view, renderDeviceWillReset);
-      break;
-    default:
-      break;
+  if (event->type == SDL_WINDOWEVENT) {
+    switch (event->window.event) {
+      case SDL_WINDOWEVENT_EXPOSED:
+        $(self, setWindow, SDL_GL_GetCurrentWindow());
+        $(self->renderer, renderDeviceDidReset);
+        $(self->viewController->view, renderDeviceDidReset);
+        $(self->viewController->view, updateBindings);
+        break;
+      case SDL_WINDOWEVENT_CLOSE:
+        $(self->renderer, renderDeviceWillReset);
+        $(self->viewController->view, renderDeviceWillReset);
+        break;
+      default:
+        break;
+    }
   }
 
-  if (event->type == SDL_EVENT_MOUSE_MOTION) {
+  if (event->type == SDL_MOUSEMOTION) {
     $(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
   }
 
-  View *keyResponder = $(self, keyResponder), *touchResponder = $(self, touchResponder);
-  
-  View *touchTarget = $(self, touchTarget, event);
-  
+  View *view = NULL;
+
   switch (event->type) {
-    case SDL_EVENT_KEY_UP:
-    case SDL_EVENT_KEY_DOWN:
-    case SDL_EVENT_TEXT_INPUT:
-      if (keyResponder) {
-        $(keyResponder, respondToEvent, event);
-      } else {
-        $(self->viewController, respondToEvent, event);
-      }
+    case SDL_KEYUP:
+    case SDL_KEYDOWN:
+    case SDL_TEXTINPUT:
+      view = $(self, keyResponder);
       break;
-    case SDL_EVENT_MOUSE_BUTTON_DOWN:
-      if (touchTarget) {
-        $(touchTarget, becomeTouchResponder);
-        $(touchTarget, respondToEvent, event);
-      } else if (touchResponder) {
-        $(touchResponder, respondToEvent, event);
-        $(touchResponder, resignTouchResponder);
-      } else {
-        $(self->viewController, respondToEvent, event);
-      }
-      
-      touchResponder = $(self, touchResponder);
-      if (touchResponder && keyResponder && touchResponder != keyResponder) {
-        $(keyResponder, resignKeyResponder);
-      }
-      break;
-    case SDL_EVENT_MOUSE_BUTTON_UP:
-      if (touchResponder) {
-        $(touchResponder, respondToEvent, event);
-        $(touchResponder, resignTouchResponder);
-      } else if (touchTarget) {
-        $(touchTarget, respondToEvent, event);
-      } else {
-        $(self->viewController, respondToEvent, event);
-      }
-      break;
-    case SDL_EVENT_MOUSE_MOTION:
-    case SDL_EVENT_MOUSE_WHEEL:
-      if (touchResponder) {
-        $(touchResponder, respondToEvent, event);
-      } else if (touchTarget) {
-        $(touchTarget, respondToEvent, event);
-      } else {
-        $(self->viewController, respondToEvent, event);
-      }
-      break;
-    default:
-      $(self->viewController, respondToEvent, event);
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEWHEEL:
+    case SDL_FINGERDOWN:
+    case SDL_FINGERUP:
+      view = $(self, touchResponder, event);
       break;
   }
 
-  if (event->type == SDL_EVENT_KEY_DOWN) {
-    if (event->key.key == SDLK_TAB) {
+  if (view) {
+    $(view, respondToEvent, event);
+  } else {
+    $(self->viewController, respondToEvent, event);
+  }
 
-      if (event->key.mod & SDL_KMOD_SHIFT) {
-        keyResponder = $(self, previousKeyResponder, keyResponder);
+  if (event->type == SDL_KEYDOWN) {
+    if (event->key.keysym.sym == SDLK_TAB) {
+
+      if (event->key.keysym.mod & KMOD_SHIFT) {
+        view = $(self, previousKeyResponder, view);
       } else {
-        keyResponder = $(self, nextKeyResponder, keyResponder);
+        view = $(self, nextKeyResponder, view);
       }
 
-      if (keyResponder) {
-        $(keyResponder, becomeKeyResponder);
+      if (view) {
+        $(view, becomeKeyResponder);
       }
     }
 
-    if (event->key.key == SDLK_D) {
-      if (event->key.mod & SDL_KMOD_CTRL) {
+    if (event->key.keysym.sym == SDLK_d) {
+      if (event->key.keysym.mod & KMOD_CTRL) {
         $(self, toggleDebugger);
       }
     }
   }
 
-  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", NULL);
+  SDL_SetWindowData(self->window, "event", NULL);
 }
 
 /**
@@ -362,7 +332,7 @@ static void setViewController(WindowController *self, ViewController *viewContro
 
   if (self->viewController != viewController || self->viewController == NULL) {
 
-    SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "keyResponder", NULL);
+    SDL_SetWindowData(self->window, "keyResponder", NULL);
 
     if (self->viewController) {
       $(self->viewController, viewWillDisappear);
@@ -395,14 +365,14 @@ static void setWindow(WindowController *self, SDL_Window *window) {
   self->window = window;
   assert(self->window);
 
-  const SDL_WindowFlags flags = SDL_GetWindowFlags(self->window);
+  const Uint32 flags = SDL_GetWindowFlags(self->window);
   assert(flags & SDL_WINDOW_OPENGL);
 
-  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "windowController", self);
-  assert(SDL_GetPointerProperty(SDL_GetWindowProperties(self->window), "windowController", NULL) == self);
+  SDL_SetWindowData(self->window, "windowController", self);
+  assert(SDL_GetWindowData(self->window, "windowController") == self);
 
-  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "keyResponder", NULL);
-  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "touchResponder", NULL);
+  SDL_SetWindowData(self->window, "keyResponder", NULL);
+  SDL_SetWindowData(self->window, "touchResponder", NULL);
 
   if (self->viewController) {
     $(self->viewController->view, moveToWindow, self->window);
@@ -447,38 +417,55 @@ static void toggleDebugger(WindowController *self) {
  * @fn View *WindowController::touchResponder(const WindowController *self, const SDL_Event *event)
  * @memberof WindowController
  */
-static View *touchResponder(const WindowController *self) {
-  return SDL_GetPointerProperty(SDL_GetWindowProperties(self->window), "touchResponder", NULL);
-}
+static View *touchResponder(const WindowController *self, const SDL_Event *event) {
 
-/**
- * @fn View *WindowController::touchTarget(const WindowController *self, const SDL_Event *event))
- * @memberof WindowController
- */
-static View *touchTarget(const WindowController *self, const SDL_Event *event) {
   SDL_Point point;
- 
+
+  View *touchResponder = SDL_GetWindowData(self->window, "touchResponder");
+
   switch (event->type) {
-    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+    case SDL_MOUSEBUTTONDOWN:
       point = MakePoint(event->button.x, event->button.y);
       break;
-    case SDL_EVENT_MOUSE_BUTTON_UP:
+    case SDL_MOUSEBUTTONUP:
+      if (touchResponder) {
+        return touchResponder;
+      }
       point = MakePoint(event->button.x, event->button.y);
       break;
-    case SDL_EVENT_MOUSE_MOTION:
+    case SDL_MOUSEMOTION:
+      if (touchResponder) {
+        return touchResponder;
+      }
       point = MakePoint(event->motion.x, event->motion.y);
       break;
-    case SDL_EVENT_MOUSE_WHEEL: {
-      float mx, my;
-      SDL_GetMouseState(&mx, &my);
-      point = MakePoint(mx, my);
+    case SDL_MOUSEWHEEL:
+      if (touchResponder) {
+        return touchResponder;
+      }
+      SDL_GetMouseState(&point.x, &point.y);
       break;
-    }
     default:
       return NULL;
   }
 
-  return $(self->viewController->view, hitTest, &point);
+  touchResponder = $(self->viewController->view, hitTest, &point);
+  if (touchResponder) {
+    switch (event->type) {
+      case SDL_MOUSEBUTTONDOWN:
+        $(touchResponder, becomeTouchResponder);
+        View *keyResponder = $(self, keyResponder);
+        if (keyResponder && keyResponder != touchResponder) {
+          $(keyResponder, resignKeyResponder);
+        }
+        break;
+      case SDL_MOUSEBUTTONUP:
+        $(touchResponder, resignTouchResponder);
+        break;
+    }
+  }
+
+  return touchResponder;
 }
 
 /**
@@ -489,7 +476,7 @@ static WindowController *windowController(SDL_Window *window) {
 
   assert(window);
 
-  return SDL_GetPointerProperty(SDL_GetWindowProperties(window), "windowController", NULL);
+  return SDL_GetWindowData(window, "windowController");
 }
 
 #pragma mark - Class lifecycle
@@ -515,7 +502,6 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;
   ((WindowControllerInterface *) clazz->interface)->toggleDebugger = toggleDebugger;
   ((WindowControllerInterface *) clazz->interface)->touchResponder = touchResponder;
-  ((WindowControllerInterface *) clazz->interface)->touchTarget = touchTarget;
   ((WindowControllerInterface *) clazz->interface)->windowController = windowController;
 }
 

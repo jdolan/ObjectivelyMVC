@@ -17,13 +17,13 @@ CFLAGS += \
 	-DEXAMPLES=\"$(abs_srcdir)\" \
 	@HOST_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
-	@SDL2_CFLAGS@
+	@SDL3_CFLAGS@
 
 LDADD = \
 	$(top_builddir)/Sources/ObjectivelyMVC/libObjectivelyMVC.la \
 	@HOST_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
-	@SDL2_LIBS@ \
+	@SDL3_LIBS@ \
 	-lm
 
 Hello_SOURCES = \

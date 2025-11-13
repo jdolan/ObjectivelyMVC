@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -106,7 +106,7 @@ static View *init(View *self) {
  */
 static void respondToEvent(View *self, const SDL_Event *event) {
 
-  if (event->type == SDL_MOUSEBUTTONUP) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
 
     TabView *this = (TabView *) self;
 

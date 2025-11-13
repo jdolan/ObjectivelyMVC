@@ -57,9 +57,9 @@ AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h])
 
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
 PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 1.0.0])
-PKG_CHECK_MODULES([SDL2], [sdl2 >= 2.0.5 SDL2_image SDL2_ttf])
+PKG_CHECK_MODULES([SDL3], [sdl3 >= 3.2.0 sdl3-image sdl3-ttf])
 
-AC_SUBST(SDL2_DLL_LIBS, $(echo $SDL2_LIBS | sed 's/-lmingw32//; s/-lSDL2main//'))
+AC_SUBST(SDL3_DLL_LIBS, $(echo $SDL3_LIBS | sed 's/-lmingw32//; s/-lSDL3main//'))
 
 AC_CONFIG_FILES([
 	Makefile

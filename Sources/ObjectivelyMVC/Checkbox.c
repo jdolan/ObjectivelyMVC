@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -87,13 +87,13 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
   const View *box = (View *) this->box;
 
   switch (event->type) {
-    case SDL_MOUSEBUTTONDOWN:
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
       if ($(box, didReceiveEvent, event)) {
         self->state |= ControlStateHighlighted;
         return true;
       }
       break;
-    case SDL_MOUSEBUTTONUP:
+    case SDL_EVENT_MOUSE_BUTTON_UP:
       if ($(box, didReceiveEvent, event)) {
         self->state ^= ControlStateSelected;
         self->state &= ~ControlStateHighlighted;
@@ -104,8 +104,8 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         return true;
       }
       break;
-    case SDL_KEYDOWN:
-      switch (event->key.keysym.sym) {
+    case SDL_EVENT_KEY_DOWN:
+      switch (event->key.key) {
         case SDLK_SPACE:
         case SDLK_KP_SPACE:
         case SDLK_RETURN:

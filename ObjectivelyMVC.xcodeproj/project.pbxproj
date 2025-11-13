@@ -56,7 +56,6 @@
 		CE12D4461C4C38C700CD0B13 /* View.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4241C4C367100CD0B13 /* View.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D4601C4C8F2400CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
 		CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE12D4621C4C8F4800CD0B13 /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		CE12D4661C4D587E00CD0B13 /* Log.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4651C4D587E00CD0B13 /* Log.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -108,6 +107,10 @@
 		CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBF1D6A08DD006DF143 /* CollectionView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EC21D6A0A17006DF143 /* CollectionItemView.c */; };
 		CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EC31D6A0A17006DF143 /* CollectionItemView.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE5A6AAC2EC55EA6005F3C92 /* libSDL3_image.0.2.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5A6AA92EC55EA6005F3C92 /* libSDL3_image.0.2.4.dylib */; };
+		CE5A6AAD2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */; };
+		CE5A6AAE2EC55EA6005F3C92 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5A6AAB2EC55EA6005F3C92 /* libSDL3.0.dylib */; };
+		CE5A6AAF2EC565AC005F3C92 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5A6AAB2EC55EA6005F3C92 /* libSDL3.0.dylib */; };
 		CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6603791CBBF93E00EB86CF /* ScrollView.c */; };
 		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
@@ -151,9 +154,6 @@
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
 		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E51C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib */; };
-		CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E61C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib */; };
-		CEDCFC7520497979008A4252 /* libSDL2_image-2.0.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157E41C4BF45D00FBA2DE /* libSDL2_image-2.0.0.dylib */; };
 		CEDCFC7720497B07008A4252 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
@@ -344,6 +344,9 @@
 		CE562EBF1D6A08DD006DF143 /* CollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CollectionView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE562EC21D6A0A17006DF143 /* CollectionItemView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionItemView.c; sourceTree = "<group>"; };
 		CE562EC31D6A0A17006DF143 /* CollectionItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CollectionItemView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		CE5A6AA92EC55EA6005F3C92 /* libSDL3_image.0.2.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_image.0.2.4.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_image/3.2.4/lib/libSDL3_image.0.2.4.dylib; sourceTree = "<group>"; };
+		CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_ttf.0.2.2.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib/libSDL3_ttf.0.2.2.dylib; sourceTree = "<group>"; };
+		CE5A6AAB2EC55EA6005F3C92 /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.2.26/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
 		CE5BD5921D3EDD7400C43B85 /* ObjectivelyMVC.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ObjectivelyMVC.pc.in; sourceTree = "<group>"; };
 		CE6603791CBBF93E00EB86CF /* ScrollView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollView.c; sourceTree = "<group>"; };
 		CE66037A1CBBF93E00EB86CF /* ScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -431,7 +434,7 @@
 				CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
 				CEDCFC7720497B07008A4252 /* libObjectively.dylib in Frameworks */,
 				CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */,
-				CE12D4601C4C8F2400CD0B13 /* libSDL2-2.0.0.dylib in Frameworks */,
+				CE5A6AAF2EC565AC005F3C92 /* libSDL3.0.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,9 +474,9 @@
 			files = (
 				CE3A45A0216594D5005ACAD6 /* libObjectively.dylib in Frameworks */,
 				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
-				CEDCFC7520497979008A4252 /* libSDL2_image-2.0.0.dylib in Frameworks */,
-				CED157E91C4BF45D00FBA2DE /* libSDL2_ttf-2.0.0.dylib in Frameworks */,
-				CED157EA1C4BF45D00FBA2DE /* libSDL2-2.0.0.dylib in Frameworks */,
+				CE5A6AAE2EC55EA6005F3C92 /* libSDL3.0.dylib in Frameworks */,
+				CE5A6AAC2EC55EA6005F3C92 /* libSDL3_image.0.2.4.dylib in Frameworks */,
+				CE5A6AAD2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -661,6 +664,9 @@
 		CE12D4971C55012200CD0B13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE5A6AA92EC55EA6005F3C92 /* libSDL3_image.0.2.4.dylib */,
+				CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */,
+				CE5A6AAB2EC55EA6005F3C92 /* libSDL3.0.dylib */,
 				CE89ADA728BAEDC0002E45C7 /* libSDL2_mixer-2.0.0.dylib */,
 				CE423A431F53457D002767E7 /* libcheck.0.dylib */,
 				CEF1D8901D4270150099A857 /* libObjectively.dylib */,
@@ -1130,6 +1136,10 @@
 		CE12D45A1C4C8E8E00CD0B13 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/homebrew/Cellar/sdl3/3.2.26/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1137,6 +1147,10 @@
 		CE12D45B1C4C8E8E00CD0B13 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/homebrew/Cellar/sdl3/3.2.26/lib,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1237,7 +1251,7 @@
 					"$(SRCROOT)/Sources",
 					"$(WORKSPACE_PREFIX)/Objectively/Sources",
 					"$(HOMEBREW_PREFIX)/include",
-					"$(HOMEBREW_PREFIX)/include/SDL2",
+					"$(HOMEBREW_PREFIX)/include/SDL3",
 				);
 				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -1271,7 +1285,7 @@
 					"$(SRCROOT)/Sources",
 					"$(WORKSPACE_PREFIX)/Objectively/Sources",
 					"$(HOMEBREW_PREFIX)/include",
-					"$(HOMEBREW_PREFIX)/include/SDL2",
+					"$(HOMEBREW_PREFIX)/include/SDL3",
 				);
 				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
@@ -1285,6 +1299,12 @@
 			buildSettings = {
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/homebrew/Cellar/sdl3_image/3.2.4/lib,
+					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
+					/opt/homebrew/Cellar/sdl3/3.2.26/lib,
+				);
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
 			};
@@ -1295,6 +1315,12 @@
 			buildSettings = {
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				EXECUTABLE_PREFIX = lib;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/homebrew/Cellar/sdl3_image/3.2.4/lib,
+					/opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib,
+					/opt/homebrew/Cellar/sdl3/3.2.26/lib,
+				);
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
 			};

@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include <SDL_video.h>
+#include <SDL3/SDL_video.h>
 
 #include <Objectively/Resource.h>
 
@@ -168,7 +168,7 @@ struct ImageInterface {
    * @param surface The backing surface.
    * @return The initialized Image, or `NULL` on error.
    * @remarks The surface's reference count is incremented, so that you can (and should) call
-   * `SDL_FreeSurface` when you no longer need it. The Image will also free the surface on
+   * `SDL_DestroySurface` when you no longer need it. The Image will also free the surface on
    * `dealloc`.
    * @remarks Designated initializer.
    * @memberof Image

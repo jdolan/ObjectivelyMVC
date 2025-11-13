@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <SDL_ttf.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include <Objectively/Enum.h>
 #include <Objectively/Array.h>

@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -79,7 +79,8 @@ struct DebugViewController {
   /**
    * Framerate counters.
    */
-  int frames, timestamp;
+  int frames;
+  Uint64 timestamp;
 
   /**
    * @brief The count of visibile Views.

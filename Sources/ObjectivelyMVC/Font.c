@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -22,6 +22,8 @@
  */
 
 #include <assert.h>
+#include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <Objectively/Hash.h>
@@ -224,17 +226,17 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 
   SDL_Surface *surface;
   if (wrapWidth) {
-    surface = TTF_RenderUTF8_Blended_Wrapped(self->font, chars, color, wrapWidth * MVC_WindowScale(NULL, NULL, NULL));
+    surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * MVC_WindowScale(NULL, NULL, NULL));
   } else {
-    surface = TTF_RenderUTF8_Blended(self->font, chars, color);
+    surface = TTF_RenderText_Blended(self->font, chars, 0, color);
   }
 
   SDL_Surface *converted = NULL;
   if (surface) {
-    converted = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA32, 0);
-    SDL_FreeSurface(surface);
+    converted = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
+    SDL_DestroySurface(surface);
   } else {
-    MVC_LogError("%s\n", TTF_GetError());
+    MVC_LogError("%s\n", SDL_GetError());
   }
 
   return converted;
@@ -255,10 +257,10 @@ static void renderDeviceDidReset(Font *self) {
       TTF_CloseFont(self->font);
     }
 
-    SDL_RWops *buffer = SDL_RWFromConstMem(self->data->bytes, (int) self->data->length);
+    SDL_IOStream *buffer = SDL_IOFromConstMem(self->data->bytes, (int) self->data->length);
     assert(buffer);
 
-    self->font = TTF_OpenFontRW(buffer, 1, self->renderSize);
+    self->font = TTF_OpenFontIO(buffer, 1, self->renderSize);
     assert(self->font);
 
     TTF_SetFontStyle(self->font, self->style);
@@ -284,7 +286,7 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
     for (char *line = strtok(lines, "\n\r"); line; line = strtok(NULL, "\n\r")) {
 
       int line_w, line_h;
-      TTF_SizeUTF8(self->font, line, &line_w, &line_h);
+      TTF_GetStringSize(self->font, line, 0, &line_w, &line_h);
 
       if (w) {
         *w = max(*w, line_w);
@@ -297,10 +299,10 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
 
     const float scale = MVC_WindowScale(NULL, NULL, NULL);
     if (w) {
-      *w = ceil(*w / scale);
+      *w = ceilf(*w / scale);
     }
     if (h) {
-      *h = ceil(*h / scale);
+      *h = ceilf(*h / scale);
     }
   }
 }
@@ -325,8 +327,8 @@ static void initialize(Class *clazz) {
   ((FontInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
   ((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
 
-  const int err = TTF_Init();
-  assert(err == 0);
+  const bool init = TTF_Init();
+  assert(init);
 
   _cache = $$(MutableDictionary, dictionary);
   assert(_cache);

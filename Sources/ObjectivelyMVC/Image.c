@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -18,7 +18,7 @@
 #include <assert.h>
 #include <string.h>
 
-#include <SDL_image.h>
+#include <SDL3_image/SDL_image.h>
 
 #include "Image.h"
 #include "Log.h"
@@ -34,7 +34,7 @@ static void dealloc(Object *self) {
 
   Image *this = (Image *) self;
 
-  SDL_FreeSurface(this->surface);
+  SDL_DestroySurface(this->surface);
 
   super(Object, self, dealloc);
 }
@@ -87,12 +87,12 @@ static Image *imageWithSurface(SDL_Surface *surface) {
  */
 static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
 
-  SDL_RWops *ops = SDL_RWFromConstMem(bytes, (int) length);
-  if (ops) {
-    SDL_Surface *surface = IMG_LoadTyped_RW(ops, 0, self->type);
+  SDL_IOStream *stream = SDL_IOFromConstMem(bytes, (int) length);
+  if (stream) {
+    SDL_Surface *surface = IMG_LoadTyped_IO(stream, 0, self->type);
     if (surface) {
       self = $(self, initWithSurface, surface);
-      SDL_FreeSurface(surface);
+      SDL_DestroySurface(surface);
     } else {
       self = release(self);
     }
@@ -100,7 +100,7 @@ static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
     self = release(self);
   }
 
-  SDL_FreeRW(ops);
+  SDL_CloseIO(stream);
   return self;
 }
 
@@ -160,8 +160,8 @@ static Image *initWithSurface(Image *self, SDL_Surface *surface) {
   if (self) {
 
     if (surface) {
-      if (surface->format->format != SDL_PIXELFORMAT_ABGR8888) {
-        self->surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ABGR8888, 0);
+      if (surface->format != SDL_PIXELFORMAT_RGBA32) {
+        self->surface = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
       } else {
         self->surface = surface;
         self->surface->refcount++;

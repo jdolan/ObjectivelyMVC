@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <math.h>
 
 #include "CollectionView.h"
 
@@ -127,7 +128,7 @@ static void layoutSubviews(View *self) {
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-  if (event->type == SDL_MOUSEBUTTONUP) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
 
     CollectionView *this = (CollectionView *) self;
 
@@ -154,7 +155,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
               }
               break;
             case ControlSelectionMultiple:
-              if (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) {
+              if (SDL_GetModState() & (SDL_KMOD_CTRL | SDL_KMOD_GUI)) {
                 if (item->isSelected) {
                   $(this, deselectItemAtIndexPath, indexPath);
                 } else {

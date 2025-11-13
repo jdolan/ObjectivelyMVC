@@ -4,9 +4,9 @@ Installing and Compiling with ObjectivelyMVC
 ### Dependencies
 
  * [Objectively](https://github.com/jdolan/Objectively)
- * [SDL2](https://www.libsdl.org/)
- * [SDL2_image](https://www.libsdl.org/projects/SDL_image/)
- * [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/)
+ * [SDL3](https://www.libsdl.org/)
+ * [SDL3_image](https://www.libsdl.org/projects/SDL_image/)
+ * [SDL3_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 
 ### GNU Autotools
 

@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -22,6 +22,8 @@
  */
 
 #include <assert.h>
+#include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "Log.h"
@@ -151,7 +153,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   const SDL_Rect frame = $((View *) this->bar, renderFrame);
 
-  if (event->type == SDL_MOUSEBUTTONDOWN) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
 
     // The handle captures mouse motion events allowing the user to drag it
     // However, the user may also click left or right of the handle to decrement
@@ -172,14 +174,14 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     return true;
   }
 
-  else if (event->type == SDL_MOUSEBUTTONUP) {
+  else if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
     if (self->state & ControlStateHighlighted) {
       self->state &= ~ControlStateHighlighted;
     }
     return true;
   }
 
-  else if (event->type == SDL_MOUSEMOTION) {
+  else if (event->type == SDL_EVENT_MOUSE_MOTION) {
     if (self->state & ControlStateHighlighted) {
       if (frame.w) {
 
@@ -204,10 +206,10 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     return true;
   }
 
-  if (event->type == SDL_KEYDOWN) {
+  if (event->type == SDL_EVENT_KEY_DOWN) {
 
     double step = 0.0;
-    switch (event->key.keysym.sym) {
+    switch (event->key.key) {
       case SDLK_LEFT:
         step = -this->step ?: -(this->max - this->min) / 20.0;
         break;

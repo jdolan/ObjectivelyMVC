@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <SDL_log.h>
+#include <SDL3/SDL_log.h>
 
 /**
  * @file
@@ -32,10 +32,10 @@
 
 #define LOG_CATEGORY_MVC (SDL_LOG_CATEGORY_CUSTOM + 69)
 
-#define MVC_LogSetPriority(priority) SDL_LogSetPriority(LOG_CATEGORY_MVC, priority)
+#define MVC_LogSetPriority(priority) SDL_SetLogPriority(LOG_CATEGORY_MVC, priority)
 
 #define MVC_LogEnabled(priority) \
-  (SDL_LogGetPriority(LOG_CATEGORY_MVC) <= priority)
+  (SDL_GetLogPriority(LOG_CATEGORY_MVC) <= priority)
 
 #define MVC_LogMessage(priority, fmt, ...) \
   SDL_LogMessage(LOG_CATEGORY_MVC, priority, "%s::%s "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
