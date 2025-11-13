@@ -23,6 +23,7 @@
 
 #include <assert.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "Text.h"
@@ -165,7 +166,7 @@ static void render(View *self, Renderer *renderer) {
 
       this->texture = $(renderer, createTexture, surface);
 
-      SDL_FreeSurface(surface);
+      SDL_DestroySurface(surface);
     }
 
     assert(this->texture);

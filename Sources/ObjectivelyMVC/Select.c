@@ -119,7 +119,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   const Array *options = (Array *) this->options;
 
-  if (event->type == SDL_MOUSEBUTTONUP) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
     if (self->state & ControlStateHighlighted) {
       self->state &= ~ControlStateHighlighted;
 
@@ -140,9 +140,9 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     }
   }
 
-  if (event->type == SDL_KEYDOWN) {
+  if (event->type == SDL_EVENT_KEY_DOWN) {
 
-    switch (event->key.keysym.sym) {
+    switch (event->key.key) {
 
       case SDLK_ESCAPE:
         self->state &= ~ControlStateHighlighted;
@@ -159,7 +159,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         if (option) {
 
           ssize_t index = $(options, indexOfObject, option);
-          if (event->key.keysym.sym == SDLK_UP) {
+          if (event->key.key == SDLK_UP) {
             index = (index - 1 + options->count) % options->count;
           } else {
             index = (index + 1) % options->count;

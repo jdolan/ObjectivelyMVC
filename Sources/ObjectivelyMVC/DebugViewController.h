@@ -79,7 +79,8 @@ struct DebugViewController {
   /**
    * Framerate counters.
    */
-  int frames, timestamp;
+  int frames;
+  Uint64 timestamp;
 
   /**
    * @brief The count of visibile Views.

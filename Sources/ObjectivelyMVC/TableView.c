@@ -136,7 +136,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   TableView *this = (TableView *) self;
 
-  if (event->type == SDL_MOUSEBUTTONUP) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
 
     if ($((View *) this->headerView, didReceiveEvent, event)) {
 
@@ -178,7 +178,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
               }
               break;
             case ControlSelectionMultiple:
-              if (SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) {
+              if (SDL_GetModState() & (SDL_KMOD_CTRL | SDL_KMOD_GUI)) {
                 if (row->isSelected) {
                   $(this, deselectRowAtIndex, index);
                 } else {

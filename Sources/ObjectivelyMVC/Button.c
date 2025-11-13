@@ -82,14 +82,14 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   const bool didReceiveEvent = $(view, didReceiveEvent, event);
 
-  if (event->type == SDL_MOUSEBUTTONDOWN) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     if (didReceiveEvent) {
       self->state |= ControlStateHighlighted;
     }
     return true;
   }
 
-  if (event->type == SDL_MOUSEBUTTONUP) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
     $(view, resignKeyResponder);
 
     self->state &= ~ControlStateHighlighted;
@@ -104,14 +104,14 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     return true;
   }
 
-  if (event->type == SDL_MOUSEMOTION) {
+  if (event->type == SDL_EVENT_MOUSE_MOTION) {
     if (self->state & ControlStateHighlighted) {
       return true;
     }
   }
 
-  if (event->type == SDL_KEYDOWN) {
-    switch (event->key.keysym.sym) {
+  if (event->type == SDL_EVENT_KEY_DOWN) {
+    switch (event->key.key) {
       case SDLK_SPACE:
       case SDLK_KP_SPACE:
       case SDLK_RETURN:

@@ -119,7 +119,7 @@ libObjectivelyMVC_la_CFLAGS = \
 	-I$(top_srcdir)/Sources \
 	@HOST_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
-	@SDL2_CFLAGS@
+	@SDL3_CFLAGS@
 
 libObjectivelyMVC_la_LDFLAGS = \
 	@HOST_LDFLAGS@ \
@@ -128,5 +128,5 @@ libObjectivelyMVC_la_LDFLAGS = \
 libObjectivelyMVC_la_LIBADD = \
 	@HOST_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
-	@SDL2_DLL_LIBS@
+	@SDL3_DLL_LIBS@
 

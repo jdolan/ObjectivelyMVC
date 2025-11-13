@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <Objectively/String.h>
@@ -92,7 +93,7 @@ static void becomeKeyResponder(View *self) {
 
   super(View, self, becomeKeyResponder);
 
-  SDL_StartTextInput();
+  SDL_StartTextInput(self->window);
 }
 
 /**
@@ -175,7 +176,7 @@ static void resignKeyResponder(View *self) {
 
   super(View, self, resignKeyResponder);
 
-  SDL_StopTextInput();
+  SDL_StopTextInput(self->window);
 }
 
 #pragma mark - Control
@@ -192,7 +193,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
   TextView *this = (TextView *) self;
 
   if (this->isEditable) {
-    if (event->type == SDL_TEXTINPUT) {
+    if (event->type == SDL_EVENT_TEXT_INPUT) {
       if ($(self, isFocused)) {
         if (this->position == this->attributedText->string.length) {
           $(this->attributedText, appendCharacters, event->text.text);
@@ -203,13 +204,13 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         didEdit = true;
         didCaptureEvent = true;
       }
-    } else if (event->type == SDL_KEYDOWN) {
+    } else if (event->type == SDL_EVENT_KEY_DOWN) {
       didCaptureEvent = true;
 
       const char *chars = this->attributedText->string.chars;
       const size_t len = this->attributedText->string.length;
 
-      switch (event->key.keysym.sym) {
+      switch (event->key.key) {
 
         case SDLK_ESCAPE:
         case SDLK_KP_ENTER:
@@ -238,7 +239,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
           break;
 
         case SDLK_LEFT:
-          if (SDL_GetModState() & KMOD_CTRL) {
+          if (SDL_GetModState() & SDL_KMOD_CTRL) {
             while (this->position > 0 && chars[this->position] == ' ') {
               this->position--;
             }
@@ -251,7 +252,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
           break;
 
         case SDLK_RIGHT:
-          if (SDL_GetModState() & KMOD_CTRL) {
+          if (SDL_GetModState() & SDL_KMOD_CTRL) {
             while (this->position < len && chars[this->position] == ' ') {
               this->position++;
             }
@@ -274,19 +275,19 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
           this->position = len;
           break;
 
-        case SDLK_a:
-          if (SDL_GetModState() & KMOD_CTRL) {
+        case SDLK_A:
+          if (SDL_GetModState() & SDL_KMOD_CTRL) {
             this->position = 0;
           }
           break;
-        case SDLK_e:
-          if (SDL_GetModState() & KMOD_CTRL) {
+        case SDLK_E:
+          if (SDL_GetModState() & SDL_KMOD_CTRL) {
             this->position = len;
           }
           break;
 
-        case SDLK_v:
-          if ((SDL_GetModState() & (KMOD_CTRL | KMOD_GUI)) && SDL_HasClipboardText()) {
+        case SDLK_V:
+          if ((SDL_GetModState() & (SDL_KMOD_CTRL | SDL_KMOD_GUI)) && SDL_HasClipboardText()) {
             const char *text = SDL_GetClipboardText();
             if (this->position == len) {
               $(this->attributedText, appendCharacters, text);
@@ -326,14 +327,14 @@ static void stateDidChange(Control *self) {
 
   if ($(self, isFocused)) {
 
-    SDL_StartTextInput();
+    SDL_StartTextInput(self->view.window);
 
     if (this->delegate.didBeginEditing) {
       this->delegate.didBeginEditing(this);
     }
   } else {
 
-    SDL_StopTextInput();
+    SDL_StopTextInput(self->view.window);
 
     if (this->delegate.didEndEditing) {
       this->delegate.didEndEditing(this);

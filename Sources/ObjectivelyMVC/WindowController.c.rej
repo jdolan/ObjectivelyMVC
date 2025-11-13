@@ -1,0 +1,128 @@
+@@ -239,16 +238,16 @@
+   View *touchTarget = $(self, touchTarget, event);
+   
+   switch (event->type) {
+-    case SDL_KEYUP:
+-    case SDL_KEYDOWN:
+-    case SDL_TEXTINPUT:
++    case SDL_EVENT_KEY_UP:
++    case SDL_EVENT_KEY_DOWN:
++    case SDL_EVENT_TEXT_INPUT:
+       if (keyResponder) {
+         $(keyResponder, respondToEvent, event);
+       } else {
+         $(self->viewController, respondToEvent, event);
+       }
+       break;
+-    case SDL_MOUSEBUTTONDOWN:
++    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+       if (touchTarget) {
+         $(touchTarget, becomeTouchResponder);
+         $(touchTarget, respondToEvent, event);
+@@ -437,8 +436,8 @@
+         $(self->viewController, respondToEvent, event);
+       }
+       break;
+-    case SDL_MOUSEMOTION:
+-    case SDL_MOUSEWHEEL:
++    case SDL_EVENT_MOUSE_MOTION:
++    case SDL_EVENT_MOUSE_WHEEL:
+       if (touchResponder) {
+         $(touchResponder, respondToEvent, event);
+       } else if (touchTarget) {
+@@ -452,10 +451,10 @@
+       break;
+   }
+ 
+-  if (event->type == SDL_KEYDOWN) {
+-    if (event->key.keysym.sym == SDLK_TAB) {
++  if (event->type == SDL_EVENT_KEY_DOWN) {
++    if (event->key.key == SDLK_TAB) {
+ 
+-      if (event->key.keysym.mod & KMOD_SHIFT) {
++      if (event->key.mod & KMOD_SHIFT) {
+         keyResponder = $(self, previousKeyResponder, keyResponder);
+       } else {
+         keyResponder = $(self, nextKeyResponder, keyResponder);
+@@ -466,14 +465,14 @@
+       }
+     }
+ 
+-    if (event->key.keysym.sym == SDLK_d) {
+-      if (event->key.keysym.mod & KMOD_CTRL) {
++    if (event->key.key == SDLK_d) {
++      if (event->key.mod & KMOD_CTRL) {
+         $(self, toggleDebugger);
+       }
+     }
+   }
+ 
+-  SDL_SetWindowData(self->window, "event", NULL);
++  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", NULL);
+ }
+ 
+ /**
+@@ -526,7 +525,7 @@
+ 
+   if (self->viewController != viewController || self->viewController == NULL) {
+ 
+-    SDL_SetWindowData(self->window, "keyResponder", NULL);
++    SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "keyResponder", NULL);
+ 
+     if (self->viewController) {
+       $(self->viewController, viewWillDisappear);
+@@ -562,11 +561,11 @@
+   const Uint32 flags = SDL_GetWindowFlags(self->window);
+   assert(flags & SDL_WINDOW_OPENGL);
+ 
+-  SDL_SetWindowData(self->window, "windowController", self);
+-  assert(SDL_GetWindowData(self->window, "windowController") == self);
++  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "windowController", self);
++  assert(SDL_GetPointerProperty(SDL_GetWindowProperties(self->window), "windowController", NULL) == self);
+ 
+-  SDL_SetWindowData(self->window, "keyResponder", NULL);
+-  SDL_SetWindowData(self->window, "touchResponder", NULL);
++  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "keyResponder", NULL);
++  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "touchResponder", NULL);
+ 
+   if (self->viewController) {
+     $(self->viewController->view, moveToWindow, self->window);
+@@ -612,7 +611,7 @@
+  * @memberof WindowController
+  */
+ static View *touchResponder(const WindowController *self) {
+-  return SDL_GetWindowData(self->window, "touchResponder");
++  return SDL_GetPointerProperty(SDL_GetWindowProperties(self->window), "touchResponder", NULL);
+ }
+ 
+ /**
+@@ -623,18 +622,21 @@
+   SDL_Point point;
+  
+   switch (event->type) {
+-    case SDL_MOUSEBUTTONDOWN:
+-      point = MakePoint(event->button.x, event->button.y);
++    case SDL_EVENT_MOUSE_BUTTON_DOWN:
++      point = MakePoint((int)event->button.x, (int)event->button.y);
+       break;
+-    case SDL_MOUSEBUTTONUP:
+-      point = MakePoint(event->button.x, event->button.y);
++    case SDL_EVENT_MOUSE_BUTTON_UP:
++      point = MakePoint((int)event->button.x, (int)event->button.y);
+       break;
+-    case SDL_MOUSEMOTION:
+-      point = MakePoint(event->motion.x, event->motion.y);
++    case SDL_EVENT_MOUSE_MOTION:
++      point = MakePoint((int)event->motion.x, (int)event->motion.y);
+       break;
+-    case SDL_MOUSEWHEEL:
+-      SDL_GetMouseState(&point.x, &point.y);
++    case SDL_EVENT_MOUSE_WHEEL: {
++      float mx, my;
++      SDL_GetMouseState(&mx, &my);
++      point = MakePoint((int)mx, (int)my);
+       break;
++    }
+     default:
+       return NULL;
+   }

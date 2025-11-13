@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <Objectively.h>
@@ -71,13 +72,13 @@ const EnumName ViewAutoresizingNames[] = MakeEnumNames(
 /**
  * `SDL_EventFilter` to purge any `MVC_VIEW_EVENT`s for this View.
  */
-static int filterViewEvents(void *data, SDL_Event *event) {
+static bool filterViewEvents(void *data, SDL_Event *event) {
 
   if (event->type == MVC_VIEW_EVENT && event->user.data1 == data) {
-    return 0;
+    return false;
   }
 
-  return 1;
+  return true;
 }
 
 /**
@@ -406,8 +407,9 @@ static void becomeKeyResponder(View *self) {
   assert(self->window);
 
   if (!$(self, isKeyResponder)) {
+    SDL_PropertiesID props = SDL_GetWindowProperties(self->window);
 
-    View *keyResponder = SDL_GetWindowData(self->window, "keyResponder");
+    View *keyResponder = SDL_GetPointerProperty(props, "keyResponder", NULL);
     if (keyResponder) {
       $(keyResponder, resignKeyResponder);
     }
@@ -416,7 +418,7 @@ static void becomeKeyResponder(View *self) {
     MVC_LogDebug("%s\n", path->chars);
     release(path);
 
-    SDL_SetWindowData(self->window, "keyResponder", self);
+    SDL_SetPointerProperty(props, "keyResponder", self);
   }
 }
 
@@ -429,8 +431,9 @@ static void becomeTouchResponder(View *self) {
   assert(self->window);
 
   if (!$(self, isTouchResponder)) {
+    SDL_PropertiesID props = SDL_GetWindowProperties(self->window);
 
-    View *touchResponder = SDL_GetWindowData(self->window, "touchResonder");
+    View *touchResponder = SDL_GetPointerProperty(props, "touchResponder", NULL);
     if (touchResponder) {
       $(touchResponder, resignTouchResponder);
     }
@@ -439,7 +442,7 @@ static void becomeTouchResponder(View *self) {
     MVC_LogDebug("%s\n", path->chars);
     release(path);
 
-    SDL_SetWindowData(self->window, "touchResponder", self);
+    SDL_SetPointerProperty(props, "touchResponder", self);
   }
 }
 
@@ -535,7 +538,7 @@ static SDL_Rect clippingFrame(const View *self) {
   while (superview) {
     if (superview->clipsSubviews) {
       const SDL_Rect clippingFrame = $(superview, clippingFrame);
-      if (SDL_IntersectRect(&clippingFrame, &frame, &frame) == false) {
+      if (SDL_GetRectIntersection(&clippingFrame, &frame, &frame) == false) {
 
         if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
           String *desc = $((Object *) self, description);
@@ -644,9 +647,9 @@ static bool didReceiveEvent(const View *self, const SDL_Event *event) {
 
   if ($(self, isKeyResponder)) {
     switch (event->type) {
-      case SDL_KEYDOWN:
-      case SDL_KEYUP:
-      case SDL_TEXTINPUT:
+      case SDL_EVENT_KEY_DOWN:
+      case SDL_EVENT_KEY_UP:
+      case SDL_EVENT_TEXT_INPUT:
         return true;
     }
   }
@@ -656,16 +659,19 @@ static bool didReceiveEvent(const View *self, const SDL_Event *event) {
     SDL_Point point;
 
     switch (event->type) {
-      case SDL_MOUSEBUTTONDOWN:
-      case SDL_MOUSEBUTTONUP:
+      case SDL_EVENT_MOUSE_BUTTON_DOWN:
+      case SDL_EVENT_MOUSE_BUTTON_UP:
         point = MakePoint(event->button.x, event->button.y);
         break;
-      case SDL_MOUSEMOTION:
+      case SDL_EVENT_MOUSE_MOTION:
         point = MakePoint(event->motion.x, event->motion.y);
         break;
-      case SDL_MOUSEWHEEL:
-        SDL_GetMouseState(&point.x, &point.y);
+      case SDL_EVENT_MOUSE_WHEEL: {
+        float mx, my;
+        SDL_GetMouseState(&mx, &my);
+        point = MakePoint(mx, my);
         break;
+      }
       default:
         return false;
     }
@@ -1030,7 +1036,7 @@ static bool isDescendantOfView(const View *self, const View *view) {
 static bool isKeyResponder(const View *self) {
 
   if (self->window) {
-    return SDL_GetWindowData(self->window, "keyResponder") == self;
+    return SDL_GetPointerProperty(SDL_GetWindowProperties(self->window), "keyResponder", NULL) == self;
   } else {
     return false;
   }
@@ -1043,7 +1049,7 @@ static bool isKeyResponder(const View *self) {
 static bool isTouchResponder(const View *self) {
 
   if (self->window) {
-    return SDL_GetWindowData(self->window, "touchResponder") == self;
+    return SDL_GetPointerProperty(SDL_GetWindowProperties(self->window), "touchResponder", NULL) == self;
   } else {
     return false;
   }
@@ -1200,8 +1206,9 @@ static bool matchesSelector(const View *self, const SimpleSelector *simpleSelect
           return $((Array *) self->superview->subviews, indexOfObject, (ident) self) & 1;
         }
       } else if (strcmp("hover", pattern) == 0) {
-        SDL_Point point;
-        SDL_GetMouseState(&point.x, &point.y);
+        float mx, my;
+        SDL_GetMouseState(&mx, &my);
+        SDL_Point point = MakePoint(mx, my);
         return $(self, containsPoint, &point);
       }
       break;
@@ -1471,7 +1478,7 @@ static void resignKeyResponder(View *self) {
     MVC_LogDebug("%s\n", path->chars);
     release(path);
 
-    SDL_SetWindowData(self->window, "keyResponder", NULL);
+    SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "keyResponder", NULL);
   }
 }
 
@@ -1487,7 +1494,7 @@ static void resignTouchResponder(View *self) {
     MVC_LogDebug("%s\n", path->chars);
     release(path);
 
-    SDL_SetWindowData(self->window, "touchResponder", NULL);
+    SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "touchResponder", NULL);
   }
 }
 
@@ -1544,17 +1551,17 @@ static void respondToEvent(View *self, const SDL_Event *event) {
   ViewEvent code = ViewEventNone;
 
   switch (event->type) {
-    case SDL_MOUSEBUTTONDOWN:
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
       code = ViewEventMouseButtonDown;
       break;
-    case SDL_MOUSEBUTTONUP:
+    case SDL_EVENT_MOUSE_BUTTON_UP:
       code = ViewEventMouseButtonUp;
       $(self, resignTouchResponder);
       break;
-    case SDL_KEYDOWN:
+    case SDL_EVENT_KEY_DOWN:
       code = ViewEventKeyDown;
       break;
-    case SDL_KEYUP:
+    case SDL_EVENT_KEY_UP:
       code = ViewEventKeyUp;
       break;
     default:
@@ -1571,7 +1578,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
     }
   }
 
-  if (event->type == SDL_MOUSEBUTTONDOWN) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     if ($(self, acceptsKeyResponder)) {
       $(self, becomeKeyResponder);
       return;
@@ -2018,10 +2025,10 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->willMoveToWindow = willMoveToWindow;
 
   MVC_NOTIFICATION_EVENT = SDL_RegisterEvents(1);
-  assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
+  assert(MVC_NOTIFICATION_EVENT != 0);
   
   MVC_VIEW_EVENT = SDL_RegisterEvents(1);
-  assert(MVC_NOTIFICATION_EVENT != (Uint32) -1);
+  assert(MVC_VIEW_EVENT != 0);
 }
 
 /**

@@ -59,7 +59,7 @@ double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight) {
   if (h) {
 
     int dh;
-    SDL_GL_GetDrawableSize(window, NULL, &dh);
+    SDL_GetWindowSizeInPixels(window, NULL, &dh);
 
     if (drawableHeight) {
       *drawableHeight = dh;

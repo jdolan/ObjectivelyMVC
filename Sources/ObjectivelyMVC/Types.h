@@ -23,9 +23,9 @@
 
 #pragma once
 
-#include <SDL_assert.h>
-#include <SDL_events.h>
-#include <SDL_pixels.h>
+#include <SDL3/SDL_assert.h>
+#include <SDL3/SDL_events.h>
+#include <SDL3/SDL_pixels.h>
 
 #include <Objectively/Types.h>
 

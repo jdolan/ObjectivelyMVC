@@ -32,7 +32,7 @@
 # define EXAMPLES "."
 #endif
 
-static void onViewEvent(SDL_AudioDeviceID device, const SDL_UserEvent *event);
+static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event);
 static void drawScene(SDL_Window *window);
 
 /**
@@ -50,24 +50,21 @@ int main(int argc, char *argv[]) {
 
   SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 
-  SDL_AudioDeviceID device = SDL_OpenAudioDevice(NULL, 0, &(SDL_AudioSpec) {
-    .freq = 22050,
-    .format = AUDIO_S16,
+  SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &(SDL_AudioSpec) {
+    .format = SDL_AUDIO_S16LE,
     .channels = 1,
-    .samples = 1024
-  }, NULL, 0);
+    .freq = 22050,
+  }, NULL, NULL);
 
-  SDL_PauseAudioDevice(device, 0);
+  SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream));
 
   SDL_Window *window = SDL_CreateWindow(__FILE__,
-    SDL_WINDOWPOS_CENTERED,
-    SDL_WINDOWPOS_CENTERED,
     1024,
     768,
-    SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
+    SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY
   );
 
-  SDL_GLContext *context = SDL_GL_CreateContext(window);
+  SDL_GLContext context = SDL_GL_CreateContext(window);
 
   SDL_GL_SetSwapInterval(1);
 
@@ -86,15 +83,15 @@ int main(int argc, char *argv[]) {
       $(windowController, respondToEvent, &event);
       
       if (event.type == MVC_VIEW_EVENT) {
-        onViewEvent(device, &event.user);
+        onViewEvent(stream, &event.user);
       }
 
-      if (event.type == SDL_QUIT) {
+      if (event.type == SDL_EVENT_QUIT) {
         break;
       }
     }
 
-    if (event.type == SDL_QUIT) {
+    if (event.type == SDL_EVENT_QUIT) {
       break;
     }
 
@@ -110,10 +107,10 @@ int main(int argc, char *argv[]) {
   release(viewController);
   release(windowController);
 
-  SDL_GL_DeleteContext(context);
+  SDL_GL_DestroyContext(context);
   SDL_DestroyWindow(window);
 
-  SDL_CloseAudioDevice(device);
+  SDL_DestroyAudioStream(stream);
 
   SDL_Quit();
 
@@ -126,7 +123,7 @@ int main(int argc, char *argv[]) {
 /**
  * @brief `ViewEvent` callback to play click sounds when interacting with `Control`s.
  */
-static void onViewEvent(SDL_AudioDeviceID device, const SDL_UserEvent *event) {
+static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event) {
 
   if (!instanceof(Control, event->data1)) {
     return;
@@ -134,10 +131,10 @@ static void onViewEvent(SDL_AudioDeviceID device, const SDL_UserEvent *event) {
 
   switch (event->code) {
     case ViewEventClick:
-      SDL_QueueAudio(device, click_wav, click_wav_len);
+      SDL_PutAudioStreamData(stream, click_wav, click_wav_len);
       break;
     case ViewEventChange:
-      SDL_QueueAudio(device, clack_wav, clack_wav_len);
+      SDL_PutAudioStreamData(stream, clack_wav, clack_wav_len);
       break;
     default:
       break;

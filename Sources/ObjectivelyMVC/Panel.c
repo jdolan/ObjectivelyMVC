@@ -129,7 +129,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   Panel *this = (Panel *) self;
 
-  if (event->type == SDL_MOUSEBUTTONDOWN) {
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     if ($((View *) this->resizeHandle, didReceiveEvent, event)) {
       if (this->isResizable && !this->isDragging) {
         this->isResizing = true;
@@ -138,7 +138,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     }
   }
 
-  if (event->type == SDL_MOUSEMOTION) {
+  if (event->type == SDL_EVENT_MOUSE_MOTION) {
 
     if (event->motion.state & SDL_BUTTON_LEFT) {
       self->state |= ControlStateHighlighted;

@@ -58,7 +58,7 @@ static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
   assert(surface);
 
   GLenum format;
-  switch (surface->format->BytesPerPixel) {
+  switch (SDL_BYTESPERPIXEL(surface->format)) {
     case 1:
       format = GL_LUMINANCE;
       break;
@@ -69,7 +69,7 @@ static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
       format = GL_RGBA;
       break;
     default:
-      MVC_LogError("Invalid surface format: %s\n", SDL_GetPixelFormatName(surface->format->format));
+      MVC_LogError("Invalid surface format: %s\n", SDL_GetPixelFormatName(surface->format));
       return 0;
   }
 
@@ -266,7 +266,7 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
     rect = *clippingFrame;
   } else {
     rect = MakeRect(0, 0, 0, 0);
-    SDL_GL_GetDrawableSize(window, &rect.w, &rect.h);
+    SDL_GetWindowSizeInPixels(window, &rect.w, &rect.h);
   }
 
   const SDL_Rect scissor = MVC_TransformToWindow(window, &rect);

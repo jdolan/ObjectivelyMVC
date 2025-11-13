@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <math.h>
 
 #include "RGBColorPicker.h"
 

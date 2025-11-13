@@ -20,7 +20,7 @@
 #include <math.h>
 #include <string.h>
 
-#include <SDL_endian.h>
+#include <SDL3/SDL_endian.h>
 
 #include "Colors.h"
 
