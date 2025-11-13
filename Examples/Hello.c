@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -142,7 +142,7 @@ static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event) {
 }
 
 /**
- * @brief Renders a rotating cube, demonstrating ObjectivelyMVC integrating with a vanilla SDL2 /
+ * @brief Renders a rotating cube, demonstrating ObjectivelyMVC integrating with a vanilla SDL3 /
  * OpenGL application.
  */
 static void drawScene(SDL_Window *window) {

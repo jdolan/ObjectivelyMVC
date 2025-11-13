@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL2 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -160,8 +160,8 @@ static Image *initWithSurface(Image *self, SDL_Surface *surface) {
   if (self) {
 
     if (surface) {
-      if (surface->format != SDL_PIXELFORMAT_ABGR8888) {
-        self->surface = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_ABGR8888);
+      if (surface->format != SDL_PIXELFORMAT_RGBA32) {
+        self->surface = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
       } else {
         self->surface = surface;
         self->surface->refcount++;

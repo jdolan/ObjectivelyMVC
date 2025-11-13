@@ -5,10 +5,10 @@
 ObjectivelyMVC
 ===
 
-Object oriented MVC framework for OpenGL, SDL2 and GNU C
+Object oriented MVC framework for OpenGL, SDL3 and GNU C
 ---
 
-ObjectivelyMVC is a cross-platform user interface and interaction framework for [SDL2](http://www.libsdl.org) inspired by Apple's [AppKit](https://developer.apple.com/reference/appkit). It is geared towards building high-quality, modern looking user interfaces within [OpenGL](http://www.opengl.org/) video games that are already using SDL2. It is built on [Objectively](https://github.com/jdolan/Objectively), written in [GNU C](http://www.gnu.org/software/gnu-c-manual/), and requires `gcc` or `clang`.
+ObjectivelyMVC is a cross-platform user interface and interaction framework for [SDL3](http://www.libsdl.org) inspired by Apple's [AppKit](https://developer.apple.com/reference/appkit). It is geared towards building high-quality, modern looking user interfaces within [OpenGL](http://www.opengl.org/) video games that are already using SDL3. It is built on [Objectively](https://github.com/jdolan/Objectively), written in [GNU C](http://www.gnu.org/software/gnu-c-manual/), and requires `gcc` or `clang`.
 
 [![Hello, ObjectivelyMVC!](Documentation/hello-thumbnail.jpg)](https://www.youtube.com/watch?v=Rm_mOr3gP5k)
  
@@ -23,7 +23,7 @@ ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively),
 WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
 ```
 
-### Easily embeddable in any SDL2 / OpenGL application
+### Easily embeddable in any SDL3 / OpenGL application
 
 ObjectivelyMVC is purpose-built for video games. Unlike Gtk+, Qt, wxWidgets, FLTK, ..ObjectivelyMVC **does not hijack the main loop**. ObjectivelyMVC does not create a window, manage an OpenGL context, or originate events. Your game already does that, because it has to. Like your mother, ObjectivelyMVC only asks that you give it a call once in a while. That's it.
 
