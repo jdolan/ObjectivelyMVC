@@ -28,7 +28,7 @@
 
 #include "ObjectivelyMVC.h"
 
-#include "stylesheet.css.h"
+#include "../Assets/stylesheet.css.h"
 
 #define _Class _Stylesheet
 

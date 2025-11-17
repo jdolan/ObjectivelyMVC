@@ -25,7 +25,7 @@
 
 #include "Panel.h"
 
-#include "resize.png.h"
+#include "../Assets/resize.png.h"
 
 static Image *_resize;
 

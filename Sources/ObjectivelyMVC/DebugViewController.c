@@ -28,8 +28,8 @@
 #include "DebugViewController.h"
 #include "WindowController.h"
 
-#include "debug.css.h"
-#include "debug.json.h"
+#include "../Assets/debug.css.h"
+#include "../Assets/debug.json.h"
 
 #define _Class _DebugViewController
 

@@ -35,7 +35,7 @@
 #include "View.h"
 #include "Window.h"
 
-#include "coda.ttf.h"
+#include "../Assets/coda.ttf.h"
 
 const EnumName FontStyleNames[] = MakeEnumNames(
   MakeEnumAlias(FontStyleRegular, regular),

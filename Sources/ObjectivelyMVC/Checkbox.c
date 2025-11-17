@@ -25,7 +25,7 @@
 
 #include "Checkbox.h"
 
-#include "check.png.h"
+#include "../Assets/check.png.h"
 
 #define _Class _Checkbox
 
