@@ -24,63 +24,63 @@
     <ClInclude Include="..\Assets\debug.json.h" />
     <ClInclude Include="..\Assets\resize.png.h" />
     <ClInclude Include="..\Assets\stylesheet.css.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Action.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Box.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Button.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Checkbox.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionItemView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\CollectionView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Colors.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Control.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\DebugViewController.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Font.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\HSVColorPicker.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\HueColorPicker.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\ImageView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Input.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Label.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Log.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\NavigationViewController.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Option.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\PageView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\ProgressBar.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Selector.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\SelectorSequence.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\SimpleSelector.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\StackView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Style.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Stylesheet.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TableCellView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TableColumn.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TableHeaderCellView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TableHeaderView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TableRowView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TableView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TabView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewController.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TabViewItem.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Text.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\TextView.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Theme.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Types.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\View+JSON.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\View.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\ViewController.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Warning.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Window.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\WindowController.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC.h" />
+    <!--<ClInclude Include="..\..\Sources\ObjectivelyMVC\Action.h" />-->
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Box.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Button.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Checkbox.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\CollectionItemView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\CollectionView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Colors.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Control.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\DebugViewController.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Font.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\HSVColorPicker.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\HueColorPicker.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Image.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\ImageView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Input.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Label.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Log.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\NavigationViewController.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Option.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\PageView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Panel.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\ProgressBar.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Renderer.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\RGBColorPicker.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\ScrollView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Select.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Selector.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\SelectorSequence.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\SimpleSelector.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Slider.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\StackView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Style.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Stylesheet.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TableCellView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TableColumn.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TableHeaderCellView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TableHeaderView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TableRowView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TableView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TabView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TabViewController.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TabViewItem.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Text.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\TextView.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Theme.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Types.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\View+JSON.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\View.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\ViewController.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Warning.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\Window.h" />
+    <ClInclude Include="..\..\Sources\ObjectivelyMVC\WindowController.h" />
     <ClInclude Include="Sources\WindowlyMVC.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c" />
+    <!--<ClCompile Include="..\Sources\ObjectivelyMVC\Action.c" />-->
     <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Button.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Checkbox.c" />
@@ -198,14 +198,14 @@
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\SDL2\;libs\sdl_ttf\SDL2\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl_image\include;libs\sdl_ttf\include;libs\sdl\include;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\SDL2\;libs\sdl_ttf\SDL2\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl_image\include;libs\sdl_ttf\include;libs\sdl\include;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
@@ -248,7 +248,7 @@
       </ShowIncludes>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -295,7 +295,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration />
     </Link>
   </ItemDefinitionGroup>
