@@ -47,6 +47,16 @@ Checkbox {
   autoresizing-mask: contain;
 }
 
+Checkbox ImageView {
+  hidden: true;
+  width: 12;
+  height: 12;
+}
+
+Checkbox:selected ImageView {
+  hidden: false;
+}
+
 Checkbox > Control {
   autoresizing-mask: contain;
   background-color: #22222266;

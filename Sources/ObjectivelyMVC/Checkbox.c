@@ -123,22 +123,6 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
   return super(Control, self, captureEvent, event);
 }
 
-/**
- * @see Control::stateDidChange(Control *)
- */
-static void stateDidChange(Control *self) {
-
-  super(Control, self, stateDidChange);
-
-  Checkbox *this = (Checkbox *) self;
-
-  if (self->state & ControlStateSelected) {
-    this->check->view.hidden = false;
-  } else {
-    this->check->view.hidden = true;
-  }
-}
-
 #pragma mark - Checkbox
 
 /**
@@ -159,7 +143,6 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
     assert(self->check);
 
     self->check->view.autoresizingMask = ViewAutoresizingFill;
-    self->check->view.hidden = true;
 
     $((View *) self->box, addSubview, (View *) self->check);
     $((View *) self, addSubview, (View *) self->box);
@@ -181,7 +164,6 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->init = init;
 
   ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
-  ((ControlInterface *) clazz->interface)->stateDidChange = stateDidChange;
 
   ((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
