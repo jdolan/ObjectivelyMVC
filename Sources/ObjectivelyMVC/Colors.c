@@ -19,6 +19,7 @@
 #include <assert.h>
 #include <math.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <SDL3/SDL_endian.h>
 
