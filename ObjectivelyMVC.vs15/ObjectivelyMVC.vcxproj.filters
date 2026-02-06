@@ -18,9 +18,6 @@
     <ClInclude Include="Sources\WindowlyMVC.h">
       <Filter>Sources</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Action.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Box.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
@@ -191,9 +188,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
