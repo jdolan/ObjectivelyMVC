@@ -25,7 +25,6 @@
     <ClInclude Include="..\Assets\resize.png.h" />
     <ClInclude Include="..\Assets\stylesheet.css.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Action.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Box.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Button.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Checkbox.h" />
@@ -80,7 +79,6 @@
     <ClInclude Include="Sources\WindowlyMVC.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Action.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Button.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Checkbox.c" />
@@ -198,11 +196,11 @@
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\SDL2\;libs\sdl_ttf\SDL2\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
-    <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;libs\sdl_image\lib\$(Platform)\;libs\sdl_ttf\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\sdl_image\SDL2\;libs\sdl_ttf\SDL2\;libs\sdl\SDL2\;libs\fontconfig\;$(IncludePath)</IncludePath>
@@ -248,7 +246,7 @@
       </ShowIncludes>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL2.lib;SDL2_image.lib;SDL2_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
