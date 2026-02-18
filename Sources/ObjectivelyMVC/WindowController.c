@@ -215,13 +215,17 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", (ident) event);
 
   switch (event->type) {
-    case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
     case SDL_EVENT_WINDOW_EXPOSED:
-    case SDL_EVENT_WINDOW_RESIZED:
       $(self, setWindow, SDL_GL_GetCurrentWindow());
       $(self->renderer, renderDeviceDidReset);
       $(self->viewController->view, renderDeviceDidReset);
       $(self->viewController->view, updateBindings);
+      break;
+    case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+    case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+    case SDL_EVENT_WINDOW_RESIZED:
+    case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
+      $(self, setWindow, SDL_GL_GetCurrentWindow());
       break;
     case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
       $(self->renderer, renderDeviceWillReset);
