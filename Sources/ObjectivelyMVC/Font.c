@@ -135,7 +135,7 @@ static Font *cachedFont(const char *family, int size, int style) {
     style = DEFAULT_FONT_STYLE;
   }
 
-  const int renderSize = size * MVC_WindowScale(NULL, NULL, NULL);
+  const int renderSize = size * SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
 
   const Array *fonts = (Array *) _fonts;
   for (size_t i = 0; i < fonts->count; i++) {
@@ -226,7 +226,8 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 
   SDL_Surface *surface;
   if (wrapWidth) {
-    surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * MVC_WindowScale(NULL, NULL, NULL));
+    const float scale = SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
+    surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * scale);
   } else {
     surface = TTF_RenderText_Blended(self->font, chars, 0, color);
   }
@@ -248,7 +249,7 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
  */
 static void renderDeviceDidReset(Font *self) {
 
-  const int renderSize = self->size * MVC_WindowScale(NULL, NULL, NULL);
+  const int renderSize = self->size * SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
   if (renderSize != self->renderSize) {
 
     self->renderSize = renderSize;
@@ -297,7 +298,7 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
     }
     free(lines);
 
-    const float scale = MVC_WindowScale(NULL, NULL, NULL);
+    const float scale = SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
     if (w) {
       *w = ceilf(*w / scale);
     }

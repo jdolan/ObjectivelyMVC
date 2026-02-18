@@ -121,7 +121,6 @@
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE84C6CC1FFC917600F72267 /* DebugViewController.c */; };
-		CE85F4782F12C104005D2F9C /* libSDL3_image.0.2.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE85F4762F12C104005D2F9C /* libSDL3_image.0.2.6.dylib */; };
 		CE85F4792F12C104005D2F9C /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE85F4772F12C104005D2F9C /* libSDL3.0.dylib */; };
 		CE85F4802F12C8A7005D2F9C /* libSDL3_ttf.0.2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */; };
 		CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */ = {isa = PBXBuildFile; fileRef = CE862AD71F79FB82005C3B10 /* ProgressBar.c */; };
@@ -161,6 +160,7 @@
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CEF3B5FE2F440D420024F4DF /* libSDL3_image.0.4.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF3B5FD2F440D420024F4DF /* libSDL3_image.0.4.0.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -426,6 +426,7 @@
 		CEF1D8AA1D4630D20099A857 /* WindowController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WindowController.c; sourceTree = "<group>"; };
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		CEF3B5FD2F440D420024F4DF /* libSDL3_image.0.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_image.0.4.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_image/3.4.0/lib/libSDL3_image.0.4.0.dylib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -476,7 +477,7 @@
 			files = (
 				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
 				CE85F4792F12C104005D2F9C /* libSDL3.0.dylib in Frameworks */,
-				CE85F4782F12C104005D2F9C /* libSDL3_image.0.2.6.dylib in Frameworks */,
+				CEF3B5FE2F440D420024F4DF /* libSDL3_image.0.4.0.dylib in Frameworks */,
 				CE85F4802F12C8A7005D2F9C /* libSDL3_ttf.0.2.2.dylib in Frameworks */,
 				CE3A45A0216594D5005ACAD6 /* libObjectively.dylib in Frameworks */,
 			);
@@ -666,6 +667,7 @@
 		CE12D4971C55012200CD0B13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CEF3B5FD2F440D420024F4DF /* libSDL3_image.0.4.0.dylib */,
 				CE85F4762F12C104005D2F9C /* libSDL3_image.0.2.6.dylib */,
 				CE85F4772F12C104005D2F9C /* libSDL3.0.dylib */,
 				CE5A6AA92EC55EA6005F3C92 /* libSDL3_image.0.2.4.dylib */,
@@ -1297,7 +1299,10 @@
 			buildSettings = {
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				EXECUTABLE_PREFIX = lib;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/homebrew/Cellar/sdl3_image/3.4.0/lib,
+				);
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
 			};
@@ -1308,7 +1313,10 @@
 			buildSettings = {
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				EXECUTABLE_PREFIX = lib;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/homebrew/Cellar/sdl3_image/3.4.0/lib,
+				);
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
 			};

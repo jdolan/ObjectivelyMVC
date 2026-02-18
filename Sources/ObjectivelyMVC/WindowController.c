@@ -215,7 +215,9 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", (ident) event);
 
   switch (event->type) {
+    case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
     case SDL_EVENT_WINDOW_EXPOSED:
+    case SDL_EVENT_WINDOW_RESIZED:
       $(self, setWindow, SDL_GL_GetCurrentWindow());
       $(self->renderer, renderDeviceDidReset);
       $(self->viewController->view, renderDeviceDidReset);
@@ -398,11 +400,11 @@ static void setWindow(WindowController *self, SDL_Window *window) {
   const SDL_WindowFlags flags = SDL_GetWindowFlags(self->window);
   assert(flags & SDL_WINDOW_OPENGL);
 
-  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "windowController", self);
-  assert(SDL_GetPointerProperty(SDL_GetWindowProperties(self->window), "windowController", NULL) == self);
-
-  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "keyResponder", NULL);
-  SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "touchResponder", NULL);
+  SDL_PropertiesID properties = SDL_GetWindowProperties(self->window);
+  
+  SDL_SetPointerProperty(properties, "windowController", self);
+  SDL_SetPointerProperty(properties, "keyResponder", NULL);
+  SDL_SetPointerProperty(properties, "touchResponder", NULL);
 
   if (self->viewController) {
     $(self->viewController->view, moveToWindow, self->window);

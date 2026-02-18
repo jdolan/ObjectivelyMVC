@@ -28,47 +28,36 @@
 SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
   assert(rect);
+  
+  int w, h;
+  SDL_GetWindowSize(window, &w, &h);
+  
+  SDL_Rect safeArea;
+  SDL_GetWindowSafeArea(window, &safeArea);
 
+  const float safeAreaScaleX = (float) safeArea.w / (float) w;
+  const float safeAreaScaleY = (float) safeArea.h / (float) h;
+  
   SDL_Rect transformed = *rect;
 
-  int dh = 0;
-  const double scale = MVC_WindowScale(window, NULL, &dh);
+  transformed.x *= safeAreaScaleX;
+  transformed.y *= safeAreaScaleY;
+  transformed.w *= safeAreaScaleX;
+  transformed.h *= safeAreaScaleY;
+  
+  transformed.x += safeArea.x;
+  transformed.y += safeArea.y;
 
-  transformed.x *= scale;
-  transformed.y *= scale;
-  transformed.w *= scale;
-  transformed.h *= scale;
+  const float displayScale = SDL_GetWindowDisplayScale(window);
 
-  transformed.y = dh - transformed.h - transformed.y;
-
+  transformed.x *= displayScale;
+  transformed.y *= displayScale;
+  transformed.w *= displayScale;
+  transformed.h *= displayScale;
+  
+  // Flip Y because OpenGL uses bottom-left coordinates like a dumbass
+  
+  transformed.y = safeArea.h * displayScale - transformed.h - transformed.y;
+  
   return transformed;
-}
-
-double MVC_WindowScale(SDL_Window *window, int *height, int *drawableHeight) {
-
-  window = window ?: SDL_GL_GetCurrentWindow();
-  assert(window);
-
-  int h;
-  SDL_GetWindowSize(window, NULL, &h);
-
-  if (height) {
-    *height = h;
-  }
-
-  if (h) {
-
-    int dh;
-    SDL_GetWindowSizeInPixels(window, NULL, &dh);
-
-    if (drawableHeight) {
-      *drawableHeight = dh;
-    }
-
-    if (dh) {
-      return dh / (double) h;
-    }
-  }
-
-  return 1.0;
 }

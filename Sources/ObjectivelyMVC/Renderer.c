@@ -266,7 +266,7 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
     rect = *clippingFrame;
   } else {
     rect = MakeRect(0, 0, 0, 0);
-    SDL_GetWindowSizeInPixels(window, &rect.w, &rect.h);
+    SDL_GetWindowSize(window, &rect.w, &rect.h);
   }
 
   const SDL_Rect scissor = MVC_TransformToWindow(window, &rect);
