@@ -29,24 +29,17 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
   assert(rect);
   
-  int w, h;
-  SDL_GetWindowSize(window, &w, &h);
-  
   SDL_Rect safeArea;
   SDL_GetWindowSafeArea(window, &safeArea);
-
-  const float safeAreaScaleX = (float) safeArea.w / (float) w;
-  const float safeAreaScaleY = (float) safeArea.h / (float) h;
   
   SDL_Rect transformed = *rect;
 
-  transformed.x *= safeAreaScaleX;
-  transformed.y *= safeAreaScaleY;
-  transformed.w *= safeAreaScaleX;
-  transformed.h *= safeAreaScaleY;
-  
   transformed.x += safeArea.x;
   transformed.y += safeArea.y;
+
+  // Flip Y because OpenGL uses bottom-left coordinates
+
+  transformed.y = safeArea.h - transformed.h - transformed.y;
 
   const float displayScale = SDL_GetWindowDisplayScale(window);
 
@@ -54,10 +47,6 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
   transformed.y *= displayScale;
   transformed.w *= displayScale;
   transformed.h *= displayScale;
-  
-  // Flip Y because OpenGL uses bottom-left coordinates like a dumbass
-  
-  transformed.y = safeArea.h * displayScale - transformed.h - transformed.y;
   
   return transformed;
 }
