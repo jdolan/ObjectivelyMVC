@@ -1230,16 +1230,13 @@ static void moveToWindow_recurse(View *subview, ident data) {
  */
 static void moveToWindow(View *self, SDL_Window *window) {
 
-  if (self->window != window) {
+  $(self, willMoveToWindow, window);
 
-    $(self, willMoveToWindow, window);
+  self->window = window;
 
-    self->window = window;
+  $(self, didMoveToWindow, window);
 
-    $(self, didMoveToWindow, window);
-
-    $(self, enumerateSubviews, moveToWindow_recurse, window);
-  }
+  $(self, enumerateSubviews, moveToWindow_recurse, window);
 }
 
 /**
