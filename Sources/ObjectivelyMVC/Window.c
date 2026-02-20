@@ -36,15 +36,16 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
   transformed.x += safeArea.x;
   transformed.y += safeArea.y;
 
-  // Flip Y because OpenGL uses bottom-left coordinates
-  transformed.y = safeArea.h - transformed.h - transformed.y;
-
   const float pixelDensity = SDL_GetWindowPixelDensity(window);
 
+  // Scale by pixel density for high DPI
   transformed.x *= pixelDensity;
   transformed.y *= pixelDensity;
   transformed.w *= pixelDensity;
   transformed.h *= pixelDensity;
+
+  // Flip Y because OpenGL uses bottom-left coordinates
+  transformed.y = (safeArea.h * pixelDensity) - transformed.h - transformed.y;
 
   return transformed;
 }

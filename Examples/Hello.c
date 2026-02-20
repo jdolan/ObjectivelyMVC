@@ -58,10 +58,11 @@ int main(int argc, char *argv[]) {
 
   SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream));
 
+  const SDL_DisplayMode *mode =SDL_GetCurrentDisplayMode(SDL_GetPrimaryDisplay());
   SDL_Window *window = SDL_CreateWindow(__FILE__,
-    1024,
-    768,
-    SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY
+    mode->w,
+    mode->h,
+    SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_HIGH_PIXEL_DENSITY
   );
 
   SDL_GLContext context = SDL_GL_CreateContext(window);
