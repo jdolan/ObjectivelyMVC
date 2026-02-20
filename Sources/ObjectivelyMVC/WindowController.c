@@ -221,9 +221,13 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
       $(self->viewController->view, renderDeviceDidReset);
       $(self->viewController->view, updateBindings);
       break;
-    case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
-    case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+    case SDL_EVENT_WINDOW_MOVED:
     case SDL_EVENT_WINDOW_RESIZED:
+    case SDL_EVENT_WINDOW_MAXIMIZED:
+    case SDL_EVENT_WINDOW_RESTORED:
+    case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
+    case SDL_EVENT_WINDOW_DISPLAY_CHANGED:
+    case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
     case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
       $(self, setWindow, SDL_GL_GetCurrentWindow());
       break;
@@ -400,9 +404,6 @@ static void setWindow(WindowController *self, SDL_Window *window) {
 
   self->window = window;
   assert(self->window);
-
-  const SDL_WindowFlags flags = SDL_GetWindowFlags(self->window);
-  assert(flags & SDL_WINDOW_OPENGL);
 
   SDL_PropertiesID properties = SDL_GetWindowProperties(self->window);
   
