@@ -218,7 +218,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     case SDL_EVENT_WINDOW_EXPOSED:
       $(self, setWindow, SDL_GL_GetCurrentWindow());
       $(self->renderer, renderDeviceDidReset);
-      $(self->viewController->view, renderDeviceDidReset);
+      $(self->viewController, renderDeviceDidReset);
       $(self->viewController->view, updateBindings);
       break;
     case SDL_EVENT_WINDOW_MOVED:
@@ -231,9 +231,10 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
       $(self, setWindow, SDL_GL_GetCurrentWindow());
       break;
+    case SDL_EVENT_WINDOW_DESTROYED:
     case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
       $(self->renderer, renderDeviceWillReset);
-      $(self->viewController->view, renderDeviceWillReset);
+      $(self->viewController, renderDeviceWillReset);
       break;
     default:
       break;

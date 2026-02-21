@@ -1073,7 +1073,7 @@ static bool isVisible(const View *self) {
 /**
  * @brief ViewEnumerator for layoutIfNeeded recursion.
  */
-static void layoutIfNeeded_recurse(View *subview, ident data) {
+static void layoutIfNeeded_enumerate(View *subview, ident data) {
   $(subview, layoutIfNeeded);
 }
 
@@ -1083,7 +1083,7 @@ static void layoutIfNeeded_recurse(View *subview, ident data) {
  */
 static void layoutIfNeeded(View *self) {
 
-  $(self, enumerateSubviews, layoutIfNeeded_recurse, NULL);
+  $(self, enumerateSubviews, layoutIfNeeded_enumerate, NULL);
 
   if (self->needsLayout) {
 
@@ -1220,7 +1220,7 @@ static bool matchesSelector(const View *self, const SimpleSelector *simpleSelect
 /**
  * @brief ViewEnumerator for moveToWindow recursion.
  */
-static void moveToWindow_recurse(View *subview, ident data) {
+static void moveToWindow_enumerate(View *subview, ident data) {
   $(subview, moveToWindow, data);
 }
 
@@ -1236,7 +1236,7 @@ static void moveToWindow(View *self, SDL_Window *window) {
 
   $(self, didMoveToWindow, window);
 
-  $(self, enumerateSubviews, moveToWindow_recurse, window);
+  $(self, enumerateSubviews, moveToWindow_enumerate, window);
 }
 
 /**
@@ -1396,7 +1396,7 @@ static void render(View *self, Renderer *renderer) {
 /**
  * @brief ViewEnumerator for renderDeviceDidReset recursion.
  */
-static void renderDeviceDidReset_recurse(View *subview, ident data) {
+static void renderDeviceDidReset_enumerate(View *subview, ident data) {
   $(subview, renderDeviceDidReset);
 }
 
@@ -1405,13 +1405,13 @@ static void renderDeviceDidReset_recurse(View *subview, ident data) {
  * @memberof View
  */
 static void renderDeviceDidReset(View *self) {
-  $(self, enumerateSubviews, renderDeviceDidReset_recurse, NULL);
+  $(self, enumerateSubviews, renderDeviceDidReset_enumerate, NULL);
 }
 
 /**
  * @brief ViewEnumerator for renderDeviceWillReset recursion.
  */
-static void renderDeviceWillReset_recurse(View *subview, ident data) {
+static void renderDeviceWillReset_enumerate(View *subview, ident data) {
   $(subview, renderDeviceWillReset);
 }
 
@@ -1420,7 +1420,7 @@ static void renderDeviceWillReset_recurse(View *subview, ident data) {
  * @memberof View
  */
 static void renderDeviceWillReset(View *self) {
-  $(self, enumerateSubviews, renderDeviceWillReset_recurse, NULL);
+  $(self, enumerateSubviews, renderDeviceWillReset_enumerate, NULL);
 }
 
 /**
@@ -1772,7 +1772,7 @@ static View *subviewWithIdentifier(const View *self, const char *identifier) {
 /**
  * @brief ViewEnumerator for updateBindings recursion.
  */
-static void updateBindings_recurse(View *subview, ident data) {
+static void updateBindings_enumerate(View *subview, ident data) {
   $(subview, updateBindings);
 }
 
@@ -1781,7 +1781,7 @@ static void updateBindings_recurse(View *subview, ident data) {
  * @memberof View
  */
 static void updateBindings(View *self) {
-  $(self, enumerateSubviews, updateBindings_recurse, NULL);
+  $(self, enumerateSubviews, updateBindings_enumerate, NULL);
 }
 
 /**

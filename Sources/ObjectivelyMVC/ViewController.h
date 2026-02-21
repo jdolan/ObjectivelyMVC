@@ -158,6 +158,24 @@ struct ViewControllerInterface {
   void (*respondToEvent)(ViewController *self, const SDL_Event *event);
 
   /**
+   * @fn void ViewController::renderDeviceDidReset(ViewController *self)
+   * @brief Informs this ViewController that the render device has reset.
+   * @param self The ViewController.
+   * @remarks Subclasses may override this method to allocate any OpenGL objects they require.
+   * @memberof ViewController
+   */
+  void (*renderDeviceDidReset)(ViewController *self);
+
+  /**
+   * @fn void ViewController::renderDeviceWillReset(ViewController *self)
+   * @brief Informs this ViewController that the render device will reset.
+   * @param self The ViewController.
+   * @remarks Subclasses should override this method to free any OpenGL objects they own.
+   * @memberof ViewController
+   */
+  void (*renderDeviceWillReset)(ViewController *self);
+  
+  /**
    * @fn void ViewController::setView(ViewController *self, View *view)
    * @brief Sets this ViewController's View.
    * @param self The ViewController.

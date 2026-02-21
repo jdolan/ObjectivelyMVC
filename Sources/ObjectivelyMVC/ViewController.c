@@ -185,6 +185,42 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
 }
 
 /**
+ * @brief ArrayEnumerator for renderDeviceDidReset recursion.
+ */
+static void renderDeviceDidReset_enumerate(const Array *array, ident obj, ident data) {
+  $((ViewController *) obj, renderDeviceDidReset);
+}
+
+/**
+ * @fn void ViewController::renderDeviceDidReset(ViewController *self)
+ * @memberof ViewController
+ */
+static void renderDeviceDidReset(ViewController *self) {
+  
+  $(self->view, renderDeviceDidReset);
+  
+  $((Array *) self->childViewControllers, enumerateObjects, renderDeviceDidReset_enumerate, NULL);
+}
+
+/**
+ * @brief ArrayEnumerator for renderDeviceWillReset recursion.
+ */
+static void renderDeviceWillReset_enumerate(const Array *array, ident obj, ident data) {
+  $((ViewController *) obj, renderDeviceWillReset);
+}
+
+/**
+ * @fn void ViewController::renderDeviceWillReset(ViewController *self)
+ * @memberof ViewController
+ */
+static void renderDeviceWillReset(ViewController *self) {
+  
+  $(self->view, renderDeviceWillReset);
+  
+  $((Array *) self->childViewControllers, enumerateObjects, renderDeviceWillReset_enumerate, NULL);
+}
+
+/**
  * @fn void ViewController::setView(ViewController *self, View *view)
  * @memberof ViewController
  */
@@ -209,7 +245,7 @@ static void setView(ViewController *self, View *view) {
 /**
  * @brief ArrayEnumerator for viewDidAppear recursion.
  */
-static void viewDidAppear_recurse(const Array *array, ident obj, ident data) {
+static void viewDidAppear_enumerate(const Array *array, ident obj, ident data) {
   $((ViewController *) obj, viewDidAppear);
 }
 
@@ -218,13 +254,13 @@ static void viewDidAppear_recurse(const Array *array, ident obj, ident data) {
  * @memberof ViewController
  */
 static void viewDidAppear(ViewController *self) {
-  $((Array *) self->childViewControllers, enumerateObjects, viewDidAppear_recurse, NULL);
+  $((Array *) self->childViewControllers, enumerateObjects, viewDidAppear_enumerate, NULL);
 }
 
 /**
  * @brief ArrayEnumerator for viewDidDisappear recursion.
  */
-static void viewDidDisappear_recurse(const Array *array, ident obj, ident data) {
+static void viewDidDisappear_enumerate(const Array *array, ident obj, ident data) {
   $((ViewController *) obj, viewDidDisappear);
 }
 
@@ -233,13 +269,13 @@ static void viewDidDisappear_recurse(const Array *array, ident obj, ident data) 
  * @memberof ViewController
  */
 static void viewDidDisappear(ViewController *self) {
-  $((Array *) self->childViewControllers, enumerateObjects, viewDidDisappear_recurse, NULL);
+  $((Array *) self->childViewControllers, enumerateObjects, viewDidDisappear_enumerate, NULL);
 }
 
 /**
  * @brief ArrayEnumerator for viewWillAppear recursion.
  */
-static void viewWillAppear_recurse(const Array *array, ident obj, ident data) {
+static void viewWillAppear_enumerate(const Array *array, ident obj, ident data) {
   $((ViewController *) obj, viewWillAppear);
 }
 
@@ -248,13 +284,13 @@ static void viewWillAppear_recurse(const Array *array, ident obj, ident data) {
  * @memberof ViewController
  */
 static void viewWillAppear(ViewController *self) {
-  $((Array *) self->childViewControllers, enumerateObjects, viewWillAppear_recurse, NULL);
+  $((Array *) self->childViewControllers, enumerateObjects, viewWillAppear_enumerate, NULL);
 }
 
 /**
  * @brief ArrayEnumerator for viewWillDisappear recursion.
  */
-static void viewWillDisappear_recurse(const Array *array, ident obj, ident data) {
+static void viewWillDisappear_enumerate(const Array *array, ident obj, ident data) {
   $((ViewController *) obj, viewWillDisappear);
 }
 
@@ -263,7 +299,7 @@ static void viewWillDisappear_recurse(const Array *array, ident obj, ident data)
  * @memberof ViewController
  */
 static void viewWillDisappear(ViewController *self) {
-  $((Array *) self->childViewControllers, enumerateObjects, viewWillDisappear_recurse, NULL);
+  $((Array *) self->childViewControllers, enumerateObjects, viewWillDisappear_enumerate, NULL);
 }
 
 #pragma mark - Class lifecycle
@@ -283,6 +319,8 @@ static void initialize(Class *clazz) {
   ((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
   ((ViewControllerInterface *) clazz->interface)->removeFromParentViewController = removeFromParentViewController;
   ((ViewControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
+  ((ViewControllerInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+  ((ViewControllerInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((ViewControllerInterface *) clazz->interface)->setView = setView;
   ((ViewControllerInterface *) clazz->interface)->viewDidAppear = viewDidAppear;
   ((ViewControllerInterface *) clazz->interface)->viewDidDisappear = viewDidDisappear;
