@@ -72,6 +72,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
     MakeInlet("labelFormat", InletTypeCharacters, &this->labelFormat, NULL),
     MakeInlet("min", InletTypeDouble, &this->min, NULL),
     MakeInlet("max", InletTypeDouble, &this->max, NULL),
+    MakeInlet("snapToStep", InletTypeBool, &this->snapToStep, NULL),
     MakeInlet("step", InletTypeDouble, &this->step, NULL),
     MakeInlet("value", InletTypeDouble, &value, NULL)
   );

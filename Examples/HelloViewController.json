@@ -52,7 +52,9 @@
                   "identifier": "slider",
                   "min": 0,
                   "max": 10,
-                  "value": 5
+                  "value": 5,
+                  "step": 1,
+                  "snapToStep": true
                 }
               ]
             }
