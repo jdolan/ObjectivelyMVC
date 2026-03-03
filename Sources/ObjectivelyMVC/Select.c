@@ -119,6 +119,13 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   const Array *options = (Array *) this->options;
 
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+    if (self->state & ControlStateHighlighted) {
+      $((View *) self, becomeTouchResponder);
+      return true;
+    }
+  }
+
   if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
     if (self->state & ControlStateHighlighted) {
       self->state &= ~ControlStateHighlighted;
