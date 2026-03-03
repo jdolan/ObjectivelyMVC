@@ -206,6 +206,16 @@ static View *previousKeyResponder(const WindowController *self, View *keyRespond
   return prev;
 }
 
+static bool isRelatedResponder(const View *self, const View *other) {
+  while (self) {
+    if (self == other) {
+      return true;
+    }
+    self = self->nextResponder ?: self->superview;
+  }
+  return false;
+}
+
 /**
  * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
  * @memberof WindowController
@@ -271,7 +281,9 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
       
       touchResponder = $(self, touchResponder);
       if (touchResponder && keyResponder && touchResponder != keyResponder) {
-        $(keyResponder, resignKeyResponder);
+        if (!isRelatedResponder(touchResponder, keyResponder)) {
+          $(keyResponder, resignKeyResponder);
+        }
       }
       break;
     case SDL_EVENT_MOUSE_BUTTON_UP:
