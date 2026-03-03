@@ -393,7 +393,9 @@ static ident parseValue(String *string) {
 
       while (token) {
 
-        $((MutableArray *) value, addObject, parseValue(token));
+        Object *obj = parseValue(token);
+        $((MutableArray *) value, addObject, obj);
+        release(obj);
         release(token);
 
         token = $(reader, readToken, charset, NULL);
