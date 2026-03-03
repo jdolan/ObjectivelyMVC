@@ -288,14 +288,19 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
         case SDLK_V:
           if ((SDL_GetModState() & (SDL_KMOD_CTRL | SDL_KMOD_GUI)) && SDL_HasClipboardText()) {
-            const char *text = SDL_GetClipboardText();
-            if (this->position == len) {
-              $(this->attributedText, appendCharacters, text);
-            } else {
-              $(this->attributedText, insertCharactersAtIndex, text, this->position);
+            char *text = SDL_GetClipboardText();
+            if (text != NULL) {
+              if (*text != '\0') {
+                if (this->position == len) {
+                  $(this->attributedText, appendCharacters, text);
+                } else {
+                  $(this->attributedText, insertCharactersAtIndex, text, this->position);
+                }
+                this->position += strlen(text);
+                didEdit = true;
+              }
+              SDL_free(text);
             }
-            this->position += strlen(text);
-            didEdit = true;
           }
           break;
       }

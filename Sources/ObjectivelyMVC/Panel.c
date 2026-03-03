@@ -43,6 +43,7 @@ static void dealloc(Object *self) {
   release(this->accessoryView);
   release(this->contentView);
   release(this->resizeHandle);
+  release(this->stackView);
 
   super(Object, self, dealloc);
 }

@@ -185,7 +185,10 @@ static void setImage(ImageView *self, Image *image) {
     self->image = NULL;
   }
 
-  self->texture = 0;
+  if (self->texture) {
+    glDeleteTextures(1, &self->texture);
+    self->texture = 0;
+  }
 }
 
 /**
