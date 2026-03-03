@@ -277,7 +277,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     case SDL_EVENT_MOUSE_BUTTON_UP:
       if (touchResponder) {
         $(touchResponder, respondToEvent, event);
-        $(touchResponder, resignTouchResponder);
       } else if (touchTarget) {
         $(touchTarget, respondToEvent, event);
       } else {
