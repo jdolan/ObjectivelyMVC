@@ -1916,6 +1916,7 @@ static void willMoveToWindow(View *self, SDL_Window *window) {
 
   if (self->window) {
     $(self, resignKeyResponder);
+    $(self, resignTouchResponder);
     $(self, detachStylesheet, self->window);
   }
 }
