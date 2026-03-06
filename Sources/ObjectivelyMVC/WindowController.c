@@ -260,6 +260,10 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
       break;
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
       if (touchTarget) {
+        if (keyResponder && touchTarget != keyResponder) {
+          $(keyResponder, resignKeyResponder);
+          keyResponder = NULL;
+        }
         $(touchTarget, becomeTouchResponder);
         $(touchTarget, respondToEvent, event);
       } else if (touchResponder) {
@@ -267,11 +271,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
         $(touchResponder, resignTouchResponder);
       } else {
         $(self->viewController, respondToEvent, event);
-      }
-      
-      touchResponder = $(self, touchResponder);
-      if (touchResponder && keyResponder && touchResponder != keyResponder) {
-        $(keyResponder, resignKeyResponder);
       }
       break;
     case SDL_EVENT_MOUSE_BUTTON_UP:
