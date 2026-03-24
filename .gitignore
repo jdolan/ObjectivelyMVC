@@ -2,6 +2,7 @@
 # http://git-scm.com
 *~
 *.dll
+!ObjectivelyMVC.vs15/libs/**/x64/*.dll
 *.exe
 *.la
 *.lo
