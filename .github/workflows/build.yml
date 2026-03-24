@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-macos:
@@ -127,3 +127,51 @@ jobs:
 
     - name: Test
       run: make check
+
+  build-windows:
+    runs-on: windows-latest
+
+    env:
+      BUILD_CONFIGURATION: Release
+
+    steps:
+    - name: Checkout Objectively
+      uses: actions/checkout@v6
+      with:
+        repository: jdolan/Objectively
+        path: Objectively
+
+    - name: Checkout ObjectivelyMVC
+      uses: actions/checkout@v6
+      with:
+        path: ObjectivelyMVC
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build Objectively
+      working-directory: ${{ github.workspace }}/Objectively
+      run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=x64 Objectively.vs15/Objectively.sln
+
+    - name: Build ObjectivelyMVC
+      working-directory: ${{ github.workspace }}/ObjectivelyMVC
+      run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=x64 ObjectivelyMVC.vs15/ObjectivelyMVC.sln
+
+  release:
+    needs: [build-macos, build-linux, build-windows]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Create release
+      run: |
+        gh release delete latest --yes --cleanup-tag || true
+        gh release create latest \
+          --title "ObjectivelyMVC Latest" \
+          --notes "Latest build from the \`main\` branch." \
+          --prerelease
+      env:
+        GH_TOKEN: ${{ github.token }}
