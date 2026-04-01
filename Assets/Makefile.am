@@ -1,5 +1,5 @@
 %.h: %
-	xxd -i $^ $@
+	xxd -i $^ | awk '/^};/{print "  , 0x00"}1' > $@
 
 BUILT_SOURCES = \
 	check.png.h \
