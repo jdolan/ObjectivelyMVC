@@ -90,10 +90,7 @@ static void dealloc(Object *self) {
 
   SDL_FilterEvents(filterViewEvents, this);
 
-  release(this->subviews);
-
-  $(this, resignKeyResponder);
-  $(this, resignTouchResponder);
+  $(this, moveToWindow, NULL);
 
   free(this->identifier);
 
@@ -101,6 +98,7 @@ static void dealloc(Object *self) {
   release(this->computedStyle);
   release(this->style);
   release(this->stylesheet);
+  release(this->subviews);
   release(this->warnings);
 
   this->superview = NULL;
@@ -1916,6 +1914,7 @@ static void willMoveToWindow(View *self, SDL_Window *window) {
 
   if (self->window) {
     $(self, resignKeyResponder);
+    $(self, resignTouchResponder);
     $(self, detachStylesheet, self->window);
   }
 }
