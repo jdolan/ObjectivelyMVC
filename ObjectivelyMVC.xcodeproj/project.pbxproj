@@ -980,7 +980,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png check.png.h\nxxd -i coda.ttf coda.ttf.h\nxxd -i debug.css debug.css.h\nxxd -i debug.json debug.json.h\nxxd -i resize.png resize.png.h\nxxd -i stylesheet.css stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png      | awk '/^};/{print \"  , 0x00\"}1' > check.png.h\nxxd -i coda.ttf       | awk '/^};/{print \"  , 0x00\"}1' > coda.ttf.h\nxxd -i debug.css      | awk '/^};/{print \"  , 0x00\"}1' > debug.css.h\nxxd -i debug.json     | awk '/^};/{print \"  , 0x00\"}1' > debug.json.h\nxxd -i resize.png     | awk '/^};/{print \"  , 0x00\"}1' > resize.png.h\nxxd -i stylesheet.css | awk '/^};/{print \"  , 0x00\"}1' > stylesheet.css.h\n";
 		};
 		CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */ = {
 			isa = PBXShellScriptBuildPhase;
