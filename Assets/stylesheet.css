@@ -174,7 +174,7 @@ ProgressBar > .foreground {
   background-color: darkgray;
 }
 
-ProgressBar > Label {
+ProgressBar > Text {
   alignment: middle-center;
 }
 
