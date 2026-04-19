@@ -29,9 +29,6 @@
 
 #define _Class _SlideShowView
 
-#define SLIDESHOW_CYCLE_INTERVAL_DEFAULT 5000
-#define SLIDESHOW_FADE_DURATION_DEFAULT  1000
-
 #pragma mark - Object
 
 /**
@@ -117,8 +114,8 @@ static SlideShowView *initWithFrame(SlideShowView *self, const SDL_Rect *frame) 
 		self->images = $(alloc(MutableArray), init);
 		assert(self->images);
 
-		self->slideDuration = SLIDESHOW_CYCLE_INTERVAL_DEFAULT;
-		self->fadeDuration = SLIDESHOW_FADE_DURATION_DEFAULT;
+		self->slideDuration = 5000;
+		self->fadeDuration = 1000;
 
 		self->current = $(alloc(ImageView), initWithFrame, NULL);
 		assert(self->current);
