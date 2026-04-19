@@ -54,6 +54,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\SelectorSequence.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\SimpleSelector.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Slider.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\SlideShowView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\StackView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Style.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Stylesheet.h" />
@@ -107,6 +108,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\SelectorSequence.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\SimpleSelector.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Slider.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\SlideShowView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\StackView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Style.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Stylesheet.c" />

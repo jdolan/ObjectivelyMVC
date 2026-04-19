@@ -43,6 +43,8 @@
 		CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0981C77AF73003E3CF7 /* Slider.c */; };
 		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
+		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
 		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
@@ -274,6 +276,8 @@
 		CE0AD0971C7241DE003E3CF7 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		CE0AD0981C77AF73003E3CF7 /* Slider.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Slider.c; sourceTree = "<group>"; };
 		CE0AD0991C77AF73003E3CF7 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Slider.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
+		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
 		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
@@ -549,6 +553,8 @@
 				CE55C1CC1F94CFB200D5A326 /* SimpleSelector.h */,
 				CE0AD0981C77AF73003E3CF7 /* Slider.c */,
 				CE0AD0991C77AF73003E3CF7 /* Slider.h */,
+				7819952C297345768B746A46 /* SlideShowView.c */,
+				965273D7A59E496B86FE11EF /* SlideShowView.h */,
 				CE12D4931C547BDD00CD0B13 /* StackView.c */,
 				CE12D4941C547BDD00CD0B13 /* StackView.h */,
 				CE8819841F8DAC96000D5AB7 /* Style.c */,
@@ -775,6 +781,7 @@
 				CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */,
 				CE55C1CE1F94CFB200D5A326 /* SimpleSelector.h in Headers */,
 				CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */,
+				E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */,
 				CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */,
 				CE8819871F8DAC96000D5AB7 /* Style.h in Headers */,
 				CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */,
@@ -1071,6 +1078,7 @@
 				CE9351681F9B6ED000B46882 /* SelectorSequence.c in Sources */,
 				CE55C1CD1F94CFB200D5A326 /* SimpleSelector.c in Sources */,
 				CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */,
+				DB525ED598D84934843E2949 /* SlideShowView.c in Sources */,
 				CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */,
 				CE8819861F8DAC96000D5AB7 /* Style.c in Sources */,
 				CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */,
