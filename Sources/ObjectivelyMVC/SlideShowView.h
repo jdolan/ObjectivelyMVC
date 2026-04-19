@@ -67,12 +67,12 @@ struct SlideShowView {
 	size_t index;
 
 	/**
-	 * @brief Milliseconds between slide advances.
+	 * @brief The duration of each slide in milliseconds, excluding the fade transition.
 	 */
-	Uint32 cycleInterval;
+	Uint32 slideDuration;
 
 	/**
-	 * @brief Milliseconds for the crossfade transition.
+	 * @brief The duration of the fade transition in milliseconds.
 	 */
 	Uint32 fadeDuration;
 
@@ -89,16 +89,16 @@ struct SlideShowView {
 	ImageView *next;
 
 	/**
-	 * @brief Ticks at which the next advance should begin (0 = not scheduled).
+	 * @brief The ticks at which the current fade began (0 = not fading).
 	 * @protected
 	 */
-	Uint64 cycleAt;
+	Uint64 fadeStartedAt;
 
 	/**
-	 * @brief Ticks at which the current fade began (0 = not fading).
+	 * @brief The ticks at which the next advance should begin (0 = not scheduled).
 	 * @protected
 	 */
-	Uint64 fadeStart;
+	Uint64 fadeEndedAt;
 };
 
 /**

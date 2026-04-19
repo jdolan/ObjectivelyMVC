@@ -57,40 +57,39 @@ static void render(View *self, Renderer *renderer) {
 
 	SlideShowView *this = (SlideShowView *) self;
 
-	const size_t count = this->images->array.count;
-	if (count == 0) {
+	const Array *images = (Array *) this->images;
+	if (images->count == 0) {
 		return;
 	}
 
 	const Uint64 now = SDL_GetTicks();
 
 	if (this->current->image == NULL) {
-		Image *first = $((Array *) this->images, firstObject);
+		Image *first = $(images, firstObject);
 		$(this->current, setImage, first);
-		this->cycleAt = now + this->cycleInterval;
+		this->fadeEndedAt = now;
 		return;
 	}
 
-	if (count < 2) {
+	if (images->count < 2) {
 		return;
 	}
 
-	if (this->fadeStart) {
-		const float t = (float) (now - this->fadeStart) / (float) this->fadeDuration;
-		this->next->color.a = (Uint8) (SDL_min(t, 1.0f) * 255.0f);
-		if (t >= 1.0f) {
+	if (this->fadeStartedAt) {
+		const float frac = (float) (now - this->fadeStartedAt) / (float) this->fadeDuration;
+		this->next->color.a = (Uint8) (SDL_min(frac, 1.f) * 255.f);
+		if (frac >= 1.f) {
 			$(this->current, setImage, this->next->image);
 			$(this->next, setImage, NULL);
 			this->next->color.a = 0;
-			this->fadeStart = 0;
-			this->cycleAt = now + this->cycleInterval;
+			this->fadeStartedAt = 0;
+			this->fadeEndedAt = now;
 		}
-	} else if (this->cycleAt && now >= this->cycleAt) {
-		this->cycleAt = 0;
-		this->index = (this->index + 1) % count;
-		Image *image = $((Array *) this->images, objectAtIndex, this->index);
+	} else if (now - this->fadeEndedAt >= this->slideDuration) {
+		this->index = (this->index + 1) % images->count;
+		Image *image = $(images, objectAtIndex, this->index);
 		$(this->next, setImage, image);
-		this->fadeStart = now;
+		this->fadeStartedAt = now;
 	}
 }
 
@@ -118,7 +117,7 @@ static SlideShowView *initWithFrame(SlideShowView *self, const SDL_Rect *frame) 
 		self->images = $(alloc(MutableArray), init);
 		assert(self->images);
 
-		self->cycleInterval = SLIDESHOW_CYCLE_INTERVAL_DEFAULT;
+		self->slideDuration = SLIDESHOW_CYCLE_INTERVAL_DEFAULT;
 		self->fadeDuration = SLIDESHOW_FADE_DURATION_DEFAULT;
 
 		self->current = $(alloc(ImageView), initWithFrame, NULL);
