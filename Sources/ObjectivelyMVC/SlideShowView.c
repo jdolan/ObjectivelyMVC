@@ -36,58 +36,65 @@
  */
 static void dealloc(Object *self) {
 
-	SlideShowView *this = (SlideShowView *) self;
+  SlideShowView *this = (SlideShowView *) self;
 
-	release(this->images);
+  release(this->images);
 
-	super(Object, self, dealloc);
+  super(Object, self, dealloc);
 }
 
 #pragma mark - View
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+  return (View *) $((SlideShowView *) self, initWithFrame, NULL);
+}
 
 /**
  * @see View::render(View *, Renderer *)
  */
 static void render(View *self, Renderer *renderer) {
 
-	super(View, self, render, renderer);
+  super(View, self, render, renderer);
 
-	SlideShowView *this = (SlideShowView *) self;
+  SlideShowView *this = (SlideShowView *) self;
 
-	const Array *images = (Array *) this->images;
-	if (images->count == 0) {
-		return;
-	}
+  const Array *images = (Array *) this->images;
+  if (images->count == 0) {
+    return;
+  }
 
-	const Uint64 now = SDL_GetTicks();
+  const Uint64 now = SDL_GetTicks();
 
-	if (this->current->image == NULL) {
-		Image *first = $(images, firstObject);
-		$(this->current, setImage, first);
-		this->fadeEndedAt = now;
-		return;
-	}
+  if (this->current->image == NULL) {
+    Image *first = $(images, firstObject);
+    $(this->current, setImage, first);
+    this->fadeEndedAt = now;
+    return;
+  }
 
-	if (images->count < 2) {
-		return;
-	}
+  if (images->count < 2) {
+    return;
+  }
 
-	if (this->fadeStartedAt) {
-		const float frac = (float) (now - this->fadeStartedAt) / (float) this->fadeDuration;
-		this->next->color.a = (Uint8) (SDL_min(frac, 1.f) * 255.f);
-		if (frac >= 1.f) {
-			$(this->current, setImage, this->next->image);
-			$(this->next, setImage, NULL);
-			this->next->color.a = 0;
-			this->fadeStartedAt = 0;
-			this->fadeEndedAt = now;
-		}
-	} else if (now - this->fadeEndedAt >= this->slideDuration) {
-		this->index = (this->index + 1) % images->count;
-		Image *image = $(images, objectAtIndex, this->index);
-		$(this->next, setImage, image);
-		this->fadeStartedAt = now;
-	}
+  if (this->fadeStartedAt) {
+    const float frac = (float) (now - this->fadeStartedAt) / (float) this->fadeDuration;
+    this->next->color.a = (Uint8) (SDL_min(frac, 1.f) * 255.f);
+    if (frac >= 1.f) {
+      $(this->current, setImage, this->next->image);
+      $(this->next, setImage, NULL);
+      this->next->color.a = 0;
+      this->fadeStartedAt = 0;
+      this->fadeEndedAt = now;
+    }
+  } else if (now - this->fadeEndedAt >= this->slideDuration) {
+    this->index = (this->index + 1) % images->count;
+    Image *image = $(images, objectAtIndex, this->index);
+    $(this->next, setImage, image);
+    this->fadeStartedAt = now;
+  }
 }
 
 #pragma mark - SlideShowView
@@ -98,9 +105,9 @@ static void render(View *self, Renderer *renderer) {
  */
 static void addImage(SlideShowView *self, Image *image) {
 
-	assert(image);
+  assert(image);
 
-	$(self->images, addObject, image);
+  $(self->images, addObject, image);
 }
 
 /**
@@ -109,29 +116,29 @@ static void addImage(SlideShowView *self, Image *image) {
  */
 static SlideShowView *initWithFrame(SlideShowView *self, const SDL_Rect *frame) {
 
-	self = (SlideShowView *) super(View, self, initWithFrame, frame);
-	if (self) {
-		self->images = $(alloc(MutableArray), init);
-		assert(self->images);
+  self = (SlideShowView *) super(View, self, initWithFrame, frame);
+  if (self) {
+    self->images = $(alloc(MutableArray), init);
+    assert(self->images);
 
-		self->slideDuration = 5000;
-		self->fadeDuration = 1000;
+    self->slideDuration = 5000;
+    self->fadeDuration = 1000;
 
-		self->current = $(alloc(ImageView), initWithFrame, NULL);
-		assert(self->current);
-		self->current->view.autoresizingMask = ViewAutoresizingFill;
-		$((View *) self, addSubview, (View *) self->current);
-		release(self->current);
+    self->current = $(alloc(ImageView), initWithFrame, NULL);
+    assert(self->current);
+    self->current->view.autoresizingMask = ViewAutoresizingFill;
+    $((View *) self, addSubview, (View *) self->current);
+    release(self->current);
 
-		self->next = $(alloc(ImageView), initWithFrame, NULL);
-		assert(self->next);
-		self->next->view.autoresizingMask = ViewAutoresizingFill;
-		self->next->color.a = 0;
-		$((View *) self, addSubview, (View *) self->next);
-		release(self->next);
-	}
+    self->next = $(alloc(ImageView), initWithFrame, NULL);
+    assert(self->next);
+    self->next->view.autoresizingMask = ViewAutoresizingFill;
+    self->next->color.a = 0;
+    $((View *) self, addSubview, (View *) self->next);
+    release(self->next);
+  }
 
-	return self;
+  return self;
 }
 
 #pragma mark - Class lifecycle
@@ -141,12 +148,13 @@ static SlideShowView *initWithFrame(SlideShowView *self, const SDL_Rect *frame) 
  */
 static void initialize(Class *clazz) {
 
-	((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-	((ViewInterface *) clazz->interface)->render = render;
+  ((ViewInterface *) clazz->interface)->render = render;
+  ((ViewInterface *) clazz->interface)->init = init;
 
-	((SlideShowViewInterface *) clazz->interface)->addImage = addImage;
-	((SlideShowViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((SlideShowViewInterface *) clazz->interface)->addImage = addImage;
+  ((SlideShowViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
 }
 
 /**
@@ -154,21 +162,21 @@ static void initialize(Class *clazz) {
  * @memberof SlideShowView
  */
 Class *_SlideShowView(void) {
-	static Class *clazz;
-	static Once once;
+  static Class *clazz;
+  static Once once;
 
-	do_once(&once, {
-		clazz = _initialize(&(const ClassDef) {
-			.name = "SlideShowView",
-			.superclass = _View(),
-			.instanceSize = sizeof(SlideShowView),
-			.interfaceOffset = offsetof(SlideShowView, interface),
-			.interfaceSize = sizeof(SlideShowViewInterface),
-			.initialize = initialize,
-		});
-	});
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "SlideShowView",
+      .superclass = _View(),
+      .instanceSize = sizeof(SlideShowView),
+      .interfaceOffset = offsetof(SlideShowView, interface),
+      .interfaceSize = sizeof(SlideShowViewInterface),
+      .initialize = initialize,
+    });
+  });
 
-	return clazz;
+  return clazz;
 }
 
 #undef _Class

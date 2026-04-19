@@ -43,62 +43,62 @@ typedef struct SlideShowViewInterface SlideShowViewInterface;
  */
 struct SlideShowView {
 
-	/**
-	 * @brief The superclass.
-	 */
-	View view;
+  /**
+   * @brief The superclass.
+   */
+  View view;
 
-	/**
-	 * @brief The interface.
-	 * @protected
-	 */
-	SlideShowViewInterface *interface;
+  /**
+   * @brief The interface.
+   * @protected
+   */
+  SlideShowViewInterface *interface;
 
-	/**
-	 * @brief The images to display.
-	 * @protected
-	 */
-	MutableArray *images;
+  /**
+   * @brief The images to display.
+   * @protected
+   */
+  MutableArray *images;
 
-	/**
-	 * @brief The index of the currently displayed image.
-	 * @protected
-	 */
-	size_t index;
+  /**
+   * @brief The index of the currently displayed image.
+   * @protected
+   */
+  size_t index;
 
-	/**
-	 * @brief The duration of each slide in milliseconds, excluding the fade transition.
-	 */
-	Uint32 slideDuration;
+  /**
+   * @brief The duration of each slide in milliseconds, excluding the fade transition.
+   */
+  Uint32 slideDuration;
 
-	/**
-	 * @brief The duration of the fade transition in milliseconds.
-	 */
-	Uint32 fadeDuration;
+  /**
+   * @brief The duration of the fade transition in milliseconds.
+   */
+  Uint32 fadeDuration;
 
-	/**
-	 * @brief The bottom ImageView, showing the current slide.
-	 * @protected
-	 */
-	ImageView *current;
+  /**
+   * @brief The bottom ImageView, showing the current slide.
+   * @protected
+   */
+  ImageView *current;
 
-	/**
-	 * @brief The top ImageView, fading in the next slide.
-	 * @protected
-	 */
-	ImageView *next;
+  /**
+   * @brief The top ImageView, fading in the next slide.
+   * @protected
+   */
+  ImageView *next;
 
-	/**
-	 * @brief The ticks at which the current fade began (0 = not fading).
-	 * @protected
-	 */
-	Uint64 fadeStartedAt;
+  /**
+   * @brief The ticks at which the current fade began (0 = not fading).
+   * @protected
+   */
+  Uint64 fadeStartedAt;
 
-	/**
-	 * @brief The ticks at which the next advance should begin (0 = not scheduled).
-	 * @protected
-	 */
-	Uint64 fadeEndedAt;
+  /**
+   * @brief The ticks at which the next advance should begin (0 = not scheduled).
+   * @protected
+   */
+  Uint64 fadeEndedAt;
 };
 
 /**
@@ -106,30 +106,30 @@ struct SlideShowView {
  */
 struct SlideShowViewInterface {
 
-	/**
-	 * @brief The superclass interface.
-	 */
-	ViewInterface viewInterface;
+  /**
+   * @brief The superclass interface.
+   */
+  ViewInterface viewInterface;
 
-	/**
-	 * @fn void SlideShowView::addImage(SlideShowView *self, Image *image)
-	 * @brief Appends an Image to the slideshow.
-	 * @param self The SlideShowView.
-	 * @param image The Image to add.
-	 * @remarks Thread-safe: may be called from a background thread before images arrive.
-	 * @memberof SlideShowView
-	 */
-	void (*addImage)(SlideShowView *self, Image *image);
+  /**
+   * @fn void SlideShowView::addImage(SlideShowView *self, Image *image)
+   * @brief Appends an Image to the slideshow.
+   * @param self The SlideShowView.
+   * @param image The Image to add.
+   * @remarks Thread-safe: may be called from a background thread before images arrive.
+   * @memberof SlideShowView
+   */
+  void (*addImage)(SlideShowView *self, Image *image);
 
-	/**
-	 * @fn SlideShowView *SlideShowView::initWithFrame(SlideShowView *self, const SDL_Rect *frame)
-	 * @brief Initializes this SlideShowView with the specified frame.
-	 * @param self The SlideShowView.
-	 * @param frame The frame, or `NULL` for the default frame.
-	 * @return The initialized SlideShowView, or `NULL` on error.
-	 * @memberof SlideShowView
-	 */
-	SlideShowView *(*initWithFrame)(SlideShowView *self, const SDL_Rect *frame);
+  /**
+   * @fn SlideShowView *SlideShowView::initWithFrame(SlideShowView *self, const SDL_Rect *frame)
+   * @brief Initializes this SlideShowView with the specified frame.
+   * @param self The SlideShowView.
+   * @param frame The frame, or `NULL` for the default frame.
+   * @return The initialized SlideShowView, or `NULL` on error.
+   * @memberof SlideShowView
+   */
+  SlideShowView *(*initWithFrame)(SlideShowView *self, const SDL_Rect *frame);
 };
 
 OBJECTIVELYMVC_EXPORT Class *_SlideShowView(void);
