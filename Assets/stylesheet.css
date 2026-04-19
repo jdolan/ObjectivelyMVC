@@ -223,6 +223,15 @@ Slider > .label {
   padding: 0 0 0 18;
 }
 
+SlideShowView {
+  autoresizing-mask: fill;
+  clips-subviews: true;
+}
+
+SlideShowView > ImageView {
+  autoresizing-mask: fill;
+}
+
 StackView.container {
   spacing: 12;
 }
