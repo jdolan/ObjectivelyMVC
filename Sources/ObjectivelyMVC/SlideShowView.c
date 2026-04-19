@@ -126,13 +126,11 @@ static SlideShowView *initWithFrame(SlideShowView *self, const SDL_Rect *frame) 
 
     self->current = $(alloc(ImageView), initWithFrame, NULL);
     assert(self->current);
-    self->current->view.autoresizingMask = ViewAutoresizingFill;
     $((View *) self, addSubview, (View *) self->current);
     release(self->current);
 
     self->next = $(alloc(ImageView), initWithFrame, NULL);
     assert(self->next);
-    self->next->view.autoresizingMask = ViewAutoresizingFill;
     self->next->color.a = 0;
     $((View *) self, addSubview, (View *) self->next);
     release(self->next);
