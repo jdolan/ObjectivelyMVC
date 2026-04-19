@@ -57,6 +57,7 @@
 #include <ObjectivelyMVC/SelectorSequence.h>
 #include <ObjectivelyMVC/SimpleSelector.h>
 #include <ObjectivelyMVC/Slider.h>
+#include <ObjectivelyMVC/SlideShowView.h>
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/Style.h>
 #include <ObjectivelyMVC/Stylesheet.h>
