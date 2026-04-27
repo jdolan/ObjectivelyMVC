@@ -3,6 +3,7 @@ name: Build
 on:
   push:
     branches: [ "main" ]
+    tags: [ "v*.*.*" ]
   pull_request:
     branches: [ "main" ]
 
@@ -159,7 +160,7 @@ jobs:
 
   release:
     needs: [build-macos, build-linux, build-windows]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
 
     steps:
@@ -168,10 +169,8 @@ jobs:
 
     - name: Create release
       run: |
-        gh release delete latest --yes --cleanup-tag || true
-        gh release create latest \
-          --title "ObjectivelyMVC Latest" \
-          --notes "Latest build from the \`main\` branch." \
-          --prerelease
+        gh release create ${{ github.ref_name }} \
+          --title "ObjectivelyMVC ${{ github.ref_name }}" \
+          --generate-notes
       env:
         GH_TOKEN: ${{ github.token }}
