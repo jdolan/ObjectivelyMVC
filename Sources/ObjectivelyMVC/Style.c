@@ -381,9 +381,9 @@ static ident parseValue(String *string) {
       if (number) {
         value = retain(number);
       } else if (strcmp("true", token->chars) == 0) {
-        value = $$(Boole, True);
+        value = retain($$(Boole, True));
       } else if (strcmp("false", token->chars) == 0) {
-        value = $$(Boole, False);
+        value = retain($$(Boole, False));
       } else {
         value = $((Object *) token, copy);
       }
