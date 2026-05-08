@@ -61,6 +61,7 @@ static void dealloc(Object *self) {
 
   release(this->debugViewController);
   release(this->renderer);
+  release(this->theme);
   release(this->viewController);
 
   super(Object, self, dealloc);
