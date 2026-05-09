@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -126,6 +127,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   const Inlet inlets[] = MakeInlets(
     MakeInlet("color", InletTypeColor, &this->color, NULL),
+    MakeInlet("colorEscapes", InletTypeBool, &this->colorEscapes, NULL),
     MakeInlet("font", InletTypeFont, &this->font, NULL),
     MakeInlet("lineWrap", InletTypeBool, &this->lineWrap, NULL),
     MakeInlet("text", InletTypeCharacters, &this->text, NULL)
@@ -159,10 +161,20 @@ static void render(View *self, Renderer *renderer) {
     const SDL_Rect frame = $(self, renderFrame);
 
     if (this->texture == 0) {
-      SDL_Surface *surface = $(this->font, renderCharacters,
-                   this->text,
-                   this->color,
-                   this->lineWrap ? frame.w : 0);
+      SDL_Surface *surface;
+      
+      if (this->colorEscapes) {
+        surface = $(this->font, renderCharactersWithColors,
+                    this->text,
+                    this->color,
+                    this->lineWrap ? frame.w : 0);
+      } else {
+        surface = $(this->font, renderCharacters,
+                    this->text,
+                    this->color,
+                    this->lineWrap ? frame.w : 0);
+      }
+      
       assert(surface);
 
       this->texture = $(renderer, createTexture, surface);
@@ -236,7 +248,13 @@ static SDL_Size naturalSize(const Text *self) {
   SDL_Size size = MakeSize(0, 0);
 
   if (self->font) {
-    $(self->font, sizeCharacters, self->text ?: "", &size.w, &size.h);
+    const char *text = self->text ?: "";
+    
+    if (self->colorEscapes) {
+      $(self->font, sizeCharactersWithColors, text, &size.w, &size.h);
+    } else {
+      $(self->font, sizeCharacters, text, &size.w, &size.h);
+    }
   }
 
   return size;

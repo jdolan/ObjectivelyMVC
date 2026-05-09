@@ -64,6 +64,15 @@ struct Text {
   Font *font;
 
   /**
+   * @brief If true, render text with color escape sequence support (^0-^7).
+   * @remarks Enables per-character colorization via Font::renderCharactersWithColors.
+   *   Only enable for Text that uses color escape sequences, as the code path is
+   *   significantly more expensive than plain rendering.
+   * @see FontEscapeColors
+   */
+  bool colorEscapes;
+
+  /**
    * @brief If true, wrap text along word boundaries to fit this Text's width.
    */
   bool lineWrap;
