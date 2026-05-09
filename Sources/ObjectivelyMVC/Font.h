@@ -53,34 +53,6 @@ typedef enum {
 
 OBJECTIVELYMVC_EXPORT const EnumName FontStyleNames[];
 
-/**
- * @brief Color palette for text escape sequences (^0-^7).
- *
- * This array defines the colors used for escape sequences in the format ^0-^7.
- * Embedding applications can customize these colors by modifying this array at runtime
- * before rendering text with color codes.
- * 
- * Default mapping:
- * - ^0 = Black
- * - ^1 = Red
- * - ^2 = Green
- * - ^3 = Yellow
- * - ^4 = Blue
- * - ^5 = Magenta
- * - ^6 = Cyan
- * - ^7 = White
- * 
- * @warning Do not modify the array size (must remain exactly 8 elements).
- * @warning Modifications should be made early in initialization, before rendering text.
- * 
- * Example customization:
- * @code
- * // Use a custom color scheme
- * FontEscapeColors[1] = MakeSDLColor(0xFF, 0x80, 0x00, 0xFF);  // ^1 = Orange
- * @endcode
- */
-OBJECTIVELYMVC_EXPORT SDL_Color FontEscapeColors[8];
-
 typedef struct Font Font;
 typedef struct FontInterface FontInterface;
 
@@ -114,7 +86,7 @@ struct Font {
   /**
    * @brief The backing font.
    */
-  ident font;
+  TTF_Font *font;
 
   /**
    * @brief The render size, adjusted for display density.
@@ -205,20 +177,6 @@ struct FontInterface {
   SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color, int wrapWidth);
 
   /**
-   * @fn SDL_Surface *Font::renderCharactersWithColors(const Font *self, const char *chars, SDL_Color defaultColor, int wrapWidth)
-   * @brief Renders the given characters with color escape sequences (^0-^7).
-   * @details Supports Quetoo-style color codes: ^0 black, ^1 red, ^2 green, ^3 yellow,
-   * ^4 blue, ^5 magenta, ^6 cyan, ^7 white (resets to defaultColor).
-   * @param self The Font.
-   * @param chars The null-terminated UTF-8 encoded C string to render, with color codes.
-   * @param defaultColor The default color when no code is active.
-   * @param wrapWidth The maximum line width, in pixels, where wrapping should occur.
-   * @return The rendered surface with colors applied, or `NULL` on error.
-   * @memberof Font
-   */
-  SDL_Surface *(*renderCharactersWithColors)(const Font *self, const char *chars, SDL_Color defaultColor, int wrapWidth);
-
-  /**
    * @fn void Font::renderDeviceDidReset(Font *self)
    * @brief This method should be invoked when the render context is invalidated.
    * @param self The Font.
@@ -236,19 +194,6 @@ struct FontInterface {
    * @memberof Font
    */
   void (*sizeCharacters)(const Font *self, const char *chars, int *w, int *h);
-
-  /**
-   * @fn void Font::sizeCharactersWithColors(const Font *self, const char *text, int *w, int *h)
-   * @brief Resolves the rendered size of text containing color escape sequences.
-   * @details Strips color codes before measuring; equivalent to calling
-   *   Font::sizeCharacters on the stripped text.
-   * @param self The Font.
-   * @param text The null-terminated UTF-8 encoded C string, optionally containing color codes.
-   * @param w The width to return.
-   * @param h The height to return.
-   * @memberof Font
-   */
-  void (*sizeCharactersWithColors)(const Font *self, const char *text, int *w, int *h);
 };
 
 /**

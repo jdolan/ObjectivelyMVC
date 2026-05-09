@@ -31,6 +31,32 @@
  * @brief Text rendered with TrueType fonts.
  */
 
+/**
+ * @brief Color palette for text escape sequences (^0-^7).
+ *
+ * Defines the colors used when rendering Text with @c colorEscapes enabled.
+ * Embedding applications can customize this array at runtime before rendering.
+ *
+ * Default mapping:
+ * - ^0 = Black
+ * - ^1 = Red
+ * - ^2 = Green
+ * - ^3 = Yellow
+ * - ^4 = Blue
+ * - ^5 = Magenta
+ * - ^6 = Cyan
+ * - ^7 = White
+ *
+ * @warning Do not modify the array size (must remain exactly 8 elements).
+ * @warning Modifications should be made early in initialization, before rendering text.
+ *
+ * Example customization:
+ * @code
+ * TextEscapeColors[1] = (SDL_Color) { 0xFF, 0x80, 0x00, 0xFF };  // ^1 = Orange
+ * @endcode
+ */
+OBJECTIVELYMVC_EXPORT SDL_Color TextEscapeColors[8];
+
 typedef struct Text Text;
 typedef struct TextInterface TextInterface;
 
