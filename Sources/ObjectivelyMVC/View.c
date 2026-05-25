@@ -82,6 +82,13 @@ static bool filterViewEvents(void *data, SDL_Event *event) {
 }
 
 /**
+ * @brief ViewEnumerator to null out superview pointers during parent dealloc.
+ */
+static void nullifySuperview(View *subview, ident data) {
+  subview->superview = NULL;
+}
+
+/**
  * @see Object::dealloc(Object *)
  */
 static void dealloc(Object *self) {
@@ -91,6 +98,8 @@ static void dealloc(Object *self) {
   SDL_FilterEvents(filterViewEvents, this);
 
   $(this, moveToWindow, NULL);
+
+  $(this, enumerateSubviews, nullifySuperview, NULL);
 
   free(this->identifier);
 
