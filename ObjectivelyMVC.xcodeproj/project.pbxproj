@@ -43,8 +43,6 @@
 		CE0943B11D615CF800C11408 /* TableHeaderCellView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943AF1D615CF800C11408 /* TableHeaderCellView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE0AD09A1C77AF73003E3CF7 /* Slider.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0AD0981C77AF73003E3CF7 /* Slider.c */; };
 		CE0AD09B1C77AF73003E3CF7 /* Slider.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0AD0991C77AF73003E3CF7 /* Slider.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
-		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4071C4C367100CD0B13 /* Colors.c */; };
 		CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4091C4C367100CD0B13 /* Font.c */; };
 		CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D40B1C4C367100CD0B13 /* ImageView.c */; };
@@ -121,6 +119,10 @@
 		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		CE7EA1FF2FC3CA0300030944 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */; };
+		CE7EA2002FC3CA0300030944 /* libSDL3.0.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		CE7EA2032FC3CA1200030944 /* libSDL3_image.0.4.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */; };
+		CE7EA2042FC3CA1200030944 /* libSDL3_image.0.4.4.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE84C6CC1FFC917600F72267 /* DebugViewController.c */; };
 		CE85F4792F12C104005D2F9C /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE85F4772F12C104005D2F9C /* libSDL3.0.dylib */; };
@@ -154,7 +156,6 @@
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
 		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CEAD8F8B2F86910D0087A850 /* libSDL3_image.0.4.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEAD8F8A2F86910D0087A850 /* libSDL3_image.0.4.2.dylib */; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEDCFC7720497B07008A4252 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -163,6 +164,8 @@
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
+		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -253,6 +256,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CE7EA2012FC3CA0300030944 /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CE7EA2042FC3CA1200030944 /* libSDL3_image.0.4.4.dylib in Embed Libraries */,
+				CE7EA2002FC3CA0300030944 /* libSDL3.0.dylib in Embed Libraries */,
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE8819931F91B0BE000D5AB7 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -265,6 +280,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
+		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE081BE42C27955C00436CDC /* click.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = click.wav.h; sourceTree = "<group>"; };
 		CE081BE52C27955C00436CDC /* clack.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = clack.wav.h; sourceTree = "<group>"; };
 		CE0943A61D60F1A300C11408 /* TableColumn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableColumn.c; sourceTree = "<group>"; };
@@ -276,8 +293,6 @@
 		CE0AD0971C7241DE003E3CF7 /* style.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = style.css; sourceTree = "<group>"; };
 		CE0AD0981C77AF73003E3CF7 /* Slider.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Slider.c; sourceTree = "<group>"; };
 		CE0AD0991C77AF73003E3CF7 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Slider.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
-		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE12D4071C4C367100CD0B13 /* Colors.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Colors.c; sourceTree = "<group>"; };
 		CE12D4081C4C367100CD0B13 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		CE12D4091C4C367100CD0B13 /* Font.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Font.c; sourceTree = "<group>"; };
@@ -365,6 +380,8 @@
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE7CBD7E202942B300C5316A /* coda.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = coda.ttf; sourceTree = "<group>"; };
 		CE7CBD7F20294B9B00C5316A /* coda.ttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coda.ttf.h; sourceTree = "<group>"; };
+		CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.4.8/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
+		CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_image.0.4.4.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_image/3.4.4/lib/libSDL3_image.0.4.4.dylib; sourceTree = "<group>"; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 		CE84C6CA1FFC8E9E00F72267 /* debug.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = debug.json; sourceTree = "<group>"; };
 		CE84C6CB1FFC917600F72267 /* DebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
@@ -482,8 +499,9 @@
 			files = (
 				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
 				CE85F4792F12C104005D2F9C /* libSDL3.0.dylib in Frameworks */,
-				CEAD8F8B2F86910D0087A850 /* libSDL3_image.0.4.2.dylib in Frameworks */,
+				CE7EA1FF2FC3CA0300030944 /* libSDL3.0.dylib in Frameworks */,
 				CE85F4802F12C8A7005D2F9C /* libSDL3_ttf.0.2.2.dylib in Frameworks */,
+				CE7EA2032FC3CA1200030944 /* libSDL3_image.0.4.4.dylib in Frameworks */,
 				CE3A45A0216594D5005ACAD6 /* libObjectively.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -674,6 +692,8 @@
 		CE12D4971C55012200CD0B13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */,
+				CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */,
 				CEAD8F8A2F86910D0087A850 /* libSDL3_image.0.4.2.dylib */,
 				CEF3B5FD2F440D420024F4DF /* libSDL3_image.0.4.0.dylib */,
 				CE85F4762F12C104005D2F9C /* libSDL3_image.0.2.6.dylib */,
@@ -892,6 +912,7 @@
 				CED157C91C4BF3AC00FBA2DE /* Sources */,
 				CED157CA1C4BF3AC00FBA2DE /* Frameworks */,
 				CED157CB1C4BF3AC00FBA2DE /* Headers */,
+				CE7EA2012FC3CA0300030944 /* Embed Libraries */,
 			);
 			buildRules = (
 			);
@@ -909,7 +930,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2620;
+				LastUpgradeCheck = 2640;
 				ORGANIZATIONNAME = "https://github.com/jdolan";
 				TargetAttributes = {
 					CE12D4541C4C8E8E00CD0B13 = {
@@ -1309,10 +1330,7 @@
 			buildSettings = {
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				EXECUTABLE_PREFIX = lib;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/homebrew/Cellar/sdl3_image/3.4.2/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
 			};
@@ -1323,10 +1341,7 @@
 			buildSettings = {
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				EXECUTABLE_PREFIX = lib;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					/opt/homebrew/Cellar/sdl3_image/3.4.2/lib,
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
 				PRODUCT_NAME = ObjectivelyMVC;
 			};
