@@ -52,10 +52,10 @@
  *
  * Example customization:
  * @code
- * TextEscapeColors[1] = (SDL_Color) { 0xFF, 0x80, 0x00, 0xFF };  // ^1 = Orange
+ * TextEscapeColors[8] = (SDL_Color) { 0xFF, 0x80, 0x00, 0xFF };  // ^8 = Orange
  * @endcode
  */
-OBJECTIVELYMVC_EXPORT SDL_Color TextEscapeColors[8];
+OBJECTIVELYMVC_EXPORT SDL_Color TextEscapeColors[10];
 
 typedef struct Text Text;
 typedef struct TextInterface TextInterface;

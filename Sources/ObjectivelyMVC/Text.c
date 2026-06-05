@@ -42,7 +42,9 @@ SDL_Color TextEscapeColors[] = {
   { 0x00, 0x00, 0xFF, 0xFF },  // ^4 Blue
   { 0xFF, 0x00, 0xFF, 0xFF },  // ^5 Magenta
   { 0x00, 0xFF, 0xFF, 0xFF },  // ^6 Cyan
-  { 0xFF, 0xFF, 0xFF, 0xFF }   // ^7 White
+  { 0xFF, 0xFF, 0xFF, 0xFF },  // ^7 White
+  { 0xFF, 0x80, 0x00, 0xFF },  // ^8 Orange
+  { 0x80, 0x80, 0x80, 0xFF }   // ^9 Grey
 };
 
 /**
@@ -56,7 +58,7 @@ static char *stripColors(const char *text) {
   int idx = 0;
 
   for (const char *p = text; *p; p++) {
-    if (p[0] == '^' && p[1] >= '0' && p[1] <= '7') {
+    if (p[0] == '^' && p[1] >= '0' && p[1] <= '9') {
       p++;
     } else {
       stripped[idx++] = *p;
@@ -143,7 +145,7 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
   int prevH = 0;
 
   for (const char *p = text; *p; p++) {
-    if (p[0] == '^' && p[1] >= '0' && p[1] <= '7') {
+    if (p[0] == '^' && p[1] >= '0' && p[1] <= '9') {
       currentColor = TextEscapeColors[p[1] - '0'];
       p++;
       continue;

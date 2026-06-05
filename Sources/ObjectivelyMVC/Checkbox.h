@@ -78,7 +78,7 @@ struct Checkbox {
   CheckboxInterface *interface;
 
   /**
-   * @brief The CheckBoxDelegate.
+   * @brief The CheckboxDelegate.
    */
   CheckboxDelegate delegate;
 
