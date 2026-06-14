@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <Objectively/JSONSerialization.h>
+#include <Objectively/JSONContext.h>
 
 #include "Log.h"
 #include "Theme.h"

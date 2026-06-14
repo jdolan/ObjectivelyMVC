@@ -356,11 +356,17 @@ static void awakeWithCharacters(View *self, const char *chars) {
  */
 static void awakeWithData(View *self, const Data *data) {
 
-  Dictionary *dictionary = $$(JSONSerialization, objectFromData, data, 0);
+  JSONContext *ctx = $(alloc(JSONContext), init);
+  Dictionary *dictionary = $(ctx, objectFromData, data, 0);
 
-  $(self, awakeWithDictionary, dictionary);
+  if (dictionary) {
+    $(self, awakeWithDictionary, dictionary);
+    release(dictionary);
+  } else {
+    MVC_LogError("Failed to parse JSON for %s\n", classnameof(self));
+  }
 
-  release(dictionary);
+  release(ctx);
 }
 
 /**
@@ -1825,12 +1831,18 @@ static View *viewWithCharacters(const char *chars, Outlet *outlets) {
  */
 static View *viewWithData(const Data *data, Outlet *outlets) {
 
-  Dictionary *dictionary = $$(JSONSerialization, objectFromData, data, 0);
+  JSONContext *ctx = $(alloc(JSONContext), init);
+  Dictionary *dictionary = $(ctx, objectFromData, data, 0);
 
-  View *view = $$(View, viewWithDictionary, dictionary, outlets);
+  View *view = NULL;
+  if (dictionary) {
+    view = $$(View, viewWithDictionary, dictionary, outlets);
+    release(dictionary);
+  } else {
+    MVC_LogError("Failed to parse JSON\n");
+  }
 
-  release(dictionary);
-
+  release(ctx);
   return view;
 }
 
