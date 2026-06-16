@@ -21,11 +21,13 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#include <stdlib.h>
 #include <unistd.h>
 
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
+#include "Hello-Scene.h"
 #include "HelloViewController.h"
 
 #ifndef EXAMPLES
@@ -33,7 +35,6 @@
 #endif
 
 static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event);
-static void drawScene(SDL_Window *window);
 
 /**
  * @brief Program entry point.
@@ -58,13 +59,27 @@ int main(int argc, char *argv[]) {
 
   SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream));
 
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+
   SDL_Window *window = SDL_CreateWindow(__FILE__,
     1024,
     720,
     SDL_WINDOW_OPENGL | SDL_WINDOW_HIGH_PIXEL_DENSITY
   );
 
+  if (window == NULL) {
+    fprintf(stderr, "%s\n", SDL_GetError());
+    exit(1);
+  }
+
   SDL_GLContext context = SDL_GL_CreateContext(window);
+  if (context == NULL) {
+    fprintf(stderr, "%s\n", SDL_GetError());
+    exit(2);
+  }
 
   SDL_GL_SetSwapInterval(1);
 
@@ -75,6 +90,8 @@ int main(int argc, char *argv[]) {
   ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
 
   $(windowController, setViewController, viewController);
+
+  initScene();
 
   while (true) {
     
@@ -139,90 +156,4 @@ static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event) {
     default:
       break;
   }
-}
-
-/**
- * @brief Renders a rotating cube, demonstrating ObjectivelyMVC integrating with a vanilla SDL3 /
- * OpenGL application.
- */
-static void drawScene(SDL_Window *window) {
-
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  glOrtho(-2.0, 2.0, -2.0, 2.0, -3.0, 3.0);
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-
-  glTranslatef(0.0, 0.0, -1.0);
-
-  glPushMatrix();
-
-  glRotatef(SDL_GetTicks() * 0.1, 1.0, 1.0, 1.0);
-
-  glEnable(GL_DEPTH_TEST);
-
-  glBegin(GL_QUADS);
-
-  // Top face (y = 1.0)
-  glColor3f(0.0, 1.0, 0.0);
-  glVertex3f( 1.0, 1.0, -1.0);
-  glVertex3f(-1.0, 1.0, -1.0);
-  glVertex3f(-1.0, 1.0,  1.0);
-  glVertex3f( 1.0, 1.0,  1.0);
-
-  // Bottom face (y = -1.0)
-  glColor3f(1.0, 0.5f, 0.0);
-  glVertex3f( 1.0, -1.0,  1.0);
-  glVertex3f(-1.0, -1.0,  1.0);
-  glVertex3f(-1.0, -1.0, -1.0);
-  glVertex3f( 1.0, -1.0, -1.0);
-
-  // Front face  (z = 1.0)
-  glColor3f(1.0, 0.0, 0.0);
-  glVertex3f( 1.0,  1.0, 1.0);
-  glVertex3f(-1.0,  1.0, 1.0);
-  glVertex3f(-1.0, -1.0, 1.0);
-  glVertex3f( 1.0, -1.0, 1.0);
-
-  // Back face (z = -1.0)
-  glColor3f(1.0, 1.0, 0.0);
-  glVertex3f( 1.0, -1.0, -1.0);
-  glVertex3f(-1.0, -1.0, -1.0);
-  glVertex3f(-1.0,  1.0, -1.0);
-  glVertex3f( 1.0,  1.0, -1.0);
-
-  // Left face (x = -1.0)
-  glColor3f(0.0, 0.0, 1.0);
-  glVertex3f(-1.0,  1.0,  1.0);
-  glVertex3f(-1.0,  1.0, -1.0);
-  glVertex3f(-1.0, -1.0, -1.0);
-  glVertex3f(-1.0, -1.0,  1.0);
-
-  // Right face (x = 1.0)
-  glColor3f(1.0, 0.0, 1.0);
-  glVertex3f(1.0,  1.0, -1.0);
-  glVertex3f(1.0,  1.0,  1.0);
-  glVertex3f(1.0, -1.0,  1.0);
-  glVertex3f(1.0, -1.0, -1.0);
-
-  glEnd();  // End of drawing color-cube
-
-  glColor3f(1.0, 1.0, 1.0);
-
-  glDisable(GL_DEPTH_TEST);
-
-  glPopMatrix();
-
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  int w, h;
-  SDL_GetWindowSize(window, &w, &h);
-
-  glOrtho(0, w, h, 0, -1, 1);
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
 }

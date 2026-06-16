@@ -58,6 +58,7 @@
 		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE12D4621C4C8F4800CD0B13 /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
+		AABB0003CC0011220033AABB /* Hello-Scene.c in Sources */ = {isa = PBXBuildFile; fileRef = AABB0001CC0011220033AABB /* Hello-Scene.c */; };
 		CE12D4661C4D587E00CD0B13 /* Log.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4651C4D587E00CD0B13 /* Log.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4691C4D810F00CD0B13 /* Button.c */; };
 		CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D46A1C4D810F00CD0B13 /* Button.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -82,13 +83,10 @@
 		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE3091BD2CFB8F2100E59187 /* Warning.c in Sources */ = {isa = PBXBuildFile; fileRef = CE3091BC2CFB8F2100E59187 /* Warning.c */; };
 		CE3091BE2CFB8F2100E59187 /* Warning.h in Headers */ = {isa = PBXBuildFile; fileRef = CE3091BB2CFB8F2100E59187 /* Warning.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE34C89B1FB29F700025F231 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE34C89C1FB29F700025F231 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE34C89D1FB29F700025F231 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE34C8A31FB29F8B0025F231 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CE34C8941FB29F3A0025F231 /* Stylesheet.c */; };
 		CE3A45A0216594D5005ACAD6 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
-		CE4E054B2FDAE59C00B92C32 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE4E05492FDAE56900B92C32 /* libSDL3.0.dylib */; };
-		CE55C1C21F944C6D00D5A326 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE55C1C31F944C6D00D5A326 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE55C1C41F944C6D00D5A326 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE55C1CA1F944C7E00D5A326 /* Selector.c in Sources */ = {isa = PBXBuildFile; fileRef = CE55C1BB1F944C1B00D5A326 /* Selector.c */; };
@@ -108,7 +106,6 @@
 		CE562EC11D6A08DD006DF143 /* CollectionView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EBF1D6A08DD006DF143 /* CollectionView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE562EC41D6A0A17006DF143 /* CollectionItemView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE562EC21D6A0A17006DF143 /* CollectionItemView.c */; };
 		CE562EC51D6A0A17006DF143 /* CollectionItemView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE562EC31D6A0A17006DF143 /* CollectionItemView.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE5A6AAF2EC565AC005F3C92 /* libSDL3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5A6AAB2EC55EA6005F3C92 /* libSDL3.0.dylib */; };
 		CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6603791CBBF93E00EB86CF /* ScrollView.c */; };
 		CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE66037A1CBBF93E00EB86CF /* ScrollView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
@@ -119,11 +116,11 @@
 		CE6EE3CC1F7156BC00FBC830 /* HueColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6EE3CA1F7156BC00FBC830 /* HueColorPicker.c */; };
 		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
+		AABB0008CC0011220033AABB /* Renderer+OpenGL.c in Sources */ = {isa = PBXBuildFile; fileRef = AABB0009CC0011220033AABB /* Renderer+OpenGL.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE7EA2032FC3CA1200030944 /* libSDL3_image.0.4.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */; };
+		AABB000ACC0011220033AABB /* Renderer+OpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = AABB000BCC0011220033AABB /* Renderer+OpenGL.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE84C6CC1FFC917600F72267 /* DebugViewController.c */; };
-		CE85F4802F12C8A7005D2F9C /* libSDL3_ttf.0.2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */; };
 		CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */ = {isa = PBXBuildFile; fileRef = CE862AD71F79FB82005C3B10 /* ProgressBar.c */; };
 		CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */ = {isa = PBXBuildFile; fileRef = CE862AD81F79FB82005C3B10 /* ProgressBar.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE88196A1F8AAC25000D5AB7 /* Window.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819681F8AAC25000D5AB7 /* Window.c */; };
@@ -132,7 +129,6 @@
 		CE8819831F8CFD60000D5AB7 /* Theme.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819811F8CFD60000D5AB7 /* Theme.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE8819861F8DAC96000D5AB7 /* Style.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819841F8DAC96000D5AB7 /* Style.c */; };
 		CE8819871F8DAC96000D5AB7 /* Style.h in Headers */ = {isa = PBXBuildFile; fileRef = CE8819851F8DAC96000D5AB7 /* Style.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		CE8819901F91B0BE000D5AB7 /* libcheck.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CE423A431F53457D002767E7 /* libcheck.0.dylib */; };
 		CE8819911F91B0BE000D5AB7 /* libObjectively.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CEF1D8901D4270150099A857 /* libObjectively.dylib */; };
 		CE8819921F91B0BE000D5AB7 /* libObjectivelyMVC.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */; };
 		CE8819981F91B0CE000D5AB7 /* Style.c in Sources */ = {isa = PBXBuildFile; fileRef = CE8819891F91B094000D5AB7 /* Style.c */; };
@@ -265,7 +261,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		14C7C5885104229637E1E9D5 /* renderer_fs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_fs.glsl; sourceTree = "<group>"; };
 		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
+		7F6735C65F7CAB13D8D96588 /* renderer_fs.glsl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderer_fs.glsl.h; sourceTree = "<group>"; };
+		8D42EC0E254AF0B8789148FA /* renderer_vs.glsl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderer_vs.glsl.h; sourceTree = "<group>"; };
 		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE081BE42C27955C00436CDC /* click.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = click.wav.h; sourceTree = "<group>"; };
 		CE081BE52C27955C00436CDC /* clack.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = clack.wav.h; sourceTree = "<group>"; };
@@ -293,6 +292,8 @@
 		CE12D4261C4C367100CD0B13 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectivelyMVC.h; sourceTree = "<group>"; };
 		CE12D42B1C4C37E500CD0B13 /* Hello.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Hello.c; sourceTree = "<group>"; };
+		AABB0001CC0011220033AABB /* Hello-Scene.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "Hello-Scene.c"; sourceTree = "<group>"; };
+		AABB0002CC0011220033AABB /* Hello-Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Hello-Scene.h"; sourceTree = "<group>"; };
 		CE12D42D1C4C383D00CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Hello"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4651C4D587E00CD0B13 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
@@ -364,6 +365,8 @@
 		CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HueColorPicker.h; sourceTree = "<group>"; };
 		CE76279C1D4A5A5800EEEE78 /* Renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Renderer.c; sourceTree = "<group>"; };
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		AABB0009CC0011220033AABB /* Renderer+OpenGL.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "Renderer+OpenGL.c"; sourceTree = "<group>"; };
+		AABB000BCC0011220033AABB /* Renderer+OpenGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Renderer+OpenGL.h"; sourceTree = "<group>"; };
 		CE7CBD7E202942B300C5316A /* coda.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = coda.ttf; sourceTree = "<group>"; };
 		CE7CBD7F20294B9B00C5316A /* coda.ttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coda.ttf.h; sourceTree = "<group>"; };
 		CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.4.8/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
@@ -435,6 +438,7 @@
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		CEF3B5FD2F440D420024F4DF /* libSDL3_image.0.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_image.0.4.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_image/3.4.0/lib/libSDL3_image.0.4.0.dylib; sourceTree = "<group>"; };
+		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -535,6 +539,8 @@
 				CE862AD81F79FB82005C3B10 /* ProgressBar.h */,
 				CE76279C1D4A5A5800EEEE78 /* Renderer.c */,
 				CE76279D1D4A5A5800EEEE78 /* Renderer.h */,
+				AABB0009CC0011220033AABB /* Renderer+OpenGL.c */,
+				AABB000BCC0011220033AABB /* Renderer+OpenGL.h */,
 				CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */,
 				CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */,
 				CE6603791CBBF93E00EB86CF /* ScrollView.c */,
@@ -627,6 +633,8 @@
 				CE081BE42C27955C00436CDC /* click.wav.h */,
 				CE89AD9E28B99568002E45C7 /* click.wav */,
 				CE12D42B1C4C37E500CD0B13 /* Hello.c */,
+				AABB0001CC0011220033AABB /* Hello-Scene.c */,
+				AABB0002CC0011220033AABB /* Hello-Scene.h */,
 				CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */,
 				CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */,
 				CE6BC16E1D79B2920070FB2D /* HelloViewController.json */,
@@ -646,6 +654,10 @@
 				CE9FECD6201D5F8000F954ED /* debug.css.h */,
 				CE84C6CA1FFC8E9E00F72267 /* debug.json */,
 				CE9FECD7201D5F8000F954ED /* debug.json.h */,
+				14C7C5885104229637E1E9D5 /* renderer_fs.glsl */,
+				7F6735C65F7CAB13D8D96588 /* renderer_fs.glsl.h */,
+				D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */,
+				8D42EC0E254AF0B8789148FA /* renderer_vs.glsl.h */,
 				CEF1D8921D429F7A0099A857 /* resize.png */,
 				CE92C5171FE029C000FDB0DF /* resize.png.h */,
 				CE92C5141FE01F6300FDB0DF /* stylesheet.css */,
@@ -774,6 +786,7 @@
 				CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */,
 				CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */,
 				CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */,
+				AABB000ACC0011220033AABB /* Renderer+OpenGL.h in Headers */,
 				CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */,
 				CE14A8CD1C66D89900B576FB /* Select.h in Headers */,
 				CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */,
@@ -974,6 +987,8 @@
 				"$(SRCROOT)/Assets/coda.ttf",
 				"$(SRCROOT)/Assets/debug.css",
 				"$(SRCROOT)/Assets/debug.json",
+				"$(SRCROOT)/Assets/renderer_fs.glsl",
+				"$(SRCROOT)/Assets/renderer_vs.glsl",
 				"$(SRCROOT)/Assets/resize.png",
 				"$(SRCROOT)/Assets/stylesheet.css",
 			);
@@ -983,12 +998,14 @@
 				"$(SRCROOT)/Assets/coda.ttf.h",
 				"$(SRCROOT)/Assets/debug.css.h",
 				"$(SRCROOT)/Assets/debug.json.h",
+				"$(SRCROOT)/Assets/renderer_fs.glsl.h",
+				"$(SRCROOT)/Assets/renderer_vs.glsl.h",
 				"$(SRCROOT)/Assets/resize.png.h",
 				"$(SRCROOT)/Assets/stylesheet.css.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png      | awk '/^};/{print \"  , 0x00\"}1' > check.png.h\nxxd -i coda.ttf       | awk '/^};/{print \"  , 0x00\"}1' > coda.ttf.h\nxxd -i debug.css      | awk '/^};/{print \"  , 0x00\"}1' > debug.css.h\nxxd -i debug.json     | awk '/^};/{print \"  , 0x00\"}1' > debug.json.h\nxxd -i resize.png     | awk '/^};/{print \"  , 0x00\"}1' > resize.png.h\nxxd -i stylesheet.css | awk '/^};/{print \"  , 0x00\"}1' > stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png        | awk '/^};/{print \"  , 0x00\"}1' > check.png.h\nxxd -i coda.ttf         | awk '/^};/{print \"  , 0x00\"}1' > coda.ttf.h\nxxd -i debug.css        | awk '/^};/{print \"  , 0x00\"}1' > debug.css.h\nxxd -i debug.json       | awk '/^};/{print \"  , 0x00\"}1' > debug.json.h\nxxd -i renderer_fs.glsl | awk '/^};/{print \"  , 0x00\"}1' > renderer_fs.glsl.h\nxxd -i renderer_vs.glsl | awk '/^};/{print \"  , 0x00\"}1' > renderer_vs.glsl.h\nxxd -i resize.png       | awk '/^};/{print \"  , 0x00\"}1' > resize.png.h\nxxd -i stylesheet.css   | awk '/^};/{print \"  , 0x00\"}1' > stylesheet.css.h\n";
 		};
 		CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1017,6 +1034,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE12D4621C4C8F4800CD0B13 /* Hello.c in Sources */,
+				AABB0003CC0011220033AABB /* Hello-Scene.c in Sources */,
 				CE12D47A1C4EAD3C00CD0B13 /* HelloViewController.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1070,6 +1088,7 @@
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
 				CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */,
 				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
+				AABB0008CC0011220033AABB /* Renderer+OpenGL.c in Sources */,
 				CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
@@ -1156,8 +1175,8 @@
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				OTHER_LDFLAGS = "-lSDL3";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
@@ -1169,32 +1188,32 @@
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				OTHER_LDFLAGS = "-lSDL3";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
 		CE34C8A01FB29F700025F231 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
 		CE34C8A11FB29F700025F231 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1229,48 +1248,48 @@
 		CE55C1C71F944C6D00D5A326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
 		CE55C1C81F944C6D00D5A326 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
 		CE8819951F91B0BE000D5AB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
 		};
 		CE8819961F91B0BE000D5AB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1353,13 +1372,13 @@
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
-				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
-				PRODUCT_NAME = ObjectivelyMVC;
 				OTHER_LDFLAGS = (
 					"-lSDL3",
 					"-lSDL3_image",
 					"-lSDL3_ttf",
 				);
+				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
+				PRODUCT_NAME = ObjectivelyMVC;
 			};
 			name = Debug;
 		};
@@ -1373,13 +1392,13 @@
 					"$(HOMEBREW_PREFIX)/lib",
 					/usr/local/lib,
 				);
-				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
-				PRODUCT_NAME = ObjectivelyMVC;
 				OTHER_LDFLAGS = (
 					"-lSDL3",
 					"-lSDL3_image",
 					"-lSDL3_ttf",
 				);
+				PRIVATE_HEADERS_FOLDER_PATH = "/usr/local/include/$(PRODUCT_NAME)";
+				PRODUCT_NAME = ObjectivelyMVC;
 			};
 			name = Release;
 		};

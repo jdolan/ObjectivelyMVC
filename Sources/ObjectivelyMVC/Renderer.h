@@ -23,18 +23,18 @@
 
 #pragma once
 
-#include <SDL3/SDL_opengl.h>
-
 #include <Objectively/MutableArray.h>
 
-#include <ObjectivelyMVC/Types.h>
+#include <ObjectivelyMVC/Renderer+OpenGL.h>
 
 /**
  * @file
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
- * @details This class provides an OpenGL 1.x implementation of the RendererInterface. Applications
- * may extend this class and provide an implementation that meets their own OpenGL version
- * requirements.
+ * @details This class provides an OpenGL ES 3.0 / Core Profile 3.3 implementation. GL function
+ * pointers are resolved at runtime via `SDL_GL_GetProcAddress` and exposed via `gl` (declared in
+ * `Renderer+OpenGL.h`). The application must open a compatible context before instantiating a
+ * WindowController: GL Core Profile 3.3+ on desktop, ES 3.0+ on mobile. Applications may
+ * subclass Renderer to use a higher GL version or different rendering strategy.
  */
 
 typedef struct Renderer Renderer;
@@ -42,9 +42,10 @@ typedef struct RendererInterface RendererInterface;
 
 /**
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
- * @details This class provides an OpenGL 1.x implementation of the RendererInterface. Applications
- * may extend this class and provide an implementation that meets their own OpenGL version
- * requirements.
+ * @details This class provides an OpenGL ES 3.0 / Core Profile 3.3 implementation. The
+ * application must open a compatible context before instantiating a WindowController:
+ * GL Core Profile 3.3+ on desktop, ES 3.0+ on mobile. Applications may subclass Renderer
+ * to use a higher GL version or a different rendering strategy.
  * @extends Object
  */
 struct Renderer {
@@ -59,6 +60,30 @@ struct Renderer {
    * @protected
    */
   RendererInterface *interface;
+
+  /**
+   * @brief The current draw color.
+   * @private
+   */
+  SDL_Color color;
+
+  /**
+   * @brief The GL shader program, vertex array, buffer, and white fallback texture.
+   * @private
+   */
+  GLuint program;
+  GLuint vao;
+  GLuint vbo;
+  GLuint white;
+
+  /**
+   * @brief Cached uniform locations.
+   * @private
+   */
+  struct {
+    GLint projection;
+    GLint color;
+  } uniforms;
 };
 
 /**
@@ -121,7 +146,7 @@ struct RendererInterface {
 
   /**
    * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
-   * @brief Fills a rectangle using `glRecti`.
+   * @brief Fills a rectangle using `GL_TRIANGLE_FAN`.
    * @param self The Renderer.
    * @param rect The rectangle.
    * @memberof Renderer
@@ -212,4 +237,3 @@ struct RendererInterface {
  * @memberof Renderer
  */
 OBJECTIVELYMVC_EXPORT Class *_Renderer(void);
-

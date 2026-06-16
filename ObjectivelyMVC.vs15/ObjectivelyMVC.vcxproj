@@ -22,6 +22,8 @@
     <ClInclude Include="..\Assets\check.png.h" />
     <ClInclude Include="..\Assets\debug.css.h" />
     <ClInclude Include="..\Assets\debug.json.h" />
+    <ClInclude Include="..\Assets\renderer_fs.glsl.h" />
+    <ClInclude Include="..\Assets\renderer_vs.glsl.h" />
     <ClInclude Include="..\Assets\resize.png.h" />
     <ClInclude Include="..\Assets\stylesheet.css.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
@@ -47,6 +49,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ProgressBar.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer+OpenGL.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
@@ -101,6 +104,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ProgressBar.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer+OpenGL.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />

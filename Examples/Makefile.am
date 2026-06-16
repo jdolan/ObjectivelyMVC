@@ -27,5 +27,6 @@ LDADD = \
 	-lm
 
 Hello_SOURCES = \
+	Hello-Scene.c \
 	HelloViewController.c \
 	Hello.c
