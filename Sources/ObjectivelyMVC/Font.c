@@ -135,7 +135,7 @@ static Font *cachedFont(const char *family, int size, int style) {
     style = DEFAULT_FONT_STYLE;
   }
 
-  const int renderSize = size * SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
+  const int renderSize = size * SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
 
   const Array *fonts = (Array *) _fonts;
   for (size_t i = 0; i < fonts->count; i++) {
@@ -226,7 +226,7 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 
   SDL_Surface *surface;
   if (wrapWidth) {
-    const float scale = SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
+    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
     surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * scale);
   } else {
     surface = TTF_RenderText_Blended(self->font, chars, 0, color);
@@ -249,7 +249,7 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
  */
 static void renderDeviceDidReset(Font *self) {
 
-  const int renderSize = self->size * SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
+  const int renderSize = self->size * SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
   if (renderSize != self->renderSize) {
 
     self->renderSize = renderSize;
@@ -265,6 +265,7 @@ static void renderDeviceDidReset(Font *self) {
     assert(self->font);
 
     TTF_SetFontStyle(self->font, self->style);
+    TTF_SetFontHinting(self->font, TTF_HINTING_LIGHT_SUBPIXEL);
   }
 }
 
@@ -284,21 +285,22 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
   if (chars) {
     char *lines = strdup(chars);
 
+    const int font_h = TTF_GetFontHeight(self->font);
+
     for (char *line = strtok(lines, "\n\r"); line; line = strtok(NULL, "\n\r")) {
 
-      int line_w, line_h;
-      TTF_GetStringSize(self->font, line, 0, &line_w, &line_h);
-
       if (w) {
+        int line_w;
+        TTF_GetStringSize(self->font, line, 0, &line_w, NULL);
         *w = max(*w, line_w);
       }
       if (h) {
-        *h += line_h;
+        *h += font_h;
       }
     }
     free(lines);
 
-    const float scale = SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
+    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
     if (w) {
       *w = ceilf(*w / scale);
     }

@@ -133,7 +133,7 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
   const size_t strippedLen = strlen(stripped);
   CharInfo *chars = malloc(sizeof(CharInfo) * strippedLen);
 
-  const float scale = SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
+  const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
   const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * scale) : 0;
 
   int lineHeight;
@@ -202,7 +202,7 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
   CharInfo *charInfo = buildCharInfo(self->font, self->text, self->color, wrapWidth, &charCount);
 
   if (charInfo) {
-    const float scale = SDL_GetWindowDisplayScale(SDL_GL_GetCurrentWindow());
+    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
     SDL_LockSurface(surface);
     for (int i = 0; i < charCount; i++) {
       colorize(surface, &charInfo[i], scale);
