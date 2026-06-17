@@ -22,30 +22,28 @@
  */
 
 #include <assert.h>
+#include <math.h>
 
 #include "Window.h"
 
 SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
   assert(rect);
-  SDL_Rect transformed = *rect;
-  
-  SDL_Rect safeArea;
-  SDL_GetWindowSafeArea(window, &safeArea);
-  
-  transformed.x += safeArea.x;
-  transformed.y += safeArea.y;
 
   const float pixelDensity = SDL_GetWindowPixelDensity(window);
 
-  // Scale by pixel density for high DPI
-  transformed.x *= pixelDensity;
-  transformed.y *= pixelDensity;
-  transformed.w *= pixelDensity;
-  transformed.h *= pixelDensity;
+  SDL_Rect transformed = {
+    .x = (int) roundf(rect->x * pixelDensity),
+    .y = (int) roundf(rect->y * pixelDensity),
+    .w = (int) roundf(rect->w * pixelDensity),
+    .h = (int) roundf(rect->h * pixelDensity),
+  };
 
-  // Flip Y because OpenGL uses bottom-left coordinates
-  transformed.y = (safeArea.h * pixelDensity) - transformed.h - transformed.y;
+  int pw, ph;
+  SDL_GetWindowSizeInPixels(window, &pw, &ph);
+
+  // Flip Y: OpenGL origin is bottom-left, SDL/View origin is top-left.
+  transformed.y = ph - transformed.y - transformed.h;
 
   return transformed;
 }

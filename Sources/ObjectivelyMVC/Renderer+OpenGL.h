@@ -142,10 +142,11 @@ OBJECTIVELYMVC_EXPORT void MVC_LoadGL(OpenGL *gl);
  * @details Prepends the correct `#version` directive for the active context
  * (`#version 330 core` on desktop, `#version 300 es` on ES).
  * @param type `GL_VERTEX_SHADER` or `GL_FRAGMENT_SHADER`.
+ * @param name The shader name, for error reporting.
  * @param source Null-terminated GLSL source without a `#version` line.
  * @return The compiled shader name, or 0 on error.
  */
-OBJECTIVELYMVC_EXPORT GLuint MVC_CompileShader(GLenum type, const char *source);
+OBJECTIVELYMVC_EXPORT GLuint MVC_CompileShader(GLenum type, const char *name, const char *source);
 
 /**
  * @brief Links a program from a compiled vertex and fragment shader.

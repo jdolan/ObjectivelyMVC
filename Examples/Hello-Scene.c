@@ -61,6 +61,7 @@ static const CubeVertex cube_verts[] = {
 };
 
 static const char *cube_vs =
+  "precision highp float;\n"
   "uniform mat4 mvp;\n"
   "layout(location=0) in vec3 in_pos;\n"
   "layout(location=1) in vec3 in_color;\n"
@@ -71,6 +72,7 @@ static const char *cube_vs =
   "}\n";
 
 static const char *cube_fs =
+  "precision highp float;\n"
   "in vec3 frag_color;\n"
   "out vec4 out_color;\n"
   "void main(void) {\n"
@@ -94,8 +96,8 @@ static void mat4_mul(GLfloat *out, const GLfloat *a, const GLfloat *b) {
 void initScene(void) {
 
   cube_program = MVC_LinkProgram(
-    MVC_CompileShader(GL_VERTEX_SHADER, cube_vs),
-    MVC_CompileShader(GL_FRAGMENT_SHADER, cube_fs)
+    MVC_CompileShader(GL_VERTEX_SHADER, "cube_vs", cube_vs),
+    MVC_CompileShader(GL_FRAGMENT_SHADER, "cube_fs", cube_fs)
   );
 
   cube_mvp_loc = gl.GetUniformLocation(cube_program, "mvp");
@@ -118,7 +120,7 @@ void initScene(void) {
 void drawScene(SDL_Window *window) {
 
   int w, h;
-  SDL_GetWindowSize(window, &w, &h);
+  SDL_GetWindowSizeInPixels(window, &w, &h);
 
   glEnable(GL_DEPTH_TEST);
 

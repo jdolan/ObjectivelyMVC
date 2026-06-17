@@ -67,7 +67,7 @@ void MVC_LoadGL(OpenGL *gl) {
 #undef L
 }
 
-GLuint MVC_CompileShader(GLenum type, const char *source) {
+GLuint MVC_CompileShader(GLenum type, const char *name, const char *source) {
 
   const char *gl_version = (const char *) glGetString(GL_VERSION);
   const char *prefix = strstr(gl_version, "OpenGL ES")
@@ -84,7 +84,7 @@ GLuint MVC_CompileShader(GLenum type, const char *source) {
   if (status == GL_FALSE) {
     GLchar log[1024];
     gl.GetShaderInfoLog(shader, sizeof(log), NULL, log);
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "MVC_CompileShader: %s\n", log);
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "MVC_CompileShader: %s: %s\n", name, log);
     gl.DeleteShader(shader);
     return 0;
   }

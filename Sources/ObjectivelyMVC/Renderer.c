@@ -90,14 +90,17 @@ static void beginFrame(Renderer *self) {
   gl.BindBuffer(GL_ARRAY_BUFFER, self->vbo);
 
   SDL_Window *window = SDL_GL_GetCurrentWindow();
-  int w, h;
-  SDL_GetWindowSize(window, &w, &h);
+  int pw, ph, lw, lh;
+  SDL_GetWindowSizeInPixels(window, &pw, &ph);
+  SDL_GetWindowSize(window, &lw, &lh);
+
+  glViewport(0, 0, pw, ph);
 
   const GLfloat projection[16] = {
-     2.0f / w,  0.0f,      0.0f,  0.0f,
-     0.0f,     -2.0f / h,  0.0f,  0.0f,
-     0.0f,      0.0f,     -1.0f,  0.0f,
-    -1.0f,      1.0f,      0.0f,  1.0f,
+     2.0f / lw,  0.0f,       0.0f,  0.0f,
+     0.0f,      -2.0f / lh,  0.0f,  0.0f,
+     0.0f,       0.0f,      -1.0f,  0.0f,
+    -1.0f,       1.0f,       0.0f,  1.0f,
   };
   gl.UniformMatrix4fv(self->uniforms.projection, 1, GL_FALSE, projection);
 
@@ -307,8 +310,8 @@ static void renderDeviceDidReset(Renderer *self) {
 
   MVC_LoadGL(&gl);
 
-  const GLuint vs = MVC_CompileShader(GL_VERTEX_SHADER, (const char *) renderer_vs_glsl);
-  const GLuint fs = MVC_CompileShader(GL_FRAGMENT_SHADER, (const char *) renderer_fs_glsl);
+  const GLuint vs = MVC_CompileShader(GL_VERTEX_SHADER, "renderer_vs.glsl", (const char *) renderer_vs_glsl);
+  const GLuint fs = MVC_CompileShader(GL_FRAGMENT_SHADER, "renderer_fs.glsl", (const char *) renderer_fs_glsl);
 
   self->program = MVC_LinkProgram(vs, fs);
   if (!self->program) {

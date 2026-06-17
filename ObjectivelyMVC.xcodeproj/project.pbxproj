@@ -38,6 +38,36 @@
 		AABB0003CC0011220033AABB /* Hello-Scene.c in Sources */ = {isa = PBXBuildFile; fileRef = AABB0001CC0011220033AABB /* Hello-Scene.c */; };
 		AABB0008CC0011220033AABB /* Renderer+OpenGL.c in Sources */ = {isa = PBXBuildFile; fileRef = AABB0009CC0011220033AABB /* Renderer+OpenGL.c */; };
 		AABB000ACC0011220033AABB /* Renderer+OpenGL.h in Headers */ = {isa = PBXBuildFile; fileRef = AABB000BCC0011220033AABB /* Renderer+OpenGL.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		B1BB0001000000000000000A /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		B1BB0001000000000000000B /* SDL3_image.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000B /* SDL3_image.xcframework */; };
+		B1BB0001000000000000000C /* SDL3_ttf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000C /* SDL3_ttf.xcframework */; };
+		B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000D /* libcurl.xcframework */; };
+		B1BB0001000000000000000E /* Objectively.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000E /* Objectively.xcframework */; };
+		B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */; };
+		B1BB000100000000000000AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AA /* UIKit.framework */; };
+		B1BB000100000000000000AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AB /* Foundation.framework */; };
+		B1BB000100000000000000AC /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AC /* OpenGLES.framework */; };
+		B1BB000100000000000000AD /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AD /* Metal.framework */; };
+		B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AE /* AudioToolbox.framework */; };
+		B1BB000100000000000000AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AF /* CoreGraphics.framework */; };
+		B1BB000100000000000000BA /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BA /* GameController.framework */; };
+		B1BB000100000000000000BB /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BB /* CoreMotion.framework */; };
+		B1BB000100000000000000BC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BC /* AVFoundation.framework */; };
+		B1BB000100000000000000BD /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BD /* CoreVideo.framework */; };
+		B1BB000100000000000000BE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BE /* QuartzCore.framework */; };
+		B1BB000100000000000000BF /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BF /* CoreBluetooth.framework */; };
+		B1BB000100000000000000CA /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CA /* CoreHaptics.framework */; };
+		B1BB000100000000000000CB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CB /* CoreMedia.framework */; };
+		B1BB000100000000000000CC /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CC /* CoreText.framework */; };
+		B1BB000100000000000000CD /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CD /* ImageIO.framework */; };
+		B1BB000100000000000000CE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CE /* MobileCoreServices.framework */; };
+		B1BB000100000000000000CF /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */; };
+		B1BB000100000000000000DA /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000DA /* Network.framework */; };
+		B1BB000100000000000000EA /* Hello-iOS.c in Sources */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000EA /* Hello-iOS.c */; };
+		B1BB000100000000000000EB /* HelloViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */; };
+		B1BB000100000000000000EC /* Hello-Scene.c in Sources */ = {isa = PBXBuildFile; fileRef = AABB0001CC0011220033AABB /* Hello-Scene.c */; };
+		B1BB000100000000000000ED /* HelloViewController.json in Resources */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
+		B1BB000100000000000000EE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000EC /* LaunchScreen.storyboard */; };
 		CE0943A71D60F1A300C11408 /* TableColumn.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943A61D60F1A300C11408 /* TableColumn.c */; };
 		CE0943A91D60F23100C11408 /* TableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943A81D60F23100C11408 /* TableColumn.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		CE0943AC1D60FFEC00C11408 /* TableRowView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943AA1D60FFEC00C11408 /* TableRowView.c */; };
@@ -439,6 +469,35 @@
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		CEF3B5FD2F440D420024F4DF /* libSDL3_image.0.4.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_image.0.4.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_image/3.4.0/lib/libSDL3_image.0.4.0.dylib; sourceTree = "<group>"; };
 		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
+		B1AA0001000000000000000A /* SDL3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3.xcframework; path = Frameworks/SDL3.xcframework; sourceTree = "<group>"; };
+		B1AA0001000000000000000B /* SDL3_image.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_image.xcframework; path = Frameworks/SDL3_image.xcframework; sourceTree = "<group>"; };
+		B1AA0001000000000000000C /* SDL3_ttf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_ttf.xcframework; path = Frameworks/SDL3_ttf.xcframework; sourceTree = "<group>"; };
+		B1AA0001000000000000000D /* libcurl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libcurl.xcframework; path = Frameworks/libcurl.xcframework; sourceTree = "<group>"; };
+		B1AA0001000000000000000E /* Objectively.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Objectively.xcframework; path = Frameworks/Objectively.xcframework; sourceTree = "<group>"; };
+		B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ObjectivelyMVC.xcframework; path = Frameworks/ObjectivelyMVC.xcframework; sourceTree = "<group>"; };
+		B1AA000100000000000000AA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000AB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000AC /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000AD /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000AE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000AF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000BA /* GameController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameController.framework; path = System/Library/Frameworks/GameController.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000BB /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000BC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000BD /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000BE /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000BF /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000CA /* CoreHaptics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreHaptics.framework; path = System/Library/Frameworks/CoreHaptics.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000CB /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000CC /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000CD /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000CE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000DA /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
+		B1AA000100000000000000EA /* Hello-iOS.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "Hello-iOS.c"; sourceTree = "<group>"; };
+		B1AA000100000000000000EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B1AA000100000000000000EC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ObjectivelyMVC-Hello-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -449,6 +508,38 @@
 				CE12D4611C4C8F2A00CD0B13 /* libObjectivelyMVC.dylib in Frameworks */,
 				CEDCFC7720497B07008A4252 /* libObjectively.dylib in Frameworks */,
 				CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1CC000100000000000000B0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1BB0001000000000000000A /* SDL3.xcframework in Frameworks */,
+				B1BB0001000000000000000B /* SDL3_image.xcframework in Frameworks */,
+				B1BB0001000000000000000C /* SDL3_ttf.xcframework in Frameworks */,
+				B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */,
+				B1BB0001000000000000000E /* Objectively.xcframework in Frameworks */,
+				B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */,
+				B1BB000100000000000000AA /* UIKit.framework in Frameworks */,
+				B1BB000100000000000000AB /* Foundation.framework in Frameworks */,
+				B1BB000100000000000000AC /* OpenGLES.framework in Frameworks */,
+				B1BB000100000000000000AD /* Metal.framework in Frameworks */,
+				B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */,
+				B1BB000100000000000000AF /* CoreGraphics.framework in Frameworks */,
+				B1BB000100000000000000BA /* GameController.framework in Frameworks */,
+				B1BB000100000000000000BB /* CoreMotion.framework in Frameworks */,
+				B1BB000100000000000000BC /* AVFoundation.framework in Frameworks */,
+				B1BB000100000000000000BD /* CoreVideo.framework in Frameworks */,
+				B1BB000100000000000000BE /* QuartzCore.framework in Frameworks */,
+				B1BB000100000000000000BF /* CoreBluetooth.framework in Frameworks */,
+				B1BB000100000000000000CA /* CoreHaptics.framework in Frameworks */,
+				B1BB000100000000000000CB /* CoreMedia.framework in Frameworks */,
+				B1BB000100000000000000CC /* CoreText.framework in Frameworks */,
+				B1BB000100000000000000CD /* ImageIO.framework in Frameworks */,
+				B1BB000100000000000000CE /* MobileCoreServices.framework in Frameworks */,
+				B1BB000100000000000000CF /* UniformTypeIdentifiers.framework in Frameworks */,
+				B1BB000100000000000000DA /* Network.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -639,8 +730,20 @@
 				CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */,
 				CE6BC16E1D79B2920070FB2D /* HelloViewController.json */,
 				CE12D42D1C4C383D00CD0B13 /* Makefile.am */,
+				B1FF000100000000000000B0 /* Hello-iOS */,
 			);
 			path = Examples;
+			sourceTree = "<group>";
+		};
+		B1FF000100000000000000B0 /* Hello-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				B1AA000100000000000000EA /* Hello-iOS.c */,
+				B1AA000100000000000000EB /* Info.plist */,
+				B1AA000100000000000000EC /* LaunchScreen.storyboard */,
+			);
+			name = "Hello-iOS";
+			path = "Hello-iOS";
 			sourceTree = "<group>";
 		};
 		CE12D4841C4F3C5900CD0B13 /* Assets */ = {
@@ -697,8 +800,41 @@
 				CEF1D8901D4270150099A857 /* libObjectively.dylib */,
 				CE12D49A1C5506F700CD0B13 /* GLUT.framework */,
 				CE12D4981C55013700CD0B13 /* OpenGL.framework */,
+				B1FF000100000000000000A0 /* iOS xcframeworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B1FF000100000000000000A0 /* iOS xcframeworks */ = {
+			isa = PBXGroup;
+			children = (
+				B1AA0001000000000000000A /* SDL3.xcframework */,
+				B1AA0001000000000000000B /* SDL3_image.xcframework */,
+				B1AA0001000000000000000C /* SDL3_ttf.xcframework */,
+				B1AA0001000000000000000D /* libcurl.xcframework */,
+				B1AA0001000000000000000E /* Objectively.xcframework */,
+				B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */,
+				B1AA000100000000000000AA /* UIKit.framework */,
+				B1AA000100000000000000AB /* Foundation.framework */,
+				B1AA000100000000000000AC /* OpenGLES.framework */,
+				B1AA000100000000000000AD /* Metal.framework */,
+				B1AA000100000000000000AE /* AudioToolbox.framework */,
+				B1AA000100000000000000AF /* CoreGraphics.framework */,
+				B1AA000100000000000000BA /* GameController.framework */,
+				B1AA000100000000000000BB /* CoreMotion.framework */,
+				B1AA000100000000000000BC /* AVFoundation.framework */,
+				B1AA000100000000000000BD /* CoreVideo.framework */,
+				B1AA000100000000000000BE /* QuartzCore.framework */,
+				B1AA000100000000000000BF /* CoreBluetooth.framework */,
+				B1AA000100000000000000CA /* CoreHaptics.framework */,
+				B1AA000100000000000000CB /* CoreMedia.framework */,
+				B1AA000100000000000000CC /* CoreText.framework */,
+				B1AA000100000000000000CD /* ImageIO.framework */,
+				B1AA000100000000000000CE /* MobileCoreServices.framework */,
+				B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */,
+				B1AA000100000000000000DA /* Network.framework */,
+			);
+			name = "iOS xcframeworks";
 			sourceTree = "<group>";
 		};
 		CED157921C4BEA8900FBA2DE = {
@@ -739,6 +875,7 @@
 				CE8819971F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
 				CE55C1C91F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE34C8A21FB29F700025F231 /* ObjectivelyMVC-Stylesheet */,
+				B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -914,6 +1051,24 @@
 			productReference = CED157CD1C4BF3AC00FBA2DE /* libObjectivelyMVC.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		B1DD00010000000000000001 /* ObjectivelyMVC-Hello-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B1EE000100000000000000C0 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello-iOS" */;
+			buildPhases = (
+				CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */,
+				B1CC000100000000000000A0 /* Sources */,
+				B1CC000100000000000000B0 /* Frameworks */,
+				B1CC000100000000000000C0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "ObjectivelyMVC-Hello-iOS";
+			productName = "ObjectivelyMVC-Hello-iOS";
+			productReference = B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -933,6 +1088,11 @@
 					};
 					CED157CC1C4BF3AC00FBA2DE = {
 						CreatedOnToolsVersion = 7.2;
+					};
+					B1DD00010000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+						DevelopmentTeam = C5PXKE9CU5;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -956,6 +1116,7 @@
 				CE423A451F534657002767E7 /* ObjectivelyMVC-Tests */,
 				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 				CE3CB2991F40F9A100FAA016 /* ObjectivelyMVC-Examples */,
+				B1DD00010000000000000001 /* ObjectivelyMVC-Hello-iOS */,
 			);
 		};
 /* End PBXProject section */
@@ -1028,6 +1189,17 @@
 		};
 /* End PBXShellScriptBuildPhase section */
 
+/* Begin PBXResourcesBuildPhase section */
+		B1CC000100000000000000C0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1BB000100000000000000ED /* HelloViewController.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CE12D4511C4C8E8E00CD0B13 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1060,6 +1232,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE8819981F91B0CE000D5AB7 /* Style.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1CC000100000000000000A0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B1BB000100000000000000EA /* Hello-iOS.c in Sources */,
+				B1BB000100000000000000EB /* HelloViewController.c in Sources */,
+				B1BB000100000000000000EC /* Hello-Scene.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1410,6 +1592,90 @@
 			};
 			name = Release;
 		};
+		B1EE000100000000000000A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C5PXKE9CU5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Frameworks",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Frameworks/SDL3.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/SDL3_image.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/SDL3_ttf.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/libcurl.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/Objectively.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/ObjectivelyMVC.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Examples",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Hello-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-lz",
+					"-liconv",
+					"-lc++",
+					"-lsqlite3",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jaydolan.ObjectivelyMVC-Hello-iOS";
+				PRODUCT_NAME = "ObjectivelyMVC-Hello-iOS";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B1EE000100000000000000B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = C5PXKE9CU5;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Frameworks",
+					"$(inherited)",
+				);
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Frameworks/SDL3.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/SDL3_image.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/SDL3_ttf.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/libcurl.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/Objectively.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Frameworks/ObjectivelyMVC.xcframework/ios-arm64/Headers",
+					"$(SRCROOT)/Examples",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Hello-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-lz",
+					"-liconv",
+					"-lc++",
+					"-lsqlite3",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.jaydolan.ObjectivelyMVC-Hello-iOS";
+				PRODUCT_NAME = "ObjectivelyMVC-Hello-iOS";
+				SDKROOT = iphoneos;
+				SUPPORTS_MACCATALYST = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1481,6 +1747,15 @@
 			buildConfigurations = (
 				CED157D01C4BF3AC00FBA2DE /* Debug */,
 				CED157D11C4BF3AC00FBA2DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B1EE000100000000000000C0 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1EE000100000000000000A0 /* Debug */,
+				B1EE000100000000000000B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

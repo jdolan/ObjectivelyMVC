@@ -1,3 +1,5 @@
+precision highp float;
+
 uniform mat4 projection;
 
 layout(location = 0) in vec2 in_position;

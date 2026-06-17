@@ -107,6 +107,20 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
   SDL_GL_SetSwapInterval(1);
 
+  // On iOS, dlsym cannot find class factories in statically linked libraries.
+  // Explicitly touch each factory to register all classes before any CSS/JSON
+  // loading calls classForName().
+  _Box(); _Button(); _Checkbox(); _CollectionItemView(); _CollectionView();
+  _Control(); _DebugViewController(); _Font(); _HSVColorPicker(); _HueColorPicker();
+  _Image(); _ImageView(); _Input(); _Label(); _NavigationViewController();
+  _Option(); _PageView(); _Panel(); _ProgressBar(); _Renderer();
+  _RGBColorPicker(); _ScrollView(); _Select(); _Selector(); _SelectorSequence();
+  _SimpleSelector(); _Slider(); _SlideShowView(); _StackView(); _Style();
+  _Stylesheet(); _TableCellView(); _TableColumn(); _TableHeaderCellView();
+  _TableHeaderView(); _TableRowView(); _TableView(); _TabView();
+  _TabViewController(); _TabViewItem(); _Text(); _TextView(); _Theme();
+  _View(); _ViewController(); _Warning(); _WindowController();
+
   // On iOS, SDL_GetBasePath() returns the app bundle's resource directory.
   const char *basePath = SDL_GetBasePath();
   $$(Resource, addResourcePath, basePath ? basePath : ".");
