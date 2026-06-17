@@ -36,6 +36,7 @@ missing
 nbproject
 stamp-h1
 test-driver
+build/
 xcuserdata/
 .build-xcframework/
 Frameworks/
