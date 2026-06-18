@@ -22,6 +22,7 @@
  */
 
 #define SDL_MAIN_USE_CALLBACKS
+
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL.h>
 
@@ -37,11 +38,13 @@
 typedef struct {
   SDL_Window *window;
   SDL_GLContext context;
-  SDL_AudioStream *stream;
+  SDL_AudioStream *audioStream;
   WindowController *windowController;
-} AppState;
+} Application;
 
-static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event) {
+static Application app;
+
+static void onViewEvent(const SDL_UserEvent *event) {
 
   if (!instanceof(Control, event->data1)) {
     return;
@@ -49,17 +52,17 @@ static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event) {
 
   switch (event->code) {
     case ViewEventClick:
-      SDL_PutAudioStreamData(stream, click_wav, click_wav_len);
+      SDL_PutAudioStreamData(app.audioStream, click_wav, click_wav_len);
       break;
     case ViewEventChange:
-      SDL_PutAudioStreamData(stream, clack_wav, clack_wav_len);
+      SDL_PutAudioStreamData(app.audioStream, clack_wav, clack_wav_len);
       break;
     default:
       break;
   }
 }
 
-SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
+SDL_AppResult SDL_AppInit(void **unused, int argc, char *argv[]) {
 
   MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
 
@@ -68,20 +71,16 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     return SDL_APP_FAILURE;
   }
 
-  AppState *state = SDL_calloc(1, sizeof(AppState));
-  if (!state) {
-    return SDL_APP_FAILURE;
-  }
-  *appstate = state;
+  memset(&app, 0, sizeof(app));
 
-  state->stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &(SDL_AudioSpec) {
+  app.audioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &(SDL_AudioSpec) {
     .format = SDL_AUDIO_S16LE,
     .channels = 1,
     .freq = 22050,
   }, NULL, NULL);
 
-  if (state->stream) {
-    SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(state->stream));
+  if (app.audioStream) {
+    SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(app.audioStream));
   }
 
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
@@ -89,18 +88,18 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-  state->window = SDL_CreateWindow("Hello",
+  app.window = SDL_CreateWindow("Hello",
     0, 0,
     SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_HIGH_PIXEL_DENSITY
   );
 
-  if (!state->window) {
+  if (!app.window) {
     SDL_Log("SDL_CreateWindow failed: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
 
-  state->context = SDL_GL_CreateContext(state->window);
-  if (!state->context) {
+  app.context = SDL_GL_CreateContext(app.window);
+  if (!app.context) {
     SDL_Log("SDL_GL_CreateContext failed: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
@@ -111,10 +110,10 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   const char *basePath = SDL_GetBasePath();
   $$(Resource, addResourcePath, basePath ? basePath : ".");
 
-  state->windowController = $(alloc(WindowController), initWithWindow, state->window);
+  app.windowController = $(alloc(WindowController), initWithWindow, app.window);
 
   ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
-  $(state->windowController, setViewController, viewController);
+  $(app.windowController, setViewController, viewController);
   release(viewController);
 
   initScene();
@@ -122,29 +121,25 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   return SDL_APP_CONTINUE;
 }
 
-SDL_AppResult SDL_AppIterate(void *appstate) {
-
-  AppState *state = appstate;
+SDL_AppResult SDL_AppIterate(void *unused) {
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  drawScene(state->window);
+  drawScene(app.window);
 
-  $(state->windowController, render);
+  $(app.windowController, render);
 
-  SDL_GL_SwapWindow(state->window);
+  SDL_GL_SwapWindow(app.window);
 
   return SDL_APP_CONTINUE;
 }
 
-SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
+SDL_AppResult SDL_AppEvent(void *unused, SDL_Event *event) {
 
-  AppState *state = appstate;
-
-  $(state->windowController, respondToEvent, event);
+  $(app.windowController, respondToEvent, event);
 
   if (event->type == MVC_VIEW_EVENT) {
-    onViewEvent(state->stream, &event->user);
+    onViewEvent(&event->user);
   }
 
   if (event->type == SDL_EVENT_QUIT) {
@@ -154,21 +149,20 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
   return SDL_APP_CONTINUE;
 }
 
-void SDL_AppQuit(void *appstate, SDL_AppResult result) {
+void SDL_AppQuit(void *unused, SDL_AppResult result) {
 
-  AppState *state = appstate;
-  if (state) {
-    release(state->windowController);
-    if (state->context) {
-      SDL_GL_DestroyContext(state->context);
-    }
-    if (state->window) {
-      SDL_DestroyWindow(state->window);
-    }
-    if (state->stream) {
-      SDL_DestroyAudioStream(state->stream);
-    }
-    SDL_free(state);
+  release(app.windowController);
+
+  if (app.audioStream) {
+    SDL_DestroyAudioStream(app.audioStream);
+  }
+
+  if (app.context) {
+    SDL_GL_DestroyContext(app.context);
+  }
+
+  if (app.window) {
+    SDL_DestroyWindow(app.window);
   }
 
   SDL_Quit();
