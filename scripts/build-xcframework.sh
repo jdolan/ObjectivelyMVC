@@ -347,7 +347,7 @@ build_mvc_slice() {
         CPPFLAGS="-arch $arch -isysroot $sdk $min_flag $include_flags" \
         CFLAGS="-arch $arch -isysroot $sdk $min_flag $include_flags" \
         LDFLAGS="-arch $arch -isysroot $sdk $min_flag" \
-        > "$builddir/configure.log" 2>&1
+        > "$builddir/configure.log" 2>&1 || (cat "$builddir/configure.log" >&2; exit 1)
 
     echo "==> ObjectivelyMVC $name: building"
     make -j"$NPROC" -C Sources >> "$builddir/make.log" 2>&1
