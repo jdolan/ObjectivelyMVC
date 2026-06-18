@@ -23,10 +23,10 @@ jobs:
       run: brew install autoconf automake libtool pkg-config cmake
 
     - name: Checkout
-      uses: actions/checkout@v5
+      uses: actions/checkout@v6
 
     - name: Cache xcframework build
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: .build-xcframework
         key: xcframework-${{ env.SDL3_VERSION }}-${{ env.SDL3_IMAGE_VERSION }}-${{ env.SDL3_TTF_VERSION }}-${{ env.OBJECTIVELY_BRANCH }}-ios-${{ env.IOS_MIN }}-${{ hashFiles('configure.ac', 'Sources/**/Makefile.am', 'Sources/ObjectivelyMVC/**/*.c', 'Sources/ObjectivelyMVC/**/*.h', 'scripts/build-xcframework.sh') }}
