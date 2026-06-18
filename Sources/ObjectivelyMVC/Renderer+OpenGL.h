@@ -23,8 +23,46 @@
 
 #pragma once
 
-#include <SDL3/SDL_opengl.h>
-#include <SDL3/SDL_opengl_glext.h>
+#if defined(__has_include) && __has_include(<TargetConditionals.h>)
+#  include <TargetConditionals.h>
+#endif
+
+#if defined(TARGET_OS_IOS) && TARGET_OS_IOS
+#  include <OpenGLES/ES3/gl.h>
+#  include <OpenGLES/ES3/glext.h>
+// OpenGL ES headers don't provide PFNGL*PROC typedefs; define them for the
+// shared function-pointer table used by MVC_LoadGL / SDL_GL_GetProcAddress.
+typedef void (*PFNGLGENVERTEXARRAYSPROC)(GLsizei, GLuint *);
+typedef void (*PFNGLDELETEVERTEXARRAYSPROC)(GLsizei, const GLuint *);
+typedef void (*PFNGLBINDVERTEXARRAYPROC)(GLuint);
+typedef void (*PFNGLGENBUFFERSPROC)(GLsizei, GLuint *);
+typedef void (*PFNGLDELETEBUFFERSPROC)(GLsizei, const GLuint *);
+typedef void (*PFNGLBINDBUFFERPROC)(GLenum, GLuint);
+typedef void (*PFNGLBUFFERDATAPROC)(GLenum, GLsizeiptr, const void *, GLenum);
+typedef void (*PFNGLENABLEVERTEXATTRIBARRAYPROC)(GLuint);
+typedef void (*PFNGLVERTEXATTRIBPOINTERPROC)(GLuint, GLint, GLenum, GLboolean, GLsizei, const void *);
+typedef GLuint (*PFNGLCREATESHADERPROC)(GLenum);
+typedef void (*PFNGLSHADERSOURCEPROC)(GLuint, GLsizei, const GLchar *const *, const GLint *);
+typedef void (*PFNGLCOMPILESHADERPROC)(GLuint);
+typedef void (*PFNGLGETSHADERIVPROC)(GLuint, GLenum, GLint *);
+typedef void (*PFNGLGETSHADERINFOLOGPROC)(GLuint, GLsizei, GLsizei *, GLchar *);
+typedef void (*PFNGLDELETESHADERPROC)(GLuint);
+typedef GLuint (*PFNGLCREATEPROGRAMPROC)(void);
+typedef void (*PFNGLATTACHSHADERPROC)(GLuint, GLuint);
+typedef void (*PFNGLLINKPROGRAMPROC)(GLuint);
+typedef void (*PFNGLGETPROGRAMIVPROC)(GLuint, GLenum, GLint *);
+typedef void (*PFNGLGETPROGRAMINFOLOGPROC)(GLuint, GLsizei, GLsizei *, GLchar *);
+typedef void (*PFNGLUSEPROGRAMPROC)(GLuint);
+typedef void (*PFNGLDELETEPROGRAMPROC)(GLuint);
+typedef GLint (*PFNGLGETUNIFORMLOCATIONPROC)(GLuint, const GLchar *);
+typedef void (*PFNGLUNIFORM1IPROC)(GLint, GLint);
+typedef void (*PFNGLUNIFORM4FPROC)(GLint, GLfloat, GLfloat, GLfloat, GLfloat);
+typedef void (*PFNGLUNIFORMMATRIX4FVPROC)(GLint, GLsizei, GLboolean, const GLfloat *);
+typedef void (*PFNGLACTIVETEXTUREPROC)(GLenum);
+#else
+#  include <SDL3/SDL_opengl.h>
+#  include <SDL3/SDL_opengl_glext.h>
+#endif
 
 #include <ObjectivelyMVC/Types.h>
 
@@ -104,10 +142,11 @@ OBJECTIVELYMVC_EXPORT void MVC_LoadGL(OpenGL *gl);
  * @details Prepends the correct `#version` directive for the active context
  * (`#version 330 core` on desktop, `#version 300 es` on ES).
  * @param type `GL_VERTEX_SHADER` or `GL_FRAGMENT_SHADER`.
+ * @param name The shader name, for error reporting.
  * @param source Null-terminated GLSL source without a `#version` line.
  * @return The compiled shader name, or 0 on error.
  */
-OBJECTIVELYMVC_EXPORT GLuint MVC_CompileShader(GLenum type, const char *source);
+OBJECTIVELYMVC_EXPORT GLuint MVC_CompileShader(GLenum type, const char *name, const char *source);
 
 /**
  * @brief Links a program from a compiled vertex and fragment shader.
