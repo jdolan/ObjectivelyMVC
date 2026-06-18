@@ -331,13 +331,13 @@ build_mvc_slice() {
     pushd "$builddir" > /dev/null
 
     SDL3_CFLAGS="-I$SDL3_HEADERS" \
-    SDL3_LIBS="" \
+    SDL3_LIBS=" " \
     SDL3_image_CFLAGS="-I$SDL3_IMAGE_HEADERS" \
-    SDL3_image_LIBS="" \
+    SDL3_image_LIBS=" " \
     SDL3_ttf_CFLAGS="-I$SDL3_TTF_HEADERS" \
-    SDL3_ttf_LIBS="" \
+    SDL3_ttf_LIBS=" " \
     OBJECTIVELY_CFLAGS="-I$OBJ_HEADERS" \
-    OBJECTIVELY_LIBS="" \
+    OBJECTIVELY_LIBS=" " \
     CHECK_CFLAGS=" " CHECK_LIBS=" " \
     "$MVC_DIR/configure" \
         --host="$host" \
