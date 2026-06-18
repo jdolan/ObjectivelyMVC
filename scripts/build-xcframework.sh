@@ -338,7 +338,7 @@ build_mvc_slice() {
     SDL3_ttf_LIBS="" \
     OBJECTIVELY_CFLAGS="-I$OBJ_HEADERS" \
     OBJECTIVELY_LIBS="" \
-    CHECK_CFLAGS="" CHECK_LIBS="" \
+    CHECK_CFLAGS=" " CHECK_LIBS=" " \
     "$MVC_DIR/configure" \
         --host="$host" \
         --prefix="$prefix" \
