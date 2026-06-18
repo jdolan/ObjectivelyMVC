@@ -33,14 +33,15 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
   const float pixelDensity = SDL_GetWindowPixelDensity(window);
 
   SDL_Rect transformed = {
-    .x = (int) roundf(rect->x * pixelDensity),
-    .y = (int) roundf(rect->y * pixelDensity),
-    .w = (int) roundf(rect->w * pixelDensity),
-    .h = (int) roundf(rect->h * pixelDensity),
+    .x = (int) SDL_roundf(rect->x * pixelDensity),
+    .y = (int) SDL_roundf(rect->y * pixelDensity),
+    .w = (int) SDL_roundf(rect->w * pixelDensity),
+    .h = (int) SDL_roundf(rect->h * pixelDensity),
   };
 
   int pw, ph;
   SDL_GetWindowSizeInPixels(window, &pw, &ph);
+  (void) pw;
 
   // Flip Y: OpenGL origin is bottom-left, SDL/View origin is top-left.
   transformed.y = ph - transformed.y - transformed.h;

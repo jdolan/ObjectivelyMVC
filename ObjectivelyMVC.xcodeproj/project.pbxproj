@@ -1120,7 +1120,6 @@
 				TargetAttributes = {
 					B1DD00010000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
-						DevelopmentTeam = C5PXKE9CU5;
 						ProvisioningStyle = Automatic;
 					};
 					CE12D4541C4C8E8E00CD0B13 = {

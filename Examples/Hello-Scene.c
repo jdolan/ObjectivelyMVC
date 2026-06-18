@@ -61,7 +61,9 @@ static const CubeVertex cube_verts[] = {
 };
 
 static const char *cube_vs =
+  "#ifdef GL_ES\n"
   "precision highp float;\n"
+  "#endif\n"
   "uniform mat4 mvp;\n"
   "layout(location=0) in vec3 in_pos;\n"
   "layout(location=1) in vec3 in_color;\n"
@@ -72,7 +74,9 @@ static const char *cube_vs =
   "}\n";
 
 static const char *cube_fs =
+  "#ifdef GL_ES\n"
   "precision highp float;\n"
+  "#endif\n"
   "in vec3 frag_color;\n"
   "out vec4 out_color;\n"
   "void main(void) {\n"
