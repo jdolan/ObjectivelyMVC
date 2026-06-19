@@ -257,13 +257,13 @@ static void addOption(Select *self, const char *title, ident value) {
 
   $(self->options, addObject, option);
 
-  $((Array *) self->options, enumerateObjects, addOption_removeSubview, self->stackView);
+  $((Array *) self->options, enumerate, addOption_removeSubview, self->stackView);
 
   if (self->comparator) {
     $(self->options, sort, self->comparator);
   }
 
-  $((Array *) self->options, enumerateObjects, addOption_addSubview, self->stackView);
+  $((Array *) self->options, enumerate, addOption_addSubview, self->stackView);
 
   if (self->control.selection == ControlSelectionSingle) {
     if ($(self, selectedOption) == NULL) {
@@ -313,7 +313,7 @@ static bool optionWithValue_predicate(ident obj, ident data) {
  * @memberof Select
  */
 static Option *optionWithValue(const Select *self, const ident value) {
-  return $((Array *) self->options, findObject, optionWithValue_predicate, value);
+  return $((Array *) self->options, find, optionWithValue_predicate, value);
 }
 
 /**
@@ -328,7 +328,7 @@ static void removeAllOptions_enumerate(const Array *array, ident obj, ident data
  * @memberof Select
  */
 static void removeAllOptions(Select *self) {
-  $((Array *) self->options, enumerateObjects, removeAllOptions_enumerate, self);
+  $((Array *) self->options, enumerate, removeAllOptions_enumerate, self);
 }
 
 /**
@@ -381,7 +381,7 @@ static void selectOption_enumerate(const Array *array, ident obj, ident data) {
 static void selectOption(Select *self, Option *option) {
 
   if (self->control.selection == ControlSelectionSingle) {
-    $((Array *) self->options, enumerateObjects, selectOption_enumerate, NULL);
+    $((Array *) self->options, enumerate, selectOption_enumerate, NULL);
   }
 
   if (option) {
@@ -417,7 +417,7 @@ static bool selectedOptions_predicate(ident obj, ident data) {
  * @memberof Select
  */
 static Option *selectedOption(const Select *self) {
-  return $((Array *) self->options, findObject, selectedOptions_predicate, NULL);
+  return $((Array *) self->options, find, selectedOptions_predicate, NULL);
 }
 
 /**

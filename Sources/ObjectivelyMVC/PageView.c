@@ -139,7 +139,7 @@ static void setCurrentPage(PageView *self, View *currentPage) {
       self->currentPage = $(subviews, firstObject);
     }
 
-    $(subviews, enumerateObjects, setCurrentPage_enumerate, self);
+    $(subviews, enumerate, setCurrentPage_enumerate, self);
 
     if (self->currentPage) {
 

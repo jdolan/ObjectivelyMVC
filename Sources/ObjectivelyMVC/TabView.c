@@ -90,7 +90,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   const Array *tabs = $(dictionary, objectForKeyPath, "tabs");
   if (tabs) {
-    $(tabs, enumerateObjects, awakeWithDictionary_tabs, self);
+    $(tabs, enumerate, awakeWithDictionary_tabs, self);
   }
 }
 
@@ -236,7 +236,7 @@ static void selectTab(TabView *self, TabViewItem *tab) {
       self->selectedTab = $(tabs, firstObject);
     }
 
-    $(tabs, enumerateObjects, selectTab_enumerate, self);
+    $(tabs, enumerate, selectTab_enumerate, self);
 
     if (self->selectedTab) {
       $(self->tabPageView, setCurrentPage, self->selectedTab->view);
@@ -273,7 +273,7 @@ static bool tabWithIdentifier_predicate(const ident obj, ident data) {
  * @memberof TabView
  */
 static TabViewItem *tabWithIdentifier(const TabView *self, const char *identifier) {
-  return $((Array *) self->tabs, findObject, tabWithIdentifier_predicate, (ident) identifier);
+  return $((Array *) self->tabs, find, tabWithIdentifier_predicate, (ident) identifier);
 }
 
 #pragma mark - Class lifecycle

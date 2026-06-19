@@ -58,7 +58,7 @@ static void bindClassNames_enumerate(const Array *array, ident obj, ident data) 
  * @brief InletBinding for InletTypeClassNames.
  */
 static void bindClassNames(const Inlet *inlet, ident obj) {
-  $(cast(Array, obj), enumerateObjects, bindClassNames_enumerate, *(View **) inlet->dest);
+  $(cast(Array, obj), enumerate, bindClassNames_enumerate, *(View **) inlet->dest);
 }
 
 /**
@@ -288,7 +288,7 @@ static void bindSubviews_enumerate(const Array *array, ident obj, ident data) {
  * @brief InletBinding for InletTypeSubviews.
  */
 static void bindSubviews(const Inlet *inlet, ident obj) {
-  $(cast(Array, obj), enumerateObjects, bindSubviews_enumerate, *(View **) inlet->dest);
+  $(cast(Array, obj), enumerate, bindSubviews_enumerate, *(View **) inlet->dest);
 }
 
 /**

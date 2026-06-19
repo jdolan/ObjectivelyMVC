@@ -200,7 +200,7 @@ static void deselectAll_enumerate(const Array *array, ident obj, ident data) {
  * @memberof CollectionView
  */
 static void deselectAll(CollectionView *self) {
-  $((Array *) self->items, enumerateObjects, deselectAll_enumerate, NULL);
+  $((Array *) self->items, enumerate, deselectAll_enumerate, NULL);
 }
 
 /**
@@ -232,7 +232,7 @@ static void deselectItemsAtIndexPaths_enumerate(const Array *array, ident obj, i
 static void deselectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths) {
 
   if (indexPaths) {
-    $(indexPaths, enumerateObjects, deselectItemsAtIndexPaths_enumerate, self);
+    $(indexPaths, enumerate, deselectItemsAtIndexPaths_enumerate, self);
   }
 }
 
@@ -412,7 +412,7 @@ static void reloadData(CollectionView *self) {
   assert(self->dataSource.numberOfItems);
   assert(self->delegate.itemForObjectAtIndexPath);
 
-  $((Array *) self->items, enumerateObjects, reloadData_removeItems, self->contentView);
+  $((Array *) self->items, enumerate, reloadData_removeItems, self->contentView);
   $(self->items, removeAllObjects);
 
   const size_t numberOfItems = self->dataSource.numberOfItems(self);
@@ -445,7 +445,7 @@ static void selectAll_enumerate(const Array *array, ident obj, ident data) {
  * @memberof CollectionView
  */
 static void selectAll(CollectionView *self) {
-  $((Array *) self->items, enumerateObjects, selectAll_enumerate, NULL);
+  $((Array *) self->items, enumerate, selectAll_enumerate, NULL);
 }
 
 /**
@@ -501,7 +501,7 @@ static void selectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ide
 static void selectItemsAtIndexPaths(CollectionView *self, const Array *indexPaths) {
 
   if (indexPaths) {
-    $(indexPaths, enumerateObjects, selectItemsAtIndexPaths_enumerate, self);
+    $(indexPaths, enumerate, selectItemsAtIndexPaths_enumerate, self);
   }
 }
 

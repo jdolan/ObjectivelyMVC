@@ -116,7 +116,7 @@ static TabViewItem *tabForViewController(const TabViewController *self, const Vi
   assert(viewController);
 
   if (viewController->view) {
-    return $((Array *) self->tabView->tabs, findObject, tabForViewController_predicate, (ident) viewController->view);
+    return $((Array *) self->tabView->tabs, find, tabForViewController_predicate, (ident) viewController->view);
   }
 
   return NULL;
@@ -138,7 +138,7 @@ static ViewController *viewControllerForTab(const TabViewController *self, const
   assert(tab);
 
   if (tab->view) {
-    return $((Array *) self->viewController.childViewControllers, findObject, viewControllerForTab_predicate, tab->view);
+    return $((Array *) self->viewController.childViewControllers, find, viewControllerForTab_predicate, tab->view);
   }
 
   return NULL;

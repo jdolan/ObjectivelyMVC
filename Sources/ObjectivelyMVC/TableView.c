@@ -77,7 +77,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   const Array *columns = $(dictionary, objectForKeyPath, "columns");
   if (columns) {
-    $(columns, enumerateObjects, awakeWithDictionary_columns, self);
+    $(columns, enumerate, awakeWithDictionary_columns, self);
   }
 }
 
@@ -298,7 +298,7 @@ static void deselectAll_enumerate(const Array *array, ident obj, ident data) {
  * @memberof TableView
  */
 static void deselectAll(TableView *self) {
-  $((Array *) self->rows, enumerateObjects, deselectAll_enumerate, NULL);
+  $((Array *) self->rows, enumerate, deselectAll_enumerate, NULL);
 }
 
 /**
@@ -489,7 +489,7 @@ static void selectAll_enumerate(const Array *array, ident obj, ident data) {
  * @memberof TableView
  */
 static void selectAll(TableView *self) {
-  $((Array *) self->rows, enumerateObjects, selectAll_enumerate, NULL);
+  $((Array *) self->rows, enumerate, selectAll_enumerate, NULL);
 }
 
 /**

@@ -181,7 +181,7 @@ static void respondToEvent_enumerate(const Array *array, ident obj, ident data) 
  * @memberof ViewController
  */
 static void respondToEvent(ViewController *self, const SDL_Event *event) {
-  $((Array *) self->childViewControllers, enumerateObjects, respondToEvent_enumerate, (ident) event);
+  $((Array *) self->childViewControllers, enumerate, respondToEvent_enumerate, (ident) event);
 }
 
 /**
@@ -199,7 +199,7 @@ static void renderDeviceDidReset(ViewController *self) {
   
   $(self->view, renderDeviceDidReset);
   
-  $((Array *) self->childViewControllers, enumerateObjects, renderDeviceDidReset_enumerate, NULL);
+  $((Array *) self->childViewControllers, enumerate, renderDeviceDidReset_enumerate, NULL);
 }
 
 /**
@@ -217,7 +217,7 @@ static void renderDeviceWillReset(ViewController *self) {
   
   $(self->view, renderDeviceWillReset);
   
-  $((Array *) self->childViewControllers, enumerateObjects, renderDeviceWillReset_enumerate, NULL);
+  $((Array *) self->childViewControllers, enumerate, renderDeviceWillReset_enumerate, NULL);
 }
 
 /**
@@ -254,7 +254,7 @@ static void viewDidAppear_enumerate(const Array *array, ident obj, ident data) {
  * @memberof ViewController
  */
 static void viewDidAppear(ViewController *self) {
-  $((Array *) self->childViewControllers, enumerateObjects, viewDidAppear_enumerate, NULL);
+  $((Array *) self->childViewControllers, enumerate, viewDidAppear_enumerate, NULL);
 }
 
 /**
@@ -269,7 +269,7 @@ static void viewDidDisappear_enumerate(const Array *array, ident obj, ident data
  * @memberof ViewController
  */
 static void viewDidDisappear(ViewController *self) {
-  $((Array *) self->childViewControllers, enumerateObjects, viewDidDisappear_enumerate, NULL);
+  $((Array *) self->childViewControllers, enumerate, viewDidDisappear_enumerate, NULL);
 }
 
 /**
@@ -284,7 +284,7 @@ static void viewWillAppear_enumerate(const Array *array, ident obj, ident data) 
  * @memberof ViewController
  */
 static void viewWillAppear(ViewController *self) {
-  $((Array *) self->childViewControllers, enumerateObjects, viewWillAppear_enumerate, NULL);
+  $((Array *) self->childViewControllers, enumerate, viewWillAppear_enumerate, NULL);
 }
 
 /**
@@ -299,7 +299,7 @@ static void viewWillDisappear_enumerate(const Array *array, ident obj, ident dat
  * @memberof ViewController
  */
 static void viewWillDisappear(ViewController *self) {
-  $((Array *) self->childViewControllers, enumerateObjects, viewWillDisappear_enumerate, NULL);
+  $((Array *) self->childViewControllers, enumerate, viewWillDisappear_enumerate, NULL);
 }
 
 #pragma mark - Class lifecycle
