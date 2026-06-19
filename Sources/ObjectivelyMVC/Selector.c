@@ -26,8 +26,8 @@
 #include <string.h>
 
 #include <Objectively/Hash.h>
-#include <Objectively/MutableArray.h>
-#include <Objectively/MutableSet.h>
+#include <Objectively/Array.h>
+#include <Objectively/Set.h>
 
 #include "Log.h"
 #include "Selector.h"
@@ -274,7 +274,7 @@ static bool matchesView(const Selector *self, const View *view) {
  */
 static Array *parse(const char *rules) {
 
-  MutableArray *selectors = $$(MutableArray, arrayWithCapacity, 4);
+  Array *selectors = $$(Array, arrayWithCapacity, 4);
   assert(selectors);
 
   if (rules) {
@@ -310,7 +310,7 @@ static Array *parse(const char *rules) {
 typedef struct {
   const Array *sequences;
   size_t sequence;
-  MutableSet *selection;
+  Set *selection;
   View *first;
 } Selection;
 
@@ -368,7 +368,7 @@ static Set *_select(const Selector *self, View *view) {
 
   return __select(view, &(Selection) {
     .sequences = self->sequences,
-    .selection = $$(MutableSet, set),
+    .selection = $$(Set, set),
   });
 }
 

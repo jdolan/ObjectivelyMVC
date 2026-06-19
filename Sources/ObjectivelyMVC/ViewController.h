@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <Objectively/MutableArray.h>
+#include <Objectively/Array.h>
 
 #include <ObjectivelyMVC/View.h>
 
@@ -64,7 +64,7 @@ struct ViewController {
   /**
    * @brief The child view controllers.
    */
-  MutableArray *childViewControllers;
+  Array *childViewControllers;
 
   /**
    * @brief The parent view controller.

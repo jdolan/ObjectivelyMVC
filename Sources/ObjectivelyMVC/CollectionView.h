@@ -151,7 +151,7 @@ struct CollectionView {
   /**
    * @brief The items.
    */
-  MutableArray *items;
+  Array *items;
 
   /**
    * @brief The item size.

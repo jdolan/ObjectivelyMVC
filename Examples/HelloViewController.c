@@ -53,7 +53,7 @@ static void didToggleCheckbox(Checkbox *checkbox) {
  * @see TextViewDelegate::didEndEditing
  */
 static void didEndEditing(TextView *textView) {
-  printf("%s: %s\n", __func__, textView->attributedText->string.chars);
+  printf("%s: %s\n", __func__, textView->attributedText->chars);
 }
 
 #pragma mark - SelectDelegate

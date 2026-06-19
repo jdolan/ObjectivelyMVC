@@ -86,7 +86,7 @@ struct Select {
   /**
    * @brief The Options.
    */
-  MutableArray *options;
+  Array *options;
 
   /**
    * @brief The StackView for rendering the Options.

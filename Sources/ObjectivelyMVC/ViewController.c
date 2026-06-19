@@ -84,7 +84,7 @@ static ViewController *init(ViewController *self) {
 
   self = (ViewController *) super(Object, self, init);
   if (self) {
-    self->childViewControllers = $$(MutableArray, arrayWithCapacity, 0);
+    self->childViewControllers = $$(Array, arrayWithCapacity, 0);
     assert(self->childViewControllers);
   }
 

@@ -160,7 +160,7 @@ static TabView *initWithFrame(TabView *self, const SDL_Rect *frame) {
     self->tabPageView = $(alloc(PageView), initWithFrame, NULL);
     assert(self->tabPageView);
 
-    self->tabs = $$(MutableArray, array);
+    self->tabs = $$(Array, array);
     assert(self->tabs);
 
     self->tabSelectionView = $(alloc(StackView), initWithFrame, NULL);

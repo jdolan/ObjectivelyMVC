@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <Objectively/MutableArray.h>
+#include <Objectively/Array.h>
 
 #include "SelectorSequence.h"
 #include "View.h"
@@ -132,7 +132,7 @@ static Array *parse(const char *rule) {
 
   assert(rule);
 
-  MutableArray *selectorSequences = $$(MutableArray, arrayWithCapacity, 8);
+  Array *selectorSequences = $$(Array, arrayWithCapacity, 8);
   assert(selectorSequences);
 
   SequenceCombinator left = SequenceCombinatorNone;

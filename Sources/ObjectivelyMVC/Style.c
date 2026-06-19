@@ -107,7 +107,7 @@ static void addAttribute(Style *self, const char *attr, ident value) {
   char *key = strtrim(attr);
   assert(key);
 
-  $((MutableDictionary *) self->attributes, setObjectForKeyPath, value, key);
+  $((Dictionary *) self->attributes, setObjectForKeyPath, value, key);
 
   free(key);
 }
@@ -120,7 +120,7 @@ static void addAttributes(Style *self, const Dictionary *attributes) {
 
   assert(attributes);
 
-  $((MutableDictionary *) self->attributes, addEntriesFromDictionary, attributes);
+  $((Dictionary *) self->attributes, addEntriesFromDictionary, attributes);
 }
 
 /**
@@ -256,7 +256,7 @@ static void addSelector(Style *self, Selector *selector) {
 
   assert(selector);
 
-  $((MutableArray *) self->selectors, addObject, selector);
+  $((Array *) self->selectors, addObject, selector);
 }
 
 /**
@@ -317,7 +317,7 @@ static Style *initWithRules(Style *self, const char *rules) {
       ((Selector *) self->selectors->elements[i])->style = self;
     }
 
-    self->attributes = (Dictionary *) $$(MutableDictionary, dictionaryWithCapacity, 4);
+    self->attributes = (Dictionary *) $$(Dictionary, dictionaryWithCapacity, 4);
     assert(self->attributes);
   }
 
@@ -389,12 +389,12 @@ static ident parseValue(String *string) {
       }
 
     } else if (number) {
-      value = $$(MutableArray, arrayWithCapacity, 4);
+      value = $$(Array, arrayWithCapacity, 4);
 
       while (token) {
 
         Object *obj = parseValue(token);
-        $((MutableArray *) value, addObject, obj);
+        $((Array *) value, addObject, obj);
         release(obj);
         release(token);
 
@@ -421,7 +421,7 @@ static ident parseValue(String *string) {
  */
 static Array *parse(const char *css) {
 
-  MutableArray *styles = $$(MutableArray, array);
+  Array *styles = $$(Array, array);
   assert(styles);
 
   if (css) {
@@ -487,7 +487,7 @@ static Array *parse(const char *css) {
  * @memberof Style
  */
 static void removeAttribute(Style *self, const char *attr) {
-  $((MutableDictionary *) self->attributes, removeObjectForKeyPath, attr);
+  $((Dictionary *) self->attributes, removeObjectForKeyPath, attr);
 }
 
 /**
@@ -495,7 +495,7 @@ static void removeAttribute(Style *self, const char *attr) {
  * @memberof Style
  */
 static void removeAllAttributes(Style *self) {
-  $((MutableDictionary *) self->attributes, removeAllObjects);
+  $((Dictionary *) self->attributes, removeAllObjects);
 }
 
 #pragma mark - Class lifecycle

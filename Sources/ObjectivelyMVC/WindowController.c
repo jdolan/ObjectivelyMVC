@@ -108,7 +108,7 @@ static View *keyResponder(const WindowController *self) {
 static void enumerateKeyResponders(View *view, ident data) {
 
   if ($(view, acceptsKeyResponder) && $(view, isVisible)) {
-    $((MutableArray *) data, addObject, view);
+    $((Array *) data, addObject, view);
   }
 }
 
@@ -118,7 +118,7 @@ static void enumerateKeyResponders(View *view, ident data) {
  */
 static Array *keyResponders(const WindowController *self) {
 
-  Array *array = (Array *) $(alloc(MutableArray), init);
+  Array *array = (Array *) $(alloc(Array), init);
   $(self->viewController->view, enumerateDescendants, enumerateKeyResponders, array);
 
   return array;

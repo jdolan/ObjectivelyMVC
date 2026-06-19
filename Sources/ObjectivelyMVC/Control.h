@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <Objectively/MutableArray.h>
+#include <Objectively/Array.h>
 
 #include <ObjectivelyMVC/Text.h>
 

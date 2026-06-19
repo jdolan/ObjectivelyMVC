@@ -1,6 +1,6 @@
 AC_PREREQ(2.69)
 
-AC_INIT([ObjectivelyMVC], [0.1.0], [jay@jaydolan.com])
+AC_INIT([ObjectivelyMVC], [1.0.7], [jay@jaydolan.com])
 
 AC_CONFIG_HEADERS([Sources/ObjectivelyMVC/Config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -56,7 +56,7 @@ AM_CONDITIONAL([LINUX], [test "x$HOST_NAME" = "xLINUX"])
 AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h])
 
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
-PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 1.0.0])
+PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 2.0.0])
 PKG_CHECK_MODULES([SDL3], [sdl3 >= 3.2.0 sdl3-image sdl3-ttf])
 
 AC_SUBST(SDL3_DLL_LIBS, $(echo $SDL3_LIBS | sed 's/-lmingw32//; s/-lSDL3main//'))

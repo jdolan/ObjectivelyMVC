@@ -23,7 +23,7 @@
 
 #include <assert.h>
 
-#include <Objectively/MutableString.h>
+#include <Objectively/String.h>
 
 #include "DebugViewController.h"
 #include "WindowController.h"
@@ -139,7 +139,7 @@ static size_t warnings_numberOfRows(const TableView *tableView) {
 
   const DebugViewController *this = tableView->dataSource.self;
   if (this->debug) {
-    return this->debug->warnings->array.count;
+    return this->debug->warnings->count;
   } else {
     return 0;
   }

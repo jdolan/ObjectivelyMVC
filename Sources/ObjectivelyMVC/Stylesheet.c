@@ -105,7 +105,7 @@ static Stylesheet *defaultStylesheet(void) {
 
 static ident selectorsReducer(const ident obj, ident accumulator, ident data) {
 
-  $((MutableArray *) accumulator, addObjectsFromArray, ((Style *) obj)->selectors);
+  $((Array *) accumulator, addObjectsFromArray, ((Style *) obj)->selectors);
 
   return accumulator;
 }
@@ -129,7 +129,7 @@ static Stylesheet *initWithCharacters(Stylesheet *self, const char *chars) {
     self->styles = $$(Style, parse, chars);
     assert(self->styles);
 
-    MutableArray *selectors = $$(MutableArray, array);
+    Array *selectors = $$(Array, array);
     assert(selectors);
 
     $(self->styles, reduce, selectorsReducer, selectors, NULL);

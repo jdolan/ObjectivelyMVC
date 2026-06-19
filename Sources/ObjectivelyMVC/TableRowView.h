@@ -57,7 +57,7 @@ struct TableRowView {
   /**
    * @brief The cells.
    */
-  MutableArray *cells;
+  Array *cells;
 
   /**
    * @brief True when this row is selected, false otherwise.

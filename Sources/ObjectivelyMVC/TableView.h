@@ -24,7 +24,7 @@
 #pragma once
 
 #include <Objectively/IndexSet.h>
-#include <Objectively/MutableArray.h>
+#include <Objectively/Array.h>
 
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/ScrollView.h>
@@ -135,7 +135,7 @@ struct TableView {
   /**
    * @brief The column definitions.
    */
-  MutableArray *columns;
+  Array *columns;
 
   /**
    * @brief The content View.
@@ -160,7 +160,7 @@ struct TableView {
   /**
    * @brief The rows.
    */
-  MutableArray *rows;
+  Array *rows;
 
   /**
    * @brief The scroll view.

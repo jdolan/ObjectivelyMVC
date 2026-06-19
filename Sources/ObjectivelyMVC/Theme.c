@@ -53,7 +53,7 @@ static void dealloc(Object *self) {
  * @memberof Theme
  */
 static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
-  $((MutableArray *) self->stylesheets, addObject, stylesheet);
+  $((Array *) self->stylesheets, addObject, stylesheet);
 }
 
 /**
@@ -119,7 +119,7 @@ static Theme *init(Theme *self) {
   self = (Theme *) super(Object, self, init);
   if (self) {
 
-    self->stylesheets = $$(MutableArray, arrayWithCapacity, 8);
+    self->stylesheets = $$(Array, arrayWithCapacity, 8);
     assert(self->stylesheets);
 
     $(self, addStylesheet, $$(Stylesheet, defaultStylesheet));
@@ -133,7 +133,7 @@ static Theme *init(Theme *self) {
  * @memberof Theme
  */
 static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
-  $((MutableArray *) self->stylesheets, removeObject, stylesheet);
+  $((Array *) self->stylesheets, removeObject, stylesheet);
 }
 
 /**
