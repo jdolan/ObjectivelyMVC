@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <Objectively/MutableString.h>
+#include <Objectively/String.h>
 
 #include <ObjectivelyMVC/Control.h>
 
@@ -92,7 +92,7 @@ struct TextView {
   /**
    * @brief The user-provided text.
    */
-  MutableString *attributedText;
+  String *attributedText;
 
   /**
    * @brief The default text, displayed when no user-provided text is available.

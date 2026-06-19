@@ -110,7 +110,7 @@ static void layoutSubviews(View *self) {
 
   TextView *this = (TextView *) self;
 
-  const char *text = this->attributedText->string.chars;
+  const char *text = this->attributedText->chars;
 
   if (text == NULL || strlen(text) == 0) {
     if ($((Control *) this, isFocused) == false) {
@@ -195,7 +195,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
   if (this->isEditable) {
     if (event->type == SDL_EVENT_TEXT_INPUT) {
       if ($(self, isFocused)) {
-        if (this->position == this->attributedText->string.length) {
+        if (this->position == this->attributedText->length) {
           $(this->attributedText, appendCharacters, event->text.text);
         } else {
           $(this->attributedText, insertCharactersAtIndex, event->text.text, this->position);
@@ -207,8 +207,8 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     } else if (event->type == SDL_EVENT_KEY_DOWN) {
       didCaptureEvent = true;
 
-      const char *chars = this->attributedText->string.chars;
-      const size_t len = this->attributedText->string.length;
+      const char *chars = this->attributedText->chars;
+      const size_t len = this->attributedText->length;
 
       switch (event->key.key) {
 
@@ -359,7 +359,7 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
 
   self = (TextView *) super(Control, self, initWithFrame, frame);
   if (self) {
-    self->attributedText = $$(MutableString, string);
+    self->attributedText = $$(String, string);
     assert(self->attributedText);
 
     self->isEditable = true;
@@ -381,11 +381,11 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
  */
 static void setAttributedText(TextView *self, const char *attributedText) {
 
-  if (strcmp(self->attributedText->string.chars ?: "", attributedText ?: "")) {
+  if (strcmp(self->attributedText->chars ?: "", attributedText ?: "")) {
 
     $(self->attributedText, setCharacters, attributedText);
 
-    self->position = self->attributedText->string.length;
+    self->position = self->attributedText->length;
 
     self->control.view.needsLayout = true;
   }

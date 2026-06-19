@@ -336,10 +336,10 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
   self = (TableView *) super(Control, self, initWithFrame, frame);
   if (self) {
-    self->columns = $$(MutableArray, array);
+    self->columns = $$(Array, array);
     assert(self->columns);
 
-    self->rows = $$(MutableArray, array);
+    self->rows = $$(Array, array);
     assert(self->rows);
 
     self->headerView = $(alloc(TableHeaderView), initWithTableView, self);
@@ -498,7 +498,7 @@ static void selectAll(TableView *self) {
  */
 static IndexSet *selectedRowIndexes(const TableView *self) {
 
-  size_t indexes[self->rows->array.count];
+  size_t indexes[self->rows->count];
   size_t count = 0;
 
   const Array *rows = (Array *) self->rows;

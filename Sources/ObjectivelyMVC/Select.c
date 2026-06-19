@@ -289,7 +289,7 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame) {
 
     self->control.selection = ControlSelectionSingle;
 
-    self->options = $$(MutableArray, arrayWithCapacity, 8);
+    self->options = $$(Array, arrayWithCapacity, 8);
     assert(self->options);
 
     self->stackView = $(alloc(StackView), initWithFrame, NULL);

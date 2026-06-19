@@ -268,7 +268,7 @@ static IndexPath *indexPathForItemAtPoint(const CollectionView *self, const SDL_
         break;
     }
 
-    if (index < (int) self->items->array.count) {
+    if (index < (int) self->items->count) {
       return $(alloc(IndexPath), initWithIndex, index);
     }
   }
@@ -298,7 +298,7 @@ static CollectionView *initWithFrame(CollectionView *self, const SDL_Rect *frame
 
   self = (CollectionView *) super(Control, self, initWithFrame, frame);
   if (self) {
-    self->items = $$(MutableArray, array);
+    self->items = $$(Array, array);
     assert(self->items);
 
     self->contentView = $(alloc(View), initWithFrame, NULL);
@@ -370,7 +370,7 @@ static SDL_Size naturalSize(const CollectionView *self) {
         }
         w -= self->itemSpacing.w;
       }
-      const int rows = ceilf(self->items->array.count / (float) itemsPerRow);
+      const int rows = ceilf(self->items->count / (float) itemsPerRow);
       size.w += max(self->itemSize.w, scrollViewSize.w);
       size.h += rows * (self->itemSize.h + self->itemSpacing.h);
     }
@@ -386,7 +386,7 @@ static SDL_Size naturalSize(const CollectionView *self) {
         }
         h -= self->itemSpacing.h;
       }
-      const int cols = ceilf(self->items->array.count / (float) itemsPerCol);
+      const int cols = ceilf(self->items->count / (float) itemsPerCol);
       size.w += cols * (self->itemSize.w + self->itemSpacing.w);
       size.h += max(self->itemSize.h, scrollViewSize.h);
     }
@@ -454,7 +454,7 @@ static void selectAll(CollectionView *self) {
  */
 static Array *selectionIndexPaths(const CollectionView *self) {
 
-  MutableArray *array = $$(MutableArray, array);
+  Array *array = $$(Array, array);
 
   const Array *items = (Array *) self->items;
   for (size_t i = 0; i < items->count; i++) {
@@ -558,4 +558,3 @@ Class *_CollectionView(void) {
 }
 
 #undef _Class
-

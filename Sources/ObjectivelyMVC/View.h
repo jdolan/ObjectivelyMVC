@@ -25,9 +25,9 @@
 
 #include <Objectively/Data.h>
 #include <Objectively/Enum.h>
-#include <Objectively/MutableDictionary.h>
-#include <Objectively/MutableArray.h>
-#include <Objectively/MutableSet.h>
+#include <Objectively/Dictionary.h>
+#include <Objectively/Array.h>
+#include <Objectively/Set.h>
 #include <Objectively/Resource.h>
 
 #include <ObjectivelyMVC/Colors.h>
@@ -173,7 +173,7 @@ struct View {
    * @brief The class names.
    * @see Style
    */
-  MutableSet *classNames;
+  Set *classNames;
 
   /**
    * @brief If true, subviews will be clipped to this View's frame.
@@ -250,7 +250,7 @@ struct View {
   /**
    * @brief The immediate subviews.
    */
-  MutableArray *subviews;
+  Array *subviews;
 
   /**
    * @brief The super View.
@@ -268,7 +268,7 @@ struct View {
    * @brief The Warnings this View generated.
    * @remarks These are optionally displayed by the DebugViewController.
    */
-  MutableArray *warnings;
+  Array *warnings;
 
   /**
    * @brief The window.

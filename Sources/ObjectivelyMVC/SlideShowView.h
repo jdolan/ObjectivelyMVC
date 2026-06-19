@@ -58,7 +58,7 @@ struct SlideShowView {
    * @brief The images to display.
    * @protected
    */
-  MutableArray *images;
+  Array *images;
 
   /**
    * @brief The index of the currently displayed image.

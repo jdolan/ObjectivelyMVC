@@ -26,7 +26,7 @@
 #include <string.h>
 
 #include <Objectively/Hash.h>
-#include <Objectively/MutableArray.h>
+#include <Objectively/Array.h>
 #include <Objectively/String.h>
 
 #include "SimpleSelector.h"
@@ -133,7 +133,7 @@ static SimpleSelectorType simpleSelectorType(const char c) {
  */
 static Array *parse(const char *sequence) {
 
-  MutableArray *simpleSelectors = $$(MutableArray, arrayWithCapacity, 4);
+  Array *simpleSelectors = $$(Array, arrayWithCapacity, 4);
   assert(simpleSelectors);
 
   if (sequence) {

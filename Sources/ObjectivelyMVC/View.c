@@ -977,19 +977,19 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
       self->frame = *frame;
     }
 
-    self->classNames = $$(MutableSet, setWithCapacity, 0);
+    self->classNames = $$(Set, setWithCapacity, 0);
     assert(self->classNames);
 
     self->computedStyle = $(alloc(Style), initWithAttributes, NULL);
     assert(self->computedStyle);
 
-    self->subviews = $$(MutableArray, arrayWithCapacity, 0);
+    self->subviews = $$(Array, arrayWithCapacity, 0);
     assert(self->subviews);
 
     self->style = $(alloc(Style), initWithAttributes, NULL);
     assert(self->style);
 
-    self->warnings = $$(MutableArray, arrayWithCapacity, 0);
+    self->warnings = $$(Array, arrayWithCapacity, 0);
     assert(self->warnings);
 
     self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
@@ -1258,7 +1258,7 @@ static void moveToWindow(View *self, SDL_Window *window) {
  */
 static String *path(const View *self) {
 
-  MutableArray *parts = $$(MutableArray, array);
+  Array *parts = $$(Array, array);
 
   const View *view = self;
   while (view) {

@@ -118,7 +118,7 @@ static SlideShowView *initWithFrame(SlideShowView *self, const SDL_Rect *frame) 
 
   self = (SlideShowView *) super(View, self, initWithFrame, frame);
   if (self) {
-    self->images = $(alloc(MutableArray), init);
+    self->images = $(alloc(Array), init);
     assert(self->images);
 
     self->slideDuration = 5000;

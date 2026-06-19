@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <Objectively/MutableArray.h>
+#include <Objectively/Array.h>
 
 #include <ObjectivelyMVC/StackView.h>
 #include <ObjectivelyMVC/PageView.h>
@@ -112,7 +112,7 @@ struct TabView {
   /**
    * @brief The TabViewItems.
    */
-  MutableArray *tabs;
+  Array *tabs;
 };
 
 /**

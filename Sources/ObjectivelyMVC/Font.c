@@ -27,7 +27,7 @@
 #include <string.h>
 
 #include <Objectively/Hash.h>
-#include <Objectively/MutableArray.h>
+#include <Objectively/Array.h>
 #include <Objectively/String.h>
 
 #include "Font.h"
@@ -108,8 +108,8 @@ static bool isEqual(const Object *self, const Object *other) {
 
 #pragma mark - Font
 
-static MutableDictionary *_cache;
-static MutableArray *_fonts;
+static Dictionary *_cache;
+static Array *_fonts;
 
 /**
  * @fn void Font::cacheFont(Data *data, const char *family)
@@ -333,10 +333,10 @@ static void initialize(Class *clazz) {
   const bool init = TTF_Init();
   assert(init);
 
-  _cache = $$(MutableDictionary, dictionary);
+  _cache = $$(Dictionary, dictionary);
   assert(_cache);
 
-  _fonts = $$(MutableArray, array);
+  _fonts = $$(Array, array);
   assert(_fonts);
 }
 
