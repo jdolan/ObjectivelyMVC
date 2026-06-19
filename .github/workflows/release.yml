@@ -15,7 +15,7 @@ jobs:
       SDL3_VERSION: "release-3.4.10"
       SDL3_IMAGE_VERSION: "release-3.4.0"
       SDL3_TTF_VERSION: "release-3.2.2"
-      OBJECTIVELY_BRANCH: "main"
+      OBJECTIVELY_BRANCH: "feature/objectively-2.x"
       IOS_MIN: "14.0"
 
     steps:
