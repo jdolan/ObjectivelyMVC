@@ -294,9 +294,6 @@ static void endFrame(Renderer *self) {
 static Renderer *init(Renderer *self) {
 
   self = (Renderer *) super(Object, self, init);
-  if (self) {
-    $(self, renderDeviceDidReset);
-  }
   return self;
 }
 

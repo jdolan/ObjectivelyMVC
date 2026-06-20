@@ -341,7 +341,10 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 
     assert(self->renderer);
 
-    $(self->viewController->view, renderDeviceDidReset);
+    if (SDL_GL_GetCurrentContext()) {
+      $(self->renderer, renderDeviceDidReset);
+      $(self->viewController->view, renderDeviceDidReset);
+    }
   }
 }
 
