@@ -43,7 +43,9 @@
 static void pushDrawCall(const Renderer *self, bool fill, const MVC_Vertex *verts, Uint32 count,
                          SDL_GPUTexture *texture) {
 
-  assert(self->vertex_staging);
+  if (!self->vertex_staging) {
+    return;
+  }
   assert(self->vertex_count + count <= MVC_MAX_VERTICES);
   assert(self->draw_call_count < MVC_MAX_DRAW_CALLS);
 

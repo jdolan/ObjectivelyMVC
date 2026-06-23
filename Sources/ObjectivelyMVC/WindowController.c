@@ -151,6 +151,10 @@ static void render(WindowController *self) {
 
   $(self->renderer, beginFrame);
 
+  if (!self->renderer->vertex_staging) {
+    return;
+  }
+
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
 

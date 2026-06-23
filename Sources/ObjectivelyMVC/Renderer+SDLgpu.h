@@ -57,6 +57,15 @@ OBJECTIVELYMVC_EXPORT SDL_Window *mvc_current_window;
 OBJECTIVELYMVC_EXPORT void MVC_ReleaseGPUTexture(SDL_GPUTexture *texture);
 
 /**
+ * @brief Returns the pixel density of @c mvc_current_window, or @c 1.0f when
+ * no window has been set (e.g. during font/view initialization before the first
+ * frame).
+ */
+static inline float MVC_WindowPixelDensity(void) {
+  return mvc_current_window ? SDL_GetWindowPixelDensity(mvc_current_window) : 1.0f;
+}
+
+/**
  * @brief MSL source for the vertex shader.
  * @details Expects:
  *   - Vertex attribute 0: float2 position
