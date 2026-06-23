@@ -269,8 +269,8 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 
   assert(rect);
 
-  const float x1 = (float) rect->x - 1.0f, y1 = (float) rect->y - 1.0f;
-  const float x2 = (float) rect->x + rect->w + 1.0f, y2 = (float) rect->y + rect->h + 1.0f;
+  const float x1 = (float) rect->x,          y1 = (float) rect->y;
+  const float x2 = (float) rect->x + rect->w, y2 = (float) rect->y + rect->h;
 
   // TRIANGLESTRIP: TL, TR, BL, BR.
   const MVC_Vertex verts[4] = {
@@ -368,11 +368,13 @@ static void endFrame(Renderer *self) {
   };
   SDL_SetGPUViewport(render_pass, &viewport);
 
-  // Orthographic projection: screen coords (0,0 top-left) → clip coords.
-  // SDL_gpu clip space has +Y pointing up, so we negate Y to map screen Y (down)
-  // to clip Y (up): x: [0, w] → [-1, +1];  y: [0, h] → [+1, -1].
-  const float lw = (float) self->swapchain_w;
-  const float lh = (float) self->swapchain_h;
+  // Orthographic projection: logical (CSS) coords → clip space.
+  // Vertices use logical window points; the viewport handles the physical-pixel
+  // scaling automatically. Negate Y so screen-Y (down) maps to clip-Y (up).
+  int win_w, win_h;
+  SDL_GetWindowSize(self->window, &win_w, &win_h);
+  const float lw = (float) win_w;
+  const float lh = (float) win_h;
   const float projection[16] = {
      2.0f / lw,  0.0f,       0.0f,  0.0f,
      0.0f,      -2.0f / lh,  0.0f,  0.0f,
