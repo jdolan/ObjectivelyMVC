@@ -133,7 +133,7 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
   const size_t strippedLen = strlen(stripped);
   CharInfo *chars = malloc(sizeof(CharInfo) * strippedLen);
 
-  const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
+  const float scale = SDL_GetWindowPixelDensity(mvc_current_window);
   const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * scale) : 0;
 
   int lineHeight;
@@ -202,7 +202,7 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
   CharInfo *charInfo = buildCharInfo(self->font, self->text, self->color, wrapWidth, &charCount);
 
   if (charInfo) {
-    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
+    const float scale = SDL_GetWindowPixelDensity(mvc_current_window);
     SDL_LockSurface(surface);
     for (int i = 0; i < charCount; i++) {
       colorize(surface, &charInfo[i], scale);
@@ -238,7 +238,8 @@ static void dealloc(Object *self) {
   free(this->text);
 
   if (this->texture) {
-    glDeleteTextures(1, &this->texture);
+    MVC_ReleaseGPUTexture(this->texture);
+    this->texture = NULL;
   }
 
   super(Object, self, dealloc);
@@ -281,7 +282,8 @@ static void applyStyle(View *self, const Style *style) {
 
   if ($(self, bind, colorInlets, style->attributes)) {
     if (this->texture) {
-      glDeleteTextures(1, &this->texture);
+      MVC_ReleaseGPUTexture(this->texture);
+    this->texture = NULL;
       this->texture = 0;
     }
   }
@@ -352,7 +354,7 @@ static void render(View *self, Renderer *renderer) {
 
     const SDL_Rect frame = $(self, renderFrame);
 
-    if (this->texture == 0) {
+    if (this->texture == NULL) {
       SDL_Surface *surface;
       
       if (this->colorEscapes) {
@@ -397,7 +399,8 @@ static void renderDeviceWillReset(View *self) {
   Text *this = (Text *) self;
 
   if (this->texture) {
-    glDeleteTextures(1, &this->texture);
+    MVC_ReleaseGPUTexture(this->texture);
+    this->texture = NULL;
     this->texture = 0;
   }
 
@@ -463,7 +466,8 @@ static void setFont(Text *self, Font *font) {
     self->font = retain(font);
 
     if (self->texture) {
-      glDeleteTextures(1, &self->texture);
+      MVC_ReleaseGPUTexture(self->texture);
+    self->texture = NULL;
       self->texture = 0;
     }
 
@@ -488,7 +492,8 @@ static void setText(Text *self, const char *text) {
     }
 
     if (self->texture) {
-      glDeleteTextures(1, &self->texture);
+      MVC_ReleaseGPUTexture(self->texture);
+    self->texture = NULL;
       self->texture = 0;
     }
 

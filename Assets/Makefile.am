@@ -6,7 +6,5 @@ BUILT_SOURCES = \
 	coda.ttf.h \
 	debug.css.h \
 	debug.json.h \
-	renderer_fs.glsl.h \
-	renderer_vs.glsl.h \
 	resize.png.h \
 	stylesheet.css.h

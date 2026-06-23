@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 GPU, SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -25,27 +25,48 @@
 
 #include <Objectively/Array.h>
 
-#include <ObjectivelyMVC/Renderer+OpenGL.h>
+#include <ObjectivelyMVC/Renderer+SDLgpu.h>
 
 /**
  * @file
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
- * @details This class provides an OpenGL ES 3.0 / Core Profile 3.3 implementation. GL function
- * pointers are resolved at runtime via `SDL_GL_GetProcAddress` and exposed via `gl` (declared in
- * `Renderer+OpenGL.h`). The application must open a compatible context before instantiating a
- * WindowController: GL Core Profile 3.3+ on desktop, ES 3.0+ on mobile. Applications may
- * subclass Renderer to use a higher GL version or different rendering strategy.
+ * @details This class provides an SDL_gpu (Metal/Vulkan/Direct3D 12) implementation.
+ * The application must create an SDL_Window before instantiating a WindowController.
+ * The Renderer creates its own SDL_GPUDevice and claims the window automatically via
+ * `renderDeviceDidReset`. Applications may subclass Renderer to use a custom pipeline
+ * or integrate with an existing SDL_GPUDevice.
  */
 
 typedef struct Renderer Renderer;
 typedef struct RendererInterface RendererInterface;
 
 /**
+ * @brief Interleaved position + texcoord vertex for GPU upload.
+ */
+typedef struct {
+  float x, y;
+  float u, v;
+} MVC_Vertex;
+
+/**
+ * @brief A recorded draw call for deferred GPU submission.
+ * @private
+ */
+typedef struct {
+  bool fill;
+  Uint32 first_vertex;
+  Uint32 vertex_count;
+  SDL_GPUTexture *texture;
+  float color[4];
+  SDL_Rect scissor;
+  bool has_scissor;
+} MVC_DrawCall;
+
+/**
  * @brief The Renderer is responsible for rasterizing the View hierarchy of a WindowController.
- * @details This class provides an OpenGL ES 3.0 / Core Profile 3.3 implementation. The
- * application must open a compatible context before instantiating a WindowController:
- * GL Core Profile 3.3+ on desktop, ES 3.0+ on mobile. Applications may subclass Renderer
- * to use a higher GL version or a different rendering strategy.
+ * @details This class provides an SDL_gpu (Metal/Vulkan/Direct3D 12) implementation.
+ * Create a WindowController to instantiate a default Renderer, or supply your own
+ * subclass via WindowController::setRenderer.
  * @extends Object
  */
 struct Renderer {
@@ -68,22 +89,120 @@ struct Renderer {
   SDL_Color color;
 
   /**
-   * @brief The GL shader program, vertex array, buffer, and white fallback texture.
+   * @brief The SDL_GPU device.
    * @private
    */
-  GLuint program;
-  GLuint vao;
-  GLuint vbo;
-  GLuint white;
+  SDL_GPUDevice *device;
 
   /**
-   * @brief Cached uniform locations.
+   * @brief The fill graphics pipeline (TRIANGLESTRIP, for rects and textured quads).
    * @private
    */
-  struct {
-    GLint projection;
-    GLint color;
-  } uniforms;
+  SDL_GPUGraphicsPipeline *fill_pipeline;
+
+  /**
+   * @brief The line graphics pipeline (LINESTRIP, for outlines and line segments).
+   * @private
+   */
+  SDL_GPUGraphicsPipeline *line_pipeline;
+
+  /**
+   * @brief The GPU-side vertex buffer.
+   * @private
+   */
+  SDL_GPUBuffer *vertex_buffer;
+
+  /**
+   * @brief The CPU-to-GPU vertex transfer buffer (staging).
+   * @private
+   */
+  SDL_GPUTransferBuffer *vertex_transfer;
+
+  /**
+   * @brief The linear texture sampler.
+   * @private
+   */
+  SDL_GPUSampler *sampler;
+
+  /**
+   * @brief The 1×1 white fallback texture (used for solid-color primitives).
+   * @private
+   */
+  SDL_GPUTexture *white;
+
+  /**
+   * @brief The window currently being rendered.
+   * @private
+   */
+  SDL_Window *window;
+
+  /**
+   * @brief When true, the render pass clears to @c clear_color before drawing.
+   * @details Defaults to `true` (clear to opaque black). Set to `false` when
+   * rendering the UI on top of an existing GPU frame (e.g. a 3D game scene
+   * that has already written to the swapchain texture).
+   */
+  bool clear;
+
+  /**
+   * @brief The color used to clear the swapchain texture when @c clear is true.
+   * @details Defaults to opaque black `{0, 0, 0, 1}`.
+   */
+  SDL_FColor clear_color;
+
+  /**
+   * @brief The current frame command buffer (valid between beginFrame and endFrame).
+   * @private
+   */
+  SDL_GPUCommandBuffer *cmd;
+
+  /**
+   * @brief The swapchain texture acquired for this frame.
+   * @private
+   */
+  SDL_GPUTexture *swapchain_texture;
+
+  /**
+   * @brief The swapchain dimensions for this frame.
+   * @private
+   */
+  Uint32 swapchain_w, swapchain_h;
+
+  /**
+   * @brief CPU-mapped pointer into vertex_transfer (valid between beginFrame and endFrame).
+   * @private
+   */
+  MVC_Vertex *vertex_staging;
+
+  /**
+   * @brief Number of vertices written this frame.
+   * @private
+   */
+  Uint32 vertex_count;
+
+  /**
+   * @brief Draw call queue for this frame (heap-allocated).
+   * @private
+   */
+  MVC_DrawCall *draw_calls;
+
+  /**
+   * @brief Number of draw calls recorded this frame.
+   * @private
+   */
+  Uint32 draw_call_count;
+
+  /**
+   * @brief The current scissor rectangle (in pixel coordinates).
+   * @private
+   */
+  SDL_Rect current_scissor;
+
+  /**
+   * @brief True if a scissor rect is active.
+   * @private
+   */
+  bool has_scissor;
 };
 
 /**
@@ -98,46 +217,47 @@ struct RendererInterface {
 
   /**
    * @fn void Renderer::beginFrame(Renderer *self)
-   * @brief Sets up OpenGL state.
+   * @brief Acquires the swapchain texture and prepares for draw calls.
    * @param self The Renderer.
-   * @remarks This method is called by the WindowController to begin rendering. Override this
-   * method for custom OpenGL state setup, if desired.
+   * @remarks Called by WindowController to begin rendering each frame. Override
+   * to perform custom setup before the first draw call.
    * @memberof Renderer
    */
   void (*beginFrame)(Renderer *self);
 
   /**
-   * @fn GLuint Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
-   * @brief Generates and binds to an OpenGL texture object, uploading the given surface.
+   * @fn SDL_GPUTexture *Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
+   * @brief Creates a GPU texture from the given surface, uploading its pixels.
    * @param self The Renderer.
-   * @param surface The surface.
-   * @return The OpenGL texture name, or `0` on error.
+   * @param surface The surface to upload.
+   * @return A new SDL_GPUTexture on success, or `NULL` on error.
+   * @remarks The caller owns the returned texture; release it with MVC_ReleaseGPUTexture().
    * @memberof Renderer
    */
-  GLuint (*createTexture)(const Renderer *self, const SDL_Surface *surface);
+  SDL_GPUTexture *(*createTexture)(const Renderer *self, const SDL_Surface *surface);
 
   /**
    * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points)
-   * @brief Draws a line segment between two points using `GL_LINE_STRIP`.
+   * @brief Records a line segment between two points.
    * @param self The Renderer.
-   * @param points The points.
+   * @param points Two points defining the line segment.
    * @memberof Renderer
    */
   void (*drawLine)(const Renderer *self, const SDL_Point *points);
 
   /**
    * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
-   * @brief Draws line segments between adjacent points using `GL_LINE_STRIP`.
+   * @brief Records a polyline through the given points.
    * @param self The Renderer.
    * @param points The points.
-   * @param count The length of points.
+   * @param count The number of points.
    * @memberof Renderer
    */
   void (*drawLines)(const Renderer *self, const SDL_Point *points, size_t count);
 
   /**
    * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
-   * @brief Draws a rectangle using `GL_LINE_LOOP`.
+   * @brief Records a rectangle outline.
    * @param self The Renderer.
    * @param rect The rectangle.
    * @memberof Renderer
@@ -146,7 +266,7 @@ struct RendererInterface {
 
   /**
    * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
-   * @brief Fills a rectangle using `GL_TRIANGLE_FAN`.
+   * @brief Records a filled rectangle.
    * @param self The Renderer.
    * @param rect The rectangle.
    * @memberof Renderer
@@ -154,30 +274,30 @@ struct RendererInterface {
   void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect);
 
   /**
-   * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
-   * @brief Draws a textured `GL_QUAD` in the given rectangle.
+   * @fn void Renderer::drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest)
+   * @brief Records a textured quad in the given destination rectangle.
    * @param self The Renderer.
-   * @param texture The texture.
-   * @param dest The destination in screen coordinates.
+   * @param texture The GPU texture to sample.
+   * @param dest The destination rectangle in logical screen coordinates.
    * @memberof Renderer
    */
-  void (*drawTexture)(const Renderer *self, GLuint texture, const SDL_Rect *dest);
+  void (*drawTexture)(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest);
 
   /**
    * @fn void Renderer::drawView(Renderer *self, View *view)
-   * @brief Draws the given View, setting the clipping frame and invoking View::render.
+   * @brief Sets the clipping frame and invokes View::render for the given View.
    * @param self The Renderer.
-   * @param view The View.
+   * @param view The View to render.
    * @memberof Renderer
    */
   void (*drawView)(Renderer *self, View *view);
 
   /**
-   * @fn void Renderer::endFrame(const Renderer *self)
-   * @brief Resets OpenGL state. Does *not* swap buffers.
+   * @fn void Renderer::endFrame(Renderer *self)
+   * @brief Flushes recorded draw calls to the GPU and submits the command buffer.
    * @param self The Renderer.
-   * @remarks This method is called by the WindowController to end rendering. Override this
-   * method for custom OpenGL state teardown, if desired.
+   * @remarks Called by WindowController after all draw calls for a frame. Does not
+   * swap buffers; swapping is handled by SDL_gpu's swapchain presentation.
    * @memberof Renderer
    */
   void (*endFrame)(Renderer *self);
@@ -194,40 +314,52 @@ struct RendererInterface {
 
   /**
    * @fn void Renderer::renderDeviceDidReset(Renderer *self)
-   * @brief This method is invoked when the render device has reset.
+   * @brief Invoked when the render device has been (re-)initialized.
    * @param self The Renderer.
-   * @remarks Subclasses may override this method to allocate any OpenGL objects they require.
+   * @remarks Creates the SDL_GPUDevice, shaders, pipelines, and GPU buffers.
+   * Subclasses may override to allocate additional GPU resources.
    * @memberof Renderer
    */
   void (*renderDeviceDidReset)(Renderer *self);
 
   /**
    * @fn void Renderer::renderDeviceWillReset(Renderer *self)
-   * @brief This method is invoked when the render device will become reset.
+   * @brief Invoked when the render device is about to be destroyed.
    * @param self The Renderer.
-   * @remarks Subclasses should override this method to free any OpenGL objects they own.
+   * @remarks Releases all GPU resources owned by this Renderer.
+   * Subclasses should override to free any additional GPU resources they own.
    * @memberof Renderer
    */
   void (*renderDeviceWillReset)(Renderer *self);
 
   /**
    * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)
-   * @brief Sets the clipping frame for draw operations.
-   * @details Primitives which fall outside of the clipping frame will not be visible.
+   * @brief Sets the scissor rectangle for subsequent draw calls.
    * @param self The Renderer.
-   * @param clippingFrame The clipping frame, or `NULL` to disable clipping.
+   * @param clippingFrame The clipping rectangle in logical screen coordinates, or
+   *   `NULL` to disable clipping (full window scissor).
    * @memberof Renderer
    */
   void (*setClippingFrame)(Renderer *self, const SDL_Rect *clippingFrame);
 
   /**
    * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
-   * @brief Sets the primary color for drawing operations.
+   * @brief Sets the primary color multiplier for subsequent draw calls.
    * @param self The Renderer.
    * @param color The color.
    * @memberof Renderer
    */
   void (*setDrawColor)(Renderer *self, const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::setWindow(Renderer *self, SDL_Window *window)
+   * @brief Binds this Renderer to the given window.
+   * @param self The Renderer.
+   * @param window The SDL_Window to render into.
+   * @remarks Called automatically by WindowController when its window changes.
+   * @memberof Renderer
+   */
+  void (*setWindow)(Renderer *self, SDL_Window *window);
 };
 
 /**

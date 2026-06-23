@@ -24,6 +24,7 @@
 #pragma once
 
 #include <ObjectivelyMVC/Image.h>
+#include <ObjectivelyMVC/Renderer+SDLgpu.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -31,7 +32,7 @@
  * @brief ImageViews render an Image in the context of a View hierarchy.
  */
 
-OBJECTIVELYMVC_EXPORT const EnumName GLBlendNames[];
+OBJECTIVELYMVC_EXPORT const EnumName SDLGPUBlendFactorNames[];
 
 typedef struct ImageView ImageView;
 typedef struct ImageViewInterface ImageViewInterface;
@@ -54,10 +55,10 @@ struct ImageView {
   ImageViewInterface *interface;
 
   /**
-   * @brief The blend function.
+   * @brief The blend factors (currently unused; reserved for future per-pipeline support).
    */
   struct {
-    GLenum src, dst;
+    SDL_GPUBlendFactor src, dst;
   } blend;
 
   /**
@@ -71,9 +72,9 @@ struct ImageView {
   Image *image;
 
   /**
-   * @brief The texture.
+   * @brief The GPU texture.
    */
-  GLuint texture;
+  SDL_GPUTexture *texture;
 };
 
 /**

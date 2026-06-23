@@ -217,7 +217,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
   switch (event->type) {
     case SDL_EVENT_WINDOW_EXPOSED:
-      $(self, setWindow, SDL_GL_GetCurrentWindow());
+      $(self, setWindow, self->window);
       $(self->renderer, renderDeviceDidReset);
       $(self->viewController, renderDeviceDidReset);
       $(self->viewController->view, updateBindings);
@@ -230,7 +230,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     case SDL_EVENT_WINDOW_DISPLAY_CHANGED:
     case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
     case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
-      $(self, setWindow, SDL_GL_GetCurrentWindow());
+      $(self, setWindow, self->window);
       break;
     case SDL_EVENT_WINDOW_DESTROYED:
     case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
@@ -341,10 +341,9 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 
     assert(self->renderer);
 
-    if (SDL_GL_GetCurrentContext()) {
-      $(self->renderer, renderDeviceDidReset);
-      $(self->viewController->view, renderDeviceDidReset);
-    }
+    $(self->renderer, setWindow, self->window);
+    $(self->renderer, renderDeviceDidReset);
+    $(self->viewController->view, renderDeviceDidReset);
   }
 }
 
@@ -414,6 +413,10 @@ static void setWindow(WindowController *self, SDL_Window *window) {
   SDL_SetPointerProperty(properties, "windowController", self);
   SDL_SetPointerProperty(properties, "keyResponder", NULL);
   SDL_SetPointerProperty(properties, "touchResponder", NULL);
+
+  if (self->renderer) {
+    $(self->renderer, setWindow, self->window);
+  }
 
   if (self->viewController) {
     $(self->viewController->view, moveToWindow, self->window);

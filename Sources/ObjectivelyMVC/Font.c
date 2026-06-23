@@ -32,6 +32,7 @@
 
 #include "Font.h"
 #include "Log.h"
+#include "Renderer+SDLgpu.h"
 #include "View.h"
 #include "Window.h"
 
@@ -135,7 +136,7 @@ static Font *cachedFont(const char *family, int size, int style) {
     style = DEFAULT_FONT_STYLE;
   }
 
-  const int renderSize = size * SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
+  const int renderSize = size * SDL_GetWindowPixelDensity(mvc_current_window);
 
   const Array *fonts = (Array *) _fonts;
   for (size_t i = 0; i < fonts->count; i++) {
@@ -226,7 +227,7 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 
   SDL_Surface *surface;
   if (wrapWidth) {
-    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
+    const float scale = SDL_GetWindowPixelDensity(mvc_current_window);
     surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * scale);
   } else {
     surface = TTF_RenderText_Blended(self->font, chars, 0, color);
@@ -249,7 +250,7 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
  */
 static void renderDeviceDidReset(Font *self) {
 
-  const int renderSize = self->size * SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
+  const int renderSize = self->size * SDL_GetWindowPixelDensity(mvc_current_window);
   if (renderSize != self->renderSize) {
 
     self->renderSize = renderSize;
@@ -300,7 +301,7 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
     }
     free(lines);
 
-    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
+    const float scale = SDL_GetWindowPixelDensity(mvc_current_window);
     if (w) {
       *w = ceilf(*w / scale);
     }

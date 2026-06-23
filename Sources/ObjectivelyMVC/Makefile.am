@@ -30,7 +30,7 @@ pkginclude_HEADERS = \
 	Panel.h \
 	ProgressBar.h \
 	Renderer.h \
-	Renderer+OpenGL.h \
+	Renderer+SDLgpu.h \
 	RGBColorPicker.h \
 	ScrollView.h \
 	Select.h \
@@ -86,7 +86,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Panel.c \
 	ProgressBar.c \
 	Renderer.c \
-	Renderer+OpenGL.c \
+	Renderer+SDLgpu.c \
 	RGBColorPicker.c \
 	ScrollView.c \
 	Select.c \

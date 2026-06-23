@@ -23,8 +23,9 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/Renderer+SDLgpu.h>
+#include <ObjectivelyMVC/View.h>
 
 /**
  * @file
@@ -111,10 +112,10 @@ struct Text {
   char *text;
 
   /**
-   * @brief The rendered texture.
+   * @brief The rendered GPU texture.
    * @protected
    */
-  GLuint texture;
+  SDL_GPUTexture *texture;
 };
 
 /**

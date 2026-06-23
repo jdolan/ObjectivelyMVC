@@ -59,29 +59,16 @@ int main(int argc, char *argv[]) {
 
   SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream));
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
   SDL_Window *window = SDL_CreateWindow(__FILE__,
     1024,
     720,
-    SDL_WINDOW_OPENGL | SDL_WINDOW_HIGH_PIXEL_DENSITY
+    SDL_WINDOW_HIGH_PIXEL_DENSITY
   );
 
   if (window == NULL) {
     fprintf(stderr, "%s\n", SDL_GetError());
     exit(1);
   }
-
-  SDL_GLContext context = SDL_GL_CreateContext(window);
-  if (context == NULL) {
-    fprintf(stderr, "%s\n", SDL_GetError());
-    exit(2);
-  }
-
-  SDL_GL_SetSwapInterval(1);
 
   $$(Resource, addResourcePath, EXAMPLES);
 
@@ -112,19 +99,14 @@ int main(int argc, char *argv[]) {
       break;
     }
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     drawScene(window);
 
     $(windowController, render);
-
-    SDL_GL_SwapWindow(window);
   }
 
   release(viewController);
   release(windowController);
 
-  SDL_GL_DestroyContext(context);
   SDL_DestroyWindow(window);
 
   SDL_DestroyAudioStream(stream);
