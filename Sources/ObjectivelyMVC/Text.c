@@ -283,8 +283,8 @@ static void applyStyle(View *self, const Style *style) {
   if ($(self, bind, colorInlets, style->attributes)) {
     if (this->texture) {
       MVC_ReleaseGPUTexture(this->texture);
-    this->texture = NULL;
-      this->texture = 0;
+      this->texture = NULL;
+      this->texture_w = this->texture_h = 0;
     }
   }
 
@@ -356,7 +356,7 @@ static void render(View *self, Renderer *renderer) {
 
     if (this->texture == NULL) {
       SDL_Surface *surface;
-      
+
       if (this->colorEscapes) {
         surface = renderWithColorEscapes(this, this->lineWrap ? frame.w : 0);
       } else {
@@ -365,8 +365,12 @@ static void render(View *self, Renderer *renderer) {
                     this->color,
                     this->lineWrap ? frame.w : 0);
       }
-      
+
       assert(surface);
+
+      const float density = MVC_WindowPixelDensity();
+      this->texture_w = (int) roundf(surface->w / density);
+      this->texture_h = (int) roundf(surface->h / density);
 
       this->texture = $(renderer, createTexture, surface);
 
@@ -375,7 +379,8 @@ static void render(View *self, Renderer *renderer) {
 
     assert(this->texture);
 
-    $(renderer, drawTexture, this->texture, &frame);
+    const SDL_Rect draw_rect = { frame.x, frame.y, this->texture_w, this->texture_h };
+    $(renderer, drawTexture, this->texture, &draw_rect);
   }
 }
 
@@ -401,7 +406,7 @@ static void renderDeviceWillReset(View *self) {
   if (this->texture) {
     MVC_ReleaseGPUTexture(this->texture);
     this->texture = NULL;
-    this->texture = 0;
+    this->texture_w = this->texture_h = 0;
   }
 
   super(View, self, renderDeviceWillReset);
@@ -467,8 +472,8 @@ static void setFont(Text *self, Font *font) {
 
     if (self->texture) {
       MVC_ReleaseGPUTexture(self->texture);
-    self->texture = NULL;
-      self->texture = 0;
+      self->texture = NULL;
+      self->texture_w = self->texture_h = 0;
     }
 
     $((View *) self, sizeToFit);
@@ -493,8 +498,8 @@ static void setText(Text *self, const char *text) {
 
     if (self->texture) {
       MVC_ReleaseGPUTexture(self->texture);
-    self->texture = NULL;
-      self->texture = 0;
+      self->texture = NULL;
+      self->texture_w = self->texture_h = 0;
     }
 
     $((View *) self, sizeToFit);

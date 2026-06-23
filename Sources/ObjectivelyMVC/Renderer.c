@@ -718,6 +718,7 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
  */
 static void setWindow(Renderer *self, SDL_Window *window) {
   self->window = window;
+  mvc_current_window = window;
 }
 
 #pragma mark - Object lifecycle

@@ -116,6 +116,13 @@ struct Text {
    * @protected
    */
   SDL_GPUTexture *texture;
+
+  /**
+   * @brief The logical draw dimensions of the texture (surface size / pixel density).
+   * @remarks Stored when the texture is created; used for pixel-perfect rendering.
+   * @protected
+   */
+  int texture_w, texture_h;
 };
 
 /**
