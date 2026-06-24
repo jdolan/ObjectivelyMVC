@@ -120,7 +120,7 @@ static void colorize(SDL_Surface *surface, const CharInfo *info, float scale) {
  * the line-start byte with TTF_GetStringSize. SDL_ttf owns all word-wrap decisions.
  */
 static CharInfo *buildCharInfo(const Font *font, const char *text,
-                               SDL_Color defaultColor, int wrapWidth, float scale, int *outCount) {
+                               SDL_Color defaultColor, int wrapWidth, int *outCount) {
 
   if (!text || !*text) {
     *outCount = 0;
@@ -137,10 +137,10 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
   const size_t strippedLen = strlen(stripped);
   CharInfo *chars = malloc(sizeof(CharInfo) * strippedLen);
 
-  const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * scale) : 0;
+  const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * font->scale) : 0;
 
   int lineHeight;
-  $(font, sizeCharacters, "A", scale, NULL, &lineHeight);
+  $(font, sizeCharacters, "A", NULL, &lineHeight);
 
   SDL_Color currentColor = defaultColor;
   int charIdx = 0;
@@ -174,9 +174,9 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
     int charW;
     TTF_GetStringSize(font->font, stripped + charIdx, 1, &charW, NULL);
 
-    chars[charIdx].rect.x = (int) (lineX / scale);
-    chars[charIdx].rect.y = (int) (currH / scale) - lineHeight;
-    chars[charIdx].rect.w = (int) (charW / scale);
+    chars[charIdx].rect.x = (int) (lineX / font->scale);
+    chars[charIdx].rect.y = (int) (currH / font->scale) - lineHeight;
+    chars[charIdx].rect.w = (int) (charW / font->scale);
     chars[charIdx].rect.h = lineHeight;
     chars[charIdx].color = currentColor;
 
@@ -191,10 +191,10 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
 /**
  * @brief Renders text with color escape sequences applied to an SDL_Surface.
  */
-static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth, float scale) {
+static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
 
   char *stripped = stripColors(self->text);
-  SDL_Surface *surface = $(self->font, renderCharacters, stripped, self->color, wrapWidth, scale);
+  SDL_Surface *surface = $(self->font, renderCharacters, stripped, self->color, wrapWidth);
   free(stripped);
 
   if (!surface) {
@@ -202,12 +202,12 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth, floa
   }
 
   int charCount = 0;
-  CharInfo *charInfo = buildCharInfo(self->font, self->text, self->color, wrapWidth, scale, &charCount);
+  CharInfo *charInfo = buildCharInfo(self->font, self->text, self->color, wrapWidth, &charCount);
 
   if (charInfo) {
     SDL_LockSurface(surface);
     for (int i = 0; i < charCount; i++) {
-      colorize(surface, &charInfo[i], scale);
+      colorize(surface, &charInfo[i], self->font->scale);
     }
     SDL_UnlockSurface(surface);
     free(charInfo);
@@ -219,10 +219,10 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth, floa
 /**
  * @brief Resolves the rendered size of this Text's content, stripping color escapes.
  */
-static void sizeWithColorEscapes(const Text *self, float scale, int *w, int *h) {
+static void sizeWithColorEscapes(const Text *self, int *w, int *h) {
 
   char *stripped = stripColors(self->text ?: "");
-  $(self->font, sizeCharacters, stripped, scale, w, h);
+  $(self->font, sizeCharacters, stripped, w, h);
   free(stripped);
 }
 
@@ -364,13 +364,12 @@ static void render(View *self, Renderer *renderer) {
       SDL_Surface *surface;
 
       if (this->colorEscapes) {
-        surface = renderWithColorEscapes(this, this->lineWrap ? frame.w : 0, scale);
+        surface = renderWithColorEscapes(this, this->lineWrap ? frame.w : 0);
       } else {
         surface = $(this->font, renderCharacters,
                     this->text,
                     this->color,
-                    this->lineWrap ? frame.w : 0,
-                    scale);
+                    this->lineWrap ? frame.w : 0);
       }
 
       assert(surface);
@@ -397,9 +396,9 @@ static void render(View *self, Renderer *renderer) {
 static void renderDeviceDidReset(View *self) {
 
   Text *this = (Text *) self;
-  const float scale = view_pixel_density(self->window);
 
-  $(this->font, renderDeviceDidReset, scale);
+  this->font->scale = view_pixel_density(self->window);
+  $(this->font, renderDeviceDidReset);
 
   super(View, self, renderDeviceDidReset);
 }
@@ -452,15 +451,14 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 static SDL_Size naturalSize(const Text *self) {
 
   SDL_Size size = MakeSize(0, 0);
-  const float scale = view_pixel_density(self->view.window);
 
   if (self->font) {
     const char *text = self->text ?: "";
-    
+
     if (self->colorEscapes) {
-      sizeWithColorEscapes(self, scale, &size.w, &size.h);
+      sizeWithColorEscapes(self, &size.w, &size.h);
     } else {
-      $(self->font, sizeCharacters, text, scale, &size.w, &size.h);
+      $(self->font, sizeCharacters, text, &size.w, &size.h);
     }
   }
 

@@ -146,16 +146,15 @@ static void render(View *self, Renderer *renderer) {
 
   if ($((Control *) this, isFocused)) {
     const char *text = this->text->text ?: "";
-    const float scale = self->window ? SDL_GetWindowPixelDensity(self->window) : 1.0f;
 
     int w, h;
     if (this->position == strlen(text)) {
-      $(this->text->font, sizeCharacters, text, scale, &w, &h);
+      $(this->text->font, sizeCharacters, text, &w, &h);
     } else {
       char *chars = calloc(this->position + 1, sizeof(char));
       strncpy(chars, text, this->position);
 
-      $(this->text->font, sizeCharacters, chars, scale, &w, &h);
+      $(this->text->font, sizeCharacters, chars, &w, &h);
       free(chars);
     }
 

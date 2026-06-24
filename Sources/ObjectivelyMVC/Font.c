@@ -208,22 +208,23 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
     assert(self->size);
 
     self->style = style;
+    self->scale = 1.0f;
 
-    $(self, renderDeviceDidReset, 1.0f);
+    $(self, renderDeviceDidReset);
   }
 
   return self;
 }
 
 /**
- * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth, float scale)
+ * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
  * @memberof Font
  */
-static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth, float scale) {
+static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth) {
 
   SDL_Surface *surface;
   if (wrapWidth) {
-    surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * scale);
+    surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * self->scale);
   } else {
     surface = TTF_RenderText_Blended(self->font, chars, 0, color);
   }
@@ -240,12 +241,12 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 }
 
 /**
- * @fn void Font::renderDeviceDidReset(Font *self, float scale)
+ * @fn void Font::renderDeviceDidReset(Font *self)
  * @memberof Font
  */
-static void renderDeviceDidReset(Font *self, float scale) {
+static void renderDeviceDidReset(Font *self) {
 
-  const int renderSize = self->size * scale;
+  const int renderSize = self->size * self->scale;
   if (renderSize != self->renderSize) {
 
     self->renderSize = renderSize;
@@ -266,10 +267,10 @@ static void renderDeviceDidReset(Font *self, float scale) {
 }
 
 /**
- * @fn void Font::sizeCharacters(const Font *self, const char *chars, float scale, int *w, int *h)
+ * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
  * @memberof Font
  */
-static void sizeCharacters(const Font *self, const char *chars, float scale, int *w, int *h) {
+static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
 
   if (w) {
     *w = 0;
@@ -297,10 +298,10 @@ static void sizeCharacters(const Font *self, const char *chars, float scale, int
     free(lines);
 
     if (w) {
-      *w = ceilf(*w / scale);
+      *w = ceilf(*w / self->scale);
     }
     if (h) {
-      *h = ceilf(*h / scale);
+      *h = ceilf(*h / self->scale);
     }
   }
 }
