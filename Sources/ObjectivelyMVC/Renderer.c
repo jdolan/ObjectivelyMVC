@@ -34,8 +34,6 @@
 
 #define _Class _Renderer
 
-#define MVC_MAX_VERTICES 16384
-
 static const char *MVC_VertexShaderMSL =
   "#include <metal_stdlib>\n"
   "using namespace metal;\n"
@@ -91,16 +89,9 @@ static const char *MVC_FragmentShaderMSL =
 static void pushDrawCall(const Renderer *self, bool fill, const MVC_Vertex *verts, Uint32 count,
                          SDL_GPUTexture *texture) {
 
-  if (!self->vertexStaging) {
-    return;
-  }
-  assert(self->vertexCount + count <= MVC_MAX_VERTICES);
-
-  memcpy(self->vertexStaging + self->vertexCount, verts, count * sizeof(MVC_Vertex));
-
   const MVC_DrawCall dc = {
     .fill        = fill,
-    .firstVertex = self->vertexCount,
+    .firstVertex = (Uint32) self->vertices->count,
     .vertexCount = count,
     .texture     = texture ? texture : self->white,
     .color       = {
@@ -113,8 +104,10 @@ static void pushDrawCall(const Renderer *self, bool fill, const MVC_Vertex *vert
     .hasScissor = self->hasScissor,
   };
 
+  for (Uint32 i = 0; i < count; i++) {
+    $(self->vertices, add, (MVC_Vertex *) &verts[i]);
+  }
   $(self->drawCalls, add, (MVC_DrawCall *) &dc);
-  ((Renderer *) self)->vertexCount += count;
 }
 
 #pragma mark - Renderer
@@ -130,9 +123,7 @@ static void beginFrame(Renderer *self) {
     return;
   }
 
-  self->vertexStaging = (MVC_Vertex *) SDL_MapGPUTransferBuffer(self->device->device, self->vertexTransfer, true);
-  MVC_Assert(self->vertexStaging, "SDL_MapGPUTransferBuffer");
-  self->vertexCount = 0;
+  $(self->vertices, removeAll);
   $(self->drawCalls, removeAll);
 
   self->scissor = MakeRect(0, 0, self->device->swapchain.size.w, self->device->swapchain.size.h);
@@ -255,12 +246,10 @@ static void endFrame(Renderer *self) {
     return;
   }
 
-  SDL_UnmapGPUTransferBuffer(self->device->device, self->vertexTransfer);
-  self->vertexStaging = NULL;
-
-  bool anyCopy = (self->vertexCount > 0);
+  const size_t vtxCount = self->vertices->count;
   Array *drawables = self->device->drawables;
 
+  bool anyCopy = (vtxCount > 0);
   if (!anyCopy) {
     for (size_t i = 0; i < drawables->count; i++) {
       if (((Drawable *) $(drawables, objectAtIndex, i))->dirty) {
@@ -270,19 +259,32 @@ static void endFrame(Renderer *self) {
     }
   }
 
+  SDL_GPUTransferBuffer *vtxTransfer = NULL;
+
   if (anyCopy) {
     SDL_GPUCopyPass *copyPass = SDL_BeginGPUCopyPass(self->device->cmd);
 
-    if (self->vertexCount > 0) {
-      const SDL_GPUTransferBufferLocation src = {
-        .transfer_buffer = self->vertexTransfer,
-        .offset          = 0,
-      };
-      const SDL_GPUBufferRegion dst = {
-        .buffer = self->vertexBuffer,
-        .offset = 0,
-        .size   = self->vertexCount * sizeof(MVC_Vertex),
-      };
+    if (vtxCount > 0) {
+      const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
+
+      if (vtxCount > self->vertexBufferCapacity) {
+        if (self->vertexBuffer) {
+          SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
+        }
+        self->vertexBuffer = $(self->device, createBuffer, SDL_GPU_BUFFERUSAGE_VERTEX, vtxSize);
+        MVC_Assert(self->vertexBuffer, "createBuffer (vertex)");
+        self->vertexBufferCapacity = (Uint32) vtxCount;
+      }
+
+      vtxTransfer = $(self->device, createTransferBuffer, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, vtxSize);
+      MVC_Assert(vtxTransfer, "createTransferBuffer (vertex)");
+      void *mapped = SDL_MapGPUTransferBuffer(self->device->device, vtxTransfer, false);
+      MVC_Assert(mapped, "SDL_MapGPUTransferBuffer");
+      memcpy(mapped, self->vertices->elements, vtxSize);
+      SDL_UnmapGPUTransferBuffer(self->device->device, vtxTransfer);
+
+      const SDL_GPUTransferBufferLocation src = { .transfer_buffer = vtxTransfer, .offset = 0 };
+      const SDL_GPUBufferRegion dst = { .buffer = self->vertexBuffer, .offset = 0, .size = vtxSize };
       SDL_UploadToGPUBuffer(copyPass, &src, &dst, true);
     }
 
@@ -313,15 +315,13 @@ static void endFrame(Renderer *self) {
   };
   SDL_SetGPUViewport(renderPass, &viewport);
 
-  int win_w, win_h;
-  SDL_GetWindowSize(self->device->window, &win_w, &win_h);
-  const float lw = (float) win_w;
-  const float lh = (float) win_h;
+  int winW, winH;
+  SDL_GetWindowSize(self->device->window, &winW, &winH);
   const float projection[16] = {
-     2.0f / lw,  0.0f,       0.0f,  0.0f,
-     0.0f,      -2.0f / lh,  0.0f,  0.0f,
-     0.0f,       0.0f,      -1.0f,  0.0f,
-    -1.0f,       1.0f,       0.0f,  1.0f,
+     2.0f / winW,  0.0f,          0.0f,  0.0f,
+     0.0f,        -2.0f / winH,   0.0f,  0.0f,
+     0.0f,         0.0f,         -1.0f,  0.0f,
+    -1.0f,         1.0f,          0.0f,  1.0f,
   };
   SDL_PushGPUVertexUniformData(self->device->cmd, 0, projection, sizeof(projection));
 
@@ -368,6 +368,10 @@ static void endFrame(Renderer *self) {
   SDL_EndGPURenderPass(renderPass);
   SDL_SubmitGPUCommandBuffer(self->device->cmd);
 
+  if (vtxTransfer) {
+    SDL_ReleaseGPUTransferBuffer(self->device->device, vtxTransfer);
+  }
+
   self->device->cmd = NULL;
   self->device->swapchain = (Swapchain) { 0 };
 
@@ -384,6 +388,8 @@ static Renderer *init(Renderer *self) {
   if (self) {
     self->device = $(alloc(RenderDevice), init);
     assert(self->device);
+    self->vertices = $(alloc(Vector), initWithSize, sizeof(MVC_Vertex));
+    assert(self->vertices);
     self->drawCalls = $(alloc(Vector), initWithSize, sizeof(MVC_DrawCall));
     assert(self->drawCalls);
   }
@@ -499,15 +505,6 @@ static void renderDeviceDidReset(Renderer *self) {
   SDL_ReleaseGPUShader(self->device->device, vs);
   SDL_ReleaseGPUShader(self->device->device, fs);
 
-  self->vertexBuffer = $(self->device, createBuffer,
-                         SDL_GPU_BUFFERUSAGE_VERTEX,
-                         MVC_MAX_VERTICES * sizeof(MVC_Vertex));
-  MVC_Assert(self->vertexBuffer, "createBuffer (vertex)");
-  self->vertexTransfer = $(self->device, createTransferBuffer,
-                           SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-                           MVC_MAX_VERTICES * sizeof(MVC_Vertex));
-  MVC_Assert(self->vertexTransfer, "createTransferBuffer (vertex)");
-
   const SDL_GPUSamplerCreateInfo samplerInfo = {
     .min_filter     = SDL_GPU_FILTER_LINEAR,
     .mag_filter     = SDL_GPU_FILTER_LINEAR,
@@ -532,11 +529,6 @@ static void renderDeviceDidReset(Renderer *self) {
  */
 static void renderDeviceWillReset(Renderer *self) {
 
-  if (self->vertexStaging && self->device->device && self->vertexTransfer) {
-    SDL_UnmapGPUTransferBuffer(self->device->device, self->vertexTransfer);
-    self->vertexStaging = NULL;
-  }
-
   if (self->device->device) {
     if (self->white) {
       SDL_ReleaseGPUTexture(self->device->device, self->white);
@@ -548,14 +540,10 @@ static void renderDeviceWillReset(Renderer *self) {
       self->sampler = NULL;
     }
 
-    if (self->vertexTransfer) {
-      SDL_ReleaseGPUTransferBuffer(self->device->device, self->vertexTransfer);
-      self->vertexTransfer = NULL;
-    }
-
     if (self->vertexBuffer) {
       SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
       self->vertexBuffer = NULL;
+      self->vertexBufferCapacity = 0;
     }
 
     if (self->linePipeline) {
@@ -569,7 +557,7 @@ static void renderDeviceWillReset(Renderer *self) {
     }
   }
 
-  self->vertexCount = 0;
+  $(self->vertices, removeAll);
   $(self->drawCalls, removeAll);
 
   $(self->device, renderDeviceWillReset);
@@ -607,6 +595,7 @@ static void dealloc(Object *self) {
 
   Renderer *this = (Renderer *) self;
 
+  release(this->vertices);
   release(this->drawCalls);
   release(this->device);
 

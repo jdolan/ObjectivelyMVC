@@ -104,16 +104,16 @@ struct Renderer {
   SDL_GPUGraphicsPipeline *linePipeline;
 
   /**
-   * @brief The GPU-side vertex buffer.
+   * @brief The GPU-side vertex buffer (resized as needed to fit vertices).
    * @private
    */
   SDL_GPUBuffer *vertexBuffer;
 
   /**
-   * @brief The CPU-to-GPU vertex transfer buffer (staging).
+   * @brief Capacity of vertexBuffer in vertices.
    * @private
    */
-  SDL_GPUTransferBuffer *vertexTransfer;
+  Uint32 vertexBufferCapacity;
 
   /**
    * @brief The linear texture sampler.
@@ -128,16 +128,10 @@ struct Renderer {
   SDL_GPUTexture *white;
 
   /**
-   * @brief CPU-mapped pointer into vertexTransfer (valid between beginFrame and endFrame).
+   * @brief CPU-side vertex accumulation buffer for this frame.
    * @private
    */
-  MVC_Vertex *vertexStaging;
-
-  /**
-   * @brief Number of vertices written this frame.
-   * @private
-   */
-  Uint32 vertexCount;
+  Vector *vertices;
 
   /**
    * @brief Draw call queue for this frame.
