@@ -102,8 +102,8 @@ static void render(View *self, Renderer *renderer) {
 
   if (this->texture == NULL) {
     if (this->image) {
-      this->texture = $(renderer, createTexture, this->image->surface);
-      this->device = renderer->device;
+      this->texture = $(renderer->device, createTexture, this->image->surface);
+      this->device = renderer->device->device;
       assert(this->texture);
     }
   }

@@ -15,6 +15,7 @@ pkginclude_HEADERS = \
 	Colors.h \
 	Control.h \
 	DebugViewController.h \
+	Drawable.h \
 	Font.h \
 	HSVColorPicker.h \
 	HueColorPicker.h \
@@ -29,6 +30,7 @@ pkginclude_HEADERS = \
 	PageView.h \
 	Panel.h \
 	ProgressBar.h \
+	RenderDevice.h \
 	Renderer.h \
 	RGBColorPicker.h \
 	ScrollView.h \
@@ -72,6 +74,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Colors.c \
 	Control.c \
 	DebugViewController.c \
+	Drawable.c \
 	Font.c \
 	HSVColorPicker.c \
 	HueColorPicker.c \
@@ -84,6 +87,7 @@ libObjectivelyMVC_la_SOURCES = \
 	PageView.c \
 	Panel.c \
 	ProgressBar.c \
+	RenderDevice.c \
 	Renderer.c \
 	RGBColorPicker.c \
 	ScrollView.c \

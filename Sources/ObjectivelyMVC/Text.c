@@ -377,8 +377,8 @@ static void render(View *self, Renderer *renderer) {
       this->texture_w = (int) roundf(surface->w / scale);
       this->texture_h = (int) roundf(surface->h / scale);
 
-      this->texture = $(renderer, createTexture, surface);
-      this->device = renderer->device;
+      this->texture = $(renderer->device, createTexture, surface);
+      this->device = renderer->device->device;
 
       SDL_DestroySurface(surface);
     }

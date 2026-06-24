@@ -36,6 +36,7 @@
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/DebugViewController.h>
+#include <ObjectivelyMVC/Drawable.h>
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/HSVColorPicker.h>
 #include <ObjectivelyMVC/HueColorPicker.h>
@@ -49,6 +50,7 @@
 #include <ObjectivelyMVC/PageView.h>
 #include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/ProgressBar.h>
+#include <ObjectivelyMVC/RenderDevice.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/RGBColorPicker.h>
 #include <ObjectivelyMVC/ScrollView.h>

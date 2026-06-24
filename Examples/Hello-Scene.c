@@ -28,7 +28,7 @@
  * @note The original OpenGL cube scene has been stubbed while the SDL_gpu port
  * is in progress. Proper game-behind-UI integration requires sharing the
  * Renderer's command buffer so the scene and UI render in separate passes on
- * the same swapchain acquire. Set `renderer->clear = false` and render your
+ * the same swapchain acquire. Set `((RenderDevice *) renderer)->clear = false` and render your
  * scene's render pass before calling `$(windowController, render)`.
  */
 

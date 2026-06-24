@@ -142,7 +142,7 @@ typedef struct SDL_Size SDL_Size;
  * @brief The SDL_Size type.
  */
 struct SDL_Size {
-  int w, h;
+  unsigned int w, h;
 };
 
 /**

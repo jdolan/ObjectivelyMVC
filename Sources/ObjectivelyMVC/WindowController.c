@@ -151,7 +151,7 @@ static void render(WindowController *self) {
 
   $(self->renderer, beginFrame);
 
-  if (!self->renderer->vertex_staging) {
+  if (!self->renderer->device->cmd) {
     return;
   }
 
@@ -345,7 +345,7 @@ static void setRenderer(WindowController *self, Renderer *renderer) {
 
     assert(self->renderer);
 
-    $(self->renderer, setWindow, self->window);
+    $(self->renderer->device, setWindow, self->window);
     $(self->renderer, renderDeviceDidReset);
     $(self->viewController->view, renderDeviceDidReset);
   }
@@ -419,7 +419,7 @@ static void setWindow(WindowController *self, SDL_Window *window) {
   SDL_SetPointerProperty(properties, "touchResponder", NULL);
 
   if (self->renderer) {
-    $(self->renderer, setWindow, self->window);
+    $(self->renderer->device, setWindow, self->window);
   }
 
   if (self->viewController) {
