@@ -30,6 +30,10 @@
 
 #include "Text.h"
 
+static inline float view_pixel_density(SDL_Window *window) {
+  return window ? SDL_GetWindowPixelDensity(window) : 1.0f;
+}
+
 #define _Class _Text
 
 #pragma mark - Color Escape Sequences
@@ -116,7 +120,7 @@ static void colorize(SDL_Surface *surface, const CharInfo *info, float scale) {
  * the line-start byte with TTF_GetStringSize. SDL_ttf owns all word-wrap decisions.
  */
 static CharInfo *buildCharInfo(const Font *font, const char *text,
-                               SDL_Color defaultColor, int wrapWidth, int *outCount) {
+                               SDL_Color defaultColor, int wrapWidth, float scale, int *outCount) {
 
   if (!text || !*text) {
     *outCount = 0;
@@ -133,11 +137,10 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
   const size_t strippedLen = strlen(stripped);
   CharInfo *chars = malloc(sizeof(CharInfo) * strippedLen);
 
-  const float scale = MVC_WindowPixelDensity();
   const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * scale) : 0;
 
   int lineHeight;
-  $(font, sizeCharacters, "A", NULL, &lineHeight);
+  $(font, sizeCharacters, "A", scale, NULL, &lineHeight);
 
   SDL_Color currentColor = defaultColor;
   int charIdx = 0;
@@ -188,10 +191,10 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
 /**
  * @brief Renders text with color escape sequences applied to an SDL_Surface.
  */
-static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
+static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth, float scale) {
 
   char *stripped = stripColors(self->text);
-  SDL_Surface *surface = $(self->font, renderCharacters, stripped, self->color, wrapWidth);
+  SDL_Surface *surface = $(self->font, renderCharacters, stripped, self->color, wrapWidth, scale);
   free(stripped);
 
   if (!surface) {
@@ -199,10 +202,9 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
   }
 
   int charCount = 0;
-  CharInfo *charInfo = buildCharInfo(self->font, self->text, self->color, wrapWidth, &charCount);
+  CharInfo *charInfo = buildCharInfo(self->font, self->text, self->color, wrapWidth, scale, &charCount);
 
   if (charInfo) {
-    const float scale = MVC_WindowPixelDensity();
     SDL_LockSurface(surface);
     for (int i = 0; i < charCount; i++) {
       colorize(surface, &charInfo[i], scale);
@@ -217,10 +219,10 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
 /**
  * @brief Resolves the rendered size of this Text's content, stripping color escapes.
  */
-static void sizeWithColorEscapes(const Text *self, int *w, int *h) {
+static void sizeWithColorEscapes(const Text *self, float scale, int *w, int *h) {
 
   char *stripped = stripColors(self->text ?: "");
-  $(self->font, sizeCharacters, stripped, w, h);
+  $(self->font, sizeCharacters, stripped, scale, w, h);
   free(stripped);
 }
 
@@ -238,8 +240,9 @@ static void dealloc(Object *self) {
   free(this->text);
 
   if (this->texture) {
-    MVC_ReleaseGPUTexture(this->texture);
+    SDL_ReleaseGPUTexture(this->device, this->texture);
     this->texture = NULL;
+    this->device = NULL;
   }
 
   super(Object, self, dealloc);
@@ -282,7 +285,8 @@ static void applyStyle(View *self, const Style *style) {
 
   if ($(self, bind, colorInlets, style->attributes)) {
     if (this->texture) {
-      MVC_ReleaseGPUTexture(this->texture);
+      SDL_ReleaseGPUTexture(this->device, this->texture);
+      this->device = NULL;
       this->texture = NULL;
       this->texture_w = this->texture_h = 0;
     }
@@ -350,6 +354,8 @@ static void render(View *self, Renderer *renderer) {
 
   assert(this->font);
 
+  const float scale = view_pixel_density(self->window);
+
   if (this->text) {
 
     const SDL_Rect frame = $(self, renderFrame);
@@ -358,21 +364,22 @@ static void render(View *self, Renderer *renderer) {
       SDL_Surface *surface;
 
       if (this->colorEscapes) {
-        surface = renderWithColorEscapes(this, this->lineWrap ? frame.w : 0);
+        surface = renderWithColorEscapes(this, this->lineWrap ? frame.w : 0, scale);
       } else {
         surface = $(this->font, renderCharacters,
                     this->text,
                     this->color,
-                    this->lineWrap ? frame.w : 0);
+                    this->lineWrap ? frame.w : 0,
+                    scale);
       }
 
       assert(surface);
 
-      const float density = MVC_WindowPixelDensity();
-      this->texture_w = (int) roundf(surface->w / density);
-      this->texture_h = (int) roundf(surface->h / density);
+      this->texture_w = (int) roundf(surface->w / scale);
+      this->texture_h = (int) roundf(surface->h / scale);
 
       this->texture = $(renderer, createTexture, surface);
+      this->device = renderer->device;
 
       SDL_DestroySurface(surface);
     }
@@ -390,8 +397,9 @@ static void render(View *self, Renderer *renderer) {
 static void renderDeviceDidReset(View *self) {
 
   Text *this = (Text *) self;
+  const float scale = view_pixel_density(self->window);
 
-  $(this->font, renderDeviceDidReset);
+  $(this->font, renderDeviceDidReset, scale);
 
   super(View, self, renderDeviceDidReset);
 }
@@ -404,8 +412,9 @@ static void renderDeviceWillReset(View *self) {
   Text *this = (Text *) self;
 
   if (this->texture) {
-    MVC_ReleaseGPUTexture(this->texture);
+    SDL_ReleaseGPUTexture(this->device, this->texture);
     this->texture = NULL;
+    this->device = NULL;
     this->texture_w = this->texture_h = 0;
   }
 
@@ -443,14 +452,15 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 static SDL_Size naturalSize(const Text *self) {
 
   SDL_Size size = MakeSize(0, 0);
+  const float scale = view_pixel_density(self->view.window);
 
   if (self->font) {
     const char *text = self->text ?: "";
     
     if (self->colorEscapes) {
-      sizeWithColorEscapes(self, &size.w, &size.h);
+      sizeWithColorEscapes(self, scale, &size.w, &size.h);
     } else {
-      $(self->font, sizeCharacters, text, &size.w, &size.h);
+      $(self->font, sizeCharacters, text, scale, &size.w, &size.h);
     }
   }
 
@@ -471,8 +481,9 @@ static void setFont(Text *self, Font *font) {
     self->font = retain(font);
 
     if (self->texture) {
-      MVC_ReleaseGPUTexture(self->texture);
+      SDL_ReleaseGPUTexture(self->device, self->texture);
       self->texture = NULL;
+      self->device = NULL;
       self->texture_w = self->texture_h = 0;
     }
 
@@ -497,8 +508,9 @@ static void setText(Text *self, const char *text) {
     }
 
     if (self->texture) {
-      MVC_ReleaseGPUTexture(self->texture);
+      SDL_ReleaseGPUTexture(self->device, self->texture);
       self->texture = NULL;
+      self->device = NULL;
       self->texture_w = self->texture_h = 0;
     }
 

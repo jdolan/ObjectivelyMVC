@@ -50,7 +50,6 @@
 #include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/ProgressBar.h>
 #include <ObjectivelyMVC/Renderer.h>
-#include <ObjectivelyMVC/Renderer+SDLgpu.h>
 #include <ObjectivelyMVC/RGBColorPicker.h>
 #include <ObjectivelyMVC/ScrollView.h>
 #include <ObjectivelyMVC/Select.h>

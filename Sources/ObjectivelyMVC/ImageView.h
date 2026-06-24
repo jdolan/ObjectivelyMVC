@@ -23,8 +23,9 @@
 
 #pragma once
 
+#include <SDL3/SDL_gpu.h>
+
 #include <ObjectivelyMVC/Image.h>
-#include <ObjectivelyMVC/Renderer+SDLgpu.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -75,6 +76,11 @@ struct ImageView {
    * @brief The GPU texture.
    */
   SDL_GPUTexture *texture;
+
+  /**
+   * @brief The device associated with @c texture.
+   */
+  SDL_GPUDevice *device;
 };
 
 /**

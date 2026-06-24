@@ -23,9 +23,9 @@
 
 #pragma once
 
-#include <Objectively/Array.h>
+#include <SDL3/SDL_gpu.h>
 
-#include <ObjectivelyMVC/Renderer+SDLgpu.h>
+#include <Objectively/Array.h>
 
 /**
  * @file
@@ -231,7 +231,7 @@ struct RendererInterface {
    * @param self The Renderer.
    * @param surface The surface to upload.
    * @return A new SDL_GPUTexture on success, or `NULL` on error.
-   * @remarks The caller owns the returned texture; release it with MVC_ReleaseGPUTexture().
+   * @remarks The caller owns the returned texture; release it with SDL_ReleaseGPUTexture(self->device, texture).
    * @memberof Renderer
    */
   SDL_GPUTexture *(*createTexture)(const Renderer *self, const SDL_Surface *surface);

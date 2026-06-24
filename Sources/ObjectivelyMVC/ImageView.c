@@ -55,8 +55,9 @@ static void dealloc(Object *self) {
   release(this->image);
 
   if (this->texture) {
-    MVC_ReleaseGPUTexture(this->texture);
+    SDL_ReleaseGPUTexture(this->device, this->texture);
     this->texture = NULL;
+    this->device = NULL;
   }
 
   super(Object, self, dealloc);
@@ -102,6 +103,7 @@ static void render(View *self, Renderer *renderer) {
   if (this->texture == NULL) {
     if (this->image) {
       this->texture = $(renderer, createTexture, this->image->surface);
+      this->device = renderer->device;
       assert(this->texture);
     }
   }
@@ -125,8 +127,9 @@ static void renderDeviceWillReset(View *self) {
   ImageView *this = (ImageView *) self;
 
   if (this->texture) {
-    MVC_ReleaseGPUTexture(this->texture);
+    SDL_ReleaseGPUTexture(this->device, this->texture);
     this->texture = NULL;
+    this->device = NULL;
   }
 
   super(View, self, renderDeviceWillReset);
@@ -187,8 +190,9 @@ static void setImage(ImageView *self, Image *image) {
   }
 
   if (self->texture) {
-    MVC_ReleaseGPUTexture(self->texture);
+    SDL_ReleaseGPUTexture(self->device, self->texture);
     self->texture = NULL;
+    self->device = NULL;
   }
 }
 

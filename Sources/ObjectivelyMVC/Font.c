@@ -32,7 +32,6 @@
 
 #include "Font.h"
 #include "Log.h"
-#include "Renderer+SDLgpu.h"
 #include "View.h"
 #include "Window.h"
 
@@ -136,8 +135,6 @@ static Font *cachedFont(const char *family, int size, int style) {
     style = DEFAULT_FONT_STYLE;
   }
 
-  const int renderSize = size * MVC_WindowPixelDensity();
-
   const Array *fonts = (Array *) _fonts;
   for (size_t i = 0; i < fonts->count; i++) {
 
@@ -145,8 +142,7 @@ static Font *cachedFont(const char *family, int size, int style) {
 
     if (!strcmp(font->family, family) &&
         font->size == size &&
-        font->style == style &&
-        font->renderSize == renderSize) {
+        font->style == style) {
       return font;
     }
   }
@@ -213,21 +209,20 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
 
     self->style = style;
 
-    $(self, renderDeviceDidReset);
+    $(self, renderDeviceDidReset, 1.0f);
   }
 
   return self;
 }
 
 /**
- * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
+ * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth, float scale)
  * @memberof Font
  */
-static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth) {
+static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth, float scale) {
 
   SDL_Surface *surface;
   if (wrapWidth) {
-    const float scale = MVC_WindowPixelDensity();
     surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * scale);
   } else {
     surface = TTF_RenderText_Blended(self->font, chars, 0, color);
@@ -245,12 +240,12 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 }
 
 /**
- * @fn void Font::renderDeviceDidReset(Font *self)
+ * @fn void Font::renderDeviceDidReset(Font *self, float scale)
  * @memberof Font
  */
-static void renderDeviceDidReset(Font *self) {
+static void renderDeviceDidReset(Font *self, float scale) {
 
-  const int renderSize = self->size * MVC_WindowPixelDensity();
+  const int renderSize = self->size * scale;
   if (renderSize != self->renderSize) {
 
     self->renderSize = renderSize;
@@ -271,10 +266,10 @@ static void renderDeviceDidReset(Font *self) {
 }
 
 /**
- * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
+ * @fn void Font::sizeCharacters(const Font *self, const char *chars, float scale, int *w, int *h)
  * @memberof Font
  */
-static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) {
+static void sizeCharacters(const Font *self, const char *chars, float scale, int *w, int *h) {
 
   if (w) {
     *w = 0;
@@ -301,7 +296,6 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
     }
     free(lines);
 
-    const float scale = MVC_WindowPixelDensity();
     if (w) {
       *w = ceilf(*w / scale);
     }

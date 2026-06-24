@@ -103,14 +103,15 @@ static void layoutSubviews(View *self) {
     if (((View *) this->label)->hidden == false) {
       int minWidth, maxWidth;
       char text[64];
+      const float scale = ((View *) this)->window ? SDL_GetWindowPixelDensity(((View *) this)->window) : 1.0f;
 
       Text *label = (Text *) this->label;
 
       snprintf(text, sizeof(text), this->labelFormat, this->min);
-      $(label->font, sizeCharacters, text, &minWidth, NULL);
+      $(label->font, sizeCharacters, text, scale, &minWidth, NULL);
 
       snprintf(text, sizeof(text), this->labelFormat, this->max);
-      $(label->font, sizeCharacters, text, &maxWidth, NULL);
+      $(label->font, sizeCharacters, text, scale, &maxWidth, NULL);
 
       this->bar->frame.w -= max(minWidth, maxWidth) + label->view.padding.left;
     }

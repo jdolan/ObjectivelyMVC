@@ -23,8 +23,9 @@
 
 #pragma once
 
+#include <SDL3/SDL_gpu.h>
+
 #include <ObjectivelyMVC/Font.h>
-#include <ObjectivelyMVC/Renderer+SDLgpu.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -116,6 +117,12 @@ struct Text {
    * @protected
    */
   SDL_GPUTexture *texture;
+
+  /**
+   * @brief The device associated with @c texture.
+   * @protected
+   */
+  SDL_GPUDevice *device;
 
   /**
    * @brief The logical draw dimensions of the texture (surface size / pixel density).

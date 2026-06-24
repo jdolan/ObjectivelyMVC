@@ -30,7 +30,6 @@ pkginclude_HEADERS = \
 	Panel.h \
 	ProgressBar.h \
 	Renderer.h \
-	Renderer+SDLgpu.h \
 	RGBColorPicker.h \
 	ScrollView.h \
 	Select.h \
@@ -86,7 +85,6 @@ libObjectivelyMVC_la_SOURCES = \
 	Panel.c \
 	ProgressBar.c \
 	Renderer.c \
-	Renderer+SDLgpu.c \
 	RGBColorPicker.c \
 	ScrollView.c \
 	Select.c \
@@ -132,4 +130,3 @@ libObjectivelyMVC_la_LIBADD = \
 	@HOST_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
 	@SDL3_DLL_LIBS@
-

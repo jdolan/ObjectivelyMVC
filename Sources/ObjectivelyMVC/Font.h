@@ -165,35 +165,39 @@ struct FontInterface {
   Font *(*initWithData)(Font *self, Data *data, const char *family, int size, int style);
 
   /**
-   * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
+   * @fn SDL_Surface *Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth, float scale)
    * @brief Renders the given characters in this Font.
    * @param self The Font.
    * @param chars The null-terminated UTF-8 encoded C string to render.
    * @param color The color.
    * @param wrapWidth The maximum line width, in pixels, where wrapping should occur.
+   * @param scale The pixel density scale to render at.
    * @return The rendered surface, or `NULL` on error.
    * @memberof Font
    */
-  SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color, int wrapWidth);
+  SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color, int wrapWidth, float scale);
 
   /**
-   * @fn void Font::renderDeviceDidReset(Font *self)
+   * @fn void Font::renderDeviceDidReset(Font *self, float scale)
    * @brief This method should be invoked when the render context is invalidated.
    * @param self The Font.
+   * @param scale The pixel density scale to render at.
    * @memberof Font
    */
-  void (*renderDeviceDidReset)(Font *self);
+  void (*renderDeviceDidReset)(Font *self, float scale);
 
   /**
-   * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
+   * @fn void Font::sizeCharacters(const Font *self, const char *chars, float scale, int *w, int *h)
+   * @brief Measures the given characters in this Font.
    * @param self The Font.
    * @param chars The null-terminated UTF-8 encoded C string to size.
+   * @param scale The pixel density scale to size at.
    * @param w The width to return.
    * @param h The height to return.
-   * @return The size of the rendered characters in pixels.
+   * @return The size of the rendered characters in logical pixels.
    * @memberof Font
    */
-  void (*sizeCharacters)(const Font *self, const char *chars, int *w, int *h);
+  void (*sizeCharacters)(const Font *self, const char *chars, float scale, int *w, int *h);
 };
 
 /**

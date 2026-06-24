@@ -27,7 +27,6 @@
 
 #include "Colors.h"
 #include "Log.h"
-#include "Renderer+SDLgpu.h"
 #include "Renderer.h"
 #include "View.h"
 #include "Window.h"
@@ -36,6 +35,55 @@
 
 #define MVC_MAX_VERTICES  16384
 #define MVC_MAX_DRAW_CALLS 1024
+
+static const char *MVC_VertexShaderMSL =
+  "#include <metal_stdlib>\n"
+  "using namespace metal;\n"
+  "\n"
+  "struct VertexIn {\n"
+  "  float2 position [[attribute(0)]];\n"
+  "  float2 texcoord [[attribute(1)]];\n"
+  "};\n"
+  "\n"
+  "struct VertexOut {\n"
+  "  float4 position [[position]];\n"
+  "  float2 texcoord;\n"
+  "};\n"
+  "\n"
+  "struct Projection {\n"
+  "  float4x4 matrix;\n"
+  "};\n"
+  "\n"
+  "vertex VertexOut vs_main(\n"
+  "  VertexIn in [[stage_in]],\n"
+  "  constant Projection &proj [[buffer(0)]])\n"
+  "{\n"
+  "  VertexOut out;\n"
+  "  out.position = proj.matrix * float4(in.position, 0.0, 1.0);\n"
+  "  out.texcoord = in.texcoord;\n"
+  "  return out;\n"
+  "}\n";
+
+static const char *MVC_FragmentShaderMSL =
+  "#include <metal_stdlib>\n"
+  "using namespace metal;\n"
+  "\n"
+  "struct FragIn {\n"
+  "  float2 texcoord;\n"
+  "};\n"
+  "\n"
+  "struct Color {\n"
+  "  float4 rgba;\n"
+  "};\n"
+  "\n"
+  "fragment float4 fs_main(\n"
+  "  FragIn in [[stage_in]],\n"
+  "  texture2d<float> tex [[texture(0)]],\n"
+  "  sampler s [[sampler(0)]],\n"
+  "  constant Color &color [[buffer(0)]])\n"
+  "{\n"
+  "  return color.rgba * tex.sample(s, in.texcoord);\n"
+  "}\n";
 
 /**
  * @brief Records vertices into the staging buffer and appends a DrawCall.
@@ -77,8 +125,6 @@ static void beginFrame(Renderer *self) {
 
   assert(self->device);
   assert(self->window);
-
-  mvc_current_window = self->window;
 
   self->cmd = SDL_AcquireGPUCommandBuffer(self->device);
   if (!self->cmd) {
@@ -469,13 +515,10 @@ static void renderDeviceDidReset(Renderer *self) {
     return;
   }
 
-  mvc_gpu_device = self->device;
-
   if (!SDL_ClaimWindowForGPUDevice(self->device, self->window)) {
     MVC_LogError("renderDeviceDidReset: SDL_ClaimWindowForGPUDevice: %s\n", SDL_GetError());
     SDL_DestroyGPUDevice(self->device);
     self->device = NULL;
-    mvc_gpu_device = NULL;
     return;
   }
 
@@ -496,7 +539,6 @@ static void renderDeviceDidReset(Renderer *self) {
     SDL_ReleaseWindowFromGPUDevice(self->device, self->window);
     SDL_DestroyGPUDevice(self->device);
     self->device = NULL;
-    mvc_gpu_device = NULL;
     return;
   }
 
@@ -529,7 +571,6 @@ static void renderDeviceDidReset(Renderer *self) {
     SDL_ReleaseWindowFromGPUDevice(self->device, self->window);
     SDL_DestroyGPUDevice(self->device);
     self->device = NULL;
-    mvc_gpu_device = NULL;
     return;
   }
 
@@ -685,8 +726,6 @@ static void renderDeviceWillReset(Renderer *self) {
 
   SDL_DestroyGPUDevice(self->device);
   self->device = NULL;
-
-  mvc_gpu_device = NULL;
 }
 
 /**
@@ -718,7 +757,6 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
  */
 static void setWindow(Renderer *self, SDL_Window *window) {
   self->window = window;
-  mvc_current_window = window;
 }
 
 #pragma mark - Object lifecycle
