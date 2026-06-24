@@ -130,9 +130,8 @@ static void beginFrame(Renderer *self) {
     return;
   }
 
-  self->vertexStaging = (MVC_Vertex *) SDL_MapGPUTransferBuffer(
-    self->device->device, self->vertexTransfer, true);
-  assert(self->vertexStaging);
+  self->vertexStaging = (MVC_Vertex *) SDL_MapGPUTransferBuffer(self->device->device, self->vertexTransfer, true);
+  MVC_Assert(self->vertexStaging, "SDL_MapGPUTransferBuffer");
   self->vertexCount = 0;
   $(self->drawCalls, removeAll);
 
@@ -415,9 +414,7 @@ static void renderDeviceDidReset(Renderer *self) {
     vsEntry  = "vs_main";
     fsEntry  = "fs_main";
   } else {
-    MVC_LogError("renderDeviceDidReset: no supported shader format (need MSL, SPIRV, or DXIL)\n");
-    assert(false);
-    return;
+    MVC_Assert(false, "unsupported shader format (need MSL, SPIRV, or DXIL)");
   }
 
   const SDL_GPUShaderCreateInfo vsInfo = {
@@ -440,8 +437,9 @@ static void renderDeviceDidReset(Renderer *self) {
   };
 
   SDL_GPUShader *vs = SDL_CreateGPUShader(self->device->device, &vsInfo);
+  MVC_Assert(vs, "SDL_CreateGPUShader (vertex)");
   SDL_GPUShader *fs = SDL_CreateGPUShader(self->device->device, &fsInfo);
-  assert(vs && fs);
+  MVC_Assert(fs, "SDL_CreateGPUShader (fragment)");
 
   const SDL_GPUVertexBufferDescription vbDesc = {
     .slot               = 0,
@@ -490,24 +488,25 @@ static void renderDeviceDidReset(Renderer *self) {
   };
 
   self->fillPipeline = SDL_CreateGPUGraphicsPipeline(self->device->device, &fillInfo);
+  MVC_Assert(self->fillPipeline, "SDL_CreateGPUGraphicsPipeline (fill)");
 
   SDL_GPUGraphicsPipelineCreateInfo lineInfo = fillInfo;
   lineInfo.primitive_type = SDL_GPU_PRIMITIVETYPE_LINESTRIP;
 
   self->linePipeline = SDL_CreateGPUGraphicsPipeline(self->device->device, &lineInfo);
+  MVC_Assert(self->linePipeline, "SDL_CreateGPUGraphicsPipeline (line)");
 
   SDL_ReleaseGPUShader(self->device->device, vs);
   SDL_ReleaseGPUShader(self->device->device, fs);
-  assert(self->fillPipeline && self->linePipeline);
 
   self->vertexBuffer = $(self->device, createBuffer,
                          SDL_GPU_BUFFERUSAGE_VERTEX,
                          MVC_MAX_VERTICES * sizeof(MVC_Vertex));
-  assert(self->vertexBuffer);
+  MVC_Assert(self->vertexBuffer, "createBuffer (vertex)");
   self->vertexTransfer = $(self->device, createTransferBuffer,
                            SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
                            MVC_MAX_VERTICES * sizeof(MVC_Vertex));
-  assert(self->vertexTransfer);
+  MVC_Assert(self->vertexTransfer, "createTransferBuffer (vertex)");
 
   const SDL_GPUSamplerCreateInfo samplerInfo = {
     .min_filter     = SDL_GPU_FILTER_LINEAR,
@@ -517,14 +516,14 @@ static void renderDeviceDidReset(Renderer *self) {
     .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
   };
   self->sampler = SDL_CreateGPUSampler(self->device->device, &samplerInfo);
-  assert(self->sampler);
+  MVC_Assert(self->sampler, "SDL_CreateGPUSampler");
 
   const Uint8 whitePx[4] = { 255, 255, 255, 255 };
   SDL_Surface *whiteSurface = SDL_CreateSurfaceFrom(1, 1, SDL_PIXELFORMAT_RGBA32, (void *) whitePx, 4);
-  assert(whiteSurface);
+  MVC_Assert(whiteSurface, "SDL_CreateSurfaceFrom");
   self->white = $(self->device, createTexture, whiteSurface);
   SDL_DestroySurface(whiteSurface);
-  assert(self->white);
+  MVC_Assert(self->white, "createTexture (white)");
 }
 
 /**
