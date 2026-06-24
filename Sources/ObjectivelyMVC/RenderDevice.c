@@ -49,7 +49,7 @@ static void beginFrame(RenderDevice *self) {
   assert(self->window);
 
   self->cmd = SDL_AcquireGPUCommandBuffer(self->device);
-  MVC_Assert(self->cmd, "SDL_AcquireGPUCommandBuffer");
+  GPU_Assert(self->cmd, "SDL_AcquireGPUCommandBuffer");
 
   if (!SDL_AcquireGPUSwapchainTexture(self->cmd, self->window,
       &self->swapchain.texture, &self->swapchain.size.w, &self->swapchain.size.h)) {
@@ -81,7 +81,7 @@ static SDL_GPUTexture *createTexture(const RenderDevice *self, const SDL_Surface
 
   if (isAlphaMask) {
     rgba = SDL_CreateSurface(surface->w, surface->h, SDL_PIXELFORMAT_RGBA32);
-    MVC_Assert(rgba, "SDL_CreateSurface");
+    GPU_Assert(rgba, "SDL_CreateSurface");
 
     const Uint8 *src = (const Uint8 *) surface->pixels;
     Uint32 *dst = (Uint32 *) rgba->pixels;
@@ -94,7 +94,7 @@ static SDL_GPUTexture *createTexture(const RenderDevice *self, const SDL_Surface
     }
   } else if (surface->format != SDL_PIXELFORMAT_RGBA32) {
     rgba = SDL_ConvertSurface((SDL_Surface *) surface, SDL_PIXELFORMAT_RGBA32);
-    MVC_Assert(rgba, "SDL_ConvertSurface");
+    GPU_Assert(rgba, "SDL_ConvertSurface");
   }
 
   const SDL_Surface *upload = rgba ? rgba : surface;
@@ -110,7 +110,7 @@ static SDL_GPUTexture *createTexture(const RenderDevice *self, const SDL_Surface
   };
 
   SDL_GPUTexture *texture = SDL_CreateGPUTexture(self->device, &texInfo);
-  MVC_Assert(texture, "SDL_CreateGPUTexture");
+  GPU_Assert(texture, "SDL_CreateGPUTexture");
 
   const Uint32 pixelSize = (Uint32) (upload->w * upload->h * 4);
 
@@ -120,7 +120,7 @@ static SDL_GPUTexture *createTexture(const RenderDevice *self, const SDL_Surface
   };
 
   SDL_GPUTransferBuffer *tbuf = SDL_CreateGPUTransferBuffer(self->device, &tbufInfo);
-  MVC_Assert(tbuf, "SDL_CreateGPUTransferBuffer");
+  GPU_Assert(tbuf, "SDL_CreateGPUTransferBuffer");
 
   void *mapped = SDL_MapGPUTransferBuffer(self->device, tbuf, false);
   memcpy(mapped, upload->pixels, pixelSize);
@@ -131,7 +131,7 @@ static SDL_GPUTexture *createTexture(const RenderDevice *self, const SDL_Surface
   }
 
   SDL_GPUCommandBuffer *cmd = SDL_AcquireGPUCommandBuffer(self->device);
-  MVC_Assert(cmd, "SDL_AcquireGPUCommandBuffer");
+  GPU_Assert(cmd, "SDL_AcquireGPUCommandBuffer");
   SDL_GPUCopyPass *copyPass = SDL_BeginGPUCopyPass(cmd);
 
   const SDL_GPUTextureTransferInfo src = {
@@ -261,10 +261,10 @@ static void renderDeviceDidReset(RenderDevice *self) {
     SDL_GPU_SHADERFORMAT_DXIL;
 
   self->device = SDL_CreateGPUDevice(formats, false, NULL);
-  MVC_Assert(self->device, "SDL_CreateGPUDevice");
+  GPU_Assert(self->device, "SDL_CreateGPUDevice");
 
   const bool claimed = SDL_ClaimWindowForGPUDevice(self->device, self->window);
-  MVC_Assert(claimed, "SDL_ClaimWindowForGPUDevice");
+  GPU_Assert(claimed, "SDL_ClaimWindowForGPUDevice");
 
   for (size_t i = 0; i < self->drawables->count; i++) {
     Drawable *d = $(self->drawables, objectAtIndex, i);

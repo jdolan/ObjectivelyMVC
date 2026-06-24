@@ -66,7 +66,7 @@
  * SDL_gpu operations where failure is unrecoverable (bad device, OOM, wrong
  * thread, unsupported format, etc.).
  */
-#define MVC_Assert(cond, fmt, ...) do { \
+#define GPU_Assert(cond, fmt, ...) do { \
   if (!(cond)) { \
     MVC_LogCritical(fmt ": %s", ## __VA_ARGS__, SDL_GetError()); \
     exit(EXIT_FAILURE); \

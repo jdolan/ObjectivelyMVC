@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -34,7 +35,7 @@
 
 #define _Class _Renderer
 
-static const char *MVC_VertexShaderMSL =
+static const char *vertexShader =
   "#include <metal_stdlib>\n"
   "using namespace metal;\n"
   "\n"
@@ -62,7 +63,7 @@ static const char *MVC_VertexShaderMSL =
   "  return out;\n"
   "}\n";
 
-static const char *MVC_FragmentShaderMSL =
+static const char *fragmentShader =
   "#include <metal_stdlib>\n"
   "using namespace metal;\n"
   "\n"
@@ -86,11 +87,10 @@ static const char *MVC_FragmentShaderMSL =
 /**
  * @brief Records vertices into the staging buffer and appends a DrawCall.
  */
-static void pushDrawCall(const Renderer *self, bool fill, const MVC_Vertex *verts, Uint32 count,
+static void pushDrawCall(const Renderer *self, const MVC_Vertex *verts, Uint32 count,
                          SDL_GPUTexture *texture) {
 
   const MVC_DrawCall dc = {
-    .fill        = fill,
     .firstVertex = (Uint32) self->vertices->count,
     .vertexCount = count,
     .texture     = texture ? texture : self->white,
@@ -107,6 +107,7 @@ static void pushDrawCall(const Renderer *self, bool fill, const MVC_Vertex *vert
   for (Uint32 i = 0; i < count; i++) {
     $(self->vertices, add, (MVC_Vertex *) &verts[i]);
   }
+
   $(self->drawCalls, add, (MVC_DrawCall *) &dc);
 }
 
@@ -119,14 +120,13 @@ static void pushDrawCall(const Renderer *self, bool fill, const MVC_Vertex *vert
 static void beginFrame(Renderer *self) {
 
   $(self->device, beginFrame);
-  if (!self->device->cmd) {
-    return;
-  }
 
   $(self->vertices, removeAll);
   $(self->drawCalls, removeAll);
 
-  self->scissor = MakeRect(0, 0, self->device->swapchain.size.w, self->device->swapchain.size.h);
+  const Swapchain *s = &self->device->swapchain;
+
+  self->scissor = MakeRect(0, 0, s->size.w, s->size.h);
   self->hasScissor = false;
 
   $(self, setDrawColor, &Colors.White);
@@ -151,14 +151,37 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
 
   assert(points);
 
-  MVC_Vertex *verts = malloc(count * sizeof(MVC_Vertex));
-  assert(verts);
-
-  for (size_t i = 0; i < count; i++) {
-    verts[i] = (MVC_Vertex) { (float) points[i].x, (float) points[i].y, 0.0f, 0.0f };
+  if (count < 2) {
+    return;
   }
 
-  pushDrawCall(self, false, verts, (Uint32) count, NULL);
+  const size_t segCount = count - 1;
+  MVC_Vertex *verts = malloc(segCount * 6 * sizeof(MVC_Vertex));
+  assert(verts);
+
+  for (size_t i = 0; i < segCount; i++) {
+    const float ax = (float) points[i].x,     ay = (float) points[i].y;
+    const float bx = (float) points[i+1].x,   by = (float) points[i+1].y;
+
+    const float dx = bx - ax, dy = by - ay;
+    const float len = sqrtf(dx * dx + dy * dy);
+
+    float nx = 0.0f, ny = 0.0f;
+    if (len > 0.001f) {
+      nx = (-dy / len) * 0.5f;
+      ny = ( dx / len) * 0.5f;
+    }
+
+    MVC_Vertex *v = &verts[i * 6];
+    v[0] = (MVC_Vertex) { ax - nx, ay - ny, 0.0f, 0.0f };
+    v[1] = (MVC_Vertex) { ax + nx, ay + ny, 0.0f, 0.0f };
+    v[2] = (MVC_Vertex) { bx - nx, by - ny, 0.0f, 0.0f };
+    v[3] = (MVC_Vertex) { ax + nx, ay + ny, 0.0f, 0.0f };
+    v[4] = (MVC_Vertex) { bx + nx, by + ny, 0.0f, 0.0f };
+    v[5] = (MVC_Vertex) { bx - nx, by - ny, 0.0f, 0.0f };
+  }
+
+  pushDrawCall(self, verts, (Uint32) (segCount * 6), NULL);
 
   free(verts);
 }
@@ -171,15 +194,15 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
 
   assert(rect);
 
-  const MVC_Vertex verts[5] = {
-    { (float) rect->x,           (float) rect->y,           0.0f, 0.0f },
-    { (float) rect->x + rect->w, (float) rect->y,           0.0f, 0.0f },
-    { (float) rect->x + rect->w, (float) rect->y + rect->h, 0.0f, 0.0f },
-    { (float) rect->x,           (float) rect->y + rect->h, 0.0f, 0.0f },
-    { (float) rect->x,           (float) rect->y,           0.0f, 0.0f },
+  const SDL_Point points[5] = {
+    { rect->x,           rect->y           },
+    { rect->x + rect->w, rect->y           },
+    { rect->x + rect->w, rect->y + rect->h },
+    { rect->x,           rect->y + rect->h },
+    { rect->x,           rect->y           },
   };
 
-  pushDrawCall(self, false, verts, 5, NULL);
+  $(self, drawLines, points, 5);
 }
 
 /**
@@ -190,17 +213,19 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
 
   assert(rect);
 
-  const float x1 = (float) rect->x,            y1 = (float) rect->y;
+  const float x1 = (float) rect->x,           y1 = (float) rect->y;
   const float x2 = (float) rect->x + rect->w, y2 = (float) rect->y + rect->h;
 
-  const MVC_Vertex verts[4] = {
+  const MVC_Vertex verts[6] = {
     { x1, y1, 0.0f, 0.0f },
     { x2, y1, 0.0f, 0.0f },
     { x1, y2, 0.0f, 0.0f },
+    { x2, y1, 0.0f, 0.0f },
     { x2, y2, 0.0f, 0.0f },
+    { x1, y2, 0.0f, 0.0f },
   };
 
-  pushDrawCall(self, true, verts, 4, NULL);
+  pushDrawCall(self, verts, 6, NULL);
 }
 
 /**
@@ -211,14 +236,19 @@ static void drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL
 
   assert(rect);
 
-  const MVC_Vertex verts[4] = {
-    { (float) rect->x,           (float) rect->y,           0.0f, 0.0f },
-    { (float) rect->x + rect->w, (float) rect->y,           1.0f, 0.0f },
-    { (float) rect->x,           (float) rect->y + rect->h, 0.0f, 1.0f },
-    { (float) rect->x + rect->w, (float) rect->y + rect->h, 1.0f, 1.0f },
+  const float x1 = (float) rect->x,           y1 = (float) rect->y;
+  const float x2 = (float) rect->x + rect->w, y2 = (float) rect->y + rect->h;
+
+  const MVC_Vertex verts[6] = {
+    { x1, y1, 0.0f, 0.0f },
+    { x2, y1, 1.0f, 0.0f },
+    { x1, y2, 0.0f, 1.0f },
+    { x2, y1, 1.0f, 0.0f },
+    { x2, y2, 1.0f, 1.0f },
+    { x1, y2, 0.0f, 1.0f },
   };
 
-  pushDrawCall(self, true, verts, 4, texture);
+  pushDrawCall(self, verts, 6, texture);
 }
 
 /**
@@ -242,62 +272,46 @@ static void drawView(Renderer *self, View *view) {
  */
 static void endFrame(Renderer *self) {
 
-  if (!self->device->cmd || !self->device->swapchain.texture) {
-    return;
-  }
-
   const size_t vtxCount = self->vertices->count;
   Array *drawables = self->device->drawables;
 
-  bool anyCopy = (vtxCount > 0);
-  if (!anyCopy) {
-    for (size_t i = 0; i < drawables->count; i++) {
-      if (((Drawable *) $(drawables, objectAtIndex, i))->dirty) {
-        anyCopy = true;
-        break;
-      }
-    }
-  }
-
   SDL_GPUTransferBuffer *vtxTransfer = NULL;
 
-  if (anyCopy) {
-    SDL_GPUCopyPass *copyPass = SDL_BeginGPUCopyPass(self->device->cmd);
+  SDL_GPUCopyPass *copyPass = SDL_BeginGPUCopyPass(self->device->cmd);
 
-    if (vtxCount > 0) {
-      const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
+  if (vtxCount > 0) {
+    const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
 
-      if (vtxCount > self->vertexBufferCapacity) {
-        if (self->vertexBuffer) {
-          SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
-        }
-        self->vertexBuffer = $(self->device, createBuffer, SDL_GPU_BUFFERUSAGE_VERTEX, vtxSize);
-        MVC_Assert(self->vertexBuffer, "createBuffer (vertex)");
-        self->vertexBufferCapacity = (Uint32) vtxCount;
+    if (vtxCount > self->vertexBufferCapacity) {
+      if (self->vertexBuffer) {
+        SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
       }
-
-      vtxTransfer = $(self->device, createTransferBuffer, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, vtxSize);
-      MVC_Assert(vtxTransfer, "createTransferBuffer (vertex)");
-      void *mapped = SDL_MapGPUTransferBuffer(self->device->device, vtxTransfer, false);
-      MVC_Assert(mapped, "SDL_MapGPUTransferBuffer");
-      memcpy(mapped, self->vertices->elements, vtxSize);
-      SDL_UnmapGPUTransferBuffer(self->device->device, vtxTransfer);
-
-      const SDL_GPUTransferBufferLocation src = { .transfer_buffer = vtxTransfer, .offset = 0 };
-      const SDL_GPUBufferRegion dst = { .buffer = self->vertexBuffer, .offset = 0, .size = vtxSize };
-      SDL_UploadToGPUBuffer(copyPass, &src, &dst, true);
+      self->vertexBuffer = $(self->device, createBuffer, SDL_GPU_BUFFERUSAGE_VERTEX, vtxSize);
+      GPU_Assert(self->vertexBuffer, "createBuffer (vertex)");
+      self->vertexBufferCapacity = (Uint32) vtxCount;
     }
 
-    for (size_t i = 0; i < drawables->count; i++) {
-      Drawable *d = $(drawables, objectAtIndex, i);
-      if (d->dirty) {
-        $(d, copy, copyPass);
-        d->dirty = false;
-      }
-    }
+    vtxTransfer = $(self->device, createTransferBuffer, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, vtxSize);
+    GPU_Assert(vtxTransfer, "createTransferBuffer (vertex)");
+    void *mapped = SDL_MapGPUTransferBuffer(self->device->device, vtxTransfer, false);
+    GPU_Assert(mapped, "SDL_MapGPUTransferBuffer");
+    memcpy(mapped, self->vertices->elements, vtxSize);
+    SDL_UnmapGPUTransferBuffer(self->device->device, vtxTransfer);
 
-    SDL_EndGPUCopyPass(copyPass);
+    const SDL_GPUTransferBufferLocation src = { .transfer_buffer = vtxTransfer, .offset = 0 };
+    const SDL_GPUBufferRegion dst = { .buffer = self->vertexBuffer, .offset = 0, .size = vtxSize };
+    SDL_UploadToGPUBuffer(copyPass, &src, &dst, true);
   }
+
+  for (size_t i = 0; i < drawables->count; i++) {
+    Drawable *d = $(drawables, objectAtIndex, i);
+    if (d->dirty) {
+      $(d, copy, copyPass);
+      d->dirty = false;
+    }
+  }
+
+  SDL_EndGPUCopyPass(copyPass);
 
   const SDL_GPUColorTargetInfo colorTarget = {
     .texture     = self->device->swapchain.texture,
@@ -330,17 +344,11 @@ static void endFrame(Renderer *self) {
     .offset = 0,
   };
 
-  SDL_GPUGraphicsPipeline *currentPipeline = NULL;
+  SDL_BindGPUGraphicsPipeline(renderPass, self->pipeline);
+  SDL_BindGPUVertexBuffers(renderPass, 0, &vbBinding, 1);
 
   for (size_t i = 0; i < self->drawCalls->count; i++) {
     const MVC_DrawCall *dc = VectorElement(self->drawCalls, MVC_DrawCall, i);
-
-    SDL_GPUGraphicsPipeline *pipeline = dc->fill ? self->fillPipeline : self->linePipeline;
-    if (pipeline != currentPipeline) {
-      SDL_BindGPUGraphicsPipeline(renderPass, pipeline);
-      SDL_BindGPUVertexBuffers(renderPass, 0, &vbBinding, 1);
-      currentPipeline = pipeline;
-    }
 
     if (dc->hasScissor) {
       SDL_SetGPUScissor(renderPass, &dc->scissor);
@@ -404,48 +412,35 @@ static Renderer *init(Renderer *self) {
 static void renderDeviceDidReset(Renderer *self) {
 
   $(self->device, renderDeviceDidReset);
-  if (!self->device->device) {
-    return;
-  }
 
   const SDL_GPUShaderFormat supported = SDL_GetGPUShaderFormats(self->device->device);
-  SDL_GPUShaderFormat fmt;
-  const char *vsCode, *fsCode;
-  const char *vsEntry, *fsEntry;
-
-  if (supported & SDL_GPU_SHADERFORMAT_MSL) {
-    fmt      = SDL_GPU_SHADERFORMAT_MSL;
-    vsCode   = MVC_VertexShaderMSL;
-    fsCode   = MVC_FragmentShaderMSL;
-    vsEntry  = "vs_main";
-    fsEntry  = "fs_main";
-  } else {
-    MVC_Assert(false, "unsupported shader format (need MSL, SPIRV, or DXIL)");
+  if (!(supported & SDL_GPU_SHADERFORMAT_MSL)) {
+    GPU_Assert(false, "unsupported shader format (need MSL, SPIRV, or DXIL)");
   }
 
   const SDL_GPUShaderCreateInfo vsInfo = {
-    .code                = (const Uint8 *) vsCode,
-    .code_size           = strlen(vsCode),
-    .entrypoint          = vsEntry,
-    .format              = fmt,
+    .code                = (const Uint8 *) vertexShader,
+    .code_size           = strlen(vertexShader),
+    .entrypoint          = "vs_main",
+    .format              = SDL_GPU_SHADERFORMAT_MSL,
     .stage               = SDL_GPU_SHADERSTAGE_VERTEX,
     .num_uniform_buffers = 1,
   };
 
   const SDL_GPUShaderCreateInfo fsInfo = {
-    .code                = (const Uint8 *) fsCode,
-    .code_size           = strlen(fsCode),
-    .entrypoint          = fsEntry,
-    .format              = fmt,
+    .code                = (const Uint8 *) fragmentShader,
+    .code_size           = strlen(fragmentShader),
+    .entrypoint          = "fs_main",
+    .format              = SDL_GPU_SHADERFORMAT_MSL,
     .stage               = SDL_GPU_SHADERSTAGE_FRAGMENT,
     .num_samplers        = 1,
     .num_uniform_buffers = 1,
   };
 
   SDL_GPUShader *vs = SDL_CreateGPUShader(self->device->device, &vsInfo);
-  MVC_Assert(vs, "SDL_CreateGPUShader (vertex)");
+  GPU_Assert(vs, "SDL_CreateGPUShader (vertex)");
   SDL_GPUShader *fs = SDL_CreateGPUShader(self->device->device, &fsInfo);
-  MVC_Assert(fs, "SDL_CreateGPUShader (fragment)");
+  GPU_Assert(fs, "SDL_CreateGPUShader (fragment)");
 
   const SDL_GPUVertexBufferDescription vbDesc = {
     .slot               = 0,
@@ -453,6 +448,7 @@ static void renderDeviceDidReset(Renderer *self) {
     .input_rate         = SDL_GPU_VERTEXINPUTRATE_VERTEX,
     .instance_step_rate = 0,
   };
+
   SDL_GPUVertexAttribute vbAttrs[2] = {
     { .location = 0, .buffer_slot = 0, .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2, .offset = 0 },
     { .location = 1, .buffer_slot = 0, .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2, .offset = 8 },
@@ -472,7 +468,7 @@ static void renderDeviceDidReset(Renderer *self) {
     },
   };
 
-  const SDL_GPUGraphicsPipelineCreateInfo fillInfo = {
+  const SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {
     .vertex_shader = vs,
     .fragment_shader = fs,
     .vertex_input_state = {
@@ -481,7 +477,7 @@ static void renderDeviceDidReset(Renderer *self) {
       .vertex_attributes          = vbAttrs,
       .num_vertex_attributes      = 2,
     },
-    .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLESTRIP,
+    .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
     .rasterizer_state = {
       .fill_mode  = SDL_GPU_FILLMODE_FILL,
       .cull_mode  = SDL_GPU_CULLMODE_NONE,
@@ -493,14 +489,8 @@ static void renderDeviceDidReset(Renderer *self) {
     },
   };
 
-  self->fillPipeline = SDL_CreateGPUGraphicsPipeline(self->device->device, &fillInfo);
-  MVC_Assert(self->fillPipeline, "SDL_CreateGPUGraphicsPipeline (fill)");
-
-  SDL_GPUGraphicsPipelineCreateInfo lineInfo = fillInfo;
-  lineInfo.primitive_type = SDL_GPU_PRIMITIVETYPE_LINESTRIP;
-
-  self->linePipeline = SDL_CreateGPUGraphicsPipeline(self->device->device, &lineInfo);
-  MVC_Assert(self->linePipeline, "SDL_CreateGPUGraphicsPipeline (line)");
+  self->pipeline = SDL_CreateGPUGraphicsPipeline(self->device->device, &pipelineInfo);
+  GPU_Assert(self->pipeline, "SDL_CreateGPUGraphicsPipeline");
 
   SDL_ReleaseGPUShader(self->device->device, vs);
   SDL_ReleaseGPUShader(self->device->device, fs);
@@ -512,15 +502,19 @@ static void renderDeviceDidReset(Renderer *self) {
     .address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
     .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
   };
+
   self->sampler = SDL_CreateGPUSampler(self->device->device, &samplerInfo);
-  MVC_Assert(self->sampler, "SDL_CreateGPUSampler");
+  GPU_Assert(self->sampler, "SDL_CreateGPUSampler");
 
   const Uint8 whitePx[4] = { 255, 255, 255, 255 };
+
   SDL_Surface *whiteSurface = SDL_CreateSurfaceFrom(1, 1, SDL_PIXELFORMAT_RGBA32, (void *) whitePx, 4);
-  MVC_Assert(whiteSurface, "SDL_CreateSurfaceFrom");
+  GPU_Assert(whiteSurface, "SDL_CreateSurfaceFrom");
+
   self->white = $(self->device, createTexture, whiteSurface);
+  GPU_Assert(self->white, "createTexture (white)");
+
   SDL_DestroySurface(whiteSurface);
-  MVC_Assert(self->white, "createTexture (white)");
 }
 
 /**
@@ -529,32 +523,25 @@ static void renderDeviceDidReset(Renderer *self) {
  */
 static void renderDeviceWillReset(Renderer *self) {
 
-  if (self->device->device) {
-    if (self->white) {
-      SDL_ReleaseGPUTexture(self->device->device, self->white);
-      self->white = NULL;
-    }
+  if (self->white) {
+    SDL_ReleaseGPUTexture(self->device->device, self->white);
+    self->white = NULL;
+  }
 
-    if (self->sampler) {
-      SDL_ReleaseGPUSampler(self->device->device, self->sampler);
-      self->sampler = NULL;
-    }
+  if (self->sampler) {
+    SDL_ReleaseGPUSampler(self->device->device, self->sampler);
+    self->sampler = NULL;
+  }
 
-    if (self->vertexBuffer) {
-      SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
-      self->vertexBuffer = NULL;
-      self->vertexBufferCapacity = 0;
-    }
+  if (self->vertexBuffer) {
+    SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
+    self->vertexBuffer = NULL;
+    self->vertexBufferCapacity = 0;
+  }
 
-    if (self->linePipeline) {
-      SDL_ReleaseGPUGraphicsPipeline(self->device->device, self->linePipeline);
-      self->linePipeline = NULL;
-    }
-
-    if (self->fillPipeline) {
-      SDL_ReleaseGPUGraphicsPipeline(self->device->device, self->fillPipeline);
-      self->fillPipeline = NULL;
-    }
+  if (self->pipeline) {
+    SDL_ReleaseGPUGraphicsPipeline(self->device->device, self->pipeline);
+    self->pipeline = NULL;
   }
 
   $(self->vertices, removeAll);

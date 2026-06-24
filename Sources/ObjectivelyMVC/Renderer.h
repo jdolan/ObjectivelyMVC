@@ -52,7 +52,6 @@ typedef struct {
  * @private
  */
 typedef struct {
-  bool fill;
   Uint32 firstVertex;
   Uint32 vertexCount;
   SDL_GPUTexture *texture;
@@ -92,16 +91,10 @@ struct Renderer {
   SDL_Color color;
 
   /**
-   * @brief The fill graphics pipeline (TRIANGLESTRIP, for rects and textured quads).
+   * @brief The graphics pipeline (TRIANGLELIST, for all MVC geometry).
    * @private
    */
-  SDL_GPUGraphicsPipeline *fillPipeline;
-
-  /**
-   * @brief The line graphics pipeline (LINESTRIP, for outlines and line segments).
-   * @private
-   */
-  SDL_GPUGraphicsPipeline *linePipeline;
+  SDL_GPUGraphicsPipeline *pipeline;
 
   /**
    * @brief The GPU-side vertex buffer (resized as needed to fit vertices).
