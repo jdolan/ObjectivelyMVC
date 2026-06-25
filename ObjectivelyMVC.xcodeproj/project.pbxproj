@@ -171,10 +171,6 @@
 		CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9351671F9B6ED000B46882 /* SelectorSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */; };
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEA0010000000000000000B7 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0010000000000000000B3 /* Objectively.framework */; };
-		CEA0010000000000000000B8 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0010000000000000000B3 /* Objectively.framework */; };
-		CEA0010000000000000000B9 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0010000000000000000B3 /* Objectively.framework */; };
-		CEA0010000000000000000C3 /* Objectively.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0010000000000000000B3 /* Objectively.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
 		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -192,6 +188,10 @@
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CEA0040000000000000000F1 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
+		CEA0040000000000000000F2 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
+		CEA0040000000000000000F3 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
+		CEA0040000000000000000F4 /* Objectively.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -251,237 +251,6 @@
 			remoteGlobalIDString = CE88198A1F91B0BE000D5AB7;
 			remoteInfo = "ObjectivelyMVC-Style";
 		};
-		CEA0010000000000000000B4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE76D9681C48218E0096DD31;
-			remoteInfo = Objectively;
-		};
-		CEA0010000000000000000B5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CE76D9671C48218E0096DD31;
-			remoteInfo = Objectively;
-		};
-		CEA0010000000000000000C1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = CE76D9671C48218E0096DD31;
-			remoteInfo = Objectively;
-		};
-		CEF602092FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE84A89E1DA15B80008BC685;
-			remoteInfo = "Objectively-Array";
-		};
-		CEF6020B2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB01B51F40DB3A004C2EDD;
-			remoteInfo = "Objectively-Boole";
-		};
-		CEF6020D2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB01C21F40DB3F004C2EDD;
-			remoteInfo = "Objectively-Data";
-		};
-		CEF6020F2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB01CF1F40DB47004C2EDD;
-			remoteInfo = "Objectively-Date";
-		};
-		CEF602112FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB01DC1F40DB4B004C2EDD;
-			remoteInfo = "Objectively-Dictionary";
-		};
-		CEF602132FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEF601B42FE5FABB005C680C;
-			remoteInfo = "Objectively-HashTable";
-		};
-		CEF602152FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB01E91F40DB4D004C2EDD;
-			remoteInfo = "Objectively-IndexPath";
-		};
-		CEF602172FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB01F61F40DB50004C2EDD;
-			remoteInfo = "Objectively-IndexSet";
-		};
-		CEF602192FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02031F40DB52004C2EDD;
-			remoteInfo = "Objectively-JSON";
-		};
-		CEF6021B2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEF601A52FE5F9EC005C680C;
-			remoteInfo = "Objectively-List";
-		};
-		CEF6021D2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02201F40DBCD004C2EDD;
-			remoteInfo = "Objectively-Log";
-		};
-		CEF6021F2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB026E1F40DBD9004C2EDD;
-			remoteInfo = "Objectively-Null";
-		};
-		CEF602212FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02921F40DD20004C2EDD;
-			remoteInfo = "Objectively-Number";
-		};
-		CEF602232FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB029F1F40DD22004C2EDD;
-			remoteInfo = "Objectively-Object";
-		};
-		CEF602252FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02AC1F40DD24004C2EDD;
-			remoteInfo = "Objectively-Operation";
-		};
-		CEF602272FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEF601DE2FEAB228005C680C;
-			remoteInfo = "Objectively-PointerArray";
-		};
-		CEF602292FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02B91F40DD26004C2EDD;
-			remoteInfo = "Objectively-Regexp";
-		};
-		CEF6022B2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE4F535F202A8C6D00D71C07;
-			remoteInfo = "Objectively-Resource";
-		};
-		CEF6022D2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE7F04462FE058E700AE0D63;
-			remoteInfo = "Objectively-RESTClient";
-		};
-		CEF6022F2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02C61F40DD27004C2EDD;
-			remoteInfo = "Objectively-Set";
-		};
-		CEF602312FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02D31F40DD29004C2EDD;
-			remoteInfo = "Objectively-String";
-		};
-		CEF602332FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE594BE21F49F931004D74FF;
-			remoteInfo = "Objectively-StringReader";
-		};
-		CEF602352FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02E01F40DD2B004C2EDD;
-			remoteInfo = "Objectively-Thread";
-		};
-		CEF602372FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02ED1F40DD4E004C2EDD;
-			remoteInfo = "Objectively-URL";
-		};
-		CEF602392FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE7F04342FD9943600AE0D63;
-			remoteInfo = "Objectively-URLCache";
-		};
-		CEF6023B2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CEEB02FA1F40DD4F004C2EDD;
-			remoteInfo = "Objectively-URLSession";
-		};
-		CEF6023D2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE129E6E23B8242B007D0433;
-			remoteInfo = "Objectively-Vector";
-		};
-		CEF6023F2FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE4A53131F40DFE800927421;
-			remoteInfo = "Objectively-Hello";
-		};
-		CEF602412FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE4A53201F40DFFC00927421;
-			remoteInfo = "Objectively-HelloCpp";
-		};
-		CEF602432FEBF0AF005C680C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = CE4A532D1F40E00A00927421;
-			remoteInfo = "Objectively-HelloObjC";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -494,7 +263,6 @@
 				B1BB000100000000000000A0 /* SDL3.xcframework in Embed Frameworks */,
 				B1BB000100000000000000B0 /* SDL3_image.xcframework in Embed Frameworks */,
 				B1BB000100000000000000C0 /* SDL3_ttf.xcframework in Embed Frameworks */,
-				CEA0010000000000000000C3 /* Objectively.framework in Embed Frameworks */,
 				B1BB000100000000000000F0 /* ObjectivelyMVC.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -711,7 +479,6 @@
 		CE9FECD5201D5F2A00F954ED /* debug.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = debug.css; sourceTree = "<group>"; };
 		CE9FECD6201D5F8000F954ED /* debug.css.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.css.h; sourceTree = "<group>"; };
 		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
-		CEA0010000000000000000B1 /* Objectively.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Objectively.xcodeproj; path = ../Objectively/Objectively.xcodeproj; sourceTree = "<group>"; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
@@ -733,6 +500,7 @@
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
+		CEA0040000000000000000F0 /* Objectively.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Objectively.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -744,7 +512,6 @@
 				B1BB0001000000000000000B /* SDL3_image.xcframework in Frameworks */,
 				B1BB0001000000000000000C /* SDL3_ttf.xcframework in Frameworks */,
 				B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */,
-				CEA0010000000000000000B9 /* Objectively.framework in Frameworks */,
 				B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */,
 				B1BB000100000000000000AA /* UIKit.framework in Frameworks */,
 				B1BB000100000000000000AB /* Foundation.framework in Frameworks */,
@@ -772,7 +539,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA0010000000000000000B8 /* Objectively.framework in Frameworks */,
 				CEEAAFFF2FEDC19C00FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 				CE12D4611C4C8F2A00CD0B13 /* ObjectivelyMVC.framework in Frameworks */,
 				CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */,
@@ -807,7 +573,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA0010000000000000000B7 /* Objectively.framework in Frameworks */,
+				CEA0040000000000000000F1 /* Objectively.framework in Frameworks */,
 				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
 				CED56FF72FE3440000756996 /* SDL3_image.xcframework in Frameworks */,
@@ -822,6 +588,7 @@
 			isa = PBXGroup;
 			children = (
 				B1AA0001000000000000000A /* SDL3.xcframework */,
+				CEA0040000000000000000F0 /* Objectively.framework */,
 				B1AA0001000000000000000B /* SDL3_image.xcframework */,
 				B1AA0001000000000000000C /* SDL3_ttf.xcframework */,
 				B1AA0001000000000000000D /* libcurl.xcframework */,
@@ -1062,48 +829,9 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		CEA0010000000000000000B2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				CEA0010000000000000000B3 /* Objectively.framework */,
-				CEF6020A2FEBF0AF005C680C /* Objectively-Array */,
-				CEF6020C2FEBF0AF005C680C /* Objectively-Boole */,
-				CEF6020E2FEBF0AF005C680C /* Objectively-Data */,
-				CEF602102FEBF0AF005C680C /* Objectively-Date */,
-				CEF602122FEBF0AF005C680C /* Objectively-Dictionary */,
-				CEF602142FEBF0AF005C680C /* Objectively-HashTable */,
-				CEF602162FEBF0AF005C680C /* Objectively-IndexPath */,
-				CEF602182FEBF0AF005C680C /* Objectively-IndexSet */,
-				CEF6021A2FEBF0AF005C680C /* Objectively-JSON */,
-				CEF6021C2FEBF0AF005C680C /* Objectively-List */,
-				CEF6021E2FEBF0AF005C680C /* Objectively-Log */,
-				CEF602202FEBF0AF005C680C /* Objectively-Null */,
-				CEF602222FEBF0AF005C680C /* Objectively-Number */,
-				CEF602242FEBF0AF005C680C /* Objectively-Object */,
-				CEF602262FEBF0AF005C680C /* Objectively-Operation */,
-				CEF602282FEBF0AF005C680C /* Objectively-PointerArray */,
-				CEF6022A2FEBF0AF005C680C /* Objectively-Regexp */,
-				CEF6022C2FEBF0AF005C680C /* Objectively-Resource */,
-				CEF6022E2FEBF0AF005C680C /* Objectively-RESTClient */,
-				CEF602302FEBF0AF005C680C /* Objectively-Set */,
-				CEF602322FEBF0AF005C680C /* Objectively-String */,
-				CEF602342FEBF0AF005C680C /* Objectively-StringReader */,
-				CEF602362FEBF0AF005C680C /* Objectively-Thread */,
-				CEF602382FEBF0AF005C680C /* Objectively-URL */,
-				CEF6023A2FEBF0AF005C680C /* Objectively-URLCache */,
-				CEF6023C2FEBF0AF005C680C /* Objectively-URLSession */,
-				CEF6023E2FEBF0AF005C680C /* Objectively-Vector */,
-				CEF602402FEBF0AF005C680C /* Objectively-Hello */,
-				CEF602422FEBF0AF005C680C /* Objectively-HelloCpp */,
-				CEF602442FEBF0AF005C680C /* Objectively-HelloObjC */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		CED157921C4BEA8900FBA2DE = {
 			isa = PBXGroup;
 			children = (
-				CEA0010000000000000000B1 /* Objectively.xcodeproj */,
 				CE12D4841C4F3C5900CD0B13 /* Assets */,
 				CE12D48E1C505FB400CD0B13 /* Documentation */,
 				CE12D42A1C4C37CD00CD0B13 /* Examples */,
@@ -1231,7 +959,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				CEA0010000000000000000C2 /* PBXTargetDependency */,
 			);
 			name = "ObjectivelyMVC-Hello-iOS";
 			productName = "ObjectivelyMVC-Hello-iOS";
@@ -1324,7 +1051,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				CEA0010000000000000000B6 /* PBXTargetDependency */,
 			);
 			name = ObjectivelyMVC;
 			productName = "SDL_mvc-Xcode";
@@ -1368,12 +1094,6 @@
 			mainGroup = CED157921C4BEA8900FBA2DE;
 			productRefGroup = CED157CE1C4BF3AC00FBA2DE /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = CEA0010000000000000000B2 /* Products */;
-					ProjectRef = CEA0010000000000000000B1 /* Objectively.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
@@ -1388,225 +1108,6 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		CEA0010000000000000000B3 /* Objectively.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Objectively.framework;
-			remoteRef = CEA0010000000000000000B4 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6020A2FEBF0AF005C680C /* Objectively-Array */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Array";
-			remoteRef = CEF602092FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6020C2FEBF0AF005C680C /* Objectively-Boole */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Boole";
-			remoteRef = CEF6020B2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6020E2FEBF0AF005C680C /* Objectively-Data */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Data";
-			remoteRef = CEF6020D2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602102FEBF0AF005C680C /* Objectively-Date */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Date";
-			remoteRef = CEF6020F2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602122FEBF0AF005C680C /* Objectively-Dictionary */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Dictionary";
-			remoteRef = CEF602112FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602142FEBF0AF005C680C /* Objectively-HashTable */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-HashTable";
-			remoteRef = CEF602132FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602162FEBF0AF005C680C /* Objectively-IndexPath */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-IndexPath";
-			remoteRef = CEF602152FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602182FEBF0AF005C680C /* Objectively-IndexSet */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-IndexSet";
-			remoteRef = CEF602172FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6021A2FEBF0AF005C680C /* Objectively-JSON */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-JSON";
-			remoteRef = CEF602192FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6021C2FEBF0AF005C680C /* Objectively-List */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-List";
-			remoteRef = CEF6021B2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6021E2FEBF0AF005C680C /* Objectively-Log */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Log";
-			remoteRef = CEF6021D2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602202FEBF0AF005C680C /* Objectively-Null */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Null";
-			remoteRef = CEF6021F2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602222FEBF0AF005C680C /* Objectively-Number */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Number";
-			remoteRef = CEF602212FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602242FEBF0AF005C680C /* Objectively-Object */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Object";
-			remoteRef = CEF602232FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602262FEBF0AF005C680C /* Objectively-Operation */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Operation";
-			remoteRef = CEF602252FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602282FEBF0AF005C680C /* Objectively-PointerArray */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-PointerArray";
-			remoteRef = CEF602272FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6022A2FEBF0AF005C680C /* Objectively-Regexp */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Regexp";
-			remoteRef = CEF602292FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6022C2FEBF0AF005C680C /* Objectively-Resource */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Resource";
-			remoteRef = CEF6022B2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6022E2FEBF0AF005C680C /* Objectively-RESTClient */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-RESTClient";
-			remoteRef = CEF6022D2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602302FEBF0AF005C680C /* Objectively-Set */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Set";
-			remoteRef = CEF6022F2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602322FEBF0AF005C680C /* Objectively-String */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-String";
-			remoteRef = CEF602312FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602342FEBF0AF005C680C /* Objectively-StringReader */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-StringReader";
-			remoteRef = CEF602332FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602362FEBF0AF005C680C /* Objectively-Thread */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Thread";
-			remoteRef = CEF602352FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602382FEBF0AF005C680C /* Objectively-URL */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-URL";
-			remoteRef = CEF602372FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6023A2FEBF0AF005C680C /* Objectively-URLCache */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-URLCache";
-			remoteRef = CEF602392FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6023C2FEBF0AF005C680C /* Objectively-URLSession */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-URLSession";
-			remoteRef = CEF6023B2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF6023E2FEBF0AF005C680C /* Objectively-Vector */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Vector";
-			remoteRef = CEF6023D2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602402FEBF0AF005C680C /* Objectively-Hello */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-Hello";
-			remoteRef = CEF6023F2FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602422FEBF0AF005C680C /* Objectively-HelloCpp */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-HelloCpp";
-			remoteRef = CEF602412FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		CEF602442FEBF0AF005C680C /* Objectively-HelloObjC */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.executable";
-			path = "Objectively-HelloObjC";
-			remoteRef = CEF602432FEBF0AF005C680C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B1CC000100000000000000C0 /* Resources */ = {
@@ -1846,16 +1347,6 @@
 			isa = PBXTargetDependency;
 			target = CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */;
 			targetProxy = CE8819991F91B0DA000D5AB7 /* PBXContainerItemProxy */;
-		};
-		CEA0010000000000000000B6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Objectively;
-			targetProxy = CEA0010000000000000000B5 /* PBXContainerItemProxy */;
-		};
-		CEA0010000000000000000C2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Objectively;
-			targetProxy = CEA0010000000000000000C1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
