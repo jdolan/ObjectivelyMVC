@@ -356,6 +356,17 @@ static void render(View *self, Renderer *renderer) {
 
   const float scale = view_pixel_density(self->window);
 
+  if (this->font->scale != scale) {
+    this->font->scale = scale;
+    $(this->font, renderDeviceDidReset);
+    if (this->texture) {
+      SDL_ReleaseGPUTexture(this->device, this->texture);
+      this->texture = NULL;
+      this->device = NULL;
+      this->texture_w = this->texture_h = 0;
+    }
+  }
+
   if (this->text) {
 
     const SDL_Rect frame = $(self, renderFrame);
