@@ -45,7 +45,9 @@ typedef struct DrawableInterface DrawableInterface;
  * when dirty) and submit() inside the active render pass (for draw commands).
  *
  * Subclasses allocate their GPU resources in renderDeviceDidReset and release
- * them in renderDeviceWillReset.
+ * them in renderDeviceWillReset. Alternatively, set the delegate function
+ * pointers (copy, submit, renderDeviceDidReset, renderDeviceWillReset) on the
+ * struct directly to avoid subclassing.
  *
  * @extends Object
  */
@@ -68,6 +70,39 @@ struct Drawable {
    * The RenderDevice resets it to false after copy() returns.
    */
   bool dirty;
+
+  /**
+   * @brief Optional user data passed to delegate callbacks.
+   */
+  void *data;
+
+  /**
+   * @brief Optional delegate invoked by copy(). Called when dirty during the copy pass.
+   * @param self The Drawable.
+   * @param copyPass The active copy pass.
+   */
+  void (*copy)(Drawable *self, SDL_GPUCopyPass *copyPass);
+
+  /**
+   * @brief Optional delegate invoked by renderDeviceDidReset(). Allocate GPU resources here.
+   * @param self The Drawable.
+   * @param device The newly created SDL_GPUDevice.
+   */
+  void (*renderDeviceDidReset)(Drawable *self, SDL_GPUDevice *device);
+
+  /**
+   * @brief Optional delegate invoked by renderDeviceWillReset(). Release GPU resources here.
+   * @param self The Drawable.
+   */
+  void (*renderDeviceWillReset)(Drawable *self);
+
+  /**
+   * @brief Optional delegate invoked by submit(). Called each frame during the render pass.
+   * @param self The Drawable.
+   * @param cmd The active command buffer.
+   * @param renderPass The active render pass.
+   */
+  void (*submit)(Drawable *self, SDL_GPUCommandBuffer *cmd, SDL_GPURenderPass *renderPass);
 };
 
 /**
@@ -99,6 +134,19 @@ struct DrawableInterface {
    * @memberof Drawable
    */
   Drawable *(*init)(Drawable *self);
+
+  /**
+   * @fn Drawable *Drawable::initWithData(Drawable *self, void *data)
+   * @brief Initializes this Drawable with user data for delegate callbacks.
+   * @details Sets self->data and starts with all delegate pointers NULL. Assign
+   *   self->copy, self->submit, self->renderDeviceDidReset, and
+   *   self->renderDeviceWillReset as needed.
+   * @param self The Drawable.
+   * @param data Arbitrary user data accessible in delegate callbacks via self->data.
+   * @return The initialized Drawable, or `NULL` on error.
+   * @memberof Drawable
+   */
+  Drawable *(*initWithData)(Drawable *self, void *data);
 
   /**
    * @fn void Drawable::renderDeviceDidReset(Drawable *self, SDL_GPUDevice *device)

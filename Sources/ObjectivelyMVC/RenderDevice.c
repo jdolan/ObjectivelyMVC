@@ -36,6 +36,9 @@
  * @memberof RenderDevice
  */
 static void addDrawable(RenderDevice *self, Drawable *drawable) {
+
+  assert(drawable);
+
   $(self->drawables, addObject, drawable);
 }
 
@@ -59,8 +62,7 @@ static bool acquireSwapchainTexture(const RenderDevice *self, SDL_GPUCommandBuff
   assert(cmd);
   assert(swapchain);
 
-  SDL_AcquireGPUSwapchainTexture(cmd, self->window,
-    &swapchain->texture, &swapchain->size.w, &swapchain->size.h);
+  SDL_AcquireGPUSwapchainTexture(cmd, self->window, &swapchain->texture, &swapchain->size.w, &swapchain->size.h);
 
   return swapchain->texture != NULL;
 }
@@ -222,8 +224,8 @@ static void setWindow(RenderDevice *self, SDL_Window *window) {
 
   if (self->window) {
     for (size_t i = 0; i < self->drawables->count; i++) {
-      Drawable *d = $(self->drawables, objectAtIndex, i);
-      $(d, renderDeviceWillReset);
+      Drawable *draw = $(self->drawables, objectAtIndex, i);
+      $(draw, renderDeviceWillReset);
     }
     SDL_ReleaseWindowFromGPUDevice(self->device, self->window);
   }
@@ -234,8 +236,8 @@ static void setWindow(RenderDevice *self, SDL_Window *window) {
     const bool claimed = SDL_ClaimWindowForGPUDevice(self->device, window);
     GPU_Assert(claimed, "SDL_ClaimWindowForGPUDevice");
     for (size_t i = 0; i < self->drawables->count; i++) {
-      Drawable *d = $(self->drawables, objectAtIndex, i);
-      $(d, renderDeviceDidReset, self->device);
+      Drawable *draw = $(self->drawables, objectAtIndex, i);
+      $(draw, renderDeviceDidReset, self->device);
     }
   }
 }

@@ -34,6 +34,9 @@
  * @memberof Drawable
  */
 static void copy(Drawable *self, SDL_GPUCopyPass *copyPass) {
+  if (self->copy) {
+    self->copy(self, copyPass);
+  }
 }
 
 /**
@@ -50,10 +53,26 @@ static Drawable *init(Drawable *self) {
 }
 
 /**
+ * @fn Drawable *Drawable::initWithData(Drawable *self, void *data)
+ * @memberof Drawable
+ */
+static Drawable *initWithData(Drawable *self, void *data) {
+
+  self = $(self, init);
+  if (self) {
+    self->data = data;
+  }
+  return self;
+}
+
+/**
  * @fn void Drawable::renderDeviceDidReset(Drawable *self, SDL_GPUDevice *device)
  * @memberof Drawable
  */
 static void renderDeviceDidReset(Drawable *self, SDL_GPUDevice *device) {
+  if (self->renderDeviceDidReset) {
+    self->renderDeviceDidReset(self, device);
+  }
 }
 
 /**
@@ -61,6 +80,9 @@ static void renderDeviceDidReset(Drawable *self, SDL_GPUDevice *device) {
  * @memberof Drawable
  */
 static void renderDeviceWillReset(Drawable *self) {
+  if (self->renderDeviceWillReset) {
+    self->renderDeviceWillReset(self);
+  }
 }
 
 /**
@@ -68,6 +90,9 @@ static void renderDeviceWillReset(Drawable *self) {
  * @memberof Drawable
  */
 static void submit(Drawable *self, SDL_GPUCommandBuffer *cmd, SDL_GPURenderPass *renderPass) {
+  if (self->submit) {
+    self->submit(self, cmd, renderPass);
+  }
 }
 
 #pragma mark - Class lifecycle
@@ -79,6 +104,7 @@ static void initialize(Class *clazz) {
 
   ((DrawableInterface *) clazz->interface)->copy                 = copy;
   ((DrawableInterface *) clazz->interface)->init                 = init;
+  ((DrawableInterface *) clazz->interface)->initWithData         = initWithData;
   ((DrawableInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
   ((DrawableInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((DrawableInterface *) clazz->interface)->submit               = submit;
