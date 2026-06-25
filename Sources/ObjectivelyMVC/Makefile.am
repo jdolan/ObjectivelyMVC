@@ -15,7 +15,6 @@ pkginclude_HEADERS = \
 	Colors.h \
 	Control.h \
 	DebugViewController.h \
-	Drawable.h \
 	Font.h \
 	HSVColorPicker.h \
 	HueColorPicker.h \
@@ -74,7 +73,6 @@ libObjectivelyMVC_la_SOURCES = \
 	Colors.c \
 	Control.c \
 	DebugViewController.c \
-	Drawable.c \
 	Font.c \
 	HSVColorPicker.c \
 	HueColorPicker.c \

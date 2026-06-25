@@ -25,16 +25,67 @@
 
 #include <SDL3/SDL_gpu.h>
 
-#include <Objectively/Array.h>
 #include <Objectively/Object.h>
+#include <Objectively/Vector.h>
 
-#include <ObjectivelyMVC/Drawable.h>
 #include <ObjectivelyMVC/Types.h>
 
 /**
  * @file
  * @brief RenderDevice owns `SDL_gpu` infrastructure for a window and frame loop.
  */
+
+typedef struct RenderDevice RenderDevice;
+
+/**
+ * @brief A GPU-renderable unit with optional transfer and submit callbacks.
+ *
+ * Drawables participate in the RenderDevice's frame loop. Assign only the
+ * callbacks you need; NULL callbacks are silently skipped.
+ *
+ * Typical use without subclassing:
+ * @code
+ *   Drawable *d = calloc(1, sizeof(Drawable));
+ *   d->data = myData;
+ *   d->transfer = myTransfer;
+ *   d->submit   = mySubmit;
+ *   $(device, addDrawable, d);
+ * @endcode
+ */
+typedef struct Drawable {
+
+  /**
+   * @brief When true, the RenderDevice calls transfer() this frame.
+   * Reset to false after transfer() returns.
+   */
+  bool dirty;
+
+  /**
+   * @brief Optional caller-supplied context, passed to all callbacks.
+   */
+  void *data;
+
+  /**
+   * @brief Called when the GPU device has been (re-)created. Allocate GPU resources here.
+   */
+  void (*renderDeviceDidReset)(struct Drawable *self, SDL_GPUDevice *device);
+
+  /**
+   * @brief Called just before the GPU device is destroyed. Release GPU resources here.
+   */
+  void (*renderDeviceWillReset)(struct Drawable *self);
+
+  /**
+   * @brief Called each frame during the render pass. Issue draw commands here.
+   */
+  void (*submit)(struct Drawable *self, SDL_GPUCommandBuffer *cmd, SDL_GPURenderPass *renderPass);
+
+  /**
+   * @brief Called when dirty during the copy pass. Upload CPU data to GPU buffers/textures here.
+   */
+  void (*transfer)(struct Drawable *self, SDL_GPUCopyPass *copyPass);
+
+} Drawable;
 
 /**
  * @brief The Swapchain (render target) type.
@@ -56,7 +107,6 @@ struct Swapchain {
 
 typedef struct Swapchain Swapchain;
 
-typedef struct RenderDevice RenderDevice;
 typedef struct RenderDeviceInterface RenderDeviceInterface;
 
 /**
@@ -108,7 +158,7 @@ struct RenderDevice {
    * @brief Registered Drawables participating in this device's frame loop.
    * @private
    */
-  Array *drawables;
+  Vector *drawables;
 };
 
 /**

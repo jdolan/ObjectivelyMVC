@@ -190,9 +190,7 @@
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEF601E52FEBF0AE005C680C /* Drawable.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF601E12FEBF0AE005C680C /* Drawable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF601E62FEBF0AE005C680C /* RenderDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF601E32FEBF0AE005C680C /* RenderDevice.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEF601E72FEBF0AE005C680C /* Drawable.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF601E22FEBF0AE005C680C /* Drawable.c */; };
 		CEF601E82FEBF0AE005C680C /* RenderDevice.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF601E42FEBF0AE005C680C /* RenderDevice.c */; };
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -734,8 +732,6 @@
 		CEF1D8AA1D4630D20099A857 /* WindowController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WindowController.c; sourceTree = "<group>"; };
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
-		CEF601E12FEBF0AE005C680C /* Drawable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Drawable.h; sourceTree = "<group>"; };
-		CEF601E22FEBF0AE005C680C /* Drawable.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Drawable.c; sourceTree = "<group>"; };
 		CEF601E32FEBF0AE005C680C /* RenderDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RenderDevice.h; sourceTree = "<group>"; };
 		CEF601E42FEBF0AE005C680C /* RenderDevice.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = RenderDevice.c; sourceTree = "<group>"; };
 		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
@@ -887,8 +883,6 @@
 				CE12D46E1C4D82AF00CD0B13 /* Control.h */,
 				CE84C6CC1FFC917600F72267 /* DebugViewController.c */,
 				CE84C6CB1FFC917600F72267 /* DebugViewController.h */,
-				CEF601E22FEBF0AE005C680C /* Drawable.c */,
-				CEF601E12FEBF0AE005C680C /* Drawable.h */,
 				CE12D4091C4C367100CD0B13 /* Font.c */,
 				CE12D40A1C4C367100CD0B13 /* Font.h */,
 				CE6EE3791F6EA91900FBC830 /* HSVColorPicker.c */,
@@ -1175,7 +1169,6 @@
 				CE12D4421C4C38C700CD0B13 /* Colors.h in Headers */,
 				CE12D4701C4D82AF00CD0B13 /* Control.h in Headers */,
 				CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */,
-				CEF601E52FEBF0AE005C680C /* Drawable.h in Headers */,
 				CE12D4431C4C38C700CD0B13 /* Font.h in Headers */,
 				CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */,
 				CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */,
@@ -1769,7 +1762,6 @@
 				CE12D43C1C4C38B500CD0B13 /* Colors.c in Sources */,
 				CE12D46F1C4D82AF00CD0B13 /* Control.c in Sources */,
 				CE84C6CE1FFC917600F72267 /* DebugViewController.c in Sources */,
-				CEF601E72FEBF0AE005C680C /* Drawable.c in Sources */,
 				CE12D43D1C4C38B500CD0B13 /* Font.c in Sources */,
 				CE6EE37B1F6EA91900FBC830 /* HSVColorPicker.c in Sources */,
 				CE6EE3CC1F7156BC00FBC830 /* HueColorPicker.c in Sources */,

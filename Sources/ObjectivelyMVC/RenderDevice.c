@@ -39,7 +39,7 @@ static void addDrawable(RenderDevice *self, Drawable *drawable) {
 
   assert(drawable);
 
-  $(self->drawables, addObject, drawable);
+  $(self->drawables, add, (ident) &drawable);
 }
 
 /**
@@ -176,7 +176,7 @@ static RenderDevice *init(RenderDevice *self) {
   if (self) {
     self->clear = true;
     self->clearColor = (SDL_FColor) { 0.f, 0.f, 0.f, 1.f };
-    self->drawables = $$(Array, array);
+    self->drawables = $(alloc(Vector), initWithSize, sizeof(Drawable *));
     assert(self->drawables);
 
     const SDL_GPUShaderFormat formats =
@@ -209,7 +209,13 @@ static RenderDevice *initWithWindow(RenderDevice *self, SDL_Window *window) {
  * @memberof RenderDevice
  */
 static void removeDrawable(RenderDevice *self, Drawable *drawable) {
-  $(self->drawables, removeObject, drawable);
+
+  for (size_t i = 0; i < self->drawables->count; i++) {
+    if (*VectorElement(self->drawables, Drawable *, i) == drawable) {
+      $(self->drawables, removeAt, i);
+      return;
+    }
+  }
 }
 
 /**
@@ -224,8 +230,10 @@ static void setWindow(RenderDevice *self, SDL_Window *window) {
 
   if (self->window) {
     for (size_t i = 0; i < self->drawables->count; i++) {
-      Drawable *draw = $(self->drawables, objectAtIndex, i);
-      $(draw, renderDeviceWillReset);
+      Drawable *draw = *VectorElement(self->drawables, Drawable *, i);
+      if (draw->renderDeviceWillReset) {
+        draw->renderDeviceWillReset(draw);
+      }
     }
     SDL_ReleaseWindowFromGPUDevice(self->device, self->window);
   }
@@ -236,8 +244,10 @@ static void setWindow(RenderDevice *self, SDL_Window *window) {
     const bool claimed = SDL_ClaimWindowForGPUDevice(self->device, window);
     GPU_Assert(claimed, "SDL_ClaimWindowForGPUDevice");
     for (size_t i = 0; i < self->drawables->count; i++) {
-      Drawable *draw = $(self->drawables, objectAtIndex, i);
-      $(draw, renderDeviceDidReset, self->device);
+      Drawable *draw = *VectorElement(self->drawables, Drawable *, i);
+      if (draw->renderDeviceDidReset) {
+        draw->renderDeviceDidReset(draw, self->device);
+      }
     }
   }
 }
@@ -252,8 +262,10 @@ static void dealloc(Object *self) {
   RenderDevice *this = (RenderDevice *) self;
 
   for (size_t i = 0; i < this->drawables->count; i++) {
-    Drawable *d = $(this->drawables, objectAtIndex, i);
-    $(d, renderDeviceWillReset);
+    Drawable *d = *VectorElement(this->drawables, Drawable *, i);
+    if (d->renderDeviceWillReset) {
+      d->renderDeviceWillReset(d);
+    }
   }
 
   if (this->window && this->device) {

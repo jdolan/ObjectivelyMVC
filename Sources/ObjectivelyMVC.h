@@ -36,7 +36,6 @@
 #include <ObjectivelyMVC/Colors.h>
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/DebugViewController.h>
-#include <ObjectivelyMVC/Drawable.h>
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/HSVColorPicker.h>
 #include <ObjectivelyMVC/HueColorPicker.h>

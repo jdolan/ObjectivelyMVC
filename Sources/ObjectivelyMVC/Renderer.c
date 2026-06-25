@@ -277,7 +277,7 @@ static void drawView(Renderer *self, View *view) {
 static void endFrame(Renderer *self) {
 
   const size_t vtxCount = self->vertices->count;
-  Array *drawables = self->device->drawables;
+  Vector *drawables = self->device->drawables;
 
   SDL_GPUTransferBuffer *vtxTransfer = NULL;
 
@@ -310,9 +310,11 @@ static void endFrame(Renderer *self) {
   }
 
   for (size_t i = 0; i < drawables->count; i++) {
-    Drawable *d = $(drawables, objectAtIndex, i);
+    Drawable *d = *VectorElement(drawables, Drawable *, i);
     if (d->dirty) {
-      $(d, transfer, copyPass);
+      if (d->transfer) {
+        d->transfer(d, copyPass);
+      }
       d->dirty = false;
     }
   }
@@ -375,8 +377,10 @@ static void endFrame(Renderer *self) {
   }
 
   for (size_t i = 0; i < drawables->count; i++) {
-    Drawable *d = $(drawables, objectAtIndex, i);
-    $(d, submit, self->cmd, renderPass);
+    Drawable *d = *VectorElement(drawables, Drawable *, i);
+    if (d->submit) {
+      d->submit(d, self->cmd, renderPass);
+    }
   }
 
   SDL_EndGPURenderPass(renderPass);
