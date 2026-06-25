@@ -279,7 +279,6 @@ static void drawView(Renderer *self, View *view) {
 static void endFrame(Renderer *self) {
 
   const size_t vtxCount = self->vertices->count;
-  Vector *drawables = self->device->drawables;
 
   SDL_GPUTransferBuffer *vtxTransfer = NULL;
 
@@ -306,16 +305,6 @@ static void endFrame(Renderer *self) {
     const SDL_GPUTransferBufferLocation src = { .transfer_buffer = vtxTransfer, .offset = 0 };
     const SDL_GPUBufferRegion dst = { .buffer = self->vertexBuffer, .offset = 0, .size = vtxSize };
     $(copyPass, uploadBuffer, &src, &dst, true);
-  }
-
-  for (size_t i = 0; i < drawables->count; i++) {
-    Drawable *draw = *VectorElement(drawables, Drawable *, i);
-    if (draw->isDirty) {
-      if (draw->transfer) {
-        draw->transfer(copyPass, draw->data);
-      }
-      draw->isDirty = false;
-    }
   }
 
   release(copyPass);
@@ -363,13 +352,6 @@ static void endFrame(Renderer *self) {
 
     $(self->cmd, pushFragmentUniformData, 0, dc->color, sizeof(dc->color));
     $(renderPass, drawPrimitives, dc->vertexCount, 1, dc->firstVertex, 0);
-  }
-
-  for (size_t i = 0; i < drawables->count; i++) {
-    Drawable *draw = *VectorElement(drawables, Drawable *, i);
-    if (draw->submit) {
-      draw->submit(self->cmd, renderPass, draw->data);
-    }
   }
 
   release(renderPass);
