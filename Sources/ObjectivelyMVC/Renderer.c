@@ -417,7 +417,7 @@ static Renderer *init(Renderer *self) {
  */
 static void renderDeviceDidReset(Renderer *self) {
 
-  $(self->device, renderDeviceDidReset);
+  $(self, renderDeviceWillReset);
 
   const SDL_GPUShaderFormat supported = SDL_GetGPUShaderFormats(self->device->device);
   if (!(supported & SDL_GPU_SHADERFORMAT_MSL)) {
@@ -561,8 +561,6 @@ static void renderDeviceWillReset(Renderer *self) {
 
   $(self->vertices, removeAll);
   $(self->drawCalls, removeAll);
-
-  $(self->device, renderDeviceWillReset);
 }
 
 /**

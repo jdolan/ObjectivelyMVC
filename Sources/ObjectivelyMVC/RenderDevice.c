@@ -176,8 +176,29 @@ static RenderDevice *init(RenderDevice *self) {
     self->clearColor = (SDL_FColor) { 0.f, 0.f, 0.f, 1.f };
     self->drawables = $$(Array, array);
     assert(self->drawables);
+
+    const SDL_GPUShaderFormat formats =
+      SDL_GPU_SHADERFORMAT_MSL |
+      SDL_GPU_SHADERFORMAT_SPIRV |
+      SDL_GPU_SHADERFORMAT_DXIL;
+
+    self->device = SDL_CreateGPUDevice(formats, false, NULL);
+    GPU_Assert(self->device, "SDL_CreateGPUDevice");
   }
 
+  return self;
+}
+
+/**
+ * @fn RenderDevice *RenderDevice::initWithWindow(RenderDevice *self, SDL_Window *window)
+ * @memberof RenderDevice
+ */
+static RenderDevice *initWithWindow(RenderDevice *self, SDL_Window *window) {
+
+  self = $(self, init);
+  if (self) {
+    $(self, setWindow, window);
+  }
   return self;
 }
 
@@ -190,64 +211,33 @@ static void removeDrawable(RenderDevice *self, Drawable *drawable) {
 }
 
 /**
- * @fn void RenderDevice::renderDeviceDidReset(RenderDevice *self)
- * @memberof RenderDevice
- */
-static void renderDeviceDidReset(RenderDevice *self) {
-
-  $(self, renderDeviceWillReset);
-
-  if (!self->window) {
-    MVC_LogError("renderDeviceDidReset: no window set\n");
-    return;
-  }
-
-  const SDL_GPUShaderFormat formats =
-    SDL_GPU_SHADERFORMAT_MSL |
-    SDL_GPU_SHADERFORMAT_SPIRV |
-    SDL_GPU_SHADERFORMAT_DXIL;
-
-  self->device = SDL_CreateGPUDevice(formats, false, NULL);
-  GPU_Assert(self->device, "SDL_CreateGPUDevice");
-
-  const bool claimed = SDL_ClaimWindowForGPUDevice(self->device, self->window);
-  GPU_Assert(claimed, "SDL_ClaimWindowForGPUDevice");
-
-  for (size_t i = 0; i < self->drawables->count; i++) {
-    Drawable *d = $(self->drawables, objectAtIndex, i);
-    $(d, renderDeviceDidReset, self->device);
-  }
-}
-
-/**
- * @fn void RenderDevice::renderDeviceWillReset(RenderDevice *self)
- * @memberof RenderDevice
- */
-static void renderDeviceWillReset(RenderDevice *self) {
-
-  if (!self->device) {
-    return;
-  }
-
-  for (size_t i = 0; i < self->drawables->count; i++) {
-    Drawable *d = $(self->drawables, objectAtIndex, i);
-    $(d, renderDeviceWillReset);
-  }
-
-  if (self->window) {
-    SDL_ReleaseWindowFromGPUDevice(self->device, self->window);
-  }
-
-  SDL_DestroyGPUDevice(self->device);
-  self->device = NULL;
-}
-
-/**
  * @fn void RenderDevice::setWindow(RenderDevice *self, SDL_Window *window)
  * @memberof RenderDevice
  */
 static void setWindow(RenderDevice *self, SDL_Window *window) {
+
+  if (self->window == window) {
+    return;
+  }
+
+  if (self->window) {
+    for (size_t i = 0; i < self->drawables->count; i++) {
+      Drawable *d = $(self->drawables, objectAtIndex, i);
+      $(d, renderDeviceWillReset);
+    }
+    SDL_ReleaseWindowFromGPUDevice(self->device, self->window);
+  }
+
   self->window = window;
+
+  if (window) {
+    const bool claimed = SDL_ClaimWindowForGPUDevice(self->device, window);
+    GPU_Assert(claimed, "SDL_ClaimWindowForGPUDevice");
+    for (size_t i = 0; i < self->drawables->count; i++) {
+      Drawable *d = $(self->drawables, objectAtIndex, i);
+      $(d, renderDeviceDidReset, self->device);
+    }
+  }
 }
 
 #pragma mark - Object lifecycle
@@ -259,7 +249,19 @@ static void dealloc(Object *self) {
 
   RenderDevice *this = (RenderDevice *) self;
 
-  $(this, renderDeviceWillReset);
+  for (size_t i = 0; i < this->drawables->count; i++) {
+    Drawable *d = $(this->drawables, objectAtIndex, i);
+    $(d, renderDeviceWillReset);
+  }
+
+  if (this->window && this->device) {
+    SDL_ReleaseWindowFromGPUDevice(this->device, this->window);
+  }
+
+  if (this->device) {
+    SDL_DestroyGPUDevice(this->device);
+  }
+
   release(this->drawables);
 
   super(Object, self, dealloc);
@@ -283,9 +285,8 @@ static void initialize(Class *clazz) {
   ((RenderDeviceInterface *) clazz->interface)->createTexture = createTexture;
   ((RenderDeviceInterface *) clazz->interface)->createTransferBuffer = createTransferBuffer;
   ((RenderDeviceInterface *) clazz->interface)->init = init;
+  ((RenderDeviceInterface *) clazz->interface)->initWithWindow = initWithWindow;
   ((RenderDeviceInterface *) clazz->interface)->removeDrawable = removeDrawable;
-  ((RenderDeviceInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
-  ((RenderDeviceInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((RenderDeviceInterface *) clazz->interface)->setWindow = setWindow;
 }
 

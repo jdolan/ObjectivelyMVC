@@ -222,6 +222,18 @@ struct RenderDeviceInterface {
   RenderDevice *(*init)(RenderDevice *self);
 
   /**
+   * @fn RenderDevice *RenderDevice::initWithWindow(RenderDevice *self, SDL_Window *window)
+   * @brief Initializes this RenderDevice and immediately claims the given window.
+   * @details Convenience initializer equivalent to `init` followed by `setWindow`.
+   *   Use `init` instead when offscreen rendering is required.
+   * @param self The RenderDevice.
+   * @param window The window to claim for GPU rendering.
+   * @return The initialized RenderDevice, or `NULL` on error.
+   * @memberof RenderDevice
+   */
+  RenderDevice *(*initWithWindow)(RenderDevice *self, SDL_Window *window);
+
+  /**
    * @fn void RenderDevice::removeDrawable(RenderDevice *self, Drawable *drawable)
    * @brief Unregisters a Drawable from this RenderDevice's frame loop.
    * @param self The RenderDevice.
@@ -231,28 +243,12 @@ struct RenderDeviceInterface {
   void (*removeDrawable)(RenderDevice *self, Drawable *drawable);
 
   /**
-   * @fn void RenderDevice::renderDeviceDidReset(RenderDevice *self)
-   * @brief Invoked when the GPU device has been (re-)created.
-   * @details Creates the SDL_GPUDevice, claims the window, and notifies
-   * registered Drawables.
-   * @param self The RenderDevice.
-   * @memberof RenderDevice
-   */
-  void (*renderDeviceDidReset)(RenderDevice *self);
-
-  /**
-   * @fn void RenderDevice::renderDeviceWillReset(RenderDevice *self)
-   * @brief Invoked just before the GPU device is destroyed.
-   * @details Notifies registered Drawables, releases the window, and destroys
-   * the SDL_GPUDevice.
-   * @param self The RenderDevice.
-   * @memberof RenderDevice
-   */
-  void (*renderDeviceWillReset)(RenderDevice *self);
-
-  /**
    * @fn void RenderDevice::setWindow(RenderDevice *self, SDL_Window *window)
    * @brief Binds this RenderDevice to the given window.
+   * @details Claims the window for GPU rendering. If a different window was
+   *   previously claimed, it is released first and registered Drawables are
+   *   notified via renderDeviceWillReset before the new window is claimed and
+   *   Drawables are notified via renderDeviceDidReset.
    * @param self The RenderDevice.
    * @param window The SDL_Window to render into.
    * @memberof RenderDevice
