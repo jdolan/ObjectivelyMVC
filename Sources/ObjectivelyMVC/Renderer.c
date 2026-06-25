@@ -28,7 +28,7 @@
 
 #include <Objectively/Vector.h>
 #include "Colors.h"
-#include "Log.h"
+#include <ObjectivelyGPU/Log.h>
 #include "Renderer.h"
 #include "View.h"
 #include "Window.h"

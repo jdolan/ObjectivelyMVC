@@ -27,7 +27,7 @@
 
 #include <Objectively/Object.h>
 #include <Objectively/Vector.h>
-#include <ObjectivelyMVC/RenderDevice.h>
+#include <ObjectivelyGPU/RenderDevice.h>
 
 /**
  * @file

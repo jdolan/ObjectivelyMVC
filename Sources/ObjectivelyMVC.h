@@ -49,7 +49,7 @@
 #include <ObjectivelyMVC/PageView.h>
 #include <ObjectivelyMVC/Panel.h>
 #include <ObjectivelyMVC/ProgressBar.h>
-#include <ObjectivelyMVC/RenderDevice.h>
+#include <ObjectivelyGPU/RenderDevice.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/RGBColorPicker.h>
 #include <ObjectivelyMVC/ScrollView.h>

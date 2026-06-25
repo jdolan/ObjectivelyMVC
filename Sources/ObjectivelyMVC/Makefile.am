@@ -29,7 +29,6 @@ pkginclude_HEADERS = \
 	PageView.h \
 	Panel.h \
 	ProgressBar.h \
-	RenderDevice.h \
 	Renderer.h \
 	RGBColorPicker.h \
 	ScrollView.h \
@@ -85,7 +84,6 @@ libObjectivelyMVC_la_SOURCES = \
 	PageView.c \
 	Panel.c \
 	ProgressBar.c \
-	RenderDevice.c \
 	Renderer.c \
 	RGBColorPicker.c \
 	ScrollView.c \
@@ -122,6 +120,7 @@ libObjectivelyMVC_la_CFLAGS = \
 	-I$(top_srcdir)/Assets \
 	-I$(top_srcdir)/Sources \
 	@HOST_CFLAGS@ \
+	@OBJECTIVELYGPU_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
 	@SDL3_CFLAGS@
 
@@ -130,5 +129,6 @@ libObjectivelyMVC_la_LDFLAGS = \
 
 libObjectivelyMVC_la_LIBADD = \
 	@HOST_LIBS@ \
+	@OBJECTIVELYGPU_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
 	@SDL3_DLL_LIBS@
