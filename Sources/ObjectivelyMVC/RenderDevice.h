@@ -188,6 +188,26 @@ struct RenderDeviceInterface {
   RenderDevice *(*init)(RenderDevice *self);
   RenderDevice *(*initWithWindow)(RenderDevice *self, SDL_Window *window);
 
+  /**
+   * @fn SDL_GPUShader *RenderDevice::loadShader(const RenderDevice *self, const char *name, const SDL_GPUShaderCreateInfo *info)
+   * @brief Loads a compiled shader blob via the Resource system and creates a GPU shader.
+   * @details Appends the platform-appropriate extension to @c name and resolves it via
+   *   Objectively's ResourceProvider chain:
+   *   - Metal (macOS/iOS): `.msl`
+   *   - Vulkan (Linux/Android): `.spv`
+   *   - D3D12 (Windows): `.dxil`
+   *   The caller fills in @c stage, @c entrypoint, and binding counts in @c info.
+   *   @c code, @c code_size, and @c format are filled in by this method.
+   *   Shader blobs are produced offline by @c sdl-shadercross from HLSL source.
+   * @param self The RenderDevice.
+   * @param name Shader base name without extension, e.g. @c "shaders/Renderer.vert".
+   * @param info Shader creation parameters. @c code, @c code_size, and @c format
+   *   are ignored; all other fields must be set by the caller.
+   * @return A new SDL_GPUShader. GPU_Asserts on failure.
+   * @memberof RenderDevice
+   */
+  SDL_GPUShader *(*loadShader)(const RenderDevice *self, const char *name, const SDL_GPUShaderCreateInfo *info);
+
   void *(*mapTransferBuffer)(const RenderDevice *self, SDL_GPUTransferBuffer *tbuf, bool cycle);
 
   bool (*queryFence)(const RenderDevice *self, SDL_GPUFence *fence);
