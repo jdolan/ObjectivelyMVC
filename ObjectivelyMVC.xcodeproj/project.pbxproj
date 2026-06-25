@@ -106,7 +106,6 @@
 		CE12D4991C55013700CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D49C1C568A7600CD0B13 /* TextView.c */; };
 		CE12D49F1C568A7600CD0B13 /* TextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D49D1C568A7600CD0B13 /* TextView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE12D4981C55013700CD0B13 /* OpenGL.framework */; };
 		CE14A8CC1C66D89900B576FB /* Select.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CA1C66D89900B576FB /* Select.c */; };
 		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE14A8D01C68CE3C00B576FB /* Option.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CE1C68CE3C00B576FB /* Option.c */; };
@@ -184,14 +183,13 @@
 		CED56FF72FE3440000756996 /* SDL3_image.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000B /* SDL3_image.xcframework */; };
 		CED56FF82FE3440000756996 /* SDL3_ttf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000C /* SDL3_ttf.xcframework */; };
 		CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
 		CEF1D8A01D440C7B0099A857 /* Box.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D89E1D440C7B0099A857 /* Box.c */; };
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEF601E62FEBF0AE005C680C /* RenderDevice.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF601E32FEBF0AE005C680C /* RenderDevice.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEF601E82FEBF0AE005C680C /* RenderDevice.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF601E42FEBF0AE005C680C /* RenderDevice.c */; };
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -723,6 +721,8 @@
 		CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectivelyMVC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEEA01A11E2D276B00B68010 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
 		CEEA01A31E2D28B900B68010 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
+		CEEAAFF32FED7E4400FFEBE6 /* ObjectivelyGPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectivelyGPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectivelyGPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF1D88B1D4265A70099A857 /* Panel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Panel.c; sourceTree = "<group>"; };
 		CEF1D88C1D4265A70099A857 /* Panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Panel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CEF1D8921D429F7A0099A857 /* resize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = resize.png; sourceTree = "<group>"; };
@@ -732,8 +732,6 @@
 		CEF1D8AA1D4630D20099A857 /* WindowController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WindowController.c; sourceTree = "<group>"; };
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
-		CEF601E32FEBF0AE005C680C /* RenderDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RenderDevice.h; sourceTree = "<group>"; };
-		CEF601E42FEBF0AE005C680C /* RenderDevice.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = RenderDevice.c; sourceTree = "<group>"; };
 		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -809,8 +807,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE12D8791C5CF4C600CD0B13 /* OpenGL.framework in Frameworks */,
 				CEA0010000000000000000B7 /* Objectively.framework in Frameworks */,
+				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
 				CED56FF72FE3440000756996 /* SDL3_image.xcframework in Frameworks */,
 				CED56FF82FE3440000756996 /* SDL3_ttf.xcframework in Frameworks */,
@@ -908,8 +906,6 @@
 				CEF1D88C1D4265A70099A857 /* Panel.h */,
 				CE862AD71F79FB82005C3B10 /* ProgressBar.c */,
 				CE862AD81F79FB82005C3B10 /* ProgressBar.h */,
-				CEF601E42FEBF0AE005C680C /* RenderDevice.c */,
-				CEF601E32FEBF0AE005C680C /* RenderDevice.h */,
 				CE76279C1D4A5A5800EEEE78 /* Renderer.c */,
 				CE76279D1D4A5A5800EEEE78 /* Renderer.h */,
 				CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */,
@@ -1054,6 +1050,8 @@
 		CE12D4971C55012200CD0B13 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */,
+				CEEAAFF32FED7E4400FFEBE6 /* ObjectivelyGPU.framework */,
 				CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */,
 				CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */,
 				CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */,
@@ -1183,7 +1181,6 @@
 				CEF1D88E1D4265A70099A857 /* Panel.h in Headers */,
 				CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */,
 				CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */,
-				CEF601E62FEBF0AE005C680C /* RenderDevice.h in Headers */,
 				CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */,
 				CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */,
 				CE14A8CD1C66D89900B576FB /* Select.h in Headers */,
@@ -1775,7 +1772,6 @@
 				CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */,
 				CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */,
 				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
-				CEF601E82FEBF0AE005C680C /* RenderDevice.c in Sources */,
 				CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
@@ -2163,10 +2159,6 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					OpenGL,
-				);
 				PRODUCT_NAME = ObjectivelyMVC;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -2186,10 +2178,6 @@
 				);
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
-				OTHER_LDFLAGS = (
-					"-framework",
-					OpenGL,
-				);
 				PRODUCT_NAME = ObjectivelyMVC;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;

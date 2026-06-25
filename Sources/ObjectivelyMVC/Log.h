@@ -59,16 +59,3 @@
 
 #define MVC_LogCritical(fmt, ...) \
   SDL_LogCritical(LOG_CATEGORY_MVC, "%s::%s: "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
-
-/**
- * @brief Asserts that @a cond is true, logging the SDL error and exiting on failure.
- * @details Unlike assert(3), this macro is never compiled out. Use it to guard
- * SDL_gpu operations where failure is unrecoverable (bad device, OOM, wrong
- * thread, unsupported format, etc.).
- */
-#define GPU_Assert(cond, fmt, ...) do { \
-  if (!(cond)) { \
-    MVC_LogCritical(fmt ": %s", ## __VA_ARGS__, SDL_GetError()); \
-    exit(EXIT_FAILURE); \
-  } \
-} while (0)

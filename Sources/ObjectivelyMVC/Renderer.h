@@ -88,7 +88,7 @@ struct Renderer {
    * @brief The current frame command buffer (valid between beginFrame and endFrame).
    * @private
    */
-  SDL_GPUCommandBuffer *cmd;
+  CommandBuffer *cmd;
 
   /**
    * @brief The current swapchain texture and dimensions (valid between beginFrame and endFrame).

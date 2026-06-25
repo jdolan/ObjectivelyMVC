@@ -28,7 +28,8 @@
 
 #include <Objectively/Vector.h>
 #include "Colors.h"
-#include <ObjectivelyGPU/Log.h>
+#include <ObjectivelyGPU/CopyPass.h>
+#include <ObjectivelyGPU/RenderPass.h>
 #include "Renderer.h"
 #include "View.h"
 #include "Window.h"
@@ -122,7 +123,8 @@ static void beginFrame(Renderer *self) {
   self->cmd = $(self->device, acquireCommandBuffer);
 
   if (!$(self->device, acquireSwapchainTexture, self->cmd, &self->swapchain)) {
-    SDL_CancelGPUCommandBuffer(self->cmd);
+    $(self->cmd, cancel);
+    release(self->cmd);
     self->cmd = NULL;
     return;
   }
@@ -281,7 +283,7 @@ static void endFrame(Renderer *self) {
 
   SDL_GPUTransferBuffer *vtxTransfer = NULL;
 
-  SDL_GPUCopyPass *copyPass = SDL_BeginGPUCopyPass(self->cmd);
+  CopyPass *copyPass = $(self->cmd, beginCopyPass);
 
   if (vtxCount > 0) {
     const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
@@ -303,7 +305,7 @@ static void endFrame(Renderer *self) {
 
     const SDL_GPUTransferBufferLocation src = { .transfer_buffer = vtxTransfer, .offset = 0 };
     const SDL_GPUBufferRegion dst = { .buffer = self->vertexBuffer, .offset = 0, .size = vtxSize };
-    SDL_UploadToGPUBuffer(copyPass, &src, &dst, true);
+    $(copyPass, uploadBuffer, &src, &dst, true);
   }
 
   for (size_t i = 0; i < drawables->count; i++) {
@@ -316,7 +318,7 @@ static void endFrame(Renderer *self) {
     }
   }
 
-  SDL_EndGPUCopyPass(copyPass);
+  release(copyPass);
 
   const SDL_GPUColorTargetInfo colorTarget = {
     .texture     = self->swapchain.texture,
@@ -325,14 +327,14 @@ static void endFrame(Renderer *self) {
     .clear_color = self->device->clearColor,
   };
 
-  SDL_GPURenderPass *renderPass = SDL_BeginGPURenderPass(self->cmd, &colorTarget, 1, NULL);
+  RenderPass *renderPass = $(self->cmd, beginRenderPass, &colorTarget, 1, NULL);
 
   const SDL_GPUViewport viewport = {
     .x = 0.0f, .y = 0.0f,
     .w = (float) self->swapchain.size.w, .h = (float) self->swapchain.size.h,
     .min_depth = 0.0f, .max_depth = 1.0f,
   };
-  SDL_SetGPUViewport(renderPass, &viewport);
+  $(renderPass, setViewport, &viewport);
 
   int winW, winH;
   SDL_GetWindowSize(self->device->window, &winW, &winH);
@@ -342,35 +344,25 @@ static void endFrame(Renderer *self) {
      0.0f,         0.0f,         -1.0f,  0.0f,
     -1.0f,         1.0f,          0.0f,  1.0f,
   };
-  SDL_PushGPUVertexUniformData(self->cmd, 0, projection, sizeof(projection));
+  $(self->cmd, pushVertexUniformData, 0, projection, sizeof(projection));
 
-  const SDL_GPUBufferBinding vbBinding = {
-    .buffer = self->vertexBuffer,
-    .offset = 0,
-  };
-
-  SDL_BindGPUGraphicsPipeline(renderPass, self->pipeline);
-  SDL_BindGPUVertexBuffers(renderPass, 0, &vbBinding, 1);
+  $(renderPass, bindGraphicsPipeline, self->pipeline);
+  $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer }, 1);
 
   for (size_t i = 0; i < self->drawCalls->count; i++) {
     const MVC_DrawCall *dc = VectorElement(self->drawCalls, MVC_DrawCall, i);
 
-    if (dc->hasScissor) {
-      SDL_SetGPUScissor(renderPass, &dc->scissor);
-    } else {
-      const SDL_Rect full = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
-      SDL_SetGPUScissor(renderPass, &full);
-    }
+    const SDL_Rect scissor = dc->hasScissor
+      ? dc->scissor
+      : MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
+    $(renderPass, setScissor, &scissor);
 
-    const SDL_GPUTextureSamplerBinding texBind = {
-      .texture = dc->texture,
-      .sampler = self->sampler,
-    };
-    SDL_BindGPUFragmentSamplers(renderPass, 0, &texBind, 1);
+    $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
+      .texture = dc->texture, .sampler = self->sampler,
+    }, 1);
 
-    SDL_PushGPUFragmentUniformData(self->cmd, 0, dc->color, sizeof(dc->color));
-
-    SDL_DrawGPUPrimitives(renderPass, dc->vertexCount, 1, dc->firstVertex, 0);
+    $(self->cmd, pushFragmentUniformData, 0, dc->color, sizeof(dc->color));
+    $(renderPass, drawPrimitives, dc->vertexCount, 1, dc->firstVertex, 0);
   }
 
   for (size_t i = 0; i < drawables->count; i++) {
@@ -380,13 +372,14 @@ static void endFrame(Renderer *self) {
     }
   }
 
-  SDL_EndGPURenderPass(renderPass);
+  release(renderPass);
 
   if (vtxTransfer) {
     $(self->device, releaseTransferBuffer, vtxTransfer);
   }
 
   $(self->device, submit, self->cmd);
+  release(self->cmd);
   self->cmd = NULL;
   self->swapchain = (Swapchain) { 0 };
 
@@ -529,7 +522,8 @@ static void renderDeviceDidReset(Renderer *self) {
 static void renderDeviceWillReset(Renderer *self) {
 
   if (self->cmd) {
-    SDL_CancelGPUCommandBuffer(self->cmd);
+    $(self->cmd, cancel);
+    release(self->cmd);
     self->cmd = NULL;
     self->swapchain = (Swapchain) { 0 };
   }
@@ -592,7 +586,8 @@ static void dealloc(Object *self) {
   Renderer *this = (Renderer *) self;
 
   if (this->cmd) {
-    SDL_CancelGPUCommandBuffer(this->cmd);
+    $(this->cmd, cancel);
+    release(this->cmd);
     this->cmd = NULL;
   }
 
