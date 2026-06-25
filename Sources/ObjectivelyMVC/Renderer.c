@@ -119,14 +119,18 @@ static void pushDrawCall(const Renderer *self, const MVC_Vertex *verts, Uint32 c
  */
 static void beginFrame(Renderer *self) {
 
-  $(self->device, beginFrame);
+  self->cmd = $(self->device, acquireCommandBuffer);
+
+  if (!$(self->device, acquireSwapchainTexture, self->cmd, &self->swapchain)) {
+    SDL_CancelGPUCommandBuffer(self->cmd);
+    self->cmd = NULL;
+    return;
+  }
 
   $(self->vertices, removeAll);
   $(self->drawCalls, removeAll);
 
-  const Swapchain *s = &self->device->swapchain;
-
-  self->scissor = MakeRect(0, 0, s->size.w, s->size.h);
+  self->scissor = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
   self->hasScissor = false;
 
   $(self, setDrawColor, &Colors.White);
@@ -277,7 +281,7 @@ static void endFrame(Renderer *self) {
 
   SDL_GPUTransferBuffer *vtxTransfer = NULL;
 
-  SDL_GPUCopyPass *copyPass = SDL_BeginGPUCopyPass(self->device->cmd);
+  SDL_GPUCopyPass *copyPass = SDL_BeginGPUCopyPass(self->cmd);
 
   if (vtxCount > 0) {
     const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
@@ -286,12 +290,14 @@ static void endFrame(Renderer *self) {
       if (self->vertexBuffer) {
         SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
       }
-      self->vertexBuffer = $(self->device, createBuffer, SDL_GPU_BUFFERUSAGE_VERTEX, vtxSize);
+      const SDL_GPUBufferCreateInfo vtxBufInfo = { .usage = SDL_GPU_BUFFERUSAGE_VERTEX, .size = vtxSize };
+      self->vertexBuffer = $(self->device, createBuffer, &vtxBufInfo);
       GPU_Assert(self->vertexBuffer, "createBuffer (vertex)");
       self->vertexBufferCapacity = (Uint32) vtxCount;
     }
 
-    vtxTransfer = $(self->device, createTransferBuffer, SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, vtxSize);
+    const SDL_GPUTransferBufferCreateInfo vtxTbufInfo = { .usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, .size = vtxSize };
+    vtxTransfer = $(self->device, createTransferBuffer, &vtxTbufInfo);
     GPU_Assert(vtxTransfer, "createTransferBuffer (vertex)");
     void *mapped = SDL_MapGPUTransferBuffer(self->device->device, vtxTransfer, false);
     GPU_Assert(mapped, "SDL_MapGPUTransferBuffer");
@@ -314,17 +320,17 @@ static void endFrame(Renderer *self) {
   SDL_EndGPUCopyPass(copyPass);
 
   const SDL_GPUColorTargetInfo colorTarget = {
-    .texture     = self->device->swapchain.texture,
+    .texture     = self->swapchain.texture,
     .load_op     = self->device->clear ? SDL_GPU_LOADOP_CLEAR : SDL_GPU_LOADOP_LOAD,
     .store_op    = SDL_GPU_STOREOP_STORE,
     .clear_color = self->device->clearColor,
   };
 
-  SDL_GPURenderPass *renderPass = SDL_BeginGPURenderPass(self->device->cmd, &colorTarget, 1, NULL);
+  SDL_GPURenderPass *renderPass = SDL_BeginGPURenderPass(self->cmd, &colorTarget, 1, NULL);
 
   const SDL_GPUViewport viewport = {
     .x = 0.0f, .y = 0.0f,
-    .w = (float) self->device->swapchain.size.w, .h = (float) self->device->swapchain.size.h,
+    .w = (float) self->swapchain.size.w, .h = (float) self->swapchain.size.h,
     .min_depth = 0.0f, .max_depth = 1.0f,
   };
   SDL_SetGPUViewport(renderPass, &viewport);
@@ -337,7 +343,7 @@ static void endFrame(Renderer *self) {
      0.0f,         0.0f,         -1.0f,  0.0f,
     -1.0f,         1.0f,          0.0f,  1.0f,
   };
-  SDL_PushGPUVertexUniformData(self->device->cmd, 0, projection, sizeof(projection));
+  SDL_PushGPUVertexUniformData(self->cmd, 0, projection, sizeof(projection));
 
   const SDL_GPUBufferBinding vbBinding = {
     .buffer = self->vertexBuffer,
@@ -353,7 +359,7 @@ static void endFrame(Renderer *self) {
     if (dc->hasScissor) {
       SDL_SetGPUScissor(renderPass, &dc->scissor);
     } else {
-      const SDL_Rect full = MakeRect(0, 0, self->device->swapchain.size.w, self->device->swapchain.size.h);
+      const SDL_Rect full = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
       SDL_SetGPUScissor(renderPass, &full);
     }
 
@@ -363,25 +369,25 @@ static void endFrame(Renderer *self) {
     };
     SDL_BindGPUFragmentSamplers(renderPass, 0, &texBind, 1);
 
-    SDL_PushGPUFragmentUniformData(self->device->cmd, 0, dc->color, sizeof(dc->color));
+    SDL_PushGPUFragmentUniformData(self->cmd, 0, dc->color, sizeof(dc->color));
 
     SDL_DrawGPUPrimitives(renderPass, dc->vertexCount, 1, dc->firstVertex, 0);
   }
 
   for (size_t i = 0; i < drawables->count; i++) {
     Drawable *d = $(drawables, objectAtIndex, i);
-    $(d, submit, self->device->cmd, renderPass);
+    $(d, submit, self->cmd, renderPass);
   }
 
   SDL_EndGPURenderPass(renderPass);
-  SDL_SubmitGPUCommandBuffer(self->device->cmd);
 
   if (vtxTransfer) {
     SDL_ReleaseGPUTransferBuffer(self->device->device, vtxTransfer);
   }
 
-  self->device->cmd = NULL;
-  self->device->swapchain = (Swapchain) { 0 };
+  $(self->device, submit, self->cmd);
+  self->cmd = NULL;
+  self->swapchain = (Swapchain) { 0 };
 
   $(self, setDrawColor, &Colors.White);
 }
@@ -507,14 +513,17 @@ static void renderDeviceDidReset(Renderer *self) {
   GPU_Assert(self->sampler, "SDL_CreateGPUSampler");
 
   const Uint8 whitePx[4] = { 255, 255, 255, 255 };
-
-  SDL_Surface *whiteSurface = SDL_CreateSurfaceFrom(1, 1, SDL_PIXELFORMAT_RGBA32, (void *) whitePx, 4);
-  GPU_Assert(whiteSurface, "SDL_CreateSurfaceFrom");
-
-  self->white = $(self->device, createTexture, whiteSurface);
+  const SDL_GPUTextureCreateInfo whiteInfo = {
+    .type                 = SDL_GPU_TEXTURETYPE_2D,
+    .format               = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+    .usage                = SDL_GPU_TEXTUREUSAGE_SAMPLER,
+    .width                = 1,
+    .height               = 1,
+    .layer_count_or_depth = 1,
+    .num_levels           = 1,
+  };
+  self->white = $(self->device, createTexture, &whiteInfo, whitePx);
   GPU_Assert(self->white, "createTexture (white)");
-
-  SDL_DestroySurface(whiteSurface);
 }
 
 /**
@@ -522,6 +531,12 @@ static void renderDeviceDidReset(Renderer *self) {
  * @memberof Renderer
  */
 static void renderDeviceWillReset(Renderer *self) {
+
+  if (self->cmd) {
+    SDL_CancelGPUCommandBuffer(self->cmd);
+    self->cmd = NULL;
+    self->swapchain = (Swapchain) { 0 };
+  }
 
   if (self->white) {
     SDL_ReleaseGPUTexture(self->device->device, self->white);
@@ -560,7 +575,7 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
     self->scissor = MVC_TransformToWindow(self->device->window, clippingFrame);
     self->hasScissor = true;
   } else {
-    self->scissor = MakeRect(0, 0, self->device->swapchain.size.w, self->device->swapchain.size.h);
+    self->scissor = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
     self->hasScissor = false;
   }
 }
@@ -581,6 +596,11 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
 static void dealloc(Object *self) {
 
   Renderer *this = (Renderer *) self;
+
+  if (this->cmd) {
+    SDL_CancelGPUCommandBuffer(this->cmd);
+    this->cmd = NULL;
+  }
 
   release(this->vertices);
   release(this->drawCalls);

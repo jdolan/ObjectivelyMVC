@@ -377,8 +377,44 @@ static void render(View *self, Renderer *renderer) {
       this->texture_w = (int) roundf(surface->w / scale);
       this->texture_h = (int) roundf(surface->h / scale);
 
-      this->texture = $(renderer->device, createTexture, surface);
+      SDL_Surface *upload = surface;
+      SDL_Surface *converted = NULL;
+
+      if (SDL_BYTESPERPIXEL(surface->format) == 1) {
+        converted = SDL_CreateSurface(surface->w, surface->h, SDL_PIXELFORMAT_RGBA32);
+        assert(converted);
+        const Uint8 *src = (const Uint8 *) surface->pixels;
+        Uint32 *dst = (Uint32 *) converted->pixels;
+        for (int y = 0; y < surface->h; y++) {
+          for (int x = 0; x < surface->w; x++) {
+            const Uint8 a = src[y * surface->pitch + x];
+            dst[y * surface->w + x] = SDL_MapRGBA(
+              SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_RGBA32), NULL, 255, 255, 255, a);
+          }
+        }
+        upload = converted;
+      } else if (surface->format != SDL_PIXELFORMAT_RGBA32) {
+        converted = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
+        assert(converted);
+        upload = converted;
+      }
+
+      const SDL_GPUTextureCreateInfo texInfo = {
+        .type                 = SDL_GPU_TEXTURETYPE_2D,
+        .format               = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+        .usage                = SDL_GPU_TEXTUREUSAGE_SAMPLER,
+        .width                = (Uint32) upload->w,
+        .height               = (Uint32) upload->h,
+        .layer_count_or_depth = 1,
+        .num_levels           = 1,
+      };
+
+      this->texture = $(renderer->device, createTexture, &texInfo, upload->pixels);
       this->device = renderer->device->device;
+
+      if (converted) {
+        SDL_DestroySurface(converted);
+      }
 
       SDL_DestroySurface(surface);
     }

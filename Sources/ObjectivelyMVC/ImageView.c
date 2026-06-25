@@ -102,9 +102,32 @@ static void render(View *self, Renderer *renderer) {
 
   if (this->texture == NULL) {
     if (this->image) {
-      this->texture = $(renderer->device, createTexture, this->image->surface);
+      SDL_Surface *surface = this->image->surface;
+      SDL_Surface *converted = NULL;
+
+      if (surface->format != SDL_PIXELFORMAT_RGBA32) {
+        converted = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
+        assert(converted);
+        surface = converted;
+      }
+
+      const SDL_GPUTextureCreateInfo texInfo = {
+        .type                 = SDL_GPU_TEXTURETYPE_2D,
+        .format               = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+        .usage                = SDL_GPU_TEXTUREUSAGE_SAMPLER,
+        .width                = (Uint32) surface->w,
+        .height               = (Uint32) surface->h,
+        .layer_count_or_depth = 1,
+        .num_levels           = 1,
+      };
+
+      this->texture = $(renderer->device, createTexture, &texInfo, surface->pixels);
       this->device = renderer->device->device;
       assert(this->texture);
+
+      if (converted) {
+        SDL_DestroySurface(converted);
+      }
     }
   }
 

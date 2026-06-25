@@ -105,17 +105,6 @@ struct RenderDevice {
   SDL_FColor clearColor;
 
   /**
-   * @brief The current frame command buffer (valid between beginFrame and endFrame).
-   * @private
-   */
-  SDL_GPUCommandBuffer *cmd;
-
-  /**
-   * @brief The current Swapchain.
-   */
-  Swapchain swapchain;
-
-  /**
    * @brief Registered Drawables participating in this device's frame loop.
    * @private
    */
@@ -142,56 +131,85 @@ struct RenderDeviceInterface {
   void (*addDrawable)(RenderDevice *self, Drawable *drawable);
 
   /**
-   * @fn void RenderDevice::beginFrame(RenderDevice *self)
-   * @brief Acquires the frame command buffer and swapchain texture.
+   * @fn SDL_GPUCommandBuffer *RenderDevice::acquireCommandBuffer(const RenderDevice *self)
+   * @brief Acquires a command buffer for recording GPU work.
    * @param self The RenderDevice.
-   * @remarks If the swapchain texture is unavailable for this frame, the command
-   * buffer is cancelled and the frame is skipped.
+   * @return A command buffer. GPU_Asserts on failure (wrong thread, device lost, etc.).
+   * @remarks The returned command buffer must be submitted or cancelled by the caller.
    * @memberof RenderDevice
    */
-  void (*beginFrame)(RenderDevice *self);
+  SDL_GPUCommandBuffer *(*acquireCommandBuffer)(const RenderDevice *self);
 
   /**
-   * @fn SDL_GPUBuffer *RenderDevice::createBuffer(const RenderDevice *self, SDL_GPUBufferUsageFlags usage, Uint32 size)
+   * @fn bool RenderDevice::acquireSwapchainTexture(const RenderDevice *self, SDL_GPUCommandBuffer *cmd, Swapchain *swapchain)
+   * @brief Attempts to acquire the swapchain texture for the given command buffer.
+   * @param self The RenderDevice.
+   * @param cmd The command buffer that will render to the swapchain.
+   * @param swapchain Filled with the swapchain texture and dimensions on success.
+   * @return True if the swapchain is available this frame; false if it is temporarily
+   *   unavailable (window minimized, pipeline warm-up, etc.). The caller should cancel
+   *   @c cmd and skip the frame when this returns false.
+   * @memberof RenderDevice
+   */
+  bool (*acquireSwapchainTexture)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd, Swapchain *swapchain);
+
+  /**
+   * @fn void RenderDevice::submit(const RenderDevice *self, SDL_GPUCommandBuffer *cmd)
+   * @brief Submits a command buffer to the GPU.
+   * @param self The RenderDevice.
+   * @param cmd The command buffer to submit.
+   * @memberof RenderDevice
+   */
+  void (*submit)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd);
+
+  /**
+   * @fn SDL_GPUFence *RenderDevice::submitAndFence(const RenderDevice *self, SDL_GPUCommandBuffer *cmd)
+   * @brief Submits a command buffer and returns a fence for tracking its completion.
+   * @param self The RenderDevice.
+   * @param cmd The command buffer to submit.
+   * @return A fence that becomes signaled when the submission completes. The caller
+   *   must release it with SDL_ReleaseGPUFence when done.
+   * @memberof RenderDevice
+   */
+  SDL_GPUFence *(*submitAndFence)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd);
+
+  /**
+   * @fn SDL_GPUBuffer *RenderDevice::createBuffer(const RenderDevice *self, const SDL_GPUBufferCreateInfo *info)
    * @brief Creates a GPU buffer on this RenderDevice's device.
    * @param self The RenderDevice.
-   * @param usage Buffer usage flags.
-   * @param size Size in bytes.
+   * @param info The buffer creation parameters.
    * @return The new buffer, or `NULL` on error.
    * @memberof RenderDevice
    */
-  SDL_GPUBuffer *(*createBuffer)(const RenderDevice *self, SDL_GPUBufferUsageFlags usage, Uint32 size);
+  SDL_GPUBuffer *(*createBuffer)(const RenderDevice *self, const SDL_GPUBufferCreateInfo *info);
 
   /**
-   * @fn SDL_GPUTexture *RenderDevice::createTexture(const RenderDevice *self, const SDL_Surface *surface)
-   * @brief Creates a GPU texture from the given surface, uploading its pixels.
+   * @fn SDL_GPUTexture *RenderDevice::createTexture(const RenderDevice *self, const SDL_GPUTextureCreateInfo *info, const void *pixels)
+   * @brief Creates a GPU texture and optionally uploads pixel data.
    * @param self The RenderDevice.
-   * @param surface The surface to upload.
+   * @param info The texture creation parameters (type, format, dimensions, etc.).
+   * @param pixels Optional pixel data to upload. If non-NULL, a one-shot transfer
+   *   buffer is created, `info->width * info->height * info->layer_count_or_depth`
+   *   texels (at `SDL_GPUTextureFormatTexelBlockSize` bytes each) are copied from
+   *   `pixels`, and the upload is submitted immediately. For 3D textures the data
+   *   is expected to be depth slices laid out contiguously. Pass `NULL` to create
+   *   the texture without any upload (caller manages the transfer).
    * @return A new SDL_GPUTexture on success, or `NULL` on error.
    * @remarks The caller owns the returned texture; release it with
-   * SDL_ReleaseGPUTexture(self->device, texture).
+   *   SDL_ReleaseGPUTexture(self->device, texture).
    * @memberof RenderDevice
    */
-  SDL_GPUTexture *(*createTexture)(const RenderDevice *self, const SDL_Surface *surface);
+  SDL_GPUTexture *(*createTexture)(const RenderDevice *self, const SDL_GPUTextureCreateInfo *info, const void *pixels);
 
   /**
-   * @fn SDL_GPUTransferBuffer *RenderDevice::createTransferBuffer(const RenderDevice *self, SDL_GPUTransferBufferUsage usage, Uint32 size)
+   * @fn SDL_GPUTransferBuffer *RenderDevice::createTransferBuffer(const RenderDevice *self, const SDL_GPUTransferBufferCreateInfo *info)
    * @brief Creates a transfer buffer on this RenderDevice's device.
    * @param self The RenderDevice.
-   * @param usage Transfer buffer usage.
-   * @param size Size in bytes.
+   * @param info The transfer buffer creation parameters.
    * @return The new transfer buffer, or `NULL` on error.
    * @memberof RenderDevice
    */
-  SDL_GPUTransferBuffer *(*createTransferBuffer)(const RenderDevice *self, SDL_GPUTransferBufferUsage usage, Uint32 size);
-
-  /**
-   * @fn void RenderDevice::endFrame(RenderDevice *self)
-   * @brief Submits this frame's Drawable uploads and render pass.
-   * @param self The RenderDevice.
-   * @memberof RenderDevice
-   */
-  void (*endFrame)(RenderDevice *self);
+  SDL_GPUTransferBuffer *(*createTransferBuffer)(const RenderDevice *self, const SDL_GPUTransferBufferCreateInfo *info);
 
   /**
    * @protected

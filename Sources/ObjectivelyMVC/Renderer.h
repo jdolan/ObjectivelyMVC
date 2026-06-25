@@ -85,6 +85,18 @@ struct Renderer {
   RenderDevice *device;
 
   /**
+   * @brief The current frame command buffer (valid between beginFrame and endFrame).
+   * @private
+   */
+  SDL_GPUCommandBuffer *cmd;
+
+  /**
+   * @brief The current swapchain texture and dimensions (valid between beginFrame and endFrame).
+   * @private
+   */
+  Swapchain swapchain;
+
+  /**
    * @brief The current draw color.
    * @private
    */

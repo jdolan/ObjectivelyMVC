@@ -151,7 +151,7 @@ static void render(WindowController *self) {
 
   $(self->renderer, beginFrame);
 
-  if (!self->renderer->device->cmd) {
+  if (!self->renderer->cmd) {
     return;
   }
 
