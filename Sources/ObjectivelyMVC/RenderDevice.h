@@ -45,47 +45,47 @@ typedef struct RenderDevice RenderDevice;
  *
  * Typical use without subclassing:
  * @code
- *   Drawable *d = calloc(1, sizeof(Drawable));
- *   d->data = myData;
- *   d->transfer = myTransfer;
- *   d->submit   = mySubmit;
- *   $(device, addDrawable, d);
+ *   $(device, addDrawable, &(Drawable) {
+ *     .transfer = R_LoadLightgrid,
+ *     .data = r_world_model,
+ *   });
  * @endcode
  */
-typedef struct Drawable {
+struct Drawable {
+
+  /**
+   * @brief Called when the GPU device has been (re-)created. Allocate GPU resources here.
+   */
+  void (*deviceDidReset)(SDL_GPUDevice *device, ident data);
+
+  /**
+   * @brief Called just before the GPU device is destroyed. Release GPU resources here.
+   */
+  void (*deviceWillReset)(ident data);
+
+  /**
+   * @brief Called each frame during the render pass. Issue draw commands here.
+   */
+  void (*submit)(SDL_GPUCommandBuffer *cmd, SDL_GPURenderPass *renderPass, ident data);
+
+  /**
+   * @brief Called when dirty during the copy pass. Upload CPU data to GPU buffers/textures here.
+   */
+  void (*transfer)(SDL_GPUCopyPass *copyPass, ident data);
 
   /**
    * @brief When true, the RenderDevice calls transfer() this frame.
    * Reset to false after transfer() returns.
    */
-  bool dirty;
+  bool isDirty;
 
   /**
-   * @brief Optional caller-supplied context, passed to all callbacks.
+   * @brief User data, passed to all callbacks.
    */
-  void *data;
+  ident data;
+};
 
-  /**
-   * @brief Called when the GPU device has been (re-)created. Allocate GPU resources here.
-   */
-  void (*renderDeviceDidReset)(struct Drawable *self, SDL_GPUDevice *device);
-
-  /**
-   * @brief Called just before the GPU device is destroyed. Release GPU resources here.
-   */
-  void (*renderDeviceWillReset)(struct Drawable *self);
-
-  /**
-   * @brief Called each frame during the render pass. Issue draw commands here.
-   */
-  void (*submit)(struct Drawable *self, SDL_GPUCommandBuffer *cmd, SDL_GPURenderPass *renderPass);
-
-  /**
-   * @brief Called when dirty during the copy pass. Upload CPU data to GPU buffers/textures here.
-   */
-  void (*transfer)(struct Drawable *self, SDL_GPUCopyPass *copyPass);
-
-} Drawable;
+typedef struct Drawable Drawable;
 
 /**
  * @brief The Swapchain (render target) type.
@@ -171,139 +171,58 @@ struct RenderDeviceInterface {
    */
   ObjectInterface objectInterface;
 
-  /**
-   * @fn void RenderDevice::addDrawable(RenderDevice *self, Drawable *drawable)
-   * @brief Registers a Drawable to participate in this RenderDevice's frame loop.
-   * @param self The RenderDevice.
-   * @param drawable The Drawable to add.
-   * @memberof RenderDevice
-   */
+  SDL_GPUCommandBuffer *(*acquireCommandBuffer)(const RenderDevice *self);
+  bool (*acquireSwapchainTexture)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd, Swapchain *swapchain);
   void (*addDrawable)(RenderDevice *self, Drawable *drawable);
 
-  /**
-   * @fn SDL_GPUCommandBuffer *RenderDevice::acquireCommandBuffer(const RenderDevice *self)
-   * @brief Acquires a command buffer for recording GPU work.
-   * @param self The RenderDevice.
-   * @return A command buffer. GPU_Asserts on failure (wrong thread, device lost, etc.).
-   * @remarks The returned command buffer must be submitted or cancelled by the caller.
-   * @memberof RenderDevice
-   */
-  SDL_GPUCommandBuffer *(*acquireCommandBuffer)(const RenderDevice *self);
-
-  /**
-   * @fn bool RenderDevice::acquireSwapchainTexture(const RenderDevice *self, SDL_GPUCommandBuffer *cmd, Swapchain *swapchain)
-   * @brief Attempts to acquire the swapchain texture for the given command buffer.
-   * @param self The RenderDevice.
-   * @param cmd The command buffer that will render to the swapchain.
-   * @param swapchain Filled with the swapchain texture and dimensions on success.
-   * @return True if the swapchain is available this frame; false if it is temporarily
-   *   unavailable (window minimized, pipeline warm-up, etc.). The caller should cancel
-   *   @c cmd and skip the frame when this returns false.
-   * @memberof RenderDevice
-   */
-  bool (*acquireSwapchainTexture)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd, Swapchain *swapchain);
-
-  /**
-   * @fn void RenderDevice::submit(const RenderDevice *self, SDL_GPUCommandBuffer *cmd)
-   * @brief Submits a command buffer to the GPU.
-   * @param self The RenderDevice.
-   * @param cmd The command buffer to submit.
-   * @memberof RenderDevice
-   */
-  void (*submit)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd);
-
-  /**
-   * @fn SDL_GPUFence *RenderDevice::submitAndFence(const RenderDevice *self, SDL_GPUCommandBuffer *cmd)
-   * @brief Submits a command buffer and returns a fence for tracking its completion.
-   * @param self The RenderDevice.
-   * @param cmd The command buffer to submit.
-   * @return A fence that becomes signaled when the submission completes. The caller
-   *   must release it with SDL_ReleaseGPUFence when done.
-   * @memberof RenderDevice
-   */
-  SDL_GPUFence *(*submitAndFence)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd);
-
-  /**
-   * @fn SDL_GPUBuffer *RenderDevice::createBuffer(const RenderDevice *self, const SDL_GPUBufferCreateInfo *info)
-   * @brief Creates a GPU buffer on this RenderDevice's device.
-   * @param self The RenderDevice.
-   * @param info The buffer creation parameters.
-   * @return The new buffer, or `NULL` on error.
-   * @memberof RenderDevice
-   */
   SDL_GPUBuffer *(*createBuffer)(const RenderDevice *self, const SDL_GPUBufferCreateInfo *info);
-
-  /**
-   * @fn SDL_GPUTexture *RenderDevice::createTexture(const RenderDevice *self, const SDL_GPUTextureCreateInfo *info, const void *pixels)
-   * @brief Creates a GPU texture and optionally uploads pixel data.
-   * @param self The RenderDevice.
-   * @param info The texture creation parameters (type, format, dimensions, etc.).
-   * @param pixels Optional pixel data to upload. If non-NULL, a one-shot transfer
-   *   buffer is created, `info->width * info->height * info->layer_count_or_depth`
-   *   texels (at `SDL_GPUTextureFormatTexelBlockSize` bytes each) are copied from
-   *   `pixels`, and the upload is submitted immediately. For 3D textures the data
-   *   is expected to be depth slices laid out contiguously. Pass `NULL` to create
-   *   the texture without any upload (caller manages the transfer).
-   * @return A new SDL_GPUTexture on success, or `NULL` on error.
-   * @remarks The caller owns the returned texture; release it with
-   *   SDL_ReleaseGPUTexture(self->device, texture).
-   * @memberof RenderDevice
-   */
+  SDL_GPUComputePipeline *(*createComputePipeline)(const RenderDevice *self, const SDL_GPUComputePipelineCreateInfo *info);
+  SDL_GPUGraphicsPipeline *(*createGraphicsPipeline)(const RenderDevice *self, const SDL_GPUGraphicsPipelineCreateInfo *info);
+  SDL_GPUSampler *(*createSampler)(const RenderDevice *self, const SDL_GPUSamplerCreateInfo *info);
+  SDL_GPUShader *(*createShader)(const RenderDevice *self, const SDL_GPUShaderCreateInfo *info);
   SDL_GPUTexture *(*createTexture)(const RenderDevice *self, const SDL_GPUTextureCreateInfo *info, const void *pixels);
-
-  /**
-   * @fn SDL_GPUTransferBuffer *RenderDevice::createTransferBuffer(const RenderDevice *self, const SDL_GPUTransferBufferCreateInfo *info)
-   * @brief Creates a transfer buffer on this RenderDevice's device.
-   * @param self The RenderDevice.
-   * @param info The transfer buffer creation parameters.
-   * @return The new transfer buffer, or `NULL` on error.
-   * @memberof RenderDevice
-   */
   SDL_GPUTransferBuffer *(*createTransferBuffer)(const RenderDevice *self, const SDL_GPUTransferBufferCreateInfo *info);
 
-  /**
-   * @protected
-   * @fn RenderDevice *RenderDevice::init(RenderDevice *self)
-   * @brief Initializes this RenderDevice.
-   * @param self The RenderDevice.
-   * @return The initialized RenderDevice, or `NULL` on error.
-   * @memberof RenderDevice
-   */
-  RenderDevice *(*init)(RenderDevice *self);
+  SDL_GPUTextureFormat (*getSwapchainTextureFormat)(const RenderDevice *self, SDL_Window *window);
 
-  /**
-   * @fn RenderDevice *RenderDevice::initWithWindow(RenderDevice *self, SDL_Window *window)
-   * @brief Initializes this RenderDevice and immediately claims the given window.
-   * @details Convenience initializer equivalent to `init` followed by `setWindow`.
-   *   Use `init` instead when offscreen rendering is required.
-   * @param self The RenderDevice.
-   * @param window The window to claim for GPU rendering.
-   * @return The initialized RenderDevice, or `NULL` on error.
-   * @memberof RenderDevice
-   */
+  RenderDevice *(*init)(RenderDevice *self);
   RenderDevice *(*initWithWindow)(RenderDevice *self, SDL_Window *window);
 
-  /**
-   * @fn void RenderDevice::removeDrawable(RenderDevice *self, Drawable *drawable)
-   * @brief Unregisters a Drawable from this RenderDevice's frame loop.
-   * @param self The RenderDevice.
-   * @param drawable The Drawable to remove.
-   * @memberof RenderDevice
-   */
+  void *(*mapTransferBuffer)(const RenderDevice *self, SDL_GPUTransferBuffer *tbuf, bool cycle);
+
+  bool (*queryFence)(const RenderDevice *self, SDL_GPUFence *fence);
+
+  void (*releaseBuffer)(const RenderDevice *self, SDL_GPUBuffer *buffer);
+  void (*releaseComputePipeline)(const RenderDevice *self, SDL_GPUComputePipeline *pipeline);
+  void (*releaseFence)(const RenderDevice *self, SDL_GPUFence *fence);
+  void (*releaseGraphicsPipeline)(const RenderDevice *self, SDL_GPUGraphicsPipeline *pipeline);
+  void (*releaseSampler)(const RenderDevice *self, SDL_GPUSampler *sampler);
+  void (*releaseShader)(const RenderDevice *self, SDL_GPUShader *shader);
+  void (*releaseTexture)(const RenderDevice *self, SDL_GPUTexture *texture);
+  void (*releaseTransferBuffer)(const RenderDevice *self, SDL_GPUTransferBuffer *tbuf);
+
   void (*removeDrawable)(RenderDevice *self, Drawable *drawable);
 
-  /**
-   * @fn void RenderDevice::setWindow(RenderDevice *self, SDL_Window *window)
-   * @brief Binds this RenderDevice to the given window.
-   * @details Claims the window for GPU rendering. If a different window was
-   *   previously claimed, it is released first and registered Drawables are
-   *   notified via renderDeviceWillReset before the new window is claimed and
-   *   Drawables are notified via renderDeviceDidReset.
-   * @param self The RenderDevice.
-   * @param window The SDL_Window to render into.
-   * @memberof RenderDevice
-   */
+  bool (*setAllowedFramesInFlight)(const RenderDevice *self, Uint32 allowed);
+  void (*setBufferName)(const RenderDevice *self, SDL_GPUBuffer *buffer, const char *name);
+  bool (*setSwapchainParameters)(const RenderDevice *self, SDL_Window *window, SDL_GPUSwapchainComposition composition, SDL_GPUPresentMode mode);
+  void (*setTextureName)(const RenderDevice *self, SDL_GPUTexture *texture, const char *name);
   void (*setWindow)(RenderDevice *self, SDL_Window *window);
+
+  void (*submit)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd);
+  SDL_GPUFence *(*submitAndFence)(const RenderDevice *self, SDL_GPUCommandBuffer *cmd);
+
+  bool (*textureSupportsFormat)(const RenderDevice *self, SDL_GPUTextureFormat format, SDL_GPUTextureType type, SDL_GPUTextureUsageFlags usage);
+  bool (*textureSupportsSampleCount)(const RenderDevice *self, SDL_GPUTextureFormat format, SDL_GPUSampleCount sample_count);
+
+  void (*unmapTransferBuffer)(const RenderDevice *self, SDL_GPUTransferBuffer *tbuf);
+
+  bool (*waitForFences)(const RenderDevice *self, bool wait_all, SDL_GPUFence *const *fences, Uint32 num_fences);
+  bool (*waitForIdle)(const RenderDevice *self);
+  bool (*waitForSwapchain)(const RenderDevice *self, SDL_Window *window);
+
+  bool (*windowSupportsPresentMode)(const RenderDevice *self, SDL_Window *window, SDL_GPUPresentMode mode);
+  bool (*windowSupportsSwapchainComposition)(const RenderDevice *self, SDL_Window *window, SDL_GPUSwapchainComposition composition);
 };
 
 /**

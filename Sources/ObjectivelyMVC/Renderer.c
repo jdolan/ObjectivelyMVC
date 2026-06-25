@@ -288,21 +288,18 @@ static void endFrame(Renderer *self) {
 
     if (vtxCount > self->vertexBufferCapacity) {
       if (self->vertexBuffer) {
-        SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
+        $(self->device, releaseBuffer, self->vertexBuffer);
       }
       const SDL_GPUBufferCreateInfo vtxBufInfo = { .usage = SDL_GPU_BUFFERUSAGE_VERTEX, .size = vtxSize };
       self->vertexBuffer = $(self->device, createBuffer, &vtxBufInfo);
-      GPU_Assert(self->vertexBuffer, "createBuffer (vertex)");
       self->vertexBufferCapacity = (Uint32) vtxCount;
     }
 
     const SDL_GPUTransferBufferCreateInfo vtxTbufInfo = { .usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, .size = vtxSize };
     vtxTransfer = $(self->device, createTransferBuffer, &vtxTbufInfo);
-    GPU_Assert(vtxTransfer, "createTransferBuffer (vertex)");
-    void *mapped = SDL_MapGPUTransferBuffer(self->device->device, vtxTransfer, false);
-    GPU_Assert(mapped, "SDL_MapGPUTransferBuffer");
+    void *mapped = $(self->device, mapTransferBuffer, vtxTransfer, false);
     memcpy(mapped, self->vertices->elements, vtxSize);
-    SDL_UnmapGPUTransferBuffer(self->device->device, vtxTransfer);
+    $(self->device, unmapTransferBuffer, vtxTransfer);
 
     const SDL_GPUTransferBufferLocation src = { .transfer_buffer = vtxTransfer, .offset = 0 };
     const SDL_GPUBufferRegion dst = { .buffer = self->vertexBuffer, .offset = 0, .size = vtxSize };
@@ -310,12 +307,12 @@ static void endFrame(Renderer *self) {
   }
 
   for (size_t i = 0; i < drawables->count; i++) {
-    Drawable *d = *VectorElement(drawables, Drawable *, i);
-    if (d->dirty) {
-      if (d->transfer) {
-        d->transfer(d, copyPass);
+    Drawable *draw = *VectorElement(drawables, Drawable *, i);
+    if (draw->isDirty) {
+      if (draw->transfer) {
+        draw->transfer(copyPass, draw->data);
       }
-      d->dirty = false;
+      draw->isDirty = false;
     }
   }
 
@@ -377,16 +374,16 @@ static void endFrame(Renderer *self) {
   }
 
   for (size_t i = 0; i < drawables->count; i++) {
-    Drawable *d = *VectorElement(drawables, Drawable *, i);
-    if (d->submit) {
-      d->submit(d, self->cmd, renderPass);
+    Drawable *draw = *VectorElement(drawables, Drawable *, i);
+    if (draw->submit) {
+      draw->submit(self->cmd, renderPass, draw->data);
     }
   }
 
   SDL_EndGPURenderPass(renderPass);
 
   if (vtxTransfer) {
-    SDL_ReleaseGPUTransferBuffer(self->device->device, vtxTransfer);
+    $(self->device, releaseTransferBuffer, vtxTransfer);
   }
 
   $(self->device, submit, self->cmd);
@@ -447,10 +444,8 @@ static void renderDeviceDidReset(Renderer *self) {
     .num_uniform_buffers = 1,
   };
 
-  SDL_GPUShader *vs = SDL_CreateGPUShader(self->device->device, &vsInfo);
-  GPU_Assert(vs, "SDL_CreateGPUShader (vertex)");
-  SDL_GPUShader *fs = SDL_CreateGPUShader(self->device->device, &fsInfo);
-  GPU_Assert(fs, "SDL_CreateGPUShader (fragment)");
+  SDL_GPUShader *vs = $(self->device, createShader, &vsInfo);
+  SDL_GPUShader *fs = $(self->device, createShader, &fsInfo);
 
   const SDL_GPUVertexBufferDescription vbDesc = {
     .slot               = 0,
@@ -464,7 +459,7 @@ static void renderDeviceDidReset(Renderer *self) {
     { .location = 1, .buffer_slot = 0, .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2, .offset = 8 },
   };
 
-  const SDL_GPUTextureFormat swapchainFmt = SDL_GetGPUSwapchainTextureFormat(self->device->device, self->device->window);
+  const SDL_GPUTextureFormat swapchainFmt = $(self->device, getSwapchainTextureFormat, self->device->window);
   const SDL_GPUColorTargetDescription colorTarget = {
     .format = swapchainFmt,
     .blend_state = {
@@ -499,11 +494,10 @@ static void renderDeviceDidReset(Renderer *self) {
     },
   };
 
-  self->pipeline = SDL_CreateGPUGraphicsPipeline(self->device->device, &pipelineInfo);
-  GPU_Assert(self->pipeline, "SDL_CreateGPUGraphicsPipeline");
+  self->pipeline = $(self->device, createGraphicsPipeline, &pipelineInfo);
 
-  SDL_ReleaseGPUShader(self->device->device, vs);
-  SDL_ReleaseGPUShader(self->device->device, fs);
+  $(self->device, releaseShader, vs);
+  $(self->device, releaseShader, fs);
 
   const SDL_GPUSamplerCreateInfo samplerInfo = {
     .min_filter     = SDL_GPU_FILTER_LINEAR,
@@ -513,8 +507,7 @@ static void renderDeviceDidReset(Renderer *self) {
     .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
   };
 
-  self->sampler = SDL_CreateGPUSampler(self->device->device, &samplerInfo);
-  GPU_Assert(self->sampler, "SDL_CreateGPUSampler");
+  self->sampler = $(self->device, createSampler, &samplerInfo);
 
   const Uint8 whitePx[4] = { 255, 255, 255, 255 };
   const SDL_GPUTextureCreateInfo whiteInfo = {
@@ -527,7 +520,6 @@ static void renderDeviceDidReset(Renderer *self) {
     .num_levels           = 1,
   };
   self->white = $(self->device, createTexture, &whiteInfo, whitePx);
-  GPU_Assert(self->white, "createTexture (white)");
 }
 
 /**
@@ -543,23 +535,23 @@ static void renderDeviceWillReset(Renderer *self) {
   }
 
   if (self->white) {
-    SDL_ReleaseGPUTexture(self->device->device, self->white);
+    $(self->device, releaseTexture, self->white);
     self->white = NULL;
   }
 
   if (self->sampler) {
-    SDL_ReleaseGPUSampler(self->device->device, self->sampler);
+    $(self->device, releaseSampler, self->sampler);
     self->sampler = NULL;
   }
 
   if (self->vertexBuffer) {
-    SDL_ReleaseGPUBuffer(self->device->device, self->vertexBuffer);
+    $(self->device, releaseBuffer, self->vertexBuffer);
     self->vertexBuffer = NULL;
     self->vertexBufferCapacity = 0;
   }
 
   if (self->pipeline) {
-    SDL_ReleaseGPUGraphicsPipeline(self->device->device, self->pipeline);
+    $(self->device, releaseGraphicsPipeline, self->pipeline);
     self->pipeline = NULL;
   }
 
