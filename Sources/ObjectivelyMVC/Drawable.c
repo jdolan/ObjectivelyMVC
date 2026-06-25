@@ -30,12 +30,12 @@
 #pragma mark - Drawable
 
 /**
- * @fn void Drawable::copy(Drawable *self, SDL_GPUCopyPass *copyPass)
+ * @fn void Drawable::transfer(Drawable *self, SDL_GPUCopyPass *copyPass)
  * @memberof Drawable
  */
-static void copy(Drawable *self, SDL_GPUCopyPass *copyPass) {
-  if (self->copy) {
-    self->copy(self, copyPass);
+static void transfer(Drawable *self, SDL_GPUCopyPass *copyPass) {
+  if (self->transfer) {
+    self->transfer(self, copyPass);
   }
 }
 
@@ -102,12 +102,12 @@ static void submit(Drawable *self, SDL_GPUCommandBuffer *cmd, SDL_GPURenderPass 
  */
 static void initialize(Class *clazz) {
 
-  ((DrawableInterface *) clazz->interface)->copy                 = copy;
   ((DrawableInterface *) clazz->interface)->init                 = init;
   ((DrawableInterface *) clazz->interface)->initWithData         = initWithData;
   ((DrawableInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
   ((DrawableInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((DrawableInterface *) clazz->interface)->submit               = submit;
+  ((DrawableInterface *) clazz->interface)->transfer             = transfer;
 }
 
 /**

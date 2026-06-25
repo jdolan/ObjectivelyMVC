@@ -41,12 +41,12 @@ typedef struct DrawableInterface DrawableInterface;
  * @brief Abstract base class for GPU-renderable units.
  *
  * A Drawable participates in the RenderDevice's frame loop. Each frame the
- * RenderDevice calls copy() inside the active copy pass (for GPU uploads, only
+ * RenderDevice calls transfer() inside the active copy pass (for GPU uploads, only
  * when dirty) and submit() inside the active render pass (for draw commands).
  *
  * Subclasses allocate their GPU resources in renderDeviceDidReset and release
  * them in renderDeviceWillReset. Alternatively, set the delegate function
- * pointers (copy, submit, renderDeviceDidReset, renderDeviceWillReset) on the
+ * pointers (transfer, submit, renderDeviceDidReset, renderDeviceWillReset) on the
  * struct directly to avoid subclassing.
  *
  * @extends Object
@@ -65,9 +65,9 @@ struct Drawable {
   DrawableInterface *interface;
 
   /**
-   * @brief When true the RenderDevice will call copy() this frame to re-upload GPU data.
+   * @brief When true the RenderDevice will call transfer() this frame to re-upload GPU data.
    * Subclasses should set this to true whenever their geometry or texture data changes.
-   * The RenderDevice resets it to false after copy() returns.
+   * The RenderDevice resets it to false after transfer() returns.
    */
   bool dirty;
 
@@ -77,11 +77,11 @@ struct Drawable {
   void *data;
 
   /**
-   * @brief Optional delegate invoked by copy(). Called when dirty during the copy pass.
+   * @brief Optional delegate invoked by transfer(). Called when dirty during the copy pass.
    * @param self The Drawable.
    * @param copyPass The active copy pass.
    */
-  void (*copy)(Drawable *self, SDL_GPUCopyPass *copyPass);
+  void (*transfer)(Drawable *self, SDL_GPUCopyPass *copyPass);
 
   /**
    * @brief Optional delegate invoked by renderDeviceDidReset(). Allocate GPU resources here.
@@ -116,17 +116,6 @@ struct DrawableInterface {
   ObjectInterface objectInterface;
 
   /**
-   * @fn void Drawable::copy(Drawable *self, SDL_GPUCopyPass *copyPass)
-   * @brief Upload geometry or texture data during the frame's copy pass.
-   * @details Only called when self->dirty is true. The RenderDevice resets dirty
-   * to false after this returns.
-   * @param self The Drawable.
-   * @param copyPass The active SDL_GPUCopyPass for this frame.
-   * @memberof Drawable
-   */
-  void (*copy)(Drawable *self, SDL_GPUCopyPass *copyPass);
-
-  /**
    * @fn Drawable *Drawable::init(Drawable *self)
    * @brief Initializes this Drawable.
    * @param self The Drawable.
@@ -139,7 +128,7 @@ struct DrawableInterface {
    * @fn Drawable *Drawable::initWithData(Drawable *self, void *data)
    * @brief Initializes this Drawable with user data for delegate callbacks.
    * @details Sets self->data and starts with all delegate pointers NULL. Assign
-   *   self->copy, self->submit, self->renderDeviceDidReset, and
+   *   self->transfer, self->submit, self->renderDeviceDidReset, and
    *   self->renderDeviceWillReset as needed.
    * @param self The Drawable.
    * @param data Arbitrary user data accessible in delegate callbacks via self->data.
@@ -179,6 +168,17 @@ struct DrawableInterface {
    * @memberof Drawable
    */
   void (*submit)(Drawable *self, SDL_GPUCommandBuffer *cmd, SDL_GPURenderPass *renderPass);
+
+  /**
+   * @fn void Drawable::transfer(Drawable *self, SDL_GPUCopyPass *copyPass)
+   * @brief Upload geometry or texture data during the frame's copy pass.
+   * @details Only called when self->dirty is true. The RenderDevice resets dirty
+   * to false after this returns.
+   * @param self The Drawable.
+   * @param copyPass The active SDL_GPUCopyPass for this frame.
+   * @memberof Drawable
+   */
+  void (*transfer)(Drawable *self, SDL_GPUCopyPass *copyPass);
 };
 
 /**

@@ -312,7 +312,7 @@ static void endFrame(Renderer *self) {
   for (size_t i = 0; i < drawables->count; i++) {
     Drawable *d = $(drawables, objectAtIndex, i);
     if (d->dirty) {
-      $(d, copy, copyPass);
+      $(d, transfer, copyPass);
       d->dirty = false;
     }
   }
