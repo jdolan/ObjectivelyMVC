@@ -1529,7 +1529,6 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
-					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1541,7 +1540,6 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
-					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1581,7 +1579,6 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
-					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1593,7 +1590,6 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
-					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1605,7 +1601,6 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
-					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1617,7 +1612,6 @@
 			buildSettings = {
 				LIBRARY_SEARCH_PATHS = (
 					"$(HOMEBREW_PREFIX)/lib",
-					/usr/local/lib,
 				);
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1647,10 +1641,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Sources",
 					"$(WORKSPACE_PREFIX)/Objectively/Sources",
-					"$(HOMEBREW_PREFIX)/include",
-					"$(HOMEBREW_PREFIX)/include/SDL3",
+					"$(WORKSPACE_PREFIX)/ObjectivelyGPU/Sources",
 				);
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
@@ -1679,10 +1671,8 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Sources",
 					"$(WORKSPACE_PREFIX)/Objectively/Sources",
-					"$(HOMEBREW_PREFIX)/include",
-					"$(HOMEBREW_PREFIX)/include/SDL3",
+					"$(WORKSPACE_PREFIX)/ObjectivelyGPU/Sources",
 				);
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
