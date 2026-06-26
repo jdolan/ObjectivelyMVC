@@ -227,6 +227,10 @@ jobs:
       working-directory: ${{ github.workspace }}/Objectively
       run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=x64 Objectively.vs15/Objectively.sln
 
+    - name: Build ObjectivelyGPU
+      working-directory: ${{ github.workspace }}/ObjectivelyGPU
+      run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=x64 ObjectivelyGPU.vs15/ObjectivelyGPU.sln
+
     - name: Build ObjectivelyMVC
       working-directory: ${{ github.workspace }}/ObjectivelyMVC
       run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=x64 ObjectivelyMVC.vs15/ObjectivelyMVC.sln
