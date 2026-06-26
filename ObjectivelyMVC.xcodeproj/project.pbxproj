@@ -575,35 +575,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B1FF000100000000000000A0 /* iOS xcframeworks */ = {
-			isa = PBXGroup;
-			children = (
-				B1AA0001000000000000000D /* libcurl.xcframework */,
-				B1AA0001000000000000000E /* Objectively.xcframework */,
-				B1AA0001000000000000000A /* SDL3.xcframework */,
-				B1AA0001000000000000000B /* SDL3_image.xcframework */,
-				B1AA0001000000000000000C /* SDL3_ttf.xcframework */,
-				B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */,
-				B1AA000100000000000000AB /* Foundation.framework */,
-				B1AA000100000000000000AD /* Metal.framework */,
-				B1AA000100000000000000AE /* AudioToolbox.framework */,
-				B1AA000100000000000000AF /* CoreGraphics.framework */,
-				B1AA000100000000000000BA /* GameController.framework */,
-				B1AA000100000000000000BB /* CoreMotion.framework */,
-				B1AA000100000000000000BC /* AVFoundation.framework */,
-				B1AA000100000000000000BD /* CoreVideo.framework */,
-				B1AA000100000000000000BE /* QuartzCore.framework */,
-				B1AA000100000000000000BF /* CoreBluetooth.framework */,
-				B1AA000100000000000000CA /* CoreHaptics.framework */,
-				B1AA000100000000000000CB /* CoreMedia.framework */,
-				B1AA000100000000000000CC /* CoreText.framework */,
-				B1AA000100000000000000CD /* ImageIO.framework */,
-				B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */,
-				B1AA000100000000000000DA /* Network.framework */,
-			);
-			name = "xcframeworks";
-			sourceTree = "<group>";
-		};
 		B1FF000100000000000000B0 /* Hello-iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -801,22 +772,12 @@
 			path = Documentation;
 			sourceTree = "<group>";
 		};
-		CE12D4971C55012200CD0B13 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */,
-				B1FF000100000000000000A0 /* iOS xcframeworks */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		CED157921C4BEA8900FBA2DE = {
 			isa = PBXGroup;
 			children = (
 				CE12D4841C4F3C5900CD0B13 /* Assets */,
 				CE12D48E1C505FB400CD0B13 /* Documentation */,
 				CE12D42A1C4C37CD00CD0B13 /* Examples */,
-				CE12D4971C55012200CD0B13 /* Frameworks */,
 				CED157F01C4BF89A00FBA2DE /* Libraries */,
 				CED157CE1C4BF3AC00FBA2DE /* Products */,
 				CED157A01C4BF32A00FBA2DE /* Sources */,
