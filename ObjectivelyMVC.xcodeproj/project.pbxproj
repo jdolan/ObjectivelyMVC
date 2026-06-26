@@ -32,6 +32,17 @@
 			name = "ObjectivelyMVC-Tests";
 			productName = "ObjectivelyMVC-Examples";
 		};
+		MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = MV02400000000000000000A1 /* Build configuration list for PBXAggregateTarget "ObjectivelyMVC-xcframework" */;
+			buildPhases = (
+				MV02100000000000000000A1 /* Run Script */,
+			);
+			dependencies = (
+			);
+			name = "ObjectivelyMVC-xcframework";
+			productName = "ObjectivelyMVC-xcframework";
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -139,6 +150,11 @@
 		CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE6EE3CC1F7156BC00FBC830 /* HueColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6EE3CA1F7156BC00FBC830 /* HueColorPicker.c */; };
 		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE73E9FE2FEEB28C0048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		CE73E9FF2FEEB2A40048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		CE73EA002FEEB2C70048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		CE73EA012FEEB2D00048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		CE73EA022FEEB2D60048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -254,6 +270,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = CE88198A1F91B0BE000D5AB7;
 			remoteInfo = "ObjectivelyMVC-Style";
+		};
+		MV03000000000000000000A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = MV02000000000000000000A1;
+			remoteInfo = "ObjectivelyMVC-xcframework";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -512,9 +535,9 @@
 				B1BB0001000000000000000B /* SDL3_image.xcframework in Frameworks */,
 				B1BB0001000000000000000C /* SDL3_ttf.xcframework in Frameworks */,
 				B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */,
-				B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */,
 				MV00110000000000000000A1 /* Objectively.xcframework in Frameworks */,
 				MV00120000000000000000A2 /* ObjectivelyGPU.xcframework in Frameworks */,
+				B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */,
 				B1BB000100000000000000AB /* Foundation.framework in Frameworks */,
 				B1BB000100000000000000AD /* Metal.framework in Frameworks */,
 				B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */,
@@ -538,9 +561,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */,
+				CE73E9FF2FEEB2A40048BC24 /* Objectively.framework in Frameworks */,
 				CEEAAFFF2FEDC19C00FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 				CE12D4611C4C8F2A00CD0B13 /* ObjectivelyMVC.framework in Frameworks */,
-				CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,9 +572,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE34C89D1FB29F700025F231 /* ObjectivelyMVC.framework in Frameworks */,
-				EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */,
 				EF00030000000000000000A3 /* SDL3.xcframework in Frameworks */,
+				CE73EA002FEEB2C70048BC24 /* Objectively.framework in Frameworks */,
+				EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */,
+				CE34C89D1FB29F700025F231 /* ObjectivelyMVC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -558,9 +583,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE55C1C41F944C6D00D5A326 /* ObjectivelyMVC.framework in Frameworks */,
-				EF00050000000000000000A5 /* ObjectivelyGPU.framework in Frameworks */,
 				EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */,
+				CE73EA022FEEB2D60048BC24 /* Objectively.framework in Frameworks */,
+				EF00050000000000000000A5 /* ObjectivelyGPU.framework in Frameworks */,
+				CE55C1C41F944C6D00D5A326 /* ObjectivelyMVC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,9 +594,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE8819921F91B0BE000D5AB7 /* ObjectivelyMVC.framework in Frameworks */,
-				EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */,
 				EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */,
+				CE73EA012FEEB2D00048BC24 /* Objectively.framework in Frameworks */,
+				EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */,
+				CE8819921F91B0BE000D5AB7 /* ObjectivelyMVC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -581,6 +608,7 @@
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
 				CED56FF72FE3440000756996 /* SDL3_image.xcframework in Frameworks */,
 				CED56FF82FE3440000756996 /* SDL3_ttf.xcframework in Frameworks */,
+				CE73E9FE2FEEB28C0048BC24 /* Objectively.framework in Frameworks */,
 				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -810,6 +838,8 @@
 				B1AA000100000000000000CD /* ImageIO.framework */,
 				B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */,
 				B1AA000100000000000000DA /* Network.framework */,
+				MV00010000000000000000A1 /* Objectively.xcframework */,
+				MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -954,6 +984,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				MV03100000000000000000A1 /* PBXTargetDependency */,
 			);
 			name = "ObjectivelyMVC-Hello-iOS";
 			productName = "ObjectivelyMVC-Hello-iOS";
@@ -1062,6 +1093,9 @@
 				LastUpgradeCheck = 2650;
 				ORGANIZATIONNAME = "https://github.com/jdolan";
 				TargetAttributes = {
+				MV02000000000000000000A1 = {
+					CreatedOnToolsVersion = 16.0;
+				};
 					B1DD00010000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
 						ProvisioningStyle = Automatic;
@@ -1099,6 +1133,7 @@
 				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 				CE3CB2991F40F9A100FAA016 /* ObjectivelyMVC-Examples */,
 				B1DD00010000000000000001 /* ObjectivelyMVC-Hello-iOS */,
+							MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */,
 			);
 		};
 /* End PBXProject section */
@@ -1194,6 +1229,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "pushd $SRCROOT/Examples\n\nxxd -i -s 44 click.wav click.wav.h\nxxd -i -s 44 clack.wav clack.wav.h\n";
+		};
+		MV02100000000000000000A1 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exec \"$SRCROOT/scripts/build-xcframework.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1341,6 +1395,11 @@
 			isa = PBXTargetDependency;
 			target = CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */;
 			targetProxy = CE8819991F91B0DA000D5AB7 /* PBXContainerItemProxy */;
+		};
+		MV03100000000000000000A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */;
+			targetProxy = MV03000000000000000000A1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1668,6 +1727,20 @@
 			};
 			name = Release;
 		};
+		MV02200000000000000000A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "ObjectivelyMVC-xcframework";
+			};
+			name = Debug;
+		};
+		MV02300000000000000000A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "ObjectivelyMVC-xcframework";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1751,6 +1824,15 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
+		};
+		MV02400000000000000000A1 /* Build configuration list for PBXAggregateTarget "ObjectivelyMVC-xcframework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				MV02200000000000000000A1 /* Debug */,
+				MV02300000000000000000A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
