@@ -191,6 +191,11 @@
 		EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		MV00110000000000000000A1 /* Objectively.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = MV00010000000000000000A1 /* Objectively.xcframework */; };
+		MV00120000000000000000A2 /* ObjectivelyGPU.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */; };
+		MV00210000000000000000A1 /* Objectively.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = MV00010000000000000000A1 /* Objectively.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		MV00220000000000000000A2 /* ObjectivelyGPU.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		MV00230000000000000000A3 /* libcurl.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000D /* libcurl.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -263,6 +268,9 @@
 				B1BB000100000000000000B0 /* SDL3_image.xcframework in Embed Frameworks */,
 				B1BB000100000000000000C0 /* SDL3_ttf.xcframework in Embed Frameworks */,
 				B1BB000100000000000000F0 /* ObjectivelyMVC.xcframework in Embed Frameworks */,
+				MV00210000000000000000A1 /* Objectively.xcframework in Embed Frameworks */,
+				MV00220000000000000000A2 /* ObjectivelyGPU.xcframework in Embed Frameworks */,
+				MV00230000000000000000A3 /* libcurl.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -318,7 +326,6 @@
 		B1AA0001000000000000000B /* SDL3_image.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_image.xcframework; path = Frameworks/SDL3_image.xcframework; sourceTree = "<group>"; };
 		B1AA0001000000000000000C /* SDL3_ttf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_ttf.xcframework; path = Frameworks/SDL3_ttf.xcframework; sourceTree = "<group>"; };
 		B1AA0001000000000000000D /* libcurl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libcurl.xcframework; path = Frameworks/libcurl.xcframework; sourceTree = "<group>"; };
-		B1AA0001000000000000000E /* Objectively.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Objectively.xcframework; path = Frameworks/Objectively.xcframework; sourceTree = "<group>"; };
 		B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ObjectivelyMVC.xcframework; path = Frameworks/ObjectivelyMVC.xcframework; sourceTree = "<group>"; };
 		B1AA000100000000000000AB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000AD /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -427,6 +434,8 @@
 		CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HSVColorPicker.h; sourceTree = "<group>"; };
 		CE6EE3CA1F7156BC00FBC830 /* HueColorPicker.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HueColorPicker.c; sourceTree = "<group>"; };
 		CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HueColorPicker.h; sourceTree = "<group>"; };
+		CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Objectively.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE73E9FC2FEEB0FD0048BC24 /* Objectively.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Objectively.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE76279C1D4A5A5800EEEE78 /* Renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Renderer.c; sourceTree = "<group>"; };
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE7CBD7E202942B300C5316A /* coda.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = coda.ttf; sourceTree = "<group>"; };
@@ -490,6 +499,8 @@
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
+		MV00010000000000000000A1 /* Objectively.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Objectively.xcframework; path = Frameworks/Objectively.xcframework; sourceTree = "<group>"; };
+		MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ObjectivelyGPU.xcframework; path = Frameworks/ObjectivelyGPU.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -502,6 +513,8 @@
 				B1BB0001000000000000000C /* SDL3_ttf.xcframework in Frameworks */,
 				B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */,
 				B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */,
+				MV00110000000000000000A1 /* Objectively.xcframework in Frameworks */,
+				MV00120000000000000000A2 /* ObjectivelyGPU.xcframework in Frameworks */,
 				B1BB000100000000000000AB /* Foundation.framework in Frameworks */,
 				B1BB000100000000000000AD /* Metal.framework in Frameworks */,
 				B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */,
@@ -565,10 +578,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
 				CED56FF72FE3440000756996 /* SDL3_image.xcframework in Frameworks */,
 				CED56FF82FE3440000756996 /* SDL3_ttf.xcframework in Frameworks */,
+				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -772,6 +785,44 @@
 			path = Documentation;
 			sourceTree = "<group>";
 		};
+		CE73E9F52FEEA5200048BC24 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */,
+				B1AA0001000000000000000A /* SDL3.xcframework */,
+				B1AA0001000000000000000B /* SDL3_image.xcframework */,
+				B1AA0001000000000000000C /* SDL3_ttf.xcframework */,
+				B1AA0001000000000000000D /* libcurl.xcframework */,
+				B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */,
+				B1AA000100000000000000AB /* Foundation.framework */,
+				B1AA000100000000000000AD /* Metal.framework */,
+				B1AA000100000000000000AE /* AudioToolbox.framework */,
+				B1AA000100000000000000AF /* CoreGraphics.framework */,
+				B1AA000100000000000000BA /* GameController.framework */,
+				B1AA000100000000000000BB /* CoreMotion.framework */,
+				B1AA000100000000000000BC /* AVFoundation.framework */,
+				B1AA000100000000000000BD /* CoreVideo.framework */,
+				B1AA000100000000000000BE /* QuartzCore.framework */,
+				B1AA000100000000000000BF /* CoreBluetooth.framework */,
+				B1AA000100000000000000CA /* CoreHaptics.framework */,
+				B1AA000100000000000000CB /* CoreMedia.framework */,
+				B1AA000100000000000000CC /* CoreText.framework */,
+				B1AA000100000000000000CD /* ImageIO.framework */,
+				B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */,
+				B1AA000100000000000000DA /* Network.framework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		CE73E9F92FEEA5F60048BC24 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CE73E9FC2FEEB0FD0048BC24 /* Objectively.framework */,
+				CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CED157921C4BEA8900FBA2DE = {
 			isa = PBXGroup;
 			children = (
@@ -787,6 +838,8 @@
 				CEEA01A11E2D276B00B68010 /* INSTALL.md */,
 				CED1579E1C4BF32A00FBA2DE /* Makefile.am */,
 				CED1579F1C4BF32A00FBA2DE /* README.md */,
+				CE73E9F52FEEA5200048BC24 /* Recovered References */,
+				CE73E9F92FEEA5F60048BC24 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
