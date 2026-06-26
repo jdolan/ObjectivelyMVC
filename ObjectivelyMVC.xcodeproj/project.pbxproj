@@ -1427,10 +1427,12 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Examples/Hello-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-liconv",
@@ -1442,8 +1444,6 @@
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Debug;
 		};
@@ -1470,10 +1470,12 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Examples/Hello-iOS/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				OTHER_LDFLAGS = (
 					"-lz",
 					"-liconv",
@@ -1485,8 +1487,6 @@
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Release;
 		};
@@ -1527,9 +1527,7 @@
 		CE34C8A01FB29F700025F231 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(HOMEBREW_PREFIX)/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1538,9 +1536,7 @@
 		CE34C8A11FB29F700025F231 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(HOMEBREW_PREFIX)/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1577,9 +1573,7 @@
 		CE55C1C71F944C6D00D5A326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(HOMEBREW_PREFIX)/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1588,9 +1582,7 @@
 		CE55C1C81F944C6D00D5A326 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(HOMEBREW_PREFIX)/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1599,9 +1591,7 @@
 		CE8819951F91B0BE000D5AB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(HOMEBREW_PREFIX)/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1610,9 +1600,7 @@
 		CE8819961F91B0BE000D5AB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(HOMEBREW_PREFIX)/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				OTHER_LDFLAGS = "-lcheck";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1694,6 +1682,7 @@
 					"$(inherited)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = ObjectivelyMVC;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -1712,6 +1701,7 @@
 					"$(inherited)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = ObjectivelyMVC;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
