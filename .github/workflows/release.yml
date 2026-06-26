@@ -42,8 +42,6 @@ jobs:
         zip -r ../SDL3.xcframework.zip SDL3.xcframework
         zip -r ../SDL3_image.xcframework.zip SDL3_image.xcframework
         zip -r ../SDL3_ttf.xcframework.zip SDL3_ttf.xcframework
-        zip -r ../libcurl.xcframework.zip libcurl.xcframework
-        zip -r ../Objectively.xcframework.zip Objectively.xcframework
         zip -r ../ObjectivelyMVC.xcframework.zip ObjectivelyMVC.xcframework
 
     - name: Create release
@@ -55,8 +53,6 @@ jobs:
           SDL3.xcframework.zip \
           SDL3_image.xcframework.zip \
           SDL3_ttf.xcframework.zip \
-          libcurl.xcframework.zip \
-          Objectively.xcframework.zip \
           ObjectivelyMVC.xcframework.zip
       env:
         GH_TOKEN: ${{ github.token }}
