@@ -42,7 +42,6 @@
 		B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000D /* libcurl.xcframework */; };
 		B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */; };
 		B1BB000100000000000000A0 /* SDL3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		B1BB000100000000000000AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AA /* UIKit.framework */; };
 		B1BB000100000000000000AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AB /* Foundation.framework */; };
 		B1BB000100000000000000AD /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AD /* Metal.framework */; };
 		B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AE /* AudioToolbox.framework */; };
@@ -59,7 +58,6 @@
 		B1BB000100000000000000CB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CB /* CoreMedia.framework */; };
 		B1BB000100000000000000CC /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CC /* CoreText.framework */; };
 		B1BB000100000000000000CD /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CD /* ImageIO.framework */; };
-		B1BB000100000000000000CE /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CE /* MobileCoreServices.framework */; };
 		B1BB000100000000000000CF /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */; };
 		B1BB000100000000000000DA /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000DA /* Network.framework */; };
 		B1BB000100000000000000EA /* Hello-iOS.c in Sources */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000EA /* Hello-iOS.c */; };
@@ -141,7 +139,6 @@
 		CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE6EE3CC1F7156BC00FBC830 /* HueColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6EE3CA1F7156BC00FBC830 /* HueColorPicker.c */; };
 		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CE73E9ED2FEE99400048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -171,7 +168,6 @@
 		CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9351671F9B6ED000B46882 /* SelectorSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */; };
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEA0040000000000000000F1 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
 		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -189,13 +185,10 @@
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EF00010000000000000000A1 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
 		EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00030000000000000000A3 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
-		EF00040000000000000000A4 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
 		EF00050000000000000000A5 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
-		EF00070000000000000000A7 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
 		EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 /* End PBXBuildFile section */
@@ -327,9 +320,7 @@
 		B1AA0001000000000000000D /* libcurl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libcurl.xcframework; path = Frameworks/libcurl.xcframework; sourceTree = "<group>"; };
 		B1AA0001000000000000000E /* Objectively.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Objectively.xcframework; path = Frameworks/Objectively.xcframework; sourceTree = "<group>"; };
 		B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ObjectivelyMVC.xcframework; path = Frameworks/ObjectivelyMVC.xcframework; sourceTree = "<group>"; };
-		B1AA000100000000000000AA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000AB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		B1AA000100000000000000AC /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000AD /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000AE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000AF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -343,7 +334,6 @@
 		B1AA000100000000000000CB /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000CC /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000CD /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
-		B1AA000100000000000000CE /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000DA /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000EA /* Hello-iOS.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "Hello-iOS.c"; sourceTree = "<group>"; };
@@ -427,7 +417,6 @@
 		CE562EBF1D6A08DD006DF143 /* CollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CollectionView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE562EC21D6A0A17006DF143 /* CollectionItemView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CollectionItemView.c; sourceTree = "<group>"; };
 		CE562EC31D6A0A17006DF143 /* CollectionItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CollectionItemView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_ttf.0.2.2.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_ttf/3.2.2/lib/libSDL3_ttf.0.2.2.dylib; sourceTree = "<group>"; };
 		CE5BD5921D3EDD7400C43B85 /* ObjectivelyMVC.pc.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ObjectivelyMVC.pc.in; sourceTree = "<group>"; };
 		CE6603791CBBF93E00EB86CF /* ScrollView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollView.c; sourceTree = "<group>"; };
 		CE66037A1CBBF93E00EB86CF /* ScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -442,8 +431,6 @@
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE7CBD7E202942B300C5316A /* coda.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = coda.ttf; sourceTree = "<group>"; };
 		CE7CBD7F20294B9B00C5316A /* coda.ttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coda.ttf.h; sourceTree = "<group>"; };
-		CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3.0.dylib; path = ../../../../opt/homebrew/Cellar/sdl3/3.4.8/lib/libSDL3.0.dylib; sourceTree = "<group>"; };
-		CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libSDL3_image.0.4.4.dylib; path = ../../../../opt/homebrew/Cellar/sdl3_image/3.4.4/lib/libSDL3_image.0.4.4.dylib; sourceTree = "<group>"; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 		CE84C6CA1FFC8E9E00F72267 /* debug.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = debug.json; sourceTree = "<group>"; };
 		CE84C6CB1FFC917600F72267 /* DebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
@@ -483,7 +470,6 @@
 		CE9FECD5201D5F2A00F954ED /* debug.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = debug.css; sourceTree = "<group>"; };
 		CE9FECD6201D5F8000F954ED /* debug.css.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.css.h; sourceTree = "<group>"; };
 		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
-		CEA0040000000000000000F0 /* Objectively.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Objectively.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
@@ -493,7 +479,6 @@
 		CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectivelyMVC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEEA01A11E2D276B00B68010 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
 		CEEA01A31E2D28B900B68010 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
-		CEEAAFF32FED7E4400FFEBE6 /* ObjectivelyGPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectivelyGPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectivelyGPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF1D88B1D4265A70099A857 /* Panel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Panel.c; sourceTree = "<group>"; };
 		CEF1D88C1D4265A70099A857 /* Panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Panel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -517,7 +502,6 @@
 				B1BB0001000000000000000C /* SDL3_ttf.xcframework in Frameworks */,
 				B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */,
 				B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */,
-				B1BB000100000000000000AA /* UIKit.framework in Frameworks */,
 				B1BB000100000000000000AB /* Foundation.framework in Frameworks */,
 				B1BB000100000000000000AD /* Metal.framework in Frameworks */,
 				B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */,
@@ -532,7 +516,6 @@
 				B1BB000100000000000000CB /* CoreMedia.framework in Frameworks */,
 				B1BB000100000000000000CC /* CoreText.framework in Frameworks */,
 				B1BB000100000000000000CD /* ImageIO.framework in Frameworks */,
-				B1BB000100000000000000CE /* MobileCoreServices.framework in Frameworks */,
 				B1BB000100000000000000CF /* UniformTypeIdentifiers.framework in Frameworks */,
 				B1BB000100000000000000DA /* Network.framework in Frameworks */,
 			);
@@ -542,7 +525,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE73E9ED2FEE99400048BC24 /* Objectively.framework in Frameworks */,
 				CEEAAFFF2FEDC19C00FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 				CE12D4611C4C8F2A00CD0B13 /* ObjectivelyMVC.framework in Frameworks */,
 				CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */,
@@ -554,7 +536,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE34C89D1FB29F700025F231 /* ObjectivelyMVC.framework in Frameworks */,
-				EF00010000000000000000A1 /* Objectively.framework in Frameworks */,
 				EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */,
 				EF00030000000000000000A3 /* SDL3.xcframework in Frameworks */,
 			);
@@ -565,7 +546,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE55C1C41F944C6D00D5A326 /* ObjectivelyMVC.framework in Frameworks */,
-				EF00040000000000000000A4 /* Objectively.framework in Frameworks */,
 				EF00050000000000000000A5 /* ObjectivelyGPU.framework in Frameworks */,
 				EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */,
 			);
@@ -576,7 +556,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE8819921F91B0BE000D5AB7 /* ObjectivelyMVC.framework in Frameworks */,
-				EF00070000000000000000A7 /* Objectively.framework in Frameworks */,
 				EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */,
 				EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */,
 			);
@@ -586,7 +565,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CEA0040000000000000000F1 /* Objectively.framework in Frameworks */,
 				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
 				CED56FF72FE3440000756996 /* SDL3_image.xcframework in Frameworks */,
@@ -600,16 +578,13 @@
 		B1FF000100000000000000A0 /* iOS xcframeworks */ = {
 			isa = PBXGroup;
 			children = (
-				B1AA0001000000000000000A /* SDL3.xcframework */,
-				CEA0040000000000000000F0 /* Objectively.framework */,
-				B1AA0001000000000000000B /* SDL3_image.xcframework */,
-				B1AA0001000000000000000C /* SDL3_ttf.xcframework */,
 				B1AA0001000000000000000D /* libcurl.xcframework */,
 				B1AA0001000000000000000E /* Objectively.xcframework */,
+				B1AA0001000000000000000A /* SDL3.xcframework */,
+				B1AA0001000000000000000B /* SDL3_image.xcframework */,
+				B1AA0001000000000000000C /* SDL3_ttf.xcframework */,
 				B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */,
-				B1AA000100000000000000AA /* UIKit.framework */,
 				B1AA000100000000000000AB /* Foundation.framework */,
-				B1AA000100000000000000AC /* OpenGLES.framework */,
 				B1AA000100000000000000AD /* Metal.framework */,
 				B1AA000100000000000000AE /* AudioToolbox.framework */,
 				B1AA000100000000000000AF /* CoreGraphics.framework */,
@@ -623,11 +598,10 @@
 				B1AA000100000000000000CB /* CoreMedia.framework */,
 				B1AA000100000000000000CC /* CoreText.framework */,
 				B1AA000100000000000000CD /* ImageIO.framework */,
-				B1AA000100000000000000CE /* MobileCoreServices.framework */,
 				B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */,
 				B1AA000100000000000000DA /* Network.framework */,
 			);
-			name = "iOS xcframeworks";
+			name = "xcframeworks";
 			sourceTree = "<group>";
 		};
 		B1FF000100000000000000B0 /* Hello-iOS */ = {
@@ -775,10 +749,11 @@
 		CE12D42A1C4C37CD00CD0B13 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
+				B1FF000100000000000000B0 /* Hello-iOS */,
 				CE89ADB028BAF661002E45C7 /* clack.wav */,
 				CE081BE52C27955C00436CDC /* clack.wav.h */,
-				CE081BE42C27955C00436CDC /* click.wav.h */,
 				CE89AD9E28B99568002E45C7 /* click.wav */,
+				CE081BE42C27955C00436CDC /* click.wav.h */,
 				CE12D42B1C4C37E500CD0B13 /* Hello.c */,
 				AABB0001CC0011220033AABB /* Hello-Scene.c */,
 				AABB0002CC0011220033AABB /* Hello-Scene.h */,
@@ -786,7 +761,6 @@
 				CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */,
 				CE6BC16E1D79B2920070FB2D /* HelloViewController.json */,
 				CE12D42D1C4C383D00CD0B13 /* Makefile.am */,
-				B1FF000100000000000000B0 /* Hello-iOS */,
 			);
 			path = Examples;
 			sourceTree = "<group>";
@@ -831,10 +805,6 @@
 			isa = PBXGroup;
 			children = (
 				CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */,
-				CEEAAFF32FED7E4400FFEBE6 /* ObjectivelyGPU.framework */,
-				CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */,
-				CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */,
-				CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */,
 				B1FF000100000000000000A0 /* iOS xcframeworks */,
 			);
 			name = Frameworks;
