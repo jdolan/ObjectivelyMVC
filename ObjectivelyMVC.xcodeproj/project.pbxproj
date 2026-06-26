@@ -44,7 +44,6 @@
 		B1BB000100000000000000A0 /* SDL3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B1BB000100000000000000AA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AA /* UIKit.framework */; };
 		B1BB000100000000000000AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AB /* Foundation.framework */; };
-		B1BB000100000000000000AC /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AC /* OpenGLES.framework */; };
 		B1BB000100000000000000AD /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AD /* Metal.framework */; };
 		B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AE /* AudioToolbox.framework */; };
 		B1BB000100000000000000AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AF /* CoreGraphics.framework */; };
@@ -142,6 +141,7 @@
 		CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE37A1F6EA91900FBC830 /* HSVColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE6EE3CC1F7156BC00FBC830 /* HueColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE6EE3CA1F7156BC00FBC830 /* HueColorPicker.c */; };
 		CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE73E9ED2FEE99400048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -171,6 +171,7 @@
 		CE9351691F9B6ED000B46882 /* SelectorSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9351671F9B6ED000B46882 /* SelectorSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */; };
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CEA0040000000000000000F1 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
 		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -188,10 +189,6 @@
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		CEA0040000000000000000F1 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
-		CEA0040000000000000000F2 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
-		CEA0040000000000000000F3 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
-		CEA0040000000000000000F4 /* Objectively.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -389,8 +386,6 @@
 		CE12D4921C50605000CD0B13 /* Doxyfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Doxyfile; sourceTree = "<group>"; };
 		CE12D4931C547BDD00CD0B13 /* StackView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = StackView.c; sourceTree = "<group>"; };
 		CE12D4941C547BDD00CD0B13 /* StackView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = StackView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		CE12D4981C55013700CD0B13 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		CE12D49A1C5506F700CD0B13 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = System/Library/Frameworks/GLUT.framework; sourceTree = SDKROOT; };
 		CE12D49C1C568A7600CD0B13 /* TextView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TextView.c; sourceTree = "<group>"; };
 		CE12D49D1C568A7600CD0B13 /* TextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextView.h; sourceTree = "<group>"; };
 		CE14A8CA1C66D89900B576FB /* Select.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Select.c; sourceTree = "<group>"; };
@@ -479,6 +474,7 @@
 		CE9FECD5201D5F2A00F954ED /* debug.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = debug.css; sourceTree = "<group>"; };
 		CE9FECD6201D5F8000F954ED /* debug.css.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.css.h; sourceTree = "<group>"; };
 		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
+		CEA0040000000000000000F0 /* Objectively.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Objectively.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
@@ -500,7 +496,6 @@
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
-		CEA0040000000000000000F0 /* Objectively.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Objectively.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -515,7 +510,6 @@
 				B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */,
 				B1BB000100000000000000AA /* UIKit.framework in Frameworks */,
 				B1BB000100000000000000AB /* Foundation.framework in Frameworks */,
-				B1BB000100000000000000AC /* OpenGLES.framework in Frameworks */,
 				B1BB000100000000000000AD /* Metal.framework in Frameworks */,
 				B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */,
 				B1BB000100000000000000AF /* CoreGraphics.framework in Frameworks */,
@@ -539,6 +533,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CE73E9ED2FEE99400048BC24 /* Objectively.framework in Frameworks */,
 				CEEAAFFF2FEDC19C00FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 				CE12D4611C4C8F2A00CD0B13 /* ObjectivelyMVC.framework in Frameworks */,
 				CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */,
@@ -822,8 +817,6 @@
 				CE7EA2022FC3CA1200030944 /* libSDL3_image.0.4.4.dylib */,
 				CE7EA1FE2FC3CA0300030944 /* libSDL3.0.dylib */,
 				CE5A6AAA2EC55EA6005F3C92 /* libSDL3_ttf.0.2.2.dylib */,
-				CE12D49A1C5506F700CD0B13 /* GLUT.framework */,
-				CE12D4981C55013700CD0B13 /* OpenGL.framework */,
 				B1FF000100000000000000A0 /* iOS xcframeworks */,
 			);
 			name = Frameworks;
@@ -1107,7 +1100,6 @@
 			);
 		};
 /* End PBXProject section */
-
 
 /* Begin PBXResourcesBuildPhase section */
 		B1CC000100000000000000C0 /* Resources */ = {
@@ -1600,7 +1592,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
-				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = OpenGL;
 			};
 			name = Debug;
 		};
@@ -1634,7 +1625,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
-				VALIDATE_WORKSPACE_SKIPPED_SDK_FRAMEWORKS = OpenGL;
 			};
 			name = Release;
 		};
