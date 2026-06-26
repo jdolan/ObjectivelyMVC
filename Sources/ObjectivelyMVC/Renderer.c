@@ -311,9 +311,9 @@ static void endFrame(Renderer *self) {
 
   const SDL_GPUColorTargetInfo colorTarget = {
     .texture     = self->swapchain.texture,
-    .load_op     = self->device->clear ? SDL_GPU_LOADOP_CLEAR : SDL_GPU_LOADOP_LOAD,
+    .load_op     = SDL_GPU_LOADOP_CLEAR,
     .store_op    = SDL_GPU_STOREOP_STORE,
-    .clear_color = self->device->clearColor,
+    .clear_color = (SDL_FColor) { 0.f, 0.f, 0.f, 0.f },
   };
 
   RenderPass *renderPass = $(self->cmd, beginRenderPass, &colorTarget, 1, NULL);
@@ -335,7 +335,7 @@ static void endFrame(Renderer *self) {
   };
   $(self->cmd, pushVertexUniformData, 0, projection, sizeof(projection));
 
-  $(renderPass, bindGraphicsPipeline, self->pipeline);
+  $(renderPass, bindPipeline, self->pipeline);
   $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer }, 1);
 
   for (size_t i = 0; i < self->drawCalls->count; i++) {
