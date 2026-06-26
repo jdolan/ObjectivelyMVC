@@ -39,7 +39,6 @@ jobs:
     - name: Zip xcframeworks
       run: |
         cd Frameworks
-        zip -r ../SDL3.xcframework.zip SDL3.xcframework
         zip -r ../SDL3_image.xcframework.zip SDL3_image.xcframework
         zip -r ../SDL3_ttf.xcframework.zip SDL3_ttf.xcframework
         zip -r ../ObjectivelyMVC.xcframework.zip ObjectivelyMVC.xcframework
@@ -50,7 +49,6 @@ jobs:
         gh release create ${{ github.ref_name }} \
           --title "ObjectivelyMVC ${{ github.ref_name }}" \
           --generate-notes \
-          SDL3.xcframework.zip \
           SDL3_image.xcframework.zip \
           SDL3_ttf.xcframework.zip \
           ObjectivelyMVC.xcframework.zip
