@@ -813,9 +813,11 @@
 			path = Documentation;
 			sourceTree = "<group>";
 		};
-		CE73E9F52FEEA5200048BC24 /* Recovered References */ = {
+		CE73E9F92FEEA5F60048BC24 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CE73E9FC2FEEB0FD0048BC24 /* Objectively.framework */,
+				CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */,
 				CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */,
 				B1AA0001000000000000000A /* SDL3.xcframework */,
 				B1AA0001000000000000000B /* SDL3_image.xcframework */,
@@ -841,15 +843,6 @@
 				MV00010000000000000000A1 /* Objectively.xcframework */,
 				MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */,
 			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		CE73E9F92FEEA5F60048BC24 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				CE73E9FC2FEEB0FD0048BC24 /* Objectively.framework */,
-				CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */,
-			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
@@ -859,7 +852,7 @@
 				CE12D4841C4F3C5900CD0B13 /* Assets */,
 				CE12D48E1C505FB400CD0B13 /* Documentation */,
 				CE12D42A1C4C37CD00CD0B13 /* Examples */,
-				CED157F01C4BF89A00FBA2DE /* Libraries */,
+				CE73E9F92FEEA5F60048BC24 /* Frameworks */,
 				CED157CE1C4BF3AC00FBA2DE /* Products */,
 				CED157A01C4BF32A00FBA2DE /* Sources */,
 				CE12D4281C4C375300CD0B13 /* Tests */,
@@ -868,8 +861,6 @@
 				CEEA01A11E2D276B00B68010 /* INSTALL.md */,
 				CED1579E1C4BF32A00FBA2DE /* Makefile.am */,
 				CED1579F1C4BF32A00FBA2DE /* README.md */,
-				CE73E9F52FEEA5200048BC24 /* Recovered References */,
-				CE73E9F92FEEA5F60048BC24 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -895,13 +886,6 @@
 				B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		CED157F01C4BF89A00FBA2DE /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Libraries;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
