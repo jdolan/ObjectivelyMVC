@@ -1412,7 +1412,6 @@
 				DEVELOPMENT_TEAM = C5PXKE9CU5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(inherited)",
 				);
@@ -1456,7 +1455,6 @@
 				DEVELOPMENT_TEAM = C5PXKE9CU5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(inherited)",
 				);
@@ -1497,7 +1495,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(inherited)",
 				);
@@ -1515,7 +1512,6 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(inherited)",
 				);
@@ -1646,6 +1642,8 @@
 					"$(SRCROOT)/Sources",
 					"$(WORKSPACE_PREFIX)/Objectively/Sources",
 					"$(WORKSPACE_PREFIX)/ObjectivelyGPU/Sources",
+					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64/SDL3.framework/Headers",
+					"$(HOMEBREW_PREFIX)/include",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1676,6 +1674,8 @@
 					"$(SRCROOT)/Sources",
 					"$(WORKSPACE_PREFIX)/Objectively/Sources",
 					"$(WORKSPACE_PREFIX)/ObjectivelyGPU/Sources",
+					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64/SDL3.framework/Headers",
+					"$(HOMEBREW_PREFIX)/include",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -1690,7 +1690,6 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(inherited)",
 				);
@@ -1709,7 +1708,6 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(inherited)",
 				);
