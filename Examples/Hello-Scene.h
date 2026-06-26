@@ -23,16 +23,18 @@
 
 #pragma once
 
-#include <SDL3/SDL.h>
+#include <ObjectivelyMVC.h>
 
 /**
- * @brief Initializes the GL 3.3 scene (loads procs, compiles shaders, uploads geometry).
- * Call once after the GL context is current.
+ * @brief Initializes the scene GPU resources.
+ * @param renderer The MVC Renderer (provides RenderDevice and swapchain format).
+ * Call once after the Renderer has been initialized.
  */
-void initScene(void);
+void initScene(Renderer *renderer);
 
 /**
- * @brief Draws one frame of the rotating cube scene.
- * @param window The SDL window (used to query the current drawable size).
+ * @brief Draws one frame of the rotating cube scene into renderer->cmd.
+ * @param renderer The MVC Renderer (cmd and swapchain must be valid).
+ * Call after beginFrame but before endFrame.
  */
-void drawScene(SDL_Window *window);
+void drawScene(Renderer *renderer);

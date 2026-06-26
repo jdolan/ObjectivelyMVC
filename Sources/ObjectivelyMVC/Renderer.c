@@ -311,7 +311,7 @@ static void endFrame(Renderer *self) {
 
   const SDL_GPUColorTargetInfo colorTarget = {
     .texture     = self->swapchain.texture,
-    .load_op     = SDL_GPU_LOADOP_CLEAR,
+    .load_op     = self->clear ? SDL_GPU_LOADOP_CLEAR : SDL_GPU_LOADOP_LOAD,
     .store_op    = SDL_GPU_STOREOP_STORE,
     .clear_color = (SDL_FColor) { 0.f, 0.f, 0.f, 0.f },
   };
@@ -376,6 +376,7 @@ static Renderer *init(Renderer *self) {
 
   self = (Renderer *) super(Object, self, init);
   if (self) {
+    self->clear = true;
     self->device = $(alloc(RenderDevice), init);
     assert(self->device);
     self->vertices = $(alloc(Vector), initWithSize, sizeof(MVC_Vertex));

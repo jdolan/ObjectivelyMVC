@@ -155,6 +155,13 @@ struct Renderer {
    * @private
    */
   bool hasScissor;
+
+  /**
+   * @brief If true (default), endFrame clears the swapchain before rendering.
+   * Set to false when a game scene has already rendered into the swapchain on
+   * the same command buffer, so MVC composites on top.
+   */
+  bool clear;
 };
 
 /**

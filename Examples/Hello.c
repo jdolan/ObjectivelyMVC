@@ -78,7 +78,10 @@ int main(int argc, char *argv[]) {
 
   $(windowController, setViewController, viewController);
 
-  initScene();
+  Renderer *renderer = windowController->renderer;
+  renderer->clear = false;
+
+  initScene(renderer);
 
   while (true) {
     
@@ -99,9 +102,17 @@ int main(int argc, char *argv[]) {
       break;
     }
 
-    drawScene(window);
+    $(renderer, beginFrame);
 
-    $(windowController, render);
+    if (renderer->cmd) {
+      drawScene(renderer);
+
+      $(viewController->view, applyThemeIfNeeded, windowController->theme);
+      $(viewController->view, layoutIfNeeded);
+      $(viewController->view, draw, renderer);
+
+      $(renderer, endFrame);
+    }
   }
 
   release(viewController);

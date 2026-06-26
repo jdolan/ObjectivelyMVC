@@ -29,15 +29,14 @@
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
 
-#include "Hello-Scene.h"
-#include "HelloViewController.h"
+#include "../Hello-Scene.h"
+#include "../HelloViewController.h"
 
-#include "click.wav.h"
-#include "clack.wav.h"
+#include "../click.wav.h"
+#include "../clack.wav.h"
 
 typedef struct {
   SDL_Window *window;
-  SDL_GLContext context;
   SDL_AudioStream *audioStream;
   WindowController *windowController;
 } Application;
@@ -83,14 +82,9 @@ SDL_AppResult SDL_AppInit(void **unused, int argc, char *argv[]) {
     SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(app.audioStream));
   }
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-  SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-
   app.window = SDL_CreateWindow("Hello",
     0, 0,
-    SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_HIGH_PIXEL_DENSITY
+    SDL_WINDOW_FULLSCREEN | SDL_WINDOW_HIGH_PIXEL_DENSITY
   );
 
   if (!app.window) {
@@ -98,15 +92,6 @@ SDL_AppResult SDL_AppInit(void **unused, int argc, char *argv[]) {
     return SDL_APP_FAILURE;
   }
 
-  app.context = SDL_GL_CreateContext(app.window);
-  if (!app.context) {
-    SDL_Log("SDL_GL_CreateContext failed: %s", SDL_GetError());
-    return SDL_APP_FAILURE;
-  }
-
-  SDL_GL_SetSwapInterval(1);
-
-  // On iOS, SDL_GetBasePath() returns the app bundle's resource directory.
   const char *basePath = SDL_GetBasePath();
   $$(Resource, addResourcePath, basePath ? basePath : ".");
 
@@ -116,20 +101,31 @@ SDL_AppResult SDL_AppInit(void **unused, int argc, char *argv[]) {
   $(app.windowController, setViewController, viewController);
   release(viewController);
 
-  initScene();
+  Renderer *renderer = app.windowController->renderer;
+  renderer->clear = false;
+
+  initScene(renderer);
 
   return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppIterate(void *unused) {
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  WindowController *wc = app.windowController;
+  Renderer *renderer = wc->renderer;
+  ViewController *vc = wc->viewController;
 
-  drawScene(app.window);
+  $(renderer, beginFrame);
 
-  $(app.windowController, render);
+  if (renderer->cmd) {
+    drawScene(renderer);
 
-  SDL_GL_SwapWindow(app.window);
+    $(vc->view, applyThemeIfNeeded, wc->theme);
+    $(vc->view, layoutIfNeeded);
+    $(vc->view, draw, renderer);
+
+    $(renderer, endFrame);
+  }
 
   return SDL_APP_CONTINUE;
 }
@@ -155,10 +151,6 @@ void SDL_AppQuit(void *unused, SDL_AppResult result) {
 
   if (app.audioStream) {
     SDL_DestroyAudioStream(app.audioStream);
-  }
-
-  if (app.context) {
-    SDL_GL_DestroyContext(app.context);
   }
 
   if (app.window) {
