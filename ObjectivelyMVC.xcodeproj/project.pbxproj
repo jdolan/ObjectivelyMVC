@@ -1093,9 +1093,6 @@
 				LastUpgradeCheck = 2650;
 				ORGANIZATIONNAME = "https://github.com/jdolan";
 				TargetAttributes = {
-				MV02000000000000000000A1 = {
-					CreatedOnToolsVersion = 16.0;
-				};
 					B1DD00010000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
 						ProvisioningStyle = Automatic;
@@ -1109,6 +1106,9 @@
 					};
 					CED157CC1C4BF3AC00FBA2DE = {
 						CreatedOnToolsVersion = 7.2;
+					};
+					MV02000000000000000000A1 = {
+						CreatedOnToolsVersion = 16.0;
 					};
 				};
 			};
@@ -1126,6 +1126,7 @@
 			projectRoot = "";
 			targets = (
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
+				MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */,
 				CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
 				CE34C8951FB29F700025F231 /* ObjectivelyMVC-Stylesheet */,
@@ -1133,7 +1134,6 @@
 				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 				CE3CB2991F40F9A100FAA016 /* ObjectivelyMVC-Examples */,
 				B1DD00010000000000000001 /* ObjectivelyMVC-Hello-iOS */,
-							MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */,
 			);
 		};
 /* End PBXProject section */
@@ -1427,7 +1427,6 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Examples/Hello-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1443,6 +1442,8 @@
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Debug;
 		};
@@ -1469,7 +1470,6 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Examples/Hello-iOS/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1485,6 +1485,8 @@
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Release;
 		};
@@ -1649,7 +1651,6 @@
 					"$(HOMEBREW_PREFIX)/include/SDL3",
 				);
 				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
@@ -1682,7 +1683,6 @@
 					"$(HOMEBREW_PREFIX)/include/SDL3",
 				);
 				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
@@ -1700,7 +1700,6 @@
 					"$(inherited)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_NAME = ObjectivelyMVC;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
@@ -1719,7 +1718,6 @@
 					"$(inherited)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_NAME = ObjectivelyMVC;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
