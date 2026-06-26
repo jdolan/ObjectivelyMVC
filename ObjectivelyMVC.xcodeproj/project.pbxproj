@@ -189,6 +189,15 @@
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EF00010000000000000000A1 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
+		EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		EF00030000000000000000A3 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		EF00040000000000000000A4 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
+		EF00050000000000000000A5 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		EF00070000000000000000A7 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA0040000000000000000F0 /* Objectively.framework */; };
+		EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -545,6 +554,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE34C89D1FB29F700025F231 /* ObjectivelyMVC.framework in Frameworks */,
+				EF00010000000000000000A1 /* Objectively.framework in Frameworks */,
+				EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */,
+				EF00030000000000000000A3 /* SDL3.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -553,6 +565,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE55C1C41F944C6D00D5A326 /* ObjectivelyMVC.framework in Frameworks */,
+				EF00040000000000000000A4 /* Objectively.framework in Frameworks */,
+				EF00050000000000000000A5 /* ObjectivelyGPU.framework in Frameworks */,
+				EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -561,6 +576,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE8819921F91B0BE000D5AB7 /* ObjectivelyMVC.framework in Frameworks */,
+				EF00070000000000000000A7 /* Objectively.framework in Frameworks */,
+				EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */,
+				EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
