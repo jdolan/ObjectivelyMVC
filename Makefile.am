@@ -6,12 +6,10 @@ SUBDIRS = \
 	Tests \
 	Examples
 
+# Requires: git clone --depth 1 https://github.com/jothepro/doxygen-awesome-css.git doxygen-awesome-css
 html:
 	doxygen
 	install -m 644 Documentation/*.{gif,jpg} Documentation/html
 
 html-clean:
 	rm -rf Documentation/html
-
-html-release:
-	rsync -rz --delete Documentation/html/ jaydolan.com:/var/www/projects/ObjectivelyMVC

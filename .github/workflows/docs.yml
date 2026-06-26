@@ -1,0 +1,50 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ "main", "jdolan-sdl-gpu-renderer" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Install Doxygen
+      run: sudo apt-get install -y doxygen graphviz
+
+    - name: Clone doxygen-awesome-css
+      run: git clone --depth 1 https://github.com/jothepro/doxygen-awesome-css.git doxygen-awesome-css
+
+    - name: Build documentation
+      run: doxygen Doxyfile
+
+    - name: Copy media files
+      run: cp Documentation/*.gif Documentation/*.jpg Documentation/html/ 2>/dev/null || true
+
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: Documentation/html
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
