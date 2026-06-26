@@ -278,13 +278,6 @@
 			remoteGlobalIDString = MV02000000000000000000A1;
 			remoteInfo = "ObjectivelyMVC-xcframework";
 		};
-		MV04000000000000000000A1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = MV00030000000000000000A3 /* ObjectivelyGPU.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = EA25F2CECA5EE87704453CE2;
-			remoteInfo = ObjectivelyGPU;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -531,7 +524,6 @@
 		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
 		MV00010000000000000000A1 /* Objectively.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Objectively.xcframework; path = Frameworks/Objectively.xcframework; sourceTree = "<group>"; };
 		MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ObjectivelyGPU.xcframework; path = Frameworks/ObjectivelyGPU.xcframework; sourceTree = "<group>"; };
-		MV00030000000000000000A3 /* ObjectivelyGPU.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectivelyGPU.xcodeproj; path = ../ObjectivelyGPU/ObjectivelyGPU.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1085,7 +1077,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				MV05000000000000000000A1 /* PBXTargetDependency */,
 			);
 			name = ObjectivelyMVC;
 			productName = "SDL_mvc-Xcode";
@@ -1252,7 +1243,6 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(SRCROOT)/Frameworks/ObjectivelyMVC.xcframework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1410,11 +1400,6 @@
 			isa = PBXTargetDependency;
 			target = MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */;
 			targetProxy = MV03000000000000000000A1 /* PBXContainerItemProxy */;
-		};
-		MV05000000000000000000A1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ObjectivelyGPU;
-			targetProxy = MV04000000000000000000A1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
