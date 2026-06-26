@@ -40,6 +40,9 @@ jobs:
         make -j$(sysctl -n hw.logicalcpu)
         sudo make install
 
+    - name: Install spirv-cross
+      run: brew install spirv-cross
+
     - name: Build SDL_shadercross
       run: |
         git clone --depth 1 https://github.com/libsdl-org/SDL_shadercross.git SDL_shadercross
@@ -145,7 +148,9 @@ jobs:
     - name: Install spirv-cross
       run: |
         git clone --depth 1 https://github.com/KhronosGroup/SPIRV-Cross.git SPIRV-Cross
-        cmake -S SPIRV-Cross -B SPIRV-Cross/build -DCMAKE_INSTALL_PREFIX=/usr/local
+        cmake -S SPIRV-Cross -B SPIRV-Cross/build \
+          -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -DCMAKE_POSITION_INDEPENDENT_CODE=ON
         cmake --build SPIRV-Cross/build -j$(nproc)
         sudo cmake --install SPIRV-Cross/build
 
@@ -203,6 +208,12 @@ jobs:
       with:
         repository: jdolan/Objectively
         path: Objectively
+
+    - name: Checkout ObjectivelyGPU
+      uses: actions/checkout@v6
+      with:
+        repository: jdolan/ObjectivelyGPU
+        path: ObjectivelyGPU
 
     - name: Checkout ObjectivelyMVC
       uses: actions/checkout@v6

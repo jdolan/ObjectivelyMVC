@@ -187,14 +187,14 @@
   <PropertyGroup Label="UserMacros" />
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;..\..\ObjectivelyGPU\Sources\;libs\sdl\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
     <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;libs\sdl\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\sdl\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;..\..\ObjectivelyGPU\Sources\;libs\sdl\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
