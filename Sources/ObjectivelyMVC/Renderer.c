@@ -122,12 +122,7 @@ static void beginFrame(Renderer *self) {
 
   self->cmd = $(self->device, acquireCommandBuffer);
 
-  if (!$(self->cmd, acquireSwapchainTexture, self->device->window, &self->swapchain)) {
-    $(self->cmd, cancel);
-    release(self->cmd);
-    self->cmd = NULL;
-    return;
-  }
+  $(self->cmd, waitAndAcquireSwapchainTexture, self->device->window, &self->swapchain);
 
   $(self->vertices, removeAll);
   $(self->drawCalls, removeAll);
@@ -289,8 +284,8 @@ static void endFrame(Renderer *self) {
       if (self->vertexBuffer) {
         $(self->device, releaseBuffer, self->vertexBuffer);
       }
-      const SDL_GPUBufferCreateInfo vtxBufInfo = { .usage = SDL_GPU_BUFFERUSAGE_VERTEX, .size = vtxSize };
-      self->vertexBuffer = $(self->device, createBuffer, &vtxBufInfo);
+      const SDL_GPUBufferCreateInfo info = { .usage = SDL_GPU_BUFFERUSAGE_VERTEX, .size = vtxSize };
+      self->vertexBuffer = $(self->device, createBuffer, &info);
       self->vertexBufferCapacity = (Uint32) vtxCount;
     }
 
@@ -300,9 +295,9 @@ static void endFrame(Renderer *self) {
   release(copyPass);
 
   const SDL_GPUColorTargetInfo colorTarget = {
-    .texture     = self->swapchain.texture,
-    .load_op     = self->clear ? SDL_GPU_LOADOP_CLEAR : SDL_GPU_LOADOP_LOAD,
-    .store_op    = SDL_GPU_STOREOP_STORE,
+    .texture = self->swapchain.texture,
+    .load_op = self->clear ? SDL_GPU_LOADOP_CLEAR : SDL_GPU_LOADOP_LOAD,
+    .store_op = SDL_GPU_STOREOP_STORE,
     .clear_color = (SDL_FColor) { 0.f, 0.f, 0.f, 0.f },
   };
 
