@@ -141,10 +141,10 @@ struct Renderer {
   Vector *vertices;
 
   /**
-   * @brief Draw call queue for this frame.
+   * @brief `MVC_DrawArray` queue for this frame.
    * @private
    */
-  Vector *drawCalls;
+  Vector *drawArrays;
 
   /**
    * @brief The current scissor rectangle (in pixel coordinates).

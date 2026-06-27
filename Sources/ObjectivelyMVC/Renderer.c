@@ -22,13 +22,13 @@
  */
 
 #include <assert.h>
-#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <Objectively/Vector.h>
 #include "Colors.h"
 #include <ObjectivelyGPU/CopyPass.h>
+#include <ObjectivelyGPU/Mathlib.h>
 #include <ObjectivelyGPU/RenderPass.h>
 #include "Renderer.h"
 #include "View.h"
@@ -109,7 +109,7 @@ static void pushDrawCall(const Renderer *self, const MVC_Vertex *verts, Uint32 c
     $(self->vertices, add, (MVC_Vertex *) &verts[i]);
   }
 
-  $(self->drawCalls, add, (MVC_DrawArrays *) &dc);
+  $(self->drawArrays, add, (MVC_DrawArrays *) &dc);
 }
 
 #pragma mark - Renderer
@@ -125,7 +125,7 @@ static void beginFrame(Renderer *self) {
   $(self->cmd, waitAndAcquireSwapchainTexture, &self->swapchain);
 
   $(self->vertices, removeAll);
-  $(self->drawCalls, removeAll);
+  $(self->drawArrays, removeAll);
 
   self->scissor = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
   self->hasScissor = false;
@@ -323,20 +323,20 @@ static void endFrame(Renderer *self) {
   $(renderPass, bindPipeline, self->pipeline);
   $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer }, 1);
 
-  for (size_t i = 0; i < self->drawCalls->count; i++) {
-    const MVC_DrawArrays *dc = VectorElement(self->drawCalls, MVC_DrawArrays, i);
+  for (size_t i = 0; i < self->drawArrays->count; i++) {
+    const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
 
-    const SDL_Rect scissor = dc->hasScissor
-      ? dc->scissor
+    const SDL_Rect scissor = draw->hasScissor
+      ? draw->scissor
       : MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
     $(renderPass, setScissor, &scissor);
 
     $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
-      .texture = dc->texture, .sampler = self->sampler,
+      .texture = draw->texture, .sampler = self->sampler,
     }, 1);
 
-    $(self->cmd, pushFragmentUniformData, 0, dc->color, sizeof(dc->color));
-    $(renderPass, drawPrimitives, dc->vertexCount, 1, dc->firstVertex, 0);
+    $(self->cmd, pushFragmentUniformData, 0, draw->color, sizeof(draw->color));
+    $(renderPass, drawPrimitives, draw->vertexCount, 1, draw->firstVertex, 0);
   }
 
   release(renderPass);
@@ -358,12 +358,15 @@ static Renderer *init(Renderer *self) {
   self = (Renderer *) super(Object, self, init);
   if (self) {
     self->clear = true;
+
     self->device = $(alloc(RenderDevice), init);
     assert(self->device);
+
     self->vertices = $(alloc(Vector), initWithSize, sizeof(MVC_Vertex));
     assert(self->vertices);
-    self->drawCalls = $(alloc(Vector), initWithSize, sizeof(MVC_DrawArrays));
-    assert(self->drawCalls);
+
+    self->drawArrays = $(alloc(Vector), initWithSize, sizeof(MVC_DrawArrays));
+    assert(self->drawArrays);
   }
 
   return self;
@@ -498,7 +501,7 @@ static void renderDeviceWillReset(Renderer *self) {
   self->pipeline = NULL;
 
   $(self->vertices, removeAll);
-  $(self->drawCalls, removeAll);
+  $(self->drawArrays, removeAll);
 }
 
 /**
@@ -540,7 +543,7 @@ static void dealloc(Object *self) {
   }
 
   release(this->vertices);
-  release(this->drawCalls);
+  release(this->drawArrays);
   release(this->device);
 
   super(Object, self, dealloc);
