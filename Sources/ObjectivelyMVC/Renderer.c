@@ -122,7 +122,7 @@ static void beginFrame(Renderer *self) {
 
   self->cmd = $(self->device, acquireCommandBuffer);
 
-  $(self->cmd, waitAndAcquireSwapchainTexture, self->device->window, &self->swapchain);
+  $(self->cmd, waitAndAcquireSwapchainTexture, &self->swapchain);
 
   $(self->vertices, removeAll);
   $(self->drawCalls, removeAll);
