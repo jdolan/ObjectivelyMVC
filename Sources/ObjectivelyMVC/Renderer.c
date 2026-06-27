@@ -280,8 +280,6 @@ static void endFrame(Renderer *self) {
 
   const size_t vtxCount = self->vertices->count;
 
-  SDL_GPUTransferBuffer *vtxTransfer = NULL;
-
   CopyPass *copyPass = $(self->cmd, beginCopyPass);
 
   if (vtxCount > 0) {
@@ -296,15 +294,7 @@ static void endFrame(Renderer *self) {
       self->vertexBufferCapacity = (Uint32) vtxCount;
     }
 
-    const SDL_GPUTransferBufferCreateInfo vtxTbufInfo = { .usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD, .size = vtxSize };
-    vtxTransfer = $(self->device, createTransferBuffer, &vtxTbufInfo);
-    void *mapped = $(self->device, mapTransferBuffer, vtxTransfer, false);
-    memcpy(mapped, self->vertices->elements, vtxSize);
-    $(self->device, unmapTransferBuffer, vtxTransfer);
-
-    const SDL_GPUTransferBufferLocation src = { .transfer_buffer = vtxTransfer, .offset = 0 };
-    const SDL_GPUBufferRegion dst = { .buffer = self->vertexBuffer, .offset = 0, .size = vtxSize };
-    $(copyPass, uploadBuffer, &src, &dst, true);
+    $(copyPass, uploadData, self->vertexBuffer, self->vertices->elements, vtxSize, 0, true);
   }
 
   release(copyPass);
@@ -355,10 +345,6 @@ static void endFrame(Renderer *self) {
   }
 
   release(renderPass);
-
-  if (vtxTransfer) {
-    $(self->device, releaseTransferBuffer, vtxTransfer);
-  }
 
   $(self->device, submit, self->cmd);
   release(self->cmd);

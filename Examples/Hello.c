@@ -65,10 +65,7 @@ int main(int argc, char *argv[]) {
     SDL_WINDOW_HIGH_PIXEL_DENSITY
   );
 
-  if (window == NULL) {
-    fprintf(stderr, "%s\n", SDL_GetError());
-    exit(1);
-  }
+  GPU_Assert(window, "Failed to create window");
 
   $$(Resource, addResourcePath, EXAMPLES);
 
