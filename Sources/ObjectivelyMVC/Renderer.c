@@ -461,15 +461,7 @@ static void renderDeviceDidReset(Renderer *self) {
   $(self->device, releaseShader, vs);
   $(self->device, releaseShader, fs);
 
-  const SDL_GPUSamplerCreateInfo samplerInfo = {
-    .min_filter     = SDL_GPU_FILTER_LINEAR,
-    .mag_filter     = SDL_GPU_FILTER_LINEAR,
-    .address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-    .address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-    .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
-  };
-
-  self->sampler = $(self->device, createSampler, &samplerInfo);
+  self->sampler = $(self->device, samplerLinearClamp);
 
   const Uint8 whitePx[4] = { 255, 255, 255, 255 };
   const SDL_GPUTextureCreateInfo whiteInfo = {
@@ -497,26 +489,18 @@ static void renderDeviceWillReset(Renderer *self) {
     self->swapchain = (Swapchain) { 0 };
   }
 
-  if (self->white) {
-    $(self->device, releaseTexture, self->white);
-    self->white = NULL;
-  }
+  $(self->device, releaseTexture, self->white);
+  self->white = NULL;
 
-  if (self->sampler) {
-    $(self->device, releaseSampler, self->sampler);
-    self->sampler = NULL;
-  }
+  // sampler is device-owned (samplerLinearClamp preset) — do not release
+  self->sampler = NULL;
 
-  if (self->vertexBuffer) {
-    $(self->device, releaseBuffer, self->vertexBuffer);
-    self->vertexBuffer = NULL;
-    self->vertexBufferCapacity = 0;
-  }
+  $(self->device, releaseBuffer, self->vertexBuffer);
+  self->vertexBuffer = NULL;
+  self->vertexBufferCapacity = 0;
 
-  if (self->pipeline) {
-    $(self->device, releaseGraphicsPipeline, self->pipeline);
-    self->pipeline = NULL;
-  }
+  $(self->device, releaseGraphicsPipeline, self->pipeline);
+  self->pipeline = NULL;
 
   $(self->vertices, removeAll);
   $(self->drawCalls, removeAll);

@@ -121,7 +121,8 @@ struct Renderer {
   Uint32 vertexBufferCapacity;
 
   /**
-   * @brief The linear texture sampler.
+   * @brief The linear clamp-to-edge sampler for texture rendering.
+   * @details Borrowed from `RenderDevice::samplerLinearClamp` — do not release.
    * @private
    */
   SDL_GPUSampler *sampler;
