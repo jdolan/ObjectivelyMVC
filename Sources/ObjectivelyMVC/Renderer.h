@@ -94,7 +94,7 @@ struct Renderer {
    * @brief The current swapchain texture and dimensions (valid between beginFrame and endFrame).
    * @private
    */
-  Swapchain swapchain;
+  SwapchainTexture swapchain;
 
   /**
    * @brief The current draw color.

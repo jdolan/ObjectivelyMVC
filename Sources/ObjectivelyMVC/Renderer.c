@@ -122,7 +122,7 @@ static void beginFrame(Renderer *self) {
 
   self->cmd = $(self->device, acquireCommandBuffer);
 
-  if (!$(self->device, acquireSwapchainTexture, self->cmd, &self->swapchain)) {
+  if (!$(self->cmd, acquireSwapchainTexture, self->device->window, &self->swapchain)) {
     $(self->cmd, cancel);
     release(self->cmd);
     self->cmd = NULL;
@@ -349,7 +349,7 @@ static void endFrame(Renderer *self) {
   $(self->device, submit, self->cmd);
   release(self->cmd);
   self->cmd = NULL;
-  self->swapchain = (Swapchain) { 0 };
+  self->swapchain = (SwapchainTexture) { 0 };
 
   $(self, setDrawColor, &Colors.White);
 }
@@ -486,7 +486,7 @@ static void renderDeviceWillReset(Renderer *self) {
     $(self->cmd, cancel);
     release(self->cmd);
     self->cmd = NULL;
-    self->swapchain = (Swapchain) { 0 };
+    self->swapchain = (SwapchainTexture) { 0 };
   }
 
   $(self->device, releaseTexture, self->white);

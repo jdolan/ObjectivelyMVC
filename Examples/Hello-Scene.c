@@ -242,7 +242,7 @@ void drawScene(Renderer *renderer) {
 
 	const RenderDevice *device = renderer->device;
 	CommandBuffer *cmd = renderer->cmd;
-	const Swapchain swapchain = renderer->swapchain;
+	const SwapchainTexture swapchain = renderer->swapchain;
 
 	const Uint64 ticks = SDL_GetTicks();
 	const float dt = (float) (ticks - scene_lastTicks) / 1000.0f;
