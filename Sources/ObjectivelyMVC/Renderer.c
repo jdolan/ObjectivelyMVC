@@ -91,7 +91,7 @@ static const char *fragmentShader =
 static void pushDrawCall(const Renderer *self, const MVC_Vertex *verts, Uint32 count,
                          SDL_GPUTexture *texture) {
 
-  const MVC_DrawCall dc = {
+  const MVC_DrawArrays dc = {
     .firstVertex = (Uint32) self->vertices->count,
     .vertexCount = count,
     .texture     = texture ? texture : self->white,
@@ -109,7 +109,7 @@ static void pushDrawCall(const Renderer *self, const MVC_Vertex *verts, Uint32 c
     $(self->vertices, add, (MVC_Vertex *) &verts[i]);
   }
 
-  $(self->drawCalls, add, (MVC_DrawCall *) &dc);
+  $(self->drawCalls, add, (MVC_DrawArrays *) &dc);
 }
 
 #pragma mark - Renderer
@@ -324,7 +324,7 @@ static void endFrame(Renderer *self) {
   $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer }, 1);
 
   for (size_t i = 0; i < self->drawCalls->count; i++) {
-    const MVC_DrawCall *dc = VectorElement(self->drawCalls, MVC_DrawCall, i);
+    const MVC_DrawArrays *dc = VectorElement(self->drawCalls, MVC_DrawArrays, i);
 
     const SDL_Rect scissor = dc->hasScissor
       ? dc->scissor
@@ -362,7 +362,7 @@ static Renderer *init(Renderer *self) {
     assert(self->device);
     self->vertices = $(alloc(Vector), initWithSize, sizeof(MVC_Vertex));
     assert(self->vertices);
-    self->drawCalls = $(alloc(Vector), initWithSize, sizeof(MVC_DrawCall));
+    self->drawCalls = $(alloc(Vector), initWithSize, sizeof(MVC_DrawArrays));
     assert(self->drawCalls);
   }
 

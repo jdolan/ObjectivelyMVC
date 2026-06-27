@@ -27,7 +27,8 @@
 
 #include <Objectively/Object.h>
 #include <Objectively/Vector.h>
-#include <ObjectivelyGPU/RenderDevice.h>
+
+#include <ObjectivelyGPU.h>
 
 /**
  * @file
@@ -43,8 +44,8 @@ typedef struct RendererInterface RendererInterface;
  * @brief Interleaved position + texcoord vertex for GPU upload.
  */
 typedef struct {
-  float x, y;
-  float u, v;
+  float2 position;
+  float2 uv;
 } MVC_Vertex;
 
 /**
@@ -52,13 +53,13 @@ typedef struct {
  * @private
  */
 typedef struct {
-  Uint32 firstVertex;
-  Uint32 vertexCount;
   SDL_GPUTexture *texture;
   float color[4];
-  SDL_Rect scissor;
   bool hasScissor;
-} MVC_DrawCall;
+  SDL_Rect scissor;
+  Uint32 firstVertex;
+  Uint32 vertexCount;
+} MVC_DrawArrays;
 
 /**
  * @brief Renderer extends Object with ObjectivelyMVC's UI rendering layer.

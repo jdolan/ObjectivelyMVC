@@ -41,31 +41,21 @@ static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event);
  */
 int main(int argc, char *argv[]) {
 
-#if __APPLE__
-  // Stop Xcode from launching multiple instances of the application
-  // https://developer.apple.com/forums/thread/765445
-  usleep(500000);
-#endif
-
   MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
 
-  SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+  MVC_Assert(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
 
   SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &(SDL_AudioSpec) {
     .format = SDL_AUDIO_S16LE,
     .channels = 1,
     .freq = 22050,
   }, NULL, NULL);
+  MVC_Assert(stream, "SDL_OpenAudioDeviceStream");
 
-  SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream));
+  MVC_Assert(SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream)), "SDL_ResumeAudioDevice");
 
-  SDL_Window *window = SDL_CreateWindow(__FILE__,
-    1024,
-    720,
-    SDL_WINDOW_HIGH_PIXEL_DENSITY
-  );
-
-  GPU_Assert(window, "Failed to create window");
+  SDL_Window *window = SDL_CreateWindow("Hello ObjectivelyMVC", 1024, 720, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+  MVC_Assert(window, "SDL_CreateWindow");
 
   $$(Resource, addResourcePath, EXAMPLES);
 
