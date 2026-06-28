@@ -30,11 +30,13 @@
 
 #include <ObjectivelyGPU.h>
 
+#include "Types.h"
+
 /**
  * @file
  * @brief Renderer extends Object with ObjectivelyMVC's UI rendering layer.
  * @details Renderer provides the MVC-specific shaders, pipelines, vertex
- * streaming, draw call queue, scissor state, color state, and draw* helpers.
+ * streaming, draw call queue, scissor state, and draw* helpers.
  */
 
 typedef struct Renderer Renderer;
@@ -55,7 +57,6 @@ typedef struct {
 typedef struct {
   SDL_GPUTexture *texture;
   float color[4];
-  bool hasScissor;
   SDL_Rect scissor;
   Uint32 firstVertex;
   Uint32 vertexCount;
@@ -96,12 +97,6 @@ struct Renderer {
    * @private
    */
   SwapchainTexture swapchain;
-
-  /**
-   * @brief The current draw color.
-   * @private
-   */
-  SDL_Color color;
 
   /**
    * @brief The graphics pipeline (TRIANGLELIST, for all MVC geometry).
@@ -151,12 +146,6 @@ struct Renderer {
    * @private
    */
   SDL_Rect scissor;
-
-  /**
-   * @brief True if a scissor rect is active.
-   * @private
-   */
-  bool hasScissor;
 
   /**
    * @brief If true (default), endFrame clears the swapchain before rendering.
@@ -219,51 +208,71 @@ struct RendererInterface {
   void (*renderDeviceWillReset)(Renderer *self);
 
   /**
-   * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points)
+   * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
+   * @brief Appends raw vertices and a draw call record to the frame queue.
+   * @details Views that need full draw-call control can call this directly
+   *   instead of going through the drawLine/drawRect/drawTexture helpers.
+   * @param self The Renderer.
+   * @param verts The vertices to append (in logical screen coordinates).
+   * @param count The number of vertices.
+   * @param texture The texture to bind, or `NULL` to use the 1×1 white fallback.
+   * @param color The color multiplier applied in the fragment shader.
+   * @memberof Renderer
+   */
+  void (*pushDrawArrays)(const Renderer *self, const MVC_Vertex *verts, size_t count,
+                         SDL_GPUTexture *texture, const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)
    * @brief Records a line segment between two points.
    * @param self The Renderer.
    * @param points Two points defining the line segment.
+   * @param color The line color.
    * @memberof Renderer
    */
-  void (*drawLine)(const Renderer *self, const SDL_Point *points);
+  void (*drawLine)(const Renderer *self, const SDL_Point *points, const SDL_Color *color);
 
   /**
-   * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
+   * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count, const SDL_Color *color)
    * @brief Records a polyline through the given points.
    * @param self The Renderer.
    * @param points The points.
    * @param count The number of points.
+   * @param color The line color.
    * @memberof Renderer
    */
-  void (*drawLines)(const Renderer *self, const SDL_Point *points, size_t count);
+  void (*drawLines)(const Renderer *self, const SDL_Point *points, size_t count, const SDL_Color *color);
 
   /**
-   * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
+   * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color)
    * @brief Records a rectangle outline.
    * @param self The Renderer.
    * @param rect The rectangle.
+   * @param color The outline color.
    * @memberof Renderer
    */
-  void (*drawRect)(const Renderer *self, const SDL_Rect *rect);
+  void (*drawRect)(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color);
 
   /**
-   * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
+   * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color)
    * @brief Records a filled rectangle.
    * @param self The Renderer.
    * @param rect The rectangle.
+   * @param color The fill color.
    * @memberof Renderer
    */
-  void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect);
+  void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color);
 
   /**
-   * @fn void Renderer::drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest)
+   * @fn void Renderer::drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest, const SDL_Color *color)
    * @brief Records a textured quad in the given destination rectangle.
    * @param self The Renderer.
    * @param texture The GPU texture to sample.
    * @param dest The destination rectangle in logical screen coordinates.
+   * @param color The color multiplier (use `&Colors.White` for no tint).
    * @memberof Renderer
    */
-  void (*drawTexture)(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest);
+  void (*drawTexture)(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest, const SDL_Color *color);
 
   /**
    * @fn void Renderer::drawView(Renderer *self, View *view)
@@ -283,15 +292,6 @@ struct RendererInterface {
    * @memberof Renderer
    */
   void (*setClippingFrame)(Renderer *self, const SDL_Rect *clippingFrame);
-
-  /**
-   * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
-   * @brief Sets the primary color multiplier for subsequent draw calls.
-   * @param self The Renderer.
-   * @param color The color.
-   * @memberof Renderer
-   */
-  void (*setDrawColor)(Renderer *self, const SDL_Color *color);
 };
 
 /**

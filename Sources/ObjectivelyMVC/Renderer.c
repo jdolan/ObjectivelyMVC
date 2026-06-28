@@ -26,7 +26,6 @@
 #include <string.h>
 
 #include <Objectively/Vector.h>
-#include "Colors.h"
 #include <ObjectivelyGPU/CopyPass.h>
 #include <ObjectivelyGPU/Mathlib.h>
 #include <ObjectivelyGPU/RenderPass.h>
@@ -86,26 +85,29 @@ static const char *fragmentShader =
   "}\n";
 
 /**
- * @brief Records vertices into the staging buffer and appends a DrawCall.
+ * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
+ * @memberof Renderer
  */
-static void pushDrawCall(const Renderer *self, const MVC_Vertex *verts, Uint32 count,
-                         SDL_GPUTexture *texture) {
+static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count,
+                            SDL_GPUTexture *texture, const SDL_Color *color) {
+
+  assert(verts);
+  assert(color);
 
   const MVC_DrawArrays dc = {
     .firstVertex = (Uint32) self->vertices->count,
-    .vertexCount = count,
+    .vertexCount = (Uint32) count,
     .texture     = texture ? texture : self->white,
     .color       = {
-      self->color.r / 255.0f,
-      self->color.g / 255.0f,
-      self->color.b / 255.0f,
-      self->color.a / 255.0f,
+      color->r / 255.0f,
+      color->g / 255.0f,
+      color->b / 255.0f,
+      color->a / 255.0f,
     },
-    .scissor    = self->scissor,
-    .hasScissor = self->hasScissor,
+    .scissor = self->scissor,
   };
 
-  for (Uint32 i = 0; i < count; i++) {
+  for (size_t i = 0; i < count; i++) {
     $(self->vertices, add, (MVC_Vertex *) &verts[i]);
   }
 
@@ -128,29 +130,27 @@ static void beginFrame(Renderer *self) {
   $(self->drawArrays, removeAll);
 
   self->scissor = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
-  self->hasScissor = false;
-
-  $(self, setDrawColor, &Colors.White);
 }
 
 /**
- * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points)
+ * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawLine(const Renderer *self, const SDL_Point *points) {
+static void drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color) {
 
   assert(points);
 
-  $(self, drawLines, points, 2);
+  $(self, drawLines, points, 2, color);
 }
 
 /**
- * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
+ * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawLines(const Renderer *self, const SDL_Point *points, size_t count) {
+static void drawLines(const Renderer *self, const SDL_Point *points, size_t count, const SDL_Color *color) {
 
   assert(points);
+  assert(color);
 
   if (count < 2) {
     return;
@@ -182,16 +182,16 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
     v[5] = (MVC_Vertex) { bx - nx, by - ny, 0.0f, 0.0f };
   }
 
-  pushDrawCall(self, verts, (Uint32) (segCount * 6), NULL);
+  $(self, pushDrawArrays, verts, segCount * 6, NULL, color);
 
   free(verts);
 }
 
 /**
- * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
+ * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawRect(const Renderer *self, const SDL_Rect *rect) {
+static void drawRect(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color) {
 
   assert(rect);
 
@@ -203,14 +203,14 @@ static void drawRect(const Renderer *self, const SDL_Rect *rect) {
     { rect->x,           rect->y           },
   };
 
-  $(self, drawLines, points, 5);
+  $(self, drawLines, points, 5, color);
 }
 
 /**
- * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
+ * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
+static void drawRectFilled(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color) {
 
   assert(rect);
 
@@ -226,14 +226,14 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
     { x1, y2, 0.0f, 0.0f },
   };
 
-  pushDrawCall(self, verts, 6, NULL);
+  $(self, pushDrawArrays, verts, 6, NULL, color);
 }
 
 /**
- * @fn void Renderer::drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest)
+ * @fn void Renderer::drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *rect) {
+static void drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *rect, const SDL_Color *color) {
 
   assert(rect);
 
@@ -249,7 +249,7 @@ static void drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL
     { x1, y2, 0.0f, 1.0f },
   };
 
-  pushDrawCall(self, verts, 6, texture);
+  $(self, pushDrawArrays, verts, 6, texture, color);
 }
 
 /**
@@ -326,10 +326,7 @@ static void endFrame(Renderer *self) {
   for (size_t i = 0; i < self->drawArrays->count; i++) {
     const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
 
-    const SDL_Rect scissor = draw->hasScissor
-      ? draw->scissor
-      : MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
-    $(renderPass, setScissor, &scissor);
+    $(renderPass, setScissor, &draw->scissor);
 
     $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
       .texture = draw->texture, .sampler = self->sampler,
@@ -345,8 +342,6 @@ static void endFrame(Renderer *self) {
   release(self->cmd);
   self->cmd = NULL;
   self->swapchain = (SwapchainTexture) { 0 };
-
-  $(self, setDrawColor, &Colors.White);
 }
 
 /**
@@ -512,19 +507,9 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
 
   if (clippingFrame) {
     self->scissor = MVC_TransformToWindow(self->device->window, clippingFrame);
-    self->hasScissor = true;
   } else {
     self->scissor = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
-    self->hasScissor = false;
   }
-}
-
-/**
- * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
- * @memberof Renderer
- */
-static void setDrawColor(Renderer *self, const SDL_Color *color) {
-  self->color = *color;
 }
 
 #pragma mark - Object lifecycle
@@ -563,6 +548,7 @@ static void initialize(Class *clazz) {
   ((RendererInterface *) clazz->interface)->endFrame = endFrame;
   ((RendererInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
   ((RendererInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
+  ((RendererInterface *) clazz->interface)->pushDrawArrays = pushDrawArrays;
   ((RendererInterface *) clazz->interface)->drawLine = drawLine;
   ((RendererInterface *) clazz->interface)->drawLines = drawLines;
   ((RendererInterface *) clazz->interface)->drawRect = drawRect;
@@ -570,7 +556,6 @@ static void initialize(Class *clazz) {
   ((RendererInterface *) clazz->interface)->drawTexture = drawTexture;
   ((RendererInterface *) clazz->interface)->drawView = drawView;
   ((RendererInterface *) clazz->interface)->setClippingFrame = setClippingFrame;
-  ((RendererInterface *) clazz->interface)->setDrawColor = setDrawColor;
 }
 
 /**

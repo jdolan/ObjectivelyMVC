@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "Colors.h"
 #include "Text.h"
 
 static inline float view_pixel_density(SDL_Window *window) {
@@ -433,7 +434,7 @@ static void render(View *self, Renderer *renderer) {
     assert(this->texture);
 
     const SDL_Rect draw_rect = { frame.x, frame.y, this->texture_w, this->texture_h };
-    $(renderer, drawTexture, this->texture, &draw_rect);
+    $(renderer, drawTexture, this->texture, &draw_rect, &Colors.White);
   }
 }
 

@@ -38,8 +38,6 @@ static void render(View *self, Renderer *renderer) {
 
   const SDL_Rect frame = $(self, renderFrame);
 
-  $(renderer, setDrawColor, &self->borderColor);
-
   SDL_Point points[2];
 
   points[0].x = frame.x;
@@ -48,9 +46,7 @@ static void render(View *self, Renderer *renderer) {
   points[1].x = frame.x + frame.w;
   points[1].y = frame.y + frame.h;
 
-  $(renderer, drawLine, points);
-
-  $(renderer, setDrawColor, &Colors.White);
+  $(renderer, drawLine, points, &self->borderColor);
 }
 
 #pragma mark - TableHeaderView

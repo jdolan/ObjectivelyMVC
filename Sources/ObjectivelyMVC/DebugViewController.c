@@ -232,9 +232,7 @@ static void debugEnumerate(View *view, ident data) {
     const SDL_Rect frame = $(view, renderFrame);
 
     $(this->renderer, setClippingFrame, NULL);
-    $(this->renderer, setDrawColor, &MakeColor(0x22, 0x66, 0x99, 0x88));
-    $(this->renderer, drawRectFilled, &frame);
-    $(this->renderer, setDrawColor, &Colors.White);
+    $(this->renderer, drawRectFilled, &frame, &MakeColor(0x22, 0x66, 0x99, 0x88));
   }
 
   if ($(view, isVisible)) {
@@ -254,9 +252,7 @@ static void debugEnumerate(View *view, ident data) {
       const SDL_Rect frame = $(view, renderFrame);
 
       $(this->renderer, setClippingFrame, NULL);
-      $(this->renderer, setDrawColor, &Colors.DarkGoldenRod);
-      $(this->renderer, drawRect, &frame);
-      $(this->renderer, setDrawColor, &Colors.White);
+      $(this->renderer, drawRect, &frame, &Colors.DarkGoldenRod);
     }
   }
 }

@@ -27,6 +27,7 @@
 
 #include <Objectively/String.h>
 
+#include "Colors.h"
 #include "TextView.h"
 
 #define _Class _TextView
@@ -165,7 +166,7 @@ static void render(View *self, Renderer *renderer) {
       { frame.x + w, frame.y + h }
     };
 
-    $(renderer, drawLine, points);
+    $(renderer, drawLine, points, &Colors.White);
   }
 }
 

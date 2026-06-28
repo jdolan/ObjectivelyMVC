@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "Colors.h"
 #include "Log.h"
 #include "Slider.h"
 
@@ -141,7 +142,7 @@ static void render(View *self, Renderer *renderer) {
     { frame.x + frame.w, frame.y + frame.h * 0.5 }
   };
 
-  $(renderer, drawLine, points);
+  $(renderer, drawLine, points, &Colors.White);
 }
 
 #pragma mark - Control

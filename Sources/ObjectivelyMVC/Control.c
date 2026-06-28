@@ -186,8 +186,6 @@ static void render(View *self, Renderer *renderer) {
 
   if (this->bevel == ControlBevelInset) {
 
-    $(renderer, setDrawColor, &Colors.Silver);
-
     SDL_Point points[3];
 
     points[0].x = frame.x;
@@ -199,9 +197,7 @@ static void render(View *self, Renderer *renderer) {
     points[2].x = frame.x + frame.w;
     points[2].y = frame.y;
 
-    $(renderer, drawLines, points, lengthof(points));
-
-    $(renderer, setDrawColor, &Colors.Black);
+    $(renderer, drawLines, points, lengthof(points), &Colors.Silver);
 
     points[0].x = frame.x;
     points[0].y = frame.y + frame.h;
@@ -212,12 +208,10 @@ static void render(View *self, Renderer *renderer) {
     points[2].x = frame.x + frame.w;
     points[2].y = frame.y;
 
-    $(renderer, drawLines, points, lengthof(points));
+    $(renderer, drawLines, points, lengthof(points), &Colors.Black);
 
   } else if (this->bevel == ControlBevelOutset) {
 
-    $(renderer, setDrawColor, &Colors.Black);
-
     SDL_Point points[3];
 
     points[0].x = frame.x;
@@ -229,9 +223,7 @@ static void render(View *self, Renderer *renderer) {
     points[2].x = frame.x + frame.w;
     points[2].y = frame.y;
 
-    $(renderer, drawLines, points, lengthof(points));
-
-    $(renderer, setDrawColor, &Colors.Silver);
+    $(renderer, drawLines, points, lengthof(points), &Colors.Black);
 
     points[0].x = frame.x;
     points[0].y = frame.y + frame.h;
@@ -242,17 +234,12 @@ static void render(View *self, Renderer *renderer) {
     points[2].x = frame.x + frame.w;
     points[2].y = frame.y;
 
-    $(renderer, drawLines, points, lengthof(points));
+    $(renderer, drawLines, points, lengthof(points), &Colors.Silver);
   }
 
   if (this->state & ControlStateFocused) {
-
-    $(renderer, setDrawColor, &Colors.Charcoal);
-
-    $(renderer, drawRect, &frame);
+    $(renderer, drawRect, &frame, &Colors.Charcoal);
   }
-
-  $(renderer, setDrawColor, &Colors.White);
 }
 
 /**

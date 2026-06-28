@@ -113,10 +113,8 @@ static void render(View *self, Renderer *renderer) {
 
     // TODO: Actually use self->blend
 
-    $(renderer, setDrawColor, &this->color);
     const SDL_Rect frame = $(self, renderFrame);
-    $(renderer, drawTexture, this->texture, &frame);
-    $(renderer, setDrawColor, &Colors.White);
+    $(renderer, drawTexture, this->texture, &frame, &this->color);
   }
 }
 
