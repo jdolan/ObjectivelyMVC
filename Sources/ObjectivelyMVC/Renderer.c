@@ -29,6 +29,7 @@
 #include <ObjectivelyGPU/CopyPass.h>
 #include <ObjectivelyGPU/Mathlib.h>
 #include <ObjectivelyGPU/RenderPass.h>
+
 #include "Renderer.h"
 #include "View.h"
 #include "Window.h"
@@ -50,7 +51,7 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
   assert(verts);
   assert(color);
 
-  const MVC_DrawArrays dc = {
+  const MVC_DrawArrays draw = {
     .firstVertex = (Uint32) self->vertices->count,
     .vertexCount = (Uint32) count,
     .texture     = texture ? texture : self->white,
@@ -67,7 +68,7 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
     $(self->vertices, add, (MVC_Vertex *) &verts[i]);
   }
 
-  $(self->drawArrays, add, (MVC_DrawArrays *) &dc);
+  $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
 }
 
 #pragma mark - Renderer

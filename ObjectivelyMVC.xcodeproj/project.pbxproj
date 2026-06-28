@@ -71,10 +71,12 @@
 		B1BB000100000000000000CD /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CD /* ImageIO.framework */; };
 		B1BB000100000000000000CF /* UniformTypeIdentifiers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */; };
 		B1BB000100000000000000DA /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000DA /* Network.framework */; };
-		B1BB000100000000000000EA /* Hello-iOS.c in Sources */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000EA /* Hello-iOS.c */; };
+		B1BB000100000000000000EA /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		B1BB000100000000000000EB /* HelloViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */; };
 		B1BB000100000000000000EC /* Hello-Scene.c in Sources */ = {isa = PBXBuildFile; fileRef = AABB0001CC0011220033AABB /* Hello-Scene.c */; };
 		B1BB000100000000000000ED /* HelloViewController.json in Resources */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
+		HS00000000000000000000B0 /* Hello-Scene.vert.msl in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello-Scene.vert.msl */; };
+		HS00000000000000000000B1 /* Hello-Scene.frag.msl in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A5 /* Hello-Scene.frag.msl */; };
 		B1BB000100000000000000F0 /* ObjectivelyMVC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CE0943A71D60F1A300C11408 /* TableColumn.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943A61D60F1A300C11408 /* TableColumn.c */; };
 		CE0943A91D60F23100C11408 /* TableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943A81D60F23100C11408 /* TableColumn.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -345,6 +347,12 @@
 		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AABB0001CC0011220033AABB /* Hello-Scene.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "Hello-Scene.c"; sourceTree = "<group>"; };
 		AABB0002CC0011220033AABB /* Hello-Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Hello-Scene.h"; sourceTree = "<group>"; };
+		HS00000000000000000000A0 /* Hello-Scene.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Hello-Scene.vert.glsl"; sourceTree = "<group>"; };
+		HS00000000000000000000A1 /* Hello-Scene.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "Hello-Scene.vert.spv"; sourceTree = "<group>"; };
+		HS00000000000000000000A2 /* Hello-Scene.vert.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Hello-Scene.vert.msl"; sourceTree = "<group>"; };
+		HS00000000000000000000A3 /* Hello-Scene.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Hello-Scene.frag.glsl"; sourceTree = "<group>"; };
+		HS00000000000000000000A4 /* Hello-Scene.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "Hello-Scene.frag.spv"; sourceTree = "<group>"; };
+		HS00000000000000000000A5 /* Hello-Scene.frag.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Hello-Scene.frag.msl"; sourceTree = "<group>"; };
 		B1AA0001000000000000000A /* SDL3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3.xcframework; path = ../ObjectivelyGPU/Frameworks/SDL3.xcframework; sourceTree = "<group>"; };
 		B1AA0001000000000000000B /* SDL3_image.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_image.xcframework; path = Frameworks/SDL3_image.xcframework; sourceTree = "<group>"; };
 		B1AA0001000000000000000C /* SDL3_ttf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_ttf.xcframework; path = Frameworks/SDL3_ttf.xcframework; sourceTree = "<group>"; };
@@ -366,7 +374,7 @@
 		B1AA000100000000000000CD /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UniformTypeIdentifiers.framework; path = System/Library/Frameworks/UniformTypeIdentifiers.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000DA /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
-		B1AA000100000000000000EA /* Hello-iOS.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "Hello-iOS.c"; sourceTree = "<group>"; };
+		B1AA000100000000000000EA /* Hello.c in iOS Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		B1AA000100000000000000EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AA000100000000000000EC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ObjectivelyMVC-Hello-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -503,6 +511,7 @@
 		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
+		CECF83CE2FF1673A00CB0CCA /* build-xcframework.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-xcframework.sh"; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -774,6 +783,12 @@
 				CE12D42B1C4C37E500CD0B13 /* Hello.c */,
 				AABB0001CC0011220033AABB /* Hello-Scene.c */,
 				AABB0002CC0011220033AABB /* Hello-Scene.h */,
+				HS00000000000000000000A0 /* Hello-Scene.vert.glsl */,
+				HS00000000000000000000A1 /* Hello-Scene.vert.spv */,
+				HS00000000000000000000A2 /* Hello-Scene.vert.msl */,
+				HS00000000000000000000A3 /* Hello-Scene.frag.glsl */,
+				HS00000000000000000000A4 /* Hello-Scene.frag.spv */,
+				HS00000000000000000000A5 /* Hello-Scene.frag.msl */,
 				CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */,
 				CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */,
 				CE6BC16E1D79B2920070FB2D /* HelloViewController.json */,
@@ -852,6 +867,7 @@
 				B1AA000100000000000000DA /* Network.framework */,
 				MV00010000000000000000A1 /* Objectively.xcframework */,
 				MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */,
+				CECF83CE2FF1673A00CB0CCA /* build-xcframework.sh */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1138,6 +1154,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1BB000100000000000000ED /* HelloViewController.json in Resources */,
+				HS00000000000000000000B0 /* Hello-Scene.vert.msl in Resources */,
+				HS00000000000000000000B1 /* Hello-Scene.frag.msl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1255,7 +1273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B1BB000100000000000000EA /* Hello-iOS.c in Sources */,
+				B1BB000100000000000000EA /* Hello.c in Sources */,
 				B1BB000100000000000000EB /* HelloViewController.c in Sources */,
 				B1BB000100000000000000EC /* Hello-Scene.c in Sources */,
 			);

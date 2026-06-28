@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -21,8 +21,10 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#include <stdlib.h>
-#include <unistd.h>
+#define SDL_MAIN_USE_CALLBACKS
+
+#include <SDL3/SDL_main.h>
+#include <SDL3/SDL.h>
 
 #include <Objectively.h>
 #include <ObjectivelyMVC.h>
@@ -30,110 +32,149 @@
 #include "Hello-Scene.h"
 #include "HelloViewController.h"
 
-#ifndef EXAMPLES
-# define EXAMPLES "."
-#endif
-
-static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event);
-
-/**
- * @brief Program entry point.
- */
-int main(int argc, char *argv[]) {
-
-  MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
-
-  MVC_Assert(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
-
-  SDL_AudioStream *stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &(SDL_AudioSpec) {
-    .format = SDL_AUDIO_S16LE,
-    .channels = 1,
-    .freq = 22050,
-  }, NULL, NULL);
-  MVC_Assert(stream, "SDL_OpenAudioDeviceStream");
-
-  MVC_Assert(SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(stream)), "SDL_ResumeAudioDevice");
-
-  SDL_Window *window = SDL_CreateWindow("Hello ObjectivelyMVC", 1024, 720, SDL_WINDOW_HIGH_PIXEL_DENSITY);
-  MVC_Assert(window, "SDL_CreateWindow");
-
-  $$(Resource, addResourcePath, EXAMPLES);
-
-  WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
-
-  ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
-
-  $(windowController, setViewController, viewController);
-
-  Renderer *renderer = windowController->renderer;
-  renderer->clear = false;
-
-  initScene(renderer);
-
-  while (true) {
-    
-    SDL_Event event;
-    while (SDL_PollEvent(&event)) {
-      $(windowController, respondToEvent, &event);
-      
-      if (event.type == MVC_VIEW_EVENT) {
-        onViewEvent(stream, &event.user);
-      }
-
-      if (event.type == SDL_EVENT_QUIT) {
-        break;
-      }
-    }
-
-    if (event.type == SDL_EVENT_QUIT) {
-      break;
-    }
-
-    $(renderer, beginFrame);
-
-    if (renderer->cmd) {
-      drawScene(renderer);
-
-      $(viewController->view, applyThemeIfNeeded, windowController->theme);
-      $(viewController->view, layoutIfNeeded);
-      $(viewController->view, draw, renderer);
-
-      $(renderer, endFrame);
-    }
-  }
-
-  release(viewController);
-  release(windowController);
-
-  SDL_DestroyWindow(window);
-
-  SDL_DestroyAudioStream(stream);
-
-  SDL_Quit();
-
-  return 0;
-}
-
 #include "click.wav.h"
 #include "clack.wav.h"
 
+#ifdef SDL_PLATFORM_IOS
+# define HELLO_WINDOW_W      0
+# define HELLO_WINDOW_H      0
+# define HELLO_WINDOW_FLAGS  (SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_FULLSCREEN)
+#else
+# define HELLO_WINDOW_W      1024
+# define HELLO_WINDOW_H      720
+# define HELLO_WINDOW_FLAGS  SDL_WINDOW_HIGH_PIXEL_DENSITY
+#endif
+
 /**
- * @brief `ViewEvent` callback to play click sounds when interacting with `Control`s.
+ * @brief SDL application state passed via pointer to callbacks.
  */
-static void onViewEvent(SDL_AudioStream *stream, const SDL_UserEvent *event) {
+typedef struct {
+	SDL_Window *window;
+	SDL_AudioStream *audioStream;
+	WindowController *windowController;
+} AppState;
 
-  if (!instanceof(Control, event->data1)) {
-    return;
-  }
+static AppState app;
 
-  switch (event->code) {
-    case ViewEventClick:
-      SDL_PutAudioStreamData(stream, click_wav, click_wav_len);
-      break;
-    case ViewEventChange:
-      SDL_PutAudioStreamData(stream, clack_wav, clack_wav_len);
-      break;
-    default:
-      break;
-  }
+static void onViewEvent(const SDL_UserEvent *event) {
+
+	if (!instanceof(Control, event->data1)) {
+		return;
+	}
+
+	switch (event->code) {
+		case ViewEventClick:
+			SDL_PutAudioStreamData(app.audioStream, click_wav, click_wav_len);
+			break;
+		case ViewEventChange:
+			SDL_PutAudioStreamData(app.audioStream, clack_wav, clack_wav_len);
+			break;
+		default:
+			break;
+	}
+}
+
+/**
+ * @brief SDL3 application initialization callback.
+ */
+SDL_AppResult SDL_AppInit(void **unused, int argc, char *argv[]) {
+
+	MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
+
+	MVC_Assert(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
+
+#ifdef EXAMPLES
+	$$(Resource, addResourcePath, EXAMPLES);
+#endif
+
+	const char *basePath = SDL_GetBasePath();
+	if (basePath) {
+		$$(Resource, addResourcePath, basePath);
+	}
+
+	app.audioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &(SDL_AudioSpec) {
+		.format = SDL_AUDIO_S16LE,
+		.channels = 1,
+		.freq = 22050,
+	}, NULL, NULL);
+
+	if (app.audioStream) {
+		SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(app.audioStream));
+	}
+
+	app.window = SDL_CreateWindow("Hello ObjectivelyMVC", HELLO_WINDOW_W, HELLO_WINDOW_H, HELLO_WINDOW_FLAGS);
+	MVC_Assert(app.window, "SDL_CreateWindow");
+
+	app.windowController = $(alloc(WindowController), initWithWindow, app.window);
+
+	ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
+	$(app.windowController, setViewController, viewController);
+	release(viewController);
+
+	Renderer *renderer = app.windowController->renderer;
+	renderer->clear = false;
+
+	initScene(renderer);
+
+	return SDL_APP_CONTINUE;
+}
+
+/**
+ * @brief SDL3 frame iteration callback.
+ */
+SDL_AppResult SDL_AppIterate(void *unused) {
+
+	WindowController *wc = app.windowController;
+	Renderer *renderer = wc->renderer;
+	ViewController *vc = wc->viewController;
+
+	$(renderer, beginFrame);
+
+	if (renderer->cmd) {
+		drawScene(renderer);
+
+		$(vc->view, applyThemeIfNeeded, wc->theme);
+		$(vc->view, layoutIfNeeded);
+		$(vc->view, draw, renderer);
+
+		$(renderer, endFrame);
+	}
+
+	return SDL_APP_CONTINUE;
+}
+
+/**
+ * @brief SDL3 event callback.
+ */
+SDL_AppResult SDL_AppEvent(void *unused, SDL_Event *event) {
+
+	$(app.windowController, respondToEvent, event);
+
+	if (event->type == MVC_VIEW_EVENT) {
+		onViewEvent(&event->user);
+	}
+
+	if (event->type == SDL_EVENT_QUIT) {
+		return SDL_APP_SUCCESS;
+	}
+
+	return SDL_APP_CONTINUE;
+}
+
+/**
+ * @brief SDL3 quit callback.
+ */
+void SDL_AppQuit(void *unused, SDL_AppResult result) {
+
+	release(app.windowController);
+
+	if (app.audioStream) {
+		SDL_DestroyAudioStream(app.audioStream);
+	}
+
+	if (app.window) {
+		SDL_DestroyWindow(app.window);
+	}
+
+	SDL_Quit();
 }

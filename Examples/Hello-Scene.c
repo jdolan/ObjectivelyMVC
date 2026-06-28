@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and GNU C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -25,168 +25,54 @@
  * @file
  * @brief Rotating cube background scene for the ObjectivelyMVC Hello example.
  *
- * Renders a spinning colored cube using SDL_gpu / Metal directly into the
- * Renderer's command buffer, before MVC composites the UI on top.
- * The cube scene uses renderer->cmd and renderer->swapchain, which are valid
- * between Renderer::beginFrame and Renderer::endFrame.
- *
- * Integration pattern:
- *   renderer->clear = false;              // MVC will LOAD instead of CLEAR
- *   $(renderer, beginFrame);
- *   if (renderer->cmd) {
- *     drawScene(renderer);               // cube renders into renderer->cmd
- *     // MVC layout + draw + endFrame happen inside windowController render:
- *   }
- *   $(viewController->view, layoutIfNeeded);
- *   $(viewController->view, draw, renderer);
- *   $(renderer, endFrame);
+ * Renders a spinning colored cube using SDL_gpu directly into the Renderer's
+ * command buffer, before MVC composites the UI on top.
  */
 
 #include <ObjectivelyGPU.h>
 
 #include "Hello-Scene.h"
 
-static const char *vertex_shader_msl =
-"#include <metal_stdlib>\n"
-"using namespace metal;\n"
-"\n"
-"struct type_UBO {\n"
-"    mat4 ModelViewProj;\n"
-"};\n"
-"\n"
-"struct main0_out {\n"
-"    vec4 out_color [[user(locn0)]];\n"
-"    vec4 gl_Position [[position]];\n"
-"};\n"
-"\n"
-"struct main0_in {\n"
-"    vec3 in_position [[attribute(0)]];\n"
-"    vec3 in_color [[attribute(1)]];\n"
-"};\n"
-"\n"
-"vertex main0_out main0(main0_in in [[stage_in]], constant type_UBO& UBO [[buffer(0)]]) {\n"
-"    main0_out out = {};\n"
-"    out.out_color = vec4(in.in_color, 1.0);\n"
-"    out.gl_Position = UBO.ModelViewProj * vec4(in.in_position, 1.0);\n"
-"    return out;\n"
-"}\n";
-
-static const char *fragment_shader_msl =
-"#include <metal_stdlib>\n"
-"using namespace metal;\n"
-"\n"
-"struct main0_in {\n"
-"    vec4 in_color [[user(locn0)]];\n"
-"};\n"
-"\n"
-"fragment vec4 main0(main0_in in [[stage_in]]) {\n"
-"    return in.in_color;\n"
-"}\n";
-
 typedef struct {
-	float x, y, z;
-	float r, g, b;
+	vec3 position;
+	vec3 color;
 } SceneVertex;
 
 static const SceneVertex vertex_data[] = {
-	{ -0.5f,  0.5f, -0.5f,  1, 0, 0 }, {  0.5f, -0.5f, -0.5f, 0, 0, 1 }, { -0.5f, -0.5f, -0.5f, 0, 1, 0 },
-	{ -0.5f,  0.5f, -0.5f,  1, 0, 0 }, {  0.5f,  0.5f, -0.5f, 1, 1, 0 }, {  0.5f, -0.5f, -0.5f, 0, 0, 1 },
-	{ -0.5f,  0.5f,  0.5f,  1, 1, 1 }, { -0.5f, -0.5f, -0.5f, 0, 1, 0 }, { -0.5f, -0.5f,  0.5f, 0, 1, 1 },
-	{ -0.5f,  0.5f,  0.5f,  1, 1, 1 }, { -0.5f,  0.5f, -0.5f, 1, 0, 0 }, { -0.5f, -0.5f, -0.5f, 0, 1, 0 },
-	{ -0.5f,  0.5f,  0.5f,  1, 1, 1 }, {  0.5f,  0.5f, -0.5f, 1, 1, 0 }, { -0.5f,  0.5f, -0.5f, 1, 0, 0 },
-	{ -0.5f,  0.5f,  0.5f,  1, 1, 1 }, {  0.5f,  0.5f,  0.5f, 0, 0, 0 }, {  0.5f,  0.5f, -0.5f, 1, 1, 0 },
-	{  0.5f,  0.5f, -0.5f,  1, 1, 0 }, {  0.5f, -0.5f,  0.5f, 1, 0, 1 }, {  0.5f, -0.5f, -0.5f, 0, 0, 1 },
-	{  0.5f,  0.5f, -0.5f,  1, 1, 0 }, {  0.5f,  0.5f,  0.5f, 0, 0, 0 }, {  0.5f, -0.5f,  0.5f, 1, 0, 1 },
-	{  0.5f,  0.5f,  0.5f,  0, 0, 0 }, { -0.5f, -0.5f,  0.5f, 0, 1, 1 }, {  0.5f, -0.5f,  0.5f, 1, 0, 1 },
-	{  0.5f,  0.5f,  0.5f,  0, 0, 0 }, { -0.5f,  0.5f,  0.5f, 1, 1, 1 }, { -0.5f, -0.5f,  0.5f, 0, 1, 1 },
-	{ -0.5f, -0.5f, -0.5f,  0, 1, 0 }, {  0.5f, -0.5f,  0.5f, 1, 0, 1 }, { -0.5f, -0.5f,  0.5f, 0, 1, 1 },
-	{ -0.5f, -0.5f, -0.5f,  0, 1, 0 }, {  0.5f, -0.5f, -0.5f, 0, 0, 1 }, {  0.5f, -0.5f,  0.5f, 1, 0, 1 },
+	{ { -0.5f,  0.5f, -0.5f }, { 1, 0, 0 } }, { {  0.5f, -0.5f, -0.5f }, { 0, 0, 1 } }, { { -0.5f, -0.5f, -0.5f }, { 0, 1, 0 } },
+	{ { -0.5f,  0.5f, -0.5f }, { 1, 0, 0 } }, { {  0.5f,  0.5f, -0.5f }, { 1, 1, 0 } }, { {  0.5f, -0.5f, -0.5f }, { 0, 0, 1 } },
+	{ { -0.5f,  0.5f,  0.5f }, { 1, 1, 1 } }, { { -0.5f, -0.5f, -0.5f }, { 0, 1, 0 } }, { { -0.5f, -0.5f,  0.5f }, { 0, 1, 1 } },
+	{ { -0.5f,  0.5f,  0.5f }, { 1, 1, 1 } }, { { -0.5f,  0.5f, -0.5f }, { 1, 0, 0 } }, { { -0.5f, -0.5f, -0.5f }, { 0, 1, 0 } },
+	{ { -0.5f,  0.5f,  0.5f }, { 1, 1, 1 } }, { {  0.5f,  0.5f, -0.5f }, { 1, 1, 0 } }, { { -0.5f,  0.5f, -0.5f }, { 1, 0, 0 } },
+	{ { -0.5f,  0.5f,  0.5f }, { 1, 1, 1 } }, { {  0.5f,  0.5f,  0.5f }, { 0, 0, 0 } }, { {  0.5f,  0.5f, -0.5f }, { 1, 1, 0 } },
+	{ {  0.5f,  0.5f, -0.5f }, { 1, 1, 0 } }, { {  0.5f, -0.5f,  0.5f }, { 1, 0, 1 } }, { {  0.5f, -0.5f, -0.5f }, { 0, 0, 1 } },
+	{ {  0.5f,  0.5f, -0.5f }, { 1, 1, 0 } }, { {  0.5f,  0.5f,  0.5f }, { 0, 0, 0 } }, { {  0.5f, -0.5f,  0.5f }, { 1, 0, 1 } },
+	{ {  0.5f,  0.5f,  0.5f }, { 0, 0, 0 } }, { { -0.5f, -0.5f,  0.5f }, { 0, 1, 1 } }, { {  0.5f, -0.5f,  0.5f }, { 1, 0, 1 } },
+	{ {  0.5f,  0.5f,  0.5f }, { 0, 0, 0 } }, { { -0.5f,  0.5f,  0.5f }, { 1, 1, 1 } }, { { -0.5f, -0.5f,  0.5f }, { 0, 1, 1 } },
+	{ { -0.5f, -0.5f, -0.5f }, { 0, 1, 0 } }, { {  0.5f, -0.5f,  0.5f }, { 1, 0, 1 } }, { { -0.5f, -0.5f,  0.5f }, { 0, 1, 1 } },
+	{ { -0.5f, -0.5f, -0.5f }, { 0, 1, 0 } }, { {  0.5f, -0.5f, -0.5f }, { 0, 0, 1 } }, { {  0.5f, -0.5f,  0.5f }, { 1, 0, 1 } },
 };
 
 static SDL_GPUBuffer *scene_vertexBuffer;
 static SDL_GPUGraphicsPipeline *scene_pipeline;
-static SDL_GPUTexture *scene_depthTexture;
-static SDL_Size scene_depthSize;
+static Framebuffer *scene_framebuffer;
 static float scene_angleX;
 static float scene_angleY;
 static Uint64 scene_lastTicks;
 
-static void rotate_matrix(float angle, float x, float y, float z, float *r) {
-	float radians = angle * SDL_PI_F / 180.0f;
-	float c = SDL_cosf(radians), s = SDL_sinf(radians), c1 = 1.0f - c;
-	float length = SDL_sqrtf(x*x + y*y + z*z);
-	float u[3] = { x/length, y/length, z/length };
-	for (int i = 0; i < 16; i++) r[i] = 0.0f;
-	r[15] = 1.0f;
-	for (int i = 0; i < 3; i++) {
-		r[i*4 + (i+1)%3] = u[(i+2)%3] * s;
-		r[i*4 + (i+2)%3] = -u[(i+1)%3] * s;
-	}
-	for (int i = 0; i < 3; i++)
-		for (int j = 0; j < 3; j++)
-			r[i*4+j] += c1 * u[i] * u[j] + (i == j ? c : 0.0f);
-}
-
-static void perspective_matrix(float fovy, float aspect, float znear, float zfar, float *r) {
-	float f = 1.0f / SDL_tanf((fovy / 180.0f) * SDL_PI_F * 0.5f);
-	for (int i = 0; i < 16; i++) r[i] = 0.0f;
-	r[0] = f / aspect; r[5] = f;
-	r[10] = (znear + zfar) / (znear - zfar); r[11] = -1.0f;
-	r[14] = (2.0f * znear * zfar) / (znear - zfar);
-}
-
-static void multiply_matrix(const float *lhs, const float *rhs, float *r) {
-	float tmp[16];
-	for (int i = 0; i < 4; i++)
-		for (int j = 0; j < 4; j++) {
-			tmp[j*4+i] = 0.0f;
-			for (int k = 0; k < 4; k++)
-				tmp[j*4+i] += lhs[k*4+i] * rhs[j*4+k];
-		}
-	for (int i = 0; i < 16; i++) r[i] = tmp[i];
-}
-
 void initScene(Renderer *renderer) {
 
-	const RenderDevice *device = renderer->device;
+	RenderDevice *device = renderer->device;
 
-	scene_vertexBuffer = $(device, createBuffer, &(SDL_GPUBufferCreateInfo) {
-		.usage = SDL_GPU_BUFFERUSAGE_VERTEX,
-		.size = sizeof(vertex_data),
-	});
+	scene_vertexBuffer = $(device, createBufferWithConstMem,
+		SDL_GPU_BUFFERUSAGE_VERTEX, vertex_data, sizeof(vertex_data));
 
-	SDL_GPUTransferBuffer *transfer = $(device, createTransferBuffer, &(SDL_GPUTransferBufferCreateInfo) {
-		.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
-		.size = sizeof(vertex_data),
-	});
-	void *mapped = $(device, mapTransferBuffer, transfer, false);
-	SDL_memcpy(mapped, vertex_data, sizeof(vertex_data));
-	$(device, unmapTransferBuffer, transfer);
-
-	CommandBuffer *cmd = $(device, acquireCommandBuffer);
-	CopyPass *copyPass = $(cmd, beginCopyPass);
-	$(copyPass, uploadBuffer,
-	  &(SDL_GPUTransferBufferLocation) { .transfer_buffer = transfer },
-	  &(SDL_GPUBufferRegion) { .buffer = scene_vertexBuffer, .size = sizeof(vertex_data) },
-	  false);
-	release(copyPass);
-	$(cmd, submit);
-	release(cmd);
-	$(device, releaseTransferBuffer, transfer);
-
-	SDL_GPUShader *vs = $(device, createShader, &(SDL_GPUShaderCreateInfo) {
-		.code_size = SDL_strlen(vertex_shader_msl),
-		.code = (const Uint8 *) vertex_shader_msl,
-		.entrypoint = "main0",
-		.format = SDL_GPU_SHADERFORMAT_MSL,
+	SDL_GPUShader *vs = $(device, loadShader, "Hello-Scene.vert", &(SDL_GPUShaderCreateInfo) {
 		.stage = SDL_GPU_SHADERSTAGE_VERTEX,
 		.num_uniform_buffers = 1,
 	});
-	SDL_GPUShader *fs = $(device, createShader, &(SDL_GPUShaderCreateInfo) {
-		.code_size = SDL_strlen(fragment_shader_msl),
-		.code = (const Uint8 *) fragment_shader_msl,
-		.entrypoint = "main0",
-		.format = SDL_GPU_SHADERFORMAT_MSL,
+
+	SDL_GPUShader *fs = $(device, loadShader, "Hello-Scene.frag", &(SDL_GPUShaderCreateInfo) {
 		.stage = SDL_GPU_SHADERSTAGE_FRAGMENT,
 	});
 
@@ -195,10 +81,22 @@ void initScene(Renderer *renderer) {
 		.pitch = sizeof(SceneVertex),
 		.input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX,
 	};
+
 	const SDL_GPUVertexAttribute attrs[] = {
-		{ .location = 0, .buffer_slot = 0, .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3, .offset = 0 },
-		{ .location = 1, .buffer_slot = 0, .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3, .offset = 12 },
+		{
+			.location = 0,
+			.buffer_slot = 0,
+			.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3,
+			.offset = offsetof(SceneVertex, position),
+		},
+		{
+			.location = 1,
+			.buffer_slot = 0,
+			.format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT3,
+			.offset = offsetof(SceneVertex, color),
+		},
 	};
+
 	const SDL_GPUColorTargetDescription ctd = {
 		.format = $(device, getSwapchainTextureFormat, device->window),
 	};
@@ -235,6 +133,14 @@ void initScene(Renderer *renderer) {
 	$(device, releaseShader, vs);
 	$(device, releaseShader, fs);
 
+	int w = 0, h = 0;
+	SDL_GetWindowSizeInPixels(device->window, &w, &h);
+
+	scene_framebuffer = $(alloc(Framebuffer), initWithDevice, device,
+		&MakeSize(w, h),
+		SDL_GPU_TEXTUREFORMAT_INVALID,
+		SDL_GPU_TEXTUREFORMAT_D16_UNORM);
+
 	scene_lastTicks = SDL_GetTicks();
 }
 
@@ -251,28 +157,15 @@ void drawScene(Renderer *renderer) {
 	scene_angleX = SDL_fmodf(scene_angleX + dt * 30.0f, 360.0f);
 	scene_angleY = SDL_fmodf(scene_angleY + dt * 60.0f, 360.0f);
 
-	if (scene_depthTexture == NULL || swapchain.size.w != scene_depthSize.w || swapchain.size.h != scene_depthSize.h) {
-		scene_depthSize = swapchain.size;
-		$(device, releaseTexture, scene_depthTexture);
-		scene_depthTexture = $(device, createTexture, &(SDL_GPUTextureCreateInfo) {
-			.type = SDL_GPU_TEXTURETYPE_2D,
-			.format = SDL_GPU_TEXTUREFORMAT_D16_UNORM,
-			.usage = SDL_GPU_TEXTUREUSAGE_DEPTH_STENCIL_TARGET,
-			.width = (Uint32) scene_depthSize.w,
-			.height = (Uint32) scene_depthSize.h,
-			.layer_count_or_depth = 1,
-			.num_levels = 1,
-			.sample_count = SDL_GPU_SAMPLECOUNT_1,
-		}, NULL);
-	}
+	$(scene_framebuffer, resize, &swapchain.size);
 
-	float mv[16], rot[16], proj[16], mvp[16];
-	rotate_matrix(scene_angleX, 1.0f, 0.0f, 0.0f, mv);
-	rotate_matrix(scene_angleY, 0.0f, 1.0f, 0.0f, rot);
-	multiply_matrix(rot, mv, mv);
-	mv[14] -= 2.5f;
-	perspective_matrix(45.0f, (float) swapchain.size.w / (float) swapchain.size.h, 0.01f, 100.0f, proj);
-	multiply_matrix(proj, mv, mvp);
+	mat4 modelView = mat4_rotation(scene_angleX, vec3_new(1.f, 0.f, 0.f));
+	modelView = mat4_mul(mat4_rotation(scene_angleY, vec3_new(0.f, 1.f, 0.f)), modelView);
+	modelView = mat4_mul(mat4_translation(vec3_new(0.f, 0.f, -2.5f)), modelView);
+
+	const mat4 projection = mat4_perspective(45.f,
+		(float) swapchain.size.w / (float) swapchain.size.h, 0.01f, 100.f);
+	const mat4 mvp = mat4_mul(projection, modelView);
 
 	const SDL_GPUColorTargetInfo colorTarget = {
 		.texture = swapchain.texture,
@@ -280,20 +173,14 @@ void drawScene(Renderer *renderer) {
 		.load_op = SDL_GPU_LOADOP_CLEAR,
 		.store_op = SDL_GPU_STOREOP_STORE,
 	};
-	const SDL_GPUDepthStencilTargetInfo depthTarget = {
-		.texture = scene_depthTexture,
-		.clear_depth = 1.0f,
-		.load_op = SDL_GPU_LOADOP_CLEAR,
-		.store_op = SDL_GPU_STOREOP_DONT_CARE,
-		.stencil_load_op = SDL_GPU_LOADOP_DONT_CARE,
-		.stencil_store_op = SDL_GPU_STOREOP_DONT_CARE,
-	};
+
+	const SDL_GPUDepthStencilTargetInfo depthTarget = $(scene_framebuffer,
+		depthTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_DONT_CARE, 1.f);
 
 	RenderPass *renderPass = $(cmd, beginRenderPass, &colorTarget, 1, &depthTarget);
 	$(renderPass, bindPipeline, scene_pipeline);
 	$(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = scene_vertexBuffer }, 1);
-	$(cmd, pushVertexUniformData, 0, mvp, sizeof(mvp));
+	$(cmd, pushVertexUniformData, 0, mvp.f, sizeof(mvp));
 	$(renderPass, drawPrimitives, (Uint32) SDL_arraysize(vertex_data), 1, 0, 0);
 	release(renderPass);
 }
-
