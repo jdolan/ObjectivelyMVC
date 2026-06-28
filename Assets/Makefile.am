@@ -1,5 +1,5 @@
 %.h: %
-	xxd -i -t -n $(subst .,_,$(notdir $<)) $< > $@
+	xxd -i -t $< > $@
 
 BUILT_SOURCES = \
 	check.png.h \

@@ -1201,7 +1201,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd \"$SRCROOT/Assets\"\n\nxxd -i -t -n check_png         check.png         > check.png.h\nxxd -i -t -n coda_ttf          coda.ttf          > coda.ttf.h\nxxd -i -t -n debug_css         debug.css         > debug.css.h\nxxd -i -t -n debug_json        debug.json        > debug.json.h\nxxd -i -t -n Renderer_vert_spv Renderer.vert.spv > Renderer.vert.spv.h\nxxd -i -t -n Renderer_vert_msl Renderer.vert.msl > Renderer.vert.msl.h\nxxd -i -t -n Renderer_frag_spv Renderer.frag.spv > Renderer.frag.spv.h\nxxd -i -t -n Renderer_frag_msl Renderer.frag.msl > Renderer.frag.msl.h\nxxd -i -t -n resize_png        resize.png        > resize.png.h\nxxd -i -t -n stylesheet_css    stylesheet.css    > stylesheet.css.h\n";
+			shellScript = "pushd \"$SRCROOT/Assets\"\n\nxxd -i -t check.png         > check.png.h\nxxd -i -t coda.ttf          > coda.ttf.h\nxxd -i -t debug.css         > debug.css.h\nxxd -i -t debug.json        > debug.json.h\nxxd -i -t Renderer.vert.spv > Renderer.vert.spv.h\nxxd -i -t Renderer.vert.msl > Renderer.vert.msl.h\nxxd -i -t Renderer.frag.spv > Renderer.frag.spv.h\nxxd -i -t Renderer.frag.msl > Renderer.frag.msl.h\nxxd -i -t resize.png        > resize.png.h\nxxd -i -t stylesheet.css    > stylesheet.css.h\n";
 		};
 		CEA0010000000000000000BA /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
