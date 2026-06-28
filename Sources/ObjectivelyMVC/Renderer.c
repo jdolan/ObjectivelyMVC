@@ -269,13 +269,8 @@ static void endFrame(Renderer *self) {
 
   int winW, winH;
   SDL_GetWindowSize(self->device->window, &winW, &winH);
-  const float projection[16] = {
-     2.0f / winW,  0.0f,          0.0f,  0.0f,
-     0.0f,        -2.0f / winH,   0.0f,  0.0f,
-     0.0f,         0.0f,         -1.0f,  0.0f,
-    -1.0f,         1.0f,          0.0f,  1.0f,
-  };
-  $(self->cmd, pushVertexUniformData, 0, projection, sizeof(projection));
+  const mat4 projection = mat4_ortho(0.f, (float) winW, (float) winH, 0.f, -1.f, 1.f);
+  $(self->cmd, pushVertexUniformData, 0, projection.f, sizeof(projection));
 
   $(renderPass, bindPipeline, self->pipeline);
   $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer }, 1);
@@ -283,7 +278,20 @@ static void endFrame(Renderer *self) {
   for (size_t i = 0; i < self->drawArrays->count; i++) {
     const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
 
-    $(renderPass, setScissor, &draw->scissor);
+    const int swW = (int) self->swapchain.size.w;
+    const int swH = (int) self->swapchain.size.h;
+    const SDL_Rect scissor = {
+      .x = SDL_max(draw->scissor.x, 0),
+      .y = SDL_max(draw->scissor.y, 0),
+      .w = SDL_min(draw->scissor.x + draw->scissor.w, swW) - SDL_max(draw->scissor.x, 0),
+      .h = SDL_min(draw->scissor.y + draw->scissor.h, swH) - SDL_max(draw->scissor.y, 0),
+    };
+
+    if (scissor.w <= 0 || scissor.h <= 0) {
+      continue;
+    }
+
+    $(renderPass, setScissor, &scissor);
 
     $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
       .texture = draw->texture, .sampler = self->sampler,
