@@ -29,12 +29,12 @@ jobs:
       uses: actions/cache@v4
       with:
         path: .build-xcframework
-        key: xcframework-${{ env.SDL3_VERSION }}-${{ env.SDL3_IMAGE_VERSION }}-${{ env.SDL3_TTF_VERSION }}-${{ env.OBJECTIVELY_BRANCH }}-ios-${{ env.IOS_MIN }}-${{ hashFiles('configure.ac', 'Sources/**/Makefile.am', 'Sources/ObjectivelyMVC/**/*.c', 'Sources/ObjectivelyMVC/**/*.h', 'scripts/build-xcframework.sh') }}
+        key: xcframework-${{ env.SDL3_VERSION }}-${{ env.SDL3_IMAGE_VERSION }}-${{ env.SDL3_TTF_VERSION }}-${{ env.OBJECTIVELY_BRANCH }}-ios-${{ env.IOS_MIN }}-${{ hashFiles('configure.ac', 'Sources/**/Makefile.am', 'Sources/ObjectivelyMVC/**/*.c', 'Sources/ObjectivelyMVC/**/*.h', 'Frameworks/build-xcframework.sh') }}
         restore-keys: |
           xcframework-${{ env.SDL3_VERSION }}-${{ env.SDL3_IMAGE_VERSION }}-${{ env.SDL3_TTF_VERSION }}-${{ env.OBJECTIVELY_BRANCH }}-ios-${{ env.IOS_MIN }}-
 
     - name: Build xcframeworks
-      run: bash scripts/build-xcframework.sh
+      run: bash Frameworks/build-xcframework.sh
 
     - name: Zip xcframeworks
       run: |
