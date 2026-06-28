@@ -630,16 +630,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B1FF000100000000000000B0 /* Hello-iOS */ = {
-			isa = PBXGroup;
-			children = (
-				B1AA000100000000000000EA /* Hello-iOS.c */,
-				B1AA000100000000000000EB /* Info.plist */,
-				B1AA000100000000000000EC /* LaunchScreen.storyboard */,
-			);
-			path = "Hello-iOS";
-			sourceTree = "<group>";
-		};
 		CE12D3DE1C4C367100CD0B13 /* ObjectivelyMVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -775,7 +765,8 @@
 		CE12D42A1C4C37CD00CD0B13 /* Examples */ = {
 			isa = PBXGroup;
 			children = (
-				B1FF000100000000000000B0 /* Hello-iOS */,
+				B1AA000100000000000000EB /* Info.plist */,
+				B1AA000100000000000000EC /* LaunchScreen.storyboard */,
 				CE89ADB028BAF661002E45C7 /* clack.wav */,
 				CE081BE52C27955C00436CDC /* clack.wav.h */,
 				CE89AD9E28B99568002E45C7 /* click.wav */,
@@ -1443,7 +1434,7 @@
 					"$(SRCROOT)/Examples",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Examples/Hello-iOS/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1486,7 +1477,7 @@
 					"$(SRCROOT)/Examples",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/Examples/Hello-iOS/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Examples/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
