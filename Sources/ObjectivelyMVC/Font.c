@@ -178,7 +178,7 @@ static Font *defaultFont(void) {
   static Once once;
 
   do_once(&once, {
-    Data *data = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len);
+    Data *data = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len - 1);
     assert(data);
 
     $$(Font, cacheFont, data, DEFAULT_FONT_FAMILY);

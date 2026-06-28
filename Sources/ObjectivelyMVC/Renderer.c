@@ -354,20 +354,20 @@ static void renderDeviceDidReset(Renderer *self) {
   const SDL_GPUShaderFormat supported = SDL_GetGPUShaderFormats(self->device->device);
   if (supported & SDL_GPU_SHADERFORMAT_MSL) {
     vsInfo.code       = (const Uint8 *) Renderer_vert_msl;
-    vsInfo.code_size  = strlen((const char *) Renderer_vert_msl);
+    vsInfo.code_size  = Renderer_vert_msl_len - 1;
     vsInfo.entrypoint = "main0";
     vsInfo.format     = SDL_GPU_SHADERFORMAT_MSL;
     fsInfo.code       = (const Uint8 *) Renderer_frag_msl;
-    fsInfo.code_size  = strlen((const char *) Renderer_frag_msl);
+    fsInfo.code_size  = Renderer_frag_msl_len - 1;
     fsInfo.entrypoint = "main0";
     fsInfo.format     = SDL_GPU_SHADERFORMAT_MSL;
   } else if (supported & SDL_GPU_SHADERFORMAT_SPIRV) {
     vsInfo.code       = Renderer_vert_spv;
-    vsInfo.code_size  = Renderer_vert_spv_len;
+    vsInfo.code_size  = Renderer_vert_spv_len - 1;
     vsInfo.entrypoint = "main";
     vsInfo.format     = SDL_GPU_SHADERFORMAT_SPIRV;
     fsInfo.code       = Renderer_frag_spv;
-    fsInfo.code_size  = Renderer_frag_spv_len;
+    fsInfo.code_size  = Renderer_frag_spv_len - 1;
     fsInfo.entrypoint = "main";
     fsInfo.format     = SDL_GPU_SHADERFORMAT_SPIRV;
   } else {

@@ -1,17 +1,5 @@
 %.h: %
-	xxd -i $^ | awk '/^};/{print "  , 0x00"}1' > $@
-
-Renderer.vert.spv.h: $(srcdir)/Renderer.vert.spv
-	xxd -i -t -n Renderer_vert_spv $< > $@
-
-Renderer.vert.msl.h: $(srcdir)/Renderer.vert.msl
-	xxd -i -t -n Renderer_vert_msl $< > $@
-
-Renderer.frag.spv.h: $(srcdir)/Renderer.frag.spv
-	xxd -i -t -n Renderer_frag_spv $< > $@
-
-Renderer.frag.msl.h: $(srcdir)/Renderer.frag.msl
-	xxd -i -t -n Renderer_frag_msl $< > $@
+	xxd -i -t -n $(subst .,_,$(notdir $<)) $< > $@
 
 BUILT_SOURCES = \
 	check.png.h \

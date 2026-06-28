@@ -38,6 +38,7 @@ SDL3_VERSION="${SDL3_VERSION:-release-3.4.10}"
 SDL3_IMAGE_VERSION="${SDL3_IMAGE_VERSION:-release-3.4.0}"
 SDL3_TTF_VERSION="${SDL3_TTF_VERSION:-release-3.2.2}"
 OBJECTIVELY_BRANCH="${OBJECTIVELY_BRANCH:-main}"
+OBJECTIVELYGPU_BRANCH="${OBJECTIVELYGPU_BRANCH:-main}"
 IOS_MIN="${IOS_MIN:-14.0}"
 MACOS_MIN="${MACOS_MIN:-12.0}"
 
@@ -244,7 +245,7 @@ if [ -n "$OBJECTIVELY_DIR" ] && [ -d "$OBJECTIVELY_DIR/.git" ]; then
     if [ ! -d "$OBJ_DIR/Frameworks/Objectively.xcframework" ] || \
        [ ! -d "$OBJ_DIR/Frameworks/libcurl.xcframework" ]; then
         echo "==> Building Objectively xcframeworks (sibling)"
-        bash "$OBJ_DIR/scripts/build-xcframework.sh"
+        bash "$OBJ_DIR/Frameworks/build-xcframework.sh"
     fi
     echo "==> Copying Objectively xcframeworks from sibling"
     cp -r "$OBJ_DIR/Frameworks/"*.xcframework "$FRAMEWORKS_DIR/"
@@ -262,11 +263,49 @@ else
     if [ ! -d "$FRAMEWORKS_DIR/Objectively.xcframework" ] || \
        [ ! -d "$FRAMEWORKS_DIR/libcurl.xcframework" ]; then
         echo "==> Building Objectively xcframeworks"
-        bash "$OBJ_DIR/scripts/build-xcframework.sh"
+        bash "$OBJ_DIR/Frameworks/build-xcframework.sh"
         cp -r "$OBJ_DIR/Frameworks/"*.xcframework "$FRAMEWORKS_DIR/"
     else
         echo "==> Objectively.xcframework: cached"
         echo "==> libcurl.xcframework: cached"
+    fi
+fi
+
+# ---------------------------------------------------------------------------
+# ObjectivelyGPU (build from source)
+# ---------------------------------------------------------------------------
+
+if [ -z "$OBJECTIVELYGPU_DIR" ]; then
+    _sibling="$(cd "$MVC_DIR/.." && pwd)/ObjectivelyGPU"
+    [ -d "$_sibling/.git" ] && OBJECTIVELYGPU_DIR="$_sibling"
+fi
+
+if [ -n "$OBJECTIVELYGPU_DIR" ] && [ -d "$OBJECTIVELYGPU_DIR/.git" ]; then
+    GPU_DIR="$OBJECTIVELYGPU_DIR"
+    echo "==> Using local ObjectivelyGPU at $GPU_DIR"
+    if [ ! -d "$GPU_DIR/Frameworks/ObjectivelyGPU.xcframework" ]; then
+        echo "==> Building ObjectivelyGPU xcframework (sibling)"
+        bash "$GPU_DIR/Frameworks/build-xcframework.sh"
+    fi
+    echo "==> Copying ObjectivelyGPU xcframework from sibling"
+    cp -r "$GPU_DIR/Frameworks/ObjectivelyGPU.xcframework" "$FRAMEWORKS_DIR/"
+else
+    GPU_DIR="$BUILD_DIR/ObjectivelyGPU"
+    if [ ! -d "$GPU_DIR/.git" ]; then
+        echo "==> Cloning ObjectivelyGPU ($OBJECTIVELYGPU_BRANCH)"
+        git clone --depth 1 --branch "$OBJECTIVELYGPU_BRANCH" \
+            https://github.com/jdolan/ObjectivelyGPU.git "$GPU_DIR" -q
+    else
+        echo "==> Updating ObjectivelyGPU ($OBJECTIVELYGPU_BRANCH)"
+        git -C "$GPU_DIR" fetch origin "$OBJECTIVELYGPU_BRANCH" -q
+        git -C "$GPU_DIR" reset --hard "origin/$OBJECTIVELYGPU_BRANCH" -q
+    fi
+    if [ ! -d "$FRAMEWORKS_DIR/ObjectivelyGPU.xcframework" ]; then
+        echo "==> Building ObjectivelyGPU xcframework"
+        bash "$GPU_DIR/Frameworks/build-xcframework.sh"
+        cp -r "$GPU_DIR/Frameworks/ObjectivelyGPU.xcframework" "$FRAMEWORKS_DIR/"
+    else
+        echo "==> ObjectivelyGPU.xcframework: cached"
     fi
 fi
 
@@ -283,6 +322,7 @@ SDL3_HEADERS="$BUILD_DIR/SDL3-install-iphoneos/include"
 SDL3_IMAGE_HEADERS="$BUILD_DIR/SDL3_image-install-iphoneos/include"
 SDL3_TTF_HEADERS="$BUILD_DIR/SDL3_ttf-install-iphoneos/include"
 OBJ_HEADERS="$FRAMEWORKS_DIR/Objectively.xcframework/ios-arm64/Objectively.framework/Headers"
+GPU_HEADERS="$FRAMEWORKS_DIR/ObjectivelyGPU.xcframework/ios-arm64/ObjectivelyGPU.framework/Headers"
 
 echo "==> Preparing ObjectivelyMVC autotools"
 pushd "$MVC_DIR" > /dev/null
@@ -297,6 +337,7 @@ build_mvc_slice() {
     local min_flag="$4"
     local host="$5"
     local obj_fw="$6"   # path to matching Objectively.framework slice
+    local gpu_fw="$7"   # path to matching ObjectivelyGPU.framework slice
 
     local prefix="$BUILD_DIR/mvc-install-$name"
     local builddir="$BUILD_DIR/mvc-build-$name"
@@ -324,7 +365,8 @@ build_mvc_slice() {
         -I$SDL3_HEADERS \
         -I$SDL3_IMAGE_HEADERS \
         -I$SDL3_TTF_HEADERS \
-        -I$OBJ_HEADERS"
+        -I$OBJ_HEADERS \
+        -I$GPU_HEADERS"
 
     echo "==> ObjectivelyMVC $name: configuring"
     mkdir -p "$builddir"
@@ -336,6 +378,8 @@ build_mvc_slice() {
     SDL3_image_LIBS=" " \
     SDL3_ttf_CFLAGS="-I$SDL3_TTF_HEADERS" \
     SDL3_ttf_LIBS=" " \
+    OBJECTIVELYGPU_CFLAGS="-I$GPU_HEADERS" \
+    OBJECTIVELYGPU_LIBS=" " \
     OBJECTIVELY_CFLAGS="-I$OBJ_HEADERS" \
     OBJECTIVELY_LIBS=" " \
     CHECK_CFLAGS=" " CHECK_LIBS=" " \
@@ -362,6 +406,7 @@ build_mvc_slice() {
         -dynamiclib \
         -Wl,-install_name,@rpath/ObjectivelyMVC.framework/ObjectivelyMVC \
         -F"$(dirname "$obj_fw")" -framework Objectively \
+        -F"$(dirname "$gpu_fw")" -framework ObjectivelyGPU \
         -F"$BUILD_DIR/SDL3-install-$sysroot" -framework SDL3 \
         -F"$BUILD_DIR/SDL3_image-install-$sysroot" -framework SDL3_image \
         -F"$BUILD_DIR/SDL3_ttf-install-$sysroot" -framework SDL3_ttf \
@@ -396,17 +441,20 @@ EOF
 build_mvc_slice "iphoneos-arm64" \
     "$IPHONEOS_SDK" "arm64" "-miphoneos-version-min=$IOS_MIN" \
     "arm-apple-darwin" \
-    "$OBJ_DIR/.build-xcframework/objectively-install-iphoneos-arm64/Objectively.framework"
+    "$OBJ_DIR/.build-xcframework/objectively-install-iphoneos-arm64/Objectively.framework" \
+    "$FRAMEWORKS_DIR/ObjectivelyGPU.xcframework/ios-arm64/ObjectivelyGPU.framework"
 
 build_mvc_slice "iphonesimulator-arm64" \
     "$IPHONESIMULATOR_SDK" "arm64" "-mios-simulator-version-min=$IOS_MIN" \
     "arm-apple-darwin" \
-    "$OBJ_DIR/.build-xcframework/objectively-install-iphonesimulator-arm64/Objectively.framework"
+    "$OBJ_DIR/.build-xcframework/objectively-install-iphonesimulator-arm64/Objectively.framework" \
+    "$FRAMEWORKS_DIR/ObjectivelyGPU.xcframework/ios-arm64_x86_64-simulator/ObjectivelyGPU.framework"
 
 build_mvc_slice "iphonesimulator-x86_64" \
     "$IPHONESIMULATOR_SDK" "x86_64" "-mios-simulator-version-min=$IOS_MIN" \
     "x86_64-apple-darwin" \
-    "$OBJ_DIR/.build-xcframework/objectively-install-iphonesimulator-x86_64/Objectively.framework"
+    "$OBJ_DIR/.build-xcframework/objectively-install-iphonesimulator-x86_64/Objectively.framework" \
+    "$FRAMEWORKS_DIR/ObjectivelyGPU.xcframework/ios-arm64_x86_64-simulator/ObjectivelyGPU.framework"
 
 echo "==> ObjectivelyMVC simulator: lipo arm64 + x86_64"
 MVC_SIM_DIR="$BUILD_DIR/mvc-install-iphonesimulator-fat"
@@ -423,12 +471,14 @@ cp "$BUILD_DIR/mvc-install-iphoneos-arm64/ObjectivelyMVC.framework/Info.plist" \
 build_mvc_slice "macos-arm64" \
     "$MACOSX_SDK" "arm64" "-mmacosx-version-min=$MACOS_MIN" \
     "aarch64-apple-darwin" \
-    "$OBJ_DIR/.build-xcframework/objectively-install-macos-arm64/Objectively.framework"
+    "$OBJ_DIR/.build-xcframework/objectively-install-macos-arm64/Objectively.framework" \
+    "$FRAMEWORKS_DIR/ObjectivelyGPU.xcframework/macos-arm64_x86_64/ObjectivelyGPU.framework"
 
 build_mvc_slice "macos-x86_64" \
     "$MACOSX_SDK" "x86_64" "-mmacosx-version-min=$MACOS_MIN" \
     "x86_64-apple-darwin" \
-    "$OBJ_DIR/.build-xcframework/objectively-install-macos-x86_64/Objectively.framework"
+    "$OBJ_DIR/.build-xcframework/objectively-install-macos-x86_64/Objectively.framework" \
+    "$FRAMEWORKS_DIR/ObjectivelyGPU.xcframework/macos-arm64_x86_64/ObjectivelyGPU.framework"
 
 echo "==> ObjectivelyMVC macOS: lipo arm64 + x86_64"
 MVC_MACOS_DIR="$BUILD_DIR/mvc-install-macos-fat"
@@ -459,4 +509,5 @@ echo "  $FRAMEWORKS_DIR/SDL3_image.xcframework"
 echo "  $FRAMEWORKS_DIR/SDL3_ttf.xcframework"
 echo "  $FRAMEWORKS_DIR/libcurl.xcframework"
 echo "  $FRAMEWORKS_DIR/Objectively.xcframework"
+echo "  $FRAMEWORKS_DIR/ObjectivelyGPU.xcframework"
 echo "  $FRAMEWORKS_DIR/ObjectivelyMVC.xcframework"
