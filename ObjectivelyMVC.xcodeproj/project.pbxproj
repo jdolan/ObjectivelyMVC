@@ -338,10 +338,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		14C7C5885104229637E1E9D5 /* renderer_fs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_fs.glsl; sourceTree = "<group>"; };
+		14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.glsl; sourceTree = "<group>"; };
 		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
-		7F6735C65F7CAB13D8D96588 /* renderer_fs.glsl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderer_fs.glsl.h; sourceTree = "<group>"; };
-		8D42EC0E254AF0B8789148FA /* renderer_vs.glsl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = renderer_vs.glsl.h; sourceTree = "<group>"; };
+		7F6735C65F7CAB13D8D96588 /* Renderer.frag.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.spv.h; sourceTree = "<group>"; };
+		8D42EC0E254AF0B8789148FA /* Renderer.frag.msl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.msl.h; sourceTree = "<group>"; };
 		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		AABB0001CC0011220033AABB /* Hello-Scene.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "Hello-Scene.c"; sourceTree = "<group>"; };
 		AABB0002CC0011220033AABB /* Hello-Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Hello-Scene.h"; sourceTree = "<group>"; };
@@ -520,7 +520,13 @@
 		CEF1D8AA1D4630D20099A857 /* WindowController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WindowController.c; sourceTree = "<group>"; };
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
-		D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = renderer_vs.glsl; sourceTree = "<group>"; };
+		D31E7AC34C7DE77F2EF97426 /* Renderer.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.vert.glsl; sourceTree = "<group>"; };
+		MV00000000000000000000A0 /* Renderer.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = Renderer.vert.spv; sourceTree = "<group>"; };
+		MV00000000000000000000A1 /* Renderer.vert.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.vert.msl; sourceTree = "<group>"; };
+		MV00000000000000000000A2 /* Renderer.vert.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.spv.h; sourceTree = "<group>"; };
+		MV00000000000000000000A3 /* Renderer.vert.msl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.msl.h; sourceTree = "<group>"; };
+		MV00000000000000000000A4 /* Renderer.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = Renderer.frag.spv; sourceTree = "<group>"; };
+		MV00000000000000000000A5 /* Renderer.frag.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.msl; sourceTree = "<group>"; };
 		MV00010000000000000000A1 /* Objectively.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Objectively.xcframework; path = Frameworks/Objectively.xcframework; sourceTree = "<group>"; };
 		MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ObjectivelyGPU.xcframework; path = Frameworks/ObjectivelyGPU.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -787,10 +793,16 @@
 				CE9FECD6201D5F8000F954ED /* debug.css.h */,
 				CE84C6CA1FFC8E9E00F72267 /* debug.json */,
 				CE9FECD7201D5F8000F954ED /* debug.json.h */,
-				14C7C5885104229637E1E9D5 /* renderer_fs.glsl */,
-				7F6735C65F7CAB13D8D96588 /* renderer_fs.glsl.h */,
-				D31E7AC34C7DE77F2EF97426 /* renderer_vs.glsl */,
-				8D42EC0E254AF0B8789148FA /* renderer_vs.glsl.h */,
+				14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */,
+				MV00000000000000000000A4 /* Renderer.frag.spv */,
+				7F6735C65F7CAB13D8D96588 /* Renderer.frag.spv.h */,
+				MV00000000000000000000A5 /* Renderer.frag.msl */,
+				8D42EC0E254AF0B8789148FA /* Renderer.frag.msl.h */,
+				D31E7AC34C7DE77F2EF97426 /* Renderer.vert.glsl */,
+				MV00000000000000000000A0 /* Renderer.vert.spv */,
+				MV00000000000000000000A2 /* Renderer.vert.spv.h */,
+				MV00000000000000000000A1 /* Renderer.vert.msl */,
+				MV00000000000000000000A3 /* Renderer.vert.msl.h */,
 				CEF1D8921D429F7A0099A857 /* resize.png */,
 				CE92C5171FE029C000FDB0DF /* resize.png.h */,
 				CE92C5141FE01F6300FDB0DF /* stylesheet.css */,
@@ -1158,8 +1170,10 @@
 				"$(SRCROOT)/Assets/coda.ttf",
 				"$(SRCROOT)/Assets/debug.css",
 				"$(SRCROOT)/Assets/debug.json",
-				"$(SRCROOT)/Assets/renderer_fs.glsl",
-				"$(SRCROOT)/Assets/renderer_vs.glsl",
+				"$(SRCROOT)/Assets/Renderer.vert.spv",
+				"$(SRCROOT)/Assets/Renderer.vert.msl",
+				"$(SRCROOT)/Assets/Renderer.frag.spv",
+				"$(SRCROOT)/Assets/Renderer.frag.msl",
 				"$(SRCROOT)/Assets/resize.png",
 				"$(SRCROOT)/Assets/stylesheet.css",
 			);
@@ -1169,14 +1183,16 @@
 				"$(SRCROOT)/Assets/coda.ttf.h",
 				"$(SRCROOT)/Assets/debug.css.h",
 				"$(SRCROOT)/Assets/debug.json.h",
-				"$(SRCROOT)/Assets/renderer_fs.glsl.h",
-				"$(SRCROOT)/Assets/renderer_vs.glsl.h",
+				"$(SRCROOT)/Assets/Renderer.vert.spv.h",
+				"$(SRCROOT)/Assets/Renderer.vert.msl.h",
+				"$(SRCROOT)/Assets/Renderer.frag.spv.h",
+				"$(SRCROOT)/Assets/Renderer.frag.msl.h",
 				"$(SRCROOT)/Assets/resize.png.h",
 				"$(SRCROOT)/Assets/stylesheet.css.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i check.png        | awk '/^};/{print \"  , 0x00\"}1' > check.png.h\nxxd -i coda.ttf         | awk '/^};/{print \"  , 0x00\"}1' > coda.ttf.h\nxxd -i debug.css        | awk '/^};/{print \"  , 0x00\"}1' > debug.css.h\nxxd -i debug.json       | awk '/^};/{print \"  , 0x00\"}1' > debug.json.h\nxxd -i renderer_fs.glsl | awk '/^};/{print \"  , 0x00\"}1' > renderer_fs.glsl.h\nxxd -i renderer_vs.glsl | awk '/^};/{print \"  , 0x00\"}1' > renderer_vs.glsl.h\nxxd -i resize.png       | awk '/^};/{print \"  , 0x00\"}1' > resize.png.h\nxxd -i stylesheet.css   | awk '/^};/{print \"  , 0x00\"}1' > stylesheet.css.h\n";
+			shellScript = "pushd $SRCROOT/Assets\n\nxxd -i -t check.png        > check.png.h\nxxd -i -t coda.ttf         > coda.ttf.h\nxxd -i -t debug.css        > debug.css.h\nxxd -i -t debug.json       > debug.json.h\nxxd -i -t -n Renderer_vert_spv Renderer.vert.spv > Renderer.vert.spv.h\nxxd -i -t -n Renderer_vert_msl Renderer.vert.msl > Renderer.vert.msl.h\nxxd -i -t -n Renderer_frag_spv Renderer.frag.spv > Renderer.frag.spv.h\nxxd -i -t -n Renderer_frag_msl Renderer.frag.msl > Renderer.frag.msl.h\nxxd -i -t resize.png       > resize.png.h\nxxd -i -t stylesheet.css   > stylesheet.css.h\n";
 		};
 		CEA0010000000000000000BA /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;

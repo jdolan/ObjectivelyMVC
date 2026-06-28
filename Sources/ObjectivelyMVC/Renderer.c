@@ -33,56 +33,12 @@
 #include "View.h"
 #include "Window.h"
 
+#include "../Assets/Renderer.vert.spv.h"
+#include "../Assets/Renderer.vert.msl.h"
+#include "../Assets/Renderer.frag.spv.h"
+#include "../Assets/Renderer.frag.msl.h"
+
 #define _Class _Renderer
-
-static const char *vertexShader =
-  "#include <metal_stdlib>\n"
-  "using namespace metal;\n"
-  "\n"
-  "struct VertexIn {\n"
-  "  float2 position [[attribute(0)]];\n"
-  "  float2 texcoord [[attribute(1)]];\n"
-  "};\n"
-  "\n"
-  "struct VertexOut {\n"
-  "  float4 position [[position]];\n"
-  "  float2 texcoord;\n"
-  "};\n"
-  "\n"
-  "struct Projection {\n"
-  "  float4x4 matrix;\n"
-  "};\n"
-  "\n"
-  "vertex VertexOut vs_main(\n"
-  "  VertexIn in [[stage_in]],\n"
-  "  constant Projection &proj [[buffer(0)]])\n"
-  "{\n"
-  "  VertexOut out;\n"
-  "  out.position = proj.matrix * float4(in.position, 0.0, 1.0);\n"
-  "  out.texcoord = in.texcoord;\n"
-  "  return out;\n"
-  "}\n";
-
-static const char *fragmentShader =
-  "#include <metal_stdlib>\n"
-  "using namespace metal;\n"
-  "\n"
-  "struct FragIn {\n"
-  "  float2 texcoord;\n"
-  "};\n"
-  "\n"
-  "struct Color {\n"
-  "  float4 rgba;\n"
-  "};\n"
-  "\n"
-  "fragment float4 fs_main(\n"
-  "  FragIn in [[stage_in]],\n"
-  "  texture2d<float> tex [[texture(0)]],\n"
-  "  sampler s [[sampler(0)]],\n"
-  "  constant Color &color [[buffer(0)]])\n"
-  "{\n"
-  "  return color.rgba * tex.sample(s, in.texcoord);\n"
-  "}\n";
 
 /**
  * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
@@ -375,29 +331,39 @@ static void renderDeviceDidReset(Renderer *self) {
 
   $(self, renderDeviceWillReset);
 
-  const SDL_GPUShaderFormat supported = SDL_GetGPUShaderFormats(self->device->device);
-  if (!(supported & SDL_GPU_SHADERFORMAT_MSL)) {
-    GPU_Assert(false, "unsupported shader format (need MSL, SPIRV, or DXIL)");
-  }
-
-  const SDL_GPUShaderCreateInfo vsInfo = {
-    .code                = (const Uint8 *) vertexShader,
-    .code_size           = strlen(vertexShader),
-    .entrypoint          = "vs_main",
-    .format              = SDL_GPU_SHADERFORMAT_MSL,
+  SDL_GPUShaderCreateInfo vsInfo = {
     .stage               = SDL_GPU_SHADERSTAGE_VERTEX,
     .num_uniform_buffers = 1,
   };
 
-  const SDL_GPUShaderCreateInfo fsInfo = {
-    .code                = (const Uint8 *) fragmentShader,
-    .code_size           = strlen(fragmentShader),
-    .entrypoint          = "fs_main",
-    .format              = SDL_GPU_SHADERFORMAT_MSL,
+  SDL_GPUShaderCreateInfo fsInfo = {
     .stage               = SDL_GPU_SHADERSTAGE_FRAGMENT,
     .num_samplers        = 1,
     .num_uniform_buffers = 1,
   };
+
+  const SDL_GPUShaderFormat supported = SDL_GetGPUShaderFormats(self->device->device);
+  if (supported & SDL_GPU_SHADERFORMAT_MSL) {
+    vsInfo.code       = (const Uint8 *) Renderer_vert_msl;
+    vsInfo.code_size  = strlen((const char *) Renderer_vert_msl);
+    vsInfo.entrypoint = "main0";
+    vsInfo.format     = SDL_GPU_SHADERFORMAT_MSL;
+    fsInfo.code       = (const Uint8 *) Renderer_frag_msl;
+    fsInfo.code_size  = strlen((const char *) Renderer_frag_msl);
+    fsInfo.entrypoint = "main0";
+    fsInfo.format     = SDL_GPU_SHADERFORMAT_MSL;
+  } else if (supported & SDL_GPU_SHADERFORMAT_SPIRV) {
+    vsInfo.code       = Renderer_vert_spv;
+    vsInfo.code_size  = Renderer_vert_spv_len;
+    vsInfo.entrypoint = "main";
+    vsInfo.format     = SDL_GPU_SHADERFORMAT_SPIRV;
+    fsInfo.code       = Renderer_frag_spv;
+    fsInfo.code_size  = Renderer_frag_spv_len;
+    fsInfo.entrypoint = "main";
+    fsInfo.format     = SDL_GPU_SHADERFORMAT_SPIRV;
+  } else {
+    GPU_Assert(false, "Unsupported GPU shader format (need MSL or SPIRV)");
+  }
 
   SDL_GPUShader *vs = $(self->device, createShader, &vsInfo);
   SDL_GPUShader *fs = $(self->device, createShader, &fsInfo);

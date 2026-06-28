@@ -46,8 +46,8 @@ typedef struct RendererInterface RendererInterface;
  * @brief Interleaved position + texcoord vertex for GPU upload.
  */
 typedef struct {
-  float2 position;
-  float2 uv;
+  vec2 position;
+  vec2 uv;
 } MVC_Vertex;
 
 /**
