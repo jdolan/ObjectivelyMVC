@@ -27,16 +27,19 @@
  *
  * Inputs  (location 0): vec2 position
  *         (location 1): vec2 texcoord
+ *         (location 2): vec4 color (UBYTE4_NORM)
  * Uniform (set=1, b=0): mat4 proj (orthographic projection)
- * Output              : vec4 gl_Position, vec2 texcoord
+ * Output              : vec4 gl_Position, vec2 texcoord, vec4 color
  */
 
 #version 450
 
 layout(location = 0) in vec2 in_position;
 layout(location = 1) in vec2 in_texcoord;
+layout(location = 2) in vec4 in_color;
 
 layout(location = 0) out vec2 out_texcoord;
+layout(location = 1) out vec4 out_color;
 
 layout(set = 1, binding = 0, std140) uniform Projection {
 	mat4 proj;
@@ -45,4 +48,5 @@ layout(set = 1, binding = 0, std140) uniform Projection {
 void main() {
 	gl_Position  = proj * vec4(in_position, 0.0, 1.0);
 	out_texcoord = in_texcoord;
+	out_color    = in_color;
 }

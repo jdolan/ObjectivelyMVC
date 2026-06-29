@@ -43,11 +43,12 @@ typedef struct Renderer Renderer;
 typedef struct RendererInterface RendererInterface;
 
 /**
- * @brief Interleaved position + texcoord vertex for GPU upload.
+ * @brief Interleaved position + texcoord + color vertex for GPU upload.
  */
 typedef struct {
   vec2 position;
   vec2 uv;
+  SDL_Color color;
 } MVC_Vertex;
 
 /**
@@ -56,7 +57,6 @@ typedef struct {
  */
 typedef struct {
   SDL_GPUTexture *texture;
-  float color[4];
   SDL_Rect scissor;
   Uint32 firstVertex;
   Uint32 vertexCount;

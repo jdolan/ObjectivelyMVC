@@ -299,7 +299,6 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
       .texture = draw->texture, .sampler = self->sampler,
     }, 1);
 
-    $(self->commands, pushFragmentUniformData, 0, draw->color, sizeof(draw->color));
     $(renderPass, drawPrimitives, draw->vertexCount, 1, draw->firstVertex, 0);
   }
 
@@ -343,17 +342,13 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
     .firstVertex = (Uint32) self->vertices->count,
     .vertexCount = (Uint32) count,
     .texture     = texture ? texture : self->white,
-    .color       = {
-      color->r / 255.0f,
-      color->g / 255.0f,
-      color->b / 255.0f,
-      color->a / 255.0f,
-    },
-      .scissor = self->scissor,
+    .scissor     = self->scissor,
   };
 
   for (size_t i = 0; i < count; i++) {
-    $(self->vertices, add, (MVC_Vertex *) &verts[i]);
+    MVC_Vertex v = verts[i];
+    v.color = *color;
+    $(self->vertices, add, &v);
   }
 
   $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
@@ -373,7 +368,6 @@ static void renderDeviceDidReset(Renderer *self) {
   SDL_GPUShader *fragmentShader = $(self->device, loadShader, "Renderer.frag", &(SDL_GPUShaderCreateInfo) {
     .stage = SDL_GPU_SHADERSTAGE_FRAGMENT,
     .num_samplers = 1,
-    .num_uniform_buffers = 1,
   });
 
   const SDL_GPUVertexBufferDescription vertexBufferInfo = {
@@ -409,13 +403,20 @@ static void renderDeviceDidReset(Renderer *self) {
           .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2,
           .offset = offsetof(MVC_Vertex, position)
         },
-        { .location = 1,
+        {
+          .location = 1,
           .buffer_slot = 0,
           .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2,
           .offset = offsetof(MVC_Vertex, uv)
         },
+        {
+          .location = 2,
+          .buffer_slot = 0,
+          .format = SDL_GPU_VERTEXELEMENTFORMAT_UBYTE4_NORM,
+          .offset = offsetof(MVC_Vertex, color)
+        },
       },
-      .num_vertex_attributes = 2,
+      .num_vertex_attributes = 3,
     },
     .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
     .rasterizer_state = {

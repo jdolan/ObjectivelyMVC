@@ -26,23 +26,20 @@
  * @brief ObjectivelyMVC Renderer fragment shader.
  *
  * Inputs  (location 0): vec2 texcoord from vertex stage
+ *         (location 1): vec4 color from vertex stage
  * Sampler (set=2, b=0): sampler2D tex (combined texture + sampler)
- * Uniform (set=3, b=0): vec4 rgba (per-draw-call color multiplier)
  * Output              : vec4 RGBA
  */
 
 #version 450
 
 layout(location = 0) in vec2 in_texcoord;
+layout(location = 1) in vec4 in_color;
 
 layout(location = 0) out vec4 out_color;
 
 layout(set = 2, binding = 0) uniform sampler2D tex;
 
-layout(set = 3, binding = 0, std140) uniform Color {
-	vec4 rgba;
-};
-
 void main() {
-	out_color = rgba * texture(tex, in_texcoord);
+	out_color = in_color * texture(tex, in_texcoord);
 }
