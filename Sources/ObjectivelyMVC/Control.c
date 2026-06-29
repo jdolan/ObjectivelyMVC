@@ -125,7 +125,7 @@ static View *init(View *self) {
 }
 
 /**
- * @fn View::becomeKeyResponder(View *)
+ * @see View::becomeKeyResponder(View *)
  */
 static void becomeKeyResponder(View *self) {
 
