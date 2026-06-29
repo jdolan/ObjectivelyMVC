@@ -44,9 +44,23 @@
 # define HELLO_WINDOW_FLAGS  SDL_WINDOW_HIGH_PIXEL_DENSITY
 #endif
 
+/**
+ * @brief The Scene type.
+ */
 typedef struct {
+  /**
+   * @brief The cube vertex buffer.
+   */
   SDL_GPUBuffer *vertexBuffer;
+
+  /**
+   * @brief The graphics pipeline.
+   */
   SDL_GPUGraphicsPipeline *pipeline;
+
+  /**
+   * @brief The cube angles.
+   */
   vec2 angles;
 } Scene;
 
@@ -56,9 +70,13 @@ typedef struct {
 typedef struct {
 
   /**
-   * @brief The @c SDL_AudioStream and @c SDL_Window.
+   * @brief The @c SDL_AudioStream.
    */
   SDL_AudioStream *audioStream;
+
+  /**
+   * @brief The @c SDL_Window.
+   */
   SDL_Window *window;
 
   /**
@@ -80,11 +98,6 @@ typedef struct {
    * @brief Simulation time in milliseconds.
    */
   Uint64 ticks;
-
-  /**
-   * @brief Delta frame time in seconds.
-   */
-  float dt;
 
   /**
    * @brief The @c Scene.
@@ -198,13 +211,13 @@ static void initScene(AppState *app) {
 static void drawScene(AppState *app, CommandBuffer *cmd) {
 
   const Uint64 ticks = SDL_GetTicks();
-  app->dt = (ticks - app->ticks) / 1000.f;
+  const float dt = (ticks - app->ticks) / 1000.f;
   app->ticks = ticks;
 
   Scene *scene = &app->scene;
 
-  scene->angles.x = SDL_fmodf(scene->angles.x + app->dt * 30.f, 360.f);
-  scene->angles.y = SDL_fmodf(scene->angles.y + app->dt * 60.f, 360.f);
+  scene->angles.x = SDL_fmodf(scene->angles.x + dt * 30.f, 360.f);
+  scene->angles.y = SDL_fmodf(scene->angles.y + dt * 60.f, 360.f);
 
   mat4 modelView = mat4_rotation(scene->angles.x, vec3_new(1.f, 0.f, 0.f));
   modelView = mat4_mul(mat4_rotation(scene->angles.y, vec3_new(0.f, 1.f, 0.f)), modelView);
