@@ -57,6 +57,11 @@ PKG_CHECK_MODULES([SDL3], [sdl3 >= 3.2.0 sdl3-image sdl3-ttf])
 
 AC_SUBST(SDL3_DLL_LIBS, $(echo $SDL3_LIBS | sed 's/-lmingw32//; s/-lSDL3main//'))
 
+AC_CHECK_PROG([GLSLC], [glslc], [glslc], [])
+AS_IF([test -z "$GLSLC"], [AC_MSG_WARN([glslc not found; 'make shaders' will not work])])
+AC_CHECK_PROG([SHADERCROSS], [shadercross], [shadercross], [])
+AS_IF([test -z "$SHADERCROSS"], [AC_MSG_WARN([shadercross not found; 'make shaders' will not work])])
+
 AC_CONFIG_FILES([
 	Makefile
 	Assets/Makefile
@@ -70,9 +75,3 @@ AC_CONFIG_FILES([
 
 AC_OUTPUT
 
-AC_CHECK_PROG([GLSLC], [glslc], [glslc], [])
-AS_IF([test -z "$GLSLC"],
-  [AC_MSG_WARN([glslc not found; 'make shaders' will not work])])
-AC_CHECK_PROG([SHADERCROSS], [shadercross], [shadercross], [])
-AS_IF([test -z "$SHADERCROSS"],
-  [AC_MSG_WARN([shadercross not found; 'make shaders' will not work])])
