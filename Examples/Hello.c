@@ -46,7 +46,6 @@
 
 typedef struct {
   SDL_GPUBuffer *vertexBuffer;
-  Framebuffer *framebuffer;
   SDL_GPUGraphicsPipeline *pipeline;
   vec2 angles;
 } Scene;
@@ -68,7 +67,12 @@ typedef struct {
   RenderDevice *renderDevice;
 
   /**
-   * @brief The ObjectiveMVC @c WindowController.
+   * @brief The shared @c Framebuffer for scene and UI rendering.
+   */
+  Framebuffer *framebuffer;
+
+  /**
+   * @brief The ObjectivelyMVC @c WindowController.
    */
 	WindowController *windowController;
 
@@ -119,14 +123,6 @@ static void initScene(AppState *app) {
 
   Scene *scene = &app->scene;
 
-  int w = 0, h = 0;
-  SDL_GetWindowSizeInPixels(app->window, &w, &h);
-
-  scene->framebuffer = $(alloc(Framebuffer), initWithDevice, app->renderDevice,
-                      &MakeSize(w, h),
-                      SDL_GPU_TEXTUREFORMAT_INVALID,
-                      SDL_GPU_TEXTUREFORMAT_D16_UNORM);
-
   scene->vertexBuffer = $(app->renderDevice, createBufferWithConstMem, SDL_GPU_BUFFERUSAGE_VERTEX, vertexes, sizeof(vertexes));
 
   SDL_GPUShader *vertexShader = $(app->renderDevice, loadShader, "Hello.vert", &(SDL_GPUShaderCreateInfo) {
@@ -160,7 +156,7 @@ static void initScene(AppState *app) {
   };
 
   const SDL_GPUColorTargetDescription ctd = {
-    .format = $(app->renderDevice, getSwapchainTextureFormat, app->window),
+    .format = app->framebuffer->colorFormat,
   };
 
   scene->pipeline = $(app->renderDevice, createGraphicsPipeline, &(SDL_GPUGraphicsPipelineCreateInfo) {
@@ -172,24 +168,24 @@ static void initScene(AppState *app) {
       .vertex_attributes = attrs,
       .num_vertex_attributes = (Uint32) SDL_arraysize(attrs),
     },
-      .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
-      .rasterizer_state = {
-        .fill_mode = SDL_GPU_FILLMODE_FILL,
-        .cull_mode = SDL_GPU_CULLMODE_BACK,
-        .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE,
-        .enable_depth_clip = true,
-      },
-      .depth_stencil_state = {
-        .compare_op = SDL_GPU_COMPAREOP_LESS_OR_EQUAL,
-        .enable_depth_test = true,
-        .enable_depth_write = true,
-      },
-      .target_info = {
-        .color_target_descriptions = &ctd,
-        .num_color_targets = 1,
-        .depth_stencil_format = SDL_GPU_TEXTUREFORMAT_D16_UNORM,
-        .has_depth_stencil_target = true,
-      },
+    .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
+    .rasterizer_state = {
+      .fill_mode = SDL_GPU_FILLMODE_FILL,
+      .cull_mode = SDL_GPU_CULLMODE_BACK,
+      .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE,
+      .enable_depth_clip = true,
+    },
+    .depth_stencil_state = {
+      .compare_op = SDL_GPU_COMPAREOP_LESS_OR_EQUAL,
+      .enable_depth_test = true,
+      .enable_depth_write = true,
+    },
+    .target_info = {
+      .color_target_descriptions = &ctd,
+      .num_color_targets = 1,
+      .depth_stencil_format = app->framebuffer->depthFormat,
+      .has_depth_stencil_target = true,
+    },
   });
 
   $(app->renderDevice, releaseShader, vertexShader);
@@ -197,17 +193,15 @@ static void initScene(AppState *app) {
 }
 
 /**
- * @brief Renders a single frame of the @c Scene into the given command buffer and swapchain.
+ * @brief Renders a single frame of the @c Scene.
  */
-static void drawScene(AppState *app, CommandBuffer *cmd, const SwapchainTexture *swapchain) {
+static void drawScene(AppState *app, CommandBuffer *cmd) {
 
   const Uint64 ticks = SDL_GetTicks();
   app->dt = (ticks - app->ticks) / 1000.f;
   app->ticks = ticks;
 
   Scene *scene = &app->scene;
-
-  $(scene->framebuffer, resize, &swapchain->size);
 
   scene->angles.x = SDL_fmodf(scene->angles.x + app->dt * 30.f, 360.f);
   scene->angles.y = SDL_fmodf(scene->angles.y + app->dt * 60.f, 360.f);
@@ -216,21 +210,15 @@ static void drawScene(AppState *app, CommandBuffer *cmd, const SwapchainTexture 
   modelView = mat4_mul(mat4_rotation(scene->angles.y, vec3_new(0.f, 1.f, 0.f)), modelView);
   modelView = mat4_mul(mat4_translation(vec3_new(0.f, 0.f, -2.5f)), modelView);
 
-  const mat4 projection = mat4_perspective(45.f, (float) swapchain->size.w / (float) swapchain->size.h, 0.01f, 100.f);
+  const mat4 projection = mat4_perspective(45.f, (float) app->framebuffer->size.w / (float) app->framebuffer->size.h, 0.01f, 100.f);
   const mat4 modelViewProjection = mat4_mul(projection, modelView);
-
   $(cmd, pushVertexUniformData, 0, modelViewProjection.f, sizeof(modelViewProjection));
 
-  const SDL_GPUColorTargetInfo sceneColor = {
-    .texture = swapchain->texture,
-    .load_op = SDL_GPU_LOADOP_CLEAR,
-    .store_op = SDL_GPU_STOREOP_STORE,
-    .clear_color = { 0.1f, 0.1f, 0.2f, 1.f },
-  };
+  const SDL_FColor clearColor = { 0.1f, 0.1f, 0.2f, 1.f };
+  const SDL_GPUColorTargetInfo color = $(app->framebuffer, colorTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_STORE, &clearColor);
+  const SDL_GPUDepthStencilTargetInfo depth = $(app->framebuffer, depthTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_DONT_CARE, 1.f);
 
-  const SDL_GPUDepthStencilTargetInfo depthTarget = $(scene->framebuffer, depthTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_DONT_CARE, 1.f);
-
-  RenderPass *pass = $(cmd, beginRenderPass, &sceneColor, 1, &depthTarget);
+  RenderPass *pass = $(cmd, beginRenderPass, &color, 1, &depth);
   $(pass, bindPipeline, scene->pipeline);
   $(pass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = scene->vertexBuffer }, 1);
   $(pass, drawPrimitives, (Uint32) SDL_arraysize(vertexes), 1, 0, 0);
@@ -293,7 +281,16 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
 	MVC_Assert(app->window, "SDL_CreateWindow");
 
   app->renderDevice = $(alloc(RenderDevice), initWithWindow, app->window);
-	app->windowController = $(alloc(WindowController), initWithDevice, app->renderDevice);
+
+  int w = 0, h = 0;
+  SDL_GetWindowSizeInPixels(app->window, &w, &h);
+
+  app->framebuffer = $(alloc(Framebuffer), initWithDevice, app->renderDevice,
+    &MakeSize(w, h),
+    SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+    SDL_GPU_TEXTUREFORMAT_D16_UNORM);
+
+	app->windowController = $(alloc(WindowController), initWithDevice, app->renderDevice, app->framebuffer);
 
 	ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
 	$(app->windowController, setViewController, viewController);
@@ -322,15 +319,26 @@ SDL_AppResult SDL_AppIterate(void *appState) {
     return SDL_APP_CONTINUE;
   }
 
-  drawScene(app, cmd, &swapchain);
+  $(app->framebuffer, resize, &swapchain.size);
 
-  const SDL_GPUColorTargetInfo uiColor = {
-    .texture = swapchain.texture,
-    .load_op = SDL_GPU_LOADOP_LOAD,
-    .store_op = SDL_GPU_STOREOP_STORE,
-  };
+  drawScene(app, cmd);
 
-  $(app->windowController, renderWith, cmd, &uiColor, swapchain.size);
+  $(app->windowController, render, cmd);
+
+  $(cmd, blitTexture, &(SDL_GPUBlitInfo) {
+    .source = {
+      .texture = app->framebuffer->colorTexture,
+      .w = (Uint32) swapchain.size.w,
+      .h = (Uint32) swapchain.size.h,
+    },
+    .destination = {
+      .texture = swapchain.texture,
+      .w = (Uint32) swapchain.size.w,
+      .h = (Uint32) swapchain.size.h,
+    },
+    .load_op = SDL_GPU_LOADOP_DONT_CARE,
+    .filter = SDL_GPU_FILTER_NEAREST,
+  });
 
   $(app->renderDevice, submit, cmd);
   release(cmd);
@@ -368,6 +376,7 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
   AppState *app = appState;
 
 	release(app->windowController);
+  release(app->framebuffer);
 
 	SDL_DestroyAudioStream(app->audioStream);
 	SDL_DestroyWindow(app->window);

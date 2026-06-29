@@ -61,6 +61,11 @@ struct WindowController {
   DebugViewController *debugViewController;
 
   /**
+   * @brief The Framebuffer this WindowController renders the UI into.
+   */
+  Framebuffer *framebuffer;
+
+  /**
    * @brief The Renderer.
    */
   Renderer *renderer;
@@ -117,37 +122,16 @@ struct WindowControllerInterface {
   Array *(*keyResponders)(const WindowController *self);
 
   /**
-   * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device)
-   * @brief Initializes this WindowController with the given RenderDevice.
+   * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device, Framebuffer *framebuffer)
+   * @brief Initializes this WindowController with the given RenderDevice and UI Framebuffer.
    * @param self The WindowController.
    * @param device The RenderDevice.
+   * @param framebuffer The Framebuffer the UI will be rendered into each frame. The WindowController
+   *   retains it. The Renderer's pipeline is built against @c framebuffer->colorFormat.
    * @return The initialized WindowController, or `NULL` on error.
    * @memberof WindowController
-   * @remarks Use this initializer for applications that use ObjectivelyGPU for their rendering.
    */
-  WindowController *(*initWithDevice)(WindowController *self, RenderDevice *device);
-
-  /**
-   * @fn WindowController *WindowController::initWithRenderer(WindowController *self, Renderer *renderer)
-   * @brief Initializes this WindowController with the given RenderDevice.
-   * @param self The WindowController.
-   * @param renderer The Renderer.
-   * @return The initialized WindowController, or `NULL` on error.
-   * @memberof WindowController
-   * @remarks Use this initializer for applications that use ObjectivelyGPU for their rendering.
-   */
-  WindowController *(*initWithRenderer)(WindowController *self, Renderer *renderer);
-
-  /**
-   * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
-   * @brief Initializes this WindowController with the given window, creating a new RenderDevice.
-   * @param self The WindowController.
-   * @param window The window.
-   * @return The initialized WindowController, or `NULL` on error.
-   * @memberof WindowController
-   * @remarks Use this initializer for applications that do not use ObjectivelyGPU for their rendering.
-   */
-  WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
+  WindowController *(*initWithDevice)(WindowController *self, RenderDevice *device, Framebuffer *framebuffer);
 
   /**
    * @fn View *WindowController::nextKeyResponder(const WindowController *self, View *keyResponder)
@@ -170,31 +154,16 @@ struct WindowControllerInterface {
   View *(*previousKeyResponder)(const WindowController *self, View *keyResponder);
 
   /**
-   * @fn void WindowController::render(WindowController *self)
-   * @brief Renders the ViewController's View.
-   * @details Convenience method for applications that do not need to share a CommandBuffer across
-   *   multiple render passes. Acquires a CommandBuffer and swapchain texture, calls renderWith,
-   *   and submits the CommandBuffer.
-   * @param self The WindowController.
-   * @remarks Use renderWith when your application owns the frame's CommandBuffer (e.g. to composite
-   *   scene geometry in the same frame).
-   * @memberof WindowController
-   */
-  void (*render)(WindowController *self);
-
-  /**
-   * @fn void WindowController::renderWith(WindowController *self, CommandBuffer *cmd, const SDL_GPUColorTargetInfo *colorTarget, SDL_Size size)
-   * @brief Renders the ViewController's View into the given color target using the provided CommandBuffer.
-   * @details The caller owns @c cmd and is responsible for submitting and releasing it after this
-   *   returns. This is the composable path: acquire the swapchain once, render your scene, then
-   *   call this to composite the MVC UI into the same command buffer.
+   * @fn void WindowController::render(WindowController *self, CommandBuffer *cmd)
+   * @brief Renders the ViewController's View into this WindowController's Framebuffer.
+   * @details The caller owns @c cmd and is responsible for submitting it after this returns.
+   *   The UI is composited over whatever is already in the Framebuffer's color texture
+   *   (`SDL_GPU_LOADOP_LOAD`), so render your scene into the Framebuffer first.
    * @param self The WindowController.
    * @param cmd The frame's CommandBuffer.
-   * @param colorTarget The color target to render the UI into.
-   * @param size The render target dimensions in pixels.
    * @memberof WindowController
    */
-  void (*renderWith)(WindowController *self, CommandBuffer *cmd, const SDL_GPUColorTargetInfo *colorTarget, SDL_Size size);
+  void (*render)(WindowController *self, CommandBuffer *cmd);
 
   /**
    * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
@@ -215,15 +184,6 @@ struct WindowControllerInterface {
    * @memberof WindowController
    */
   void (*respondToEvent)(WindowController * self, const SDL_Event *event);
-
-  /**
-   * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
-   * @brief Sets this WindowController's Renderer.
-   * @param self The WindowController.
-   * @param renderer The Renderer.
-   * @memberof WindowController
-   */
-  void (*setRenderer)(WindowController *self, Renderer *renderer);
 
   /**
    * @fn void WindowController::setTheme(WindowController *self, Theme *theme)

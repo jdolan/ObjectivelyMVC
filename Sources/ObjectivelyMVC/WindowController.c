@@ -60,6 +60,7 @@ static void dealloc(Object *self) {
   WindowController *this = (WindowController *) self;
 
   release(this->debugViewController);
+  release(this->framebuffer);
   release(this->renderer);
   release(this->theme);
   release(this->viewController);
@@ -125,101 +126,55 @@ static Array *keyResponders(const WindowController *self) {
 }
 
 /**
- * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device)
+ * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device, Framebuffer *framebuffer)
  * @memberof WindowController
  */
-static WindowController *initWithDevice(WindowController *self, RenderDevice *device) {
+static WindowController *initWithDevice(WindowController *self, RenderDevice *device, Framebuffer *framebuffer) {
 
-  Renderer *renderer = $(alloc(Renderer), initWithDevice, device);
-  self = $(self, initWithRenderer, renderer);
-  release(renderer);
-
-  return self;
-}
-
-/**
- * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
- * @memberof WindowController
- */
-static WindowController *initWithRenderer(WindowController *self, Renderer *renderer) {
-
-  assert(renderer);
+  assert(device);
+  assert(framebuffer);
 
   self = (WindowController *) super(Object, self, init);
   if (self) {
-    $(self, setWindow, renderer->device->window);
+    self->framebuffer = retain(framebuffer);
+
+    self->renderer = $(alloc(Renderer), initWithDevice, device);
+    assert(self->renderer);
+    self->renderer->colorFormat = framebuffer->colorFormat;
+
+    $(self, setWindow, device->window);
     $(self, setViewController, NULL);
-    $(self, setRenderer, renderer);
     $(self, setTheme, NULL);
+
+    $(self->renderer->device, setWindow, self->window);
+    $(self->renderer, renderDeviceDidReset);
+    $(self->viewController->view, renderDeviceDidReset);
   }
 
   return self;
 }
 
 /**
- * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
+ * @fn void WindowController::render(WindowController *self, CommandBuffer *cmd)
  * @memberof WindowController
  */
-static WindowController *initWithWindow(WindowController *self, SDL_Window *window) {
-
-  Renderer *renderer = $(alloc(Renderer), init);
-  self = $(self, initWithRenderer, renderer);
-  release(renderer);
-  
-  return self;
-}
-
-/**
- * @fn void WindowController::renderWith(WindowController *self, CommandBuffer *cmd, const SDL_GPUColorTargetInfo *colorTarget, SDL_Size size)
- * @memberof WindowController
- */
-static void renderWith(WindowController *self, CommandBuffer *cmd, const SDL_GPUColorTargetInfo *colorTarget, SDL_Size size) {
+static void render(WindowController *self, CommandBuffer *cmd) {
 
   assert(self->renderer);
+  assert(self->framebuffer);
   assert(cmd);
-  assert(colorTarget);
 
-  $(self->renderer, beginFrame, cmd, size);
+  $(self->renderer, beginFrame, cmd, self->framebuffer->size);
 
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
-
   $(self->viewController->view, draw, self->renderer);
 
   $(self, debug);
 
-  $(self->renderer, endFrame, colorTarget);
-}
-
-/**
- * @fn void WindowController::render(WindowController *self)
- * @memberof WindowController
- */
-static void render(WindowController *self) {
-
-  assert(self->renderer);
-
-  CommandBuffer *cmd = $(self->renderer->device, acquireCommandBuffer);
-
-  SwapchainTexture swapchain = { 0 };
-  $(cmd, waitAndAcquireSwapchainTexture, &swapchain);
-
-  if (!swapchain.texture) {
-    $(cmd, cancel);
-    release(cmd);
-    return;
-  }
-
-  const SDL_GPUColorTargetInfo colorTarget = {
-    .texture = swapchain.texture,
-    .load_op = SDL_GPU_LOADOP_LOAD,
-    .store_op = SDL_GPU_STOREOP_STORE,
-  };
-
-  $(self, renderWith, cmd, &colorTarget, swapchain.size);
-
-  $(self->renderer->device, submit, cmd);
-  release(cmd);
+  const SDL_GPUColorTargetInfo colorTarget = $(self->framebuffer, colorTargetInfo,
+    SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE, NULL);
+  $(self->renderer, endFrame, &colorTarget);
 }
 
 /**
@@ -382,30 +337,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   }
 
   SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", NULL);
-}
-
-/**
- * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
- * @memberof WindowController
- */
-static void setRenderer(WindowController *self, Renderer *renderer) {
-
-  if (self->renderer != renderer || self->renderer == NULL) {
-
-    release(self->renderer);
-
-    if (renderer) {
-      self->renderer = retain(renderer);
-    } else {
-      self->renderer = $(alloc(Renderer), init);
-    }
-
-    assert(self->renderer);
-
-    $(self->renderer->device, setWindow, self->window);
-    $(self->renderer, renderDeviceDidReset);
-    $(self->viewController->view, renderDeviceDidReset);
-  }
 }
 
 /**
@@ -580,14 +511,10 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->keyResponder = keyResponder;
   ((WindowControllerInterface *) clazz->interface)->keyResponders = keyResponders;
   ((WindowControllerInterface *) clazz->interface)->initWithDevice = initWithDevice;
-  ((WindowControllerInterface *) clazz->interface)->initWithRenderer = initWithRenderer;
-  ((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
   ((WindowControllerInterface *) clazz->interface)->nextKeyResponder = nextKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->previousKeyResponder = previousKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->render = render;
-  ((WindowControllerInterface *) clazz->interface)->renderWith = renderWith;
   ((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
-  ((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
   ((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
   ((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
   ((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;

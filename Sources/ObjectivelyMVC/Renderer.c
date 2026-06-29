@@ -291,21 +291,6 @@ static void endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget) 
 }
 
 /**
- * @fn Renderer *Renderer::init(Renderer *self)
- * @memberof Renderer
- */
-static Renderer *init(Renderer *self) {
-
-  RenderDevice *device = $(alloc(RenderDevice), init);
-
-  $(self, initWithDevice, device);
-
-  release(device);
-
-  return self;
-}
-
-/**
  * @fn Renderer *Renderer::initWithDevice(Renderer *self, RenderDevice *device)
  * @memberof Renderer
  */
@@ -315,6 +300,8 @@ static Renderer *initWithDevice(Renderer *self, RenderDevice *device) {
   if (self) {
     self->device = retain(device);
     assert(self->device);
+
+    self->colorFormat = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM;
 
     self->vertices = $(alloc(Vector), initWithSize, sizeof(MVC_Vertex));
     assert(self->vertices);
@@ -412,9 +399,8 @@ static void renderDeviceDidReset(Renderer *self) {
     { .location = 1, .buffer_slot = 0, .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2, .offset = 8 },
   };
 
-  const SDL_GPUTextureFormat swapchainFmt = $(self->device, getSwapchainTextureFormat, self->device->window);
   const SDL_GPUColorTargetDescription colorTarget = {
-    .format = swapchainFmt,
+    .format = self->colorFormat,
     .blend_state = {
       .enable_blend          = true,
       .color_blend_op        = SDL_GPU_BLENDOP_ADD,
@@ -517,16 +503,14 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((RendererInterface *) clazz->interface)->beginFrame = beginFrame;
-  ((RendererInterface *) clazz->interface)->drawLine = drawLine;
-  ((RendererInterface *) clazz->interface)->drawLines = drawLines;
+  ((RendererInterface *) clazz->interface)->drawLine = drawLine;  ((RendererInterface *) clazz->interface)->drawLines = drawLines;
   ((RendererInterface *) clazz->interface)->drawRect = drawRect;
   ((RendererInterface *) clazz->interface)->drawRectFilled = drawRectFilled;
   ((RendererInterface *) clazz->interface)->drawTexture = drawTexture;
   ((RendererInterface *) clazz->interface)->drawView = drawView;
   ((RendererInterface *) clazz->interface)->endFrame = endFrame;
-  ((RendererInterface *) clazz->interface)->init = init;
-  ((RendererInterface *) clazz->interface)->pushDrawArrays = pushDrawArrays;
   ((RendererInterface *) clazz->interface)->initWithDevice = initWithDevice;
+  ((RendererInterface *) clazz->interface)->pushDrawArrays = pushDrawArrays;
   ((RendererInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
   ((RendererInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((RendererInterface *) clazz->interface)->setClippingFrame = setClippingFrame;

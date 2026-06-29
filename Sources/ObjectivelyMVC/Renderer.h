@@ -87,6 +87,14 @@ struct Renderer {
   RenderDevice *device;
 
   /**
+   * @brief The color format the Renderer's pipeline targets.
+   * @details Must match the color format of the Framebuffer passed to WindowController::render.
+   * Defaults to `SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM`. Set this before the first call to
+   * `renderDeviceDidReset` if your framebuffer uses a different format.
+   */
+  SDL_GPUTextureFormat colorFormat;
+
+  /**
    * @brief The current frame command buffer (valid between beginFrame and endFrame).
    * @private
    */
@@ -240,17 +248,8 @@ struct RendererInterface {
   void (*endFrame)(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget);
 
   /**
-   * @fn Renderer *Renderer::init(Renderer *self)
-   * @brief Initializes this Renderer.
-   * @param self The Renderer.
-   * @return The initialized Renderer, or `NULL` on error.
-   * @memberof Renderer
-   */
-  Renderer *(*init)(Renderer *self);
-
-  /**
    * @fn Renderer *Renderer::initWithDevice(Renderer *self, RenderDevice *device)
-   * @brief Initializes this Renderer.
+   * @brief Initializes this Renderer with the given RenderDevice.
    * @param self The Renderer.
    * @param device The RenderDevice.
    * @return The initialized Renderer, or `NULL` on error.
