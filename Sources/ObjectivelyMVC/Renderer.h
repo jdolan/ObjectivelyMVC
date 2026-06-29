@@ -82,9 +82,10 @@ struct Renderer {
   RendererInterface *interface;
 
   /**
-   * @brief The backing RenderDevice.
+   * @brief The current frame command buffer (valid between beginFrame and endFrame).
+   * @private
    */
-  RenderDevice *device;
+  CommandBuffer *commands;
 
   /**
    * @brief The color format the Renderer's pipeline targets.
@@ -95,10 +96,15 @@ struct Renderer {
   SDL_GPUTextureFormat colorFormat;
 
   /**
-   * @brief The current frame command buffer (valid between beginFrame and endFrame).
+   * @brief The backing RenderDevice.
+   */
+  RenderDevice *device;
+
+  /**
+   * @brief CPU-side frame accumulation of draw arrays.
    * @private
    */
-  CommandBuffer *cmd;
+  Vector *drawArrays;
 
   /**
    * @brief The current frame Framebuffer (valid between beginFrame and endFrame).
@@ -114,6 +120,25 @@ struct Renderer {
   SDL_GPUGraphicsPipeline *pipeline;
 
   /**
+   * @brief The linear clamp-to-edge sampler for texture rendering.
+   * @details Borrowed from `RenderDevice::samplerLinearClamp` — do not release.
+   * @private
+   */
+  SDL_GPUSampler *sampler;
+
+  /**
+   * @brief The current scissor rectangle (in pixel coordinates).
+   * @private
+   */
+  SDL_Rect scissor;
+
+  /**
+   * @brief CPU-side frame accumulation of vertices.
+   * @private
+   */
+  Vector *vertices;
+
+  /**
    * @brief The GPU-side vertex buffer (resized as needed to fit vertices).
    * @private
    */
@@ -126,35 +151,10 @@ struct Renderer {
   Uint32 vertexBufferCapacity;
 
   /**
-   * @brief The linear clamp-to-edge sampler for texture rendering.
-   * @details Borrowed from `RenderDevice::samplerLinearClamp` — do not release.
-   * @private
-   */
-  SDL_GPUSampler *sampler;
-
-  /**
    * @brief The 1×1 white fallback texture (used for solid-color primitives).
    * @private
    */
   SDL_GPUTexture *white;
-
-  /**
-   * @brief CPU-side frame accumulation of vertices.
-   * @private
-   */
-  Vector *vertices;
-
-  /**
-   * @brief CPU-side frame accumulation of draw arrays.
-   * @private
-   */
-  Vector *drawArrays;
-
-  /**
-   * @brief The current scissor rectangle (in pixel coordinates).
-   * @private
-   */
-  SDL_Rect scissor;
 };
 
 /**
@@ -168,14 +168,14 @@ struct RendererInterface {
   ObjectInterface objectInterface;
 
   /**
-   * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *cmd, Framebuffer *framebuffer)
+   * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer)
    * @brief Prepares this Renderer for a new frame using the given command buffer and framebuffer.
    * @param self The Renderer.
-   * @param cmd The frame's CommandBuffer. The caller retains ownership and must submit and release it.
+   * @param commands The frame's CommandBuffer. The caller retains ownership and must submit and release it.
    * @param framebuffer The target Framebuffer for this frame. Borrowed for the duration of the frame.
    * @memberof Renderer
    */
-  void (*beginFrame)(Renderer *self, CommandBuffer *cmd, Framebuffer *framebuffer);
+  void (*beginFrame)(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer);
 
   /**
    * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)

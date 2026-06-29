@@ -101,7 +101,7 @@ typedef struct {
   vec3 color;
 } Vertex;
 
-static const Vertex vertexes[] = {
+static const Vertex vertices[] = {
   { { -0.5f,  0.5f, -0.5f }, { 1, 0, 0 } }, { {  0.5f, -0.5f, -0.5f }, { 0, 0, 1 } }, { { -0.5f, -0.5f, -0.5f }, { 0, 1, 0 } },
   { { -0.5f,  0.5f, -0.5f }, { 1, 0, 0 } }, { {  0.5f,  0.5f, -0.5f }, { 1, 1, 0 } }, { {  0.5f, -0.5f, -0.5f }, { 0, 0, 1 } },
   { { -0.5f,  0.5f,  0.5f }, { 1, 1, 1 } }, { { -0.5f, -0.5f, -0.5f }, { 0, 1, 0 } }, { { -0.5f, -0.5f,  0.5f }, { 0, 1, 1 } },
@@ -123,7 +123,7 @@ static void initScene(AppState *app) {
 
   Scene *scene = &app->scene;
 
-  scene->vertexBuffer = $(app->renderDevice, createBufferWithConstMem, SDL_GPU_BUFFERUSAGE_VERTEX, vertexes, sizeof(vertexes));
+  scene->vertexBuffer = $(app->renderDevice, createBufferWithConstMem, SDL_GPU_BUFFERUSAGE_VERTEX, vertices, sizeof(vertices));
 
   SDL_GPUShader *vertexShader = $(app->renderDevice, loadShader, "Hello.vert", &(SDL_GPUShaderCreateInfo) {
     .stage = SDL_GPU_SHADERSTAGE_VERTEX,
@@ -221,7 +221,7 @@ static void drawScene(AppState *app, CommandBuffer *cmd) {
   RenderPass *pass = $(cmd, beginRenderPass, &color, 1, &depth);
   $(pass, bindPipeline, scene->pipeline);
   $(pass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = scene->vertexBuffer }, 1);
-  $(pass, drawPrimitives, (Uint32) SDL_arraysize(vertexes), 1, 0, 0);
+  $(pass, drawPrimitives, (Uint32) SDL_arraysize(vertices), 1, 0, 0);
   release(pass);
 }
 
@@ -312,12 +312,6 @@ SDL_AppResult SDL_AppIterate(void *appState) {
 
   SwapchainTexture swapchain = { 0 };
   $(cmd, waitAndAcquireSwapchainTexture, &swapchain);
-
-  if (!swapchain.texture) {
-    $(cmd, cancel);
-    release(cmd);
-    return SDL_APP_CONTINUE;
-  }
 
   $(app->framebuffer, resize, &swapchain.size);
 

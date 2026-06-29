@@ -39,6 +39,26 @@
 #include "../Assets/Renderer.frag.spv.h"
 #include "../Assets/Renderer.frag.msl.h"
 
+/**
+ * @brief @c ResourceProvider for loading shaders from @c xxd headers.
+ */
+static Data *shaderResourceProvider(const char *name) {
+
+  Data *data = NULL;
+
+  if (!strcmp("Renderer.vert.msl", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_vert_msl, Renderer_vert_msl_len);
+  } else if (!strcmp("Renderer.vert.spv", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_vert_spv, Renderer_vert_spv_len);
+  } else if (!strcmp("Renderer.frag.msl", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_frag_msl, Renderer_frag_msl_len);
+  } else if (!strcmp("Renderer.frag.spv", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_frag_msl, Renderer_frag_msl_len);
+  }
+
+  return data;
+}
+
 #define _Class _Renderer
 
 #pragma mark - Object
@@ -50,7 +70,7 @@ static void dealloc(Object *self) {
 
   Renderer *this = (Renderer *) self;
 
-  this->cmd = NULL;
+  this->commands = NULL;
 
   release(this->vertices);
   release(this->drawArrays);
@@ -62,15 +82,15 @@ static void dealloc(Object *self) {
 #pragma mark - Renderer
 
 /**
- * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *cmd, Framebuffer *framebuffer)
+ * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer)
  * @memberof Renderer
  */
-static void beginFrame(Renderer *self, CommandBuffer *cmd, Framebuffer *framebuffer) {
+static void beginFrame(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer) {
 
-  assert(cmd);
+  assert(commands);
   assert(framebuffer);
 
-  self->cmd = cmd;
+  self->commands = commands;
   self->framebuffer = framebuffer;
 
   $(self->vertices, removeAll);
@@ -226,7 +246,7 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
 
   const size_t vtxCount = self->vertices->count;
 
-  CopyPass *copyPass = $(self->cmd, beginCopyPass);
+  CopyPass *copyPass = $(self->commands, beginCopyPass);
 
   if (vtxCount > 0) {
     const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
@@ -245,7 +265,7 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
 
   release(copyPass);
 
-  RenderPass *renderPass = $(self->cmd, beginRenderPass, &colorTarget, 1, NULL);
+  RenderPass *renderPass = $(self->commands, beginRenderPass, &colorTarget, 1, NULL);
 
   $(renderPass, setViewport, &(SDL_GPUViewport){
     .x = 0.0f, .y = 0.0f,
@@ -256,7 +276,7 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
   int winW, winH;
   SDL_GetWindowSize(self->device->window, &winW, &winH);
   const mat4 projection = mat4_ortho(0.f, (float) winW, (float) winH, 0.f, -1.f, 1.f);
-  $(self->cmd, pushVertexUniformData, 0, projection.f, sizeof(projection));
+  $(self->commands, pushVertexUniformData, 0, projection.f, sizeof(projection));
 
   $(renderPass, bindPipeline, self->pipeline);
   $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer }, 1);
@@ -279,13 +299,13 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
       .texture = draw->texture, .sampler = self->sampler,
     }, 1);
 
-    $(self->cmd, pushFragmentUniformData, 0, draw->color, sizeof(draw->color));
+    $(self->commands, pushFragmentUniformData, 0, draw->color, sizeof(draw->color));
     $(renderPass, drawPrimitives, draw->vertexCount, 1, draw->firstVertex, 0);
   }
 
   release(renderPass);
 
-  self->cmd = NULL;
+  self->commands = NULL;
   self->framebuffer = NULL;
 }
 
@@ -345,63 +365,30 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
  */
 static void renderDeviceDidReset(Renderer *self) {
 
-  $(self, renderDeviceWillReset);
-
-  SDL_GPUShaderCreateInfo vsInfo = {
-    .stage               = SDL_GPU_SHADERSTAGE_VERTEX,
+  SDL_GPUShader *vertexShader = $(self->device, loadShader, "Renderer.vert", &(SDL_GPUShaderCreateInfo) {
+    .stage = SDL_GPU_SHADERSTAGE_VERTEX,
     .num_uniform_buffers = 1,
-  };
+  });
 
-  SDL_GPUShaderCreateInfo fsInfo = {
-    .stage               = SDL_GPU_SHADERSTAGE_FRAGMENT,
-    .num_samplers        = 1,
+  SDL_GPUShader *fragmentShader = $(self->device, loadShader, "Renderer.frag", &(SDL_GPUShaderCreateInfo) {
+    .stage = SDL_GPU_SHADERSTAGE_FRAGMENT,
+    .num_samplers = 1,
     .num_uniform_buffers = 1,
-  };
+  });
 
-  const SDL_GPUShaderFormat supported = SDL_GetGPUShaderFormats(self->device->device);
-  if (supported & SDL_GPU_SHADERFORMAT_MSL) {
-    vsInfo.code       = (const Uint8 *) Renderer_vert_msl;
-    vsInfo.code_size  = Renderer_vert_msl_len - 1;
-    vsInfo.entrypoint = "main0";
-    vsInfo.format     = SDL_GPU_SHADERFORMAT_MSL;
-    fsInfo.code       = (const Uint8 *) Renderer_frag_msl;
-    fsInfo.code_size  = Renderer_frag_msl_len - 1;
-    fsInfo.entrypoint = "main0";
-    fsInfo.format     = SDL_GPU_SHADERFORMAT_MSL;
-  } else if (supported & SDL_GPU_SHADERFORMAT_SPIRV) {
-    vsInfo.code       = Renderer_vert_spv;
-    vsInfo.code_size  = Renderer_vert_spv_len - 1;
-    vsInfo.entrypoint = "main";
-    vsInfo.format     = SDL_GPU_SHADERFORMAT_SPIRV;
-    fsInfo.code       = Renderer_frag_spv;
-    fsInfo.code_size  = Renderer_frag_spv_len - 1;
-    fsInfo.entrypoint = "main";
-    fsInfo.format     = SDL_GPU_SHADERFORMAT_SPIRV;
-  } else {
-    GPU_Assert(false, "Unsupported GPU shader format (need MSL or SPIRV)");
-  }
-
-  SDL_GPUShader *vs = $(self->device, createShader, &vsInfo);
-  SDL_GPUShader *fs = $(self->device, createShader, &fsInfo);
-
-  const SDL_GPUVertexBufferDescription vbDesc = {
-    .slot               = 0,
-    .pitch              = sizeof(MVC_Vertex),
-    .input_rate         = SDL_GPU_VERTEXINPUTRATE_VERTEX,
+  const SDL_GPUVertexBufferDescription vertexBufferInfo = {
+    .slot = 0,
+    .pitch = sizeof(MVC_Vertex),
+    .input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX,
     .instance_step_rate = 0,
-  };
-
-  SDL_GPUVertexAttribute vbAttrs[2] = {
-    { .location = 0, .buffer_slot = 0, .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2, .offset = 0 },
-    { .location = 1, .buffer_slot = 0, .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2, .offset = 8 },
   };
 
   const SDL_GPUColorTargetDescription colorTarget = {
     .format = self->colorFormat,
     .blend_state = {
-      .enable_blend          = true,
-      .color_blend_op        = SDL_GPU_BLENDOP_ADD,
-      .alpha_blend_op        = SDL_GPU_BLENDOP_ADD,
+      .enable_blend = true,
+      .color_blend_op = SDL_GPU_BLENDOP_ADD,
+      .alpha_blend_op = SDL_GPU_BLENDOP_ADD,
       .src_color_blendfactor = SDL_GPU_BLENDFACTOR_SRC_ALPHA,
       .dst_color_blendfactor = SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
       .src_alpha_blendfactor = SDL_GPU_BLENDFACTOR_ONE,
@@ -410,44 +397,56 @@ static void renderDeviceDidReset(Renderer *self) {
   };
 
   const SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {
-    .vertex_shader = vs,
-    .fragment_shader = fs,
+    .vertex_shader = vertexShader,
+    .fragment_shader = fragmentShader,
     .vertex_input_state = {
-      .vertex_buffer_descriptions = &vbDesc,
-      .num_vertex_buffers         = 1,
-      .vertex_attributes          = vbAttrs,
-      .num_vertex_attributes      = 2,
+      .vertex_buffer_descriptions = &vertexBufferInfo,
+      .num_vertex_buffers = 1,
+      .vertex_attributes = (SDL_GPUVertexAttribute[]) {
+        {
+          .location = 0,
+          .buffer_slot = 0,
+          .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2,
+          .offset = offsetof(MVC_Vertex, position)
+        },
+        { .location = 1,
+          .buffer_slot = 0,
+          .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2,
+          .offset = offsetof(MVC_Vertex, uv)
+        },
+      },
+      .num_vertex_attributes = 2,
     },
     .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
     .rasterizer_state = {
-      .fill_mode  = SDL_GPU_FILLMODE_FILL,
-      .cull_mode  = SDL_GPU_CULLMODE_NONE,
+      .fill_mode = SDL_GPU_FILLMODE_FILL,
+      .cull_mode = SDL_GPU_CULLMODE_NONE,
       .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE,
     },
     .target_info = {
       .color_target_descriptions = &colorTarget,
-      .num_color_targets         = 1,
+      .num_color_targets = 1,
     },
   };
 
   self->pipeline = $(self->device, createGraphicsPipeline, &pipelineInfo);
 
-  $(self->device, releaseShader, vs);
-  $(self->device, releaseShader, fs);
+  $(self->device, releaseShader, vertexShader);
+  $(self->device, releaseShader, fragmentShader);
 
   self->sampler = $(self->device, samplerLinearClamp);
 
-  const Uint8 whitePx[4] = { 255, 255, 255, 255 };
-  const SDL_GPUTextureCreateInfo whiteInfo = {
-    .type                 = SDL_GPU_TEXTURETYPE_2D,
-    .format               = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
-    .usage                = SDL_GPU_TEXTUREUSAGE_SAMPLER,
-    .width                = 1,
-    .height               = 1,
+  const Uint8 white[4] = { 255, 255, 255, 255 };
+
+  self->white = $(self->device, createTexture, &(const SDL_GPUTextureCreateInfo) {
+    .type = SDL_GPU_TEXTURETYPE_2D,
+    .format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+    .usage = SDL_GPU_TEXTUREUSAGE_SAMPLER,
+    .width = 1,
+    .height = 1,
     .layer_count_or_depth = 1,
-    .num_levels           = 1,
-  };
-  self->white = $(self->device, createTexture, &whiteInfo, whitePx);
+    .num_levels = 1,
+  }, white);
 }
 
 /**
@@ -456,14 +455,12 @@ static void renderDeviceDidReset(Renderer *self) {
  */
 static void renderDeviceWillReset(Renderer *self) {
 
-  if (self->cmd) {
-    self->cmd = NULL;
-  }
+  self->commands = NULL;
+  // FIXME: No release here?
 
   $(self->device, releaseTexture, self->white);
   self->white = NULL;
 
-  // sampler is device-owned (samplerLinearClamp preset) — do not release
   self->sampler = NULL;
 
   $(self->device, releaseBuffer, self->vertexBuffer);
@@ -511,6 +508,8 @@ static void initialize(Class *clazz) {
   ((RendererInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
   ((RendererInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((RendererInterface *) clazz->interface)->setClippingFrame = setClippingFrame;
+
+  $$(Resource, addResourceProvider, shaderResourceProvider);
 }
 
 /**

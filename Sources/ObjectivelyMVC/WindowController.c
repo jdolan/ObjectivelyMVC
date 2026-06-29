@@ -150,13 +150,13 @@ static WindowController *initWithDevice(WindowController *self, RenderDevice *de
 }
 
 /**
- * @fn void WindowController::render(WindowController *self, CommandBuffer *cmd, Framebuffer *framebuffer)
+ * @fn void WindowController::render(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer)
  * @memberof WindowController
  */
-static void render(WindowController *self, CommandBuffer *cmd, Framebuffer *framebuffer) {
+static void render(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer) {
 
   assert(self->renderer);
-  assert(cmd);
+  assert(commands);
   assert(framebuffer);
 
   if (framebuffer->colorFormat != self->renderer->colorFormat) {
@@ -164,7 +164,7 @@ static void render(WindowController *self, CommandBuffer *cmd, Framebuffer *fram
     $(self->renderer, renderDeviceDidReset);
   }
 
-  $(self->renderer, beginFrame, cmd, framebuffer);
+  $(self->renderer, beginFrame, commands, framebuffer);
 
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
