@@ -284,16 +284,7 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
   for (size_t i = 0; i < self->drawArrays->count; i++) {
     const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
 
-    const int fbW = (int) framebuffer->size.w;
-    const int fbH = (int) framebuffer->size.h;
-    const SDL_Rect scissor = {
-      .x = SDL_max(draw->scissor.x, 0),
-      .y = SDL_max(draw->scissor.y, 0),
-      .w = SDL_min(draw->scissor.x + draw->scissor.w, fbW) - SDL_max(draw->scissor.x, 0),
-      .h = SDL_min(draw->scissor.y + draw->scissor.h, fbH) - SDL_max(draw->scissor.y, 0),
-    };
-
-    $(renderPass, setScissor, &scissor);
+    $(renderPass, setScissor, &draw->scissor);
 
     $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
       .texture = draw->texture, .sampler = self->sampler,
