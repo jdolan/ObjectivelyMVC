@@ -16,12 +16,14 @@ CFLAGS += \
 	-I$(top_srcdir)/Sources \
 	-DEXAMPLES=\"$(abs_srcdir)\" \
 	@HOST_CFLAGS@ \
+	@OBJECTIVELYGPU_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
 	@SDL3_CFLAGS@
 
 LDADD = \
 	$(top_builddir)/Sources/ObjectivelyMVC/libObjectivelyMVC.la \
 	@HOST_LIBS@ \
+	@OBJECTIVELYGPU_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
 	@SDL3_LIBS@ \
 	-lm
