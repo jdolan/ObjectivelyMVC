@@ -302,8 +302,6 @@ static Renderer *initWithDevice(Renderer *self, RenderDevice *device) {
     self->device = retain(device);
     assert(self->device);
 
-    self->colorFormat = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM;
-
     self->vertices = $(alloc(Vector), initWithSize, sizeof(MVC_Vertex));
     assert(self->vertices);
 
@@ -350,6 +348,10 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
 static void renderDeviceDidReset(Renderer *self) {
 
   $(self, renderDeviceWillReset);
+
+  if (self->device->window) {
+    self->colorFormat = SDL_GetGPUSwapchainTextureFormat(self->device->device, self->device->window);
+  }
 
   SDL_GPUShaderCreateInfo vsInfo = {
     .stage               = SDL_GPU_SHADERSTAGE_VERTEX,

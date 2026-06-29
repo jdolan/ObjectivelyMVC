@@ -88,9 +88,9 @@ struct Renderer {
 
   /**
    * @brief The color format the Renderer's pipeline targets.
-   * @details Must match the color format of the Framebuffer passed to WindowController::render.
-   * Defaults to `SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM`. Set this before the first call to
-   * `renderDeviceDidReset` if your framebuffer uses a different format.
+   * @details Initialized from the swapchain texture format in `renderDeviceDidReset`.
+   *   The lazy pipeline rebuild in `WindowController::render` keeps this in sync with
+   *   the Framebuffer passed each frame, so direct writes are rarely needed.
    */
   SDL_GPUTextureFormat colorFormat;
 
