@@ -141,7 +141,7 @@ static WindowController *initWithDevice(WindowController *self, RenderDevice *de
     $(self, setViewController, NULL);
     $(self, setTheme, NULL);
 
-    $(self->renderer->device, setWindow, self->window);
+    self->renderer->colorFormat = SDL_GetGPUSwapchainTextureFormat(device->device, self->window);
     $(self->renderer, renderDeviceDidReset);
     $(self->viewController->view, renderDeviceDidReset);
   }
@@ -232,6 +232,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   switch (event->type) {
     case SDL_EVENT_WINDOW_EXPOSED:
       $(self, setWindow, self->window);
+      self->renderer->colorFormat = SDL_GetGPUSwapchainTextureFormat(self->renderer->device->device, self->window);
       $(self->renderer, renderDeviceDidReset);
       $(self->viewController, renderDeviceDidReset);
       $(self->viewController->view, updateBindings);

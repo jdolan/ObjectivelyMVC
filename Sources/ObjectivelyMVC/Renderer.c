@@ -222,8 +222,7 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
 
   assert(framebuffer);
 
-  const SDL_GPUColorTargetInfo colorTarget = $(framebuffer, colorTargetInfo,
-    SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE, NULL);
+  const SDL_GPUColorTargetInfo colorTarget = $(framebuffer, colorTargetInfo, SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE, NULL);
 
   const size_t vtxCount = self->vertices->count;
 
@@ -248,12 +247,11 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
 
   RenderPass *renderPass = $(self->cmd, beginRenderPass, &colorTarget, 1, NULL);
 
-  const SDL_GPUViewport viewport = {
+  $(renderPass, setViewport, &(SDL_GPUViewport){
     .x = 0.0f, .y = 0.0f,
     .w = (float) framebuffer->size.w, .h = (float) framebuffer->size.h,
     .min_depth = 0.0f, .max_depth = 1.0f,
-  };
-  $(renderPass, setViewport, &viewport);
+  });
 
   int winW, winH;
   SDL_GetWindowSize(self->device->window, &winW, &winH);
@@ -348,10 +346,6 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
 static void renderDeviceDidReset(Renderer *self) {
 
   $(self, renderDeviceWillReset);
-
-  if (self->device->window) {
-    self->colorFormat = SDL_GetGPUSwapchainTextureFormat(self->device->device, self->device->window);
-  }
 
   SDL_GPUShaderCreateInfo vsInfo = {
     .stage               = SDL_GPU_SHADERSTAGE_VERTEX,
