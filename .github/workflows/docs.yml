@@ -2,7 +2,7 @@ name: Documentation
 
 on:
   push:
-    branches: [ "main", "jdolan-sdl-gpu-renderer" ]
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
