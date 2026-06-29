@@ -290,7 +290,7 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
     SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
     SDL_GPU_TEXTUREFORMAT_D16_UNORM);
 
-	app->windowController = $(alloc(WindowController), initWithDevice, app->renderDevice, app->framebuffer);
+	app->windowController = $(alloc(WindowController), initWithDevice, app->renderDevice);
 
 	ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
 	$(app->windowController, setViewController, viewController);
@@ -323,7 +323,7 @@ SDL_AppResult SDL_AppIterate(void *appState) {
 
   drawScene(app, cmd);
 
-  $(app->windowController, render, cmd);
+  $(app->windowController, render, cmd, app->framebuffer);
 
   $(cmd, blitTexture, &(SDL_GPUBlitInfo) {
     .source = {

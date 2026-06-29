@@ -61,11 +61,6 @@ struct WindowController {
   DebugViewController *debugViewController;
 
   /**
-   * @brief The Framebuffer this WindowController renders the UI into.
-   */
-  Framebuffer *framebuffer;
-
-  /**
    * @brief The Renderer.
    */
   Renderer *renderer;
@@ -122,16 +117,14 @@ struct WindowControllerInterface {
   Array *(*keyResponders)(const WindowController *self);
 
   /**
-   * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device, Framebuffer *framebuffer)
-   * @brief Initializes this WindowController with the given RenderDevice and UI Framebuffer.
+   * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device)
+   * @brief Initializes this WindowController with the given RenderDevice.
    * @param self The WindowController.
    * @param device The RenderDevice.
-   * @param framebuffer The Framebuffer the UI will be rendered into each frame. The WindowController
-   *   retains it. The Renderer's pipeline is built against @c framebuffer->colorFormat.
    * @return The initialized WindowController, or `NULL` on error.
    * @memberof WindowController
    */
-  WindowController *(*initWithDevice)(WindowController *self, RenderDevice *device, Framebuffer *framebuffer);
+  WindowController *(*initWithDevice)(WindowController *self, RenderDevice *device);
 
   /**
    * @fn View *WindowController::nextKeyResponder(const WindowController *self, View *keyResponder)
@@ -154,16 +147,18 @@ struct WindowControllerInterface {
   View *(*previousKeyResponder)(const WindowController *self, View *keyResponder);
 
   /**
-   * @fn void WindowController::render(WindowController *self, CommandBuffer *cmd)
-   * @brief Renders the ViewController's View into this WindowController's Framebuffer.
+   * @fn void WindowController::render(WindowController *self, CommandBuffer *cmd, Framebuffer *framebuffer)
+   * @brief Renders the ViewController's View into the given Framebuffer.
    * @details The caller owns @c cmd and is responsible for submitting it after this returns.
    *   The UI is composited over whatever is already in the Framebuffer's color texture
    *   (`SDL_GPU_LOADOP_LOAD`), so render your scene into the Framebuffer first.
+   *   If @c framebuffer->colorFormat differs from the previous frame, the pipeline is rebuilt.
    * @param self The WindowController.
    * @param cmd The frame's CommandBuffer.
+   * @param framebuffer The Framebuffer to render the UI into.
    * @memberof WindowController
    */
-  void (*render)(WindowController *self, CommandBuffer *cmd);
+  void (*render)(WindowController *self, CommandBuffer *cmd, Framebuffer *framebuffer);
 
   /**
    * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)

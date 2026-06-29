@@ -60,7 +60,6 @@ static void dealloc(Object *self) {
   WindowController *this = (WindowController *) self;
 
   release(this->debugViewController);
-  release(this->framebuffer);
   release(this->renderer);
   release(this->theme);
   release(this->viewController);
@@ -126,21 +125,17 @@ static Array *keyResponders(const WindowController *self) {
 }
 
 /**
- * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device, Framebuffer *framebuffer)
+ * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device)
  * @memberof WindowController
  */
-static WindowController *initWithDevice(WindowController *self, RenderDevice *device, Framebuffer *framebuffer) {
+static WindowController *initWithDevice(WindowController *self, RenderDevice *device) {
 
   assert(device);
-  assert(framebuffer);
 
   self = (WindowController *) super(Object, self, init);
   if (self) {
-    self->framebuffer = retain(framebuffer);
-
     self->renderer = $(alloc(Renderer), initWithDevice, device);
     assert(self->renderer);
-    self->renderer->colorFormat = framebuffer->colorFormat;
 
     $(self, setWindow, device->window);
     $(self, setViewController, NULL);
@@ -155,16 +150,21 @@ static WindowController *initWithDevice(WindowController *self, RenderDevice *de
 }
 
 /**
- * @fn void WindowController::render(WindowController *self, CommandBuffer *cmd)
+ * @fn void WindowController::render(WindowController *self, CommandBuffer *cmd, Framebuffer *framebuffer)
  * @memberof WindowController
  */
-static void render(WindowController *self, CommandBuffer *cmd) {
+static void render(WindowController *self, CommandBuffer *cmd, Framebuffer *framebuffer) {
 
   assert(self->renderer);
-  assert(self->framebuffer);
   assert(cmd);
+  assert(framebuffer);
 
-  $(self->renderer, beginFrame, cmd, self->framebuffer);
+  if (framebuffer->colorFormat != self->renderer->colorFormat) {
+    self->renderer->colorFormat = framebuffer->colorFormat;
+    $(self->renderer, renderDeviceDidReset);
+  }
+
+  $(self->renderer, beginFrame, cmd, framebuffer);
 
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
@@ -172,7 +172,7 @@ static void render(WindowController *self, CommandBuffer *cmd) {
 
   $(self, debug);
 
-  $(self->renderer, endFrame, self->framebuffer);
+  $(self->renderer, endFrame, framebuffer);
 }
 
 /**
