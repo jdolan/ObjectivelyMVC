@@ -142,6 +142,14 @@ jobs:
         repository: jdolan/Objectively
         path: Objectively
 
+    # ObjectivelyGPU is the source of truth for the SDL3 core dependency; its
+    # sdl3.targets is imported by the build to fetch SDL3 on demand.
+    - name: Checkout ObjectivelyGPU
+      uses: actions/checkout@v6
+      with:
+        repository: jdolan/ObjectivelyGPU
+        path: ObjectivelyGPU
+
     - name: Checkout ObjectivelyMVC
       uses: actions/checkout@v6
       with:
