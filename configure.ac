@@ -11,13 +11,6 @@ AC_CANONICAL_HOST
 AC_USE_SYSTEM_EXTENSIONS
 
 AC_PROG_CC
-
-AC_CHECK_PROG([GLSLC], [glslc], [glslc], [])
-AS_IF([test -z "$GLSLC"],
-  [AC_MSG_WARN([glslc not found; 'make shaders' will not work])])
-AC_CHECK_PROG([SHADERCROSS], [shadercross], [shadercross], [])
-AS_IF([test -z "$SHADERCROSS"],
-  [AC_MSG_WARN([shadercross not found; 'make shaders' will not work])])
 LT_INIT
 
 AM_INIT_AUTOMAKE([foreign])
@@ -76,3 +69,10 @@ AC_CONFIG_FILES([
 ])
 
 AC_OUTPUT
+
+AC_CHECK_PROG([GLSLC], [glslc], [glslc], [])
+AS_IF([test -z "$GLSLC"],
+  [AC_MSG_WARN([glslc not found; 'make shaders' will not work])])
+AC_CHECK_PROG([SHADERCROSS], [shadercross], [shadercross], [])
+AS_IF([test -z "$SHADERCROSS"],
+  [AC_MSG_WARN([shadercross not found; 'make shaders' will not work])])
