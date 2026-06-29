@@ -172,11 +172,29 @@ struct WindowControllerInterface {
   /**
    * @fn void WindowController::render(WindowController *self)
    * @brief Renders the ViewController's View.
+   * @details Convenience method for applications that do not need to share a CommandBuffer across
+   *   multiple render passes. Acquires a CommandBuffer and swapchain texture, calls renderWith,
+   *   and submits the CommandBuffer.
    * @param self The WindowController.
-   * @remarks Your application should call this method once per frame to render the View hierarchy.
+   * @remarks Use renderWith when your application owns the frame's CommandBuffer (e.g. to composite
+   *   scene geometry in the same frame).
    * @memberof WindowController
    */
   void (*render)(WindowController *self);
+
+  /**
+   * @fn void WindowController::renderWith(WindowController *self, CommandBuffer *cmd, const SDL_GPUColorTargetInfo *colorTarget, SDL_Size size)
+   * @brief Renders the ViewController's View into the given color target using the provided CommandBuffer.
+   * @details The caller owns @c cmd and is responsible for submitting and releasing it after this
+   *   returns. This is the composable path: acquire the swapchain once, render your scene, then
+   *   call this to composite the MVC UI into the same command buffer.
+   * @param self The WindowController.
+   * @param cmd The frame's CommandBuffer.
+   * @param colorTarget The color target to render the UI into.
+   * @param size The render target dimensions in pixels.
+   * @memberof WindowController
+   */
+  void (*renderWith)(WindowController *self, CommandBuffer *cmd, const SDL_GPUColorTargetInfo *colorTarget, SDL_Size size);
 
   /**
    * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)

@@ -170,18 +170,16 @@ static WindowController *initWithWindow(WindowController *self, SDL_Window *wind
 }
 
 /**
- * @fn void WindowController::render(WindowController *self)
+ * @fn void WindowController::renderWith(WindowController *self, CommandBuffer *cmd, const SDL_GPUColorTargetInfo *colorTarget, SDL_Size size)
  * @memberof WindowController
  */
-static void render(WindowController *self) {
+static void renderWith(WindowController *self, CommandBuffer *cmd, const SDL_GPUColorTargetInfo *colorTarget, SDL_Size size) {
 
   assert(self->renderer);
+  assert(cmd);
+  assert(colorTarget);
 
-  $(self->renderer, beginFrame);
-
-  if (!self->renderer->cmd) {
-    return;
-  }
+  $(self->renderer, beginFrame, cmd, size);
 
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
@@ -190,7 +188,38 @@ static void render(WindowController *self) {
 
   $(self, debug);
 
-  $(self->renderer, endFrame);
+  $(self->renderer, endFrame, colorTarget);
+}
+
+/**
+ * @fn void WindowController::render(WindowController *self)
+ * @memberof WindowController
+ */
+static void render(WindowController *self) {
+
+  assert(self->renderer);
+
+  CommandBuffer *cmd = $(self->renderer->device, acquireCommandBuffer);
+
+  SwapchainTexture swapchain = { 0 };
+  $(cmd, waitAndAcquireSwapchainTexture, &swapchain);
+
+  if (!swapchain.texture) {
+    $(cmd, cancel);
+    release(cmd);
+    return;
+  }
+
+  const SDL_GPUColorTargetInfo colorTarget = {
+    .texture = swapchain.texture,
+    .load_op = SDL_GPU_LOADOP_LOAD,
+    .store_op = SDL_GPU_STOREOP_STORE,
+  };
+
+  $(self, renderWith, cmd, &colorTarget, swapchain.size);
+
+  $(self->renderer->device, submit, cmd);
+  release(cmd);
 }
 
 /**
@@ -556,6 +585,7 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->nextKeyResponder = nextKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->previousKeyResponder = previousKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->render = render;
+  ((WindowControllerInterface *) clazz->interface)->renderWith = renderWith;
   ((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
   ((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;

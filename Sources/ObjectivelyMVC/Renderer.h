@@ -93,10 +93,10 @@ struct Renderer {
   CommandBuffer *cmd;
 
   /**
-   * @brief The current swapchain texture and dimensions (valid between beginFrame and endFrame).
+   * @brief The render target size for the current frame (valid between beginFrame and endFrame).
    * @private
    */
-  SwapchainTexture swapchain;
+  SDL_Size renderSize;
 
   /**
    * @brief The graphics pipeline (TRIANGLELIST, for all MVC geometry).
@@ -146,13 +146,6 @@ struct Renderer {
    * @private
    */
   SDL_Rect scissor;
-
-  /**
-   * @brief If true (default), endFrame clears the swapchain before rendering.
-   * Set to false when a game scene has already rendered into the swapchain on
-   * the same command buffer, so MVC composites on top.
-   */
-  bool clear;
 };
 
 /**
@@ -166,12 +159,14 @@ struct RendererInterface {
   ObjectInterface objectInterface;
 
   /**
-   * @fn void Renderer::beginFrame(Renderer *self)
-   * @brief Begins a new frame on the backing RenderDevice and maps MVC staging buffers.
+   * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *cmd, SDL_Size size)
+   * @brief Prepares this Renderer for a new frame using the given command buffer and render target size.
    * @param self The Renderer.
+   * @param cmd The frame's CommandBuffer. The caller retains ownership and must submit and release it.
+   * @param size The render target dimensions in pixels. Used for the default scissor, viewport, and projection.
    * @memberof Renderer
    */
-  void (*beginFrame)(Renderer *self);
+  void (*beginFrame)(Renderer *self, CommandBuffer *cmd, SDL_Size size);
 
   /**
    * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)
@@ -235,12 +230,14 @@ struct RendererInterface {
   void (*drawView)(Renderer *self, View *view);
 
   /**
-   * @fn void Renderer::endFrame(Renderer *self)
-   * @brief Finalizes MVC uploads and submits the frame on the backing RenderDevice.
+   * @fn void Renderer::endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget)
+   * @brief Uploads MVC vertices and executes the UI render pass into the given color target.
+   * @details The caller is responsible for submitting the command buffer after this returns.
    * @param self The Renderer.
+   * @param colorTarget The color target to render the UI into.
    * @memberof Renderer
    */
-  void (*endFrame)(Renderer *self);
+  void (*endFrame)(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget);
 
   /**
    * @fn Renderer *Renderer::init(Renderer *self)

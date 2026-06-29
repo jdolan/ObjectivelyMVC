@@ -50,11 +50,7 @@ static void dealloc(Object *self) {
 
   Renderer *this = (Renderer *) self;
 
-  if (this->cmd) {
-    $(this->cmd, cancel);
-    release(this->cmd);
-    this->cmd = NULL;
-  }
+  this->cmd = NULL;
 
   release(this->vertices);
   release(this->drawArrays);
@@ -66,19 +62,20 @@ static void dealloc(Object *self) {
 #pragma mark - Renderer
 
 /**
- * @fn void Renderer::beginFrame(Renderer *self)
+ * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *cmd, SDL_Size size)
  * @memberof Renderer
  */
-static void beginFrame(Renderer *self) {
+static void beginFrame(Renderer *self, CommandBuffer *cmd, SDL_Size size) {
 
-  self->cmd = $(self->device, acquireCommandBuffer);
+  assert(cmd);
 
-  $(self->cmd, waitAndAcquireSwapchainTexture, &self->swapchain);
+  self->cmd = cmd;
+  self->renderSize = size;
 
   $(self->vertices, removeAll);
   $(self->drawArrays, removeAll);
 
-  self->scissor = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
+  self->scissor = MakeRect(0, 0, size.w, size.h);
 }
 
 /**
@@ -217,10 +214,12 @@ static void drawView(Renderer *self, View *view) {
 }
 
 /**
- * @fn void Renderer::endFrame(Renderer *self)
+ * @fn void Renderer::endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget)
  * @memberof Renderer
  */
-static void endFrame(Renderer *self) {
+static void endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget) {
+
+  assert(colorTarget);
 
   const size_t vtxCount = self->vertices->count;
 
@@ -243,18 +242,11 @@ static void endFrame(Renderer *self) {
 
   release(copyPass);
 
-  const SDL_GPUColorTargetInfo colorTarget = {
-    .texture = self->swapchain.texture,
-    .load_op = self->clear ? SDL_GPU_LOADOP_CLEAR : SDL_GPU_LOADOP_LOAD,
-    .store_op = SDL_GPU_STOREOP_STORE,
-    .clear_color = (SDL_FColor) { 0.f, 0.f, 0.f, 0.f },
-  };
-
-  RenderPass *renderPass = $(self->cmd, beginRenderPass, &colorTarget, 1, NULL);
+  RenderPass *renderPass = $(self->cmd, beginRenderPass, colorTarget, 1, NULL);
 
   const SDL_GPUViewport viewport = {
     .x = 0.0f, .y = 0.0f,
-    .w = (float) self->swapchain.size.w, .h = (float) self->swapchain.size.h,
+    .w = (float) self->renderSize.w, .h = (float) self->renderSize.h,
     .min_depth = 0.0f, .max_depth = 1.0f,
   };
   $(renderPass, setViewport, &viewport);
@@ -270,8 +262,8 @@ static void endFrame(Renderer *self) {
   for (size_t i = 0; i < self->drawArrays->count; i++) {
     const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
 
-    const int swW = (int) self->swapchain.size.w;
-    const int swH = (int) self->swapchain.size.h;
+    const int swW = (int) self->renderSize.w;
+    const int swH = (int) self->renderSize.h;
     const SDL_Rect scissor = {
       .x = SDL_max(draw->scissor.x, 0),
       .y = SDL_max(draw->scissor.y, 0),
@@ -295,10 +287,7 @@ static void endFrame(Renderer *self) {
 
   release(renderPass);
 
-  $(self->device, submit, self->cmd);
-  release(self->cmd);
   self->cmd = NULL;
-  self->swapchain = (SwapchainTexture) { 0 };
 }
 
 /**
@@ -485,10 +474,7 @@ static void renderDeviceDidReset(Renderer *self) {
 static void renderDeviceWillReset(Renderer *self) {
 
   if (self->cmd) {
-    $(self->cmd, cancel);
-    release(self->cmd);
     self->cmd = NULL;
-    self->swapchain = (SwapchainTexture) { 0 };
   }
 
   $(self->device, releaseTexture, self->white);
@@ -517,7 +503,7 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
   if (clippingFrame) {
     self->scissor = MVC_TransformToWindow(self->device->window, clippingFrame);
   } else {
-    self->scissor = MakeRect(0, 0, self->swapchain.size.w, self->swapchain.size.h);
+    self->scissor = MakeRect(0, 0, self->renderSize.w, self->renderSize.h);
   }
 }
 

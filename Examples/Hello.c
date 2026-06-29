@@ -23,7 +23,6 @@
 
 #define SDL_MAIN_USE_CALLBACKS
 
-#include <unistd.h>
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL.h>
 
@@ -198,9 +197,9 @@ static void initScene(AppState *app) {
 }
 
 /**
- * @brief Renders a single frame of the @c Scene.
+ * @brief Renders a single frame of the @c Scene into the given command buffer and swapchain.
  */
-static void drawScene(AppState *app) {
+static void drawScene(AppState *app, CommandBuffer *cmd, const SwapchainTexture *swapchain) {
 
   const Uint64 ticks = SDL_GetTicks();
   app->dt = (ticks - app->ticks) / 1000.f;
@@ -208,12 +207,7 @@ static void drawScene(AppState *app) {
 
   Scene *scene = &app->scene;
 
-  CommandBuffer *buffer = $(app->renderDevice, acquireCommandBuffer);
-
-  SwapchainTexture swapchain;
-  $(buffer, waitAndAcquireSwapchainTexture, &swapchain);
-
-  $(scene->framebuffer, resize, &swapchain.size);
+  $(scene->framebuffer, resize, &swapchain->size);
 
   scene->angles.x = SDL_fmodf(scene->angles.x + app->dt * 30.f, 360.f);
   scene->angles.y = SDL_fmodf(scene->angles.y + app->dt * 60.f, 360.f);
@@ -222,28 +216,25 @@ static void drawScene(AppState *app) {
   modelView = mat4_mul(mat4_rotation(scene->angles.y, vec3_new(0.f, 1.f, 0.f)), modelView);
   modelView = mat4_mul(mat4_translation(vec3_new(0.f, 0.f, -2.5f)), modelView);
 
-  const mat4 projection = mat4_perspective(45.f, (float) swapchain.size.w / (float) swapchain.size.h, 0.01f, 100.f);
+  const mat4 projection = mat4_perspective(45.f, (float) swapchain->size.w / (float) swapchain->size.h, 0.01f, 100.f);
   const mat4 modelViewProjection = mat4_mul(projection, modelView);
 
-  $(buffer, pushVertexUniformData, 0, modelViewProjection.f, sizeof(modelViewProjection));
+  $(cmd, pushVertexUniformData, 0, modelViewProjection.f, sizeof(modelViewProjection));
 
-  const SDL_GPUColorTargetInfo colorTarget = {
-    .texture = swapchain.texture,
-    .clear_color = { 0.1f, 0.1f, 0.2f, 1.f },
+  const SDL_GPUColorTargetInfo sceneColor = {
+    .texture = swapchain->texture,
     .load_op = SDL_GPU_LOADOP_CLEAR,
     .store_op = SDL_GPU_STOREOP_STORE,
+    .clear_color = { 0.1f, 0.1f, 0.2f, 1.f },
   };
 
   const SDL_GPUDepthStencilTargetInfo depthTarget = $(scene->framebuffer, depthTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_DONT_CARE, 1.f);
 
-  RenderPass *pass = $(buffer, beginRenderPass, &colorTarget, 1, &depthTarget);
+  RenderPass *pass = $(cmd, beginRenderPass, &sceneColor, 1, &depthTarget);
   $(pass, bindPipeline, scene->pipeline);
   $(pass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = scene->vertexBuffer }, 1);
   $(pass, drawPrimitives, (Uint32) SDL_arraysize(vertexes), 1, 0, 0);
   release(pass);
-
-  $(buffer, submit);
-  release(buffer);
 }
 
 #pragma mark - Event handlers
@@ -320,9 +311,29 @@ SDL_AppResult SDL_AppIterate(void *appState) {
 
   AppState *app = appState;
 
-  drawScene(app);
+  CommandBuffer *cmd = $(app->renderDevice, acquireCommandBuffer);
 
-  $(app->windowController, render);
+  SwapchainTexture swapchain = { 0 };
+  $(cmd, waitAndAcquireSwapchainTexture, &swapchain);
+
+  if (!swapchain.texture) {
+    $(cmd, cancel);
+    release(cmd);
+    return SDL_APP_CONTINUE;
+  }
+
+  drawScene(app, cmd, &swapchain);
+
+  const SDL_GPUColorTargetInfo uiColor = {
+    .texture = swapchain.texture,
+    .load_op = SDL_GPU_LOADOP_LOAD,
+    .store_op = SDL_GPU_STOREOP_STORE,
+  };
+
+  $(app->windowController, renderWith, cmd, &uiColor, swapchain.size);
+
+  $(app->renderDevice, submit, cmd);
+  release(cmd);
 
 	return SDL_APP_CONTINUE;
 }
