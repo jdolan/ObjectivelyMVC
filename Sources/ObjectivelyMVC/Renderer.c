@@ -62,20 +62,21 @@ static void dealloc(Object *self) {
 #pragma mark - Renderer
 
 /**
- * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *cmd, SDL_Size size)
+ * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *cmd, Framebuffer *framebuffer)
  * @memberof Renderer
  */
-static void beginFrame(Renderer *self, CommandBuffer *cmd, SDL_Size size) {
+static void beginFrame(Renderer *self, CommandBuffer *cmd, Framebuffer *framebuffer) {
 
   assert(cmd);
+  assert(framebuffer);
 
   self->cmd = cmd;
-  self->renderSize = size;
+  self->framebuffer = framebuffer;
 
   $(self->vertices, removeAll);
   $(self->drawArrays, removeAll);
 
-  self->scissor = MakeRect(0, 0, size.w, size.h);
+  self->scissor = MakeRect(0, 0, framebuffer->size.w, framebuffer->size.h);
 }
 
 /**
@@ -214,12 +215,15 @@ static void drawView(Renderer *self, View *view) {
 }
 
 /**
- * @fn void Renderer::endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget)
+ * @fn void Renderer::endFrame(Renderer *self, Framebuffer *framebuffer)
  * @memberof Renderer
  */
-static void endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget) {
+static void endFrame(Renderer *self, Framebuffer *framebuffer) {
 
-  assert(colorTarget);
+  assert(framebuffer);
+
+  const SDL_GPUColorTargetInfo colorTarget = $(framebuffer, colorTargetInfo,
+    SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE, NULL);
 
   const size_t vtxCount = self->vertices->count;
 
@@ -242,11 +246,11 @@ static void endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget) 
 
   release(copyPass);
 
-  RenderPass *renderPass = $(self->cmd, beginRenderPass, colorTarget, 1, NULL);
+  RenderPass *renderPass = $(self->cmd, beginRenderPass, &colorTarget, 1, NULL);
 
   const SDL_GPUViewport viewport = {
     .x = 0.0f, .y = 0.0f,
-    .w = (float) self->renderSize.w, .h = (float) self->renderSize.h,
+    .w = (float) framebuffer->size.w, .h = (float) framebuffer->size.h,
     .min_depth = 0.0f, .max_depth = 1.0f,
   };
   $(renderPass, setViewport, &viewport);
@@ -262,18 +266,14 @@ static void endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget) 
   for (size_t i = 0; i < self->drawArrays->count; i++) {
     const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
 
-    const int swW = (int) self->renderSize.w;
-    const int swH = (int) self->renderSize.h;
+    const int fbW = (int) framebuffer->size.w;
+    const int fbH = (int) framebuffer->size.h;
     const SDL_Rect scissor = {
       .x = SDL_max(draw->scissor.x, 0),
       .y = SDL_max(draw->scissor.y, 0),
-      .w = SDL_min(draw->scissor.x + draw->scissor.w, swW) - SDL_max(draw->scissor.x, 0),
-      .h = SDL_min(draw->scissor.y + draw->scissor.h, swH) - SDL_max(draw->scissor.y, 0),
+      .w = SDL_min(draw->scissor.x + draw->scissor.w, fbW) - SDL_max(draw->scissor.x, 0),
+      .h = SDL_min(draw->scissor.y + draw->scissor.h, fbH) - SDL_max(draw->scissor.y, 0),
     };
-
-    if (scissor.w <= 0 || scissor.h <= 0) {
-      continue;
-    }
 
     $(renderPass, setScissor, &scissor);
 
@@ -288,6 +288,7 @@ static void endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget) 
   release(renderPass);
 
   self->cmd = NULL;
+  self->framebuffer = NULL;
 }
 
 /**
@@ -489,7 +490,7 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
   if (clippingFrame) {
     self->scissor = MVC_TransformToWindow(self->device->window, clippingFrame);
   } else {
-    self->scissor = MakeRect(0, 0, self->renderSize.w, self->renderSize.h);
+    self->scissor = MakeRect(0, 0, self->framebuffer->size.w, self->framebuffer->size.h);
   }
 }
 

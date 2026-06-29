@@ -164,7 +164,7 @@ static void render(WindowController *self, CommandBuffer *cmd) {
   assert(self->framebuffer);
   assert(cmd);
 
-  $(self->renderer, beginFrame, cmd, self->framebuffer->size);
+  $(self->renderer, beginFrame, cmd, self->framebuffer);
 
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
@@ -172,9 +172,7 @@ static void render(WindowController *self, CommandBuffer *cmd) {
 
   $(self, debug);
 
-  const SDL_GPUColorTargetInfo colorTarget = $(self->framebuffer, colorTargetInfo,
-    SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE, NULL);
-  $(self->renderer, endFrame, &colorTarget);
+  $(self->renderer, endFrame, self->framebuffer);
 }
 
 /**

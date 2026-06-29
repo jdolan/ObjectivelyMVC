@@ -101,10 +101,11 @@ struct Renderer {
   CommandBuffer *cmd;
 
   /**
-   * @brief The render target size for the current frame (valid between beginFrame and endFrame).
+   * @brief The current frame Framebuffer (valid between beginFrame and endFrame).
+   * @details Borrowed reference — valid only while the frame is in flight. Do not retain.
    * @private
    */
-  SDL_Size renderSize;
+  Framebuffer *framebuffer;
 
   /**
    * @brief The graphics pipeline (TRIANGLELIST, for all MVC geometry).
@@ -167,14 +168,14 @@ struct RendererInterface {
   ObjectInterface objectInterface;
 
   /**
-   * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *cmd, SDL_Size size)
-   * @brief Prepares this Renderer for a new frame using the given command buffer and render target size.
+   * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *cmd, Framebuffer *framebuffer)
+   * @brief Prepares this Renderer for a new frame using the given command buffer and framebuffer.
    * @param self The Renderer.
    * @param cmd The frame's CommandBuffer. The caller retains ownership and must submit and release it.
-   * @param size The render target dimensions in pixels. Used for the default scissor, viewport, and projection.
+   * @param framebuffer The target Framebuffer for this frame. Borrowed for the duration of the frame.
    * @memberof Renderer
    */
-  void (*beginFrame)(Renderer *self, CommandBuffer *cmd, SDL_Size size);
+  void (*beginFrame)(Renderer *self, CommandBuffer *cmd, Framebuffer *framebuffer);
 
   /**
    * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)
@@ -238,14 +239,14 @@ struct RendererInterface {
   void (*drawView)(Renderer *self, View *view);
 
   /**
-   * @fn void Renderer::endFrame(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget)
-   * @brief Uploads MVC vertices and executes the UI render pass into the given color target.
+   * @fn void Renderer::endFrame(Renderer *self, Framebuffer *framebuffer)
+   * @brief Uploads MVC vertices and executes the UI render pass into the given framebuffer.
    * @details The caller is responsible for submitting the command buffer after this returns.
    * @param self The Renderer.
-   * @param colorTarget The color target to render the UI into.
+   * @param framebuffer The target Framebuffer to render the UI into (LOAD_OP_LOAD).
    * @memberof Renderer
    */
-  void (*endFrame)(Renderer *self, const SDL_GPUColorTargetInfo *colorTarget);
+  void (*endFrame)(Renderer *self, Framebuffer *framebuffer);
 
   /**
    * @fn Renderer *Renderer::initWithDevice(Renderer *self, RenderDevice *device)
