@@ -2,7 +2,6 @@
 # http://git-scm.com
 *~
 *.dll
-!ObjectivelyMVC.vs15/libs/**/x64/*.dll
 *.exe
 *.la
 *.lo
@@ -42,3 +41,5 @@ build/
 xcuserdata/
 .build-xcframework/
 Frameworks/
+ObjectivelyMVC.vs15/libs/SDL3_image-*/
+ObjectivelyMVC.vs15/libs/SDL3_ttf-*/

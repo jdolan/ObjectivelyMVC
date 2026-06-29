@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    SDL3 core is owned by ObjectivelyGPU, the layer that introduces SDL3 into
+    the stack.  We import its sdl3.targets to pick up the SDL3 core search paths
+    and on-demand download, so GPU is the single source of truth for the core
+    version.  ObjectivelyMVC adds only the extensions it layers on top:
+    SDL3_image and SDL3_ttf, whose official VC development packages are
+    downloaded on demand and cached under libs/ (.gitignored).  This requires
+    ObjectivelyGPU to be checked out alongside ObjectivelyMVC.
+  -->
+  <Import Project="..\..\ObjectivelyGPU\ObjectivelyGPU.vs15\sdl3.targets" />
+
+  <PropertyGroup>
+    <SDL3ImageVersion>3.4.0</SDL3ImageVersion>
+    <SDL3TtfVersion>3.2.2</SDL3TtfVersion>
+    <SDL3ImageDir>$(MSBuildThisFileDirectory)libs\SDL3_image-$(SDL3ImageVersion)\</SDL3ImageDir>
+    <SDL3TtfDir>$(MSBuildThisFileDirectory)libs\SDL3_ttf-$(SDL3TtfVersion)\</SDL3TtfDir>
+    <SDL3LibArch Condition="'$(Platform)' == 'Win32'">x86</SDL3LibArch>
+    <SDL3LibArch Condition="'$(SDL3LibArch)' == ''">x64</SDL3LibArch>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IncludePath>$(SDL3ImageDir)include\;$(SDL3TtfDir)include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SDL3ImageDir)lib\$(SDL3LibArch)\;$(SDL3TtfDir)lib\$(SDL3LibArch)\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+
+  <Target Name="DownloadSDL3Extensions" BeforeTargets="ClCompile">
+    <Message Condition="!Exists('$(SDL3ImageDir)include\SDL3_image\SDL_image.h')" Importance="high" Text="Downloading SDL3_image $(SDL3ImageVersion) development libraries..." />
+    <Exec Condition="!Exists('$(SDL3ImageDir)include\SDL3_image\SDL_image.h')"
+          WorkingDirectory="$(MSBuildThisFileDirectory)"
+          Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$ErrorActionPreference = 'Stop'; $m = New-Object System.Threading.Mutex($false, 'Global\ObjectivelySDL3'); [void]$m.WaitOne(); try { if (-not (Test-Path '$(SDL3ImageDir)include\SDL3_image\SDL_image.h')) { New-Item -ItemType Directory -Force libs | Out-Null; Invoke-WebRequest -Uri 'https://github.com/libsdl-org/SDL_image/releases/download/release-$(SDL3ImageVersion)/SDL3_image-devel-$(SDL3ImageVersion)-VC.zip' -OutFile 'libs\sdl3_image.zip'; Expand-Archive -Force 'libs\sdl3_image.zip' 'libs'; Remove-Item 'libs\sdl3_image.zip' } } finally { $m.ReleaseMutex() }&quot;" />
+    <Message Condition="!Exists('$(SDL3TtfDir)include\SDL3_ttf\SDL_ttf.h')" Importance="high" Text="Downloading SDL3_ttf $(SDL3TtfVersion) development libraries..." />
+    <Exec Condition="!Exists('$(SDL3TtfDir)include\SDL3_ttf\SDL_ttf.h')"
+          WorkingDirectory="$(MSBuildThisFileDirectory)"
+          Command="powershell -NoProfile -ExecutionPolicy Bypass -Command &quot;$ErrorActionPreference = 'Stop'; $m = New-Object System.Threading.Mutex($false, 'Global\ObjectivelySDL3'); [void]$m.WaitOne(); try { if (-not (Test-Path '$(SDL3TtfDir)include\SDL3_ttf\SDL_ttf.h')) { New-Item -ItemType Directory -Force libs | Out-Null; Invoke-WebRequest -Uri 'https://github.com/libsdl-org/SDL_ttf/releases/download/release-$(SDL3TtfVersion)/SDL3_ttf-devel-$(SDL3TtfVersion)-VC.zip' -OutFile 'libs\sdl3_ttf.zip'; Expand-Archive -Force 'libs\sdl3_ttf.zip' 'libs'; Remove-Item 'libs\sdl3_ttf.zip' } } finally { $m.ReleaseMutex() }&quot;" />
+  </Target>
+
+</Project>
