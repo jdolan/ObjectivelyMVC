@@ -130,13 +130,13 @@ struct Renderer {
   SDL_GPUTexture *white;
 
   /**
-   * @brief CPU-side vertex accumulation buffer for this frame.
+   * @brief CPU-side frame accumulation of vertices.
    * @private
    */
   Vector *vertices;
 
   /**
-   * @brief `MVC_DrawArray` queue for this frame.
+   * @brief CPU-side frame accumulation of draw arrays.
    * @private
    */
   Vector *drawArrays;
@@ -166,61 +166,12 @@ struct RendererInterface {
   ObjectInterface objectInterface;
 
   /**
-   * @protected
-   * @fn Renderer *Renderer::init(Renderer *self)
-   * @brief Initializes this Renderer.
-   * @param self The Renderer.
-   * @return The initialized Renderer, or `NULL` on error.
-   * @memberof Renderer
-   */
-  Renderer *(*init)(Renderer *self);
-
-  /**
    * @fn void Renderer::beginFrame(Renderer *self)
    * @brief Begins a new frame on the backing RenderDevice and maps MVC staging buffers.
    * @param self The Renderer.
    * @memberof Renderer
    */
   void (*beginFrame)(Renderer *self);
-
-  /**
-   * @fn void Renderer::endFrame(Renderer *self)
-   * @brief Finalizes MVC uploads and submits the frame on the backing RenderDevice.
-   * @param self The Renderer.
-   * @memberof Renderer
-   */
-  void (*endFrame)(Renderer *self);
-
-  /**
-   * @fn void Renderer::renderDeviceDidReset(Renderer *self)
-   * @brief Recreates MVC GPU resources after the backing RenderDevice resets.
-   * @param self The Renderer.
-   * @memberof Renderer
-   */
-  void (*renderDeviceDidReset)(Renderer *self);
-
-  /**
-   * @fn void Renderer::renderDeviceWillReset(Renderer *self)
-   * @brief Releases MVC GPU resources before the backing RenderDevice resets.
-   * @param self The Renderer.
-   * @memberof Renderer
-   */
-  void (*renderDeviceWillReset)(Renderer *self);
-
-  /**
-   * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
-   * @brief Appends raw vertices and a draw call record to the frame queue.
-   * @details Views that need full draw-call control can call this directly
-   *   instead of going through the drawLine/drawRect/drawTexture helpers.
-   * @param self The Renderer.
-   * @param verts The vertices to append (in logical screen coordinates).
-   * @param count The number of vertices.
-   * @param texture The texture to bind, or `NULL` to use the 1×1 white fallback.
-   * @param color The color multiplier applied in the fragment shader.
-   * @memberof Renderer
-   */
-  void (*pushDrawArrays)(const Renderer *self, const MVC_Vertex *verts, size_t count,
-                         SDL_GPUTexture *texture, const SDL_Color *color);
 
   /**
    * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)
@@ -282,6 +233,64 @@ struct RendererInterface {
    * @memberof Renderer
    */
   void (*drawView)(Renderer *self, View *view);
+
+  /**
+   * @fn void Renderer::endFrame(Renderer *self)
+   * @brief Finalizes MVC uploads and submits the frame on the backing RenderDevice.
+   * @param self The Renderer.
+   * @memberof Renderer
+   */
+  void (*endFrame)(Renderer *self);
+
+  /**
+   * @fn Renderer *Renderer::init(Renderer *self)
+   * @brief Initializes this Renderer.
+   * @param self The Renderer.
+   * @return The initialized Renderer, or `NULL` on error.
+   * @memberof Renderer
+   */
+  Renderer *(*init)(Renderer *self);
+
+  /**
+   * @fn Renderer *Renderer::initWithDevice(Renderer *self, RenderDevice *device)
+   * @brief Initializes this Renderer.
+   * @param self The Renderer.
+   * @param device The RenderDevice.
+   * @return The initialized Renderer, or `NULL` on error.
+   * @memberof Renderer
+   */
+  Renderer *(*initWithDevice)(Renderer *self, RenderDevice *device);
+
+  /**
+   * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
+   * @brief Appends raw vertices and a draw call record to the frame queue.
+   * @details Views that need full draw-call control can call this directly
+   *   instead of going through the drawLine/drawRect/drawTexture helpers.
+   * @param self The Renderer.
+   * @param verts The vertices to append (in logical screen coordinates).
+   * @param count The number of vertices.
+   * @param texture The texture to bind, or `NULL` to use the 1×1 white fallback.
+   * @param color The color multiplier applied in the fragment shader.
+   * @memberof Renderer
+   */
+  void (*pushDrawArrays)(const Renderer *self, const MVC_Vertex *verts, size_t count,
+                         SDL_GPUTexture *texture, const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::renderDeviceDidReset(Renderer *self)
+   * @brief Recreates MVC GPU resources after the backing RenderDevice resets.
+   * @param self The Renderer.
+   * @memberof Renderer
+   */
+  void (*renderDeviceDidReset)(Renderer *self);
+
+  /**
+   * @fn void Renderer::renderDeviceWillReset(Renderer *self)
+   * @brief Releases MVC GPU resources before the backing RenderDevice resets.
+   * @param self The Renderer.
+   * @memberof Renderer
+   */
+  void (*renderDeviceWillReset)(Renderer *self);
 
   /**
    * @fn void Renderer::setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame)

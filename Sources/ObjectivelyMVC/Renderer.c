@@ -41,34 +41,26 @@
 
 #define _Class _Renderer
 
+#pragma mark - Object
+
 /**
- * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
- * @memberof Renderer
+ * @see Object::dealloc(Object *)
  */
-static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count,
-                            SDL_GPUTexture *texture, const SDL_Color *color) {
+static void dealloc(Object *self) {
 
-  assert(verts);
-  assert(color);
+  Renderer *this = (Renderer *) self;
 
-  const MVC_DrawArrays draw = {
-    .firstVertex = (Uint32) self->vertices->count,
-    .vertexCount = (Uint32) count,
-    .texture     = texture ? texture : self->white,
-    .color       = {
-      color->r / 255.0f,
-      color->g / 255.0f,
-      color->b / 255.0f,
-      color->a / 255.0f,
-    },
-    .scissor = self->scissor,
-  };
-
-  for (size_t i = 0; i < count; i++) {
-    $(self->vertices, add, (MVC_Vertex *) &verts[i]);
+  if (this->cmd) {
+    $(this->cmd, cancel);
+    release(this->cmd);
+    this->cmd = NULL;
   }
 
-  $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
+  release(this->vertices);
+  release(this->drawArrays);
+  release(this->device);
+
+  super(Object, self, dealloc);
 }
 
 #pragma mark - Renderer
@@ -315,11 +307,24 @@ static void endFrame(Renderer *self) {
  */
 static Renderer *init(Renderer *self) {
 
+  RenderDevice *device = $(alloc(RenderDevice), init);
+
+  $(self, initWithDevice, device);
+
+  release(device);
+
+  return self;
+}
+
+/**
+ * @fn Renderer *Renderer::initWithDevice(Renderer *self, RenderDevice *device)
+ * @memberof Renderer
+ */
+static Renderer *initWithDevice(Renderer *self, RenderDevice *device) {
+
   self = (Renderer *) super(Object, self, init);
   if (self) {
-    self->clear = true;
-
-    self->device = $(alloc(RenderDevice), init);
+    self->device = retain(device);
     assert(self->device);
 
     self->vertices = $(alloc(Vector), initWithSize, sizeof(MVC_Vertex));
@@ -330,6 +335,35 @@ static Renderer *init(Renderer *self) {
   }
 
   return self;
+}
+
+/**
+ * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
+ * @memberof Renderer
+ */
+static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color) {
+
+  assert(verts);
+  assert(color);
+
+  const MVC_DrawArrays draw = {
+    .firstVertex = (Uint32) self->vertices->count,
+    .vertexCount = (Uint32) count,
+    .texture     = texture ? texture : self->white,
+    .color       = {
+      color->r / 255.0f,
+      color->g / 255.0f,
+      color->b / 255.0f,
+      color->a / 255.0f,
+    },
+      .scissor = self->scissor,
+  };
+
+  for (size_t i = 0; i < count; i++) {
+    $(self->vertices, add, (MVC_Vertex *) &verts[i]);
+  }
+
+  $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
 }
 
 /**
@@ -487,28 +521,6 @@ static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
   }
 }
 
-#pragma mark - Object lifecycle
-
-/**
- * @see Object::dealloc(Object *)
- */
-static void dealloc(Object *self) {
-
-  Renderer *this = (Renderer *) self;
-
-  if (this->cmd) {
-    $(this->cmd, cancel);
-    release(this->cmd);
-    this->cmd = NULL;
-  }
-
-  release(this->vertices);
-  release(this->drawArrays);
-  release(this->device);
-
-  super(Object, self, dealloc);
-}
-
 #pragma mark - Class lifecycle
 
 /**
@@ -518,18 +530,19 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-  ((RendererInterface *) clazz->interface)->init = init;
   ((RendererInterface *) clazz->interface)->beginFrame = beginFrame;
-  ((RendererInterface *) clazz->interface)->endFrame = endFrame;
-  ((RendererInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
-  ((RendererInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
-  ((RendererInterface *) clazz->interface)->pushDrawArrays = pushDrawArrays;
   ((RendererInterface *) clazz->interface)->drawLine = drawLine;
   ((RendererInterface *) clazz->interface)->drawLines = drawLines;
   ((RendererInterface *) clazz->interface)->drawRect = drawRect;
   ((RendererInterface *) clazz->interface)->drawRectFilled = drawRectFilled;
   ((RendererInterface *) clazz->interface)->drawTexture = drawTexture;
   ((RendererInterface *) clazz->interface)->drawView = drawView;
+  ((RendererInterface *) clazz->interface)->endFrame = endFrame;
+  ((RendererInterface *) clazz->interface)->init = init;
+  ((RendererInterface *) clazz->interface)->pushDrawArrays = pushDrawArrays;
+  ((RendererInterface *) clazz->interface)->initWithDevice = initWithDevice;
+  ((RendererInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+  ((RendererInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((RendererInterface *) clazz->interface)->setClippingFrame = setClippingFrame;
 }
 

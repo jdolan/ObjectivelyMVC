@@ -27,7 +27,6 @@ LDADD = \
 	-lm
 
 Hello_SOURCES = \
-	Hello-Scene.c \
 	HelloViewController.c \
 	Hello.c
 
@@ -39,16 +38,16 @@ GLSLC       = glslc
 SHADERCROSS = shadercross
 
 GLSL_SHADERS = \
-	Hello-Scene.vert.glsl \
-	Hello-Scene.frag.glsl
+	Hello.vert.glsl \
+	Hello.frag.glsl
 
 MSL_BLOBS = \
-	Hello-Scene.vert.msl \
-	Hello-Scene.frag.msl
+	Hello.vert.msl \
+	Hello.frag.msl
 
 SPIRV_BLOBS = \
-	Hello-Scene.vert.spv \
-	Hello-Scene.frag.spv
+	Hello.vert.spv \
+	Hello.frag.spv
 
 EXTRA_DIST = $(GLSL_SHADERS) $(MSL_BLOBS) $(SPIRV_BLOBS)
 

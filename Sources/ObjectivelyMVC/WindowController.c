@@ -125,19 +125,47 @@ static Array *keyResponders(const WindowController *self) {
 }
 
 /**
+ * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device)
+ * @memberof WindowController
+ */
+static WindowController *initWithDevice(WindowController *self, RenderDevice *device) {
+
+  Renderer *renderer = $(alloc(Renderer), initWithDevice, device);
+  self = $(self, initWithRenderer, renderer);
+  release(renderer);
+
+  return self;
+}
+
+/**
+ * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
+ * @memberof WindowController
+ */
+static WindowController *initWithRenderer(WindowController *self, Renderer *renderer) {
+
+  assert(renderer);
+
+  self = (WindowController *) super(Object, self, init);
+  if (self) {
+    $(self, setWindow, renderer->device->window);
+    $(self, setViewController, NULL);
+    $(self, setRenderer, renderer);
+    $(self, setTheme, NULL);
+  }
+
+  return self;
+}
+
+/**
  * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
  * @memberof WindowController
  */
 static WindowController *initWithWindow(WindowController *self, SDL_Window *window) {
 
-  self = (WindowController *) super(Object, self, init);
-  if (self) {
-    $(self, setWindow, window);
-    $(self, setViewController, NULL);
-    $(self, setRenderer, NULL);
-    $(self, setTheme, NULL);
-  }
-
+  Renderer *renderer = $(alloc(Renderer), init);
+  self = $(self, initWithRenderer, renderer);
+  release(renderer);
+  
   return self;
 }
 
@@ -522,6 +550,8 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->debug = debug;
   ((WindowControllerInterface *) clazz->interface)->keyResponder = keyResponder;
   ((WindowControllerInterface *) clazz->interface)->keyResponders = keyResponders;
+  ((WindowControllerInterface *) clazz->interface)->initWithDevice = initWithDevice;
+  ((WindowControllerInterface *) clazz->interface)->initWithRenderer = initWithRenderer;
   ((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
   ((WindowControllerInterface *) clazz->interface)->nextKeyResponder = nextKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->previousKeyResponder = previousKeyResponder;

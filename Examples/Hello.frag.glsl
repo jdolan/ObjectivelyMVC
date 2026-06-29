@@ -22,27 +22,19 @@
  */
 
 /**
- * @file Hello-Scene.vert.glsl
- * @brief Hello-Scene example vertex shader.
+ * @file Hello.frag.glsl
+ * @brief Hello example fragment shader.
  *
- * Inputs  (location 0): vec3 position
- *         (location 1): vec3 color
- * Uniform (set=1, b=0): mat4 ModelViewProj
- * Output              : vec4 gl_Position, vec4 color
+ * Inputs (location 0): vec4 color from vertex stage
+ * Output             : vec4 RGBA
  */
 
 #version 450
 
-layout(location = 0) in vec3 in_position;
-layout(location = 1) in vec3 in_color;
+layout(location = 0) in vec4 in_color;
 
 layout(location = 0) out vec4 out_color;
 
-layout(set = 1, binding = 0, std140) uniform UBO {
-	mat4 ModelViewProj;
-};
-
 void main() {
-	out_color   = vec4(in_color, 1.0);
-	gl_Position = ModelViewProj * vec4(in_position, 1.0);
+	out_color = in_color;
 }

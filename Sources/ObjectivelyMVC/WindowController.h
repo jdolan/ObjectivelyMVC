@@ -117,12 +117,35 @@ struct WindowControllerInterface {
   Array *(*keyResponders)(const WindowController *self);
 
   /**
+   * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device)
+   * @brief Initializes this WindowController with the given RenderDevice.
+   * @param self The WindowController.
+   * @param device The RenderDevice.
+   * @return The initialized WindowController, or `NULL` on error.
+   * @memberof WindowController
+   * @remarks Use this initializer for applications that use ObjectivelyGPU for their rendering.
+   */
+  WindowController *(*initWithDevice)(WindowController *self, RenderDevice *device);
+
+  /**
+   * @fn WindowController *WindowController::initWithRenderer(WindowController *self, Renderer *renderer)
+   * @brief Initializes this WindowController with the given RenderDevice.
+   * @param self The WindowController.
+   * @param renderer The Renderer.
+   * @return The initialized WindowController, or `NULL` on error.
+   * @memberof WindowController
+   * @remarks Use this initializer for applications that use ObjectivelyGPU for their rendering.
+   */
+  WindowController *(*initWithRenderer)(WindowController *self, Renderer *renderer);
+
+  /**
    * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
-   * @brief Initializes this WindowController with the given window.
+   * @brief Initializes this WindowController with the given window, creating a new RenderDevice.
    * @param self The WindowController.
    * @param window The window.
    * @return The initialized WindowController, or `NULL` on error.
    * @memberof WindowController
+   * @remarks Use this initializer for applications that do not use ObjectivelyGPU for their rendering.
    */
   WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
 
