@@ -56,7 +56,7 @@ typedef struct {
  * @private
  */
 typedef struct {
-  SDL_GPUTexture *texture;
+  Texture *texture;
   SDL_Rect scissor;
   Uint32 firstVertex;
   Uint32 vertexCount;
@@ -117,14 +117,15 @@ struct Renderer {
    * @brief The graphics pipeline (TRIANGLELIST, for all MVC geometry).
    * @private
    */
-  SDL_GPUGraphicsPipeline *pipeline;
+  GraphicsPipeline *pipeline;
 
   /**
    * @brief The linear clamp-to-edge sampler for texture rendering.
-   * @details Borrowed from `RenderDevice::samplerLinearClamp` — do not release.
+   * @details Owned by this Renderer; created in `renderDeviceDidReset` and
+   *   released in `renderDeviceWillReset`.
    * @private
    */
-  SDL_GPUSampler *sampler;
+  Sampler *sampler;
 
   /**
    * @brief The current scissor rectangle (in pixel coordinates).
@@ -142,7 +143,7 @@ struct Renderer {
    * @brief The GPU-side vertex buffer (resized as needed to fit vertices).
    * @private
    */
-  SDL_GPUBuffer *vertexBuffer;
+  Buffer *vertexBuffer;
 
   /**
    * @brief Capacity of vertexBuffer in vertices.
@@ -154,7 +155,7 @@ struct Renderer {
    * @brief The 1×1 white fallback texture (used for solid-color primitives).
    * @private
    */
-  SDL_GPUTexture *white;
+  Texture *white;
 };
 
 /**
@@ -219,15 +220,15 @@ struct RendererInterface {
   void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color);
 
   /**
-   * @fn void Renderer::drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest, const SDL_Color *color)
+   * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *dest, const SDL_Color *color)
    * @brief Records a textured quad in the given destination rectangle.
    * @param self The Renderer.
-   * @param texture The GPU texture to sample.
+   * @param texture The Texture to sample.
    * @param dest The destination rectangle in logical screen coordinates.
    * @param color The color multiplier (use `&Colors.White` for no tint).
    * @memberof Renderer
    */
-  void (*drawTexture)(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest, const SDL_Color *color);
+  void (*drawTexture)(const Renderer *self, Texture *texture, const SDL_Rect *dest, const SDL_Color *color);
 
   /**
    * @fn void Renderer::drawView(Renderer *self, View *view)
@@ -259,7 +260,7 @@ struct RendererInterface {
   Renderer *(*initWithDevice)(Renderer *self, RenderDevice *device);
 
   /**
-   * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
+   * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, Texture *texture, const SDL_Color *color)
    * @brief Appends raw vertices and a draw call record to the frame queue.
    * @details Views that need full draw-call control can call this directly
    *   instead of going through the drawLine/drawRect/drawTexture helpers.
@@ -271,7 +272,7 @@ struct RendererInterface {
    * @memberof Renderer
    */
   void (*pushDrawArrays)(const Renderer *self, const MVC_Vertex *verts, size_t count,
-                         SDL_GPUTexture *texture, const SDL_Color *color);
+                         Texture *texture, const SDL_Color *color);
 
   /**
    * @fn void Renderer::renderDeviceDidReset(Renderer *self)

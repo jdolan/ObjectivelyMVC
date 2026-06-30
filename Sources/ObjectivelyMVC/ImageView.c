@@ -54,11 +54,7 @@ static void dealloc(Object *self) {
 
   release(this->image);
 
-  if (this->texture) {
-    SDL_ReleaseGPUTexture(this->device, this->texture);
-    this->texture = NULL;
-    this->device = NULL;
-  }
+  this->texture = release(this->texture);
 
   super(Object, self, dealloc);
 }
@@ -104,7 +100,6 @@ static void render(View *self, Renderer *renderer) {
     if (this->image) {
       this->texture = $(renderer->device, createTextureFromSurface,
         this->image->surface, SDL_GPU_TEXTUREUSAGE_SAMPLER);
-      this->device = renderer->device->device;
       assert(this->texture);
     }
   }
@@ -125,11 +120,7 @@ static void renderDeviceWillReset(View *self) {
 
   ImageView *this = (ImageView *) self;
 
-  if (this->texture) {
-    SDL_ReleaseGPUTexture(this->device, this->texture);
-    this->texture = NULL;
-    this->device = NULL;
-  }
+  this->texture = release(this->texture);
 
   super(View, self, renderDeviceWillReset);
 }
@@ -188,11 +179,7 @@ static void setImage(ImageView *self, Image *image) {
     self->image = NULL;
   }
 
-  if (self->texture) {
-    SDL_ReleaseGPUTexture(self->device, self->texture);
-    self->texture = NULL;
-    self->device = NULL;
-  }
+  self->texture = release(self->texture);
 }
 
 /**

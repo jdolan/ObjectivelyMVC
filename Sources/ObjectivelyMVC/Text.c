@@ -240,11 +240,7 @@ static void dealloc(Object *self) {
 
   free(this->text);
 
-  if (this->texture) {
-    SDL_ReleaseGPUTexture(this->device, this->texture);
-    this->texture = NULL;
-    this->device = NULL;
-  }
+  this->texture = release(this->texture);
 
   super(Object, self, dealloc);
 }
@@ -285,12 +281,8 @@ static void applyStyle(View *self, const Style *style) {
   );
 
   if ($(self, bind, colorInlets, style->attributes)) {
-    if (this->texture) {
-      SDL_ReleaseGPUTexture(this->device, this->texture);
-      this->device = NULL;
-      this->texture = NULL;
-      this->texture_w = this->texture_h = 0;
-    }
+    this->texture = release(this->texture);
+    this->textureSize = MakeSize(0, 0);
   }
 
   char *fontFamily = NULL;
@@ -360,12 +352,8 @@ static void render(View *self, Renderer *renderer) {
   if (this->font->scale != scale) {
     this->font->scale = scale;
     $(this->font, renderDeviceDidReset);
-    if (this->texture) {
-      SDL_ReleaseGPUTexture(this->device, this->texture);
-      this->texture = NULL;
-      this->device = NULL;
-      this->texture_w = this->texture_h = 0;
-    }
+    this->texture = release(this->texture);
+    this->textureSize = MakeSize(0, 0);
   }
 
   if (this->text) {
@@ -386,8 +374,8 @@ static void render(View *self, Renderer *renderer) {
 
       assert(surface);
 
-      this->texture_w = (int) roundf(surface->w / scale);
-      this->texture_h = (int) roundf(surface->h / scale);
+      this->textureSize.w = (int) roundf(surface->w / scale);
+      this->textureSize.h = (int) roundf(surface->h / scale);
 
       SDL_Surface *upload = surface;
       SDL_Surface *converted = NULL;
@@ -422,7 +410,6 @@ static void render(View *self, Renderer *renderer) {
       };
 
       this->texture = $(renderer->device, createTexture, &texInfo, upload->pixels);
-      this->device = renderer->device->device;
 
       if (converted) {
         SDL_DestroySurface(converted);
@@ -433,7 +420,7 @@ static void render(View *self, Renderer *renderer) {
 
     assert(this->texture);
 
-    const SDL_Rect draw_rect = { frame.x, frame.y, this->texture_w, this->texture_h };
+    const SDL_Rect draw_rect = { frame.x, frame.y, this->textureSize.w, this->textureSize.h };
     $(renderer, drawTexture, this->texture, &draw_rect, &Colors.White);
   }
 }
@@ -458,12 +445,8 @@ static void renderDeviceWillReset(View *self) {
 
   Text *this = (Text *) self;
 
-  if (this->texture) {
-    SDL_ReleaseGPUTexture(this->device, this->texture);
-    this->texture = NULL;
-    this->device = NULL;
-    this->texture_w = this->texture_h = 0;
-  }
+  this->texture = release(this->texture);
+  this->textureSize = MakeSize(0, 0);
 
   super(View, self, renderDeviceWillReset);
 }
@@ -526,12 +509,8 @@ static void setFont(Text *self, Font *font) {
     release(self->font);
     self->font = retain(font);
 
-    if (self->texture) {
-      SDL_ReleaseGPUTexture(self->device, self->texture);
-      self->texture = NULL;
-      self->device = NULL;
-      self->texture_w = self->texture_h = 0;
-    }
+    self->texture = release(self->texture);
+    self->textureSize = MakeSize(0, 0);
 
     $((View *) self, sizeToFit);
   }
@@ -553,12 +532,8 @@ static void setText(Text *self, const char *text) {
       self->text = NULL;
     }
 
-    if (self->texture) {
-      SDL_ReleaseGPUTexture(self->device, self->texture);
-      self->texture = NULL;
-      self->device = NULL;
-      self->texture_w = self->texture_h = 0;
-    }
+    self->texture = release(self->texture);
+    self->textureSize = MakeSize(0, 0);
 
     $((View *) self, sizeToFit);
   }

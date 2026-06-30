@@ -53,7 +53,7 @@ static Data *shaderResourceProvider(const char *name) {
   } else if (!strcmp("Renderer.frag.msl", name)) {
     data = $(alloc(Data), initWithConstMemory, Renderer_frag_msl, Renderer_frag_msl_len);
   } else if (!strcmp("Renderer.frag.spv", name)) {
-    data = $(alloc(Data), initWithConstMemory, Renderer_frag_msl, Renderer_frag_msl_len);
+    data = $(alloc(Data), initWithConstMemory, Renderer_frag_spv, Renderer_frag_spv_len);
   }
 
   return data;
@@ -197,10 +197,10 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect, const SDL
 }
 
 /**
- * @fn void Renderer::drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *dest, const SDL_Color *color)
+ * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *dest, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawTexture(const Renderer *self, SDL_GPUTexture *texture, const SDL_Rect *rect, const SDL_Color *color) {
+static void drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *rect, const SDL_Color *color) {
 
   assert(rect);
 
@@ -252,15 +252,13 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
     const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
 
     if (vtxCount > self->vertexBufferCapacity) {
-      if (self->vertexBuffer) {
-        $(self->device, releaseBuffer, self->vertexBuffer);
-      }
+      release(self->vertexBuffer);
       const SDL_GPUBufferCreateInfo info = { .usage = SDL_GPU_BUFFERUSAGE_VERTEX, .size = vtxSize };
       self->vertexBuffer = $(self->device, createBuffer, &info);
       self->vertexBufferCapacity = (Uint32) vtxCount;
     }
 
-    $(copyPass, uploadData, self->vertexBuffer, self->vertices->elements, vtxSize, 0, true);
+    $(copyPass, uploadData, self->vertexBuffer->buffer, self->vertices->elements, vtxSize, 0, true);
   }
 
   release(copyPass);
@@ -279,7 +277,7 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
   $(self->commands, pushVertexUniformData, 0, projection.f, sizeof(projection));
 
   $(renderPass, bindPipeline, self->pipeline);
-  $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer }, 1);
+  $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer->buffer }, 1);
 
   for (size_t i = 0; i < self->drawArrays->count; i++) {
     const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
@@ -287,7 +285,7 @@ static void endFrame(Renderer *self, Framebuffer *framebuffer) {
     $(renderPass, setScissor, &draw->scissor);
 
     $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
-      .texture = draw->texture, .sampler = self->sampler,
+      .texture = draw->texture->texture, .sampler = self->sampler->sampler,
     }, 1);
 
     $(renderPass, drawPrimitives, draw->vertexCount, 1, draw->firstVertex, 0);
@@ -321,10 +319,10 @@ static Renderer *initWithDevice(Renderer *self, RenderDevice *device) {
 }
 
 /**
- * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color)
+ * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, Texture *texture, const SDL_Color *color)
  * @memberof Renderer
  */
-static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, SDL_GPUTexture *texture, const SDL_Color *color) {
+static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, Texture *texture, const SDL_Color *color) {
 
   assert(verts);
   assert(color);
@@ -351,12 +349,12 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
  */
 static void renderDeviceDidReset(Renderer *self) {
 
-  SDL_GPUShader *vertexShader = $(self->device, loadShader, "Renderer.vert", &(SDL_GPUShaderCreateInfo) {
+  Shader *vertexShader = $(self->device, loadShader, "Renderer.vert", &(SDL_GPUShaderCreateInfo) {
     .stage = SDL_GPU_SHADERSTAGE_VERTEX,
     .num_uniform_buffers = 1,
   });
 
-  SDL_GPUShader *fragmentShader = $(self->device, loadShader, "Renderer.frag", &(SDL_GPUShaderCreateInfo) {
+  Shader *fragmentShader = $(self->device, loadShader, "Renderer.frag", &(SDL_GPUShaderCreateInfo) {
     .stage = SDL_GPU_SHADERSTAGE_FRAGMENT,
     .num_samplers = 1,
   });
@@ -382,8 +380,8 @@ static void renderDeviceDidReset(Renderer *self) {
   };
 
   const SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {
-    .vertex_shader = vertexShader,
-    .fragment_shader = fragmentShader,
+    .vertex_shader = vertexShader->shader,
+    .fragment_shader = fragmentShader->shader,
     .vertex_input_state = {
       .vertex_buffer_descriptions = &vertexBufferInfo,
       .num_vertex_buffers = 1,
@@ -423,10 +421,17 @@ static void renderDeviceDidReset(Renderer *self) {
 
   self->pipeline = $(self->device, createGraphicsPipeline, &pipelineInfo);
 
-  $(self->device, releaseShader, vertexShader);
-  $(self->device, releaseShader, fragmentShader);
+  release(vertexShader);
+  release(fragmentShader);
 
-  self->sampler = $(self->device, samplerLinearClamp);
+  self->sampler = $(self->device, createSampler, &(const SDL_GPUSamplerCreateInfo) {
+    .min_filter = SDL_GPU_FILTER_LINEAR,
+    .mag_filter = SDL_GPU_FILTER_LINEAR,
+    .mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
+    .address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+    .address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+    .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+  });
 
   const Uint8 white[4] = { 255, 255, 255, 255 };
 
@@ -448,19 +453,14 @@ static void renderDeviceDidReset(Renderer *self) {
 static void renderDeviceWillReset(Renderer *self) {
 
   self->commands = NULL;
-  // FIXME: No release here?
 
-  $(self->device, releaseTexture, self->white);
-  self->white = NULL;
+  self->white = release(self->white);
+  self->sampler = release(self->sampler);
 
-  self->sampler = NULL;
-
-  $(self->device, releaseBuffer, self->vertexBuffer);
-  self->vertexBuffer = NULL;
+  self->vertexBuffer = release(self->vertexBuffer);
   self->vertexBufferCapacity = 0;
 
-  $(self->device, releaseGraphicsPipeline, self->pipeline);
-  self->pipeline = NULL;
+  self->pipeline = release(self->pipeline);
 
   $(self->vertices, removeAll);
   $(self->drawArrays, removeAll);

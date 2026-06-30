@@ -116,20 +116,14 @@ struct Text {
    * @brief The rendered GPU texture.
    * @protected
    */
-  SDL_GPUTexture *texture;
-
-  /**
-   * @brief The device associated with @c texture.
-   * @protected
-   */
-  SDL_GPUDevice *device;
+  Texture *texture;
 
   /**
    * @brief The logical draw dimensions of the texture (surface size / pixel density).
    * @remarks Stored when the texture is created; used for pixel-perfect rendering.
    * @protected
    */
-  int texture_w, texture_h;
+  SDL_Size textureSize;
 };
 
 /**

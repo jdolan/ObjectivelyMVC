@@ -75,12 +75,7 @@ struct ImageView {
   /**
    * @brief The GPU texture.
    */
-  SDL_GPUTexture *texture;
-
-  /**
-   * @brief The device associated with @c texture.
-   */
-  SDL_GPUDevice *device;
+  Texture *texture;
 };
 
 /**

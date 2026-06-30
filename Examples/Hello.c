@@ -51,12 +51,12 @@ typedef struct {
   /**
    * @brief The cube vertex buffer.
    */
-  SDL_GPUBuffer *vertexBuffer;
+  Buffer *vertexBuffer;
 
   /**
    * @brief The graphics pipeline.
    */
-  SDL_GPUGraphicsPipeline *pipeline;
+  GraphicsPipeline *pipeline;
 
   /**
    * @brief The cube angles.
@@ -138,12 +138,12 @@ static void initScene(AppState *app) {
 
   scene->vertexBuffer = $(app->renderDevice, createBufferWithConstMem, SDL_GPU_BUFFERUSAGE_VERTEX, vertices, sizeof(vertices));
 
-  SDL_GPUShader *vertexShader = $(app->renderDevice, loadShader, "Hello.vert", &(SDL_GPUShaderCreateInfo) {
+  Shader *vertexShader = $(app->renderDevice, loadShader, "Hello.vert", &(SDL_GPUShaderCreateInfo) {
     .stage = SDL_GPU_SHADERSTAGE_VERTEX,
     .num_uniform_buffers = 1,
   });
 
-  SDL_GPUShader *fragmentShader = $(app->renderDevice, loadShader, "Hello.frag", &(SDL_GPUShaderCreateInfo) {
+  Shader *fragmentShader = $(app->renderDevice, loadShader, "Hello.frag", &(SDL_GPUShaderCreateInfo) {
     .stage = SDL_GPU_SHADERSTAGE_FRAGMENT,
   });
 
@@ -168,41 +168,29 @@ static void initScene(AppState *app) {
     },
   };
 
-  const SDL_GPUColorTargetDescription ctd = {
-    .format = app->framebuffer->colorFormat,
+  SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = GPU_GraphicsPipeline3D;
+  pipelineInfo.vertex_shader = vertexShader->shader;
+  pipelineInfo.fragment_shader = fragmentShader->shader;
+  pipelineInfo.vertex_input_state = (SDL_GPUVertexInputState) {
+    .vertex_buffer_descriptions = &vbd,
+    .num_vertex_buffers = 1,
+    .vertex_attributes = attrs,
+    .num_vertex_attributes = (Uint32) SDL_arraysize(attrs),
+  };
+  pipelineInfo.target_info = (SDL_GPUGraphicsPipelineTargetInfo) {
+    .color_target_descriptions = &(SDL_GPUColorTargetDescription) {
+      .format = app->framebuffer->colorTexture->format,
+      .blend_state = GPU_BlendStateOpaque,
+    },
+    .num_color_targets = 1,
+    .depth_stencil_format = app->framebuffer->depthTexture->format,
+    .has_depth_stencil_target = true,
   };
 
-  scene->pipeline = $(app->renderDevice, createGraphicsPipeline, &(SDL_GPUGraphicsPipelineCreateInfo) {
-    .vertex_shader = vertexShader,
-    .fragment_shader = fragmentShader,
-    .vertex_input_state = {
-      .vertex_buffer_descriptions = &vbd,
-      .num_vertex_buffers = 1,
-      .vertex_attributes = attrs,
-      .num_vertex_attributes = (Uint32) SDL_arraysize(attrs),
-    },
-    .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
-    .rasterizer_state = {
-      .fill_mode = SDL_GPU_FILLMODE_FILL,
-      .cull_mode = SDL_GPU_CULLMODE_BACK,
-      .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE,
-      .enable_depth_clip = true,
-    },
-    .depth_stencil_state = {
-      .compare_op = SDL_GPU_COMPAREOP_LESS_OR_EQUAL,
-      .enable_depth_test = true,
-      .enable_depth_write = true,
-    },
-    .target_info = {
-      .color_target_descriptions = &ctd,
-      .num_color_targets = 1,
-      .depth_stencil_format = app->framebuffer->depthFormat,
-      .has_depth_stencil_target = true,
-    },
-  });
+  scene->pipeline = $(app->renderDevice, createGraphicsPipeline, &pipelineInfo);
 
-  $(app->renderDevice, releaseShader, vertexShader);
-  $(app->renderDevice, releaseShader, fragmentShader);
+  release(vertexShader);
+  release(fragmentShader);
 }
 
 /**
@@ -233,7 +221,7 @@ static void drawScene(AppState *app, CommandBuffer *cmd) {
 
   RenderPass *pass = $(cmd, beginRenderPass, &color, 1, &depth);
   $(pass, bindPipeline, scene->pipeline);
-  $(pass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = scene->vertexBuffer }, 1);
+  $(pass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = scene->vertexBuffer->buffer }, 1);
   $(pass, drawPrimitives, (Uint32) SDL_arraysize(vertices), 1, 0, 0);
   release(pass);
 }
@@ -334,7 +322,7 @@ SDL_AppResult SDL_AppIterate(void *appState) {
 
   $(cmd, blitTexture, &(SDL_GPUBlitInfo) {
     .source = {
-      .texture = app->framebuffer->colorTexture,
+      .texture = app->framebuffer->colorTexture->texture,
       .w = (Uint32) swapchain.size.w,
       .h = (Uint32) swapchain.size.h,
     },
@@ -382,8 +370,15 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
 
   AppState *app = appState;
 
+  $(app->renderDevice, waitForIdle);
+
 	release(app->windowController);
+
+  release(app->scene.pipeline);
+  release(app->scene.vertexBuffer);
+
   release(app->framebuffer);
+  release(app->renderDevice);
 
 	SDL_DestroyAudioStream(app->audioStream);
 	SDL_DestroyWindow(app->window);
