@@ -32,38 +32,21 @@
 			name = "ObjectivelyMVC-Tests";
 			productName = "ObjectivelyMVC-Examples";
 		};
-		MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */ = {
-			isa = PBXAggregateTarget;
-			buildConfigurationList = MV02400000000000000000A1 /* Build configuration list for PBXAggregateTarget "ObjectivelyMVC-xcframework" */;
-			buildPhases = (
-				MV02100000000000000000A1 /* Run Script */,
-			);
-			dependencies = (
-			);
-			name = "ObjectivelyMVC-xcframework";
-			productName = "ObjectivelyMVC-xcframework";
-		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
 		B1BB0001000000000000000A /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
-		B1BB0001000000000000000B /* SDL3_image.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000B /* SDL3_image.xcframework */; };
-		B1BB0001000000000000000C /* SDL3_ttf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000C /* SDL3_ttf.xcframework */; };
-		B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000D /* libcurl.xcframework */; };
-		B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */; };
 		B1BB000100000000000000A0 /* SDL3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B1BB000100000000000000AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AB /* Foundation.framework */; };
 		B1BB000100000000000000AD /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AD /* Metal.framework */; };
 		B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AE /* AudioToolbox.framework */; };
 		B1BB000100000000000000AF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AF /* CoreGraphics.framework */; };
-		B1BB000100000000000000B0 /* SDL3_image.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000B /* SDL3_image.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B1BB000100000000000000BA /* GameController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BA /* GameController.framework */; };
 		B1BB000100000000000000BB /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BB /* CoreMotion.framework */; };
 		B1BB000100000000000000BC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BC /* AVFoundation.framework */; };
 		B1BB000100000000000000BD /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BD /* CoreVideo.framework */; };
 		B1BB000100000000000000BE /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BE /* QuartzCore.framework */; };
 		B1BB000100000000000000BF /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000BF /* CoreBluetooth.framework */; };
-		B1BB000100000000000000C0 /* SDL3_ttf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000C /* SDL3_ttf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B1BB000100000000000000CA /* CoreHaptics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CA /* CoreHaptics.framework */; };
 		B1BB000100000000000000CB /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CB /* CoreMedia.framework */; };
 		B1BB000100000000000000CC /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000CC /* CoreText.framework */; };
@@ -73,7 +56,6 @@
 		B1BB000100000000000000EA /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		B1BB000100000000000000EB /* HelloViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */; };
 		B1BB000100000000000000ED /* HelloViewController.json in Resources */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
-		B1BB000100000000000000F0 /* ObjectivelyMVC.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CE0943A71D60F1A300C11408 /* TableColumn.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943A61D60F1A300C11408 /* TableColumn.c */; };
 		CE0943A91D60F23100C11408 /* TableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943A81D60F23100C11408 /* TableColumn.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0943AC1D60FFEC00C11408 /* TableRowView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943AA1D60FFEC00C11408 /* TableRowView.c */; };
@@ -184,10 +166,11 @@
 		CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEA8FC1E1FB153A5002CCB08 /* Stylesheet.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */; };
 		CEA8FC1F1FB153A5002CCB08 /* Stylesheet.h in Headers */ = {isa = PBXBuildFile; fileRef = CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CEBA3F792FF341B300758CA6 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		CEBA3F7A2FF341BF00758CA6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		CEBA3F7B2FF341C200758CA6 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
-		CED56FF72FE3440000756996 /* SDL3_image.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000B /* SDL3_image.xcframework */; };
-		CED56FF82FE3440000756996 /* SDL3_ttf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000C /* SDL3_ttf.xcframework */; };
 		CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		CEEAAFFF2FEDC19C00FFEBE6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
@@ -207,11 +190,6 @@
 		EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		HS00000000000000000000B0 /* Hello.vert.msl in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello.vert.msl */; };
 		HS00000000000000000000B1 /* Hello.frag.msl in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A5 /* Hello.frag.msl */; };
-		MV00110000000000000000A1 /* Objectively.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = MV00010000000000000000A1 /* Objectively.xcframework */; };
-		MV00120000000000000000A2 /* ObjectivelyGPU.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */; };
-		MV00210000000000000000A1 /* Objectively.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = MV00010000000000000000A1 /* Objectively.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		MV00220000000000000000A2 /* ObjectivelyGPU.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		MV00230000000000000000A3 /* libcurl.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000D /* libcurl.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -271,13 +249,6 @@
 			remoteGlobalIDString = CE88198A1F91B0BE000D5AB7;
 			remoteInfo = "ObjectivelyMVC-Style";
 		};
-		MV03000000000000000000A1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = MV02000000000000000000A1;
-			remoteInfo = "ObjectivelyMVC-xcframework";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -288,12 +259,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				B1BB000100000000000000A0 /* SDL3.xcframework in Embed Frameworks */,
-				B1BB000100000000000000B0 /* SDL3_image.xcframework in Embed Frameworks */,
-				B1BB000100000000000000C0 /* SDL3_ttf.xcframework in Embed Frameworks */,
-				B1BB000100000000000000F0 /* ObjectivelyMVC.xcframework in Embed Frameworks */,
-				MV00210000000000000000A1 /* Objectively.xcframework in Embed Frameworks */,
-				MV00220000000000000000A2 /* ObjectivelyGPU.xcframework in Embed Frameworks */,
-				MV00230000000000000000A3 /* libcurl.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -344,10 +309,6 @@
 		8D42EC0E254AF0B8789148FA /* Renderer.frag.msl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.msl.h; sourceTree = "<group>"; };
 		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B1AA0001000000000000000A /* SDL3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3.xcframework; path = ../ObjectivelyGPU/Frameworks/SDL3.xcframework; sourceTree = "<group>"; };
-		B1AA0001000000000000000B /* SDL3_image.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_image.xcframework; path = Frameworks/SDL3_image.xcframework; sourceTree = "<group>"; };
-		B1AA0001000000000000000C /* SDL3_ttf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_ttf.xcframework; path = Frameworks/SDL3_ttf.xcframework; sourceTree = "<group>"; };
-		B1AA0001000000000000000D /* libcurl.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libcurl.xcframework; path = Frameworks/libcurl.xcframework; sourceTree = "<group>"; };
-		B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ObjectivelyMVC.xcframework; path = Frameworks/ObjectivelyMVC.xcframework; sourceTree = "<group>"; };
 		B1AA000100000000000000AB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000AD /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000AE /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -519,16 +480,14 @@
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		D31E7AC34C7DE77F2EF97426 /* Renderer.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.vert.glsl; sourceTree = "<group>"; };
-		HS00000000000000000000A0 /* Hello.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Hello.vert.glsl"; sourceTree = "<group>"; };
-		HS00000000000000000000A1 /* Hello.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hello.vert.spv"; sourceTree = "<group>"; };
-		HS00000000000000000000A2 /* Hello.vert.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Hello.vert.msl"; sourceTree = "<group>"; };
-		HS00000000000000000000A3 /* Hello.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Hello.frag.glsl"; sourceTree = "<group>"; };
-		HS00000000000000000000A4 /* Hello.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hello.frag.spv"; sourceTree = "<group>"; };
-		HS00000000000000000000A5 /* Hello.frag.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Hello.frag.msl"; sourceTree = "<group>"; };
+		HS00000000000000000000A0 /* Hello.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.vert.glsl; sourceTree = "<group>"; };
+		HS00000000000000000000A1 /* Hello.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hello.vert.spv; sourceTree = "<group>"; };
+		HS00000000000000000000A2 /* Hello.vert.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.vert.msl; sourceTree = "<group>"; };
+		HS00000000000000000000A3 /* Hello.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.frag.glsl; sourceTree = "<group>"; };
+		HS00000000000000000000A4 /* Hello.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hello.frag.spv; sourceTree = "<group>"; };
+		HS00000000000000000000A5 /* Hello.frag.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.frag.msl; sourceTree = "<group>"; };
 		MV00000000000000000000A2 /* Renderer.vert.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.spv.h; sourceTree = "<group>"; };
 		MV00000000000000000000A3 /* Renderer.vert.msl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.msl.h; sourceTree = "<group>"; };
-		MV00010000000000000000A1 /* Objectively.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Objectively.xcframework; path = Frameworks/Objectively.xcframework; sourceTree = "<group>"; };
-		MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = ObjectivelyGPU.xcframework; path = Frameworks/ObjectivelyGPU.xcframework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -537,12 +496,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B1BB0001000000000000000A /* SDL3.xcframework in Frameworks */,
-				B1BB0001000000000000000B /* SDL3_image.xcframework in Frameworks */,
-				B1BB0001000000000000000C /* SDL3_ttf.xcframework in Frameworks */,
-				B1BB0001000000000000000D /* libcurl.xcframework in Frameworks */,
-				MV00110000000000000000A1 /* Objectively.xcframework in Frameworks */,
-				MV00120000000000000000A2 /* ObjectivelyGPU.xcframework in Frameworks */,
-				B1BB0001000000000000000F /* ObjectivelyMVC.xcframework in Frameworks */,
+				CEBA3F792FF341B300758CA6 /* Objectively.framework in Frameworks */,
+				CEBA3F7A2FF341BF00758CA6 /* ObjectivelyGPU.framework in Frameworks */,
+				CEBA3F7B2FF341C200758CA6 /* ObjectivelyMVC.framework in Frameworks */,
 				B1BB000100000000000000AB /* Foundation.framework in Frameworks */,
 				B1BB000100000000000000AD /* Metal.framework in Frameworks */,
 				B1BB000100000000000000AE /* AudioToolbox.framework in Frameworks */,
@@ -611,8 +567,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
-				CED56FF72FE3440000756996 /* SDL3_image.xcframework in Frameworks */,
-				CED56FF82FE3440000756996 /* SDL3_ttf.xcframework in Frameworks */,
 				CE73E9FE2FEEB28C0048BC24 /* Objectively.framework in Frameworks */,
 				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
 			);
@@ -817,32 +771,26 @@
 		CE73E9F92FEEA5F60048BC24 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B1AA000100000000000000AE /* AudioToolbox.framework */,
+				B1AA000100000000000000BC /* AVFoundation.framework */,
+				B1AA000100000000000000BF /* CoreBluetooth.framework */,
+				B1AA000100000000000000AF /* CoreGraphics.framework */,
+				B1AA000100000000000000CA /* CoreHaptics.framework */,
+				B1AA000100000000000000CB /* CoreMedia.framework */,
+				B1AA000100000000000000BB /* CoreMotion.framework */,
+				B1AA000100000000000000CC /* CoreText.framework */,
+				B1AA000100000000000000BD /* CoreVideo.framework */,
+				B1AA000100000000000000AB /* Foundation.framework */,
+				B1AA000100000000000000BA /* GameController.framework */,
+				B1AA000100000000000000CD /* ImageIO.framework */,
+				B1AA000100000000000000AD /* Metal.framework */,
+				B1AA000100000000000000DA /* Network.framework */,
 				CE73E9FC2FEEB0FD0048BC24 /* Objectively.framework */,
 				CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */,
 				CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */,
-				B1AA0001000000000000000A /* SDL3.xcframework */,
-				B1AA0001000000000000000B /* SDL3_image.xcframework */,
-				B1AA0001000000000000000C /* SDL3_ttf.xcframework */,
-				B1AA0001000000000000000D /* libcurl.xcframework */,
-				B1AA0001000000000000000F /* ObjectivelyMVC.xcframework */,
-				B1AA000100000000000000AB /* Foundation.framework */,
-				B1AA000100000000000000AD /* Metal.framework */,
-				B1AA000100000000000000AE /* AudioToolbox.framework */,
-				B1AA000100000000000000AF /* CoreGraphics.framework */,
-				B1AA000100000000000000BA /* GameController.framework */,
-				B1AA000100000000000000BB /* CoreMotion.framework */,
-				B1AA000100000000000000BC /* AVFoundation.framework */,
-				B1AA000100000000000000BD /* CoreVideo.framework */,
 				B1AA000100000000000000BE /* QuartzCore.framework */,
-				B1AA000100000000000000BF /* CoreBluetooth.framework */,
-				B1AA000100000000000000CA /* CoreHaptics.framework */,
-				B1AA000100000000000000CB /* CoreMedia.framework */,
-				B1AA000100000000000000CC /* CoreText.framework */,
-				B1AA000100000000000000CD /* ImageIO.framework */,
+				B1AA0001000000000000000A /* SDL3.xcframework */,
 				B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */,
-				B1AA000100000000000000DA /* Network.framework */,
-				MV00010000000000000000A1 /* Objectively.xcframework */,
-				MV00020000000000000000A2 /* ObjectivelyGPU.xcframework */,
 				CECF83CF2FF1B30700CB0CCA /* build-xcframework.sh */,
 			);
 			name = Frameworks;
@@ -970,7 +918,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				MV03100000000000000000A1 /* PBXTargetDependency */,
 			);
 			name = "ObjectivelyMVC-Hello-iOS";
 			productName = "ObjectivelyMVC-Hello-iOS";
@@ -1055,7 +1002,6 @@
 			buildConfigurationList = CED157CF1C4BF3AC00FBA2DE /* Build configuration list for PBXNativeTarget "ObjectivelyMVC" */;
 			buildPhases = (
 				CEA0010000000000000000BA /* Configure */,
-				CEA0020000000000000000BB /* Preprocess Shaders */,
 				CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */,
 				CED157C91C4BF3AC00FBA2DE /* Sources */,
 				CED157CA1C4BF3AC00FBA2DE /* Frameworks */,
@@ -1094,9 +1040,6 @@
 					CED157CC1C4BF3AC00FBA2DE = {
 						CreatedOnToolsVersion = 7.2;
 					};
-					MV02000000000000000000A1 = {
-						CreatedOnToolsVersion = 16.0;
-					};
 				};
 			};
 			buildConfigurationList = CED157961C4BEA8900FBA2DE /* Build configuration list for PBXProject "ObjectivelyMVC" */;
@@ -1113,14 +1056,13 @@
 			projectRoot = "";
 			targets = (
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
-				MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */,
 				CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
 				CE34C8951FB29F700025F231 /* ObjectivelyMVC-Stylesheet */,
 				CE423A451F534657002767E7 /* ObjectivelyMVC-Tests */,
 				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
-				CE3CB2991F40F9A100FAA016 /* ObjectivelyMVC-Examples */,
 				B1DD00010000000000000001 /* ObjectivelyMVC-Hello-iOS */,
+				CE3CB2991F40F9A100FAA016 /* ObjectivelyMVC-Examples */,
 			);
 		};
 /* End PBXProject section */
@@ -1204,31 +1146,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if [ ! -f \"$SRCROOT/Sources/ObjectivelyMVC/Config.h\" ]; then\n  cd \"$SRCROOT\" && autoreconf -i && ./configure\nfi\n";
 		};
-		CEA0020000000000000000BB /* Preprocess Shaders */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Assets/Renderer.vert.glsl",
-				"$(SRCROOT)/Assets/Renderer.frag.glsl",
-			);
-			name = "Preprocess Shaders";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(SRCROOT)/Assets/Renderer.vert.spv",
-				"$(SRCROOT)/Assets/Renderer.vert.msl",
-				"$(SRCROOT)/Assets/Renderer.frag.spv",
-				"$(SRCROOT)/Assets/Renderer.frag.msl",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nglslc -fshader-stage=vert Renderer.vert.glsl -o Renderer.vert.spv\nshadercross Renderer.vert.spv -s SPIRV -d MSL -t vertex -o Renderer.vert.msl\nglslc -fshader-stage=frag Renderer.frag.glsl -o Renderer.frag.spv\nshadercross Renderer.frag.spv -s SPIRV -d MSL -t fragment -o Renderer.frag.msl\n";
-		};
 		CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -1247,26 +1164,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "pushd $SRCROOT/Examples\n\nxxd -i -s 44 click.wav click.wav.h\nxxd -i -s 44 clack.wav clack.wav.h\n";
-		};
-		MV02100000000000000000A1 /* Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(SRCROOT)/Frameworks/ObjectivelyMVC.xcframework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "exec \"$SRCROOT/Frameworks/build-xcframework.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1412,11 +1309,6 @@
 			isa = PBXTargetDependency;
 			target = CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */;
 			targetProxy = CE8819991F91B0DA000D5AB7 /* PBXContainerItemProxy */;
-		};
-		MV03100000000000000000A1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = MV02000000000000000000A1 /* ObjectivelyMVC-xcframework */;
-			targetProxy = MV03000000000000000000A1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1726,20 +1618,6 @@
 			};
 			name = Release;
 		};
-		MV02200000000000000000A1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "ObjectivelyMVC-xcframework";
-			};
-			name = Debug;
-		};
-		MV02300000000000000000A2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				PRODUCT_NAME = "ObjectivelyMVC-xcframework";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1823,15 +1701,6 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
-		};
-		MV02400000000000000000A1 /* Build configuration list for PBXAggregateTarget "ObjectivelyMVC-xcframework" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				MV02200000000000000000A1 /* Debug */,
-				MV02300000000000000000A2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
