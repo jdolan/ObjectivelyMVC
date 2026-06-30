@@ -34,10 +34,10 @@
 #include "View.h"
 #include "Window.h"
 
+#include "../Assets/Renderer.vert.metal.h"
+#include "../Assets/Renderer.frag.metal.h"
 #include "../Assets/Renderer.vert.spv.h"
-#include "../Assets/Renderer.vert.msl.h"
 #include "../Assets/Renderer.frag.spv.h"
-#include "../Assets/Renderer.frag.msl.h"
 
 /**
  * @brief @c ResourceProvider for loading shaders from @c xxd headers.
@@ -46,12 +46,12 @@ static Data *shaderResourceProvider(const char *name) {
 
   Data *data = NULL;
 
-  if (!strcmp("Renderer.vert.msl", name)) {
-    data = $(alloc(Data), initWithConstMemory, Renderer_vert_msl, Renderer_vert_msl_len);
+  if (!strcmp("Renderer.vert.metal", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_vert_metal, Renderer_vert_metal_len);
+  } else if (!strcmp("Renderer.frag.metal", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_frag_metal, Renderer_frag_metal_len);
   } else if (!strcmp("Renderer.vert.spv", name)) {
     data = $(alloc(Data), initWithConstMemory, Renderer_vert_spv, Renderer_vert_spv_len);
-  } else if (!strcmp("Renderer.frag.msl", name)) {
-    data = $(alloc(Data), initWithConstMemory, Renderer_frag_msl, Renderer_frag_msl_len);
   } else if (!strcmp("Renderer.frag.spv", name)) {
     data = $(alloc(Data), initWithConstMemory, Renderer_frag_spv, Renderer_frag_spv_len);
   }

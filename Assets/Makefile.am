@@ -1,7 +1,27 @@
+# The compiled .spv/.metal blobs are versioned, so normal builds only re-run
+# xxd and never need glslc/shadercross. Run 'make shaders' after editing a .glsl.
+EXTRA_DIST = \
+	Renderer.vert.glsl \
+	Renderer.frag.glsl \
+	Renderer.vert.metal \
+	Renderer.frag.metal \
+	Renderer.vert.spv \
+	Renderer.frag.spv \
+	check.png \
+	coda.ttf \
+	debug.css \
+	debug.json \
+	resize.png \
+	stylesheet.css
+
 %.h: %
 	xxd -i -t $< > $@
 
 BUILT_SOURCES = \
+	Renderer.vert.metal.h \
+	Renderer.frag.metal.h \
+	Renderer.vert.spv.h \
+	Renderer.frag.spv.h \
 	check.png.h \
 	coda.ttf.h \
 	debug.css.h \
@@ -9,32 +29,9 @@ BUILT_SOURCES = \
 	resize.png.h \
 	stylesheet.css.h
 
-GLSLC       = glslc
-SHADERCROSS = shadercross
-
-SHADER_H = \
-	Renderer.vert.spv.h \
-	Renderer.vert.msl.h \
-	Renderer.frag.spv.h \
-	Renderer.frag.msl.h
-
-EXTRA_DIST = \
-	Renderer.vert.glsl \
-	Renderer.frag.glsl \
-	$(SHADER_H)
-
-# Run 'make shaders' after editing a .glsl file to regenerate blobs and headers.
 .PHONY: shaders
-shaders: $(SHADER_H)
-
-Renderer.vert.spv: Renderer.vert.glsl
-	$(GLSLC) -fshader-stage=vert $< -o $@
-
-Renderer.vert.msl: Renderer.vert.spv
-	$(SHADERCROSS) $< -s SPIRV -d MSL -t vertex -o $@
-
-Renderer.frag.spv: Renderer.frag.glsl
-	$(GLSLC) -fshader-stage=frag $< -o $@
-
-Renderer.frag.msl: Renderer.frag.spv
-	$(SHADERCROSS) $< -s SPIRV -d MSL -t fragment -o $@
+shaders:
+	$(GLSLC) -fshader-stage=vert Renderer.vert.glsl -o Renderer.vert.spv
+	$(GLSLC) -fshader-stage=frag Renderer.frag.glsl -o Renderer.frag.spv
+	$(SHADERCROSS) Renderer.vert.spv -s SPIRV -d MSL -t vertex -o Renderer.vert.metal
+	$(SHADERCROSS) Renderer.frag.spv -s SPIRV -d MSL -t fragment -o Renderer.frag.metal

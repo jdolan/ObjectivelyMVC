@@ -97,6 +97,10 @@
 		CE14A8CD1C66D89900B576FB /* Select.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CB1C66D89900B576FB /* Select.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE14A8D01C68CE3C00B576FB /* Option.c in Sources */ = {isa = PBXBuildFile; fileRef = CE14A8CE1C68CE3C00B576FB /* Option.c */; };
 		CE14A8D11C68CE3C00B576FB /* Option.h in Headers */ = {isa = PBXBuildFile; fileRef = CE14A8CF1C68CE3C00B576FB /* Option.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CE1643342FF40ECF00863996 /* clack.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE89ADB028BAF661002E45C7 /* clack.wav */; };
+		CE1643352FF40ED200863996 /* click.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE89AD9E28B99568002E45C7 /* click.wav */; };
+		CE1643362FF40F0100863996 /* clack.wav in Resources */ = {isa = PBXBuildFile; fileRef = CE89ADB028BAF661002E45C7 /* clack.wav */; };
+		CE1643372FF40F0400863996 /* click.wav in Resources */ = {isa = PBXBuildFile; fileRef = CE89AD9E28B99568002E45C7 /* click.wav */; };
 		CE1CCDA41D9E859F00891F05 /* View+JSON.c in Sources */ = {isa = PBXBuildFile; fileRef = CE1CCDA21D9E859F00891F05 /* View+JSON.c */; };
 		CE1CCDA51D9E859F00891F05 /* View+JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1CCDA31D9E859F00891F05 /* View+JSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE3091BD2CFB8F2100E59187 /* Warning.c in Sources */ = {isa = PBXBuildFile; fileRef = CE3091BC2CFB8F2100E59187 /* Warning.c */; };
@@ -134,7 +138,6 @@
 		CE73E9FF2FEEB2A40048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		CE73EA002FEEB2C70048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		CE73EA012FEEB2D00048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
-		CE73EA022FEEB2D60048BC24 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = CE76279C1D4A5A5800EEEE78 /* Renderer.c */; };
 		CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = CE76279D1D4A5A5800EEEE78 /* Renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE84C6CD1FFC917600F72267 /* DebugViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE84C6CB1FFC917600F72267 /* DebugViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -169,6 +172,12 @@
 		CEBA3F792FF341B300758CA6 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		CEBA3F7A2FF341BF00758CA6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		CEBA3F7B2FF341C200758CA6 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
+		CEBA3F7E2FF3E6D200758CA6 /* SDL3_image.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA3F7D2FF3E6D200758CA6 /* SDL3_image.xcframework */; };
+		CEBA3F802FF3E6D200758CA6 /* SDL3_ttf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA3F7F2FF3E6D200758CA6 /* SDL3_ttf.xcframework */; };
+		CEBA3F812FF3E72400758CA6 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		CEBA3F822FF3E73900758CA6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		CEBA3F892FF3F25E00758CA6 /* Hello.frag.metal in CopyFiles */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A5 /* Hello.frag.metal */; };
+		CEBA3F8C2FF3F25E00758CA6 /* Hello.vert.metal in CopyFiles */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello.vert.metal */; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
@@ -184,12 +193,11 @@
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00030000000000000000A3 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
-		EF00050000000000000000A5 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
-		HS00000000000000000000B0 /* Hello.vert.msl in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello.vert.msl */; };
-		HS00000000000000000000B1 /* Hello.frag.msl in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A5 /* Hello.frag.msl */; };
+		HS00000000000000000000B0 /* Hello.vert.metal in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello.vert.metal */; };
+		HS00000000000000000000B1 /* Hello.frag.metal in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A5 /* Hello.frag.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -269,7 +277,11 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				CEBA3F892FF3F25E00758CA6 /* Hello.frag.metal in CopyFiles */,
+				CEBA3F8C2FF3F25E00758CA6 /* Hello.vert.metal in CopyFiles */,
 				CE6BC16F1D79B3840070FB2D /* HelloViewController.json in CopyFiles */,
+				CE1643342FF40ECF00863996 /* clack.wav in CopyFiles */,
+				CE1643352FF40ED200863996 /* click.wav in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,7 +318,7 @@
 		14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.glsl; sourceTree = "<group>"; };
 		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
 		7F6735C65F7CAB13D8D96588 /* Renderer.frag.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.spv.h; sourceTree = "<group>"; };
-		8D42EC0E254AF0B8789148FA /* Renderer.frag.msl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.msl.h; sourceTree = "<group>"; };
+		8D42EC0E254AF0B8789148FA /* Renderer.frag.metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.metal.h; sourceTree = "<group>"; };
 		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B1AA0001000000000000000A /* SDL3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3.xcframework; path = ../ObjectivelyGPU/Frameworks/SDL3.xcframework; sourceTree = "<group>"; };
 		B1AA000100000000000000AB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -328,8 +340,6 @@
 		B1AA000100000000000000EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AA000100000000000000EC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ObjectivelyMVC-Hello-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE081BE42C27955C00436CDC /* click.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = click.wav.h; sourceTree = "<group>"; };
-		CE081BE52C27955C00436CDC /* clack.wav.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = clack.wav.h; sourceTree = "<group>"; };
 		CE0943A61D60F1A300C11408 /* TableColumn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableColumn.c; sourceTree = "<group>"; };
 		CE0943A81D60F23100C11408 /* TableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableColumn.h; sourceTree = "<group>"; };
 		CE0943AA1D60FFEC00C11408 /* TableRowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableRowView.c; sourceTree = "<group>"; };
@@ -461,6 +471,12 @@
 		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
+		CEBA3F7D2FF3E6D200758CA6 /* SDL3_image.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_image.xcframework; path = Frameworks/SDL3_image.xcframework; sourceTree = "<group>"; };
+		CEBA3F7F2FF3E6D200758CA6 /* SDL3_ttf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_ttf.xcframework; path = Frameworks/SDL3_ttf.xcframework; sourceTree = "<group>"; };
+		CEBA3F832FF3E77F00758CA6 /* Renderer.frag.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Renderer.frag.metal; sourceTree = "<group>"; };
+		CEBA3F842FF3E77F00758CA6 /* Renderer.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Renderer.frag.spv; sourceTree = "<group>"; };
+		CEBA3F852FF3E77F00758CA6 /* Renderer.vert.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Renderer.vert.metal; sourceTree = "<group>"; };
+		CEBA3F862FF3E77F00758CA6 /* Renderer.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Renderer.vert.spv; sourceTree = "<group>"; };
 		CECF83CF2FF1B30700CB0CCA /* build-xcframework.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-xcframework.sh"; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
@@ -482,12 +498,12 @@
 		D31E7AC34C7DE77F2EF97426 /* Renderer.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.vert.glsl; sourceTree = "<group>"; };
 		HS00000000000000000000A0 /* Hello.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.vert.glsl; sourceTree = "<group>"; };
 		HS00000000000000000000A1 /* Hello.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hello.vert.spv; sourceTree = "<group>"; };
-		HS00000000000000000000A2 /* Hello.vert.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.vert.msl; sourceTree = "<group>"; };
+		HS00000000000000000000A2 /* Hello.vert.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Hello.vert.metal; sourceTree = "<group>"; };
 		HS00000000000000000000A3 /* Hello.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.frag.glsl; sourceTree = "<group>"; };
 		HS00000000000000000000A4 /* Hello.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hello.frag.spv; sourceTree = "<group>"; };
-		HS00000000000000000000A5 /* Hello.frag.msl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.frag.msl; sourceTree = "<group>"; };
+		HS00000000000000000000A5 /* Hello.frag.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Hello.frag.metal; sourceTree = "<group>"; };
 		MV00000000000000000000A2 /* Renderer.vert.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.spv.h; sourceTree = "<group>"; };
-		MV00000000000000000000A3 /* Renderer.vert.msl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.msl.h; sourceTree = "<group>"; };
+		MV00000000000000000000A3 /* Renderer.vert.metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.metal.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -545,8 +561,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */,
-				CE73EA022FEEB2D60048BC24 /* Objectively.framework in Frameworks */,
-				EF00050000000000000000A5 /* ObjectivelyGPU.framework in Frameworks */,
+				CEBA3F812FF3E72400758CA6 /* Objectively.framework in Frameworks */,
+				CEBA3F822FF3E73900758CA6 /* ObjectivelyGPU.framework in Frameworks */,
 				CE55C1C41F944C6D00D5A326 /* ObjectivelyMVC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -566,6 +582,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEBA3F7E2FF3E6D200758CA6 /* SDL3_image.xcframework in Frameworks */,
+				CEBA3F802FF3E6D200758CA6 /* SDL3_ttf.xcframework in Frameworks */,
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
 				CE73E9FE2FEEB28C0048BC24 /* Objectively.framework in Frameworks */,
 				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
@@ -713,19 +731,17 @@
 				CE12D42B1C4C37E500CD0B13 /* Hello.c */,
 				HS00000000000000000000A3 /* Hello.frag.glsl */,
 				HS00000000000000000000A4 /* Hello.frag.spv */,
-				HS00000000000000000000A5 /* Hello.frag.msl */,
+				HS00000000000000000000A5 /* Hello.frag.metal */,
 				HS00000000000000000000A0 /* Hello.vert.glsl */,
 				HS00000000000000000000A1 /* Hello.vert.spv */,
-				HS00000000000000000000A2 /* Hello.vert.msl */,
+				HS00000000000000000000A2 /* Hello.vert.metal */,
 				CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */,
 				CE12D4761C4EAD3100CD0B13 /* HelloViewController.h */,
 				CE6BC16E1D79B2920070FB2D /* HelloViewController.json */,
 				B1AA000100000000000000EB /* Info.plist */,
 				B1AA000100000000000000EC /* LaunchScreen.storyboard */,
 				CE89ADB028BAF661002E45C7 /* clack.wav */,
-				CE081BE52C27955C00436CDC /* clack.wav.h */,
 				CE89AD9E28B99568002E45C7 /* click.wav */,
-				CE081BE42C27955C00436CDC /* click.wav.h */,
 				CE12D42D1C4C383D00CD0B13 /* Makefile.am */,
 			);
 			path = Examples;
@@ -735,10 +751,14 @@
 			isa = PBXGroup;
 			children = (
 				14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */,
-				8D42EC0E254AF0B8789148FA /* Renderer.frag.msl.h */,
+				CEBA3F832FF3E77F00758CA6 /* Renderer.frag.metal */,
+				8D42EC0E254AF0B8789148FA /* Renderer.frag.metal.h */,
+				CEBA3F842FF3E77F00758CA6 /* Renderer.frag.spv */,
 				7F6735C65F7CAB13D8D96588 /* Renderer.frag.spv.h */,
 				D31E7AC34C7DE77F2EF97426 /* Renderer.vert.glsl */,
-				MV00000000000000000000A3 /* Renderer.vert.msl.h */,
+				CEBA3F852FF3E77F00758CA6 /* Renderer.vert.metal */,
+				MV00000000000000000000A3 /* Renderer.vert.metal.h */,
+				CEBA3F862FF3E77F00758CA6 /* Renderer.vert.spv */,
 				MV00000000000000000000A2 /* Renderer.vert.spv.h */,
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
@@ -771,6 +791,9 @@
 		CE73E9F92FEEA5F60048BC24 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CEBA3F7D2FF3E6D200758CA6 /* SDL3_image.xcframework */,
+				CEBA3F7F2FF3E6D200758CA6 /* SDL3_ttf.xcframework */,
+				B1AA0001000000000000000A /* SDL3.xcframework */,
 				B1AA000100000000000000AE /* AudioToolbox.framework */,
 				B1AA000100000000000000BC /* AVFoundation.framework */,
 				B1AA000100000000000000BF /* CoreBluetooth.framework */,
@@ -789,7 +812,6 @@
 				CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */,
 				CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */,
 				B1AA000100000000000000BE /* QuartzCore.framework */,
-				B1AA0001000000000000000A /* SDL3.xcframework */,
 				B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */,
 				CECF83CF2FF1B30700CB0CCA /* build-xcframework.sh */,
 			);
@@ -909,7 +931,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1EE000100000000000000C0 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello-iOS" */;
 			buildPhases = (
-				CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */,
 				B1CC000100000000000000A0 /* Sources */,
 				B1CC000100000000000000B0 /* Frameworks */,
 				B1CC000100000000000000C0 /* Resources */,
@@ -1072,9 +1093,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				HS00000000000000000000B0 /* Hello.vert.metal in Resources */,
+				HS00000000000000000000B1 /* Hello.frag.metal in Resources */,
 				B1BB000100000000000000ED /* HelloViewController.json in Resources */,
-				HS00000000000000000000B0 /* Hello.vert.msl in Resources */,
-				HS00000000000000000000B1 /* Hello.frag.msl in Resources */,
+				CE1643362FF40F0100863996 /* clack.wav in Resources */,
+				CE1643372FF40F0400863996 /* click.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -31,9 +31,6 @@
 
 #include "HelloViewController.h"
 
-#include "click.wav.h"
-#include "clack.wav.h"
-
 #ifdef SDL_PLATFORM_IOS
 # define HELLO_WINDOW_W      0
 # define HELLO_WINDOW_H      0
@@ -65,6 +62,14 @@ typedef struct {
 } Scene;
 
 /**
+ * @brief A decoded PCM sound effect, loaded from a WAV resource.
+ */
+typedef struct {
+  Uint8 *buffer;
+  Uint32 length;
+} Sound;
+
+/**
  * @brief SDL application state passed via pointer to callbacks.
  */
 typedef struct {
@@ -73,6 +78,11 @@ typedef struct {
    * @brief The @c SDL_AudioStream.
    */
   SDL_AudioStream *audioStream;
+
+  /**
+   * @brief The click and clack sound effects.
+   */
+  Sound click, clack;
 
   /**
    * @brief The @c SDL_Window.
@@ -242,14 +252,37 @@ static void onViewEvent(const SDL_UserEvent *event) {
 
   switch (event->code) {
     case ViewEventClick:
-      SDL_PutAudioStreamData(app->audioStream, click_wav, click_wav_len);
+      SDL_PutAudioStreamData(app->audioStream, app->click.buffer, app->click.length);
       break;
     case ViewEventChange:
-      SDL_PutAudioStreamData(app->audioStream, clack_wav, clack_wav_len);
+      SDL_PutAudioStreamData(app->audioStream, app->clack.buffer, app->clack.length);
       break;
     default:
       break;
   }
+}
+
+#pragma mark - Audio
+
+/**
+ * @brief Loads a WAV sound effect via the Resource API and decodes it to PCM.
+ * @details Demonstrates idiomatic asset loading: resources are resolved by name
+ *   through the ResourceProvider chain (here, the @c EXAMPLES path), exactly as a
+ *   consuming application would ship and load its own assets.
+ */
+static Sound loadSound(const char *name) {
+
+  Resource *resource = $$(Resource, resourceWithName, name);
+  MVC_Assert(resource, "Resource not found: %s", name);
+
+  Sound sound = { 0 };
+
+  SDL_IOStream *io = SDL_IOFromConstMem(resource->data->bytes, resource->data->length);
+  SDL_AudioSpec spec;
+  MVC_Assert(SDL_LoadWAV_IO(io, true, &spec, &sound.buffer, &sound.length), "SDL_LoadWAV_IO: %s", name);
+
+  release(resource);
+  return sound;
 }
 
 #pragma mark - SDL application callbacks
@@ -277,6 +310,9 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
 
   MVC_Assert(app->audioStream, "SDL_OpenAudioDeviceStream");
   SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(app->audioStream));
+
+  app->click = loadSound("click.wav");
+  app->clack = loadSound("clack.wav");
 
   app->window = SDL_CreateWindow("Hello ObjectivelyMVC", HELLO_WINDOW_W, HELLO_WINDOW_H, HELLO_WINDOW_FLAGS);
   MVC_Assert(app->window, "SDL_CreateWindow");
@@ -363,6 +399,8 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
   release(app->renderDevice);
 
   SDL_DestroyAudioStream(app->audioStream);
+  SDL_free(app->click.buffer);
+  SDL_free(app->clack.buffer);
   SDL_DestroyWindow(app->window);
 
   SDL_Quit();

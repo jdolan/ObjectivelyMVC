@@ -1,10 +1,3 @@
-%.wav.h: %
-	xxd -i -s 44 $^ $@
-
-BUILT_SOURCES = \
-	click.wav.h \
-	clack.wav.h
-
 noinst_HEADERS = \
 	HelloViewController.h
 
@@ -32,38 +25,23 @@ Hello_SOURCES = \
 	HelloViewController.c \
 	Hello.c
 
-# All GLSL sources and compiled blobs are versioned in the repository.
-# Normal builds never invoke glslc or shadercross.  Run 'make shaders' after
-# editing a .glsl file to regenerate the platform blobs.
-
-GLSLC       = glslc
-SHADERCROSS = shadercross
-
-GLSL_SHADERS = \
+# Runtime assets loaded via the Resource API (from the EXAMPLES path), plus the
+# versioned shader sources/blobs. Normal builds never need glslc/shadercross;
+# run 'make shaders' after editing a .glsl.
+EXTRA_DIST = \
 	Hello.vert.glsl \
-	Hello.frag.glsl
-
-MSL_BLOBS = \
-	Hello.vert.msl \
-	Hello.frag.msl
-
-SPIRV_BLOBS = \
+	Hello.frag.glsl \
+	Hello.vert.metal \
+	Hello.frag.metal \
 	Hello.vert.spv \
-	Hello.frag.spv
+	Hello.frag.spv \
+	click.wav \
+	clack.wav
 
-EXTRA_DIST = $(GLSL_SHADERS) $(MSL_BLOBS) $(SPIRV_BLOBS)
 
 .PHONY: shaders
-shaders: $(SPIRV_BLOBS) $(MSL_BLOBS)
-
-$(srcdir)/%.vert.spv: $(srcdir)/%.vert.glsl
-	$(GLSLC) -fshader-stage=vert $< -o $@
-
-$(srcdir)/%.vert.msl: $(srcdir)/%.vert.spv
-	$(SHADERCROSS) $< -s SPIRV -d MSL -t vertex -o $@
-
-$(srcdir)/%.frag.spv: $(srcdir)/%.frag.glsl
-	$(GLSLC) -fshader-stage=frag $< -o $@
-
-$(srcdir)/%.frag.msl: $(srcdir)/%.frag.spv
-	$(SHADERCROSS) $< -s SPIRV -d MSL -t fragment -o $@
+shaders:
+	$(GLSLC) -fshader-stage=vert Hello.vert.glsl -o Hello.vert.spv
+	$(GLSLC) -fshader-stage=frag Hello.frag.glsl -o Hello.frag.spv
+	$(SHADERCROSS) Hello.vert.spv -s SPIRV -d MSL -t vertex -o Hello.vert.metal
+	$(SHADERCROSS) Hello.frag.spv -s SPIRV -d MSL -t fragment -o Hello.frag.metal
