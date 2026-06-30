@@ -483,8 +483,6 @@
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CED157B51C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectivelyMVC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CEEA01A11E2D276B00B68010 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
-		CEEA01A31E2D28B900B68010 /* INSTALL.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
 		CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectivelyGPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF1D88B1D4265A70099A857 /* Panel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Panel.c; sourceTree = "<group>"; };
 		CEF1D88C1D4265A70099A857 /* Panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Panel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -782,7 +780,6 @@
 			children = (
 				CE7EA4CC1D479A9000BD37A3 /* demo.gif */,
 				CE12D48F1C505FB400CD0B13 /* index.md */,
-				CEEA01A31E2D28B900B68010 /* INSTALL.md */,
 				CE12D4901C505FB400CD0B13 /* layout.xml */,
 			);
 			path = Documentation;
@@ -830,7 +827,6 @@
 				CE12D4281C4C375300CD0B13 /* Tests */,
 				CED1579D1C4BF32A00FBA2DE /* configure.ac */,
 				CE12D4921C50605000CD0B13 /* Doxyfile */,
-				CEEA01A11E2D276B00B68010 /* INSTALL.md */,
 				CED1579E1C4BF32A00FBA2DE /* Makefile.am */,
 				CED1579F1C4BF32A00FBA2DE /* README.md */,
 			);
