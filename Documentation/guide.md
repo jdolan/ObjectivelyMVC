@@ -1,5 +1,5 @@
-ObjectivelyMVC Guide {#guide}
-=====================
+ObjectivelyMVC User Guide {#guide}
+=========================
 
 A tour of building user interfaces with ObjectivelyMVC.
 

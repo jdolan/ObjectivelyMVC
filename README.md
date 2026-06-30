@@ -1,6 +1,6 @@
 [![Build](https://github.com/jdolan/ObjectivelyMVC/actions/workflows/build.yml/badge.svg)](https://github.com/jdolan/ObjectivelyMVC/actions/workflows/build.yml)
-[![Zlib License](https://img.shields.io/badge/license-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
-![Stable](https://img.shields.io/badge/maturity-stable-green.svg)
+[![Zlib License](https://img.shields.io/badge/license-Zlib-limegreen.svg)](https://opensource.org/licenses/Zlib)
+![Stable](https://img.shields.io/badge/maturity-stable-limegreen.svg)
 
 # ObjectivelyMVC
 Object oriented MVC framework for SDL3 and C.
@@ -31,7 +31,9 @@ $(windowController, respondToEvent, &event);
 $(windowController, render, commands, framebuffer);
 ```
 
-Read the **[Guide](https://jdolan.github.io/ObjectivelyMVC/guide.html)** for fonts, views and controls, JSON layout, theming, and resource loading.
+## User Guide
+
+Consult the **[User Guide](https://jdolan.github.io/ObjectivelyMVC/guide.html)** to build your first interface — fonts, views and controls, JSON layout, theming, and resource loading.
 
 ## API Documentation
 

@@ -17,19 +17,13 @@ Object oriented MVC framework for SDL3 and C.
 - **High-DPI / 4K ready** — automatic Retina detection with SDL_ttf TrueType font rendering
 - **iOS and macOS** (xcframework), **Windows** (MSVC / ClangCL), and **Linux**
 
+## User Guide
+
+Consult the @subpage guide [User Guide] to build your first interface.
+
 ## Class Hierarchy
 
-Browse the [class hierarchy](hierarchy.html) to navigate the full API.
-
-## Getting Started
-
-```sh
-autoreconf -i
-./configure
-make && sudo make install
-```
-
-See the @subpage guide for a full tour of fonts, views and controls, JSON layout, theming, and resource loading.
+Browse the [Class Hierarchy](hierarchy.html) to navigate the full API.
 
 ## Examples
 
