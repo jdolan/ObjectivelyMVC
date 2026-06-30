@@ -9,21 +9,20 @@ Zlib [license](./COPYING).
 
 ## About
 
-ObjectivelyMVC is a cross-platform user interface and interaction framework for [SDL3](https://libsdl.org) and C.
-It is geared towards building high-quality, modern looking user interfaces within video games that are already
-using SDL3. It is built on [Objectively](https://github.com/jdolan/Objectively) and
-[ObjectivelyGPU](https://github.com/jdolan/ObjectivelyGPU), rendering through SDL3's GPU API
-(Metal, Vulkan, and Direct3D 12).
+ObjectivelyMVC is a cross-platform user interface framework for [SDL3](https://libsdl.org) and C.
+It is geared towards building high-quality, modern user interfaces within video games. It is built on [Objectively](https://github.com/jdolan/Objectively) and
+[ObjectivelyGPU](https://github.com/jdolan/ObjectivelyGPU).
 
 ![ObjectivelyMVC demo](Documentation/demo.gif)
 
 ## Features
 
+* **Cross-platform** works on Android, iOS, macOS, Linux and Windows
 * **Does not hijack your main loop** — your game owns the window, GPU device, and events; you call it each frame
 * **Complete widget set**: Button, Checkbox, Slider, Select, TextView, TableView, CollectionView, TabView, PageView, and more
 * **Programmatic or JSON-driven layouts** for declarative, data-driven UI
 * **Fully themable** via a CSS-inspired Selector / Style / Stylesheet system
-* **High-DPI / 4K ready** — automatic Retina detection with SDL_ttf TrueType font rendering
+* **High-DPI / Retina ready** — high-density display detection with SDL_ttf TrueType font rendering
 * **Object oriented MVC in C** via [Objectively](https://github.com/jdolan/Objectively), without imposing C++
 
 ```c
