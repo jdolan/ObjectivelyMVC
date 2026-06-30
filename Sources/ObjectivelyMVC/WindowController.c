@@ -159,8 +159,8 @@ static void render(WindowController *self, CommandBuffer *commands, Framebuffer 
   assert(commands);
   assert(framebuffer);
 
-  if (framebuffer->colorFormat != self->renderer->colorFormat) {
-    self->renderer->colorFormat = framebuffer->colorFormat;
+  if (framebuffer->colorFormats[0] != self->renderer->colorFormat) {
+    self->renderer->colorFormat = framebuffer->colorFormats[0];
     $(self->renderer, renderDeviceDidReset);
   }
 

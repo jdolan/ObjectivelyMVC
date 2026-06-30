@@ -189,7 +189,7 @@ static void initScene(AppState *app) {
   };
   pipelineInfo.target_info = (SDL_GPUGraphicsPipelineTargetInfo) {
     .color_target_descriptions = &(SDL_GPUColorTargetDescription) {
-      .format = app->framebuffer->colorTexture->format,
+      .format = app->framebuffer->colorTextures[0]->format,
       .blend_state = GPU_BlendStateOpaque,
     },
     .num_color_targets = 1,
@@ -226,7 +226,7 @@ static void drawScene(AppState *app, CommandBuffer *commands) {
   $(commands, pushVertexUniformData, 0, modelViewProjection.f, sizeof(modelViewProjection));
 
   const SDL_FColor clearColor = { 0.1f, 0.1f, 0.2f, 1.f };
-  const SDL_GPUColorTargetInfo color = $(app->framebuffer, colorTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_STORE, &clearColor);
+  const SDL_GPUColorTargetInfo color = $(app->framebuffer, colorTargetInfo, 0, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_STORE, &clearColor);
   const SDL_GPUDepthStencilTargetInfo depth = $(app->framebuffer, depthTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_DONT_CARE, 1.f);
 
   RenderPass *pass = $(commands, beginRenderPass, &color, 1, &depth);
@@ -324,7 +324,8 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
 
   app->framebuffer = $(app->renderDevice, createFramebuffer, &(GPU_FramebufferCreateInfo) {
     .size = MakeSize(w, h),
-    .colorFormat = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+    .colorFormats = { SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM },
+    .numColorTargets = 1,
     .depthFormat = SDL_GPU_TEXTUREFORMAT_D16_UNORM,
     .sampleCount = SDL_GPU_SAMPLECOUNT_1,
   });
