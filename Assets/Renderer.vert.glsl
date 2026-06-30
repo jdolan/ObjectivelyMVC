@@ -42,11 +42,11 @@ layout(location = 0) out vec2 out_texcoord;
 layout(location = 1) out vec4 out_color;
 
 layout(set = 1, binding = 0, std140) uniform Projection {
-	mat4 proj;
+  mat4 proj;
 };
 
 void main() {
-	gl_Position  = proj * vec4(in_position, 0.0, 1.0);
-	out_texcoord = in_texcoord;
-	out_color    = in_color;
+  gl_Position = proj * vec4(in_position, 0.0, 1.0);
+  out_texcoord = in_texcoord;
+  out_color = in_color;
 }

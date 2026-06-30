@@ -92,7 +92,7 @@ typedef struct {
   /**
    * @brief The ObjectivelyMVC @c WindowController.
    */
-	WindowController *windowController;
+  WindowController *windowController;
 
   /**
    * @brief Simulation time in milliseconds.
@@ -196,7 +196,7 @@ static void initScene(AppState *app) {
 /**
  * @brief Renders a single frame of the @c Scene.
  */
-static void drawScene(AppState *app, CommandBuffer *cmd) {
+static void drawScene(AppState *app, CommandBuffer *commands) {
 
   const Uint64 ticks = SDL_GetTicks();
   const float dt = (ticks - app->ticks) / 1000.f;
@@ -213,13 +213,13 @@ static void drawScene(AppState *app, CommandBuffer *cmd) {
 
   const mat4 projection = mat4_perspective(45.f, (float) app->framebuffer->size.w / (float) app->framebuffer->size.h, 0.01f, 100.f);
   const mat4 modelViewProjection = mat4_mul(projection, modelView);
-  $(cmd, pushVertexUniformData, 0, modelViewProjection.f, sizeof(modelViewProjection));
+  $(commands, pushVertexUniformData, 0, modelViewProjection.f, sizeof(modelViewProjection));
 
   const SDL_FColor clearColor = { 0.1f, 0.1f, 0.2f, 1.f };
   const SDL_GPUColorTargetInfo color = $(app->framebuffer, colorTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_STORE, &clearColor);
   const SDL_GPUDepthStencilTargetInfo depth = $(app->framebuffer, depthTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_DONT_CARE, 1.f);
 
-  RenderPass *pass = $(cmd, beginRenderPass, &color, 1, &depth);
+  RenderPass *pass = $(commands, beginRenderPass, &color, 1, &depth);
   $(pass, bindPipeline, scene->pipeline);
   $(pass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = scene->vertexBuffer->buffer }, 1);
   $(pass, drawPrimitives, (Uint32) SDL_arraysize(vertices), 1, 0, 0);
@@ -261,45 +261,49 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
 
   AppState *app = *appState = &application;
 
-	MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
+  MVC_LogSetPriority(SDL_LOG_PRIORITY_DEBUG);
 
-	MVC_Assert(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
+  MVC_Assert(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO), "SDL_Init");
 
 #ifdef EXAMPLES
-	$$(Resource, addResourcePath, EXAMPLES);
+  $$(Resource, addResourcePath, EXAMPLES);
 #endif
 
-	app->audioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &(SDL_AudioSpec) {
-		.format = SDL_AUDIO_S16LE,
-		.channels = 1,
-		.freq = 22050,
-	}, NULL, NULL);
+  app->audioStream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &(SDL_AudioSpec) {
+    .format = SDL_AUDIO_S16LE,
+    .channels = 1,
+    .freq = 22050,
+  }, NULL, NULL);
 
   MVC_Assert(app->audioStream, "SDL_OpenAudioDeviceStream");
-	SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(app->audioStream));
+  SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(app->audioStream));
 
-	app->window = SDL_CreateWindow("Hello ObjectivelyMVC", HELLO_WINDOW_W, HELLO_WINDOW_H, HELLO_WINDOW_FLAGS);
-	MVC_Assert(app->window, "SDL_CreateWindow");
+  app->window = SDL_CreateWindow("Hello ObjectivelyMVC", HELLO_WINDOW_W, HELLO_WINDOW_H, HELLO_WINDOW_FLAGS);
+  MVC_Assert(app->window, "SDL_CreateWindow");
 
   app->renderDevice = $(alloc(RenderDevice), initWithWindow, app->window);
 
   int w = 0, h = 0;
   SDL_GetWindowSizeInPixels(app->window, &w, &h);
 
-  app->framebuffer = $(alloc(Framebuffer), initWithDevice, app->renderDevice,
-    &MakeSize(w, h),
-    SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
-    SDL_GPU_TEXTUREFORMAT_D16_UNORM);
+  app->framebuffer = $(app->renderDevice, createFramebuffer, &(GPU_FramebufferCreateInfo) {
+    .size = MakeSize(w, h),
+    .colorFormat = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+    .depthFormat = SDL_GPU_TEXTUREFORMAT_D16_UNORM,
+    .sampleCount = SDL_GPU_SAMPLECOUNT_1,
+  });
 
-	app->windowController = $(alloc(WindowController), initWithDevice, app->renderDevice);
+  $(app->renderDevice, setFramebuffer, app->framebuffer);
 
-	ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
-	$(app->windowController, setViewController, viewController);
-	release(viewController);
+  app->windowController = $(alloc(WindowController), initWithDevice, app->renderDevice);
 
-	initScene(app);
+  ViewController *viewController = (ViewController *) $(alloc(HelloViewController), init);
+  $(app->windowController, setViewController, viewController);
+  release(viewController);
 
-	return SDL_APP_CONTINUE;
+  initScene(app);
+
+  return SDL_APP_CONTINUE;
 }
 
 /**
@@ -309,36 +313,14 @@ SDL_AppResult SDL_AppIterate(void *appState) {
 
   AppState *app = appState;
 
-  CommandBuffer *cmd = $(app->renderDevice, acquireCommandBuffer);
+  CommandBuffer *commands = $(app->renderDevice, beginFrame);
+  if (commands) {
+    drawScene(app, commands);
+    $(app->windowController, render, commands, app->framebuffer);
+    $(app->renderDevice, endFrame);
+  }
 
-  SwapchainTexture swapchain = { 0 };
-  $(cmd, waitAndAcquireSwapchainTexture, &swapchain);
-
-  $(app->framebuffer, resize, &swapchain.size);
-
-  drawScene(app, cmd);
-
-  $(app->windowController, render, cmd, app->framebuffer);
-
-  $(cmd, blitTexture, &(SDL_GPUBlitInfo) {
-    .source = {
-      .texture = app->framebuffer->colorTexture->texture,
-      .w = (Uint32) swapchain.size.w,
-      .h = (Uint32) swapchain.size.h,
-    },
-    .destination = {
-      .texture = swapchain.texture,
-      .w = (Uint32) swapchain.size.w,
-      .h = (Uint32) swapchain.size.h,
-    },
-    .load_op = SDL_GPU_LOADOP_DONT_CARE,
-    .filter = SDL_GPU_FILTER_NEAREST,
-  });
-
-  $(app->renderDevice, submit, cmd);
-  release(cmd);
-
-	return SDL_APP_CONTINUE;
+  return SDL_APP_CONTINUE;
 }
 
 /**
@@ -348,19 +330,19 @@ SDL_AppResult SDL_AppEvent(void *appState, SDL_Event *event) {
 
   AppState *app = appState;
 
-	$(app->windowController, respondToEvent, event);
+  $(app->windowController, respondToEvent, event);
 
-	if (event->type == MVC_VIEW_EVENT) {
+  if (event->type == MVC_VIEW_EVENT) {
     SDL_UserEvent *user = &event->user;
     user->data2 = appState;
     onViewEvent(user);
-	}
+  }
 
-	if (event->type == SDL_EVENT_QUIT) {
-		return SDL_APP_SUCCESS;
-	}
+  if (event->type == SDL_EVENT_QUIT) {
+    return SDL_APP_SUCCESS;
+  }
 
-	return SDL_APP_CONTINUE;
+  return SDL_APP_CONTINUE;
 }
 
 /**
@@ -372,7 +354,7 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
 
   $(app->renderDevice, waitForIdle);
 
-	release(app->windowController);
+  release(app->windowController);
 
   release(app->scene.pipeline);
   release(app->scene.vertexBuffer);
@@ -380,8 +362,8 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
   release(app->framebuffer);
   release(app->renderDevice);
 
-	SDL_DestroyAudioStream(app->audioStream);
-	SDL_DestroyWindow(app->window);
+  SDL_DestroyAudioStream(app->audioStream);
+  SDL_DestroyWindow(app->window);
 
-	SDL_Quit();
+  SDL_Quit();
 }
