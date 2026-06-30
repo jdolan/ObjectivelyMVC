@@ -22,8 +22,10 @@
     <ClInclude Include="..\Assets\check.png.h" />
     <ClInclude Include="..\Assets\debug.css.h" />
     <ClInclude Include="..\Assets\debug.json.h" />
-    <ClInclude Include="..\Assets\renderer_fs.glsl.h" />
-    <ClInclude Include="..\Assets\renderer_vs.glsl.h" />
+    <ClInclude Include="..\Assets\Renderer.frag.msl.h" />
+    <ClInclude Include="..\Assets\Renderer.frag.spv.h" />
+    <ClInclude Include="..\Assets\Renderer.vert.msl.h" />
+    <ClInclude Include="..\Assets\Renderer.vert.spv.h" />
     <ClInclude Include="..\Assets\resize.png.h" />
     <ClInclude Include="..\Assets\stylesheet.css.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
