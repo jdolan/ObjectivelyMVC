@@ -89,6 +89,15 @@ struct Panel {
   bool isResizing;
 
   /**
+   * @brief Sub-point motion carried between events while dragging or resizing.
+   * @remarks Mouse motion is reported in points, which are fractional on
+   * high-density displays. Accumulating the remainder here keeps the Panel
+   * tracking the cursor 1:1 instead of drifting as truncated deltas are lost.
+   * @private
+   */
+  SDL_FPoint gestureResidual;
+
+  /**
    * @brief The resize handle.
    * @private
    */

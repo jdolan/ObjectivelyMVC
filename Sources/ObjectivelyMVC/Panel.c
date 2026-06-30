@@ -144,26 +144,42 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     if (event->motion.state & SDL_BUTTON_LEFT) {
       self->state |= ControlStateHighlighted;
 
-      if (this->isResizing) {
-        SDL_Size size = $((View *) self, size);
+      if (this->isResizing || this->isDraggable) {
 
-        size.w += event->motion.xrel;
-        size.h += event->motion.yrel;
+        // Motion is reported in points, which are fractional on high-density
+        // displays. Carry the sub-point remainder between events so the integer
+        // deltas applied to the frame sum exactly to the cursor's movement,
+        // rather than truncating away a fraction each event and drifting behind.
+        this->gestureResidual.x += event->motion.xrel;
+        this->gestureResidual.y += event->motion.yrel;
 
-        $((View *) self, resize, &size);
-        return true;
+        const int dx = (int) this->gestureResidual.x;
+        const int dy = (int) this->gestureResidual.y;
 
-      } else if (this->isDraggable) {
-        this->isDragging = true;
+        this->gestureResidual.x -= dx;
+        this->gestureResidual.y -= dy;
 
-        self->view.frame.x += event->motion.xrel;
-        self->view.frame.y += event->motion.yrel;
+        if (this->isResizing) {
+          SDL_Size size = $((View *) self, size);
+
+          size.w += dx;
+          size.h += dy;
+
+          $((View *) self, resize, &size);
+
+        } else {
+          this->isDragging = true;
+
+          self->view.frame.x += dx;
+          self->view.frame.y += dy;
+        }
 
         return true;
       }
     } else {
       self->state &= ~ControlStateHighlighted;
       this->isResizing = this->isDragging = false;
+      this->gestureResidual.x = this->gestureResidual.y = 0.f;
     }
   }
 
