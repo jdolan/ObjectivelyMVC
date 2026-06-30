@@ -5,10 +5,8 @@
 *.exe
 *.la
 *.lo
-*.msl
 *.o
 *.pc
-*.spv
 *.swp
 .deps/
 .dirstamp
