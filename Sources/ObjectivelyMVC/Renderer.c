@@ -489,7 +489,8 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((RendererInterface *) clazz->interface)->beginFrame = beginFrame;
-  ((RendererInterface *) clazz->interface)->drawLine = drawLine;  ((RendererInterface *) clazz->interface)->drawLines = drawLines;
+  ((RendererInterface *) clazz->interface)->drawLine = drawLine;
+  ((RendererInterface *) clazz->interface)->drawLines = drawLines;
   ((RendererInterface *) clazz->interface)->drawRect = drawRect;
   ((RendererInterface *) clazz->interface)->drawRectFilled = drawRectFilled;
   ((RendererInterface *) clazz->interface)->drawTexture = drawTexture;
