@@ -25,11 +25,33 @@ It is geared towards building high-quality, modern user interfaces within video 
 * **High-DPI / Retina ready** — high-density display detection with SDL_ttf TrueType font rendering
 * **Object oriented MVC in C** via [Objectively](https://github.com/jdolan/Objectively), without imposing C++
 
+## tl;dr
+
+Describe an entire interface in JSON and inflate it with a single call — outlets bind the named Views straight into your controller:
+
+```c
+Outlet outlets[] = MakeOutlets(
+  MakeOutlet("apply", &this->apply),
+  MakeOutlet("slider", &this->slider)
+);
+
+View *panel = $$(View, viewWithResourceName, "Settings.json", outlets);
+$(self->view, addSubview, panel);
+
+this->apply->delegate.didClick = didClickApply;
+```
+
+And ObjectivelyMVC never hijacks your main loop. Your game owns the window, the GPU device and the events; you simply hand it each event and a frame to draw into:
+
 ```c
 $(windowController, respondToEvent, &event);
 ...
 $(windowController, render, commands, framebuffer);
 ```
+
+## Getting Started
+
+Consult the **[Installation](https://jdolan.github.io/ObjectivelyMVC/install.html)** guide for dependencies, building, and linking.
 
 ## User Guide
 
@@ -38,28 +60,6 @@ Consult the **[User Guide](https://jdolan.github.io/ObjectivelyMVC/guide.html)**
 ## API Documentation
 
 Browse the [API Documentation](https://jdolan.github.io/ObjectivelyMVC/) to explore the library.
-
-## Getting Started
-
-### Dependencies
-
-* [Objectively](https://github.com/jdolan/Objectively) >= 2.0.0
-* [ObjectivelyGPU](https://github.com/jdolan/ObjectivelyGPU) >= 1.0.0
-* [SDL3](https://github.com/libsdl-org/SDL) >= 3.2.0, [SDL3_image](https://github.com/libsdl-org/SDL_image), [SDL3_ttf](https://github.com/libsdl-org/SDL_ttf)
-
-### Building
-
-```sh
-autoreconf -i
-./configure
-make && sudo make install
-```
-
-Then compile and link against ObjectivelyMVC with `pkg-config`:
-
-```sh
-gcc `pkg-config --cflags --libs ObjectivelyMVC` -o myprogram *.c
-```
 
 ## Examples & projects using ObjectivelyMVC
 

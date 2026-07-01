@@ -17,6 +17,34 @@ Object oriented MVC framework for SDL3 and C.
 - **High-DPI / 4K ready** — automatic Retina detection with SDL_ttf TrueType font rendering
 - **iOS and macOS** (xcframework), **Windows** (MSVC / ClangCL), and **Linux**
 
+## tl;dr
+
+Describe an entire interface in JSON and inflate it with a single call — outlets bind the named Views straight into your controller:
+
+```c
+Outlet outlets[] = MakeOutlets(
+  MakeOutlet("apply", &this->apply),
+  MakeOutlet("slider", &this->slider)
+);
+
+View *panel = $$(View, viewWithResourceName, "Settings.json", outlets);
+$(self->view, addSubview, panel);
+
+this->apply->delegate.didClick = didClickApply;
+```
+
+And ObjectivelyMVC never hijacks your main loop. Your game owns the window, the GPU device and the events; you simply hand it each event and a frame to draw into:
+
+```c
+$(windowController, respondToEvent, &event);
+...
+$(windowController, render, commands, framebuffer);
+```
+
+## Getting Started
+
+Consult the @subpage install for dependencies, building, and linking.
+
 ## User Guide
 
 Consult the @subpage guide [User Guide] to build your first interface.

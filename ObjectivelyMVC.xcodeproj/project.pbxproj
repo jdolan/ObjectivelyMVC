@@ -388,6 +388,11 @@
 		CE14A8CB1C66D89900B576FB /* Select.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Select.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE14A8CE1C68CE3C00B576FB /* Option.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Option.c; sourceTree = "<group>"; };
 		CE14A8CF1C68CE3C00B576FB /* Option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Option.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		CE1643442FF47EC500863996 /* guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = guide.md; sourceTree = "<group>"; };
+		CE1643452FF47EC500863996 /* hello-thumbnail.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "hello-thumbnail.jpg"; sourceTree = "<group>"; };
+		CE1643462FF47EC500863996 /* quetoo1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = quetoo1.jpg; sourceTree = "<group>"; };
+		CE1643472FF47EC500863996 /* quetoo2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = quetoo2.jpg; sourceTree = "<group>"; };
+		CE1643482FF47EC500863996 /* quetoo3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = quetoo3.jpg; sourceTree = "<group>"; };
 		CE1CCDA21D9E859F00891F05 /* View+JSON.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "View+JSON.c"; sourceTree = "<group>"; };
 		CE1CCDA31D9E859F00891F05 /* View+JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "View+JSON.h"; sourceTree = "<group>"; };
 		CE3091BB2CFB8F2100E59187 /* Warning.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Warning.h; sourceTree = "<group>"; };
@@ -779,8 +784,13 @@
 			isa = PBXGroup;
 			children = (
 				CE7EA4CC1D479A9000BD37A3 /* demo.gif */,
+				CE1643442FF47EC500863996 /* guide.md */,
+				CE1643452FF47EC500863996 /* hello-thumbnail.jpg */,
 				CE12D48F1C505FB400CD0B13 /* index.md */,
 				CE12D4901C505FB400CD0B13 /* layout.xml */,
+				CE1643462FF47EC500863996 /* quetoo1.jpg */,
+				CE1643472FF47EC500863996 /* quetoo2.jpg */,
+				CE1643482FF47EC500863996 /* quetoo3.jpg */,
 			);
 			path = Documentation;
 			sourceTree = "<group>";
