@@ -64,8 +64,7 @@ typedef struct {
 
 /**
  * @brief Renderer extends Object with ObjectivelyMVC's UI rendering layer.
- * @details Create a WindowController to instantiate a default Renderer, or
- * supply your own subclass via WindowController::setRenderer.
+ * @details Create a WindowController to instantiate a default Renderer.
  * @extends Object
  */
 struct Renderer {
