@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -28,6 +28,7 @@
 #include <SDL3/SDL_pixels.h>
 
 #include <Objectively/Types.h>
+#include <ObjectivelyGPU/Types.h>
 
 #undef interface
 
@@ -135,27 +136,3 @@ OBJECTIVELYMVC_EXPORT Uint32 MVC_VIEW_EVENT;
  * @brief The custom `SDL_event` type for notifications.
  */
 OBJECTIVELYMVC_EXPORT Uint32 MVC_NOTIFICATION_EVENT;
-
-typedef struct SDL_Size SDL_Size;
-
-/**
- * @brief The SDL_Size type.
- */
-struct SDL_Size {
-  int w, h;
-};
-
-/**
- * @brief Creates an SDL_Point with the given coordinates.
- */
-#define MakePoint(x, y) (SDL_Point) { (x), (y) }
-
-/**
- * @brief Creates an SDL_Rect with the given origin and size.
- */
-#define MakeRect(x, y, w, h) (SDL_Rect) { (x), (y), (w), (h) }
-
-/**
- * @brief Creates an SDL_Size with the given dimensions.
- */
-#define MakeSize(w, h) (SDL_Size) { (w), (h) }

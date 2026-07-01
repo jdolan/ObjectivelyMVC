@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <SDL3/SDL_gpu.h>
+
 #include <ObjectivelyMVC/Image.h>
 #include <ObjectivelyMVC/View.h>
 
@@ -31,7 +33,7 @@
  * @brief ImageViews render an Image in the context of a View hierarchy.
  */
 
-OBJECTIVELYMVC_EXPORT const EnumName GLBlendNames[];
+OBJECTIVELYMVC_EXPORT const EnumName SDLGPUBlendFactorNames[];
 
 typedef struct ImageView ImageView;
 typedef struct ImageViewInterface ImageViewInterface;
@@ -54,10 +56,10 @@ struct ImageView {
   ImageViewInterface *interface;
 
   /**
-   * @brief The blend function.
+   * @brief The blend factors (currently unused; reserved for future per-pipeline support).
    */
   struct {
-    GLenum src, dst;
+    SDL_GPUBlendFactor src, dst;
   } blend;
 
   /**
@@ -71,9 +73,9 @@ struct ImageView {
   Image *image;
 
   /**
-   * @brief The texture.
+   * @brief The GPU texture.
    */
-  GLuint texture;
+  Texture *texture;
 };
 
 /**

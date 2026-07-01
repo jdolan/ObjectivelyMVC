@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -21,18 +21,25 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
-#pragma once
-
-#include <SDL3/SDL.h>
-
 /**
- * @brief Initializes the GL 3.3 scene (loads procs, compiles shaders, uploads geometry).
- * Call once after the GL context is current.
+ * @file Renderer.frag.glsl
+ * @brief ObjectivelyMVC Renderer fragment shader.
+ *
+ * Inputs  (location 0): vec2 texcoord from vertex stage
+ *         (location 1): vec4 color from vertex stage
+ * Sampler (set=2, b=0): sampler2D tex (combined texture + sampler)
+ * Output              : vec4 RGBA
  */
-void initScene(void);
 
-/**
- * @brief Draws one frame of the rotating cube scene.
- * @param window The SDL window (used to query the current drawable size).
- */
-void drawScene(SDL_Window *window);
+#version 450
+
+layout(location = 0) in vec2 in_texcoord;
+layout(location = 1) in vec4 in_color;
+
+layout(location = 0) out vec4 out_color;
+
+layout(set = 2, binding = 0) uniform sampler2D tex;
+
+void main() {
+  out_color = in_color * texture(tex, in_texcoord);
+}

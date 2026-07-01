@@ -22,8 +22,10 @@
     <ClInclude Include="..\Assets\check.png.h" />
     <ClInclude Include="..\Assets\debug.css.h" />
     <ClInclude Include="..\Assets\debug.json.h" />
-    <ClInclude Include="..\Assets\renderer_fs.glsl.h" />
-    <ClInclude Include="..\Assets\renderer_vs.glsl.h" />
+    <ClInclude Include="..\Assets\Renderer.frag.msl.h" />
+    <ClInclude Include="..\Assets\Renderer.frag.spv.h" />
+    <ClInclude Include="..\Assets\Renderer.vert.msl.h" />
+    <ClInclude Include="..\Assets\Renderer.vert.spv.h" />
     <ClInclude Include="..\Assets\resize.png.h" />
     <ClInclude Include="..\Assets\stylesheet.css.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
@@ -49,7 +51,6 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Panel.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ProgressBar.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer+OpenGL.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
@@ -104,7 +105,6 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\Panel.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ProgressBar.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer+OpenGL.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
@@ -138,6 +138,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Objectively\Objectively.vs15\Objectively.vcxproj">
       <Project>{3e6b97c6-1f51-4d72-bdfe-1d492f5eda6c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ObjectivelyGPU\ObjectivelyGPU.vs15\ObjectivelyGPU.vcxproj">
+      <Project>{859DBD01-F8E7-4636-96FA-260D3144F157}</Project>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -189,18 +192,18 @@
   <PropertyGroup Label="UserMacros" />
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;..\..\ObjectivelyGPU\Sources\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
-    <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;..\..\ObjectivelyGPU\ObjectivelyGPU.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;libs\fontconfig\;$(IncludePath)</IncludePath>
+    <IncludePath>..\Assets\;..\Sources\;Sources\;..\..\Objectively\Sources\;..\..\Objectively\Objectively.vs15\Sources\;..\..\Objectively\Objectively.vs15\Sources\gnu\;..\..\ObjectivelyGPU\Sources\;libs\fontconfig\;$(IncludePath)</IncludePath>
     <OutDir>bin\$(Platform)$(Configuration)\</OutDir>
     <IntDir>tmp\$(ProjectName)\$(Platform)$(Configuration)\</IntDir>
     <UseMultiToolTask>true</UseMultiToolTask>
-    <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>..\..\Objectively\Objectively.vs15\bin\$(Platform)$(Configuration)\;..\..\ObjectivelyGPU\ObjectivelyGPU.vs15\bin\$(Platform)$(Configuration)\;libs\fontconfig\lib\$(Platform)\;libs\freetype\lib\$(Platform)\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
 
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -217,7 +220,7 @@
       </ShowIncludes>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;Objectively.lib;ObjectivelyGPU.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 
@@ -238,7 +241,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;Objectively.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>fontconfig.lib;freetype.lib;SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;Objectively.lib;ObjectivelyGPU.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration />
     </Link>
   </ItemDefinitionGroup>

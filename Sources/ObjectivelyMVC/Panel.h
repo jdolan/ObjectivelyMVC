@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -87,6 +87,15 @@ struct Panel {
    * @brief True if the user is resizing this Panel.
    */
   bool isResizing;
+
+  /**
+   * @brief Sub-point motion carried between events while dragging or resizing.
+   * @remarks Mouse motion is reported in points, which are fractional on
+   * high-density displays. Accumulating the remainder here keeps the Panel
+   * tracking the cursor 1:1 instead of drifting as truncated deltas are lost.
+   * @private
+   */
+  SDL_FPoint gestureResidual;
 
   /**
    * @brief The resize handle.

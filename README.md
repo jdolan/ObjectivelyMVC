@@ -1,159 +1,73 @@
 [![Build](https://github.com/jdolan/ObjectivelyMVC/actions/workflows/build.yml/badge.svg)](https://github.com/jdolan/ObjectivelyMVC/actions/workflows/build.yml)
-[![Zlib License](https://img.shields.io/badge/license-Zlib-brightgreen.svg)](https://opensource.org/licenses/Zlib)
-![This software is PRE-ALPHA](https://img.shields.io/badge/development_stage-ALPHA-yellow.svg)
+[![Zlib License](https://img.shields.io/badge/license-Zlib-limegreen.svg)](https://opensource.org/licenses/Zlib)
+![Stable](https://img.shields.io/badge/maturity-stable-limegreen.svg)
 
-ObjectivelyMVC
-===
+# ObjectivelyMVC
+Object oriented MVC framework for SDL3 and C.
 
-Object oriented MVC framework for OpenGL, SDL3 and GNU C
----
+Zlib [license](./COPYING).
 
-ObjectivelyMVC is a cross-platform user interface and interaction framework for [SDL3](http://www.libsdl.org) inspired by Apple's [AppKit](https://developer.apple.com/reference/appkit). It is geared towards building high-quality, modern looking user interfaces within [OpenGL](http://www.opengl.org/) video games that are already using SDL3. It is built on [Objectively](https://github.com/jdolan/Objectively), written in [GNU C](http://www.gnu.org/software/gnu-c-manual/), and requires `gcc` or `clang`.
+## About
 
-[![Hello, ObjectivelyMVC!](Documentation/hello-thumbnail.jpg)](https://www.youtube.com/watch?v=Rm_mOr3gP5k)
- 
-Features
----
+ObjectivelyMVC is a cross-platform user interface framework for [SDL3](https://libsdl.org) and C.
+It is geared towards building high-quality, modern user interfaces within video games. It is built on [Objectively](https://github.com/jdolan/Objectively) and
+[ObjectivelyGPU](https://github.com/jdolan/ObjectivelyGPU).
 
-### Object oriented Model-View-Controller implementation in C
+![ObjectivelyMVC demo](Documentation/demo.gif)
 
-ObjectivelyMVC is built on [Objectively](https://github.com/jdolan/Objectively), an ultra-lightweight object oriented framework for [GNU C](http://www.gnu.org/software/gnu-c-manual/). ObjectivelyMVC delivers the elegance of OO / MVC without imposing C++ on your project. If you *are* using C++ or Objective-C, ObjectivelyMVC is perfectly happy alongside those, too.
+## Features
+
+* **Cross-platform** works on Android, iOS, macOS, Linux and Windows
+* **Does not hijack your main loop** — your game owns the window, GPU device, and events; you call it each frame
+* **Complete widget set**: Button, Checkbox, Slider, Select, TextView, TableView, CollectionView, TabView, PageView, and more
+* **Programmatic or JSON-driven layouts** for declarative, data-driven UI
+* **Fully themable** via a CSS-inspired Selector / Style / Stylesheet system
+* **High-DPI / Retina ready** — high-density display detection with SDL_ttf TrueType font rendering
+* **Object oriented MVC in C** via [Objectively](https://github.com/jdolan/Objectively), without imposing C++
+
+## tl;dr
+
+Describe an entire interface in JSON and inflate it with a single call — outlets bind the named Views straight into your controller:
 
 ```c
-WindowController *windowController = $(alloc(WindowController), initWithWindow, window);
+Outlet outlets[] = MakeOutlets(
+  MakeOutlet("apply", &this->apply),
+  MakeOutlet("slider", &this->slider)
+);
+
+View *panel = $$(View, viewWithResourceName, "Settings.json", outlets);
+$(self->view, addSubview, panel);
+
+this->apply->delegate.didClick = didClickApply;
 ```
 
-### Easily embeddable in any SDL3 / OpenGL application
-
-ObjectivelyMVC is purpose-built for video games. Unlike Gtk+, Qt, wxWidgets, FLTK, ..ObjectivelyMVC **does not hijack the main loop**. ObjectivelyMVC does not create a window, manage an OpenGL context, or originate events. Your game already does that, because it has to. Like your mother, ObjectivelyMVC only asks that you give it a call once in a while. That's it.
+And ObjectivelyMVC never hijacks your main loop. Your game owns the window, the GPU device and the events; you simply hand it each event and a frame to draw into:
 
 ```c
 $(windowController, respondToEvent, &event);
 ...
-$(windowController, render);
+$(windowController, render, commands, framebuffer);
 ```
 
-### Beautiful 4K-ready fonts
+## Getting Started
 
-ObjectivelyMVC uses [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/) to render TrueType fonts. It also automatically detects High-DPI (Retina, 4K) displays, and scales fonts accordingly. The result is crisp, beautiful vector-based fonts that look native, because they are.
+Consult the **[Installation](https://jdolan.github.io/ObjectivelyMVC/install.html)** guide for dependencies, building, and linking.
 
-```c
-Data *data = $$(Data, dataWithContentsOfFile, "Verdana.ttf");
-...
-$$(Font, cacheFont, data, "Verdana");
-...
-Font *verdana = $$(Font, cachedFont, "Verdana", 24, FontStyleRegular); // will render at 48pt on Retina displays
-```
+## User Guide
 
-### Full suite of Views and Controls
+Consult the **[User Guide](https://jdolan.github.io/ObjectivelyMVC/guide.html)** to build your first interface — fonts, views and controls, JSON layout, theming, and resource loading.
 
-ObjectivelyMVC provides a robust set of containers, views and controls. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular data or a thumbnail gallery with `TableView` and `CollectionView`. Split complex interfaces into multiple tabs with `TabView` and `TabViewController`. Use the specialized _delegate_ callbacks to respond to events.
+## API Documentation
 
-```c
-Select *select = $(alloc(Select), initWithFrame, NULL);
-...
-select->delegate.didSelectOption = my_callback;
-```
+Browse the [API Documentation](https://jdolan.github.io/ObjectivelyMVC/) to explore the library.
 
-### Programmatic or JSON-based layout options
+## Examples & projects using ObjectivelyMVC
 
-ObjectivelyMVC allows you to define your View hierarchy programmatically, via JSON, or using any combination of both. Programmatic layout gives you explicit control over the big picture, while JSON layout allows you to reduce boilerplate and avoid common pitfalls like memory leaks.
-
-```json
-{
-	"class": "Panel",
-	"style": {
-		"top": 50,
-		"left": 50
-	},
-	"contentView": {
-		"subviews": [{
-			"class": "Input",
-			"control": {
-				"class": "Checkbox",
-				"identifier": "checkbox"
-			},
-			"label": {
-				"text": "This is a checkbox:"
-			}
-		}]
-	}
-}
-```
-
-### Fully themable via Cascading Stylesheets
-
-ObjectivelyMVC uses a custom CSS3 dialect to manage all aspects of its presentation. Nothing about the look and feel of ObjectivelyMVC is hard-coded, and authoring and attaching new `Stylesheets` is trivial and straightforward.
-
-```css
-/* MyView.css */
-
-Box {
-	border-color: #1e4e62;
-}
-
-Panel {
-	background-color: #08151aaa;
-}
-
-.columns {
-	autoresizing-mask: contain | width;
-	axis: horizontal;
-	distribution: fill;
-}
-
-.columns > .column {
-	autoresizing-mask: contain | height;
-	distribution: fill;
-	width: 384;
-}
-```
-
-### Simple, flexible resource loading
-
-ObjectivelyMVC makes loading `Fonts`, `Images`, `Stylesheets`, and `Views` painless. For direct filesystem access, add directories to its search path with `$$(Resource, addResourcePath, "/my/path")`. To search your game's filesystem abstraction, implement a custom `ResourceProvider` function, and register it:
-
-```c
-static Data *resourceProvider(const char *name) {
-	uint8_t *bytes;
-
-	const ssize_t length = read_file_from_gamefs(name, &bytes);
-
-	return length != -1 ? $$(Data, dataWithBytes, bytes, length) : NULL;
-}
-
-// ...
-
-$$(Resource, addResourceProvider, resourceProvider);
-```
-
-Examples
----
-
-### HelloViewController
-An example application that creates a Window, enters its main loop and draws a scene before rendering a simple menu. This example uses JSON layout.
-
-[![Hello, ObjectivelyMVC!](Documentation/hello-thumbnail.jpg)](https://www.youtube.com/watch?v=Rm_mOr3gP5k)
-
- * [Hello.c](Examples/Hello.c) - The application source code
- * [HelloViewController.h](Examples/HelloViewController.h) - The `HelloViewController` header.
- * [HelloViewController.c](Examples/HelloViewController.c) - The `HelloViewController` source code.
- * [HelloViewController.json](Examples/HelloViewController.json) - The `HelloViewController` JSON layout. 
-
-
-### Quetoo
-[Quetoo](https://github.com/jdolan/quetoo) is an open source FPS based on [idTech2](https://en.wikipedia.org/wiki/Quake_II_engine). Quetoo uses ObjectivelyMVC for its in-game user interface:
+1. [Hello](Examples/Hello.c) creates a window and renders a themed menu over a 3D scene using JSON layout — walked through in the [Guide](https://jdolan.github.io/ObjectivelyMVC/guide.html).
+1. [Objectively](https://github.com/jdolan/Objectively) is the object oriented framework ObjectivelyMVC is built on.
+1. [ObjectivelyGPU](https://github.com/jdolan/ObjectivelyGPU) is the graphics framework ObjectivelyMVC renders with.
+1. [Quetoo](https://github.com/jdolan/quetoo) is a free first-person shooter that uses ObjectivelyMVC for its in-game user interface.
 
 ![Quetoo](Documentation/quetoo1.jpg)
 ![Quetoo](Documentation/quetoo2.jpg)
 ![Quetoo](Documentation/quetoo3.jpg)
-
-Installation
----
-
-See [INSTALL.md](INSTALL.md) for installation and linking instructions.
-
-API documentation
----
- 
-The API documentation can be [browsed online](http://jaydolan.com/projects/ObjectivelyMVC) or generated with [Doxygen](http://www.doxygen.org) by running `make html`.

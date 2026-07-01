@@ -1,6 +1,6 @@
 AC_PREREQ(2.69)
 
-AC_INIT([ObjectivelyMVC], [1.0.7], [jay@jaydolan.com])
+AC_INIT([ObjectivelyMVC], [2.0.0], [jay@jaydolan.com])
 
 AC_CONFIG_HEADERS([Sources/ObjectivelyMVC/Config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -28,18 +28,15 @@ case "$host" in
 	*-apple-*)
 		HOST_NAME="APPLE"
 		HOST_LDFLAGS="-headerpad_max_install_names"
-		HOST_LIBS="-framework OpenGL"
 		AC_MSG_RESULT(apple)
 		;;
 	*-mingw*)
 		HOST_NAME="MINGW"
 		HOST_LDFLAGS="-no-undefined"
-		HOST_LIBS="-lopengl32"
 		AC_MSG_RESULT(mingw)
 		;;
 	*)
 		HOST_NAME="LINUX"
-		HOST_LIBS="-lGL"
 		AC_MSG_RESULT(linux)
 		;;
 esac
@@ -53,13 +50,17 @@ AM_CONDITIONAL([APPLE], [test "x$HOST_NAME" = "xAPPLE"])
 AM_CONDITIONAL([MINGW], [test "x$HOST_NAME" = "xMINGW"])
 AM_CONDITIONAL([LINUX], [test "x$HOST_NAME" = "xLINUX"])
 
-AC_CHECK_HEADERS([GL/gl.h OpenGL/gl.h])
-
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+PKG_CHECK_MODULES([OBJECTIVELYGPU], [ObjectivelyGPU >= 1.0.0])
 PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 2.0.0])
 PKG_CHECK_MODULES([SDL3], [sdl3 >= 3.2.0 sdl3-image sdl3-ttf])
 
 AC_SUBST(SDL3_DLL_LIBS, $(echo $SDL3_LIBS | sed 's/-lmingw32//; s/-lSDL3main//'))
+
+AC_CHECK_PROG([GLSLC], [glslc], [glslc], [])
+AS_IF([test -z "$GLSLC"], [AC_MSG_WARN([glslc not found; 'make shaders' will not work])])
+AC_CHECK_PROG([SHADERCROSS], [shadercross], [shadercross], [])
+AS_IF([test -z "$SHADERCROSS"], [AC_MSG_WARN([shadercross not found; 'make shaders' will not work])])
 
 AC_CONFIG_FILES([
 	Makefile
@@ -73,3 +74,4 @@ AC_CONFIG_FILES([
 ])
 
 AC_OUTPUT
+

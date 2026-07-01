@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -22,6 +22,8 @@
  */
 
 #pragma once
+
+#include <stdlib.h>
 
 #include <SDL3/SDL_log.h>
 
@@ -57,3 +59,14 @@
 
 #define MVC_LogCritical(fmt, ...) \
   SDL_LogCritical(LOG_CATEGORY_MVC, "%s::%s: "fmt, _Class()->def.name, __func__, ## __VA_ARGS__)
+
+/**
+ * @brief Asserts that @a cond is true, logging the SDL error and exiting on failure.
+ * @details Unlike assert(3), this macro is never compiled out.
+ */
+#define MVC_Assert(cond, fmt, ...) \
+  if (!(cond)) { \
+    SDL_LogCritical(LOG_CATEGORY_MVC, "%s::%d::%s: " fmt ": %s", __FILE__, __LINE__, __func__, ## __VA_ARGS__, SDL_GetError()); \
+    SDL_TriggerBreakpoint(); \
+    exit(EXIT_FAILURE); \
+  }

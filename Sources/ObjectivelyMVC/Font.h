@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -94,6 +94,12 @@ struct Font {
   int renderSize;
 
   /**
+   * @brief The display pixel density scale (e.g. 2.0 on Retina). Updated by callers
+   * via the scale field before invoking renderDeviceDidReset.
+   */
+  float scale;
+
+  /**
    * @brief The point size.
    */
   int size;
@@ -165,12 +171,12 @@ struct FontInterface {
   Font *(*initWithData)(Font *self, Data *data, const char *family, int size, int style);
 
   /**
-   * @fn void Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
+   * @fn SDL_Surface *Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
    * @brief Renders the given characters in this Font.
    * @param self The Font.
    * @param chars The null-terminated UTF-8 encoded C string to render.
    * @param color The color.
-   * @param wrapWidth The maximum line width, in pixels, where wrapping should occur.
+   * @param wrapWidth The maximum line width, in logical pixels, where wrapping should occur.
    * @return The rendered surface, or `NULL` on error.
    * @memberof Font
    */
@@ -179,6 +185,7 @@ struct FontInterface {
   /**
    * @fn void Font::renderDeviceDidReset(Font *self)
    * @brief This method should be invoked when the render context is invalidated.
+   *        Callers must update self->scale before invoking this method.
    * @param self The Font.
    * @memberof Font
    */
@@ -186,11 +193,12 @@ struct FontInterface {
 
   /**
    * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)
+   * @brief Measures the given characters in this Font.
    * @param self The Font.
    * @param chars The null-terminated UTF-8 encoded C string to size.
    * @param w The width to return.
    * @param h The height to return.
-   * @return The size of the rendered characters in pixels.
+   * @return The size of the rendered characters in logical pixels.
    * @memberof Font
    */
   void (*sizeCharacters)(const Font *self, const char *chars, int *w, int *h);

@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -27,6 +27,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "Colors.h"
 #include "Log.h"
 #include "Slider.h"
 
@@ -141,7 +142,7 @@ static void render(View *self, Renderer *renderer) {
     { frame.x + frame.w, frame.y + frame.h * 0.5 }
   };
 
-  $(renderer, drawLine, points);
+  $(renderer, drawLine, points, &Colors.White);
 }
 
 #pragma mark - Control

@@ -30,7 +30,6 @@ pkginclude_HEADERS = \
 	Panel.h \
 	ProgressBar.h \
 	Renderer.h \
-	Renderer+OpenGL.h \
 	RGBColorPicker.h \
 	ScrollView.h \
 	Select.h \
@@ -86,7 +85,6 @@ libObjectivelyMVC_la_SOURCES = \
 	Panel.c \
 	ProgressBar.c \
 	Renderer.c \
-	Renderer+OpenGL.c \
 	RGBColorPicker.c \
 	ScrollView.c \
 	Select.c \
@@ -122,6 +120,7 @@ libObjectivelyMVC_la_CFLAGS = \
 	-I$(top_srcdir)/Assets \
 	-I$(top_srcdir)/Sources \
 	@HOST_CFLAGS@ \
+	@OBJECTIVELYGPU_CFLAGS@ \
 	@OBJECTIVELY_CFLAGS@ \
 	@SDL3_CFLAGS@
 
@@ -130,6 +129,6 @@ libObjectivelyMVC_la_LDFLAGS = \
 
 libObjectivelyMVC_la_LIBADD = \
 	@HOST_LIBS@ \
+	@OBJECTIVELYGPU_LIBS@ \
 	@OBJECTIVELY_LIBS@ \
 	@SDL3_DLL_LIBS@
-

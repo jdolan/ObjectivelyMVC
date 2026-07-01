@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -125,40 +125,54 @@ static Array *keyResponders(const WindowController *self) {
 }
 
 /**
- * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
+ * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device)
  * @memberof WindowController
  */
-static WindowController *initWithWindow(WindowController *self, SDL_Window *window) {
+static WindowController *initWithDevice(WindowController *self, RenderDevice *device) {
+
+  assert(device);
 
   self = (WindowController *) super(Object, self, init);
   if (self) {
-    $(self, setWindow, window);
+    self->renderer = $(alloc(Renderer), initWithDevice, device);
+    assert(self->renderer);
+
+    $(self, setWindow, device->window);
     $(self, setViewController, NULL);
-    $(self, setRenderer, NULL);
     $(self, setTheme, NULL);
+
+    self->renderer->colorFormat = SDL_GetGPUSwapchainTextureFormat(device->device, self->window);
+    $(self->renderer, renderDeviceDidReset);
+    $(self->viewController->view, renderDeviceDidReset);
   }
 
   return self;
 }
 
 /**
- * @fn void WindowController::render(WindowController *self)
+ * @fn void WindowController::render(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer)
  * @memberof WindowController
  */
-static void render(WindowController *self) {
+static void render(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer) {
 
   assert(self->renderer);
+  assert(commands);
+  assert(framebuffer);
 
-  $(self->renderer, beginFrame);
+  if (framebuffer->colorFormats[0] != self->renderer->colorFormat) {
+    self->renderer->colorFormat = framebuffer->colorFormats[0];
+    $(self->renderer, renderDeviceDidReset);
+  }
+
+  $(self->renderer, beginFrame, commands, framebuffer);
 
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
-
   $(self->viewController->view, draw, self->renderer);
 
   $(self, debug);
 
-  $(self->renderer, endFrame);
+  $(self->renderer, endFrame, framebuffer);
 }
 
 /**
@@ -217,7 +231,8 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
   switch (event->type) {
     case SDL_EVENT_WINDOW_EXPOSED:
-      $(self, setWindow, SDL_GL_GetCurrentWindow());
+      $(self, setWindow, self->window);
+      self->renderer->colorFormat = SDL_GetGPUSwapchainTextureFormat(self->renderer->device->device, self->window);
       $(self->renderer, renderDeviceDidReset);
       $(self->viewController, renderDeviceDidReset);
       $(self->viewController->view, updateBindings);
@@ -230,7 +245,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     case SDL_EVENT_WINDOW_DISPLAY_CHANGED:
     case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
     case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
-      $(self, setWindow, SDL_GL_GetCurrentWindow());
+      $(self, setWindow, self->window);
       break;
     case SDL_EVENT_WINDOW_DESTROYED:
     case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
@@ -324,31 +339,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 }
 
 /**
- * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
- * @memberof WindowController
- */
-static void setRenderer(WindowController *self, Renderer *renderer) {
-
-  if (self->renderer != renderer || self->renderer == NULL) {
-
-    release(self->renderer);
-
-    if (renderer) {
-      self->renderer = retain(renderer);
-    } else {
-      self->renderer = $(alloc(Renderer), init);
-    }
-
-    assert(self->renderer);
-
-    if (SDL_GL_GetCurrentContext()) {
-      $(self->renderer, renderDeviceDidReset);
-      $(self->viewController->view, renderDeviceDidReset);
-    }
-  }
-}
-
-/**
  * @fn void WindowController::setTheme(WindowController *self, Theme *theme)
  * @memberof WindowController
  */
@@ -414,6 +404,10 @@ static void setWindow(WindowController *self, SDL_Window *window) {
   SDL_SetPointerProperty(properties, "windowController", self);
   SDL_SetPointerProperty(properties, "keyResponder", NULL);
   SDL_SetPointerProperty(properties, "touchResponder", NULL);
+
+  if (self->renderer) {
+    $(self->renderer->device, setWindow, self->window);
+  }
 
   if (self->viewController) {
     $(self->viewController->view, moveToWindow, self->window);
@@ -515,12 +509,11 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->debug = debug;
   ((WindowControllerInterface *) clazz->interface)->keyResponder = keyResponder;
   ((WindowControllerInterface *) clazz->interface)->keyResponders = keyResponders;
-  ((WindowControllerInterface *) clazz->interface)->initWithWindow = initWithWindow;
+  ((WindowControllerInterface *) clazz->interface)->initWithDevice = initWithDevice;
   ((WindowControllerInterface *) clazz->interface)->nextKeyResponder = nextKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->previousKeyResponder = previousKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->render = render;
   ((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
-  ((WindowControllerInterface *) clazz->interface)->setRenderer = setRenderer;
   ((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
   ((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;
   ((WindowControllerInterface *) clazz->interface)->setWindow = setWindow;

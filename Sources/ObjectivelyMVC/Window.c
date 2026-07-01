@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -32,19 +32,11 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
 
   const float pixelDensity = SDL_GetWindowPixelDensity(window);
 
-  SDL_Rect transformed = {
+  // SDL_gpu uses top-left origin (same as SDL), so no Y-flip is required.
+  return (SDL_Rect) {
     .x = (int) SDL_roundf(rect->x * pixelDensity),
     .y = (int) SDL_roundf(rect->y * pixelDensity),
     .w = (int) SDL_roundf(rect->w * pixelDensity),
     .h = (int) SDL_roundf(rect->h * pixelDensity),
   };
-
-  int pw, ph;
-  SDL_GetWindowSizeInPixels(window, &pw, &ph);
-  (void) pw;
-
-  // Flip Y: OpenGL origin is bottom-left, SDL/View origin is top-left.
-  transformed.y = ph - transformed.y - transformed.h;
-
-  return transformed;
 }

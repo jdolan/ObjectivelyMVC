@@ -81,9 +81,6 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer+OpenGL.h">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
@@ -180,10 +177,16 @@
     <ClInclude Include="..\Assets\resize.png.h">
       <Filter>Assets</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\renderer_fs.glsl.h">
+    <ClInclude Include="..\Assets\Renderer.frag.msl.h">
       <Filter>Assets</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\renderer_vs.glsl.h">
+    <ClInclude Include="..\Assets\Renderer.frag.spv.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Renderer.vert.msl.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Renderer.vert.spv.h">
       <Filter>Assets</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\stylesheet.css.h">
@@ -255,9 +258,6 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c">
-      <Filter>Sources\ObjectivelyMVC</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer+OpenGL.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c">

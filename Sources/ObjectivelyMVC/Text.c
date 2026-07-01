@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -28,7 +28,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "Colors.h"
 #include "Text.h"
+
+static inline float view_pixel_density(SDL_Window *window) {
+  return window ? SDL_GetWindowPixelDensity(window) : 1.0f;
+}
 
 #define _Class _Text
 
@@ -133,8 +138,7 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
   const size_t strippedLen = strlen(stripped);
   CharInfo *chars = malloc(sizeof(CharInfo) * strippedLen);
 
-  const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
-  const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * scale) : 0;
+  const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * font->scale) : 0;
 
   int lineHeight;
   $(font, sizeCharacters, "A", NULL, &lineHeight);
@@ -171,9 +175,9 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
     int charW;
     TTF_GetStringSize(font->font, stripped + charIdx, 1, &charW, NULL);
 
-    chars[charIdx].rect.x = (int) (lineX / scale);
-    chars[charIdx].rect.y = (int) (currH / scale) - lineHeight;
-    chars[charIdx].rect.w = (int) (charW / scale);
+    chars[charIdx].rect.x = (int) (lineX / font->scale);
+    chars[charIdx].rect.y = (int) (currH / font->scale) - lineHeight;
+    chars[charIdx].rect.w = (int) (charW / font->scale);
     chars[charIdx].rect.h = lineHeight;
     chars[charIdx].color = currentColor;
 
@@ -202,10 +206,9 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
   CharInfo *charInfo = buildCharInfo(self->font, self->text, self->color, wrapWidth, &charCount);
 
   if (charInfo) {
-    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
     SDL_LockSurface(surface);
     for (int i = 0; i < charCount; i++) {
-      colorize(surface, &charInfo[i], scale);
+      colorize(surface, &charInfo[i], self->font->scale);
     }
     SDL_UnlockSurface(surface);
     free(charInfo);
@@ -237,9 +240,7 @@ static void dealloc(Object *self) {
 
   free(this->text);
 
-  if (this->texture) {
-    glDeleteTextures(1, &this->texture);
-  }
+  this->texture = release(this->texture);
 
   super(Object, self, dealloc);
 }
@@ -280,10 +281,8 @@ static void applyStyle(View *self, const Style *style) {
   );
 
   if ($(self, bind, colorInlets, style->attributes)) {
-    if (this->texture) {
-      glDeleteTextures(1, &this->texture);
-      this->texture = 0;
-    }
+    this->texture = release(this->texture);
+    this->textureSize = MakeSize(0, 0);
   }
 
   char *fontFamily = NULL;
@@ -348,13 +347,22 @@ static void render(View *self, Renderer *renderer) {
 
   assert(this->font);
 
+  const float scale = view_pixel_density(self->window);
+
+  if (this->font->scale != scale) {
+    this->font->scale = scale;
+    $(this->font, renderDeviceDidReset);
+    this->texture = release(this->texture);
+    this->textureSize = MakeSize(0, 0);
+  }
+
   if (this->text) {
 
     const SDL_Rect frame = $(self, renderFrame);
 
-    if (this->texture == 0) {
+    if (this->texture == NULL) {
       SDL_Surface *surface;
-      
+
       if (this->colorEscapes) {
         surface = renderWithColorEscapes(this, this->lineWrap ? frame.w : 0);
       } else {
@@ -363,17 +371,57 @@ static void render(View *self, Renderer *renderer) {
                     this->color,
                     this->lineWrap ? frame.w : 0);
       }
-      
+
       assert(surface);
 
-      this->texture = $(renderer, createTexture, surface);
+      this->textureSize.w = (int) roundf(surface->w / scale);
+      this->textureSize.h = (int) roundf(surface->h / scale);
+
+      SDL_Surface *upload = surface;
+      SDL_Surface *converted = NULL;
+
+      if (SDL_BYTESPERPIXEL(surface->format) == 1) {
+        converted = SDL_CreateSurface(surface->w, surface->h, SDL_PIXELFORMAT_RGBA32);
+        assert(converted);
+        const Uint8 *src = (const Uint8 *) surface->pixels;
+        Uint32 *dst = (Uint32 *) converted->pixels;
+        for (int y = 0; y < surface->h; y++) {
+          for (int x = 0; x < surface->w; x++) {
+            const Uint8 a = src[y * surface->pitch + x];
+            dst[y * surface->w + x] = SDL_MapRGBA(
+              SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_RGBA32), NULL, 255, 255, 255, a);
+          }
+        }
+        upload = converted;
+      } else if (surface->format != SDL_PIXELFORMAT_RGBA32) {
+        converted = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
+        assert(converted);
+        upload = converted;
+      }
+
+      const SDL_GPUTextureCreateInfo texInfo = {
+        .type                 = SDL_GPU_TEXTURETYPE_2D,
+        .format               = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+        .usage                = SDL_GPU_TEXTUREUSAGE_SAMPLER,
+        .width                = (Uint32) upload->w,
+        .height               = (Uint32) upload->h,
+        .layer_count_or_depth = 1,
+        .num_levels           = 1,
+      };
+
+      this->texture = $(renderer->device, createTexture, &texInfo, upload->pixels);
+
+      if (converted) {
+        SDL_DestroySurface(converted);
+      }
 
       SDL_DestroySurface(surface);
     }
 
     assert(this->texture);
 
-    $(renderer, drawTexture, this->texture, &frame);
+    const SDL_Rect draw_rect = { frame.x, frame.y, this->textureSize.w, this->textureSize.h };
+    $(renderer, drawTexture, this->texture, &draw_rect, &Colors.White);
   }
 }
 
@@ -384,6 +432,7 @@ static void renderDeviceDidReset(View *self) {
 
   Text *this = (Text *) self;
 
+  this->font->scale = view_pixel_density(self->window);
   $(this->font, renderDeviceDidReset);
 
   super(View, self, renderDeviceDidReset);
@@ -396,10 +445,8 @@ static void renderDeviceWillReset(View *self) {
 
   Text *this = (Text *) self;
 
-  if (this->texture) {
-    glDeleteTextures(1, &this->texture);
-    this->texture = 0;
-  }
+  this->texture = release(this->texture);
+  this->textureSize = MakeSize(0, 0);
 
   super(View, self, renderDeviceWillReset);
 }
@@ -438,7 +485,7 @@ static SDL_Size naturalSize(const Text *self) {
 
   if (self->font) {
     const char *text = self->text ?: "";
-    
+
     if (self->colorEscapes) {
       sizeWithColorEscapes(self, &size.w, &size.h);
     } else {
@@ -462,10 +509,8 @@ static void setFont(Text *self, Font *font) {
     release(self->font);
     self->font = retain(font);
 
-    if (self->texture) {
-      glDeleteTextures(1, &self->texture);
-      self->texture = 0;
-    }
+    self->texture = release(self->texture);
+    self->textureSize = MakeSize(0, 0);
 
     $((View *) self, sizeToFit);
   }
@@ -487,10 +532,8 @@ static void setText(Text *self, const char *text) {
       self->text = NULL;
     }
 
-    if (self->texture) {
-      glDeleteTextures(1, &self->texture);
-      self->texture = 0;
-    }
+    self->texture = release(self->texture);
+    self->textureSize = MakeSize(0, 0);
 
     $((View *) self, sizeToFit);
   }

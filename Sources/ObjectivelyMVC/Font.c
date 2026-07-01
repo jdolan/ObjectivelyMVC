@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -135,8 +135,6 @@ static Font *cachedFont(const char *family, int size, int style) {
     style = DEFAULT_FONT_STYLE;
   }
 
-  const int renderSize = size * SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
-
   const Array *fonts = (Array *) _fonts;
   for (size_t i = 0; i < fonts->count; i++) {
 
@@ -144,8 +142,7 @@ static Font *cachedFont(const char *family, int size, int style) {
 
     if (!strcmp(font->family, family) &&
         font->size == size &&
-        font->style == style &&
-        font->renderSize == renderSize) {
+        font->style == style) {
       return font;
     }
   }
@@ -181,7 +178,7 @@ static Font *defaultFont(void) {
   static Once once;
 
   do_once(&once, {
-    Data *data = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len);
+    Data *data = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len - 1);
     assert(data);
 
     $$(Font, cacheFont, data, DEFAULT_FONT_FAMILY);
@@ -211,6 +208,7 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
     assert(self->size);
 
     self->style = style;
+    self->scale = 1.0f;
 
     $(self, renderDeviceDidReset);
   }
@@ -226,8 +224,7 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
 
   SDL_Surface *surface;
   if (wrapWidth) {
-    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
-    surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * scale);
+    surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * self->scale);
   } else {
     surface = TTF_RenderText_Blended(self->font, chars, 0, color);
   }
@@ -249,7 +246,7 @@ static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Co
  */
 static void renderDeviceDidReset(Font *self) {
 
-  const int renderSize = self->size * SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
+  const int renderSize = self->size * self->scale;
   if (renderSize != self->renderSize) {
 
     self->renderSize = renderSize;
@@ -300,12 +297,11 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
     }
     free(lines);
 
-    const float scale = SDL_GetWindowPixelDensity(SDL_GL_GetCurrentWindow());
     if (w) {
-      *w = ceilf(*w / scale);
+      *w = ceilf(*w / self->scale);
     }
     if (h) {
-      *h = ceilf(*h / scale);
+      *h = ceilf(*h / self->scale);
     }
   }
 }

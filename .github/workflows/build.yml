@@ -40,6 +40,38 @@ jobs:
         make -j$(sysctl -n hw.logicalcpu)
         sudo make install
 
+    - name: Install spirv-cross
+      run: brew install spirv-cross
+
+    - name: Build SDL_shadercross
+      run: |
+        git clone --depth 1 https://github.com/libsdl-org/SDL_shadercross.git SDL_shadercross
+        cmake -S SDL_shadercross -B SDL_shadercross/build \
+          -DSDLSHADERCROSS_DXC=OFF \
+          -DSDLSHADERCROSS_SPIRVCROSS_SHARED=OFF \
+          -DCMAKE_PREFIX_PATH=${HOMEBREW_PREFIX}
+        cmake --build SDL_shadercross/build
+        sudo cmake --install SDL_shadercross/build
+        sudo cp SDL_shadercross/build/shadercross /usr/local/bin/
+        sudo install_name_tool -add_rpath /usr/local/lib /usr/local/bin/shadercross
+
+    - name: Checkout ObjectivelyGPU
+      uses: actions/checkout@v6
+      with:
+        repository: jdolan/ObjectivelyGPU
+        path: ObjectivelyGPU
+
+    - name: Build ObjectivelyGPU
+      working-directory: ObjectivelyGPU
+      run: |
+        export CFLAGS="-I${HOMEBREW_PREFIX}/include"
+        export LDFLAGS="-L${HOMEBREW_PREFIX}/lib"
+        export PKG_CONFIG_PATH="${HOMEBREW_PREFIX}/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        autoreconf -i
+        ./configure
+        make -j$(sysctl -n hw.logicalcpu)
+        sudo make install
+
     - name: Checkout ObjectivelyMVC
       uses: actions/checkout@v6
 
@@ -113,6 +145,41 @@ jobs:
         make -j$(nproc)
         sudo make install
 
+    - name: Install spirv-cross
+      run: |
+        git clone --depth 1 https://github.com/KhronosGroup/SPIRV-Cross.git SPIRV-Cross
+        cmake -S SPIRV-Cross -B SPIRV-Cross/build \
+          -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+        cmake --build SPIRV-Cross/build -j$(nproc)
+        sudo cmake --install SPIRV-Cross/build
+
+    - name: Build SDL_shadercross
+      run: |
+        git clone --depth 1 https://github.com/libsdl-org/SDL_shadercross.git SDL_shadercross
+        cmake -S SDL_shadercross -B SDL_shadercross/build \
+          -DSDLSHADERCROSS_DXC=OFF \
+          -DSDLSHADERCROSS_SPIRVCROSS_SHARED=OFF \
+          -DCMAKE_PREFIX_PATH=/usr/local
+        cmake --build SDL_shadercross/build -j$(nproc)
+        sudo cmake --install SDL_shadercross/build
+        sudo cp SDL_shadercross/build/shadercross /usr/local/bin/
+
+    - name: Checkout ObjectivelyGPU
+      uses: actions/checkout@v6
+      with:
+        repository: jdolan/ObjectivelyGPU
+        path: ObjectivelyGPU
+
+    - name: Build ObjectivelyGPU
+      working-directory: ObjectivelyGPU
+      run: |
+        export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:${PKG_CONFIG_PATH}"
+        autoreconf -i
+        ./configure
+        make -j$(nproc)
+        sudo make install
+
     - name: Refresh shared library cache
       run: sudo ldconfig
 
@@ -161,6 +228,10 @@ jobs:
     - name: Build Objectively
       working-directory: ${{ github.workspace }}/Objectively
       run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=x64 Objectively.vs15/Objectively.sln
+
+    - name: Build ObjectivelyGPU
+      working-directory: ${{ github.workspace }}/ObjectivelyGPU
+      run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=x64 ObjectivelyGPU.vs15/ObjectivelyGPU.vcxproj
 
     - name: Build ObjectivelyMVC
       working-directory: ${{ github.workspace }}/ObjectivelyMVC

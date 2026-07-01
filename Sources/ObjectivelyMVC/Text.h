@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -23,8 +23,10 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/View.h>
+#include <SDL3/SDL_gpu.h>
+
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/View.h>
 
 /**
  * @file
@@ -111,10 +113,17 @@ struct Text {
   char *text;
 
   /**
-   * @brief The rendered texture.
+   * @brief The rendered GPU texture.
    * @protected
    */
-  GLuint texture;
+  Texture *texture;
+
+  /**
+   * @brief The logical draw dimensions of the texture (surface size / pixel density).
+   * @remarks Stored when the texture is created; used for pixel-perfect rendering.
+   * @protected
+   */
+  SDL_Size textureSize;
 };
 
 /**

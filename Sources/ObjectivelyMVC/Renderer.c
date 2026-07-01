@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -25,227 +25,198 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Log.h"
-#include "Renderer+OpenGL.h"
+#include <Objectively/Vector.h>
+#include <ObjectivelyGPU/CopyPass.h>
+#include <ObjectivelyGPU/Mathlib.h>
+#include <ObjectivelyGPU/RenderPass.h>
+
 #include "Renderer.h"
 #include "View.h"
 #include "Window.h"
 
-#include "../Assets/renderer_fs.glsl.h"
-#include "../Assets/renderer_vs.glsl.h"
+#include "../Assets/Renderer.vert.metal.h"
+#include "../Assets/Renderer.frag.metal.h"
+#include "../Assets/Renderer.vert.spv.h"
+#include "../Assets/Renderer.frag.spv.h"
+
+/**
+ * @brief @c ResourceProvider for loading shaders from @c xxd headers.
+ */
+static Data *shaderResourceProvider(const char *name) {
+
+  Data *data = NULL;
+
+  if (!strcmp("Renderer.vert.metal", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_vert_metal, Renderer_vert_metal_len);
+  } else if (!strcmp("Renderer.frag.metal", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_frag_metal, Renderer_frag_metal_len);
+  } else if (!strcmp("Renderer.vert.spv", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_vert_spv, Renderer_vert_spv_len);
+  } else if (!strcmp("Renderer.frag.spv", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_frag_spv, Renderer_frag_spv_len);
+  }
+
+  return data;
+}
 
 #define _Class _Renderer
 
-#define GL_GET_ERROR() do { \
-  GLenum _err; \
-  while ((_err = glGetError()) != GL_NO_ERROR) { \
-    MVC_LogError("%s: GL error: %d\n", __func__, _err); \
-    SDL_TriggerBreakpoint(); \
-  } \
-} while (0)
+#pragma mark - Object
 
 /**
- * @brief Interleaved position + texcoord vertex.
+ * @see Object::dealloc(Object *)
  */
-typedef struct {
-  GLfloat x, y;
-  GLfloat u, v;
-} Vertex;
+static void dealloc(Object *self) {
 
-/**
- * @brief Uploads vertices to the VBO and issues a draw call.
- */
-static void drawVertices(const Renderer *self, GLenum mode, const Vertex *verts, GLsizei count, GLuint texture) {
+  Renderer *this = (Renderer *) self;
 
-  glBindTexture(GL_TEXTURE_2D, texture);
+  this->commands = NULL;
 
-  gl.BufferData(GL_ARRAY_BUFFER, count * sizeof(Vertex), verts, GL_STREAM_DRAW);
+  release(this->vertices);
+  release(this->drawArrays);
+  release(this->device);
 
-  gl.Uniform4f(self->uniforms.color,
-               self->color.r / 255.0f,
-               self->color.g / 255.0f,
-               self->color.b / 255.0f,
-               self->color.a / 255.0f);
-
-  glDrawArrays(mode, 0, count);
-  GL_GET_ERROR();
+  super(Object, self, dealloc);
 }
 
 #pragma mark - Renderer
 
 /**
- * @fn void Renderer::beginFrame(Renderer *self)
+ * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer)
  * @memberof Renderer
  */
-static void beginFrame(Renderer *self) {
+static void beginFrame(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer) {
 
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  assert(commands);
+  assert(framebuffer);
 
-  glEnable(GL_SCISSOR_TEST);
+  self->commands = commands;
+  self->framebuffer = framebuffer;
 
-  gl.UseProgram(self->program);
+  $(self->vertices, removeAll);
+  $(self->drawArrays, removeAll);
 
-  gl.BindVertexArray(self->vao);
-  gl.BindBuffer(GL_ARRAY_BUFFER, self->vbo);
-
-  SDL_Window *window = SDL_GL_GetCurrentWindow();
-  int pw, ph, lw, lh;
-  SDL_GetWindowSizeInPixels(window, &pw, &ph);
-  SDL_GetWindowSize(window, &lw, &lh);
-
-  glViewport(0, 0, pw, ph);
-
-  const GLfloat projection[16] = {
-     2.0f / lw,  0.0f,       0.0f,  0.0f,
-     0.0f,      -2.0f / lh,  0.0f,  0.0f,
-     0.0f,       0.0f,      -1.0f,  0.0f,
-    -1.0f,       1.0f,       0.0f,  1.0f,
-  };
-  gl.UniformMatrix4fv(self->uniforms.projection, 1, GL_FALSE, projection);
-
-  gl.ActiveTexture(GL_TEXTURE0);
-
-  $(self, setDrawColor, &Colors.White);
-
-  GL_GET_ERROR();
+  self->scissor = MakeRect(0, 0, framebuffer->size.w, framebuffer->size.h);
 }
 
 /**
- * @fn GLuint Renderer::createTexture(const Renderer *self, const SDL_Surface *surface)
+ * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)
  * @memberof Renderer
  */
-static GLuint createTexture(const Renderer *self, const SDL_Surface *surface) {
-
-  assert(surface);
-
-  GLenum format;
-  GLint internal_format;
-  switch (SDL_BYTESPERPIXEL(surface->format)) {
-    case 1:
-      internal_format = GL_R8;
-      format = GL_RED;
-      break;
-    case 3:
-      internal_format = GL_RGB;
-      format = GL_RGB;
-      break;
-    case 4:
-      internal_format = GL_RGBA;
-      format = GL_RGBA;
-      break;
-    default:
-      MVC_LogError("Invalid surface format: %s\n", SDL_GetPixelFormatName(surface->format));
-      return 0;
-  }
-
-  GLuint texture;
-  glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  glTexImage2D(GL_TEXTURE_2D, 0, internal_format, surface->w, surface->h, 0,
-               format, GL_UNSIGNED_BYTE, surface->pixels);
-
-  if (internal_format == GL_R8) {
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_R, GL_ONE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_G, GL_ONE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_B, GL_ONE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_A, GL_RED);
-  }
-
-  GL_GET_ERROR();
-  return texture;
-}
-
-/**
- * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points)
- * @memberof Renderer
- */
-static void drawLine(const Renderer *self, const SDL_Point *points) {
+static void drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color) {
 
   assert(points);
 
-  $(self, drawLines, points, 2);
+  $(self, drawLines, points, 2, color);
 }
 
 /**
- * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count)
+ * @fn void Renderer::drawLines(const Renderer *self, const SDL_Point *points, size_t count, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawLines(const Renderer *self, const SDL_Point *points, size_t count) {
+static void drawLines(const Renderer *self, const SDL_Point *points, size_t count, const SDL_Color *color) {
 
   assert(points);
+  assert(color);
 
-  Vertex *verts = malloc(count * sizeof(Vertex));
+  if (count < 2) {
+    return;
+  }
+
+  const size_t segCount = count - 1;
+  MVC_Vertex *verts = malloc(segCount * 6 * sizeof(MVC_Vertex));
   assert(verts);
 
-  for (size_t i = 0; i < count; i++) {
-    verts[i] = (Vertex) { points[i].x, points[i].y, 0.0f, 0.0f };
+  for (size_t i = 0; i < segCount; i++) {
+    const float ax = (float) points[i].x,     ay = (float) points[i].y;
+    const float bx = (float) points[i+1].x,   by = (float) points[i+1].y;
+
+    const float dx = bx - ax, dy = by - ay;
+    const float len = sqrtf(dx * dx + dy * dy);
+
+    float nx = 0.0f, ny = 0.0f;
+    if (len > 0.001f) {
+      nx = (-dy / len) * 0.5f;
+      ny = ( dx / len) * 0.5f;
+    }
+
+    MVC_Vertex *v = &verts[i * 6];
+    v[0] = (MVC_Vertex) { ax - nx, ay - ny, 0.0f, 0.0f };
+    v[1] = (MVC_Vertex) { ax + nx, ay + ny, 0.0f, 0.0f };
+    v[2] = (MVC_Vertex) { bx - nx, by - ny, 0.0f, 0.0f };
+    v[3] = (MVC_Vertex) { ax + nx, ay + ny, 0.0f, 0.0f };
+    v[4] = (MVC_Vertex) { bx + nx, by + ny, 0.0f, 0.0f };
+    v[5] = (MVC_Vertex) { bx - nx, by - ny, 0.0f, 0.0f };
   }
 
-  drawVertices(self, GL_LINE_STRIP, verts, (GLsizei) count, self->white);
+  $(self, pushDrawArrays, verts, segCount * 6, NULL, color);
 
   free(verts);
 }
 
 /**
- * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect)
+ * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawRect(const Renderer *self, const SDL_Rect *rect) {
+static void drawRect(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color) {
 
   assert(rect);
 
-  const Vertex verts[4] = {
-    { rect->x,           rect->y,           0.0f, 0.0f },
-    { rect->x + rect->w, rect->y,           0.0f, 0.0f },
-    { rect->x + rect->w, rect->y + rect->h, 0.0f, 0.0f },
-    { rect->x,           rect->y + rect->h, 0.0f, 0.0f },
+  const SDL_Point points[5] = {
+    { rect->x,           rect->y           },
+    { rect->x + rect->w, rect->y           },
+    { rect->x + rect->w, rect->y + rect->h },
+    { rect->x,           rect->y + rect->h },
+    { rect->x,           rect->y           },
   };
 
-  drawVertices(self, GL_LINE_LOOP, verts, 4, self->white);
+  $(self, drawLines, points, 5, color);
 }
 
 /**
- * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect)
+ * @fn void Renderer::drawRectFilled(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawRectFilled(const Renderer *self, const SDL_Rect *rect) {
+static void drawRectFilled(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color) {
 
   assert(rect);
 
-  const GLfloat x1 = rect->x - 1, y1 = rect->y - 1;
-  const GLfloat x2 = rect->x + rect->w + 1, y2 = rect->y + rect->h + 1;
+  const float x1 = (float) rect->x,           y1 = (float) rect->y;
+  const float x2 = (float) rect->x + rect->w, y2 = (float) rect->y + rect->h;
 
-  const Vertex verts[4] = {
+  const MVC_Vertex verts[6] = {
     { x1, y1, 0.0f, 0.0f },
+    { x2, y1, 0.0f, 0.0f },
+    { x1, y2, 0.0f, 0.0f },
     { x2, y1, 0.0f, 0.0f },
     { x2, y2, 0.0f, 0.0f },
     { x1, y2, 0.0f, 0.0f },
   };
 
-  drawVertices(self, GL_TRIANGLE_FAN, verts, 4, self->white);
+  $(self, pushDrawArrays, verts, 6, NULL, color);
 }
 
 /**
- * @fn void Renderer::drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *dest)
+ * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *dest, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawTexture(const Renderer *self, GLuint texture, const SDL_Rect *rect) {
+static void drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *rect, const SDL_Color *color) {
 
   assert(rect);
 
-  const Vertex verts[4] = {
-    { rect->x,           rect->y,           0.0f, 0.0f },
-    { rect->x + rect->w, rect->y,           1.0f, 0.0f },
-    { rect->x + rect->w, rect->y + rect->h, 1.0f, 1.0f },
-    { rect->x,           rect->y + rect->h, 0.0f, 1.0f },
+  const float x1 = (float) rect->x,           y1 = (float) rect->y;
+  const float x2 = (float) rect->x + rect->w, y2 = (float) rect->y + rect->h;
+
+  const MVC_Vertex verts[6] = {
+    { x1, y1, 0.0f, 0.0f },
+    { x2, y1, 1.0f, 0.0f },
+    { x1, y2, 0.0f, 1.0f },
+    { x2, y1, 1.0f, 0.0f },
+    { x2, y2, 1.0f, 1.0f },
+    { x1, y2, 0.0f, 1.0f },
   };
 
-  drawVertices(self, GL_TRIANGLE_FAN, verts, 4, texture);
+  $(self, pushDrawArrays, verts, 6, texture, color);
 }
 
 /**
@@ -258,43 +229,118 @@ static void drawView(Renderer *self, View *view) {
 
   const SDL_Rect clippingFrame = $(view, clippingFrame);
   if (clippingFrame.w && clippingFrame.h) {
-
     $(self, setClippingFrame, &clippingFrame);
-
     $(view, render, self);
   }
 }
 
 /**
- * @fn void Renderer::endFrame(Renderer *self)
+ * @fn void Renderer::endFrame(Renderer *self, Framebuffer *framebuffer)
  * @memberof Renderer
  */
-static void endFrame(Renderer *self) {
+static void endFrame(Renderer *self, Framebuffer *framebuffer) {
 
-  $(self, setDrawColor, &Colors.White);
+  assert(framebuffer);
 
-  $(self, setClippingFrame, NULL);
+  const SDL_GPUColorTargetInfo colorTarget = $(framebuffer, colorTargetInfo, 0, SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE, NULL);
 
-  gl.BindBuffer(GL_ARRAY_BUFFER, 0);
-  gl.BindVertexArray(0);
-  gl.UseProgram(0);
+  const size_t vtxCount = self->vertices->count;
 
-  glDisable(GL_SCISSOR_TEST);
+  CopyPass *copyPass = $(self->commands, beginCopyPass);
 
-  glBlendFunc(GL_ONE, GL_ZERO);
-  glDisable(GL_BLEND);
+  if (vtxCount > 0) {
+    const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
 
-  GL_GET_ERROR();
+    if (vtxCount > self->vertexBufferCapacity) {
+      release(self->vertexBuffer);
+      const SDL_GPUBufferCreateInfo info = { .usage = SDL_GPU_BUFFERUSAGE_VERTEX, .size = vtxSize };
+      self->vertexBuffer = $(self->device, createBuffer, &info);
+      self->vertexBufferCapacity = (Uint32) vtxCount;
+    }
+
+    $(copyPass, uploadData, self->vertexBuffer->buffer, self->vertices->elements, vtxSize, 0, true);
+  }
+
+  release(copyPass);
+
+  RenderPass *renderPass = $(self->commands, beginRenderPass, &colorTarget, 1, NULL);
+
+  $(renderPass, setViewport, &(SDL_GPUViewport){
+    .x = 0.0f, .y = 0.0f,
+    .w = (float) framebuffer->size.w, .h = (float) framebuffer->size.h,
+    .min_depth = 0.0f, .max_depth = 1.0f,
+  });
+
+  int winW, winH;
+  SDL_GetWindowSize(self->device->window, &winW, &winH);
+  const mat4 projection = mat4_ortho(0.f, (float) winW, (float) winH, 0.f, -1.f, 1.f);
+  $(self->commands, pushVertexUniformData, 0, projection.f, sizeof(projection));
+
+  $(renderPass, bindPipeline, self->pipeline);
+  $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer->buffer }, 1);
+
+  for (size_t i = 0; i < self->drawArrays->count; i++) {
+    const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
+
+    $(renderPass, setScissor, &draw->scissor);
+
+    $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
+      .texture = draw->texture->texture, .sampler = self->sampler->sampler,
+    }, 1);
+
+    $(renderPass, drawPrimitives, draw->vertexCount, 1, draw->firstVertex, 0);
+  }
+
+  release(renderPass);
+
+  self->commands = NULL;
+  self->framebuffer = NULL;
 }
 
 /**
- * @fn Renderer *Renderer::init(Renderer *self)
+ * @fn Renderer *Renderer::initWithDevice(Renderer *self, RenderDevice *device)
  * @memberof Renderer
  */
-static Renderer *init(Renderer *self) {
+static Renderer *initWithDevice(Renderer *self, RenderDevice *device) {
 
   self = (Renderer *) super(Object, self, init);
+  if (self) {
+    self->device = retain(device);
+    assert(self->device);
+
+    self->vertices = $(alloc(Vector), initWithSize, sizeof(MVC_Vertex));
+    assert(self->vertices);
+
+    self->drawArrays = $(alloc(Vector), initWithSize, sizeof(MVC_DrawArrays));
+    assert(self->drawArrays);
+  }
+
   return self;
+}
+
+/**
+ * @fn void Renderer::pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, Texture *texture, const SDL_Color *color)
+ * @memberof Renderer
+ */
+static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, Texture *texture, const SDL_Color *color) {
+
+  assert(verts);
+  assert(color);
+
+  const MVC_DrawArrays draw = {
+    .firstVertex = (Uint32) self->vertices->count,
+    .vertexCount = (Uint32) count,
+    .texture     = texture ? texture : self->white,
+    .scissor     = self->scissor,
+  };
+
+  for (size_t i = 0; i < count; i++) {
+    MVC_Vertex v = verts[i];
+    v.color = *color;
+    $(self->vertices, add, &v);
+  }
+
+  $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
 }
 
 /**
@@ -303,45 +349,101 @@ static Renderer *init(Renderer *self) {
  */
 static void renderDeviceDidReset(Renderer *self) {
 
-  $(self, renderDeviceWillReset);
+  Shader *vertexShader = $(self->device, loadShader, "Renderer.vert", &(SDL_GPUShaderCreateInfo) {
+    .stage = SDL_GPU_SHADERSTAGE_VERTEX,
+    .num_uniform_buffers = 1,
+  });
 
-  MVC_LoadGL(&gl);
+  Shader *fragmentShader = $(self->device, loadShader, "Renderer.frag", &(SDL_GPUShaderCreateInfo) {
+    .stage = SDL_GPU_SHADERSTAGE_FRAGMENT,
+    .num_samplers = 1,
+  });
 
-  const GLuint vs = MVC_CompileShader(GL_VERTEX_SHADER, "renderer_vs.glsl", (const char *) renderer_vs_glsl);
-  const GLuint fs = MVC_CompileShader(GL_FRAGMENT_SHADER, "renderer_fs.glsl", (const char *) renderer_fs_glsl);
+  const SDL_GPUVertexBufferDescription vertexBufferInfo = {
+    .slot = 0,
+    .pitch = sizeof(MVC_Vertex),
+    .input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX,
+    .instance_step_rate = 0,
+  };
 
-  self->program = MVC_LinkProgram(vs, fs);
-  if (!self->program) {
-    return;
-  }
+  const SDL_GPUColorTargetDescription colorTarget = {
+    .format = self->colorFormat,
+    .blend_state = {
+      .enable_blend = true,
+      .color_blend_op = SDL_GPU_BLENDOP_ADD,
+      .alpha_blend_op = SDL_GPU_BLENDOP_ADD,
+      .src_color_blendfactor = SDL_GPU_BLENDFACTOR_SRC_ALPHA,
+      .dst_color_blendfactor = SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+      .src_alpha_blendfactor = SDL_GPU_BLENDFACTOR_ONE,
+      .dst_alpha_blendfactor = SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA,
+    },
+  };
 
-  self->uniforms.projection = gl.GetUniformLocation(self->program, "projection");
-  self->uniforms.color = gl.GetUniformLocation(self->program, "color");
+  const SDL_GPUGraphicsPipelineCreateInfo pipelineInfo = {
+    .vertex_shader = vertexShader->shader,
+    .fragment_shader = fragmentShader->shader,
+    .vertex_input_state = {
+      .vertex_buffer_descriptions = &vertexBufferInfo,
+      .num_vertex_buffers = 1,
+      .vertex_attributes = (SDL_GPUVertexAttribute[]) {
+        {
+          .location = 0,
+          .buffer_slot = 0,
+          .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2,
+          .offset = offsetof(MVC_Vertex, position)
+        },
+        {
+          .location = 1,
+          .buffer_slot = 0,
+          .format = SDL_GPU_VERTEXELEMENTFORMAT_FLOAT2,
+          .offset = offsetof(MVC_Vertex, uv)
+        },
+        {
+          .location = 2,
+          .buffer_slot = 0,
+          .format = SDL_GPU_VERTEXELEMENTFORMAT_UBYTE4_NORM,
+          .offset = offsetof(MVC_Vertex, color)
+        },
+      },
+      .num_vertex_attributes = 3,
+    },
+    .primitive_type = SDL_GPU_PRIMITIVETYPE_TRIANGLELIST,
+    .rasterizer_state = {
+      .fill_mode = SDL_GPU_FILLMODE_FILL,
+      .cull_mode = SDL_GPU_CULLMODE_NONE,
+      .front_face = SDL_GPU_FRONTFACE_COUNTER_CLOCKWISE,
+    },
+    .target_info = {
+      .color_target_descriptions = &colorTarget,
+      .num_color_targets = 1,
+    },
+  };
 
-  const GLubyte white[] = { 255, 255, 255, 255 };
-  glGenTextures(1, &self->white);
-  glBindTexture(GL_TEXTURE_2D, self->white);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, white);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glBindTexture(GL_TEXTURE_2D, 0);
+  self->pipeline = $(self->device, createGraphicsPipeline, &pipelineInfo);
 
-  gl.GenVertexArrays(1, &self->vao);
-  gl.BindVertexArray(self->vao);
+  release(vertexShader);
+  release(fragmentShader);
 
-  gl.GenBuffers(1, &self->vbo);
-  gl.BindBuffer(GL_ARRAY_BUFFER, self->vbo);
+  self->sampler = $(self->device, createSampler, &(const SDL_GPUSamplerCreateInfo) {
+    .min_filter = SDL_GPU_FILTER_LINEAR,
+    .mag_filter = SDL_GPU_FILTER_LINEAR,
+    .mipmap_mode = SDL_GPU_SAMPLERMIPMAPMODE_LINEAR,
+    .address_mode_u = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+    .address_mode_v = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+    .address_mode_w = SDL_GPU_SAMPLERADDRESSMODE_CLAMP_TO_EDGE,
+  });
 
-  gl.EnableVertexAttribArray(0);
-  gl.VertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, x));
+  const Uint8 white[4] = { 255, 255, 255, 255 };
 
-  gl.EnableVertexAttribArray(1);
-  gl.VertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) offsetof(Vertex, u));
-
-  gl.BindBuffer(GL_ARRAY_BUFFER, 0);
-  gl.BindVertexArray(0);
-
-  GL_GET_ERROR();
+  self->white = $(self->device, createTexture, &(const SDL_GPUTextureCreateInfo) {
+    .type = SDL_GPU_TEXTURETYPE_2D,
+    .format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
+    .usage = SDL_GPU_TEXTUREUSAGE_SAMPLER,
+    .width = 1,
+    .height = 1,
+    .layer_count_or_depth = 1,
+    .num_levels = 1,
+  }, white);
 }
 
 /**
@@ -350,27 +452,18 @@ static void renderDeviceDidReset(Renderer *self) {
  */
 static void renderDeviceWillReset(Renderer *self) {
 
-  if (self->white) {
-    glDeleteTextures(1, &self->white);
-    self->white = 0;
-  }
+  self->commands = NULL;
 
-  if (self->vbo) {
-    gl.DeleteBuffers(1, &self->vbo);
-    self->vbo = 0;
-  }
+  self->white = release(self->white);
+  self->sampler = release(self->sampler);
 
-  if (self->vao) {
-    gl.DeleteVertexArrays(1, &self->vao);
-    self->vao = 0;
-  }
+  self->vertexBuffer = release(self->vertexBuffer);
+  self->vertexBufferCapacity = 0;
 
-  if (self->program) {
-    gl.DeleteProgram(self->program);
-    self->program = 0;
-  }
+  self->pipeline = release(self->pipeline);
 
-  GL_GET_ERROR();
+  $(self->vertices, removeAll);
+  $(self->drawArrays, removeAll);
 }
 
 /**
@@ -379,29 +472,11 @@ static void renderDeviceWillReset(Renderer *self) {
  */
 static void setClippingFrame(Renderer *self, const SDL_Rect *clippingFrame) {
 
-  SDL_Window *window = SDL_GL_GetCurrentWindow();
-
-  SDL_Rect rect;
   if (clippingFrame) {
-    rect = *clippingFrame;
+    self->scissor = MVC_TransformToWindow(self->device->window, clippingFrame);
   } else {
-    rect = MakeRect(0, 0, 0, 0);
-    SDL_GetWindowSize(window, &rect.w, &rect.h);
+    self->scissor = MakeRect(0, 0, self->framebuffer->size.w, self->framebuffer->size.h);
   }
-
-  const SDL_Rect scissor = MVC_TransformToWindow(window, &rect);
-
-  glScissor(scissor.x - 1, scissor.y - 1, scissor.w + 2, scissor.h + 2);
-
-  GL_GET_ERROR();
-}
-
-/**
- * @fn void Renderer::setDrawColor(Renderer *self, const SDL_Color *color)
- * @memberof Renderer
- */
-static void setDrawColor(Renderer *self, const SDL_Color *color) {
-  self->color = *color;
 }
 
 #pragma mark - Class lifecycle
@@ -410,21 +485,23 @@ static void setDrawColor(Renderer *self, const SDL_Color *color) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
-  
+
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+
   ((RendererInterface *) clazz->interface)->beginFrame = beginFrame;
-  ((RendererInterface *) clazz->interface)->createTexture = createTexture;
-  ((RendererInterface *) clazz->interface)->drawLine = drawLine;
-  ((RendererInterface *) clazz->interface)->drawLines = drawLines;
+  ((RendererInterface *) clazz->interface)->drawLine = drawLine;  ((RendererInterface *) clazz->interface)->drawLines = drawLines;
   ((RendererInterface *) clazz->interface)->drawRect = drawRect;
   ((RendererInterface *) clazz->interface)->drawRectFilled = drawRectFilled;
   ((RendererInterface *) clazz->interface)->drawTexture = drawTexture;
   ((RendererInterface *) clazz->interface)->drawView = drawView;
   ((RendererInterface *) clazz->interface)->endFrame = endFrame;
-  ((RendererInterface *) clazz->interface)->init = init;
+  ((RendererInterface *) clazz->interface)->initWithDevice = initWithDevice;
+  ((RendererInterface *) clazz->interface)->pushDrawArrays = pushDrawArrays;
   ((RendererInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
   ((RendererInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((RendererInterface *) clazz->interface)->setClippingFrame = setClippingFrame;
-  ((RendererInterface *) clazz->interface)->setDrawColor = setDrawColor;
+
+  $$(Resource, addResourceProvider, shaderResourceProvider);
 }
 
 /**
@@ -437,12 +514,12 @@ Class *_Renderer(void) {
 
   do_once(&once, {
     clazz = _initialize(&(const ClassDef) {
-      .name = "Renderer",
-      .superclass = _Object(),
-      .instanceSize = sizeof(Renderer),
+      .name            = "Renderer",
+      .superclass      = _Object(),
+      .instanceSize    = sizeof(Renderer),
       .interfaceOffset = offsetof(Renderer, interface),
-      .interfaceSize = sizeof(RendererInterface),
-      .initialize = initialize,
+      .interfaceSize   = sizeof(RendererInterface),
+      .initialize      = initialize,
     });
   });
 

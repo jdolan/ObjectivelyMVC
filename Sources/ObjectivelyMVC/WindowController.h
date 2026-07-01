@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -117,14 +117,14 @@ struct WindowControllerInterface {
   Array *(*keyResponders)(const WindowController *self);
 
   /**
-   * @fn WindowController *WindowController::initWithWindow(WindowController *self, SDL_Window *window)
-   * @brief Initializes this WindowController with the given window.
+   * @fn WindowController *WindowController::initWithDevice(WindowController *self, RenderDevice *device)
+   * @brief Initializes this WindowController with the given RenderDevice.
    * @param self The WindowController.
-   * @param window The window.
+   * @param device The RenderDevice.
    * @return The initialized WindowController, or `NULL` on error.
    * @memberof WindowController
    */
-  WindowController *(*initWithWindow)(WindowController *self, SDL_Window *window);
+  WindowController *(*initWithDevice)(WindowController *self, RenderDevice *device);
 
   /**
    * @fn View *WindowController::nextKeyResponder(const WindowController *self, View *keyResponder)
@@ -147,13 +147,18 @@ struct WindowControllerInterface {
   View *(*previousKeyResponder)(const WindowController *self, View *keyResponder);
 
   /**
-   * @fn void WindowController::render(WindowController *self)
-   * @brief Renders the ViewController's View.
+   * @fn void WindowController::render(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer)
+   * @brief Renders the ViewController's View into the given Framebuffer.
+   * @details The caller owns @c commands and is responsible for submitting it after this returns.
+   *   The UI is composited over whatever is already in the Framebuffer's color texture
+   *   (`SDL_GPU_LOADOP_LOAD`), so render your scene into the Framebuffer first.
+   *   If @c framebuffer->colorFormat differs from the previous frame, the pipeline is rebuilt.
    * @param self The WindowController.
-   * @remarks Your application should call this method once per frame to render the View hierarchy.
+   * @param commands The frame's CommandBuffer.
+   * @param framebuffer The Framebuffer to render the UI into.
    * @memberof WindowController
    */
-  void (*render)(WindowController *self);
+  void (*render)(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer);
 
   /**
    * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
@@ -174,15 +179,6 @@ struct WindowControllerInterface {
    * @memberof WindowController
    */
   void (*respondToEvent)(WindowController * self, const SDL_Event *event);
-
-  /**
-   * @fn void WindowController::setRenderer(WindowController *self, Renderer *renderer)
-   * @brief Sets this WindowController's Renderer.
-   * @param self The WindowController.
-   * @param renderer The Renderer.
-   * @memberof WindowController
-   */
-  void (*setRenderer)(WindowController *self, Renderer *renderer);
 
   /**
    * @fn void WindowController::setTheme(WindowController *self, Theme *theme)

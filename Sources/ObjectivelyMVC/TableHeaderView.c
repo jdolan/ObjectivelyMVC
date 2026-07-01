@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -38,8 +38,6 @@ static void render(View *self, Renderer *renderer) {
 
   const SDL_Rect frame = $(self, renderFrame);
 
-  $(renderer, setDrawColor, &self->borderColor);
-
   SDL_Point points[2];
 
   points[0].x = frame.x;
@@ -48,9 +46,7 @@ static void render(View *self, Renderer *renderer) {
   points[1].x = frame.x + frame.w;
   points[1].y = frame.y + frame.h;
 
-  $(renderer, drawLine, points);
-
-  $(renderer, setDrawColor, &Colors.White);
+  $(renderer, drawLine, points, &self->borderColor);
 }
 
 #pragma mark - TableHeaderView

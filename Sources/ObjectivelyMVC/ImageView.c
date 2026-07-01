@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -25,19 +25,20 @@
 
 #include "ImageView.h"
 
-const EnumName GLBlendNames[] = MakeEnumNames(
-  MakeEnumName(GL_CONSTANT_ALPHA),
-  MakeEnumName(GL_CONSTANT_COLOR),
-  MakeEnumName(GL_DST_ALPHA),
-  MakeEnumName(GL_DST_COLOR),
-  MakeEnumName(GL_ONE),
-  MakeEnumName(GL_ONE_MINUS_DST_ALPHA),
-  MakeEnumName(GL_ONE_MINUS_DST_COLOR),
-  MakeEnumName(GL_ONE_MINUS_SRC_ALPHA),
-  MakeEnumName(GL_ONE_MINUS_SRC_COLOR),
-  MakeEnumName(GL_SRC_ALPHA),
-  MakeEnumName(GL_SRC_COLOR),
-  MakeEnumName(GL_ZERO)
+const EnumName SDLGPUBlendFactorNames[] = MakeEnumNames(
+  MakeEnumName(SDL_GPU_BLENDFACTOR_ZERO),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_ONE),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_SRC_COLOR),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_COLOR),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_DST_COLOR),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_COLOR),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_SRC_ALPHA),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_DST_ALPHA),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_ONE_MINUS_DST_ALPHA),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_CONSTANT_COLOR),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_ONE_MINUS_CONSTANT_COLOR),
+  MakeEnumName(SDL_GPU_BLENDFACTOR_SRC_ALPHA_SATURATE)
 );
 
 #define _Class _ImageView
@@ -53,9 +54,7 @@ static void dealloc(Object *self) {
 
   release(this->image);
 
-  if (this->texture) {
-    glDeleteTextures(1, &this->texture);
-  }
+  this->texture = release(this->texture);
 
   super(Object, self, dealloc);
 }
@@ -72,8 +71,8 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
   ImageView *this = (ImageView *) self;
 
   const Inlet inlets[] = MakeInlets(
-    MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) GLBlendNames),
-    MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) GLBlendNames),
+    MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) SDLGPUBlendFactorNames),
+    MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) SDLGPUBlendFactorNames),
     MakeInlet("color", InletTypeColor, &this->color, NULL),
     MakeInlet("image", InletTypeImage, &this->image, NULL)
   );
@@ -97,9 +96,10 @@ static void render(View *self, Renderer *renderer) {
 
   ImageView *this = (ImageView *) self;
 
-  if (this->texture == 0) {
+  if (this->texture == NULL) {
     if (this->image) {
-      this->texture = $(renderer, createTexture, this->image->surface);
+      this->texture = $(renderer->device, createTextureFromSurface,
+        this->image->surface, SDL_GPU_TEXTUREUSAGE_SAMPLER);
       assert(this->texture);
     }
   }
@@ -108,10 +108,8 @@ static void render(View *self, Renderer *renderer) {
 
     // TODO: Actually use self->blend
 
-    $(renderer, setDrawColor, &this->color);
     const SDL_Rect frame = $(self, renderFrame);
-    $(renderer, drawTexture, this->texture, &frame);
-    $(renderer, setDrawColor, &Colors.White);
+    $(renderer, drawTexture, this->texture, &frame, &this->color);
   }
 }
 
@@ -122,11 +120,7 @@ static void renderDeviceWillReset(View *self) {
 
   ImageView *this = (ImageView *) self;
 
-  if (this->texture) {
-    glDeleteTextures(1, &this->texture);
-  }
-
-  this->texture = 0;
+  this->texture = release(this->texture);
 
   super(View, self, renderDeviceWillReset);
 }
@@ -141,8 +135,8 @@ static ImageView *initWithFrame(ImageView *self, const SDL_Rect *frame) {
 
   self = (ImageView *) super(View, self, initWithFrame, frame);
   if (self) {
-    self->blend.src = GL_SRC_ALPHA;
-    self->blend.dst = GL_ONE_MINUS_SRC_ALPHA;
+    self->blend.src = SDL_GPU_BLENDFACTOR_SRC_ALPHA;
+    self->blend.dst = SDL_GPU_BLENDFACTOR_ONE_MINUS_SRC_ALPHA;
 
     self->color = Colors.White;
   }
@@ -185,10 +179,7 @@ static void setImage(ImageView *self, Image *image) {
     self->image = NULL;
   }
 
-  if (self->texture) {
-    glDeleteTextures(1, &self->texture);
-    self->texture = 0;
-  }
+  self->texture = release(self->texture);
 }
 
 /**

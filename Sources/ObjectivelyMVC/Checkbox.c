@@ -1,5 +1,5 @@
 /*
- * ObjectivelyMVC: Object oriented MVC framework for OpenGL, SDL3 and GNU C.
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
  *
  * This software is provided 'as-is', without any express or implied
@@ -167,7 +167,7 @@ static void initialize(Class *clazz) {
 
   ((CheckboxInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
-  _check = $(alloc(Image), initWithBytes, check_png, check_png_len);
+  _check = $(alloc(Image), initWithBytes, check_png, check_png_len - 1);
 }
 
 /**

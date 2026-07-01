@@ -38,6 +38,7 @@ test-driver
 build/
 xcuserdata/
 .build-xcframework/
-Frameworks/
+Frameworks/*
+!Frameworks/*.sh
 ObjectivelyMVC.vs15/libs/SDL3_image-*/
 ObjectivelyMVC.vs15/libs/SDL3_ttf-*/
