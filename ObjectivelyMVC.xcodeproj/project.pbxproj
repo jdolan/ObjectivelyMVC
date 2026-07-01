@@ -482,7 +482,6 @@
 		CEBA3F842FF3E77F00758CA6 /* Renderer.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Renderer.frag.spv; sourceTree = "<group>"; };
 		CEBA3F852FF3E77F00758CA6 /* Renderer.vert.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Renderer.vert.metal; sourceTree = "<group>"; };
 		CEBA3F862FF3E77F00758CA6 /* Renderer.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Renderer.vert.spv; sourceTree = "<group>"; };
-		CECF83CF2FF1B30700CB0CCA /* build-xcframework.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "build-xcframework.sh"; sourceTree = "<group>"; };
 		CED1579D1C4BF32A00FBA2DE /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
 		CED1579E1C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -820,7 +819,6 @@
 				CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */,
 				B1AA000100000000000000BE /* QuartzCore.framework */,
 				B1AA000100000000000000CF /* UniformTypeIdentifiers.framework */,
-				CECF83CF2FF1B30700CB0CCA /* build-xcframework.sh */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
