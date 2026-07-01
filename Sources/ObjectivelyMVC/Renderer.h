@@ -87,14 +87,6 @@ struct Renderer {
   CommandBuffer *commands;
 
   /**
-   * @brief The color format the Renderer's pipeline targets.
-   * @details Initialized from the swapchain texture format in `renderDeviceDidReset`.
-   *   The lazy pipeline rebuild in `WindowController::render` keeps this in sync with
-   *   the Framebuffer passed each frame, so direct writes are rarely needed.
-   */
-  SDL_GPUTextureFormat colorFormat;
-
-  /**
    * @brief The backing RenderDevice.
    */
   RenderDevice *device;

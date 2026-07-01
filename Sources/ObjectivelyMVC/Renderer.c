@@ -367,7 +367,7 @@ static void renderDeviceDidReset(Renderer *self) {
   };
 
   const SDL_GPUColorTargetDescription colorTarget = {
-    .format = self->colorFormat,
+    .format = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
     .blend_state = {
       .enable_blend = true,
       .color_blend_op = SDL_GPU_BLENDOP_ADD,

@@ -152,7 +152,6 @@ struct WindowControllerInterface {
    * @details The caller owns @c commands and is responsible for submitting it after this returns.
    *   The UI is composited over whatever is already in the Framebuffer's color texture
    *   (`SDL_GPU_LOADOP_LOAD`), so render your scene into the Framebuffer first.
-   *   If @c framebuffer->colorFormat differs from the previous frame, the pipeline is rebuilt.
    * @param self The WindowController.
    * @param commands The frame's CommandBuffer.
    * @param framebuffer The Framebuffer to render the UI into.

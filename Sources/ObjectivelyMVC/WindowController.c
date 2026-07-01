@@ -140,10 +140,9 @@ static WindowController *initWithDevice(WindowController *self, RenderDevice *de
     $(self, setWindow, device->window);
     $(self, setViewController, NULL);
     $(self, setTheme, NULL);
-
-    self->renderer->colorFormat = SDL_GetGPUSwapchainTextureFormat(device->device, self->window);
+    
     $(self->renderer, renderDeviceDidReset);
-    $(self->viewController->view, renderDeviceDidReset);
+    $(self->viewController, renderDeviceDidReset);
   }
 
   return self;
@@ -158,11 +157,6 @@ static void render(WindowController *self, CommandBuffer *commands, Framebuffer 
   assert(self->renderer);
   assert(commands);
   assert(framebuffer);
-
-  if (framebuffer->colorFormats[0] != self->renderer->colorFormat) {
-    self->renderer->colorFormat = framebuffer->colorFormats[0];
-    $(self->renderer, renderDeviceDidReset);
-  }
 
   $(self->renderer, beginFrame, commands, framebuffer);
 
@@ -232,7 +226,6 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   switch (event->type) {
     case SDL_EVENT_WINDOW_EXPOSED:
       $(self, setWindow, self->window);
-      self->renderer->colorFormat = SDL_GetGPUSwapchainTextureFormat(self->renderer->device->device, self->window);
       $(self->renderer, renderDeviceDidReset);
       $(self->viewController, renderDeviceDidReset);
       $(self->viewController->view, updateBindings);
