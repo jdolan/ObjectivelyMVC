@@ -383,13 +383,14 @@ static void render(View *self, Renderer *renderer) {
       if (SDL_BYTESPERPIXEL(surface->format) == 1) {
         converted = SDL_CreateSurface(surface->w, surface->h, SDL_PIXELFORMAT_RGBA32);
         assert(converted);
+        const SDL_PixelFormatDetails *details = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_RGBA32);
+        assert(details);
         const Uint8 *src = (const Uint8 *) surface->pixels;
         Uint32 *dst = (Uint32 *) converted->pixels;
         for (int y = 0; y < surface->h; y++) {
           for (int x = 0; x < surface->w; x++) {
             const Uint8 a = src[y * surface->pitch + x];
-            dst[y * surface->w + x] = SDL_MapRGBA(
-              SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_RGBA32), NULL, 255, 255, 255, a);
+            dst[y * surface->w + x] = SDL_MapRGBA(details, NULL, 255, 255, 255, a);
           }
         }
         upload = converted;
