@@ -103,7 +103,10 @@ static SequenceCombinator sequenceCombinator(const char *c) {
 
   SequenceCombinator combinator = SequenceCombinatorNone;
 
-  while (isspace(*c)) {
+  // Cast to unsigned char: isspace() is UB for negative values (non-ASCII bytes
+  // sign-extend to negative char), which the MSVC debug CRT asserts on. This
+  // also lets the parser tolerate arbitrary input bytes without crashing.
+  while (isspace((unsigned char) *c)) {
     combinator = SequenceCombinatorDescendent;
     c++;
   }

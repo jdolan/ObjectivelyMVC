@@ -38,6 +38,8 @@ const EnumName StackViewDistributionNames[] = MakeEnumNames(
 
 #define _Class _StackView
 
+#define DEFAULT_STACK_VIEW_SCROLL_STEP 12
+
 #pragma mark - View
 
 /**
@@ -52,7 +54,8 @@ static void applyStyle(View *self, const Style *style) {
   const Inlet inlets[] = MakeInlets(
     MakeInlet("axis", InletTypeEnum, &this->axis, (ident) StackViewAxisNames),
     MakeInlet("distribution", InletTypeEnum, &this->distribution, (ident) StackViewDistributionNames),
-    MakeInlet("spacing", InletTypeInteger, &this->spacing, NULL)
+    MakeInlet("spacing", InletTypeInteger, &this->spacing, NULL),
+    MakeInlet("scroll", InletTypeBool, &this->scrolls, NULL)
   );
 
   $(self, bind, inlets, (Dictionary *) style->attributes);
@@ -108,6 +111,13 @@ static void layoutSubviews(View *self) {
     }
 
     int pos = 0;
+
+    // Opt-in scrolling: when enabled, shift the stack by the (negative) scroll
+    // offset and clip the overflow. Disabled StackViews lay out exactly as before.
+    if (this->scrolls) {
+      pos = (this->axis == StackViewAxisVertical) ? this->contentOffset.y : this->contentOffset.x;
+      self->clipsSubviews = true;
+    }
 
     const float scale = requestedSize ? availableSize / (float) requestedSize : 1.f;
 
@@ -248,6 +258,34 @@ static SDL_Size sizeThatFits(const View *self) {
   return size;
 }
 
+/**
+ * @see View::respondToEvent(View *, const SDL_Event *)
+ */
+static void respondToEvent(View *self, const SDL_Event *event) {
+
+  StackView *this = (StackView *) self;
+
+  if (this->scrolls && event->type == SDL_EVENT_MOUSE_WHEEL) {
+    if ($(self, didReceiveEvent, event)) {
+
+      SDL_Point offset = this->contentOffset;
+      switch (this->axis) {
+        case StackViewAxisVertical:
+          offset.y += (int) (event->wheel.y * this->step);
+          break;
+        case StackViewAxisHorizontal:
+          offset.x -= (int) (event->wheel.x * this->step);
+          break;
+      }
+
+      $(this, scrollToOffset, &offset);
+      return;
+    }
+  }
+
+  super(View, self, respondToEvent, event);
+}
+
 #pragma mark - StackView
 
 /**
@@ -259,9 +297,43 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
   self = (StackView *) super(View, self, initWithFrame, frame);
   if (self) {
     self->view.autoresizingMask = ViewAutoresizingContain;
+
+    // Scrolling is opt-in; legacy StackViews stay inert.
+    self->scrolls = false;
+    self->step = DEFAULT_STACK_VIEW_SCROLL_STEP;
   }
 
   return self;
+}
+
+/**
+ * @fn void StackView::scrollToOffset(StackView *self, const SDL_Point *offset)
+ * @memberof StackView
+ */
+static void scrollToOffset(StackView *self, const SDL_Point *offset) {
+
+  if (self->scrolls) {
+
+    const SDL_Size content = $((View *) self, sizeThatFits);
+    const SDL_Rect bounds = $((View *) self, bounds);
+
+    if (content.w > bounds.w) {
+      self->contentOffset.x = clamp(offset->x, -(content.w - bounds.w), 0);
+    } else {
+      self->contentOffset.x = 0;
+    }
+
+    if (content.h > bounds.h) {
+      self->contentOffset.y = clamp(offset->y, -(content.h - bounds.h), 0);
+    } else {
+      self->contentOffset.y = 0;
+    }
+
+  } else {
+    self->contentOffset.x = self->contentOffset.y = 0;
+  }
+
+  self->view.needsLayout = true;
 }
 
 #pragma mark - Class lifecycle
@@ -275,9 +347,11 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->init = init;
 
   ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
 
   ((StackViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
+  ((StackViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
 }
 
 /**

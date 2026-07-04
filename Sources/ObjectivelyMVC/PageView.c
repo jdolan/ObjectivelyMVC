@@ -93,6 +93,101 @@ static Array *visibleSubviews(const View *self) {
   return $$(Array, arrayWithArray, (Array *) self->subviews);
 }
 
+/**
+ * @see View::layoutIfNeeded(View *)
+ * @brief Identical to View::layoutIfNeeded, but does not recurse into hidden
+ * (non-current) pages. Layout is driven TOP-DOWN through layoutIfNeeded (each view
+ * recurses into all of its subviews), so without this every hidden tab page and
+ * its entire content subtree is laid out on every pass -- the actual source of the
+ * tabbed-panel layout stall. A page is laid out lazily when it becomes current:
+ * setCurrentPage unhides it and flags this view for layout.
+ */
+static void layoutIfNeeded(View *self) {
+
+  const Array *subviews = (Array *) self->subviews;
+  for (size_t i = 0; i < subviews->count; i++) {
+
+    View *subview = subviews->elements[i];
+
+    if (!subview->hidden) {
+      $(subview, layoutIfNeeded);
+    }
+  }
+
+  if (self->needsLayout) {
+    $(self, clearWarnings, WarningTypeLayout);
+    $(self, layoutSubviews);
+    self->needsLayout = false;
+  }
+}
+
+/**
+ * @see View::layoutSubviews(View *)
+ * @brief Identical to View::layoutSubviews, but skips hidden (non-current) pages.
+ * The base implementation lays out every subview, so a tabbed panel re-lays-out
+ * each hidden page on every layout pass -- which becomes very expensive when a
+ * hidden page's content is dirtied (e.g. an unseen tab's controller refreshing on
+ * appear). A hidden page is laid out lazily instead: setCurrentPage unhides it and
+ * flags this view for layout, so the now-current page is laid out when shown.
+ */
+static void layoutSubviews(View *self) {
+
+  if (self->autoresizingMask & ViewAutoresizingContain) {
+    $(self, sizeToContain);
+  } else if (self->autoresizingMask & ViewAutoresizingFit) {
+    $(self, sizeToFit);
+  }
+
+  const SDL_Rect bounds = $(self, bounds);
+
+  const Array *subviews = (Array *) self->subviews;
+  for (size_t i = 0; i < subviews->count; i++) {
+
+    View *subview = subviews->elements[i];
+
+    if (subview->hidden) {
+      continue;
+    }
+
+    SDL_Size subviewSize = $(subview, size);
+
+    if (subview->autoresizingMask & ViewAutoresizingWidth) {
+      subviewSize.w = bounds.w;
+    }
+
+    if (subview->autoresizingMask & ViewAutoresizingHeight) {
+      subviewSize.h = bounds.h;
+    }
+
+    $(subview, resize, &subviewSize);
+    $(subview, layoutIfNeeded);
+
+    switch (subview->alignment & ViewAlignmentMaskHorizontal) {
+      case ViewAlignmentLeft:
+        subview->frame.x = 0;
+        break;
+      case ViewAlignmentCenter:
+        subview->frame.x = (bounds.w - subview->frame.w) * 0.5f;
+        break;
+      case ViewAlignmentRight:
+        subview->frame.x = bounds.w - subview->frame.w;
+        break;
+    }
+
+    switch (subview->alignment & ViewAlignmentMaskVertical) {
+      case ViewAlignmentMaskTop:
+        subview->frame.y = 0;
+        break;
+      case ViewAlignmentMaskMiddle:
+        subview->frame.y = (bounds.h - subview->frame.h) * 0.5f;
+        break;
+      case ViewAlignmentMaskBottom:
+        subview->frame.y = bounds.h - subview->frame.h;
+        break;
+    }
+  }
+}
+
 #pragma mark - PageView
 
 /**
@@ -163,6 +258,8 @@ static void initialize(Class *clazz) {
 
   ((ViewInterface *) clazz->interface)->addSubview = addSubview;
   ((ViewInterface *) clazz->interface)->init = init;
+  ((ViewInterface *) clazz->interface)->layoutIfNeeded = layoutIfNeeded;
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
   ((ViewInterface *) clazz->interface)->removeSubview = removeSubview;
   ((ViewInterface *) clazz->interface)->visibleSubviews = visibleSubviews;
 

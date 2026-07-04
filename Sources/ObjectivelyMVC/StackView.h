@@ -64,6 +64,12 @@ typedef struct StackViewInterface StackViewInterface;
  * @brief StackViews are containers that manage the arrangement of their subviews.
  * @extends View
  * @ingroup Containers
+ * @remarks A StackView can optionally pan its own stacked subviews when its
+ * content overflows its frame. This is strictly opt-in: the `scroll` flag
+ * defaults to `false`, so legacy layouts behave exactly as before unless the
+ * `scroll` style attribute (or code) enables it. Scrolling lives directly on
+ * StackView (it remains a View, not a Control/ScrollView) to avoid inheriting
+ * framework defaults that would blanket every StackView in the UI.
  */
 struct StackView {
 
@@ -92,6 +98,24 @@ struct StackView {
    * @brief The subview spacing.
    */
   int spacing;
+
+  /**
+   * @brief If `true`, this StackView pans its subviews along its axis when its
+   * content overflows its frame. Opt-in via the `scroll` style attribute.
+   */
+  bool scrolls;
+
+  /**
+   * @brief The scroll offset, in pixels. Negative along the primary axis as the
+   * content is panned (the first subview moves off the leading edge). Only used
+   * when `scrolls` is `true`.
+   */
+  SDL_Point contentOffset;
+
+  /**
+   * @brief The scroll step, in pixels, applied per mouse-wheel notch.
+   */
+  int step;
 };
 
 /**
@@ -113,6 +137,16 @@ struct StackViewInterface {
    * @memberof StackView
    */
   StackView *(*initWithFrame)(StackView *self, const SDL_Rect *frame);
+
+  /**
+   * @fn void StackView::scrollToOffset(StackView *self, const SDL_Point *offset)
+   * @brief Pans the stacked content to the given offset, clamped to the
+   * scrollable range. No-op unless `scrolls` is `true`.
+   * @param self The StackView.
+   * @param offset The desired content offset (negative along the axis to advance).
+   * @memberof StackView
+   */
+  void (*scrollToOffset)(StackView *self, const SDL_Point *offset);
 };
 
 /**
