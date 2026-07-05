@@ -33,10 +33,15 @@ SDL_Rect MVC_TransformToWindow(SDL_Window *window, const SDL_Rect *rect) {
   const float pixelDensity = SDL_GetWindowPixelDensity(window);
 
   // SDL_gpu uses top-left origin (same as SDL), so no Y-flip is required.
+  const float x = SDL_roundf(rect->x * pixelDensity);
+  const float y = SDL_roundf(rect->y * pixelDensity);
+  const float w = SDL_roundf(rect->w * pixelDensity);
+  const float h = SDL_roundf(rect->h * pixelDensity);
+
   return (SDL_Rect) {
-    .x = (int) SDL_roundf(rect->x * pixelDensity),
-    .y = (int) SDL_roundf(rect->y * pixelDensity),
-    .w = (int) SDL_roundf(rect->w * pixelDensity),
-    .h = (int) SDL_roundf(rect->h * pixelDensity),
+    .x = (int) x,
+    .y = (int) y,
+    .w = (int) w,
+    .h = (int) h,
   };
 }

@@ -244,7 +244,7 @@ static void debugEnumerate(View *view, ident data) {
     // FIXME: Ideally, warnings are accumulated during layoutSubviews and applyTheme, instead
     // FIXME: of attempting to collect them here.
 
-    $(view, clearWarnings, 0xff);
+    $(view, clearWarnings, (WarningType) 0xff);
     $(view, hasOverflow);
 
     const Array *warnings = (Array *) view->warnings;

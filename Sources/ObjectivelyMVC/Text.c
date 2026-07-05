@@ -87,10 +87,15 @@ typedef struct {
  */
 static void colorize(SDL_Surface *surface, const CharInfo *info, float scale) {
 
-  int x = (int) floorf(info->rect.x * scale) - 1;
-  int y = (int) floorf(info->rect.y * scale) - 1;
-  int w = (int) ceilf(info->rect.w * scale) + 2;
-  int h = (int) ceilf(info->rect.h * scale) + 2;
+  const float fx = floorf(info->rect.x * scale);
+  const float fy = floorf(info->rect.y * scale);
+  const float fw = ceilf(info->rect.w * scale);
+  const float fh = ceilf(info->rect.h * scale);
+
+  int x = (int) fx - 1;
+  int y = (int) fy - 1;
+  int w = (int) fw + 2;
+  int h = (int) fh + 2;
 
   if (w <= 0 || h <= 0) {
     return;
@@ -374,8 +379,11 @@ static void render(View *self, Renderer *renderer) {
 
       assert(surface);
 
-      this->textureSize.w = (int) roundf(surface->w / scale);
-      this->textureSize.h = (int) roundf(surface->h / scale);
+      const float textureWidth = roundf(surface->w / scale);
+      const float textureHeight = roundf(surface->h / scale);
+
+      this->textureSize.w = (int) textureWidth;
+      this->textureSize.h = (int) textureHeight;
 
       SDL_Surface *upload = surface;
       SDL_Surface *converted = NULL;

@@ -141,12 +141,12 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
     }
 
     MVC_Vertex *v = &verts[i * 6];
-    v[0] = (MVC_Vertex) { ax - nx, ay - ny, 0.0f, 0.0f };
-    v[1] = (MVC_Vertex) { ax + nx, ay + ny, 0.0f, 0.0f };
-    v[2] = (MVC_Vertex) { bx - nx, by - ny, 0.0f, 0.0f };
-    v[3] = (MVC_Vertex) { ax + nx, ay + ny, 0.0f, 0.0f };
-    v[4] = (MVC_Vertex) { bx + nx, by + ny, 0.0f, 0.0f };
-    v[5] = (MVC_Vertex) { bx - nx, by - ny, 0.0f, 0.0f };
+    v[0] = (MVC_Vertex) { { ax - nx, ay - ny }, { 0.0f, 0.0f }, { 0 } };
+    v[1] = (MVC_Vertex) { { ax + nx, ay + ny }, { 0.0f, 0.0f }, { 0 } };
+    v[2] = (MVC_Vertex) { { bx - nx, by - ny }, { 0.0f, 0.0f }, { 0 } };
+    v[3] = (MVC_Vertex) { { ax + nx, ay + ny }, { 0.0f, 0.0f }, { 0 } };
+    v[4] = (MVC_Vertex) { { bx + nx, by + ny }, { 0.0f, 0.0f }, { 0 } };
+    v[5] = (MVC_Vertex) { { bx - nx, by - ny }, { 0.0f, 0.0f }, { 0 } };
   }
 
   $(self, pushDrawArrays, verts, segCount * 6, NULL, color);
@@ -185,12 +185,12 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect, const SDL
   const float x2 = (float) rect->x + rect->w, y2 = (float) rect->y + rect->h;
 
   const MVC_Vertex verts[6] = {
-    { x1, y1, 0.0f, 0.0f },
-    { x2, y1, 0.0f, 0.0f },
-    { x1, y2, 0.0f, 0.0f },
-    { x2, y1, 0.0f, 0.0f },
-    { x2, y2, 0.0f, 0.0f },
-    { x1, y2, 0.0f, 0.0f },
+    { { x1, y1 }, { 0.0f, 0.0f }, { 0 } },
+    { { x2, y1 }, { 0.0f, 0.0f }, { 0 } },
+    { { x1, y2 }, { 0.0f, 0.0f }, { 0 } },
+    { { x2, y1 }, { 0.0f, 0.0f }, { 0 } },
+    { { x2, y2 }, { 0.0f, 0.0f }, { 0 } },
+    { { x1, y2 }, { 0.0f, 0.0f }, { 0 } },
   };
 
   $(self, pushDrawArrays, verts, 6, NULL, color);
@@ -208,12 +208,12 @@ static void drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *
   const float x2 = (float) rect->x + rect->w, y2 = (float) rect->y + rect->h;
 
   const MVC_Vertex verts[6] = {
-    { x1, y1, 0.0f, 0.0f },
-    { x2, y1, 1.0f, 0.0f },
-    { x1, y2, 0.0f, 1.0f },
-    { x2, y1, 1.0f, 0.0f },
-    { x2, y2, 1.0f, 1.0f },
-    { x1, y2, 0.0f, 1.0f },
+    { { x1, y1 }, { 0.0f, 0.0f }, { 0 } },
+    { { x2, y1 }, { 1.0f, 0.0f }, { 0 } },
+    { { x1, y2 }, { 0.0f, 1.0f }, { 0 } },
+    { { x2, y1 }, { 1.0f, 0.0f }, { 0 } },
+    { { x2, y2 }, { 1.0f, 1.0f }, { 0 } },
+    { { x1, y2 }, { 0.0f, 1.0f }, { 0 } },
   };
 
   $(self, pushDrawArrays, verts, 6, texture, color);

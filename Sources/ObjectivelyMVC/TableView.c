@@ -563,7 +563,7 @@ static void setSortColumn(TableView *self, TableColumn *column) {
     }
   } else {
     if (self->sortColumn) {
-      self->sortColumn->order = -self->sortColumn->order;
+      self->sortColumn->order = (Order) -self->sortColumn->order;
     }
   }
 

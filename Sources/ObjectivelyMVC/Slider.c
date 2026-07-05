@@ -188,7 +188,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     if (self->state & ControlStateHighlighted) {
       if (frame.w) {
 
-        const double fraction = (event->motion.x - frame.x) / (double) frame.w;
+        const double fraction = (double) (event->motion.x - frame.x) / (double) frame.w;
         double value = this->min + (this->max - this->min) * clamp(fraction, 0.0, 1.0);
 
         if (this->snapToStep && this->step) {

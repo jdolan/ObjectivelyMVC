@@ -328,6 +328,7 @@ static void initialize(Class *clazz) {
 
   const bool init = TTF_Init();
   assert(init);
+  (void) init;
 
   _cache = $$(Dictionary, dictionary);
   assert(_cache);
