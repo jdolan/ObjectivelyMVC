@@ -99,7 +99,7 @@ static void render(View *self, Renderer *renderer) {
   if (this->texture == NULL) {
     if (this->image) {
       this->texture = $(renderer->device, createTextureFromSurface,
-        this->image->surface, SDL_GPU_TEXTUREUSAGE_SAMPLER);
+        this->image->surface, SDL_GPU_TEXTUREUSAGE_SAMPLER, false);
       assert(this->texture);
     }
   }
