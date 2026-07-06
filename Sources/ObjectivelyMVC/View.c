@@ -305,11 +305,20 @@ static void applyTheme(View *self, const Theme *theme) {
  * @fn void View::applyThemeIfNeeded(View *self, const Theme *theme)
  * @memberof View
  */
+static void applyThemeIfNeeded(View *self, const Theme *theme);
+
+/**
+ * @brief ViewEnumerator adapter for applyThemeIfNeeded.
+ */
+static void _applyThemeIfNeeded(View *view, ident data) {
+  applyThemeIfNeeded(view, (const Theme *) data);
+}
+
 static void applyThemeIfNeeded(View *self, const Theme *theme) {
 
   assert(theme);
 
-  $(self, enumerateSubviews, (ViewEnumerator) applyThemeIfNeeded, (ident) theme);
+  $(self, enumerateSubviews, _applyThemeIfNeeded, (ident) theme);
 
   if (self->needsApplyTheme) {
 
@@ -699,6 +708,15 @@ static bool didReceiveEvent(const View *self, const SDL_Event *event) {
  * @fn void View::draw(View *self, Renderer *renderer)
  * @memberof View
  */
+static void draw(View *self, Renderer *renderer);
+
+/**
+ * @brief ViewEnumerator adapter for draw.
+ */
+static void _draw(View *view, ident data) {
+  draw(view, (Renderer *) data);
+}
+
 static void draw(View *self, Renderer *renderer) {
 
   assert(self->window);
@@ -707,7 +725,7 @@ static void draw(View *self, Renderer *renderer) {
 
     $(renderer, drawView, self);
 
-    $(self, enumerateSubviews, (ViewEnumerator) draw, renderer);
+    $(self, enumerateSubviews, _draw, renderer);
   }
 }
 

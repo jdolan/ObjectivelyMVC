@@ -113,7 +113,7 @@ static int specificity(const Selector *selector) {
         case SimpleSelectorTypePseudo:
           specificity += 10;
           break;
-        case SimpleSelectorTypeType:
+        case SimpleSelectorTypeType: {
           specificity += 1;
           Class *clazz = classForName(simpleSelector->pattern);
           if (clazz) {
@@ -134,6 +134,7 @@ static int specificity(const Selector *selector) {
           }
 
           break;
+        }
         default:
           break;
       }
@@ -213,7 +214,15 @@ typedef struct {
 } Match;
 
 /**
- * @brief ViewEnumerator for matchesView.
+ * @brief ViewEnumerator adapter for _matchesView, so it may be passed to the
+ * View::enumerate* family of methods, which require the exact ViewEnumerator
+ * signature.
+ */
+static void _matchesViewEnumerator(View *view, ident data);
+
+/**
+ * @brief Recursive View match predicate, invoked directly by matchesView and
+ * indirectly, via _matchesViewEnumerator, by the View::enumerate* methods.
  */
 static bool _matchesView(const View *view, Match *match) {
 
@@ -228,22 +237,22 @@ static bool _matchesView(const View *view, Match *match) {
 
       case SequenceCombinatorDescendent:
         match->sequence--;
-        $(view, enumerateAncestors, (ViewEnumerator) _matchesView, match);
+        $(view, enumerateAncestors, _matchesViewEnumerator, match);
         break;
 
       case SequenceCombinatorChild:
         match->sequence--;
-        $(view, enumerateSuperview, (ViewEnumerator) _matchesView, match);
+        $(view, enumerateSuperview, _matchesViewEnumerator, match);
         break;
 
       case SequenceCombinatorSibling:
         match->sequence--;
-        $(view, enumerateSiblings, (ViewEnumerator) _matchesView, match);
+        $(view, enumerateSiblings, _matchesViewEnumerator, match);
         break;
 
       case SequenceCombinatorAdjacent:
         match->sequence--;
-        $(view, enumerateAdjacent, (ViewEnumerator) _matchesView, match);
+        $(view, enumerateAdjacent, _matchesViewEnumerator, match);
         break;
 
       case SequenceCombinatorTerminal:
@@ -252,6 +261,13 @@ static bool _matchesView(const View *view, Match *match) {
   }
 
   return match->match;
+}
+
+/**
+ * @see _matchesViewEnumerator(View *, ident)
+ */
+static void _matchesViewEnumerator(View *view, ident data) {
+  _matchesView(view, (Match *) data);
 }
 
 /**
@@ -315,12 +331,19 @@ typedef struct {
 } Selection;
 
 /**
+ * @brief ViewEnumerator adapter for __select, so it may be passed to the
+ * View::enumerate* family of methods, which require the exact ViewEnumerator
+ * signature.
+ */
+static void __selectEnumerator(View *view, ident data);
+
+/**
  * @brief Recursively selects Views by iterating the SelectorSequences in the given Selection.
  */
 static Set *__select(View *view, Selection *selection) {
 
   const SelectorSequence *sequence = $(selection->sequences, objectAtIndex, selection->sequence);
-  
+
   if ($(sequence, matchesView, view)) {
 
     switch (sequence->right) {
@@ -329,22 +352,22 @@ static Set *__select(View *view, Selection *selection) {
 
       case SequenceCombinatorDescendent:
         selection->sequence++;
-        $(view, enumerateDescendants, (ViewEnumerator) __select, selection);
+        $(view, enumerateDescendants, __selectEnumerator, selection);
         break;
 
       case SequenceCombinatorChild:
         selection->sequence++;
-        $(view, enumerateSubviews, (ViewEnumerator) __select, selection);
+        $(view, enumerateSubviews, __selectEnumerator, selection);
         break;
 
       case SequenceCombinatorSibling:
         selection->sequence++;
-        $(view, enumerateSiblings, (ViewEnumerator) __select, selection);
+        $(view, enumerateSiblings, __selectEnumerator, selection);
         break;
 
       case SequenceCombinatorAdjacent:
         selection->sequence++;
-        $(view, enumerateAdjacent, (ViewEnumerator) __select, selection);
+        $(view, enumerateAdjacent, __selectEnumerator, selection);
         break;
 
       case SequenceCombinatorTerminal:
@@ -353,9 +376,16 @@ static Set *__select(View *view, Selection *selection) {
     }
   }
 
-  $(view, enumerateSubviews, (ViewEnumerator) __select, selection);
+  $(view, enumerateSubviews, __selectEnumerator, selection);
 
   return (Set *) selection->selection;
+}
+
+/**
+ * @see __selectEnumerator(View *, ident)
+ */
+static void __selectEnumerator(View *view, ident data) {
+  __select(view, (Selection *) data);
 }
 
 /**
@@ -373,6 +403,15 @@ static Set *_select(const Selector *self, View *view) {
 }
 
 /**
+ * @brief ViewEnumerator adapter for _selectFirst, so it may be passed to the
+ * View::enumerate* family of methods, which require the exact ViewEnumerator
+ * signature. Note that _selectFirst's parameter order (Selection *, View *)
+ * is reversed from ViewEnumerator's (View *, ident); this adapter restores
+ * the correct order rather than relying on an incompatible raw cast.
+ */
+static void _selectFirstEnumerator(View *view, ident data);
+
+/**
  * @brief Recursively selects the first View by iterating the SelectorSequences in the given Selection.
  */
 static void _selectFirst(Selection *selection, View *view) {
@@ -387,22 +426,22 @@ static void _selectFirst(Selection *selection, View *view) {
 
       case SequenceCombinatorDescendent:
         selection->sequence++;
-        $(view, enumerateDescendants, (ViewEnumerator) __select, selection);
+        $(view, enumerateDescendants, __selectEnumerator, selection);
         break;
 
       case SequenceCombinatorChild:
         selection->sequence++;
-        $(view, enumerateSubviews, (ViewEnumerator) __select, selection);
+        $(view, enumerateSubviews, __selectEnumerator, selection);
         break;
 
       case SequenceCombinatorSibling:
         selection->sequence++;
-        $(view, enumerateSiblings, (ViewEnumerator) __select, selection);
+        $(view, enumerateSiblings, __selectEnumerator, selection);
         break;
 
       case SequenceCombinatorAdjacent:
         selection->sequence++;
-        $(view, enumerateAdjacent, (ViewEnumerator) __select, selection);
+        $(view, enumerateAdjacent, __selectEnumerator, selection);
         break;
 
       case SequenceCombinatorTerminal:
@@ -411,7 +450,14 @@ static void _selectFirst(Selection *selection, View *view) {
     }
   }
 
-  $(view, enumerateSubviews, (ViewEnumerator) _selectFirst, selection);
+  $(view, enumerateSubviews, _selectFirstEnumerator, selection);
+}
+
+/**
+ * @see _selectFirstEnumerator(View *, ident)
+ */
+static void _selectFirstEnumerator(View *view, ident data) {
+  _selectFirst((Selection *) data, view);
 }
 
 /**
