@@ -543,40 +543,78 @@ static void clearWarnings(const View *self, WarningType type) {
  * @fn SDL_Rect View::clippingFrame(const View *self)
  * @memberof View
  */
+/**
+ * @brief Border-expands `frame` by `view`'s border, in place (matches the
+ * per-pixel expansion the renderer applies).
+ */
+static SDL_Rect expandForBorder(const View *view, SDL_Rect frame) {
+
+  if (view->borderWidth && view->borderColor.a) {
+    frame.x -= view->borderWidth;
+    frame.y -= view->borderWidth;
+    frame.w += view->borderWidth * 2;
+    frame.h += view->borderWidth * 2;
+  }
+
+  return frame;
+}
+
+#define VIEW_MAX_CLIP_DEPTH 128
+
 static SDL_Rect clippingFrame(const View *self) {
 
-  SDL_Rect frame = $(self, renderFrame);
+  // A view's clipping frame is its (border-expanded) window-space frame,
+  // intersected with the (border-expanded) window-space frame of every ancestor
+  // that clips its subviews. The previous implementation recursed into
+  // `superview->clippingFrame` for each clipping ancestor, which made this
+  // O(depth^2). Since the renderer calls this for every view every frame (and it
+  // also backs hit-testing), that was the dominant cost in a deep, wide UI. This
+  // computes the same result in a single O(depth) pass: gather the ancestor
+  // chain, derive each view's absolute frame top-down exactly as renderFrame
+  // does, then intersect self with the clipping ancestors.
 
-  if (self->borderWidth && self->borderColor.a) {
-    for (int i = 0; i < self->borderWidth; i++) {
-      frame.x -= 1;
-      frame.y -= 1;
-      frame.w += 2;
-      frame.h += 2;
+  const View *chain[VIEW_MAX_CLIP_DEPTH];
+  SDL_Rect abs[VIEW_MAX_CLIP_DEPTH];
+
+  size_t depth = 0;
+  for (const View *v = self; v && depth < VIEW_MAX_CLIP_DEPTH; v = v->superview) {
+    chain[depth++] = v;
+  }
+
+  // Pathologically deep tree (should never happen): fall back to renderFrame so
+  // we never read past the fixed chain and silently mis-clip.
+  if (depth == VIEW_MAX_CLIP_DEPTH && chain[depth - 1]->superview) {
+    return $(self, renderFrame);
+  }
+
+  // Top-down: each view's absolute origin = its frame plus its parent's absolute
+  // origin, plus the parent's padding when the child is not internally aligned
+  // (identical accumulation to renderFrame).
+  int accX = 0, accY = 0;
+  for (size_t i = depth; i > 0; i--) {
+
+    const View *v = chain[i - 1];
+    abs[i - 1] = (SDL_Rect) { v->frame.x + accX, v->frame.y + accY, v->frame.w, v->frame.h };
+
+    if (i - 1 > 0) {
+      const View *child = chain[i - 2];
+      const bool pad = child->alignment != ViewAlignmentInternal;
+      accX = abs[i - 1].x + (pad ? v->padding.left : 0);
+      accY = abs[i - 1].y + (pad ? v->padding.top : 0);
     }
   }
 
-  const View *superview = self->superview;
-  while (superview) {
-    if (superview->clipsSubviews) {
-      const SDL_Rect clippingFrame = $(superview, clippingFrame);
-      if (SDL_GetRectIntersection(&clippingFrame, &frame, &frame) == false) {
+  SDL_Rect frame = expandForBorder(self, abs[0]);
 
-        if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
-          String *desc = $((Object *) self, description);
-          String *superdesc = $((Object *) superview, description);
-
-          MVC_LogVerbose("%s is clipped by %s\n", desc->chars, superdesc->chars);
-
-          release(desc);
-          release(superdesc);
-        }
-
+  for (size_t i = 1; i < depth; i++) {
+    const View *ancestor = chain[i];
+    if (ancestor->clipsSubviews) {
+      const SDL_Rect clip = expandForBorder(ancestor, abs[i]);
+      if (SDL_GetRectIntersection(&clip, &frame, &frame) == false) {
         frame.w = frame.h = 0;
         break;
       }
     }
-    superview = superview->superview;
   }
 
   return frame;

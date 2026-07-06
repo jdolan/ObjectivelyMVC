@@ -350,6 +350,11 @@ static void stateDidChange(Control *self) {
     $(this, emitViewEvent, ViewEventBlur, NULL);
   }
 
+  // A control's state pseudo-classes (:selected, :highlighted, :focused) can style
+  // DESCENDANTS, not just the control itself -- e.g. `Checkbox:selected ImageView`
+  // toggles the checkmark, `CollectionItemView:selected > .selectionOverlay`, etc.
+  // So a state change must re-theme the whole subtree. State changes are discrete
+  // user events (click/focus/select), so this is not a hot path.
   $(this, invalidateStyle);
 
   this->needsLayout = true;

@@ -33,22 +33,72 @@
 #pragma mark - Delegates
 
 /**
- * @brief ViewEnumerator for `SDL_EVENT_MOUSE_MOTION`.
+ * @return True if `ancestor` is `view` or one of its superviews.
  */
-static void mouseMotion_enumerate(View *view, ident data) {
+static bool isInChain(const View *ancestor, const View *view) {
 
-  const SDL_MouseMotionEvent *event = data;
+  for (const View *v = view; v; v = v->superview) {
+    if (v == ancestor) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * @brief Dispatches mouse-enter / mouse-leave for an `SDL_EVENT_MOUSE_MOTION`.
+ * @details Only the views along the hit-test paths of the old and new cursor
+ * positions can change hover state, so we walk those two paths (via `superview`)
+ * and fire enter/leave on their difference -- instead of scanning the entire
+ * visible tree and hit-testing every view twice. The old approach was
+ * O(views * depth^2) per motion event (containsPoint recomputes an uncached
+ * clippingFrame up the ancestor chain), which becomes pathological in a deep,
+ * wide UI (e.g. a large scrolling list) and floods during any drag or hover.
+ * This is O(depth).
+ */
+static void mouseMotion(WindowController *self, const SDL_MouseMotionEvent *event) {
+
+  View *root = self->viewController->view;
+
   const SDL_Point a = MakePoint(event->x - event->xrel, event->y - event->yrel);
   const SDL_Point b = MakePoint(event->x, event->y);
 
-  if ($(view, containsPoint, &a) && !$(view, containsPoint, &b)) {
-    $(view, emitViewEvent, ViewEventMouseLeave, NULL);
-    $(view, invalidateStyle);
-  } else if ($(view, containsPoint, &b) && !$(view, containsPoint, &a)) {
-    $(view, emitViewEvent, ViewEventMouseEnter, NULL);
-    $(view, invalidateStyle);
+  View *from = $(root, hitTest, &a);
+  View *to = $(root, hitTest, &b);
+
+  // Same topmost view under both positions: nothing entered or left. This is the
+  // overwhelmingly common case (the cursor moving within a single control).
+  if (from == to) {
+    return;
+  }
+
+  // Leaving: views under the old position that are no longer under the new one.
+  for (View *v = from; v; v = v->superview) {
+    if (!isInChain(v, to)) {
+      $(v, emitViewEvent, ViewEventMouseLeave, NULL);
+      v->needsApplyTheme = true;
+    }
+  }
+
+  // Entering: views under the new position that were not under the old one.
+  for (View *v = to; v; v = v->superview) {
+    if (!isInChain(v, from)) {
+      $(v, emitViewEvent, ViewEventMouseEnter, NULL);
+      v->needsApplyTheme = true;
+    }
   }
 }
+
+// The `:hover` pseudo (see View::matchesSelector) matches a view purely by
+// whether the cursor is over its OWN frame -- there is no `ancestor:hover
+// descendant` cascade -- so a hover change on a view can only alter that view's
+// own computed style. We therefore mark just the entered/left view for
+// re-theming (needsApplyTheme), NOT its whole subtree via invalidateStyle. That
+// distinction is critical: invalidateStyle re-styles every descendant, so
+// entering a large container (e.g. the editor's scrolling stage list) would
+// re-compute the style of thousands of views in a single frame -- a massive
+// spike the instant the cursor crosses into it.
 
 #pragma mark - Object
 
@@ -262,7 +312,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   }
 
   if (event->type == SDL_EVENT_MOUSE_MOTION) {
-    $(self->viewController->view, enumerateVisible, mouseMotion_enumerate, (ident) event);
+    mouseMotion(self, &event->motion);
   }
 
   View *keyResponder = $(self, keyResponder), *touchResponder = $(self, touchResponder);

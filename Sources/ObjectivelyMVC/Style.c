@@ -416,6 +416,38 @@ static ident parseValue(String *string) {
 }
 
 /**
+ * @brief Returns a newly allocated copy of `css` with all `/ * ... * /` comments
+ * removed. The tokenizer below splits on `{ : ; }` and has no notion of comments,
+ * so a comment absorbed into a selector or declaration silently corrupts the rule.
+ * Each comment is replaced by a single space so it still separates adjacent tokens.
+ * The caller must free the returned buffer.
+ */
+static char *stripComments(const char *css) {
+
+  const size_t len = strlen(css);
+
+  char *out = calloc(1, len + 1);
+  assert(out);
+
+  size_t w = 0;
+  for (size_t r = 0; r < len; ) {
+    if (css[r] == '/' && css[r + 1] == '*') {
+      r += 2;
+      while (r < len && !(css[r] == '*' && css[r + 1] == '/')) {
+        r++;
+      }
+      r = (r < len) ? r + 2 : len;
+      out[w++] = ' ';
+    } else {
+      out[w++] = css[r++];
+    }
+  }
+
+  out[w] = '\0';
+  return out;
+}
+
+/**
  * @fn Array *Style::parse(const char *css)
  * @memberof Style
  */
@@ -426,7 +458,9 @@ static Array *parse(const char *css) {
 
   if (css) {
 
-    StringReader *reader = $(alloc(StringReader), initWithCharacters, css);
+    char *stripped = stripComments(css);
+
+    StringReader *reader = $(alloc(StringReader), initWithCharacters, stripped);
     assert(reader);
 
     Style *style = NULL;
@@ -477,6 +511,7 @@ static Array *parse(const char *css) {
     }
 
     release(reader);
+    free(stripped);
   }
 
   return (Array *) styles;
