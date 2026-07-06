@@ -82,10 +82,18 @@ static void dealloc(Object *self) {
 #pragma mark - Renderer
 
 /**
- * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer)
+ * @fn void Renderer::beginFrame(Renderer *self)
  * @memberof Renderer
  */
-static void beginFrame(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer) {
+static void beginFrame(Renderer *self) {
+  $(self, beginFrameWith, self->device->commands, self->device->framebuffer);
+}
+
+/**
+ * @fn void Renderer::beginFrameWith(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer)
+ * @memberof Renderer
+ */
+static void beginFrameWith(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer) {
 
   assert(commands);
   assert(framebuffer);
@@ -235,11 +243,12 @@ static void drawView(Renderer *self, View *view) {
 }
 
 /**
- * @fn void Renderer::endFrame(Renderer *self, Framebuffer *framebuffer)
+ * @fn void Renderer::endFrame(Renderer *self)
  * @memberof Renderer
  */
-static void endFrame(Renderer *self, Framebuffer *framebuffer) {
+static void endFrame(Renderer *self) {
 
+  Framebuffer *framebuffer = self->framebuffer;
   assert(framebuffer);
 
   const SDL_GPUColorTargetInfo colorTarget = $(framebuffer, colorTargetInfo, 0, SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE, NULL);
@@ -489,6 +498,7 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((RendererInterface *) clazz->interface)->beginFrame = beginFrame;
+  ((RendererInterface *) clazz->interface)->beginFrameWith = beginFrameWith;
   ((RendererInterface *) clazz->interface)->drawLine = drawLine;
   ((RendererInterface *) clazz->interface)->drawLines = drawLines;
   ((RendererInterface *) clazz->interface)->drawRect = drawRect;

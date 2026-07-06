@@ -353,7 +353,7 @@ SDL_AppResult SDL_AppIterate(void *appState) {
   CommandBuffer *commands = $(app->renderDevice, beginFrame);
   if (commands) {
     drawScene(app, commands);
-    $(app->windowController, render, commands, app->framebuffer);
+    $(app->windowController, render);
     $(app->renderDevice, endFrame);
   }
 

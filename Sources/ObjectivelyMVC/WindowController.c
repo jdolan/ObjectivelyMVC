@@ -149,16 +149,28 @@ static WindowController *initWithDevice(WindowController *self, RenderDevice *de
 }
 
 /**
- * @fn void WindowController::render(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer)
+ * @fn void WindowController::render(WindowController *self)
  * @memberof WindowController
  */
-static void render(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer) {
+static void render(WindowController *self) {
+
+  assert(self->renderer);
+
+  const RenderDevice *device = self->renderer->device;
+  $(self, renderTo, device->commands, device->framebuffer);
+}
+
+/**
+ * @fn void WindowController::renderTo(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer)
+ * @memberof WindowController
+ */
+static void renderTo(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer) {
 
   assert(self->renderer);
   assert(commands);
   assert(framebuffer);
 
-  $(self->renderer, beginFrame, commands, framebuffer);
+  $(self->renderer, beginFrameWith, commands, framebuffer);
 
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
@@ -166,7 +178,7 @@ static void render(WindowController *self, CommandBuffer *commands, Framebuffer 
 
   $(self, debug);
 
-  $(self->renderer, endFrame, framebuffer);
+  $(self->renderer, endFrame);
 }
 
 /**
@@ -506,6 +518,7 @@ static void initialize(Class *clazz) {
   ((WindowControllerInterface *) clazz->interface)->nextKeyResponder = nextKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->previousKeyResponder = previousKeyResponder;
   ((WindowControllerInterface *) clazz->interface)->render = render;
+  ((WindowControllerInterface *) clazz->interface)->renderTo = renderTo;
   ((WindowControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((WindowControllerInterface *) clazz->interface)->setTheme = setTheme;
   ((WindowControllerInterface *) clazz->interface)->setViewController = setViewController;

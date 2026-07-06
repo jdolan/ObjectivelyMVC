@@ -147,7 +147,18 @@ struct WindowControllerInterface {
   View *(*previousKeyResponder)(const WindowController *self, View *keyResponder);
 
   /**
-   * @fn void WindowController::render(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer)
+   * @fn void WindowController::render(WindowController *self)
+   * @brief Renders the ViewController's View into the RenderDevice's current frame.
+   * @details Convenience over `renderTo` for the common case of rendering the UI into
+   *   the device's own current command buffer and framebuffer. Equivalent to
+   *   `$(self, renderTo, device->commands, device->framebuffer)`.
+   * @param self The WindowController.
+   * @memberof WindowController
+   */
+  void (*render)(WindowController *self);
+
+  /**
+   * @fn void WindowController::renderTo(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer)
    * @brief Renders the ViewController's View into the given Framebuffer.
    * @details The caller owns @c commands and is responsible for submitting it after this returns.
    *   The UI is composited over whatever is already in the Framebuffer's color texture
@@ -157,7 +168,7 @@ struct WindowControllerInterface {
    * @param framebuffer The Framebuffer to render the UI into.
    * @memberof WindowController
    */
-  void (*render)(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer);
+  void (*renderTo)(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer);
 
   /**
    * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)

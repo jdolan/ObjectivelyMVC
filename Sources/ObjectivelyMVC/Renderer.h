@@ -160,14 +160,26 @@ struct RendererInterface {
   ObjectInterface objectInterface;
 
   /**
-   * @fn void Renderer::beginFrame(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer)
+   * @fn void Renderer::beginFrame(Renderer *self)
+   * @brief Prepares this Renderer for a new frame using `self->device`'s current command
+   *   buffer and framebuffer.
+   * @details Convenience over `beginFrameWith` for the common case of rendering the UI
+   *   into the device's own current frame. Equivalent to
+   *   `$(self, beginFrameWith, self->device->commands, self->device->framebuffer)`.
+   * @param self The Renderer.
+   * @memberof Renderer
+   */
+  void (*beginFrame)(Renderer *self);
+
+  /**
+   * @fn void Renderer::beginFrameWith(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer)
    * @brief Prepares this Renderer for a new frame using the given command buffer and framebuffer.
    * @param self The Renderer.
    * @param commands The frame's CommandBuffer. The caller retains ownership and must submit and release it.
    * @param framebuffer The target Framebuffer for this frame. Borrowed for the duration of the frame.
    * @memberof Renderer
    */
-  void (*beginFrame)(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer);
+  void (*beginFrameWith)(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer);
 
   /**
    * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)
@@ -231,14 +243,14 @@ struct RendererInterface {
   void (*drawView)(Renderer *self, View *view);
 
   /**
-   * @fn void Renderer::endFrame(Renderer *self, Framebuffer *framebuffer)
-   * @brief Uploads MVC vertices and executes the UI render pass into the given framebuffer.
+   * @fn void Renderer::endFrame(Renderer *self)
+   * @brief Uploads MVC vertices and executes the UI render pass into the Framebuffer
+   *   given to `beginFrame`/`beginFrameWith` (LOAD_OP_LOAD).
    * @details The caller is responsible for submitting the command buffer after this returns.
    * @param self The Renderer.
-   * @param framebuffer The target Framebuffer to render the UI into (LOAD_OP_LOAD).
    * @memberof Renderer
    */
-  void (*endFrame)(Renderer *self, Framebuffer *framebuffer);
+  void (*endFrame)(Renderer *self);
 
   /**
    * @fn Renderer *Renderer::initWithDevice(Renderer *self, RenderDevice *device)

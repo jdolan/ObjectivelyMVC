@@ -46,7 +46,7 @@ And ObjectivelyMVC never hijacks your main loop. Your game owns the window, the 
 ```c
 $(windowController, respondToEvent, &event);
 ...
-$(windowController, render, commands, framebuffer);
+$(windowController, render);
 ```
 
 ## Getting Started
