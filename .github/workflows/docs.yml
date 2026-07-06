@@ -34,7 +34,7 @@ jobs:
       run: cp Documentation/*.gif Documentation/*.jpg Documentation/html/ 2>/dev/null || true
 
     - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v5
       with:
         path: Documentation/html
 
@@ -47,4 +47,4 @@ jobs:
     steps:
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@v5
