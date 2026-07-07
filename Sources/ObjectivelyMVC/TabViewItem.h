@@ -38,7 +38,8 @@
  */
 typedef enum {
   TabStateDefault = 0x0,
-  TabStateSelected = 0x1
+  TabStateSelected = 0x1,
+  TabStateDisabled = 0x2
 } TabState;
 
 typedef struct TabViewItem TabViewItem;
