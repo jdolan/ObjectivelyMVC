@@ -35,9 +35,9 @@ BUILT_SOURCES = \
 
 .PHONY: shaders
 shaders:
-	$(GLSLC) -fshader-stage=vert Renderer.vert.glsl -o Renderer.vert.spv
 	$(GLSLC) -fshader-stage=frag Renderer.frag.glsl -o Renderer.frag.spv
-	$(SHADERCROSS) Renderer.vert.spv -s SPIRV -d MSL  -t vertex   -o Renderer.vert.dxil	
-	$(SHADERCROSS) Renderer.vert.spv -s SPIRV -d DXIL -t vertex   -o Renderer.vert.metal
-	$(SHADERCROSS) Renderer.frag.spv -s SPIRV -d MSL  -t fragment -o Renderer.frag.dxil
-	$(SHADERCROSS) Renderer.frag.spv -s SPIRV -d DXIL -t fragment -o Renderer.frag.metal
+	$(GLSLC) -fshader-stage=vert Renderer.vert.glsl -o Renderer.vert.spv
+	$(SHADERCROSS) Renderer.frag.spv -s SPIRV -d DXIL -t fragment -o Renderer.frag.dxil
+	$(SHADERCROSS) Renderer.frag.spv -s SPIRV -d MSL  -t fragment -o Renderer.frag.metal
+	$(SHADERCROSS) Renderer.vert.spv -s SPIRV -d DXIL -t vertex   -o Renderer.vert.dxil
+	$(SHADERCROSS) Renderer.vert.spv -s SPIRV -d MSL  -t vertex   -o Renderer.vert.metal
