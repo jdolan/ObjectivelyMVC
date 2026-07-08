@@ -476,6 +476,10 @@
 		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
+		CEB198D12FFDE17A00DCBD09 /* Renderer.frag.dxil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.dxil; sourceTree = "<group>"; };
+		CEB198D22FFDE17A00DCBD09 /* Renderer.frag.dxil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.dxil.h; sourceTree = "<group>"; };
+		CEB198D32FFDE17A00DCBD09 /* Renderer.vert.dxil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.vert.dxil; sourceTree = "<group>"; };
+		CEB198D42FFDE17A00DCBD09 /* Renderer.vert.dxil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.dxil.h; sourceTree = "<group>"; };
 		CEBA3F7D2FF3E6D200758CA6 /* SDL3_image.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_image.xcframework; path = Frameworks/SDL3_image.xcframework; sourceTree = "<group>"; };
 		CEBA3F7F2FF3E6D200758CA6 /* SDL3_ttf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_ttf.xcframework; path = Frameworks/SDL3_ttf.xcframework; sourceTree = "<group>"; };
 		CEBA3F832FF3E77F00758CA6 /* Renderer.frag.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Renderer.frag.metal; sourceTree = "<group>"; };
@@ -752,15 +756,19 @@
 		CE12D4841C4F3C5900CD0B13 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				CEB198D12FFDE17A00DCBD09 /* Renderer.frag.dxil */,
 				14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */,
 				CEBA3F832FF3E77F00758CA6 /* Renderer.frag.metal */,
-				8D42EC0E254AF0B8789148FA /* Renderer.frag.metal.h */,
 				CEBA3F842FF3E77F00758CA6 /* Renderer.frag.spv */,
+				CEB198D22FFDE17A00DCBD09 /* Renderer.frag.dxil.h */,
+				8D42EC0E254AF0B8789148FA /* Renderer.frag.metal.h */,
 				7F6735C65F7CAB13D8D96588 /* Renderer.frag.spv.h */,
+				CEB198D32FFDE17A00DCBD09 /* Renderer.vert.dxil */,
 				D31E7AC34C7DE77F2EF97426 /* Renderer.vert.glsl */,
 				CEBA3F852FF3E77F00758CA6 /* Renderer.vert.metal */,
-				MV00000000000000000000A3 /* Renderer.vert.metal.h */,
 				CEBA3F862FF3E77F00758CA6 /* Renderer.vert.spv */,
+				CEB198D42FFDE17A00DCBD09 /* Renderer.vert.dxil.h */,
+				MV00000000000000000000A3 /* Renderer.vert.metal.h */,
 				MV00000000000000000000A2 /* Renderer.vert.spv.h */,
 				CE12D4851C4F3C5900CD0B13 /* check.png */,
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
@@ -1027,6 +1035,7 @@
 			buildConfigurationList = CED157CF1C4BF3AC00FBA2DE /* Build configuration list for PBXNativeTarget "ObjectivelyMVC" */;
 			buildPhases = (
 				CEA0010000000000000000BA /* Configure */,
+				CEB198D02FFDDE3E00DCBD09 /* Compile Shaders */,
 				CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */,
 				CED157C91C4BF3AC00FBA2DE /* Sources */,
 				CED157CA1C4BF3AC00FBA2DE /* Frameworks */,
@@ -1156,7 +1165,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nxxd -i -t check.png         > check.png.h\nxxd -i -t coda.ttf          > coda.ttf.h\nxxd -i -t debug.css         > debug.css.h\nxxd -i -t debug.json        > debug.json.h\nxxd -i -t Renderer.vert.spv > Renderer.vert.spv.h\nxxd -i -t Renderer.vert.msl > Renderer.vert.msl.h\nxxd -i -t Renderer.frag.spv > Renderer.frag.spv.h\nxxd -i -t Renderer.frag.msl > Renderer.frag.msl.h\nxxd -i -t resize.png        > resize.png.h\nxxd -i -t stylesheet.css    > stylesheet.css.h\n";
+			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nxxd -i -t check.png           > check.png.h\nxxd -i -t coda.ttf            > coda.ttf.h\nxxd -i -t debug.css           > debug.css.h\nxxd -i -t debug.json          > debug.json.h\nxxd -i -t Renderer.vert.dxil  > Renderer.vert.dxil.h\nxxd -i -t Renderer.vert.metal > Renderer.vert.metal.h\nxxd -i -t Renderer.vert.spv   > Renderer.vert.spv.h\nxxd -i -t Renderer.frag.dxil  > Renderer.frag.dxil.h\nxxd -i -t Renderer.frag.metal > Renderer.frag.metal.h\nxxd -i -t Renderer.frag.spv   > Renderer.frag.spv.h\nxxd -i -t resize.png          > resize.png.h\nxxd -i -t stylesheet.css      > stylesheet.css.h\n";
 		};
 		CEA0010000000000000000BA /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1172,6 +1181,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ ! -f \"$SRCROOT/Sources/ObjectivelyMVC/Config.h\" ]; then\n  cd \"$SRCROOT\" && autoreconf -i && ./configure\nfi\n";
+		};
+		CEB198D02FFDDE3E00DCBD09 /* Compile Shaders */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Compile Shaders";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=/usr/local/bin:/opt/homebrew/bin:${PATH}\nmake -C Assets shaders\n";
 		};
 		CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */ = {
 			isa = PBXShellScriptBuildPhase;
