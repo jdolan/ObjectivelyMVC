@@ -48,18 +48,18 @@ static Data *shaderResourceProvider(const char *name) {
 
   Data *data = NULL;
 
-  if (!strcmp("Renderer.vert.dxil", name)) {
-    data = $(alloc(Data), initWithConstMemory, Renderer_vert_metal, Renderer_vert_dxil_len);
-  } else if (!strcmp("Renderer.frag.dxil", name)) {
-    data = $(alloc(Data), initWithConstMemory, Renderer_frag_metal, Renderer_frag_dxil_len);
-  } else if (!strcmp("Renderer.vert.metal", name)) {
-    data = $(alloc(Data), initWithConstMemory, Renderer_vert_metal, Renderer_vert_metal_len);
+  if (!strcmp("Renderer.frag.dxil", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_frag_dxil, Renderer_frag_dxil_len);
   } else if (!strcmp("Renderer.frag.metal", name)) {
     data = $(alloc(Data), initWithConstMemory, Renderer_frag_metal, Renderer_frag_metal_len);
-  } else if (!strcmp("Renderer.vert.spv", name)) {
-    data = $(alloc(Data), initWithConstMemory, Renderer_vert_spv, Renderer_vert_spv_len);
   } else if (!strcmp("Renderer.frag.spv", name)) {
     data = $(alloc(Data), initWithConstMemory, Renderer_frag_spv, Renderer_frag_spv_len);
+  } else if (!strcmp("Renderer.vert.dxil", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_vert_dxil, Renderer_vert_dxil_len);
+  } else if (!strcmp("Renderer.vert.metal", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_vert_metal, Renderer_vert_metal_len);
+  } else if (!strcmp("Renderer.vert.spv", name)) {
+    data = $(alloc(Data), initWithConstMemory, Renderer_vert_spv, Renderer_vert_spv_len);
   }
 
   return data;
