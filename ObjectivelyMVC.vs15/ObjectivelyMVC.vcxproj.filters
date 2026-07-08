@@ -177,13 +177,19 @@
     <ClInclude Include="..\Assets\resize.png.h">
       <Filter>Assets</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Renderer.frag.msl.h">
+    <ClInclude Include="..\Assets\Renderer.frag.dxil.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+	<ClInclude Include="..\Assets\Renderer.frag.msl.h">
       <Filter>Assets</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\Renderer.frag.spv.h">
       <Filter>Assets</Filter>
     </ClInclude>
-    <ClInclude Include="..\Assets\Renderer.vert.msl.h">
+    <ClInclude Include="..\Assets\Renderer.vert.dxil.h">
+      <Filter>Assets</Filter>
+    </ClInclude>
+	<ClInclude Include="..\Assets\Renderer.vert.msl.h">
       <Filter>Assets</Filter>
     </ClInclude>
     <ClInclude Include="..\Assets\Renderer.vert.spv.h">
