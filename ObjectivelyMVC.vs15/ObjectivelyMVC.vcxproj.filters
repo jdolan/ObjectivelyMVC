@@ -57,6 +57,12 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Input.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\KeyValueTableView.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\KeyValueView.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\Label.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
@@ -82,6 +88,12 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Scrollbar.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollThumb.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h">
@@ -245,6 +257,12 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\Input.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\KeyValueTableView.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\KeyValueView.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\Label.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
@@ -267,6 +285,12 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Scrollbar.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollThumb.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c">

@@ -22,6 +22,8 @@ pkginclude_HEADERS = \
 	ImageView.h \
 	Input.h \
 	Text.h \
+	KeyValueTableView.h \
+	KeyValueView.h \
 	Label.h \
 	Log.h \
 	NavigationViewController.h \
@@ -31,6 +33,8 @@ pkginclude_HEADERS = \
 	ProgressBar.h \
 	Renderer.h \
 	RGBColorPicker.h \
+	Scrollbar.h \
+	ScrollThumb.h \
 	ScrollView.h \
 	Select.h \
 	Selector.h \
@@ -78,6 +82,8 @@ libObjectivelyMVC_la_SOURCES = \
 	Image.c \
 	ImageView.c \
 	Input.c \
+	KeyValueTableView.c \
+	KeyValueView.c \
 	Label.c \
 	NavigationViewController.c \
 	Option.c \
@@ -86,6 +92,8 @@ libObjectivelyMVC_la_SOURCES = \
 	ProgressBar.c \
 	Renderer.c \
 	RGBColorPicker.c \
+	Scrollbar.c \
+	ScrollThumb.c \
 	ScrollView.c \
 	Select.c \
 	Selector.c \

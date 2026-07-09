@@ -43,6 +43,8 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ImageView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Input.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\KeyValueTableView.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\KeyValueView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Label.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Log.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\NavigationViewController.h" />
@@ -52,6 +54,8 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\ProgressBar.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Scrollbar.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollThumb.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Selector.h" />
@@ -98,6 +102,8 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\Image.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ImageView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Input.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\KeyValueTableView.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\KeyValueView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Label.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\NavigationViewController.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Option.c" />
@@ -106,6 +112,8 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\ProgressBar.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Scrollbar.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollThumb.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Selector.c" />
