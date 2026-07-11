@@ -21,6 +21,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  */
 
+#define _GNU_SOURCE
+
 #include <assert.h>
 #include <math.h>
 #include <stdarg.h>
