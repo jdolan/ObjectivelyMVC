@@ -322,9 +322,11 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
   int w = 0, h = 0;
   SDL_GetWindowSizeInPixels(app->window, &w, &h);
 
+  const SDL_GPUTextureFormat format = $(app->renderDevice, getSwapchainTextureFormat);
+
   app->framebuffer = $(app->renderDevice, createFramebuffer, &(GPU_FramebufferCreateInfo) {
     .size = MakeSize(w, h),
-    .colorFormats = { SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM },
+    .colorFormats = { format },
     .numColorTargets = 1,
     .depthFormat = SDL_GPU_TEXTUREFORMAT_D16_UNORM,
     .sampleCount = SDL_GPU_SAMPLECOUNT_1,
