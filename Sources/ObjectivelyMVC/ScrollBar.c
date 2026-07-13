@@ -127,27 +127,38 @@ static void layoutSubviews(View *self) {
 static void respondToEvent(View *self, const SDL_Event *event) {
 
   ScrollBar *this = (ScrollBar *) self;
-  
-  if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN && this->scrollView) {
 
-    const SDL_Point point = MakePoint(event->button.x, event->button.y);
-    const SDL_Rect handleFrame = $((View *) this->handle, renderFrame);
-    const SDL_Rect visible = $((View *) this->scrollView, bounds);
+  switch (event->type) {
 
-    SDL_Point offset = this->scrollView->contentOffset;
+    case SDL_EVENT_MOUSE_BUTTON_DOWN:
+      if (this->scrollView) {
 
-    if (point.y < handleFrame.y) {
-      offset.y += visible.h;
-    } else if (point.y > handleFrame.y + handleFrame.h) {
-      offset.y -= visible.h;
-    } else {
-      super(View, self, respondToEvent, event);
+        const SDL_Point point = MakePoint(event->button.x, event->button.y);
+        const SDL_Rect handleFrame = $((View *) this->handle, renderFrame);
+        const SDL_Rect visible = $((View *) this->scrollView, bounds);
+
+        SDL_Point offset = this->scrollView->contentOffset;
+
+        if (point.y < handleFrame.y) {
+          offset.y += visible.h;
+        } else if (point.y > handleFrame.y + handleFrame.h) {
+          offset.y -= visible.h;
+        }
+
+        $(this->scrollView, scrollToOffset, &offset);
+        self->needsLayout = true;
+      }
       return;
-    }
 
-    $(this->scrollView, scrollToOffset, &offset);
-    self->needsLayout = true;
-    return;
+    case SDL_EVENT_MOUSE_BUTTON_UP:
+      $(self, resignTouchResponder);
+      return;
+
+    case SDL_EVENT_MOUSE_MOTION:
+      return;
+
+    default:
+      break;
   }
 
   super(View, self, respondToEvent, event);
