@@ -561,17 +561,6 @@ static SDL_Rect clippingFrame(const View *self) {
     if (superview->clipsSubviews) {
       const SDL_Rect clippingFrame = $(superview, clippingFrame);
       if (SDL_GetRectIntersection(&clippingFrame, &frame, &frame) == false) {
-
-        if (MVC_LogEnabled(SDL_LOG_PRIORITY_VERBOSE)) {
-          String *desc = $((Object *) self, description);
-          String *superdesc = $((Object *) superview, description);
-
-          MVC_LogVerbose("%s is clipped by %s\n", desc->chars, superdesc->chars);
-
-          release(desc);
-          release(superdesc);
-        }
-
         frame.w = frame.h = 0;
         break;
       }

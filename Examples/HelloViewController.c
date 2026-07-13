@@ -76,38 +76,27 @@ static void didSetValue(Slider *slider, double value) {
 
 #pragma mark - TableViewDataSource
 
-static int tableData[25][3] = {
-  { 1, 1, 1 },
-  { 2, 2, 2 },
-  { 3, 3, 3 },
-  { 4, 4, 4 },
-  { 5, 5, 5 },
-  { 6, 6, 6 },
-  { 7, 7, 7 },
-  { 8, 8, 8 },
-  { 9, 9, 9 },
-  { 10, 10, 10 },
-  { 11, 11, 11 },
-  { 12, 12, 12 },
-  { 13, 13, 13 },
-  { 14, 14, 14 },
-  { 15, 15, 15 },
-  { 16, 16, 16 },
-  { 17, 17, 17 },
-  { 18, 18, 18 },
-  { 19, 19, 19 },
-  { 20, 20, 20 },
-  { 21, 21, 21 },
-  { 22, 22, 22 },
-  { 23, 23, 23 },
-  { 24, 24, 24 },
-  { 25, 25, 25 }
-};
+static int tableData[100][3];
+
+/**
+ * @brief Fills tableData with sequential rows on first use -- a stress-test
+ * size for profiling, in place of the original 25 literal rows.
+ */
+static void initTableData(void) {
+  static bool initialized;
+  if (!initialized) {
+    for (size_t i = 0; i < lengthof(tableData); i++) {
+      tableData[i][0] = tableData[i][1] = tableData[i][2] = (int) (i + 1);
+    }
+    initialized = true;
+  }
+}
 
 /**
  * @see TableViewDataSource::numberOfRows
  */
 static size_t numberOfRows(const TableView *tableView) {
+  initTableData();
   return lengthof(tableData);
 }
 
@@ -115,6 +104,8 @@ static size_t numberOfRows(const TableView *tableView) {
  * @see TableViewDataSource::valueForColumnAndRow
  */
 static ident valueForColumnAndRow(const TableView *tableView, const TableColumn *column, size_t row) {
+
+  initTableData();
 
   const ssize_t col = $((Array *) tableView->columns, indexOfObject, (ident) column);
 
