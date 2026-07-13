@@ -81,6 +81,27 @@ static void layoutSubviews(View *self) {
 
     $((View *) this->stackView, sizeToFit);
     $((View *) this->stackView, layoutIfNeeded);
+
+    // Keep the expanded menu on-screen. The options are only un-hidden (and the menu
+    // sized to its full height) just above, so this is the earliest point the true
+    // height is known -- stateDidChange sees a collapsed, all-hidden menu. The menu
+    // opens downward from the control and is parented to the window root (its frame
+    // is window space); if it runs past the bottom edge, shift it up, clamped to the
+    // top. Idempotent: once its bottom sits at the window edge, re-running is a no-op.
+    View *menu = (View *) this->stackView;
+    if ($(control, isHighlighted) && menu->window) {
+
+      int windowHeight;
+      SDL_GetWindowSize(menu->window, NULL, &windowHeight);
+
+      const int bottom = menu->frame.y + menu->frame.h;
+      if (bottom > windowHeight) {
+        menu->frame.y -= (bottom - windowHeight);
+        if (menu->frame.y < 0) {
+          menu->frame.y = 0;
+        }
+      }
+    }
   }
 
   super(View, self, layoutSubviews);
