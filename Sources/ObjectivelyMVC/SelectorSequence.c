@@ -103,7 +103,7 @@ static SequenceCombinator sequenceCombinator(const char *c) {
 
   SequenceCombinator combinator = SequenceCombinatorNone;
 
-  while (isspace(*c)) {
+  while (isspace((unsigned char) *c)) {
     combinator = SequenceCombinatorDescendent;
     c++;
   }
