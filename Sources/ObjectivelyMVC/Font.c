@@ -287,8 +287,18 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
     for (char *line = strtok(lines, "\n\r"); line; line = strtok(NULL, "\n\r")) {
 
       if (w) {
+
+        // A little ghetto whitespace padding to ensure TTF doesn't truncate words 🫠
+
+        const size_t len = strlen(line) + 2;
+        char buf[len];
+
+        strlcpy(buf, line, len);
+        strlcat(buf, " ", len);
+
         int line_w;
-        TTF_GetStringSize(self->font, line, 0, &line_w, NULL);
+
+        TTF_GetStringSize(self->font, buf, 0, &line_w, NULL);
         *w = max(*w, line_w);
       }
       if (h) {
