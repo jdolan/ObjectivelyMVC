@@ -303,6 +303,10 @@ TabView > .tabSelectionView > Label.selected {
   background-color: darkgray;
 }
 
+TabView > .tabSelectionView > Label.disabled > Text {
+  color: grey;
+}
+
 TabView > .tabSelectionView > Label > Text {
   alignment: middle-center;
 }

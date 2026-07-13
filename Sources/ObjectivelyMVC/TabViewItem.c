@@ -99,6 +99,12 @@ static void setState(TabViewItem *self, int state) {
   } else {
     $((View *) self->label, removeClassName, "selected");
   }
+
+  if (self->state & TabStateDisabled) {
+    $((View *) self->label, addClassName, "disabled");
+  } else {
+    $((View *) self->label, removeClassName, "disabled");
+  }
 }
 
 #pragma mark - Class lifecycle

@@ -115,6 +115,10 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
       TabViewItem *tab = $(tabs, objectAtIndex, i);
 
+      if (tab->state & TabStateDisabled) {
+        continue;
+      }
+
       if ($((View *) tab->label, didReceiveEvent, event)) {
         $(this, selectTab, tab);
       }
