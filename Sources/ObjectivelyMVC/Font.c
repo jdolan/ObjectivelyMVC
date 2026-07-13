@@ -23,6 +23,7 @@
 
 #include <assert.h>
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -293,8 +294,7 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
         const size_t len = strlen(line) + 2;
         char buf[len];
 
-        strlcpy(buf, line, len);
-        strlcat(buf, " ", len);
+        snprintf(buf, len, "%s ", line);
 
         int line_w;
 
