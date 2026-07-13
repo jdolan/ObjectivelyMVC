@@ -37,6 +37,7 @@ static void dealloc(Object *self) {
   ScrollView *this = (ScrollView *) self;
 
   release(this->contentView);
+  release(this->scrollBar);
 
   super(Object, self, dealloc);
 }
@@ -44,17 +45,78 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::awakeWithDictionary(View *, const Dictionary *)
+ */
+static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
+
+  super(View, self, awakeWithDictionary, dictionary);
+
+  ScrollView *this = (ScrollView *) self;
+
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("scrollbarVisibility", InletTypeEnum, &this->scrollBarVisibility, (ident) ScrollBarVisibilityNames),
+    MakeInlet("step", InletTypeFloat, &this->step, NULL)
+  );
+
+  $(self, bind, inlets, dictionary);
+}
+
+/**
+ * @see View::applyStyle(View *, const Style *)
+ */
+static void applyStyle(View *self, const Style *style) {
+
+  super(View, self, applyStyle, style);
+
+  ScrollView *this = (ScrollView *) self;
+
+  const Inlet inlets[] = MakeInlets(
+    MakeInlet("scrollbar", InletTypeEnum, &this->scrollBarVisibility, (ident) ScrollBarVisibilityNames)
+  );
+
+  $(self, bind, inlets, (Dictionary *) style->attributes);
+
+  self->needsLayout = true;
+}
+
+/**
  * @see View::layoutSubviews(View *)
  */
 static void layoutSubviews(View *self) {
 
-  super(View, self, layoutSubviews);
-
   ScrollView *this = (ScrollView *) self;
+
+  bool showScrollBar;
+  switch (this->scrollBarVisibility) {
+    case ScrollBarShow:
+      showScrollBar = true;
+      break;
+    case ScrollBarHide:
+      showScrollBar = false;
+      break;
+    default: {
+      if (this->contentView == NULL) {
+        showScrollBar = false;
+      } else {
+        const SDL_Size contentSize = $(this->contentView, size);
+        const SDL_Rect bounds = $(self, bounds);
+        showScrollBar = contentSize.h > bounds.h;
+      }
+      break;
+    }
+  }
+  
+  ((View *) this->scrollBar)->hidden = !showScrollBar;
+
+  super(View, self, layoutSubviews);
 
   if (this->contentView) {
     this->contentView->frame.x = this->contentOffset.x;
     this->contentView->frame.y = this->contentOffset.y;
+  }
+
+  if (showScrollBar) {
+    ((View *) this->scrollBar)->needsLayout = true;
   }
 }
 
@@ -106,7 +168,18 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
 
   self = (ScrollView *) super(Control, self, initWithFrame, frame);
   if (self) {
-    self->step = DEFAULT_SCROLL_VIEW_STEP;
+    self->step = 12.f;
+    self->scrollBarVisibility = ScrollBarAuto;
+
+    self->scrollBar = $(alloc(ScrollBar), initWithScrollView, self);
+    assert(self->scrollBar);
+
+    View *scrollBar = (View *) self->scrollBar;
+    scrollBar->alignment = ViewAlignmentRight;
+    scrollBar->autoresizingMask = ViewAutoresizingHeight;
+    scrollBar->hidden = true;
+
+    $((View *) self, addSubview, scrollBar);
   }
 
   return self;
@@ -139,6 +212,7 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
   }
 
   self->control.view.needsLayout = true;
+  ((View *) self->scrollBar)->needsLayout = true;
 }
 
 /**
@@ -160,9 +234,21 @@ static void setContentView(ScrollView *self, View *contentView) {
       $((View *) self, addSubview, contentView);
       self->contentView = retain(contentView);
     }
+    
+    $((View *) self, addSubview, (View *) self->scrollBar);
 
     $(self, scrollToOffset, &MakePoint(0, 0));
   }
+}
+
+/**
+ * @fn void ScrollView::setScrollBarVisibility(ScrollView *self, ScrollBarVisibility visibility)
+ * @memberof ScrollView
+ */
+static void setScrollBarVisibility(ScrollView *self, ScrollBarVisibility visibility) {
+
+  self->scrollBarVisibility = visibility;
+  self->control.view.needsLayout = true;
 }
 
 #pragma mark - Class lifecycle
@@ -174,6 +260,8 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+  ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
+  ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
   ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
   ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
@@ -181,6 +269,7 @@ static void initialize(Class *clazz) {
   ((ScrollViewInterface *) clazz->interface)->initWithFrame = initWithFrame;
   ((ScrollViewInterface *) clazz->interface)->scrollToOffset = scrollToOffset;
   ((ScrollViewInterface *) clazz->interface)->setContentView = setContentView;
+  ((ScrollViewInterface *) clazz->interface)->setScrollBarVisibility = setScrollBarVisibility;
 }
 
 /**

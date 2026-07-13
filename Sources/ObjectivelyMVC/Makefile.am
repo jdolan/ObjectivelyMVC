@@ -31,6 +31,8 @@ pkginclude_HEADERS = \
 	ProgressBar.h \
 	Renderer.h \
 	RGBColorPicker.h \
+	ScrollBar.h \
+	ScrollHandle.h \
 	ScrollView.h \
 	Select.h \
 	Selector.h \
@@ -86,6 +88,8 @@ libObjectivelyMVC_la_SOURCES = \
 	ProgressBar.c \
 	Renderer.c \
 	RGBColorPicker.c \
+	ScrollBar.c \
+	ScrollHandle.c \
 	ScrollView.c \
 	Select.c \
 	Selector.c \

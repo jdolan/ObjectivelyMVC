@@ -178,6 +178,16 @@ ProgressBar > Text {
   alignment: middle-center;
 }
 
+ScrollBar {
+  width: 12;
+  background-color: #222222c0;
+}
+
+ScrollBar > .handle {
+  background-color: #888888c0;
+  min-height: 16;
+}
+
 ScrollView {
   autoresizing-mask: fill;
   clips-subviews: true;

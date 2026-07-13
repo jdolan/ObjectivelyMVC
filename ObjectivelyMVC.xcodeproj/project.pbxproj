@@ -35,6 +35,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		12CB053DBF7CE0752A5AE6E9 /* ScrollBar.c in Sources */ = {isa = PBXBuildFile; fileRef = 7889454C3F84200465B57578 /* ScrollBar.c */; };
+		3081E9324C929F44F2424D7C /* ScrollHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F25B4D3F9924D41ADDBF368 /* ScrollHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		373CCC1EDB79A83F1F913610 /* ScrollHandle.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */; };
 		B1BB0001000000000000000A /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		B1BB000100000000000000A0 /* SDL3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B1BB000100000000000000AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AB /* Foundation.framework */; };
@@ -189,6 +192,7 @@
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D52A3AB45A575A7A6D498A19 /* ScrollBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 64D1E41ED038FCC725227A5B /* ScrollBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
@@ -316,9 +320,13 @@
 
 /* Begin PBXFileReference section */
 		14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.glsl; sourceTree = "<group>"; };
+		64D1E41ED038FCC725227A5B /* ScrollBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollBar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollHandle.c; sourceTree = "<group>"; };
 		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
+		7889454C3F84200465B57578 /* ScrollBar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollBar.c; sourceTree = "<group>"; };
 		7F6735C65F7CAB13D8D96588 /* Renderer.frag.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.spv.h; sourceTree = "<group>"; };
 		8D42EC0E254AF0B8789148FA /* Renderer.frag.metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.metal.h; sourceTree = "<group>"; };
+		8F25B4D3F9924D41ADDBF368 /* ScrollHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollHandle.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		B1AA0001000000000000000A /* SDL3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3.xcframework; path = ../ObjectivelyGPU/Frameworks/SDL3.xcframework; sourceTree = "<group>"; };
 		B1AA000100000000000000AB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -649,6 +657,10 @@
 				CE76279D1D4A5A5800EEEE78 /* Renderer.h */,
 				CE9EB86D1EA50FD10087BD1D /* RGBColorPicker.c */,
 				CE9EB86E1EA50FD10087BD1D /* RGBColorPicker.h */,
+				7889454C3F84200465B57578 /* ScrollBar.c */,
+				64D1E41ED038FCC725227A5B /* ScrollBar.h */,
+				6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */,
+				8F25B4D3F9924D41ADDBF368 /* ScrollHandle.h */,
 				CE6603791CBBF93E00EB86CF /* ScrollView.c */,
 				CE66037A1CBBF93E00EB86CF /* ScrollView.h */,
 				CE14A8CA1C66D89900B576FB /* Select.c */,
@@ -903,6 +915,8 @@
 				CE862ADA1F79FB82005C3B10 /* ProgressBar.h in Headers */,
 				CE9EB8701EA50FD10087BD1D /* RGBColorPicker.h in Headers */,
 				CE76279F1D4A5A5800EEEE78 /* Renderer.h in Headers */,
+				D52A3AB45A575A7A6D498A19 /* ScrollBar.h in Headers */,
+				3081E9324C929F44F2424D7C /* ScrollHandle.h in Headers */,
 				CE66037C1CBBF93E00EB86CF /* ScrollView.h in Headers */,
 				CE14A8CD1C66D89900B576FB /* Select.h in Headers */,
 				CE88199E1F9231AF000D5AB7 /* Selector.h in Headers */,
@@ -1139,6 +1153,10 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Assets/arrow_down.png",
+				"$(SRCROOT)/Assets/arrow_left.png",
+				"$(SRCROOT)/Assets/arrow_right.png",
+				"$(SRCROOT)/Assets/arrow_up.png",
 				"$(SRCROOT)/Assets/check.png",
 				"$(SRCROOT)/Assets/coda.ttf",
 				"$(SRCROOT)/Assets/debug.css",
@@ -1152,6 +1170,10 @@
 			);
 			name = "Preprocess Assets";
 			outputPaths = (
+				"$(SRCROOT)/Assets/arrow_down.png.h",
+				"$(SRCROOT)/Assets/arrow_left.png.h",
+				"$(SRCROOT)/Assets/arrow_right.png.h",
+				"$(SRCROOT)/Assets/arrow_up.png.h",
 				"$(SRCROOT)/Assets/check.png.h",
 				"$(SRCROOT)/Assets/coda.ttf.h",
 				"$(SRCROOT)/Assets/debug.css.h",
@@ -1165,7 +1187,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nxxd -i -t check.png           > check.png.h\nxxd -i -t coda.ttf            > coda.ttf.h\nxxd -i -t debug.css           > debug.css.h\nxxd -i -t debug.json          > debug.json.h\nxxd -i -t Renderer.vert.dxil  > Renderer.vert.dxil.h\nxxd -i -t Renderer.vert.metal > Renderer.vert.metal.h\nxxd -i -t Renderer.vert.spv   > Renderer.vert.spv.h\nxxd -i -t Renderer.frag.dxil  > Renderer.frag.dxil.h\nxxd -i -t Renderer.frag.metal > Renderer.frag.metal.h\nxxd -i -t Renderer.frag.spv   > Renderer.frag.spv.h\nxxd -i -t resize.png          > resize.png.h\nxxd -i -t stylesheet.css      > stylesheet.css.h\n";
+			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nxxd -i -t arrow_down.png      > arrow_down.png.h\nxxd -i -t arrow_left.png      > arrow_left.png.h\nxxd -i -t arrow_right.png     > arrow_right.png.h\nxxd -i -t arrow_up.png        > arrow_up.png.h\nxxd -i -t check.png           > check.png.h\nxxd -i -t coda.ttf            > coda.ttf.h\nxxd -i -t debug.css           > debug.css.h\nxxd -i -t debug.json          > debug.json.h\nxxd -i -t Renderer.vert.dxil  > Renderer.vert.dxil.h\nxxd -i -t Renderer.vert.metal > Renderer.vert.metal.h\nxxd -i -t Renderer.vert.spv   > Renderer.vert.spv.h\nxxd -i -t Renderer.frag.dxil  > Renderer.frag.dxil.h\nxxd -i -t Renderer.frag.metal > Renderer.frag.metal.h\nxxd -i -t Renderer.frag.spv   > Renderer.frag.spv.h\nxxd -i -t resize.png          > resize.png.h\nxxd -i -t stylesheet.css      > stylesheet.css.h\n";
 		};
 		CEA0010000000000000000BA /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1291,6 +1313,8 @@
 				CE862AD91F79FB82005C3B10 /* ProgressBar.c in Sources */,
 				CE76279E1D4A5A5800EEEE78 /* Renderer.c in Sources */,
 				CE9EB86F1EA50FD10087BD1D /* RGBColorPicker.c in Sources */,
+				12CB053DBF7CE0752A5AE6E9 /* ScrollBar.c in Sources */,
+				373CCC1EDB79A83F1F913610 /* ScrollHandle.c in Sources */,
 				CE66037B1CBBF93E00EB86CF /* ScrollView.c in Sources */,
 				CE14A8CC1C66D89900B576FB /* Select.c in Sources */,
 				CE88199D1F9231AF000D5AB7 /* Selector.c in Sources */,

@@ -24,13 +24,12 @@
 #pragma once
 
 #include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/ScrollBar.h>
 
 /**
  * @file
  * @brief ScrollViews allow users to pan their internal contents.
  */
-
-#define DEFAULT_SCROLL_VIEW_STEP 12.0
 
 typedef struct ScrollViewDelegate ScrollViewDelegate;
 
@@ -86,6 +85,19 @@ struct ScrollView {
    * @brief The scroll step, in pixels.
    */
   float step;
+
+  /**
+   * @brief The scrollbar. Always present; shown per `scrollBarVisibility`
+   * (see the `scrollbar` style attribute / `setScrollBarVisibility`).
+   */
+  ScrollBar *scrollBar;
+
+  /**
+   * @brief Governs whether the scrollbar is shown. Attribute `scrollbar`.
+   * @details `ScrollBarAuto` (the default) shows it only when the content
+   * View's height exceeds this ScrollView's own.
+   */
+  ScrollBarVisibility scrollBarVisibility;
 };
 
 /**
@@ -107,7 +119,7 @@ struct ScrollViewInterface {
    * @memberof ScrollView
    */
   ScrollView *(*initWithFrame)(ScrollView *self, const SDL_Rect *frame);
-
+ 
   /**
    * @fn void ScrollView::scrollToOffset(ScrollView *self, const SDL_Point offset);
    * @brief Scrolls the content View to the specified offset.
@@ -125,6 +137,15 @@ struct ScrollViewInterface {
    * @memberof ScrollView
    */
   void (*setContentView)(ScrollView *self, View *contentView);
+
+  /**
+   * @fn void ScrollView::setScrollBarVisibility(ScrollView *self, ScrollBarVisibility visibility)
+   * @brief Sets whether this ScrollView's ScrollBar is shown, hidden, or shown only as needed.
+   * @param self The ScrollView.
+   * @param visibility The ScrollBarVisibility.
+   * @memberof ScrollView
+   */
+  void (*setScrollBarVisibility)(ScrollView *self, ScrollBarVisibility visibility);
 };
 
 /**

@@ -52,6 +52,8 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\ProgressBar.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Renderer.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollBar.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollHandle.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Select.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Selector.h" />
@@ -106,6 +108,8 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\ProgressBar.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Renderer.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollBar.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollHandle.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Select.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Selector.c" />

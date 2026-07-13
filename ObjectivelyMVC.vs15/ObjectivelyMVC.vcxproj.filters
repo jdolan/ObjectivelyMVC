@@ -84,6 +84,12 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\RGBColorPicker.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollBar.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollHandle.h">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClInclude>
     <ClInclude Include="..\Sources\ObjectivelyMVC\ScrollView.h">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClInclude>
@@ -267,6 +273,12 @@
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\RGBColorPicker.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollBar.c">
+      <Filter>Sources\ObjectivelyMVC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollHandle.c">
       <Filter>Sources\ObjectivelyMVC</Filter>
     </ClCompile>
     <ClCompile Include="..\Sources\ObjectivelyMVC\ScrollView.c">
