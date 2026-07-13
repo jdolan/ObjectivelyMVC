@@ -1094,7 +1094,9 @@ static bool isVisible(const View *self) {
  * @brief ViewEnumerator for layoutIfNeeded recursion.
  */
 static void layoutIfNeeded_enumerate(View *subview, ident data) {
-  $(subview, layoutIfNeeded);
+  if (subview->hidden == false) {
+    $(subview, layoutIfNeeded);
+  }
 }
 
 /**

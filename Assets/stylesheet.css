@@ -87,7 +87,7 @@ CollectionView {
 }
 
 CollectionView .contentView {
-  autoresizing-mask: contain;
+  autoresizing-mask: contain | width;
   padding: 10 10 10 10;
 }
 
