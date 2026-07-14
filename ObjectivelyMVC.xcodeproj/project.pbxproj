@@ -1221,7 +1221,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=/usr/local/bin:/opt/homebrew/bin:${PATH}\nmake -C Assets shaders\n";
+			shellScript = "export PATH=/usr/local/bin:/opt/homebrew/bin:${PATH}\nif command -v glslc >/dev/null && command -v shadercross >/dev/null; then\n  make -C Assets shaders\nelse\n  echo \"glslc/shadercross not found; using versioned Assets/*.spv, *.dxil, *.metal\"\nfi\n";
 		};
 		CED8CEF52CCECC9D00D4CFD8 /* Preprocess Sounds */ = {
 			isa = PBXShellScriptBuildPhase;
