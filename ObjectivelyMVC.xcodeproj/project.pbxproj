@@ -1153,10 +1153,6 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Assets/arrow_down.png",
-				"$(SRCROOT)/Assets/arrow_left.png",
-				"$(SRCROOT)/Assets/arrow_right.png",
-				"$(SRCROOT)/Assets/arrow_up.png",
 				"$(SRCROOT)/Assets/check.png",
 				"$(SRCROOT)/Assets/coda.ttf",
 				"$(SRCROOT)/Assets/debug.css",
@@ -1170,10 +1166,6 @@
 			);
 			name = "Preprocess Assets";
 			outputPaths = (
-				"$(SRCROOT)/Assets/arrow_down.png.h",
-				"$(SRCROOT)/Assets/arrow_left.png.h",
-				"$(SRCROOT)/Assets/arrow_right.png.h",
-				"$(SRCROOT)/Assets/arrow_up.png.h",
 				"$(SRCROOT)/Assets/check.png.h",
 				"$(SRCROOT)/Assets/coda.ttf.h",
 				"$(SRCROOT)/Assets/debug.css.h",
@@ -1187,7 +1179,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nxxd -i -t arrow_down.png      > arrow_down.png.h\nxxd -i -t arrow_left.png      > arrow_left.png.h\nxxd -i -t arrow_right.png     > arrow_right.png.h\nxxd -i -t arrow_up.png        > arrow_up.png.h\nxxd -i -t check.png           > check.png.h\nxxd -i -t coda.ttf            > coda.ttf.h\nxxd -i -t debug.css           > debug.css.h\nxxd -i -t debug.json          > debug.json.h\nxxd -i -t Renderer.vert.dxil  > Renderer.vert.dxil.h\nxxd -i -t Renderer.vert.metal > Renderer.vert.metal.h\nxxd -i -t Renderer.vert.spv   > Renderer.vert.spv.h\nxxd -i -t Renderer.frag.dxil  > Renderer.frag.dxil.h\nxxd -i -t Renderer.frag.metal > Renderer.frag.metal.h\nxxd -i -t Renderer.frag.spv   > Renderer.frag.spv.h\nxxd -i -t resize.png          > resize.png.h\nxxd -i -t stylesheet.css      > stylesheet.css.h\n";
+			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nxxd -i -t check.png           > check.png.h\nxxd -i -t coda.ttf            > coda.ttf.h\nxxd -i -t debug.css           > debug.css.h\nxxd -i -t debug.json          > debug.json.h\nxxd -i -t Renderer.vert.dxil  > Renderer.vert.dxil.h\nxxd -i -t Renderer.vert.metal > Renderer.vert.metal.h\nxxd -i -t Renderer.vert.spv   > Renderer.vert.spv.h\nxxd -i -t Renderer.frag.dxil  > Renderer.frag.dxil.h\nxxd -i -t Renderer.frag.metal > Renderer.frag.metal.h\nxxd -i -t Renderer.frag.spv   > Renderer.frag.spv.h\nxxd -i -t resize.png          > resize.png.h\nxxd -i -t stylesheet.css      > stylesheet.css.h\n";
 		};
 		CEA0010000000000000000BA /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;
