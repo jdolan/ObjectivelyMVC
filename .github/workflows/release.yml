@@ -108,18 +108,22 @@ jobs:
         curl_ios="$GITHUB_WORKSPACE/Objectively/Frameworks/libcurl.xcframework/ios-arm64/Headers"
         curl_sim="$GITHUB_WORKSPACE/Objectively/Frameworks/libcurl.xcframework/ios-arm64_x86_64-simulator/Headers"
 
+        # WORKSPACE_PREFIX resolves ObjectivelyMVC.xcodeproj's HEADER_SEARCH_PATHS
+        # ($(WORKSPACE_PREFIX)/Objectively/Sources etc.) against the sibling
+        # checkouts above. It's otherwise only ever set as a local Xcode
+        # user-default, so it must be passed explicitly here.
         xcodebuild archive -workspace ObjectivelyMVC.xcworkspace -scheme ObjectivelyMVC \
           -destination "generic/platform=macOS" -archivePath build/macOS \
-          SKIP_INSTALL=NO CODE_SIGNING_ALLOWED=NO
+          SKIP_INSTALL=NO CODE_SIGNING_ALLOWED=NO WORKSPACE_PREFIX=..
 
         xcodebuild archive -workspace ObjectivelyMVC.xcworkspace -scheme ObjectivelyMVC \
           -destination "generic/platform=iOS" -archivePath build/iOS \
-          SKIP_INSTALL=NO CODE_SIGNING_ALLOWED=NO \
+          SKIP_INSTALL=NO CODE_SIGNING_ALLOWED=NO WORKSPACE_PREFIX=.. \
           OTHER_CFLAGS="\$(inherited) -I$curl_ios"
 
         xcodebuild archive -workspace ObjectivelyMVC.xcworkspace -scheme ObjectivelyMVC \
           -destination "generic/platform=iOS Simulator" -archivePath build/iOS_Simulator \
-          SKIP_INSTALL=NO CODE_SIGNING_ALLOWED=NO \
+          SKIP_INSTALL=NO CODE_SIGNING_ALLOWED=NO WORKSPACE_PREFIX=.. \
           OTHER_CFLAGS="\$(inherited) -I$curl_sim"
 
         xcodebuild -create-xcframework \
