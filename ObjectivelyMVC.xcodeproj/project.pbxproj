@@ -484,9 +484,9 @@
 		CE9FECD7201D5F8000F954ED /* debug.json.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.json.h; sourceTree = "<group>"; };
 		CEA8FC1C1FB153A5002CCB08 /* Stylesheet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Stylesheet.c; sourceTree = "<group>"; };
 		CEA8FC1D1FB153A5002CCB08 /* Stylesheet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stylesheet.h; sourceTree = "<group>"; };
-		CEB198D12FFDE17A00DCBD09 /* Renderer.frag.dxil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.dxil; sourceTree = "<group>"; };
+		CEB198D12FFDE17A00DCBD09 /* Renderer.frag.dxil */ = {isa = PBXFileReference; lastKnownFileType = file; path = Renderer.frag.dxil; sourceTree = "<group>"; };
 		CEB198D22FFDE17A00DCBD09 /* Renderer.frag.dxil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.dxil.h; sourceTree = "<group>"; };
-		CEB198D32FFDE17A00DCBD09 /* Renderer.vert.dxil */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.vert.dxil; sourceTree = "<group>"; };
+		CEB198D32FFDE17A00DCBD09 /* Renderer.vert.dxil */ = {isa = PBXFileReference; lastKnownFileType = file; path = Renderer.vert.dxil; sourceTree = "<group>"; };
 		CEB198D42FFDE17A00DCBD09 /* Renderer.vert.dxil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.dxil.h; sourceTree = "<group>"; };
 		CEBA3F7D2FF3E6D200758CA6 /* SDL3_image.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_image.xcframework; path = Frameworks/SDL3_image.xcframework; sourceTree = "<group>"; };
 		CEBA3F7F2FF3E6D200758CA6 /* SDL3_ttf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3_ttf.xcframework; path = Frameworks/SDL3_ttf.xcframework; sourceTree = "<group>"; };
@@ -1153,27 +1153,31 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Assets/Renderer.frag.dxil",
+				"$(SRCROOT)/Assets/Renderer.frag.metal",
+				"$(SRCROOT)/Assets/Renderer.frag.spv",
+				"$(SRCROOT)/Assets/Renderer.vert.dxil",
+				"$(SRCROOT)/Assets/Renderer.vert.metal",
+				"$(SRCROOT)/Assets/Renderer.vert.spv",
 				"$(SRCROOT)/Assets/check.png",
 				"$(SRCROOT)/Assets/coda.ttf",
 				"$(SRCROOT)/Assets/debug.css",
 				"$(SRCROOT)/Assets/debug.json",
-				"$(SRCROOT)/Assets/Renderer.vert.spv",
-				"$(SRCROOT)/Assets/Renderer.vert.msl",
-				"$(SRCROOT)/Assets/Renderer.frag.spv",
-				"$(SRCROOT)/Assets/Renderer.frag.msl",
 				"$(SRCROOT)/Assets/resize.png",
 				"$(SRCROOT)/Assets/stylesheet.css",
 			);
 			name = "Preprocess Assets";
 			outputPaths = (
+				"$(SRCROOT)/Assets/Renderer.frag.dxil.h",
+				"$(SRCROOT)/Assets/Renderer.frag.spv.h",
+				"$(SRCROOT)/Assets/Renderer.frag.metal.h",
+				"$(SRCROOT)/Assets/Renderer.vert.dxil.h",
+				"$(SRCROOT)/Assets/Renderer.vert.spv.h",
+				"$(SRCROOT)/Assets/Renderer.vert.metal.h",
 				"$(SRCROOT)/Assets/check.png.h",
 				"$(SRCROOT)/Assets/coda.ttf.h",
 				"$(SRCROOT)/Assets/debug.css.h",
 				"$(SRCROOT)/Assets/debug.json.h",
-				"$(SRCROOT)/Assets/Renderer.vert.spv.h",
-				"$(SRCROOT)/Assets/Renderer.vert.msl.h",
-				"$(SRCROOT)/Assets/Renderer.frag.spv.h",
-				"$(SRCROOT)/Assets/Renderer.frag.msl.h",
 				"$(SRCROOT)/Assets/resize.png.h",
 				"$(SRCROOT)/Assets/stylesheet.css.h",
 			);
@@ -1205,11 +1209,20 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/Assets/Makefile",
+				"$(SRCROOT)/Assets/Renderer.frag.glsl",
+				"$(SRCROOT)/Assets/Renderer.vert.glsl",
 			);
 			name = "Compile Shaders";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(SRCROOT)/Assets/Renderer.frag.dxil",
+				"$(SRCROOT)/Assets/Renderer.frag.metal",
+				"$(SRCROOT)/Assets/Renderer.frag.spv",
+				"$(SRCROOT)/Assets/Renderer.vert.dxil",
+				"$(SRCROOT)/Assets/Renderer.vert.metal",
+				"$(SRCROOT)/Assets/Renderer.vert.spv",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1655,7 +1668,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEFINES_MODULE = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
 					"$(BUILT_PRODUCTS_DIR)",
@@ -1674,7 +1687,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEFINES_MODULE = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
 					"$(BUILT_PRODUCTS_DIR)",
