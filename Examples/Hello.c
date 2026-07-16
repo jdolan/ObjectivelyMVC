@@ -189,11 +189,11 @@ static void initScene(AppState *app) {
   };
   pipelineInfo.target_info = (SDL_GPUGraphicsPipelineTargetInfo) {
     .color_target_descriptions = &(SDL_GPUColorTargetDescription) {
-      .format = app->framebuffer->colorTextures[0]->format,
+      .format = app->framebuffer->colorAttachments[0].textures[0]->format,
       .blend_state = GPU_BlendStateOpaque,
     },
     .num_color_targets = 1,
-    .depth_stencil_format = app->framebuffer->depthTexture->format,
+    .depth_stencil_format = app->framebuffer->depthAttachment.textures[0]->format,
     .has_depth_stencil_target = true,
   };
 
@@ -225,9 +225,8 @@ static void drawScene(AppState *app, CommandBuffer *commands) {
   const mat4 modelViewProjection = mat4_mul(projection, modelView);
   $(commands, pushVertexUniformData, 0, modelViewProjection.f, sizeof(modelViewProjection));
 
-  const SDL_FColor clearColor = { 0.1f, 0.1f, 0.2f, 1.f };
-  const SDL_GPUColorTargetInfo color = $(app->framebuffer, colorTargetInfo, 0, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_STORE, &clearColor);
-  const SDL_GPUDepthStencilTargetInfo depth = $(app->framebuffer, depthTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_DONT_CARE, 1.f);
+  const SDL_GPUColorTargetInfo color = $(app->framebuffer, colorTargetInfo, 0, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_STORE);
+  const SDL_GPUDepthStencilTargetInfo depth = $(app->framebuffer, depthTargetInfo, SDL_GPU_LOADOP_CLEAR, SDL_GPU_STOREOP_DONT_CARE);
 
   RenderPass *pass = $(commands, beginRenderPass, &color, 1, &depth);
   $(pass, bindPipeline, scene->pipeline);
@@ -326,9 +325,9 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
 
   app->framebuffer = $(app->renderDevice, createFramebuffer, &(GPU_FramebufferCreateInfo) {
     .size = MakeSize(w, h),
-    .colorFormats = { format },
+    .colorAttachments = { { .format = format, .clearColor = { 0.1f, 0.1f, 0.2f, 1.f } } },
     .numColorTargets = 1,
-    .depthFormat = SDL_GPU_TEXTUREFORMAT_D16_UNORM,
+    .depthAttachment = { .format = SDL_GPU_TEXTUREFORMAT_D16_UNORM, .clearDepth = 1.f },
     .sampleCount = SDL_GPU_SAMPLECOUNT_1,
   });
 

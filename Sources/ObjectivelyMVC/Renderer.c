@@ -257,7 +257,7 @@ static void endFrame(Renderer *self) {
   Framebuffer *framebuffer = self->framebuffer;
   assert(framebuffer);
 
-  const SDL_GPUColorTargetInfo colorTarget = $(framebuffer, colorTargetInfo, 0, SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE, NULL);
+  const SDL_GPUColorTargetInfo colorTarget = $(framebuffer, colorTargetInfo, 0, SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE);
 
   const size_t vtxCount = self->vertices->count;
 
