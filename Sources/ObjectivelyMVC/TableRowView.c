@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <string.h>
 
 #include "TableRowView.h"
 #include "TableView.h"
@@ -58,6 +59,111 @@ static bool matchesSelector(const View *self, const SimpleSelector *simpleSelect
   }
 
   return super(View, self, matchesSelector, simpleSelector);
+}
+
+/**
+ * @see View::applyStyle(View *, const Style *)
+ * @remarks When selected, nudges this row's own (unselected) background-color +25 per RGB
+ * channel, rather than hard-coding an unrelated selection color. A stylesheet rule targeting
+ * `TableRowView:selected` still takes precedence: if such a rule changed backgroundColor during
+ * this same pass (via `super`), that value is left alone.
+ * @remarks `applyStyle` may run more than once while selected (e.g. re-triggered by unrelated
+ * hover-state invalidation elsewhere in the tree); reading the *incoming* backgroundColor as
+ * "the base" would treat an already-nudged value as the new base and compound on every call,
+ * drifting toward white. `unselectedBackgroundColor` is only ever captured while NOT selected, so
+ * it stays a stable reference no matter how many times this runs while selected.
+ */
+static void applyStyle(View *self, const Style *style) {
+
+  TableRowView *this = (TableRowView *) self;
+
+  if (this->isSelected == false) {
+    super(View, self, applyStyle, style);
+    this->unselectedBackgroundColor = self->backgroundColor;
+    return;
+  }
+
+  self->backgroundColor = this->unselectedBackgroundColor;
+
+  super(View, self, applyStyle, style);
+
+  if (memcmp(&self->backgroundColor, &this->unselectedBackgroundColor, sizeof(SDL_Color)) == 0) {
+    const int selectedColorNudge = 25;
+    const SDL_Color baseColor = this->unselectedBackgroundColor;
+    // Nudge alpha too, uniformly with RGB: this framework represents "transparent" as
+    // white with alpha=0, not black-transparent, so a TableRowView with no explicit
+    // background (the common case) has base (255,255,255,0). Forcing alpha to 255 in
+    // that case turned an invisible row into a solid white block; nudging alpha by
+    // the same amount instead yields a faint, barely-visible highlight (alpha 25),
+    // consistent with the subtle-overlay tints used elsewhere (e.g. #ffffff22).
+    self->backgroundColor = MakeColor(
+      (Uint8) min(255, baseColor.r + selectedColorNudge),
+      (Uint8) min(255, baseColor.g + selectedColorNudge),
+      (Uint8) min(255, baseColor.b + selectedColorNudge),
+      (Uint8) min(255, baseColor.a + selectedColorNudge)
+    );
+  }
+}
+
+/**
+ * @see View::layoutSubviews(View *)
+ * @remarks After the normal StackView layout, the LAST cell is stretched to fill
+ * whatever width remains after the preceding cells -- a "fixed label(s) + flexible
+ * value" table shape (every current consumer is exactly this: a key/label column
+ * plus a value column meant to reach the table's own width). This is not
+ * expressible via StackView distribution alone: `Fill` scales every child
+ * uniformly, so a caller-side fixed-width clamp on the other cells just fights and
+ * undoes it. Grows the cell's real content widget (the one subview that isn't the
+ * cell's own hidden default Text) rather than the cell itself, since the cell's
+ * `autoresizing-mask:contain` hugs that content -- growing the content lets
+ * Contain naturally report the wider size back up, instead of fighting it.
+ */
+static void layoutSubviews(View *self) {
+
+  super(View, self, layoutSubviews);
+
+  TableRowView *this = (TableRowView *) self;
+
+  const Array *cells = (Array *) this->cells;
+  if (cells->count < 2) {
+    return;
+  }
+
+  const SDL_Rect bounds = $(self, bounds);
+
+  int used = 0;
+  for (size_t i = 0; i < cells->count - 1; i++) {
+    const View *cell = $(cells, objectAtIndex, i);
+    used += cell->frame.w + this->stackView.spacing;
+  }
+
+  TableCellView *last = $(cells, objectAtIndex, cells->count - 1);
+  const View *lastView = (View *) last;
+
+  // The cell's own padding is added back on top of its (Contain-computed) child
+  // size, so the child must be sized to `width` MINUS that padding -- otherwise
+  // the cell reports back width+padding next pass, which grows `bounds.w` on the
+  // pass after that, compounding a few pixels wider on every re-layout (visible
+  // as "clicking anything grows the row").
+  const int width = max(0, bounds.w - used - lastView->padding.left - lastView->padding.right);
+
+  const Array *subviews = lastView->subviews;
+  for (size_t i = 0; i < subviews->count; i++) {
+
+    View *child = $(subviews, objectAtIndex, i);
+    if (child != (View *) last->text) {
+      if (child->frame.w != width) {
+        const SDL_Size size = MakeSize(width, child->frame.h);
+        $(child, resize, &size);
+      }
+      break;
+    }
+  }
+
+  ((View *) last)->needsLayout = true;
+  $((View *) last, layoutIfNeeded);
+
+  ((View *) last)->frame.x = used;
 }
 
 #pragma mark - TableRowView
@@ -147,6 +253,8 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
 
   ((TableRowViewInterface *) clazz->interface)->addCell = addCell;
   ((TableRowViewInterface *) clazz->interface)->initWithTableView = initWithTableView;

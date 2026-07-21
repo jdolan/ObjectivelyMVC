@@ -68,6 +68,14 @@ struct TableRowView {
    * @brief The table.
    */
   TableView *tableView;
+
+  /**
+   * @brief This row's own background-color while unselected, captured in `applyStyle`.
+   * @remarks Used as a stable reference for computing the default selected background-color
+   * (base + 25 per RGB channel); only ever updated while NOT selected, so it stays correct no
+   * matter how many times `applyStyle` re-runs while selected.
+   */
+  SDL_Color unselectedBackgroundColor;
 };
 
 /**
