@@ -55,6 +55,11 @@ static TableCellView *initWithFrame(TableCellView *self, const SDL_Rect *frame) 
     assert(self->text);
 
     $((View *) self, addSubview, (View *) self->text);
+
+    // Without this, the cell's own size() reflects only its raw/prior frame, not its actual
+    // content -- so the row's height (computed from its tallest cell) never accounts for cells
+    // whose content is taller than a single line of text (e.g. a nested Box).
+    ((View *) self)->autoresizingMask = ViewAutoresizingContain;
   }
 
   return self;

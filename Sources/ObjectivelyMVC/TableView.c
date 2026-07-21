@@ -22,8 +22,10 @@
  */
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 
+#include <Objectively/Number.h>
 #include <Objectively/String.h>
 
 #include "TableView.h"
@@ -54,10 +56,17 @@ static void dealloc(Object *self) {
 
 /**
  * @brief ArrayEnumerator for awaking TableColumns.
+ * @remarks Accepts either a bare identifier String (`"key"`) or a full `{"identifier": "key"}`
+ * Dictionary, for whenever a column ever needs more than just its identifier.
  */
 static void awakeWithDictionary_columns(const Array *array, ident obj, ident data) {
 
-  const String *identifier = $((Dictionary *) obj, objectForKeyPath, "identifier");
+  const String *identifier;
+  if ($((Object *) obj, isKindOfClass, _String())) {
+    identifier = (String *) obj;
+  } else {
+    identifier = $((Dictionary *) obj, objectForKeyPath, "identifier");
+  }
   assert(identifier);
 
   TableColumn *column = $(alloc(TableColumn), initWithIdentifier, identifier->chars);
@@ -69,15 +78,134 @@ static void awakeWithDictionary_columns(const Array *array, ident obj, ident dat
 }
 
 /**
+ * @return The index of `column` within `self->columns`, or `0` if not found.
+ */
+static size_t indexOfColumn(const TableView *self, const TableColumn *column) {
+
+  const Array *columns = (Array *) self->columns;
+  for (size_t i = 0; i < columns->count; i++) {
+    if ($(columns, objectAtIndex, i) == column) {
+      return i;
+    }
+  }
+
+  return 0;
+}
+
+/**
+ * @brief Parses a JSON `"cells"` array directly into TableRowViews/TableCellViews, appended to
+ * this table's `rows`/`contentView` -- bypassing `dataSource`/`delegate`/`reloadData()` entirely.
+ * Each entry specifies `"column"` (an identifier declared in `"columns"`) and `"row"` (a 0-based
+ * integer index), plus a View definition -- anything a normal subview entry would accept,
+ * including nested composites like `Box` or another `TableView` -- for the cell's content. Cells
+ * not covered by any entry render as blank (default-constructed) TableCellViews. This exists so
+ * tables with a fixed, known-in-advance row set can be authored entirely in JSON, without a C
+ * `dataSource`/`delegate` -- that path remains for genuinely data-driven tables (row count/content
+ * not known until runtime).
+ */
+static void awakeWithDictionary_cells(TableView *self, const Array *cells) {
+
+  const Array *columns = (Array *) self->columns;
+  const size_t numColumns = columns->count;
+  if (numColumns == 0 || cells->count == 0) {
+    return;
+  }
+
+  size_t numRows = 0;
+  for (size_t i = 0; i < cells->count; i++) {
+    const Dictionary *dictionary = $(cells, objectAtIndex, i);
+
+    const Number *rowNumber = $(dictionary, objectForKeyPath, "row");
+    assert(rowNumber);
+
+    numRows = max(numRows, (size_t) rowNumber->value + 1);
+  }
+
+  View **grid = calloc(numRows * numColumns, sizeof(View *));
+  assert(grid);
+
+  for (size_t i = 0; i < cells->count; i++) {
+    const Dictionary *dictionary = $(cells, objectAtIndex, i);
+
+    const String *columnIdentifier = $(dictionary, objectForKeyPath, "column");
+    assert(columnIdentifier);
+
+    const Number *rowNumber = $(dictionary, objectForKeyPath, "row");
+    assert(rowNumber);
+
+    const TableColumn *column = $(self, columnWithIdentifier, columnIdentifier->chars);
+    assert(column);
+
+    const size_t columnIndex = indexOfColumn(self, column);
+    const size_t row = (size_t) rowNumber->value;
+
+    View *view = NULL;
+    const Inlet inlet = MakeInlet(NULL, InletTypeView, &view, NULL);
+    BindInlet(&inlet, dictionary);
+    assert(view);
+
+    grid[row * numColumns + columnIndex] = view;
+  }
+
+  for (size_t row = 0; row < numRows; row++) {
+
+    TableRowView *rowView = $(alloc(TableRowView), initWithTableView, self);
+    assert(rowView);
+
+    for (size_t col = 0; col < numColumns; col++) {
+
+      const TableColumn *column = $(columns, objectAtIndex, col);
+
+      TableCellView *cell = $(alloc(TableCellView), initWithFrame, NULL);
+      assert(cell);
+
+      cell->view.identifier = strdup(column->identifier);
+
+      // Every row's cell for a given column shares this class, so a column can be
+      // styled once (e.g. `.value { width: 280px }`) instead of per-row.
+      $((View *) cell, addClassName, column->identifier);
+
+      View *view = grid[row * numColumns + col];
+      if (view) {
+        ((View *) cell->text)->hidden = true;
+        $((View *) cell, addSubview, view);
+      }
+
+      $(rowView, addCell, cell);
+      release(cell);
+    }
+
+    $(self->rows, addObject, rowView);
+    release(rowView);
+
+    $((View *) self->contentView, addSubview, (View *) rowView);
+  }
+
+  free(grid);
+
+  // None of these are sortable spreadsheet-style tables.
+  ((View *) self->headerView)->hidden = true;
+
+  self->control.view.needsLayout = true;
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   super(View, self, awakeWithDictionary, dictionary);
 
+  TableView *this = (TableView *) self;
+
   const Array *columns = $(dictionary, objectForKeyPath, "columns");
   if (columns) {
     $(columns, enumerate, awakeWithDictionary_columns, self);
+  }
+
+  const Array *cells = $(dictionary, objectForKeyPath, "cells");
+  if (cells) {
+    awakeWithDictionary_cells(this, cells);
   }
 }
 
@@ -352,6 +480,11 @@ static TableView *initWithFrame(TableView *self, const SDL_Rect *frame) {
 
     $((View *) self->contentView, addClassName, "contentView");
 
+    // Box's own body is ALSO classed "contentView" -- this second class lets a stylesheet
+    // target just the row stack (e.g. row spacing) without also matching an ancestor Box's
+    // contentView.
+    $((View *) self->contentView, addClassName, "tableRows");
+
     self->scrollView = $(alloc(ScrollView), initWithFrame, NULL);
     assert(self->scrollView);
 
@@ -423,6 +556,10 @@ static void reloadData(TableView *self) {
       assert(cell);
 
       cell->view.identifier = strdup(column->identifier);
+
+      // Every row's cell for a given column shares this class, so a column can be
+      // styled once (e.g. `.value { width: 280px }`) instead of per-row.
+      $((View *) cell, addClassName, column->identifier);
 
       $(row, addCell, cell);
       release(cell);

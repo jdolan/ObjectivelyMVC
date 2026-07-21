@@ -271,8 +271,16 @@ TableRowView:nth-child(even) TableCellView {
   background-color: #ffffff11;
 }
 
+/* Sentinel, not a real color: `View::applyTheme` only calls `applyStyle` when the computed CSS
+   attribute set actually changes (an equality check, for perf) -- without SOME attribute here
+   that differs between selected/unselected, toggling :selected changes nothing CSS can see, and
+   TableRowView's computed default (base color + 25 per RGB channel, see TableRowView.c) never
+   gets a chance to run. `none` is a real, explicit inlet value that `bindColor` deliberately
+   leaves untouched (see its "none" case), so this is purely a change-detection trigger; it does
+   not itself paint anything. A real `TableRowView:selected { background-color: X }` rule in an
+   app's own stylesheet still fully overrides the computed default, same as before. */
 TableRowView:selected {
-  background-color: darkgray;
+  background-color: none;
 }
 
 TableView > ScrollView > .contentView {
