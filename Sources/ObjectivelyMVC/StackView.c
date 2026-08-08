@@ -229,6 +229,15 @@ static SDL_Size sizeThatFits(const View *self) {
     }
   }
 
+  switch (this->axis) {
+    case StackViewAxisVertical:
+      size.w += self->padding.left + self->padding.right;
+      break;
+    case StackViewAxisHorizontal:
+      size.h += self->padding.top + self->padding.bottom;
+      break;
+  }
+
   if (subviews->count) {
     switch (this->axis) {
       case StackViewAxisVertical:
