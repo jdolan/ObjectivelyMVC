@@ -13,7 +13,7 @@
   <Import Project="..\..\ObjectivelyGPU\ObjectivelyGPU.vs15\sdl3.targets" />
 
   <PropertyGroup>
-    <SDL3ImageVersion>3.4.0</SDL3ImageVersion>
+    <SDL3ImageVersion>3.4.4</SDL3ImageVersion>
     <SDL3TtfVersion>3.2.2</SDL3TtfVersion>
     <SDL3ImageDir>$(MSBuildThisFileDirectory)libs\SDL3_image-$(SDL3ImageVersion)\</SDL3ImageDir>
     <SDL3TtfDir>$(MSBuildThisFileDirectory)libs\SDL3_ttf-$(SDL3TtfVersion)\</SDL3TtfDir>
