@@ -78,6 +78,11 @@ static void dealloc(Object *self) {
 
   this->commands = NULL;
 
+  release(this->white);
+  release(this->sampler);
+  release(this->vertexBuffer);
+  release(this->pipeline);
+
   release(this->vertices);
   release(this->drawArrays);
   release(this->device);
