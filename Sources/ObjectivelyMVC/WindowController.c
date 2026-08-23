@@ -230,27 +230,30 @@ static View *previousKeyResponder(const WindowController *self, View *keyRespond
 /**
  * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
  * @memberof WindowController
+ * @remarks Exposure MUST NOT reset render device resources. It fires on every frame on some
+ * platforms, where resetting leaks a generation of GPU resources per frame. Only the view
+ * hierarchy's resources depend on the window, through its pixel density, so only a change in
+ * pixel density resets them. The renderer's own resources are created with the device.
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
   SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", (ident) event);
 
   switch (event->type) {
-    case SDL_EVENT_WINDOW_EXPOSED:
-      $(self, setWindow, self->window);
-      $(self->renderer, renderDeviceDidReset);
-      $(self->viewController, renderDeviceDidReset);
-      $(self->viewController->view, updateBindings);
-      break;
     case SDL_EVENT_WINDOW_MOVED:
     case SDL_EVENT_WINDOW_RESIZED:
     case SDL_EVENT_WINDOW_MAXIMIZED:
     case SDL_EVENT_WINDOW_RESTORED:
+    case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
+      $(self, setWindow, self->window);
+      break;
     case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
     case SDL_EVENT_WINDOW_DISPLAY_CHANGED:
     case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
-    case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
       $(self, setWindow, self->window);
+      $(self->viewController, renderDeviceWillReset);
+      $(self->viewController, renderDeviceDidReset);
+      $(self->viewController->view, updateBindings);
       break;
     case SDL_EVENT_WINDOW_DESTROYED:
     case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
