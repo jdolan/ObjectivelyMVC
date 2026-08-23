@@ -234,8 +234,16 @@ static View *previousKeyResponder(const WindowController *self, View *keyRespond
  * platforms, where resetting leaks a generation of GPU resources per frame. Only the view
  * hierarchy's resources depend on the window, through its pixel density, so only a change in
  * pixel density resets them. The renderer's own resources are created with the device.
+ * @remarks Window events for another window MUST be ignored, or a window being torn down
+ * releases the resources of the controller that replaced it.
  */
 static void respondToEvent(WindowController *self, const SDL_Event *event) {
+
+  if (event->type >= SDL_EVENT_WINDOW_FIRST && event->type <= SDL_EVENT_WINDOW_LAST) {
+    if (event->window.windowID != SDL_GetWindowID(self->window)) {
+      return;
+    }
+  }
 
   SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", (ident) event);
 
