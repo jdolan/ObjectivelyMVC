@@ -143,6 +143,14 @@ struct Renderer {
   Uint32 vertexBufferCapacity;
 
   /**
+   * @brief The transfer buffer sourcing the vertex upload, held for the renderer's
+   * lifetime because the vertices are uploaded every frame. Grown with the buffer it
+   * sources.
+   * @private
+   */
+  TransferBuffer *transferBuffer;
+
+  /**
    * @brief The 1×1 white fallback texture (used for solid-color primitives).
    * @private
    */

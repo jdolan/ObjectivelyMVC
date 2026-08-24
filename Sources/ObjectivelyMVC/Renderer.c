@@ -81,6 +81,7 @@ static void dealloc(Object *self) {
   release(this->white);
   release(this->sampler);
   release(this->vertexBuffer);
+  release(this->transferBuffer);
   release(this->pipeline);
 
   release(this->vertices);
@@ -264,21 +265,35 @@ static void endFrame(Renderer *self) {
 
   const SDL_GPUColorTargetInfo colorTarget = $(framebuffer, colorTargetInfo, 0, SDL_GPU_LOADOP_LOAD, SDL_GPU_STOREOP_STORE);
 
-  const size_t vtxCount = self->vertices->count;
+  const size_t vertexCount = self->vertices->count;
 
   CopyPass *copyPass = $(self->commands, beginCopyPass);
 
-  if (vtxCount > 0) {
-    const Uint32 vtxSize = (Uint32) (vtxCount * sizeof(MVC_Vertex));
+  if (vertexCount > 0) {
+    const Uint32 vertexSize = (Uint32) (vertexCount * sizeof(MVC_Vertex));
 
-    if (vtxCount > self->vertexBufferCapacity) {
+    if (vertexCount > self->vertexBufferCapacity) {
       release(self->vertexBuffer);
-      const SDL_GPUBufferCreateInfo info = { .usage = SDL_GPU_BUFFERUSAGE_VERTEX, .size = vtxSize };
-      self->vertexBuffer = $(self->device, createBuffer, &info);
-      self->vertexBufferCapacity = (Uint32) vtxCount;
+      self->vertexBuffer = $(self->device, createBuffer, &(SDL_GPUBufferCreateInfo) {
+        .usage = SDL_GPU_BUFFERUSAGE_VERTEX,
+        .size = vertexSize
+      });
+
+      release(self->transferBuffer);
+      self->transferBuffer = $(self->device, createTransferBuffer, &(SDL_GPUTransferBufferCreateInfo) {
+        .usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD,
+        .size = vertexSize,
+      });
+
+      self->vertexBufferCapacity = (Uint32) vertexCount;
     }
 
-    $(copyPass, uploadData, self->vertexBuffer->buffer, self->vertices->elements, vtxSize, 0, true);
+    $(self->transferBuffer, write, self->vertices->elements, vertexSize, true);
+
+    $(copyPass, uploadBuffer,
+      &(SDL_GPUTransferBufferLocation) { .transfer_buffer = self->transferBuffer->buffer },
+      &(SDL_GPUBufferRegion) { .buffer = self->vertexBuffer->buffer, .size = vertexSize },
+      true);
   }
 
   release(copyPass);
@@ -478,6 +493,7 @@ static void renderDeviceWillReset(Renderer *self) {
   self->sampler = release(self->sampler);
 
   self->vertexBuffer = release(self->vertexBuffer);
+  self->transferBuffer = release(self->transferBuffer);
   self->vertexBufferCapacity = 0;
 
   self->pipeline = release(self->pipeline);
