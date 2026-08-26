@@ -1,6 +1,6 @@
 AC_PREREQ(2.69)
 
-AC_INIT([ObjectivelyMVC], [2.0.0], [jay@jaydolan.com])
+AC_INIT([ObjectivelyMVC], [2.1.7], [jay@jaydolan.com])
 
 AC_CONFIG_HEADERS([Sources/ObjectivelyMVC/Config.h])
 AC_CONFIG_MACRO_DIR([m4])
@@ -51,7 +51,7 @@ AM_CONDITIONAL([MINGW], [test "x$HOST_NAME" = "xMINGW"])
 AM_CONDITIONAL([LINUX], [test "x$HOST_NAME" = "xLINUX"])
 
 PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
-PKG_CHECK_MODULES([OBJECTIVELYGPU], [ObjectivelyGPU >= 0.4.0])
+PKG_CHECK_MODULES([OBJECTIVELYGPU], [ObjectivelyGPU >= 1.0.0])
 PKG_CHECK_MODULES([OBJECTIVELY], [Objectively >= 2.0.0])
 PKG_CHECK_MODULES([SDL3], [sdl3 >= 3.2.0 sdl3-image sdl3-ttf])
 
