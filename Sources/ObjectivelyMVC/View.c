@@ -1117,15 +1117,12 @@ static void layoutIfNeeded(View *self) {
   if (self->needsLayout) {
 
     // No ancestor is actively arranging self right now, so there's no fresh constraint to
-    // consult; treat an existing frame as authoritative (Equal, not Max -- see ViewConstraintMax).
-    ViewConstraint w, h;
-    if (self->frame.w || self->frame.h) {
-      w = MakeConstraint(ViewConstraintEqual, self->frame.w);
-      h = MakeConstraint(ViewConstraintEqual, self->frame.h);
-    } else {
-      w = MakeConstraint(ViewConstraintUnspecified, 0);
-      h = MakeConstraint(ViewConstraintUnspecified, 0);
-    }
+    // consult; treat an existing frame as authoritative per-axis (Equal, not Max -- see
+    // ViewConstraintMax), leaving an axis with no frame yet Unspecified.
+    const ViewConstraint w = self->frame.w ?
+      MakeConstraint(ViewConstraintEqual, self->frame.w) : MakeConstraint(ViewConstraintUnspecified, 0);
+    const ViewConstraint h = self->frame.h ?
+      MakeConstraint(ViewConstraintEqual, self->frame.h) : MakeConstraint(ViewConstraintUnspecified, 0);
 
     $(self, layoutWithConstraint, w, h);
   }

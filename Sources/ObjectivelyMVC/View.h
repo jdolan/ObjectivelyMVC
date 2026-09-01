@@ -838,8 +838,9 @@ struct ViewInterface {
    * already resolved `self->frame`; it must not perform any sizing of its own, only positioning
    * and committing of subview frames.
    * @remarks The default implementation resolves each subview's size via View::layoutWithConstraint,
-   * offering `Exact` for a `ViewAutoresizingWidth`/`Height` subview (since this View's bounds are
-   * already final) or `Unspecified` otherwise (so the subview sizes itself from its own content).
+   * offering `ViewConstraintEqual` for a `ViewAutoresizingWidth`/`Height` subview (since this
+   * View's bounds are already final) or `ViewConstraintUnspecified` otherwise (so the subview
+   * sizes itself from its own content).
    * @memberof View
    */
   void (*layoutSubviews)(View *self);
@@ -851,12 +852,12 @@ struct ViewInterface {
    * @param width The ViewConstraint offered for this View's width.
    * @param height The ViewConstraint offered for this View's height.
    * @remarks This is the shared tail of View::layoutIfNeeded: resolve self's size via
-   * View::sizeToSatisfy if self is a container, then View::layoutSubviews, then clear
-   * `needsLayout`. It exists so a caller that already knows the correct ViewConstraint for a
-   * View it is arranging -- e.g. a parent's own View::layoutSubviews, positioning one of its
-   * subviews -- can drive that View's layout directly, without going through
-   * View::layoutIfNeeded's own guess at what constraint applies (which is only appropriate when
-   * a View is laying out standalone, with no parent currently arranging it).
+   * View::sizeToSatisfy, then View::layoutSubviews, then clear `needsLayout`. It exists so a
+   * caller that already knows the correct ViewConstraint for a View it is arranging -- e.g. a
+   * parent's own View::layoutSubviews, positioning one of its subviews -- can drive that View's
+   * layout directly, without going through View::layoutIfNeeded's own guess at what constraint
+   * applies (which is only appropriate when a View is laying out standalone, with no parent
+   * currently arranging it).
    * @see View::layoutWithSize(View *, const SDL_Size *)
    * @memberof View
    */

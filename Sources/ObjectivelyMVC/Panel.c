@@ -110,10 +110,7 @@ static void layoutSubviews(View *self) {
 
   View *contentView = (View *) this->contentView;
 
-  const ViewConstraint w = MakeConstraint(ViewConstraintEqual, size.w);
-  const ViewConstraint h = MakeConstraint(ViewConstraintEqual, size.h);
-
-  $(contentView, layoutWithConstraint, w, h);
+  $(contentView, layoutWithSize, &size);
 
   super(View, self, layoutSubviews);
 
