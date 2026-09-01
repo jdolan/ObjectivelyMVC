@@ -33,10 +33,6 @@
 #include "Colors.h"
 #include "Text.h"
 
-static inline float view_pixel_density(SDL_Window *window) {
-  return window ? SDL_GetWindowPixelDensity(window) : 1.0f;
-}
-
 #define _Class _Text
 
 #pragma mark - Color Escape Sequences
@@ -354,7 +350,7 @@ static void render(View *self, Renderer *renderer) {
 
   assert(this->font);
 
-  const float scale = view_pixel_density(self->window);
+  const float scale = SDL_GetWindowPixelDensity(self->window);
 
   if (this->font->scale != scale) {
     this->font->scale = scale;
@@ -452,7 +448,7 @@ static void renderDeviceDidReset(View *self) {
 
   Text *this = (Text *) self;
 
-  this->font->scale = view_pixel_density(self->window);
+  this->font->scale = SDL_GetWindowPixelDensity(self->window);
   $(this->font, renderDeviceDidReset);
 
   super(View, self, renderDeviceDidReset);
