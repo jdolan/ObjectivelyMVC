@@ -161,10 +161,10 @@ static void layoutSubviews(View *self) {
         case StackViewDistributionFillEqually:
           switch (this->axis) {
             case StackViewAxisVertical:
-              subviewSize.h = availableSize / (float) subviews->count;
+              subviewSize.h = max(availableSize / (float) subviews->count, sizes[i].h);
               break;
             case StackViewAxisHorizontal:
-              subviewSize.w = availableSize / (float) subviews->count;
+              subviewSize.w = max(availableSize / (float) subviews->count, sizes[i].w);
               break;
           }
           break;
