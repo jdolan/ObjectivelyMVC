@@ -91,9 +91,6 @@ static void layoutSubviews(View *self) {
 
     const ViewConstraint unspecified = MakeConstraint(ViewConstraintUnspecified, 0);
 
-    // Each subview's unconstrained size, measured once here and consumed by the second loop
-    // below -- scoped to this call, not cached on the View itself, since nothing outside this
-    // function has any business reading a mid-layout intermediate value.
     SDL_Size sizes[subviews->count];
 
     for (size_t i = 0; i < subviews->count; i++) {
@@ -144,6 +141,8 @@ static void layoutSubviews(View *self) {
           break;
       }
 
+      // Distribute along primary axis
+      
       switch (this->distribution) {
         case StackViewDistributionDefault:
           break;
@@ -171,12 +170,10 @@ static void layoutSubviews(View *self) {
           break;
       }
 
-      // subviewSize is the final, already-computed distribution/bounds-override size; see
-      // View::layoutWithSize for why it's applied directly rather than via a ViewConstraint.
       $(subview, layoutWithSize, &subviewSize);
 
-      // The switch above positioned subview along the stack's primary axis; align it along the
-      // cross axis here, now that its final (post-resize) frame is known.
+      // Align along secondary axis
+      
       switch (this->axis) {
         case StackViewAxisVertical:
           switch (subview->alignment & ViewAlignmentMaskHorizontal) {

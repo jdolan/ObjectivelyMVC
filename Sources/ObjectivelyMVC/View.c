@@ -1175,14 +1175,7 @@ static void layoutSubviews(View *self) {
  */
 static void layoutWithConstraint(View *self, ViewConstraint width, ViewConstraint height) {
 
-  // Always resolve, regardless of isContainer: resolveViewConstraint's own per-axis
-  // ViewAutoresizingWidth/Height check is what decides whether width/height actually changes
-  // anything -- for a non-container with no matching bit, sizeThatFits already returns self's
-  // current size unchanged, so this is a no-op. Gating this on isContainer would (and did) skip
-  // resizing entirely for a Fill-only, non-container View -- e.g. Slider's `bar`, which is
-  // `fill` but not `Contain`/`Fit` -- leaving it at its stale or zero frame.
   $(self, sizeToSatisfy, width, height);
-
   $(self, clearWarnings, WarningTypeLayout);
   $(self, layoutSubviews);
 

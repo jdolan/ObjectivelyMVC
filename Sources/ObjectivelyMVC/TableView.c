@@ -121,10 +121,6 @@ static void layoutSubviews(View *self) {
  */
 static SDL_Size sizeThatFits(const View *self) {
 
-  // naturalSize sums every row's height unconditionally; only report it as this View's own size
-  // when self is actually a container, so an explicit JSON/CSS width or height isn't silently
-  // discarded for a TableView that manages its own size (e.g. a fixed viewport with a
-  // ScrollView).
   if ($(self, isContainer) == false) {
     return $(self, size);
   }
