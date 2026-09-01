@@ -279,6 +279,17 @@ struct View {
   Style *style;
 
   /**
+   * @brief The `width`/`height` this View was most recently given via styling, per axis.
+   * @remarks Written only when a `width` or `height` Style attribute is actually present -- not
+   * on every View::applyStyle call -- so it reflects the last authored value for an axis, or
+   * `0` if that axis has never been styled. View::sizeThatFits's container branch floors its
+   * children-derived sum against this, so an authored size survives being a Contain view with no
+   * content of its own to size from (e.g. Slider, whose `bar` and `handle` have none
+   * independently).
+   */
+  SDL_Size styledSize;
+
+  /**
    * @brief An optional Stylesheet.
    * @remarks If set, this Stylesheet is added to or removed from the current Theme when this
    * View is added to or removed from a valid View hierarchy.

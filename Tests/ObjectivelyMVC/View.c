@@ -234,6 +234,38 @@ START_TEST(fillOnlyChildFillsContainBounds) {
 
 } END_TEST
 
+START_TEST(styledSizeFloorsContainBoundsWithNoMinSize) {
+
+  // Mirrors Slider itself: a styled `width` is the only thing giving a Contain view with no
+  // sized content of its own (a bare `fill` leaf, contributing nothing) a real width -- with no
+  // minSize set at all, unlike fillOnlyChildFillsContainBounds above.
+
+  View *outer = $(alloc(View), initWithFrame, NULL);
+  outer->autoresizingMask = ViewAutoresizingContain;
+
+  Style *style = $(alloc(Style), initWithAttributes, NULL);
+  $(style, addIntegerAttribute, "width", 140);
+  $(style, addIntegerAttribute, "height", 24);
+
+  $(outer, applyStyle, style);
+  release(style);
+
+  View *child = $(alloc(View), initWithFrame, NULL);
+  child->autoresizingMask = ViewAutoresizingFill;
+
+  $(outer, addSubview, child);
+
+  $(outer, layoutIfNeeded);
+
+  ck_assert_int_eq(140, outer->frame.w);
+  ck_assert_int_eq(24, outer->frame.h);
+  ck_assert_int_eq(140, child->frame.w);
+  ck_assert_int_eq(24, child->frame.h);
+
+  release(outer);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("View");
@@ -244,6 +276,7 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, stackViewMeasuresFreshNotStale);
   tcase_add_test(tcase, standaloneRelayoutDoesNotShrinkFillChild);
   tcase_add_test(tcase, fillOnlyChildFillsContainBounds);
+  tcase_add_test(tcase, styledSizeFloorsContainBoundsWithNoMinSize);
 
   Suite *suite = suite_create("View");
   suite_add_tcase(suite, tcase);
