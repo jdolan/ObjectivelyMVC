@@ -231,15 +231,20 @@ struct RendererInterface {
   void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color);
 
   /**
-   * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *dest, const SDL_Color *color)
+   * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, const SDL_Color *color)
    * @brief Records a textured quad in the given destination rectangle.
    * @param self The Renderer.
    * @param texture The Texture to sample.
    * @param dest The destination rectangle in logical screen coordinates.
+   * @remarks `dest` is a sub-pixel-precise SDL_FRect, not SDL_Rect: a caller that needs the
+   * texture drawn at its exact native resolution (e.g. Text, to avoid a fractional stretch that
+   * shifts every glyph as the string's pixel width changes) must pass an unrounded size here,
+   * since rounding it to the nearest integer logical unit first is precisely what reintroduces
+   * that stretch.
    * @param color The color multiplier (use `&Colors.White` for no tint).
    * @memberof Renderer
    */
-  void (*drawTexture)(const Renderer *self, Texture *texture, const SDL_Rect *dest, const SDL_Color *color);
+  void (*drawTexture)(const Renderer *self, Texture *texture, const SDL_FRect *dest, const SDL_Color *color);
 
   /**
    * @fn void Renderer::drawView(Renderer *self, View *view)
