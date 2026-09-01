@@ -108,8 +108,12 @@ static void layoutSubviews(View *self) {
 
   const SDL_Size size = $(this, contentSize);
 
-  $((View *) this->contentView, resize, &size);
-  $((View *) this->contentView, layoutIfNeeded);
+  View *contentView = (View *) this->contentView;
+
+  const ViewConstraint w = MakeConstraint(ViewConstraintEqual, size.w);
+  const ViewConstraint h = MakeConstraint(ViewConstraintEqual, size.h);
+
+  $(contentView, layoutWithConstraint, w, h);
 
   super(View, self, layoutSubviews);
 

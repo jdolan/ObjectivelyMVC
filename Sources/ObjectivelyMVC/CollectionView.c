@@ -96,8 +96,11 @@ static void layoutSubviews(View *self) {
 
     CollectionItemView *item = (CollectionItemView *) $(items, objectAtIndex, i);
 
-    $((View *) item, resize, &this->itemSize);
-    $((View *) item, layoutIfNeeded);
+    // itemSize is dictated here, not negotiated: layoutWithSize applies it verbatim, since
+    // layoutIfNeeded would instead offer it as an Equal ViewConstraint, which a Contain item
+    // with no ViewAutoresizingWidth/Height of its own would ignore in favor of its own
+    // sizeThatFits value (see View::layoutWithSize).
+    $((View *) item, layoutWithSize, &this->itemSize);
 
     item->view.frame.x = x;
     item->view.frame.y = y;

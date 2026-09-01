@@ -95,6 +95,44 @@ typedef enum {
 OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
 
 /**
+ * @brief A constraint offered by an ancestor View to a descendant during View::sizeThatSatisfies.
+ */
+typedef struct {
+  enum {
+    /**
+     * @brief The offered value is final; the View must resolve to exactly this size.
+     */
+    ViewConstraintEqual,
+
+    /**
+     * @brief The offered value is an upper bound; the View may resolve to any size up to it.
+     * @remarks Do not use this for a View's own already-resolved frame (e.g. re-deriving a
+     * constraint to re-layout a View standalone): a `ViewAutoresizingWidth`/`Height` axis whose
+     * sizeThatFits value is smaller than that frame would shrink to it, discarding a size a
+     * parent previously forced with `ViewConstraintEqual`. Use `ViewConstraintEqual` instead to
+     * treat an existing frame as authoritative.
+     */
+    ViewConstraintMax,
+
+    /**
+     * @brief No bound is offered; the ancestor is itself unresolved for this axis.
+     */
+    ViewConstraintUnspecified
+  } mode;
+
+  /**
+   * @brief The constraint value; a size in pixels.
+   */
+  int value;
+} ViewConstraint;
+
+/**
+ * @return A ViewConstraint with the given mode and value.
+ */
+#define MakeConstraint(mode, value) \
+  (ViewConstraint) { (mode), (value) }
+
+/**
  * @brief Spacing applied to the inside of a View's frame.
  */
 typedef struct {
@@ -765,19 +803,68 @@ struct ViewInterface {
    * @fn void View::layoutIfNeeded(View *self)
    * @brief Recursively updates the layout of this View and its subviews.
    * @param self The View.
+   * @remarks Drives the two-phase layout pass for a dirty View: View::sizeThatSatisfies resolves
+   * this View's own size (bottom-up, from its subviews), if it is a container, before
+   * View::layoutSubviews arranges its subviews (top-down) using that now-final frame. This
+   * ordering guarantees every View's size is settled before any View's position is committed.
+   * @remarks This View may be laying out standalone here -- e.g. marked dirty directly by a
+   * style rebind (View::_bind unconditionally sets needsLayout on the View it re-binds), not as
+   * part of an active parent-driven arrange pass -- so there is no fresh ViewConstraint from an
+   * ancestor to consult. If self already has a frame, this is resolved as `Equal` rather than
+   * `Max`, trusting it as authoritative rather than merely an upper bound; see
+   * View::layoutWithConstraint, which performs the actual resolve-and-arrange once that
+   * ViewConstraint is determined.
    * @memberof View
    */
   void (*layoutIfNeeded)(View *self);
 
   /**
    * @fn View::layoutSubviews(View *self)
-   * @brief Performs layout for this View's immediate subviews.
+   * @brief Arranges this View's immediate subviews within its (already final) frame.
    * @param self The View.
-   * @remarks Subclasses may override this method to perform their own layout operations. This
-   * method is called recursively by View::layoutIfNeeded.
+   * @remarks Subclasses may override this method to perform their own arrangement of subviews.
+   * This method is called by View::layoutIfNeeded only after a View::sizeThatSatisfies pass has
+   * already resolved `self->frame`; it must not perform any sizing of its own, only positioning
+   * and committing of subview frames.
+   * @remarks The default implementation resolves each subview's size via View::layoutWithConstraint,
+   * offering `Exact` for a `ViewAutoresizingWidth`/`Height` subview (since this View's bounds are
+   * already final) or `Unspecified` otherwise (so the subview sizes itself from its own content).
    * @memberof View
    */
   void (*layoutSubviews)(View *self);
+
+  /**
+   * @fn void View::layoutWithConstraint(View *self, ViewConstraint width, ViewConstraint height)
+   * @brief Resolves this View's size against the given ViewConstraints, then arranges it.
+   * @param self The View.
+   * @param width The ViewConstraint offered for this View's width.
+   * @param height The ViewConstraint offered for this View's height.
+   * @remarks This is the shared tail of View::layoutIfNeeded: resolve self's size via
+   * View::sizeToSatisfy if self is a container, then View::layoutSubviews, then clear
+   * `needsLayout`. It exists so a caller that already knows the correct ViewConstraint for a
+   * View it is arranging -- e.g. a parent's own View::layoutSubviews, positioning one of its
+   * subviews -- can drive that View's layout directly, without going through
+   * View::layoutIfNeeded's own guess at what constraint applies (which is only appropriate when
+   * a View is laying out standalone, with no parent currently arranging it).
+   * @see View::layoutWithSize(View *, const SDL_Size *)
+   * @memberof View
+   */
+  void (*layoutWithConstraint)(View *self, ViewConstraint width, ViewConstraint height);
+
+  /**
+   * @fn void View::layoutWithSize(View *self, const SDL_Size *size)
+   * @brief Resizes this View to the given size, then arranges it.
+   * @param self The View.
+   * @param size The size to resize this View to.
+   * @remarks Like View::layoutWithConstraint, but for a caller that has already computed this
+   * View's exact final size and must apply it verbatim -- e.g. a StackView applying its
+   * distribution math to a subview -- rather than resolving it through the ViewConstraint
+   * pipeline, which would ignore that computed size on any axis the subview has not opted into
+   * `ViewAutoresizingWidth`/`ViewAutoresizingHeight` for.
+   * @see View::layoutWithConstraint(View *, ViewConstraint, ViewConstraint)
+   * @memberof View
+   */
+  void (*layoutWithSize)(View *self, const SDL_Size *size);
 
   /**
    * @fn bool View::matchesSelector(const View *self, const SimpleSelector *simpleSelector)
@@ -978,8 +1065,12 @@ struct ViewInterface {
    * @fn SDL_Size View::sizeThatFits(const View *self)
    * @param self The View.
    * @return An SDL_Size that fits this View's subviews.
-   * @remarks The default implementation of this method returns the View's current size, or an
-   * appropriate value based on this View's `autoresizingMask`.
+   * @remarks The default implementation returns this View's current size if it is not a
+   * container. If it is a container, it instead returns the size that contains all of its
+   * subviews, each measured via View::sizeThatSatisfies with `ViewConstraintUnspecified` for
+   * both axes -- so a subview with `ViewAutoresizingWidth`/`ViewAutoresizingHeight` degrades to
+   * its own sizeThatFits value here, rather than inflating to fill a not-yet-determined bound.
+   * Subclasses with their own sizing logic (e.g. Text, TableView) should override this method.
    * @memberof View
    */
   SDL_Size (*sizeThatFits)(const View *self);
@@ -991,6 +1082,28 @@ struct ViewInterface {
    * @memberof View
    */
   SDL_Size (*sizeThatFills)(const View *self);
+
+  /**
+   * @fn SDL_Size View::sizeThatSatisfies(View *self, ViewConstraint width, ViewConstraint height)
+   * @brief Resolves the size this View wants to be, given the offered ViewConstraints.
+   * @param self The View.
+   * @param width The ViewConstraint offered for this View's width.
+   * @param height The ViewConstraint offered for this View's height.
+   * @return The resolved size.
+   * @remarks This is the bottom-up half of layout: it computes this View's sizeThatFits value,
+   * then resolves that value against the offered ViewConstraints for any axis on which this View
+   * has `ViewAutoresizingWidth` or `ViewAutoresizingHeight` set. It never mutates `self->frame`
+   * or any subview's frame, and is always run to completion for an entire dirty subtree before
+   * View::layoutSubviews arranges any View in that subtree.
+   * @remarks Always consults View::sizeThatFits, so that a subclass's sizeThatFits override
+   * (Text, TableView, Select) is honored by any container summing over it as a subview,
+   * regardless of whether self itself is a container. A sizeThatFits override that only makes
+   * sense to consult for self's own sizing when self is a container (e.g. TableView, whose
+   * override is otherwise an expensive, unclamped sum of every row) is responsible for making
+   * that check itself -- see View::sizeThatFits(const View *) on TableView.
+   * @memberof View
+   */
+  SDL_Size (*sizeThatSatisfies)(View *self, ViewConstraint width, ViewConstraint height);
 
   /**
    * @fn void View::sizeToContain(View *self)
@@ -1018,6 +1131,17 @@ struct ViewInterface {
    * @memberof View
    */
   void (*sizeToFit)(View *self);
+
+  /**
+   * @fn void View::sizeToSatisfy(View *self, ViewConstraint width, ViewConstraint height)
+   * @brief Resizes this View to satisfy the given ViewConstraints.
+   * @param self The View.
+   * @param width The ViewConstraint offered for this View's width.
+   * @param height The ViewConstraint offered for this View's height.
+   * @see View::sizeThatSatisfies(View *, ViewConstraint, ViewConstraint)
+   * @memberof View
+   */
+  void (*sizeToSatisfy)(View *self, ViewConstraint width, ViewConstraint height);
 
   /**
    * @fn View *View::subviewWithIdentifier(const View *self, const char *identifier)

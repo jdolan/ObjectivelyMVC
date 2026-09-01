@@ -1107,11 +1107,18 @@ static void layoutIfNeeded(View *self) {
 
   if (self->needsLayout) {
 
-    $(self, clearWarnings, WarningTypeLayout);
+    // No ancestor is actively arranging self right now, so there's no fresh constraint to
+    // consult; treat an existing frame as authoritative (Equal, not Max -- see ViewConstraintMax).
+    ViewConstraint w, h;
+    if (self->frame.w || self->frame.h) {
+      w = MakeConstraint(ViewConstraintEqual, self->frame.w);
+      h = MakeConstraint(ViewConstraintEqual, self->frame.h);
+    } else {
+      w = MakeConstraint(ViewConstraintUnspecified, 0);
+      h = MakeConstraint(ViewConstraintUnspecified, 0);
+    }
 
-    $(self, layoutSubviews);
-
-    self->needsLayout = false;
+    $(self, layoutWithConstraint, w, h);
   }
 }
 
@@ -1121,12 +1128,6 @@ static void layoutIfNeeded(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-  if (self->autoresizingMask & ViewAutoresizingContain) {
-    $(self, sizeToContain);
-  } else if (self->autoresizingMask & ViewAutoresizingFit) {
-    $(self, sizeToFit);
-  }
-
   const SDL_Rect bounds = $(self, bounds);
 
   const Array *subviews = (Array *) self->subviews;
@@ -1134,18 +1135,13 @@ static void layoutSubviews(View *self) {
 
     View *subview = subviews->elements[i];
 
-    SDL_Size subviewSize = $(subview, size);
+    const ViewConstraint w = (subview->autoresizingMask & ViewAutoresizingWidth) ?
+      MakeConstraint(ViewConstraintEqual, bounds.w) : MakeConstraint(ViewConstraintUnspecified, 0);
 
-    if (subview->autoresizingMask & ViewAutoresizingWidth) {
-      subviewSize.w = bounds.w;
-    }
+    const ViewConstraint h = (subview->autoresizingMask & ViewAutoresizingHeight) ?
+      MakeConstraint(ViewConstraintEqual, bounds.h) : MakeConstraint(ViewConstraintUnspecified, 0);
 
-    if (subview->autoresizingMask & ViewAutoresizingHeight) {
-      subviewSize.h = bounds.h;
-    }
-
-    $(subview, resize, &subviewSize);
-    $(subview, layoutIfNeeded);
+    $(subview, layoutWithConstraint, w, h);
 
     switch (subview->alignment & ViewAlignmentMaskHorizontal) {
       case ViewAlignmentLeft:
@@ -1171,6 +1167,39 @@ static void layoutSubviews(View *self) {
         break;
     }
   }
+}
+
+/**
+ * @fn void View::layoutWithConstraint(View *self, ViewConstraint width, ViewConstraint height)
+ * @memberof View
+ */
+static void layoutWithConstraint(View *self, ViewConstraint width, ViewConstraint height) {
+
+  // Always resolve, regardless of isContainer: resolveViewConstraint's own per-axis
+  // ViewAutoresizingWidth/Height check is what decides whether width/height actually changes
+  // anything -- for a non-container with no matching bit, sizeThatFits already returns self's
+  // current size unchanged, so this is a no-op. Gating this on isContainer would (and did) skip
+  // resizing entirely for a Fill-only, non-container View -- e.g. Slider's `bar`, which is
+  // `fill` but not `Contain`/`Fit` -- leaving it at its stale or zero frame.
+  $(self, sizeToSatisfy, width, height);
+
+  $(self, clearWarnings, WarningTypeLayout);
+  $(self, layoutSubviews);
+
+  self->needsLayout = false;
+}
+
+/**
+ * @fn void View::layoutWithSize(View *self, const SDL_Size *size)
+ * @memberof View
+ */
+static void layoutWithSize(View *self, const SDL_Size *size) {
+
+  $(self, resize, size);
+  $(self, clearWarnings, WarningTypeLayout);
+  $(self, layoutSubviews);
+
+  self->needsLayout = false;
 }
 
 /**
@@ -1677,30 +1706,16 @@ static SDL_Size sizeThatFits(const View *self) {
 
   SDL_Size size = $(self, size);
 
-  if (self->autoresizingMask & ViewAutoresizingWidth) {
-    size.w = 0;
-  }
-
-  if (self->autoresizingMask & ViewAutoresizingHeight) {
-    size.h = 0;
-  }
-
   if ($(self, isContainer)) {
     size = MakeSize(0, 0);
 
     Array *subviews = $(self, visibleSubviews);
     for (size_t i = 0; i < subviews->count; i++) {
 
-      const View *subview = subviews->elements[i];
+      View *subview = subviews->elements[i];
 
-      SDL_Size subviewSize;
-      if (subview->autoresizingMask & ViewAutoresizingContain) {
-        subviewSize = $(subview, sizeThatContains);
-      } else if (subview->autoresizingMask & ViewAutoresizingFit) {
-        subviewSize = $(subview, sizeThatFits);
-      } else {
-        subviewSize = $(subview, size);
-      }
+      const ViewConstraint unspecified = MakeConstraint(ViewConstraintUnspecified, 0);
+      const SDL_Size subviewSize = $(subview, sizeThatSatisfies, unspecified, unspecified);
 
       SDL_Point subviewOrigin = MakePoint(0, 0);
       switch (subview->alignment) {
@@ -1720,6 +1735,43 @@ static SDL_Size sizeThatFits(const View *self) {
 
     release(subviews);
   }
+
+  size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
+  size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
+
+  return size;
+}
+
+/**
+ * @brief Resolves an axis's `sizeThatFits` value against an offered ViewConstraint, if the
+ * View has opted into that axis's autoresizing bit; otherwise returns the value unmodified.
+ */
+static int resolveViewConstraint(int hasAutoresizingBit, ViewConstraint constraint, int intrinsic) {
+
+  if (!hasAutoresizingBit) {
+    return intrinsic;
+  }
+
+  switch (constraint.mode) {
+    case ViewConstraintEqual:
+      return constraint.value;
+    case ViewConstraintMax:
+      return min(intrinsic, constraint.value);
+    default:
+      return intrinsic;
+  }
+}
+
+/**
+ * @fn SDL_Size View::sizeThatSatisfies(View *self, ViewConstraint width, ViewConstraint height)
+ * @memberof View
+ */
+static SDL_Size sizeThatSatisfies(View *self, ViewConstraint width, ViewConstraint height) {
+
+  SDL_Size size = $(self, sizeThatFits);
+
+  size.w = resolveViewConstraint(self->autoresizingMask & ViewAutoresizingWidth, width, size.w);
+  size.h = resolveViewConstraint(self->autoresizingMask & ViewAutoresizingHeight, height, size.h);
 
   size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
   size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
@@ -1756,6 +1808,17 @@ static void sizeToFill(View *self) {
 static void sizeToFit(View *self) {
 
   const SDL_Size size = $(self, sizeThatFits);
+
+  $(self, resize, &size);
+}
+
+/**
+ * @fn void View::sizeToSatisfy(View *self, ViewConstraint width, ViewConstraint height)
+ * @memberof View
+ */
+static void sizeToSatisfy(View *self, ViewConstraint width, ViewConstraint height) {
+
+  const SDL_Size size = $(self, sizeThatSatisfies, width, height);
 
   $(self, resize, &size);
 }
@@ -2003,6 +2066,8 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->isVisible = isVisible;
   ((ViewInterface *) clazz->interface)->layoutIfNeeded = layoutIfNeeded;
   ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
+  ((ViewInterface *) clazz->interface)->layoutWithConstraint = layoutWithConstraint;
+  ((ViewInterface *) clazz->interface)->layoutWithSize = layoutWithSize;
   ((ViewInterface *) clazz->interface)->matchesSelector = matchesSelector;
   ((ViewInterface *) clazz->interface)->moveToWindow = moveToWindow;
   ((ViewInterface *) clazz->interface)->path = path;
@@ -2027,9 +2092,11 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
   ((ViewInterface *) clazz->interface)->sizeThatFills = sizeThatFills;
   ((ViewInterface *) clazz->interface)->sizeThatFits = sizeThatFits;
+  ((ViewInterface *) clazz->interface)->sizeThatSatisfies = sizeThatSatisfies;
   ((ViewInterface *) clazz->interface)->sizeToContain = sizeToContain;
   ((ViewInterface *) clazz->interface)->sizeToFill = sizeToFill;
   ((ViewInterface *) clazz->interface)->sizeToFit = sizeToFit;
+  ((ViewInterface *) clazz->interface)->sizeToSatisfy = sizeToSatisfy;
   ((ViewInterface *) clazz->interface)->subviewWithIdentifier = subviewWithIdentifier;
   ((ViewInterface *) clazz->interface)->updateBindings = updateBindings;
   ((ViewInterface *) clazz->interface)->viewport = viewport;

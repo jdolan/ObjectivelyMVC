@@ -211,6 +211,7 @@ Select > StackView {
 
 Slider {
   autoresizing-mask: contain;
+  min-width: 140;
   width: 140;
 }
 
@@ -315,6 +316,7 @@ TextView {
   autoresizing-mask: contain;
   background-color: #22222266;
   bevel: inset;
+  min-width: 160;
   padding: 4 4 4 4;
   width: 160;
 }
