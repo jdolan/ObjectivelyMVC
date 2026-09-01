@@ -1662,6 +1662,22 @@ static View *selectFirst(View *self, const char *rule) {
 }
 
 /**
+ * @fn void View::setHidden(View *self, bool hidden)
+ * @memberof View
+ */
+static void setHidden(View *self, bool hidden) {
+
+  if (self->hidden != hidden) {
+
+    self->hidden = hidden;
+
+    if (self->superview && $(self->superview, isContainer)) {
+      self->superview->needsLayout = true;
+    }
+  }
+}
+
+/**
  * @fn SDL_Size View::size(const View *self)
  * @memberof View
  */
@@ -2093,6 +2109,7 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((ViewInterface *) clazz->interface)->select = _select;
   ((ViewInterface *) clazz->interface)->selectFirst = selectFirst;
+  ((ViewInterface *) clazz->interface)->setHidden = setHidden;
   ((ViewInterface *) clazz->interface)->size = size;
   ((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
   ((ViewInterface *) clazz->interface)->sizeThatFills = sizeThatFills;

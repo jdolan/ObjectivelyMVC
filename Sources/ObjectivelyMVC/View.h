@@ -230,6 +230,7 @@ struct View {
 
   /**
    * @brief If `true`, this View is not drawn.
+   * @see View::setHidden(View *, bool)
    */
   bool hidden;
 
@@ -1041,6 +1042,18 @@ struct ViewInterface {
    * @memberof View
    */
   View *(*selectFirst)(View *self, const char *rule);
+
+  /**
+   * @fn void View::setHidden(View *self, bool hidden)
+   * @brief Sets this View's hidden state.
+   * @param self The View.
+   * @param hidden The hidden state.
+   * @remarks Hiding or unhiding a View changes its superview's View::visibleSubviews, so this
+   * marks the superview `needsLayout` if it is a container; writing `self->hidden` directly does
+   * not.
+   * @memberof View
+   */
+  void (*setHidden)(View *self, bool hidden);
 
   /**
    * @fn SDL_Size View::size(const View *self)

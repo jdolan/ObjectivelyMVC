@@ -266,6 +266,29 @@ START_TEST(styledSizeFloorsContainBoundsWithNoMinSize) {
 
 } END_TEST
 
+START_TEST(setHiddenMarksSuperviewNeedsLayout) {
+
+  StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+
+  View *a = fixedView(40, 20);
+  View *b = fixedView(60, 30);
+
+  $((View *) stackView, addSubview, a);
+  $((View *) stackView, addSubview, b);
+
+  $((View *) stackView, layoutIfNeeded);
+
+  $(a, setHidden, true);
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(60, stackView->view.frame.w);
+  ck_assert_int_eq(30, stackView->view.frame.h);
+  ck_assert_int_eq(0, b->frame.y);
+
+  release(stackView);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("View");
@@ -277,6 +300,7 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, standaloneRelayoutDoesNotShrinkFillChild);
   tcase_add_test(tcase, fillOnlyChildFillsContainBounds);
   tcase_add_test(tcase, styledSizeFloorsContainBoundsWithNoMinSize);
+  tcase_add_test(tcase, setHiddenMarksSuperviewNeedsLayout);
 
   Suite *suite = suite_create("View");
   suite_add_tcase(suite, tcase);

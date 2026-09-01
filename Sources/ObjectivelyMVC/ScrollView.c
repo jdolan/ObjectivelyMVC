@@ -86,37 +86,33 @@ static void layoutSubviews(View *self) {
 
   ScrollView *this = (ScrollView *) self;
 
-  bool showScrollBar;
+  bool scrollBarHidden;
   switch (this->scrollBarVisibility) {
     case ScrollBarShow:
-      showScrollBar = true;
+      scrollBarHidden = false;
       break;
     case ScrollBarHide:
-      showScrollBar = false;
+      scrollBarHidden = true;
       break;
     default: {
       if (this->contentView == NULL) {
-        showScrollBar = false;
+        scrollBarHidden = true;
       } else {
         const SDL_Size contentSize = $(this->contentView, size);
         const SDL_Rect bounds = $(self, bounds);
-        showScrollBar = contentSize.h > bounds.h;
+        scrollBarHidden = contentSize.h <= bounds.h;
       }
       break;
     }
   }
   
-  ((View *) this->scrollBar)->hidden = !showScrollBar;
+  $((View *) this->scrollBar, setHidden, scrollBarHidden);
 
   super(View, self, layoutSubviews);
 
   if (this->contentView) {
     this->contentView->frame.x = this->contentOffset.x;
     this->contentView->frame.y = this->contentOffset.y;
-  }
-
-  if (showScrollBar) {
-    ((View *) this->scrollBar)->needsLayout = true;
   }
 }
 
