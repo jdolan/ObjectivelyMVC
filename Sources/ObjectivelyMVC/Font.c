@@ -289,17 +289,24 @@ static void sizeCharacters(const Font *self, const char *chars, int *w, int *h) 
 
       if (w) {
 
-        // A little ghetto whitespace padding to ensure TTF doesn't truncate words 🫠
+        int lineWidth;
+        TTF_GetStringSize(self->font, line, 0, &lineWidth, NULL);
 
-        const size_t len = strlen(line) + 2;
-        char buf[len];
+        // TTF_GetStringSize sums glyph advances, but the final glyph's ink can extend past its
+        // own advance (common with bold or large faces). Check the final glyph's bounds and
+        // ensure we take the larger value.
+        const char *end = line + strlen(line);
+        const Uint32 ch = SDL_StepBackUTF8(line, &end);
+        if (ch) {
+          int maxX, advance;
+          if (TTF_GetGlyphMetrics(self->font, ch, NULL, &maxX, NULL, NULL, &advance)) {
+            if (maxX > advance) {
+              lineWidth += maxX - advance;
+            }
+          }
+        }
 
-        snprintf(buf, len, "%s ", line);
-
-        int line_w;
-
-        TTF_GetStringSize(self->font, buf, 0, &line_w, NULL);
-        *w = max(*w, line_w);
+        *w = max(*w, lineWidth);
       }
       if (h) {
         *h += font_h;
