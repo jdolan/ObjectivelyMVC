@@ -217,15 +217,15 @@ static void drawRectFilled(const Renderer *self, const SDL_Rect *rect, const SDL
 }
 
 /**
- * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *dest, const SDL_Color *color)
+ * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawTexture(const Renderer *self, Texture *texture, const SDL_Rect *rect, const SDL_Color *color) {
+static void drawTexture(const Renderer *self, Texture *texture, const SDL_FRect *rect, const SDL_Color *color) {
 
   assert(rect);
 
-  const float x1 = (float) rect->x,           y1 = (float) rect->y;
-  const float x2 = (float) rect->x + rect->w, y2 = (float) rect->y + rect->h;
+  const float x1 = rect->x,           y1 = rect->y;
+  const float x2 = rect->x + rect->w, y2 = rect->y + rect->h;
 
   const MVC_Vertex verts[6] = {
     { { { x1, y1 } }, { { 0.0f, 0.0f } }, { 0 } },

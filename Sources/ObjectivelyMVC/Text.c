@@ -33,10 +33,6 @@
 #include "Colors.h"
 #include "Text.h"
 
-static inline float view_pixel_density(SDL_Window *window) {
-  return window ? SDL_GetWindowPixelDensity(window) : 1.0f;
-}
-
 #define _Class _Text
 
 #pragma mark - Color Escape Sequences
@@ -354,7 +350,7 @@ static void render(View *self, Renderer *renderer) {
 
   assert(this->font);
 
-  const float scale = view_pixel_density(self->window);
+  const float scale = SDL_GetWindowPixelDensity(self->window);
 
   if (this->font->scale != scale) {
     this->font->scale = scale;
@@ -431,7 +427,16 @@ static void render(View *self, Renderer *renderer) {
 
     assert(this->texture);
 
-    const SDL_Rect draw_rect = { frame.x, frame.y, this->textureSize.w, this->textureSize.h };
+    // The destination size must be the texture's exact native size divided by scale, not the
+    // rounded-to-integer textureSize: rounding it first, then having the renderer's projection
+    // multiply back by scale to reach physical pixels, lands on a physical width that differs
+    // from the texture's actual resolution -- stretching it by that (sub-)pixel remainder. Since
+    // the remainder depends on the string's own pixel width, this stretch changes with every
+    // keystroke, visibly shifting every glyph in the string, not just the one that was typed.
+    const SDL_FRect draw_rect = {
+      (float) frame.x, (float) frame.y,
+      this->texture->size.w / scale, this->texture->size.h / scale
+    };
     $(renderer, drawTexture, this->texture, &draw_rect, &Colors.White);
   }
 }
@@ -443,7 +448,7 @@ static void renderDeviceDidReset(View *self) {
 
   Text *this = (Text *) self;
 
-  this->font->scale = view_pixel_density(self->window);
+  this->font->scale = SDL_GetWindowPixelDensity(self->window);
   $(this->font, renderDeviceDidReset);
 
   super(View, self, renderDeviceDidReset);

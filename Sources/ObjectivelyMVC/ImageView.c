@@ -109,7 +109,11 @@ static void render(View *self, Renderer *renderer) {
     // TODO: Actually use self->blend
 
     const SDL_Rect frame = $(self, renderFrame);
-    $(renderer, drawTexture, this->texture, &frame, &this->color);
+
+    SDL_FRect frect;
+    SDL_RectToFRect(&frame, &frect);
+
+    $(renderer, drawTexture, this->texture, &frect, &this->color);
   }
 }
 
