@@ -353,8 +353,7 @@ static void render(View *self, Renderer *renderer) {
   const float scale = SDL_GetWindowPixelDensity(self->window);
 
   if (this->font->scale != scale) {
-    this->font->scale = scale;
-    $(this->font, renderDeviceDidReset);
+    $(self, renderDeviceDidReset);
     this->texture = release(this->texture);
     this->textureSize = MakeSize(0, 0);
   }
@@ -449,7 +448,10 @@ static void renderDeviceDidReset(View *self) {
   Text *this = (Text *) self;
 
   this->font->scale = SDL_GetWindowPixelDensity(self->window);
+
   $(this->font, renderDeviceDidReset);
+  
+  $(self, sizeToFit);
 
   super(View, self, renderDeviceDidReset);
 }
