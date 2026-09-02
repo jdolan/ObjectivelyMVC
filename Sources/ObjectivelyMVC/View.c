@@ -1049,7 +1049,7 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
  * @brief ViewEnumerator for invalidateStyle.
  */
 static void invalidateStyle_enumerate(View *view, ident data) {
-  view->needsApplyTheme = true;
+  $(view, setNeedsApplyTheme);
 }
 
 /**
@@ -1058,7 +1058,6 @@ static void invalidateStyle_enumerate(View *view, ident data) {
  */
 static void invalidateStyle(View *self) {
   $(self, enumerate, invalidateStyle_enumerate, NULL);
-  $(self, setNeedsApplyTheme);
 }
 
 /**
@@ -1149,6 +1148,11 @@ static void layoutIfNeeded(View *self) {
   // propagating setNeedsLayout, or a widget marking a sibling) survives to the next frame.
   self->needsLayoutSubviews = false;
 
+  // Subviews first, so that a dirty descendant whose layout resizes it marks its ancestors
+  // before their own dirty checks below run; the whole tree then converges bottom-up in a
+  // single pass, exactly as invalidations propagate.
+  $(self, enumerateSubviews, layoutIfNeeded_enumerate, NULL);
+
   if (self->needsLayout) {
 
     // No ancestor is actively arranging self right now, so there's no fresh constraint to
@@ -1161,11 +1165,6 @@ static void layoutIfNeeded(View *self) {
 
     $(self, layoutWithConstraint, w, h);
   }
-
-  // Subviews just arranged by layoutWithConstraint are clean, so this recursion visits only
-  // direct subviews; it descends only where a dirty descendant was skipped by an overridden
-  // layoutSubviews, or was marked during the layout above.
-  $(self, enumerateSubviews, layoutIfNeeded_enumerate, NULL);
 }
 
 /**

@@ -52,7 +52,7 @@ typedef struct ScrollView ScrollView;
  *
  * The handle's size tracks the visible/content ratio and its position tracks
  * the ScrollView's contentOffset; dragging the handle scrolls the content.
- * Anything that changes either just flags `needsLayout` -- ScrollBar's own
+ * Anything that changes either just calls View::setNeedsLayout -- ScrollBar's own
  * `layoutSubviews` is what actually repositions/resizes the handle.
  *
  * Styling is plain View attributes, set in the stylesheet like any other
