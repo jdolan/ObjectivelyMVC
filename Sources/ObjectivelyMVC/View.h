@@ -214,7 +214,7 @@ struct View {
   Set *classNames;
 
   /**
-   * @brief The cached View::clippingFrame, valid while `stamp` matches the current render
+   * @brief The cached View::clippingFrame, valid while `generation` matches the current render
    * frame generation.
    * @private
    */
