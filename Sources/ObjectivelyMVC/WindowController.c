@@ -60,6 +60,7 @@ static void dealloc(Object *self) {
   WindowController *this = (WindowController *) self;
 
   release(this->debugViewController);
+  release(this->fontCache);
   release(this->renderer);
   release(this->theme);
   release(this->viewController);
@@ -68,6 +69,43 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - WindowController
+
+/**
+ * @fn Font *WindowController::cachedFont(WindowController *self, const char *family, int size, int style)
+ * @memberof WindowController
+ */
+static Font *cachedFont(WindowController *self, const char *family, int size, int style) {
+
+  String *name = $$(Font, nameWithAttributes, family, size, style);
+  assert(name);
+
+  Font *font = $(self->fontCache, objectForKeyPath, name->chars);
+  if (font == NULL) {
+
+    Font *resolved = $$(Font, fontWithAttributes, family, size, style, SDL_GetWindowPixelDensity(self->window));
+    assert(resolved);
+
+    // Keyed by the resolved Font's own name: when the requested family is not registered,
+    // Font::fontWithAttributes falls back to the default Font, and caching that under the
+    // requested key would pin the wrong Font to it permanently. This way the request
+    // simply misses again, and heals once the family is registered via Font::cacheFont.
+    String *resolvedName = $(resolved, name);
+    assert(resolvedName);
+
+    font = $(self->fontCache, objectForKeyPath, resolvedName->chars);
+    if (font == NULL) {
+      $(self->fontCache, setObjectForKeyPath, resolved, resolvedName->chars);
+      font = resolved;
+    }
+
+    release(resolvedName);
+    release(resolved);
+  }
+
+  release(name);
+
+  return font;
+}
 
 /**
  * @fn void WindowController::debug(WindowController *self)
@@ -137,6 +175,9 @@ static WindowController *initWithDevice(WindowController *self, RenderDevice *de
 
   self = (WindowController *) super(Object, self, init);
   if (self) {
+    self->fontCache = $$(Dictionary, dictionary);
+    assert(self->fontCache);
+
     self->renderer = $(alloc(Renderer), initWithDevice, device);
     assert(self->renderer);
 
@@ -263,11 +304,29 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
       break;
     case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
     case SDL_EVENT_WINDOW_DISPLAY_CHANGED:
-    case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
+    case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED: {
       $(self, setWindow, self->window);
+
+      // Emptied only when the density actually changed: SDL emits PIXEL_SIZE_CHANGED
+      // continuously during interactive resizes, and discarding open TTF_Fonts on each
+      // event would re-parse every face, tens of times per second.
+      const float pixelDensity = SDL_GetWindowPixelDensity(self->window);
+      if (pixelDensity != self->pixelDensity) {
+        self->pixelDensity = pixelDensity;
+        $(self->fontCache, removeAllObjects);
+      }
+
       $(self->viewController, renderDeviceWillReset);
       $(self->viewController, renderDeviceDidReset);
       $(self->viewController->view, updateBindings);
+
+      if (self->debugViewController) {
+        ViewController *debugViewController = (ViewController *) self->debugViewController;
+        $(debugViewController, renderDeviceWillReset);
+        $(debugViewController, renderDeviceDidReset);
+        $(debugViewController->view, updateBindings);
+      }
+    }
       break;
     case SDL_EVENT_WINDOW_DESTROYED:
     case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
@@ -418,8 +477,16 @@ static void setViewController(WindowController *self, ViewController *viewContro
  */
 static void setWindow(WindowController *self, SDL_Window *window) {
 
+  assert(window);
+
+  // A different window may reside on a different-density display; discard Fonts opened
+  // at the previous window's density so they re-resolve against the new one.
+  if (window != self->window) {
+    self->pixelDensity = SDL_GetWindowPixelDensity(window);
+    $(self->fontCache, removeAllObjects);
+  }
+
   self->window = window;
-  assert(self->window);
 
   SDL_PropertiesID properties = SDL_GetWindowProperties(self->window);
   
@@ -528,6 +595,7 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+  ((WindowControllerInterface *) clazz->interface)->cachedFont = cachedFont;
   ((WindowControllerInterface *) clazz->interface)->debug = debug;
   ((WindowControllerInterface *) clazz->interface)->keyResponder = keyResponder;
   ((WindowControllerInterface *) clazz->interface)->keyResponders = keyResponders;

@@ -32,6 +32,7 @@
 
 #include "Colors.h"
 #include "Text.h"
+#include "WindowController.h"
 
 #define _Class _Text
 
@@ -141,7 +142,7 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
   const size_t strippedLen = strlen(stripped);
   CharInfo *chars = malloc(sizeof(CharInfo) * strippedLen);
 
-  const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * font->scale) : 0;
+  const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * font->pixelDensity) : 0;
 
   int lineHeight;
   $(font, sizeCharacters, "A", NULL, &lineHeight);
@@ -178,9 +179,9 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
     int charW;
     TTF_GetStringSize(font->font, stripped + charIdx, 1, &charW, NULL);
 
-    chars[charIdx].rect.x = (int) (lineX / font->scale);
-    chars[charIdx].rect.y = (int) (currH / font->scale) - lineHeight;
-    chars[charIdx].rect.w = (int) (charW / font->scale);
+    chars[charIdx].rect.x = (int) (lineX / font->pixelDensity);
+    chars[charIdx].rect.y = (int) (currH / font->pixelDensity) - lineHeight;
+    chars[charIdx].rect.w = (int) (charW / font->pixelDensity);
     chars[charIdx].rect.h = lineHeight;
     chars[charIdx].color = currentColor;
 
@@ -211,7 +212,7 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
   if (charInfo) {
     SDL_LockSurface(surface);
     for (int i = 0; i < charCount; i++) {
-      colorize(surface, &charInfo[i], self->font->scale);
+      colorize(surface, &charInfo[i], self->font->pixelDensity);
     }
     SDL_UnlockSurface(surface);
     free(charInfo);
@@ -286,7 +287,7 @@ static void applyStyle(View *self, const Style *style) {
   if ($(self, bind, colorInlets, style->attributes)) {
     this->texture = release(this->texture);
     this->textureSize = MakeSize(0, 0);
-    this->naturalSizeCache.valid = false;
+    this->naturalSizeCache.isValid = false;
   }
 
   char *fontFamily = NULL;
@@ -300,10 +301,24 @@ static void applyStyle(View *self, const Style *style) {
 
   if ($(self, bind, fontInlets, style->attributes)) {
 
-    Font *font = $$(Font, cachedFont, fontFamily , fontSize, fontStyle);
+    // Attached Views resolve through the window's Font cache, which supplies the window's
+    // pixel density; unattached Views fall back to a density of 1.0, and re-resolve in
+    // didMoveToWindow on attachment. The cache owns its Fonts, so its reference is
+    // retained here to mirror the owned reference the fallback returns.
+    WindowController *windowController = self->window ?
+      $$(WindowController, windowController, self->window) : NULL;
+
+    Font *font;
+    if (windowController) {
+      font = retain($(windowController, cachedFont, fontFamily, fontSize, fontStyle));
+    } else {
+      font = $$(Font, fontWithAttributes, fontFamily, fontSize, fontStyle, 1.f);
+    }
+
     assert(font);
 
     $(this, setFont, font);
+    release(font);
 
     if (fontFamily) {
       free(fontFamily);
@@ -330,9 +345,30 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   $(self, bind, inlets, dictionary);
 
-  this->naturalSizeCache.valid = false;
+  this->naturalSizeCache.isValid = false;
 
   $(self, sizeToFit);
+}
+
+/**
+ * @see View::didMoveToWindow(View *, SDL_Window *)
+ */
+static void didMoveToWindow(View *self, SDL_Window *window) {
+
+  super(View, self, didMoveToWindow, window);
+
+  // A Font resolved before attachment (e.g. the default Font) was opened at a pixel
+  // density of 1.0; re-resolve through the window's cache at the window's actual density.
+  if (window) {
+    Text *this = (Text *) self;
+    if (this->font) {
+      WindowController *windowController = $$(WindowController, windowController, window);
+      if (windowController) {
+        Font *font = $(windowController, cachedFont, this->font->family, this->font->size, this->font->style);
+        $(this, setFont, font);
+      }
+    }
+  }
 }
 
 /**
@@ -353,18 +389,10 @@ static void render(View *self, Renderer *renderer) {
 
   assert(this->font);
 
-  const float scale = SDL_GetWindowPixelDensity(self->window);
-
-  if (this->font->scale != scale) {
-    $(self, renderDeviceDidReset);
-    this->texture = release(this->texture);
-    this->textureSize = MakeSize(0, 0);
-    this->naturalSizeCache.valid = false;
-
-    // renderDeviceDidReset resized this View mid-draw; refresh the render frame caches so
-    // the renderFrame read below observes the new size rather than this pass's stale stamp.
-    MVC_InvalidateRenderFrames();
-  }
+  // The Font is opened at the window's pixel density: density changes arrive via the
+  // WindowController, which empties its font cache and resets the render device, so by
+  // draw time this Font is always current.
+  const float scale = this->font->pixelDensity;
 
   if (this->text) {
 
@@ -390,44 +418,17 @@ static void render(View *self, Renderer *renderer) {
       this->textureSize.w = (int) textureWidth;
       this->textureSize.h = (int) textureHeight;
 
-      SDL_Surface *upload = surface;
-      SDL_Surface *converted = NULL;
-
-      if (SDL_BYTESPERPIXEL(surface->format) == 1) {
-        converted = SDL_CreateSurface(surface->w, surface->h, SDL_PIXELFORMAT_RGBA32);
-        assert(converted);
-        const SDL_PixelFormatDetails *details = SDL_GetPixelFormatDetails(SDL_PIXELFORMAT_RGBA32);
-        assert(details);
-        const Uint8 *src = (const Uint8 *) surface->pixels;
-        Uint32 *dst = (Uint32 *) converted->pixels;
-        for (int y = 0; y < surface->h; y++) {
-          for (int x = 0; x < surface->w; x++) {
-            const Uint8 a = src[y * surface->pitch + x];
-            dst[y * surface->w + x] = SDL_MapRGBA(details, NULL, 255, 255, 255, a);
-          }
-        }
-        upload = converted;
-      } else if (surface->format != SDL_PIXELFORMAT_RGBA32) {
-        converted = SDL_ConvertSurface(surface, SDL_PIXELFORMAT_RGBA32);
-        assert(converted);
-        upload = converted;
-      }
-
       const SDL_GPUTextureCreateInfo texInfo = {
         .type                 = SDL_GPU_TEXTURETYPE_2D,
         .format               = SDL_GPU_TEXTUREFORMAT_R8G8B8A8_UNORM,
         .usage                = SDL_GPU_TEXTUREUSAGE_SAMPLER,
-        .width                = (Uint32) upload->w,
-        .height               = (Uint32) upload->h,
+        .width                = (Uint32) surface->w,
+        .height               = (Uint32) surface->h,
         .layer_count_or_depth = 1,
         .num_levels           = 1,
       };
 
-      this->texture = $(renderer->device, createTexture, &texInfo, upload->pixels);
-
-      if (converted) {
-        SDL_DestroySurface(converted);
-      }
+      this->texture = $(renderer->device, createTexture, &texInfo, surface->pixels);
 
       SDL_DestroySurface(surface);
     }
@@ -440,10 +441,12 @@ static void render(View *self, Renderer *renderer) {
     // from the texture's actual resolution -- stretching it by that (sub-)pixel remainder. Since
     // the remainder depends on the string's own pixel width, this stretch changes with every
     // keystroke, visibly shifting every glyph in the string, not just the one that was typed.
+    
     const SDL_FRect draw_rect = {
       (float) frame.x, (float) frame.y,
       this->texture->size.w / scale, this->texture->size.h / scale
     };
+    
     $(renderer, drawTexture, this->texture, &draw_rect, &Colors.White);
   }
 }
@@ -455,10 +458,16 @@ static void renderDeviceDidReset(View *self) {
 
   Text *this = (Text *) self;
 
-  this->font->scale = SDL_GetWindowPixelDensity(self->window);
+  // Fonts are immutable, opened at their window's pixel density; re-resolve through the
+  // window's cache, which the WindowController empties before resetting the device.
+  if (self->window) {
+    WindowController *windowController = $$(WindowController, windowController, self->window);
+    if (windowController) {
+      Font *font = $(windowController, cachedFont, this->font->family, this->font->size, this->font->style);
+      $(this, setFont, font);
+    }
+  }
 
-  $(this->font, renderDeviceDidReset);
-  
   $(self, sizeToFit);
 
   super(View, self, renderDeviceDidReset);
@@ -473,7 +482,7 @@ static void renderDeviceWillReset(View *self) {
 
   this->texture = release(this->texture);
   this->textureSize = MakeSize(0, 0);
-  this->naturalSizeCache.valid = false;
+  this->naturalSizeCache.isValid = false;
 
   super(View, self, renderDeviceWillReset);
 }
@@ -508,7 +517,7 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
  */
 static SDL_Size naturalSize(const Text *self) {
 
-  if (self->naturalSizeCache.valid && self->font && self->font->scale == self->naturalSizeCache.scale &&
+  if (self->naturalSizeCache.isValid && self->font && self->font->pixelDensity == self->naturalSizeCache.pixelDensity &&
       self->colorEscapes == self->naturalSizeCache.colorEscapes) {
     return self->naturalSizeCache.size;
   }
@@ -527,9 +536,9 @@ static SDL_Size naturalSize(const Text *self) {
     Text *this = (Text *) self;
 
     this->naturalSizeCache.size = size;
-    this->naturalSizeCache.scale = self->font->scale;
+    this->naturalSizeCache.pixelDensity = self->font->pixelDensity;
     this->naturalSizeCache.colorEscapes = self->colorEscapes;
-    this->naturalSizeCache.valid = true;
+    this->naturalSizeCache.isValid = true;
   }
 
   return size;
@@ -550,7 +559,7 @@ static void setFont(Text *self, Font *font) {
 
     self->texture = release(self->texture);
     self->textureSize = MakeSize(0, 0);
-    self->naturalSizeCache.valid = false;
+    self->naturalSizeCache.isValid = false;
 
     $((View *) self, sizeToFit);
   }
@@ -574,7 +583,7 @@ static void setText(Text *self, const char *text) {
 
     self->texture = release(self->texture);
     self->textureSize = MakeSize(0, 0);
-    self->naturalSizeCache.valid = false;
+    self->naturalSizeCache.isValid = false;
 
     $((View *) self, sizeToFit);
   }
@@ -614,6 +623,7 @@ static void initialize(Class *clazz) {
 
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->didMoveToWindow = didMoveToWindow;
   ((ViewInterface *) clazz->interface)->init = init;
   ((ViewInterface *) clazz->interface)->render = render;
   ((ViewInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;

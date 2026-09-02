@@ -26,6 +26,7 @@
 #include <Objectively/Object.h>
 
 #include <ObjectivelyMVC/DebugViewController.h>
+#include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/ViewController.h>
 
@@ -61,6 +62,23 @@ struct WindowController {
   DebugViewController *debugViewController;
 
   /**
+   * @brief The Font instance cache for this window, keyed by Font::name.
+   * @details Fonts are opened at this window's pixel density, which is why the cache lives
+   * here rather than on Font: density is implied by the window. The cache is emptied when
+   * the window's pixel density or display changes, and Views re-resolve their Fonts during
+   * the ensuing render device reset.
+   * @private
+   */
+  Dictionary *fontCache;
+
+  /**
+   * @brief The pixel density of the window when `fontCache` was last emptied, used to
+   * empty it only when the density actually changes.
+   * @private
+   */
+  float pixelDensity;
+
+  /**
    * @brief The Renderer.
    */
   Renderer *renderer;
@@ -90,6 +108,19 @@ struct WindowControllerInterface {
    * @brief The superclass interface.
    */
   ObjectInterface objectInterface;
+
+  /**
+   * @fn Font *WindowController::cachedFont(WindowController *self, const char *family, int size, int style)
+   * @brief Resolves the cached Font with the given attributes at this window's pixel density.
+   * @param self The WindowController.
+   * @param family The family, or `NULL` for the default.
+   * @param size The point size, or `0` for the default.
+   * @param style The FontStyle, or `-1` for the default.
+   * @return The cached Font. The returned Font is owned by the cache; callers retaining it
+   * beyond the current frame MUST re-resolve after a pixel density change.
+   * @memberof WindowController
+   */
+  Font *(*cachedFont)(WindowController *self, const char *family, int size, int style);
 
   /**
    * @private
