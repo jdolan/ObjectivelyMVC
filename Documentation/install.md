@@ -11,8 +11,8 @@ Tagged releases are published on the [GitHub releases page](https://github.com/j
 
 ## Dependencies
 
-* [Objectively](https://github.com/jdolan/Objectively) >= 2.0.0
-* [ObjectivelyGPU](https://github.com/jdolan/ObjectivelyGPU) >= 1.0.0
+* [Objectively](https://github.com/jdolan/Objectively) >= 2.2.0
+* [ObjectivelyGPU](https://github.com/jdolan/ObjectivelyGPU) >= 2.2.0
 * [SDL3](https://github.com/libsdl-org/SDL) >= 3.2.0, [SDL3_image](https://github.com/libsdl-org/SDL_image), [SDL3_ttf](https://github.com/libsdl-org/SDL_ttf)
 
 ## Building
