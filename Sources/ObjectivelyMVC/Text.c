@@ -360,6 +360,10 @@ static void render(View *self, Renderer *renderer) {
     this->texture = release(this->texture);
     this->textureSize = MakeSize(0, 0);
     this->naturalSizeCache.valid = false;
+
+    // renderDeviceDidReset resized this View mid-draw; refresh the render frame caches so
+    // the renderFrame read below observes the new size rather than this pass's stale stamp.
+    MVC_InvalidateRenderFrames();
   }
 
   if (this->text) {

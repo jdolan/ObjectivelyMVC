@@ -345,6 +345,8 @@ SDL_AppResult SDL_AppIterate(void *appState) {
     const Uint64 t1 = SDL_GetPerformanceCounter();
     $(view, layoutIfNeeded);
 
+    MVC_InvalidateRenderFrames();
+
     const Uint64 t2 = SDL_GetPerformanceCounter();
     $(view, draw, renderer);
 

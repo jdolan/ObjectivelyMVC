@@ -173,6 +173,10 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
           self->view.frame.x += dx;
           self->view.frame.y += dy;
+
+          // Direct frame mutation outside of layout: refresh the render frame caches so
+          // hit-testing for the remainder of this event batch sees the moved Panel.
+          MVC_InvalidateRenderFrames();
         }
 
         return true;
