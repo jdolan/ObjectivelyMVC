@@ -44,7 +44,9 @@ Uint32 MVC_VIEW_EVENT;
 static unsigned _renderFrameGeneration;
 
 void MVC_InvalidateRenderFrames(void) {
-  _renderFrameGeneration++;
+  if (++_renderFrameGeneration == 0) {
+    _renderFrameGeneration = 1;
+  }
 }
 
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
