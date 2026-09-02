@@ -327,6 +327,14 @@ static void applyThemeIfNeeded(View *self, const Theme *theme) {
 
   assert(theme);
 
+  if (!self->needsApplyTheme && !self->needsApplyThemeSubviews) {
+    return;
+  }
+
+  // Cleared before descending so that any re-invalidation during the traversal
+  // propagates fresh subtree flags and survives to the next frame.
+  self->needsApplyThemeSubviews = false;
+
   $(self, enumerateSubviews, _applyThemeIfNeeded, (ident) theme);
 
   if (self->needsApplyTheme) {
@@ -1113,7 +1121,13 @@ static void layoutIfNeeded_enumerate(View *subview, ident data) {
  */
 static void layoutIfNeeded(View *self) {
 
-  $(self, enumerateSubviews, layoutIfNeeded_enumerate, NULL);
+  if (!self->needsLayout && !self->needsLayoutSubviews) {
+    return;
+  }
+
+  // Cleared before laying out so that any re-invalidation during layout (e.g. a resize
+  // propagating setNeedsLayout, or a widget marking a sibling) survives to the next frame.
+  self->needsLayoutSubviews = false;
 
   if (self->needsLayout) {
 
@@ -1127,6 +1141,11 @@ static void layoutIfNeeded(View *self) {
 
     $(self, layoutWithConstraint, w, h);
   }
+
+  // Subviews just arranged by layoutWithConstraint are clean, so this recursion visits only
+  // direct subviews; it descends only where a dirty descendant was skipped by an overridden
+  // layoutSubviews, or was marked during the layout above.
+  $(self, enumerateSubviews, layoutIfNeeded_enumerate, NULL);
 }
 
 /**
