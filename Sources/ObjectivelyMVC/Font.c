@@ -57,11 +57,11 @@ static void dealloc(Object *self) {
 
   Font *this = (Font *) self;
 
+  TTF_CloseFont(this->font);
+
   free(this->family);
 
-  release(this->data);
-  
-  TTF_CloseFont(this->font);
+  release(this->data);  
 
   super(Object, self, dealloc);
 }
