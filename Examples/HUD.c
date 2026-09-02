@@ -32,6 +32,8 @@
  * Environment:
  *  - `MVC_HUD_FRAMES=N` exits successfully after N frames (for benchmarking).
  *  - `MVC_HUD_HIDDEN=1` creates the window hidden (best effort headless).
+ *  - `MVC_HUD_SCALE=N` multiplies the scoreboard row count (default 1),
+ *    scaling the View tree to gauge how frame cost grows with UI complexity.
  */
 
 #define SDL_MAIN_USE_CALLBACKS
@@ -136,7 +138,14 @@ static void buildHUD(AppState *app, View *root) {
   Panel *scoreboard = $(alloc(Panel), initWithFrame, NULL);
   scoreboard->control.view.alignment = ViewAlignmentMiddleCenter;
 
-  for (int i = 0; i < 8; i++) {
+  int rows = 8;
+
+  const char *scale = SDL_getenv("MVC_HUD_SCALE");
+  if (scale) {
+    rows *= SDL_max(1, SDL_atoi(scale));
+  }
+
+  for (int i = 0; i < rows; i++) {
     StackView *row = $(alloc(StackView), initWithFrame, NULL);
     row->axis = StackViewAxisHorizontal;
     row->spacing = 32;
