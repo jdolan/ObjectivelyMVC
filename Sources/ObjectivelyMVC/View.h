@@ -220,7 +220,7 @@ struct View {
    */
   struct {
     SDL_Rect frame;
-    uint64_t stamp;
+    unsigned generation;
   } clippingFrameCache;
 
   /**
@@ -304,13 +304,13 @@ struct View {
   ViewPadding padding;
 
   /**
-   * @brief The cached View::renderFrame, valid while `stamp` matches the current render
-   * frame generation.
+   * @brief The cached View::renderFrame, valid while `generation` matches the current
+   * `renderFrameGeneration`.
    * @private
    */
   struct {
     SDL_Rect frame;
-    uint64_t stamp;
+    unsigned generation;
   } renderFrameCache;
 
   /**

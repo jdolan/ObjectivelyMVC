@@ -41,7 +41,7 @@ Uint32 MVC_VIEW_EVENT;
  * valid only while their stamp matches this. Zero disables caching entirely, for callers
  * that never invalidate (e.g. unit tests).
  */
-static uint64_t _renderFrameGeneration;
+static unsigned _renderFrameGeneration;
 
 void MVC_InvalidateRenderFrames(void) {
   _renderFrameGeneration++;
@@ -575,7 +575,7 @@ static SDL_Rect clippingFrame(const View *self) {
 
   View *this = (View *) self;
 
-  if (_renderFrameGeneration && this->clippingFrameCache.stamp == _renderFrameGeneration) {
+  if (_renderFrameGeneration && this->clippingFrameCache.generation == _renderFrameGeneration) {
     return this->clippingFrameCache.frame;
   }
 
@@ -603,7 +603,7 @@ static SDL_Rect clippingFrame(const View *self) {
   }
 
   this->clippingFrameCache.frame = frame;
-  this->clippingFrameCache.stamp = _renderFrameGeneration;
+  this->clippingFrameCache.generation = _renderFrameGeneration;
 
   return frame;
 }
@@ -1512,7 +1512,7 @@ static SDL_Rect renderFrame(const View *self) {
 
   View *this = (View *) self;
 
-  if (_renderFrameGeneration && this->renderFrameCache.stamp == _renderFrameGeneration) {
+  if (_renderFrameGeneration && this->renderFrameCache.generation == _renderFrameGeneration) {
     return this->renderFrameCache.frame;
   }
 
@@ -1533,7 +1533,7 @@ static SDL_Rect renderFrame(const View *self) {
   }
 
   this->renderFrameCache.frame = frame;
-  this->renderFrameCache.stamp = _renderFrameGeneration;
+  this->renderFrameCache.generation = _renderFrameGeneration;
 
   return frame;
 }
