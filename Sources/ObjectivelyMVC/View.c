@@ -38,7 +38,7 @@ Uint32 MVC_VIEW_EVENT;
 
 /**
  * @brief The render frame generation; per-View renderFrame and clippingFrame caches are
- * valid only while their stamp matches this. Zero disables caching entirely, for callers
+ * valid only while their generation matches this. Zero disables caching entirely, for callers
  * that never invalidate (e.g. unit tests).
  */
 static unsigned _renderFrameGeneration;
