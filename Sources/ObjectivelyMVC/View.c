@@ -575,8 +575,8 @@ static SDL_Rect clippingFrame(const View *self) {
 
   View *this = (View *) self;
 
-  if (_renderFrameGeneration && this->clippingFrameStamp == _renderFrameGeneration) {
-    return this->cachedClippingFrame;
+  if (_renderFrameGeneration && this->clippingFrameCache.stamp == _renderFrameGeneration) {
+    return this->clippingFrameCache.frame;
   }
 
   SDL_Rect frame = $(self, renderFrame);
@@ -602,8 +602,8 @@ static SDL_Rect clippingFrame(const View *self) {
     }
   }
 
-  this->cachedClippingFrame = frame;
-  this->clippingFrameStamp = _renderFrameGeneration;
+  this->clippingFrameCache.frame = frame;
+  this->clippingFrameCache.stamp = _renderFrameGeneration;
 
   return frame;
 }
@@ -1513,8 +1513,8 @@ static SDL_Rect renderFrame(const View *self) {
 
   View *this = (View *) self;
 
-  if (_renderFrameGeneration && this->renderFrameStamp == _renderFrameGeneration) {
-    return this->cachedRenderFrame;
+  if (_renderFrameGeneration && this->renderFrameCache.stamp == _renderFrameGeneration) {
+    return this->renderFrameCache.frame;
   }
 
   SDL_Rect frame = self->frame;
@@ -1533,8 +1533,8 @@ static SDL_Rect renderFrame(const View *self) {
     }
   }
 
-  this->cachedRenderFrame = frame;
-  this->renderFrameStamp = _renderFrameGeneration;
+  this->renderFrameCache.frame = frame;
+  this->renderFrameCache.stamp = _renderFrameGeneration;
 
   return frame;
 }

@@ -106,23 +106,15 @@ struct Text {
   bool lineWrap;
 
   /**
-   * @brief The cached Text::naturalSize, valid while `naturalSizeValid` is set and
-   * `naturalSizeScale` matches the Font's scale.
+   * @brief The cached Text::naturalSize, valid while `valid` is set and `scale` matches the
+   * Font's scale.
    * @private
    */
-  SDL_Size naturalSizeCache;
-
-  /**
-   * @brief The Font scale at which `naturalSizeCache` was measured.
-   * @private
-   */
-  float naturalSizeScale;
-
-  /**
-   * @brief True while `naturalSizeCache` is valid.
-   * @private
-   */
-  bool naturalSizeValid;
+  struct {
+    SDL_Size size;
+    float scale;
+    bool valid;
+  } naturalSizeCache;
 
   /**
    * @brief The text.

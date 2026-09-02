@@ -208,30 +208,20 @@ struct View {
   int borderWidth;
 
   /**
-   * @brief The cached View::clippingFrame, valid while `clippingFrameStamp` matches the
-   * current render frame generation.
-   * @private
-   */
-  SDL_Rect cachedClippingFrame;
-
-  /**
-   * @brief The cached View::renderFrame, valid while `renderFrameStamp` matches the current
-   * render frame generation.
-   * @private
-   */
-  SDL_Rect cachedRenderFrame;
-
-  /**
    * @brief The class names.
    * @see Style
    */
   Set *classNames;
 
   /**
-   * @brief The render frame generation at which `cachedClippingFrame` was computed.
+   * @brief The cached View::clippingFrame, valid while `stamp` matches the current render
+   * frame generation.
    * @private
    */
-  uint64_t clippingFrameStamp;
+  struct {
+    SDL_Rect frame;
+    uint64_t stamp;
+  } clippingFrameCache;
 
   /**
    * @brief If true, subviews will be clipped to this View's frame.
@@ -314,10 +304,14 @@ struct View {
   ViewPadding padding;
 
   /**
-   * @brief The render frame generation at which `cachedRenderFrame` was computed.
+   * @brief The cached View::renderFrame, valid while `stamp` matches the current render
+   * frame generation.
    * @private
    */
-  uint64_t renderFrameStamp;
+  struct {
+    SDL_Rect frame;
+    uint64_t stamp;
+  } renderFrameCache;
 
   /**
    * @brief The element-level Style of this View.
