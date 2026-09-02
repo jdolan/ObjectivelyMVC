@@ -36,6 +36,17 @@
 Uint32 MVC_NOTIFICATION_EVENT;
 Uint32 MVC_VIEW_EVENT;
 
+/**
+ * @brief The render frame generation; per-View renderFrame and clippingFrame caches are
+ * valid only while their stamp matches this. Zero disables caching entirely, for callers
+ * that never invalidate (e.g. unit tests).
+ */
+static uint64_t _renderFrameGeneration;
+
+void MVC_InvalidateRenderFrames(void) {
+  _renderFrameGeneration++;
+}
+
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
   MakeEnumAlias(ViewAlignmentNone, none),
   MakeEnumAlias(ViewAlignmentTop, top),
@@ -562,28 +573,37 @@ static void clearWarnings(const View *self, WarningType type) {
  */
 static SDL_Rect clippingFrame(const View *self) {
 
+  View *this = (View *) self;
+
+  if (_renderFrameGeneration && this->clippingFrameStamp == _renderFrameGeneration) {
+    return this->cachedClippingFrame;
+  }
+
   SDL_Rect frame = $(self, renderFrame);
 
   if (self->borderWidth && self->borderColor.a) {
-    for (int i = 0; i < self->borderWidth; i++) {
-      frame.x -= 1;
-      frame.y -= 1;
-      frame.w += 2;
-      frame.h += 2;
+    frame.x -= self->borderWidth;
+    frame.y -= self->borderWidth;
+    frame.w += self->borderWidth * 2;
+    frame.h += self->borderWidth * 2;
+  }
+
+  // The nearest clipping ancestor's clippingFrame already folds in every outer clip, so a
+  // single intersection with it is equivalent to intersecting each clipping ancestor in turn.
+  const View *superview = self->superview;
+  while (superview && !superview->clipsSubviews) {
+    superview = superview->superview;
+  }
+
+  if (superview) {
+    const SDL_Rect clippingFrame = $(superview, clippingFrame);
+    if (SDL_GetRectIntersection(&clippingFrame, &frame, &frame) == false) {
+      frame.w = frame.h = 0;
     }
   }
 
-  const View *superview = self->superview;
-  while (superview) {
-    if (superview->clipsSubviews) {
-      const SDL_Rect clippingFrame = $(superview, clippingFrame);
-      if (SDL_GetRectIntersection(&clippingFrame, &frame, &frame) == false) {
-        frame.w = frame.h = 0;
-        break;
-      }
-    }
-    superview = superview->superview;
-  }
+  this->cachedClippingFrame = frame;
+  this->clippingFrameStamp = _renderFrameGeneration;
 
   return frame;
 }
@@ -1491,23 +1511,30 @@ static void renderDeviceWillReset(View *self) {
  */
 static SDL_Rect renderFrame(const View *self) {
 
+  View *this = (View *) self;
+
+  if (_renderFrameGeneration && this->renderFrameStamp == _renderFrameGeneration) {
+    return this->cachedRenderFrame;
+  }
+
   SDL_Rect frame = self->frame;
 
-  const View *view = self;
-  const View *superview = view->superview;
-  while (superview) {
+  const View *superview = self->superview;
+  if (superview) {
 
-    frame.x += superview->frame.x;
-    frame.y += superview->frame.y;
+    const SDL_Rect superFrame = $(superview, renderFrame);
 
-    if (view->alignment != ViewAlignmentInternal) {
+    frame.x += superFrame.x;
+    frame.y += superFrame.y;
+
+    if (self->alignment != ViewAlignmentInternal) {
       frame.x += superview->padding.left;
       frame.y += superview->padding.top;
     }
-
-    view = superview;
-    superview = view->superview;
   }
+
+  this->cachedRenderFrame = frame;
+  this->renderFrameStamp = _renderFrameGeneration;
 
   return frame;
 }

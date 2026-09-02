@@ -90,6 +90,9 @@ static void debug(WindowController *self) {
 
     $(debugViewController->view, applyThemeIfNeeded, self->theme);
     $(debugViewController->view, layoutIfNeeded);
+
+    MVC_InvalidateRenderFrames();
+
     $(debugViewController->view, draw, self->renderer);
   }
 }
@@ -174,6 +177,9 @@ static void renderTo(WindowController *self, CommandBuffer *commands, Framebuffe
 
   $(self->viewController->view, applyThemeIfNeeded, self->theme);
   $(self->viewController->view, layoutIfNeeded);
+
+  MVC_InvalidateRenderFrames();
+
   $(self->viewController->view, draw, self->renderer);
 
   $(self, debug);

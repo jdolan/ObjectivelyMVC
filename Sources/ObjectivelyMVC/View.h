@@ -208,10 +208,30 @@ struct View {
   int borderWidth;
 
   /**
+   * @brief The cached View::clippingFrame, valid while `clippingFrameStamp` matches the
+   * current render frame generation.
+   * @private
+   */
+  SDL_Rect cachedClippingFrame;
+
+  /**
+   * @brief The cached View::renderFrame, valid while `renderFrameStamp` matches the current
+   * render frame generation.
+   * @private
+   */
+  SDL_Rect cachedRenderFrame;
+
+  /**
    * @brief The class names.
    * @see Style
    */
   Set *classNames;
+
+  /**
+   * @brief The render frame generation at which `cachedClippingFrame` was computed.
+   * @private
+   */
+  uint64_t clippingFrameStamp;
 
   /**
    * @brief If true, subviews will be clipped to this View's frame.
@@ -292,6 +312,12 @@ struct View {
    * @brief The padding.
    */
   ViewPadding padding;
+
+  /**
+   * @brief The render frame generation at which `cachedRenderFrame` was computed.
+   * @private
+   */
+  uint64_t renderFrameStamp;
 
   /**
    * @brief The element-level Style of this View.
@@ -1306,3 +1332,12 @@ struct ViewInterface {
  * @memberof View
  */
 OBJECTIVELYMVC_EXPORT Class *_View(void);
+
+/**
+ * @brief Invalidates every View's cached View::renderFrame and View::clippingFrame.
+ * @details WindowController::renderTo invokes this after layout, before drawing, so that
+ * drawing and subsequent hit-testing observe post-layout frames; both methods memoize their
+ * result until the next invocation. Callers that mutate View frames outside of a layout pass
+ * MUST invoke this afterwards if hit-testing precision is required before the next render.
+ */
+OBJECTIVELYMVC_EXPORT void MVC_InvalidateRenderFrames(void);
