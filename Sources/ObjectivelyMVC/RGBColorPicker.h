@@ -68,10 +68,10 @@ struct RGBColorPicker {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  RGBColorPickerInterface *interface;
+  RGBColorPickerInterface *interface[0];
 
   /**
    * @brief The delegate.

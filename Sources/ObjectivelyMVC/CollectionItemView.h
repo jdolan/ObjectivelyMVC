@@ -48,10 +48,10 @@ struct CollectionItemView {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  CollectionItemViewInterface *interface;
+  CollectionItemViewInterface *interface[0];
 
   /**
    * @brief The ImageView.

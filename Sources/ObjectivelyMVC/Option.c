@@ -151,7 +151,6 @@ Class *_Option(void) {
       .name = "Option",
       .superclass = _View(),
       .instanceSize = sizeof(Option),
-      .interfaceOffset = offsetof(Option, interface),
       .interfaceSize = sizeof(OptionInterface),
       .initialize = initialize,
     });

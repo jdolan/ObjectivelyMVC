@@ -580,7 +580,6 @@ Class *_Style(void) {
       .name = "Style",
       .superclass = _Object(),
       .instanceSize = sizeof(Style),
-      .interfaceOffset = offsetof(Style, interface),
       .interfaceSize = sizeof(StyleInterface),
       .initialize = initialize,
     });

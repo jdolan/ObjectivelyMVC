@@ -50,10 +50,10 @@ struct TableColumn {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TableColumnInterface *interface;
+  TableColumnInterface *interface[0];
 
   /**
    * @brief The header cell.

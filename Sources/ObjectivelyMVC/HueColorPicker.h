@@ -70,10 +70,10 @@ struct HueColorPicker {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  HueColorPickerInterface *interface;
+  HueColorPickerInterface *interface[0];
 
   /**
    * @brief The hue preview.

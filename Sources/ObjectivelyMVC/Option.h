@@ -46,10 +46,10 @@ struct Option {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  OptionInterface *interface;
+  OptionInterface *interface[0];
 
   /**
    * @brief True if this Option is selected, false otherwise.

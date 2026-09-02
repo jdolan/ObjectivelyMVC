@@ -68,10 +68,10 @@ struct Select {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  SelectInterface *interface;
+  SelectInterface *interface[0];
 
   /**
    * @brief An optional Comparator to sort Options.

@@ -190,7 +190,6 @@ Class *_Checkbox(void) {
       .name = "Checkbox",
       .superclass = _Control(),
       .instanceSize = sizeof(Checkbox),
-      .interfaceOffset = offsetof(Checkbox, interface),
       .interfaceSize = sizeof(CheckboxInterface),
       .initialize = initialize,
       .destroy = destroy,

@@ -181,7 +181,6 @@ Class *_Theme(void) {
       .name = "Theme",
       .superclass = _Object(),
       .instanceSize = sizeof(Theme),
-      .interfaceOffset = offsetof(Theme, interface),
       .interfaceSize = sizeof(ThemeInterface),
       .initialize = initialize,
     });

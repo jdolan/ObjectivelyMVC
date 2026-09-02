@@ -427,7 +427,6 @@ Class *_Font(void) {
       .name = "Font",
       .superclass = _Object(),
       .instanceSize = sizeof(Font),
-      .interfaceOffset = offsetof(Font, interface),
       .interfaceSize = sizeof(FontInterface),
       .initialize = initialize,
       .destroy = destroy,

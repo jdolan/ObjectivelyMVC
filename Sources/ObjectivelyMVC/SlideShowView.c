@@ -168,7 +168,6 @@ Class *_SlideShowView(void) {
       .name = "SlideShowView",
       .superclass = _View(),
       .instanceSize = sizeof(SlideShowView),
-      .interfaceOffset = offsetof(SlideShowView, interface),
       .interfaceSize = sizeof(SlideShowViewInterface),
       .initialize = initialize,
     });

@@ -220,7 +220,6 @@ Class *_ProgressBar(void) {
       .name = "ProgressBar",
       .superclass = _View(),
       .instanceSize = sizeof(ProgressBar),
-      .interfaceOffset = offsetof(ProgressBar, interface),
       .interfaceSize = sizeof(ProgressBarInterface),
       .initialize = initialize,
     });

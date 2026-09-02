@@ -48,10 +48,10 @@ struct NavigationViewController {
   ViewController viewController;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  NavigationViewControllerInterface *interface;
+  NavigationViewControllerInterface *interface[0];
 };
 
 /**

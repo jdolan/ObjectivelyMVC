@@ -307,7 +307,6 @@ Class *_Panel(void) {
       .name = "Panel",
       .superclass = _Control(),
       .instanceSize = sizeof(Panel),
-      .interfaceOffset = offsetof(Panel, interface),
       .interfaceSize = sizeof(PanelInterface),
       .initialize = initialize,
       .destroy = destroy,

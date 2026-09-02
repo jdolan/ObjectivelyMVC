@@ -108,7 +108,6 @@ Class *_ScrollHandle(void) {
       .name = "ScrollHandle",
       .superclass = _Control(),
       .instanceSize = sizeof(ScrollHandle),
-      .interfaceOffset = offsetof(ScrollHandle, interface),
       .interfaceSize = sizeof(ScrollHandleInterface),
       .initialize = initialize,
     });

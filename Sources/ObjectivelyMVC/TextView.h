@@ -84,10 +84,10 @@ struct TextView {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TextViewInterface *interface;
+  TextViewInterface *interface[0];
 
   /**
    * @brief The user-provided text.

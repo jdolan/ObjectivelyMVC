@@ -57,9 +57,9 @@ struct ViewController {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    */
-  ViewControllerInterface *interface;
+  ViewControllerInterface *interface[0];
 
   /**
    * @brief The child view controllers.

@@ -156,7 +156,6 @@ Class *_NavigationViewController(void) {
       .name = "NavigationViewController",
       .superclass = _ViewController(),
       .instanceSize = sizeof(NavigationViewController),
-      .interfaceOffset = offsetof(NavigationViewController, interface),
       .interfaceSize = sizeof(NavigationViewControllerInterface),
       .initialize = initialize,
     });

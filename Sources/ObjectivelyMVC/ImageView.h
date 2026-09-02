@@ -50,10 +50,10 @@ struct ImageView {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  ImageViewInterface *interface;
+  ImageViewInterface *interface[0];
 
   /**
    * @brief The blend factors (currently unused; reserved for future per-pipeline support).

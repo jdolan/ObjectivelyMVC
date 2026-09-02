@@ -347,7 +347,6 @@ Class *_DebugViewController(void) {
       .name = "DebugViewController",
       .superclass = _ViewController(),
       .instanceSize = sizeof(DebugViewController),
-      .interfaceOffset = offsetof(DebugViewController, interface),
       .interfaceSize = sizeof(DebugViewControllerInterface),
       .initialize = initialize,
     });

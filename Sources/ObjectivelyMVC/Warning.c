@@ -103,7 +103,6 @@ Class *_Warning(void) {
       .name = "Warning",
       .superclass = _Object(),
       .instanceSize = sizeof(Warning),
-      .interfaceOffset = offsetof(Warning, interface),
       .interfaceSize = sizeof(WarningInterface),
       .initialize = initialize,
     });

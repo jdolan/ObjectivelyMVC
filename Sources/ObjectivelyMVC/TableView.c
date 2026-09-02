@@ -624,7 +624,6 @@ Class *_TableView(void) {
       .name = "TableView",
       .superclass = _Control(),
       .instanceSize = sizeof(TableView),
-      .interfaceOffset = offsetof(TableView, interface),
       .interfaceSize = sizeof(TableViewInterface),
       .initialize = initialize,
     });

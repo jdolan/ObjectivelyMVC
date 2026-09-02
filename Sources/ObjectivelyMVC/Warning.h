@@ -55,10 +55,10 @@ struct Warning {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  WarningInterface *interface;
+  WarningInterface *interface[0];
 
   /**
    * @brief The WarningType.

@@ -450,7 +450,6 @@ Class *_TextView(void) {
       .name = "TextView",
       .superclass = _Control(),
       .instanceSize = sizeof(TextView),
-      .interfaceOffset = offsetof(TextView, interface),
       .interfaceSize = sizeof(TextViewInterface),
       .initialize = initialize,
     });

@@ -45,10 +45,10 @@ struct Label {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  LabelInterface *interface;
+  LabelInterface *interface[0];
 
   /**
    * @brief The Label Text.

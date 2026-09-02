@@ -217,7 +217,6 @@ Class *_Image(void) {
       .name = "Image",
       .superclass = _Object(),
       .instanceSize = sizeof(Image),
-      .interfaceOffset = offsetof(Image, interface),
       .interfaceSize = sizeof(ImageInterface),
       .initialize = initialize,
     });

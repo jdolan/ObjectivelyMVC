@@ -143,7 +143,6 @@ Class *_CollectionItemView(void) {
       .name = "CollectionItemView",
       .superclass = _View(),
       .instanceSize = sizeof(CollectionItemView),
-      .interfaceOffset = offsetof(CollectionItemView, interface),
       .interfaceSize = sizeof(CollectionItemViewInterface),
       .initialize = initialize,
     });

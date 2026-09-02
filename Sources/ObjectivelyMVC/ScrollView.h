@@ -66,10 +66,10 @@ struct ScrollView {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  ScrollViewInterface *interface;
+  ScrollViewInterface *interface[0];
 
   /**
    * @brief The content View offset.

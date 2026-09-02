@@ -47,11 +47,10 @@ struct HelloViewController {
   ViewController viewController;
 
   /**
-   * @brief The interface.
-   *
+   * @brief The interface type.
    * @private
    */
-  HelloViewControllerInterface *interface;
+  HelloViewControllerInterface *interface[0];
 
   /**
    * @brief A Panel.

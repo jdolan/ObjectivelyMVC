@@ -57,10 +57,10 @@ struct TabViewItem {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TabViewItemInterface *interface;
+  TabViewItemInterface *interface[0];
 
   /**
    * @brief The identifier.

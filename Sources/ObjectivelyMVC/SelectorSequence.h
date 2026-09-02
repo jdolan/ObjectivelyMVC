@@ -60,10 +60,10 @@ struct SelectorSequence {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  SelectorSequenceInterface *interface;
+  SelectorSequenceInterface *interface[0];
 
   /**
    * @brief The combinators.

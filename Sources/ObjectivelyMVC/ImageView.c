@@ -265,7 +265,6 @@ Class *_ImageView(void) {
       .name = "ImageView",
       .superclass = _View(),
       .instanceSize = sizeof(ImageView),
-      .interfaceOffset = offsetof(ImageView, interface),
       .interfaceSize = sizeof(ImageViewInterface),
       .initialize = initialize,
     });

@@ -283,7 +283,6 @@ Class *_Stylesheet(void) {
       .name = "Stylesheet",
       .superclass = _Object(),
       .instanceSize = sizeof(Stylesheet),
-      .interfaceOffset = offsetof(Stylesheet, interface),
       .interfaceSize = sizeof(StylesheetInterface),
       .initialize = initialize,
       .destroy = destroy,

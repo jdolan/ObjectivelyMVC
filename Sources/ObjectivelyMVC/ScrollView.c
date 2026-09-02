@@ -281,7 +281,6 @@ Class *_ScrollView(void) {
       .name = "ScrollView",
       .superclass = _Control(),
       .instanceSize = sizeof(ScrollView),
-      .interfaceOffset = offsetof(ScrollView, interface),
       .interfaceSize = sizeof(ScrollViewInterface),
       .initialize = initialize,
     });

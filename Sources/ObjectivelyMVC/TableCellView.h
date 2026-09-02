@@ -46,10 +46,10 @@ struct TableCellView {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TableCellViewInterface *interface;
+  TableCellViewInterface *interface[0];
 
   /**
    * @brief The text.

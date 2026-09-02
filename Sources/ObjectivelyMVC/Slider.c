@@ -350,7 +350,6 @@ Class *_Slider(void) {
       .name = "Slider",
       .superclass = _Control(),
       .instanceSize = sizeof(Slider),
-      .interfaceOffset = offsetof(Slider, interface),
       .interfaceSize = sizeof(SliderInterface),
       .initialize = initialize,
     });

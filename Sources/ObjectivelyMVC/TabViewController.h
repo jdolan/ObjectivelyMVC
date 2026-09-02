@@ -50,10 +50,10 @@ struct TabViewController {
   ViewController viewController;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TabViewControllerInterface *interface;
+  TabViewControllerInterface *interface[0];
 
   /**
    * @brief The TabView.

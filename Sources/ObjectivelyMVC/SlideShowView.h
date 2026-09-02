@@ -49,10 +49,10 @@ struct SlideShowView {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  SlideShowViewInterface *interface;
+  SlideShowViewInterface *interface[0];
 
   /**
    * @brief The images to display.

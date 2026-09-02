@@ -67,10 +67,10 @@ struct Slider {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  SliderInterface *interface;
+  SliderInterface *interface[0];
 
   /**
    * @brief The slider bar.

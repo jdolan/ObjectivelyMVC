@@ -49,10 +49,10 @@ struct Stylesheet {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  StylesheetInterface *interface;
+  StylesheetInterface *interface[0];
 
   /**
    * @brief The Selectors, ordered by specificity.

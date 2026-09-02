@@ -84,10 +84,10 @@ struct TabView {
   StackView stackView;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TabViewInterface *interface;
+  TabViewInterface *interface[0];
 
   /**
    * @brief The TabViewDelegate.

@@ -325,7 +325,6 @@ Class *_StackView(void) {
       .name = "StackView",
       .superclass = _View(),
       .instanceSize = sizeof(StackView),
-      .interfaceOffset = offsetof(StackView, interface),
       .interfaceSize = sizeof(StackViewInterface),
       .initialize = initialize,
     });

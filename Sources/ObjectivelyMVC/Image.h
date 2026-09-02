@@ -43,10 +43,10 @@ struct Image {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  ImageInterface *interface;
+  ImageInterface *interface[0];
 
   /**
    * @brief The backing surface.

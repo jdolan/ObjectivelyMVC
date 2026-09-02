@@ -627,7 +627,6 @@ Class *_WindowController(void) {
       .name = "WindowController",
       .superclass = _Object(),
       .instanceSize = sizeof(WindowController),
-      .interfaceOffset = offsetof(WindowController, interface),
       .interfaceSize = sizeof(WindowControllerInterface),
       .initialize = initialize,
     });

@@ -490,7 +490,6 @@ Class *_Select(void) {
       .name = "Select",
       .superclass = _Control(),
       .instanceSize = sizeof(Select),
-      .interfaceOffset = offsetof(Select, interface),
       .interfaceSize = sizeof(SelectInterface),
       .initialize = initialize,
     });

@@ -510,7 +510,6 @@ Class *_Selector(void) {
       .name = "Selector",
       .superclass = _Object(),
       .instanceSize = sizeof(Selector),
-      .interfaceOffset = offsetof(Selector, interface),
       .interfaceSize = sizeof(SelectorInterface),
       .initialize = initialize,
     });

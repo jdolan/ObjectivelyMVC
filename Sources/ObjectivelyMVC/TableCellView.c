@@ -85,7 +85,6 @@ Class *_TableCellView(void) {
       .name = "TableCellView",
       .superclass = _View(),
       .instanceSize = sizeof(TableCellView),
-      .interfaceOffset = offsetof(TableCellView, interface),
       .interfaceSize = sizeof(TableCellViewInterface),
       .initialize = initialize,
     });
