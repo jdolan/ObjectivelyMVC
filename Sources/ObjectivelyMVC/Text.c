@@ -231,6 +231,32 @@ static void sizeWithColorEscapes(const Text *self, int *w, int *h) {
   free(stripped);
 }
 
+/**
+ * @brief Resolves and applies the Font with the given attributes: through the window's
+ * Font cache when attached, which supplies the window's pixel density, or at a density
+ * of 1.0 otherwise, to be re-resolved on attachment via View::didMoveToWindow. The
+ * cache's reference is retained to mirror the owned reference the fallback returns.
+ */
+static void resolveFont(Text *self, const char *family, int size, int style) {
+
+  View *view = (View *) self;
+
+  WindowController *windowController = view->window ?
+    $$(WindowController, windowController, view->window) : NULL;
+
+  Font *font;
+  if (windowController) {
+    font = retain($(windowController, cachedFont, family, size, style));
+  } else {
+    font = $$(Font, fontWithAttributes, family, size, style, 1.f);
+  }
+
+  assert(font);
+
+  $(self, setFont, font);
+  release(font);
+}
+
 #pragma mark - ObjectInterface
 
 /**
@@ -301,24 +327,7 @@ static void applyStyle(View *self, const Style *style) {
 
   if ($(self, bind, fontInlets, style->attributes)) {
 
-    // Attached Views resolve through the window's Font cache, which supplies the window's
-    // pixel density; unattached Views fall back to a density of 1.0, and re-resolve in
-    // didMoveToWindow on attachment. The cache owns its Fonts, so its reference is
-    // retained here to mirror the owned reference the fallback returns.
-    WindowController *windowController = self->window ?
-      $$(WindowController, windowController, self->window) : NULL;
-
-    Font *font;
-    if (windowController) {
-      font = retain($(windowController, cachedFont, fontFamily, fontSize, fontStyle));
-    } else {
-      font = $$(Font, fontWithAttributes, fontFamily, fontSize, fontStyle, 1.f);
-    }
-
-    assert(font);
-
-    $(this, setFont, font);
-    release(font);
+    resolveFont(this, fontFamily, fontSize, fontStyle);
 
     if (fontFamily) {
       free(fontFamily);
@@ -359,15 +368,9 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
 
   // A Font resolved before attachment (e.g. the default Font) was opened at a pixel
   // density of 1.0; re-resolve through the window's cache at the window's actual density.
-  if (window) {
-    Text *this = (Text *) self;
-    if (this->font) {
-      WindowController *windowController = $$(WindowController, windowController, window);
-      if (windowController) {
-        Font *font = $(windowController, cachedFont, this->font->family, this->font->size, this->font->style);
-        $(this, setFont, font);
-      }
-    }
+  Text *this = (Text *) self;
+  if (window && this->font) {
+    resolveFont(this, this->font->family, this->font->size, this->font->style);
   }
 }
 
@@ -460,12 +463,8 @@ static void renderDeviceDidReset(View *self) {
 
   // Fonts are immutable, opened at their window's pixel density; re-resolve through the
   // window's cache, which the WindowController empties before resetting the device.
-  if (self->window) {
-    WindowController *windowController = $$(WindowController, windowController, self->window);
-    if (windowController) {
-      Font *font = $(windowController, cachedFont, this->font->family, this->font->size, this->font->style);
-      $(this, setFont, font);
-    }
+  if (self->window && this->font) {
+    resolveFont(this, this->font->family, this->font->size, this->font->style);
   }
 
   $(self, sizeToFit);
