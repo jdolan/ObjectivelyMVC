@@ -286,6 +286,7 @@ static void applyStyle(View *self, const Style *style) {
   if ($(self, bind, colorInlets, style->attributes)) {
     this->texture = release(this->texture);
     this->textureSize = MakeSize(0, 0);
+    this->naturalSizeValid = false;
   }
 
   char *fontFamily = NULL;
@@ -329,6 +330,8 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   $(self, bind, inlets, dictionary);
 
+  this->naturalSizeValid = false;
+
   $(self, sizeToFit);
 }
 
@@ -356,6 +359,7 @@ static void render(View *self, Renderer *renderer) {
     $(self, renderDeviceDidReset);
     this->texture = release(this->texture);
     this->textureSize = MakeSize(0, 0);
+    this->naturalSizeValid = false;
   }
 
   if (this->text) {
@@ -465,6 +469,7 @@ static void renderDeviceWillReset(View *self) {
 
   this->texture = release(this->texture);
   this->textureSize = MakeSize(0, 0);
+  this->naturalSizeValid = false;
 
   super(View, self, renderDeviceWillReset);
 }
@@ -499,6 +504,10 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
  */
 static SDL_Size naturalSize(const Text *self) {
 
+  if (self->naturalSizeValid && self->font && self->font->scale == self->naturalSizeScale) {
+    return self->naturalSizeCache;
+  }
+
   SDL_Size size = MakeSize(0, 0);
 
   if (self->font) {
@@ -509,6 +518,12 @@ static SDL_Size naturalSize(const Text *self) {
     } else {
       $(self->font, sizeCharacters, text, &size.w, &size.h);
     }
+
+    Text *this = (Text *) self;
+
+    this->naturalSizeCache = size;
+    this->naturalSizeScale = self->font->scale;
+    this->naturalSizeValid = true;
   }
 
   return size;
@@ -529,6 +544,7 @@ static void setFont(Text *self, Font *font) {
 
     self->texture = release(self->texture);
     self->textureSize = MakeSize(0, 0);
+    self->naturalSizeValid = false;
 
     $((View *) self, sizeToFit);
   }
@@ -552,6 +568,7 @@ static void setText(Text *self, const char *text) {
 
     self->texture = release(self->texture);
     self->textureSize = MakeSize(0, 0);
+    self->naturalSizeValid = false;
 
     $((View *) self, sizeToFit);
   }
