@@ -65,7 +65,14 @@ typedef struct {
  * @brief A decoded PCM sound effect, loaded from a WAV resource.
  */
 typedef struct {
+  /**
+   * @brief The PCM buffer.
+   */
   Uint8 *buffer;
+  
+  /**
+   * @brief The buffer length in bytes.
+   */
   Uint32 length;
 } Sound;
 
@@ -119,6 +126,9 @@ static AppState application;
 
 #pragma mark - Scene management
 
+/**
+ * @brief The cube vertex type.
+ */
 typedef struct {
   vec3 position;
   vec3 color;
