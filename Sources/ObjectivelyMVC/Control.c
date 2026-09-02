@@ -352,7 +352,7 @@ static void stateDidChange(Control *self) {
 
   $(this, invalidateStyle);
 
-  this->needsLayout = true;
+  $(this, setNeedsLayout);
 }
 
 #pragma mark - Class lifecycle

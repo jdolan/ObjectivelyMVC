@@ -58,7 +58,7 @@ static void didDragHandle(ScrollHandle *handle, float delta) {
       offset.y -= (int) (delta * ((float) scrollRange / travel));
 
       $(self->scrollView, scrollToOffset, &offset);
-      ((View *) self)->needsLayout = true;
+      $((View *) self, setNeedsLayout);
     }
   }
 }
@@ -146,7 +146,7 @@ static void respondToEvent(View *self, const SDL_Event *event) {
         }
 
         $(this->scrollView, scrollToOffset, &offset);
-        self->needsLayout = true;
+        $(self, setNeedsLayout);
       }
       return;
 
@@ -198,7 +198,7 @@ static void setScrollView(ScrollBar *self, ScrollView *scrollView) {
 
   self->scrollView = scrollView;
 
-  ((View *) self)->needsLayout = true;
+  $((View *) self, setNeedsLayout);
 }
 
 #pragma mark - Class lifecycle

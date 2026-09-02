@@ -429,7 +429,7 @@ static void reloadData(CollectionView *self) {
     release(indexPath);
   }
 
-  ((View *) self)->needsLayout = true;
+  $((View *) self, setNeedsLayout);
 }
 
 /**

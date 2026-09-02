@@ -217,7 +217,7 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
   $(subview, invalidateStyle);
 
-  self->needsLayout = true;
+  $(self, setNeedsLayout);
 }
 
 /**
@@ -485,8 +485,8 @@ static bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
 
   if (inlets) {
     if (bindInlets(inlets, dictionary)) {
-      self->needsApplyTheme = true;
-      self->needsLayout = true;
+      $(self, setNeedsApplyTheme);
+      $(self, setNeedsLayout);
       return true;
     }
   }
@@ -655,7 +655,7 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
       $(self, sizeToFill);
     }
 
-    self->needsLayout = true;
+    $(self, setNeedsLayout);
   }
 }
 
@@ -1030,6 +1030,7 @@ static void invalidateStyle_enumerate(View *view, ident data) {
  */
 static void invalidateStyle(View *self) {
   $(self, enumerate, invalidateStyle_enumerate, NULL);
+  $(self, setNeedsApplyTheme);
 }
 
 /**
@@ -1398,7 +1399,7 @@ static void removeSubview(View *self, View *subview) {
 
     $(self->subviews, removeObject, subview);
 
-    self->needsLayout = true;
+    $(self, setNeedsLayout);
   }
 }
 
@@ -1551,10 +1552,10 @@ static void resize(View *self, const SDL_Size *size) {
     self->frame.w = w;
     self->frame.h = h;
 
-    self->needsLayout = true;
+    $(self, setNeedsLayout);
 
     if (self->superview && $(self->superview, isContainer)) {
-      self->superview->needsLayout = true;
+      $(self->superview, setNeedsLayout);
     }
   }
 }
@@ -1672,8 +1673,34 @@ static void setHidden(View *self, bool hidden) {
     self->hidden = hidden;
 
     if (self->superview && $(self->superview, isContainer)) {
-      self->superview->needsLayout = true;
+      $(self->superview, setNeedsLayout);
     }
+  }
+}
+
+/**
+ * @fn void View::setNeedsApplyTheme(View *self)
+ * @memberof View
+ */
+static void setNeedsApplyTheme(View *self) {
+
+  self->needsApplyTheme = true;
+
+  for (View *view = self->superview; view && !view->needsApplyThemeSubviews; view = view->superview) {
+    view->needsApplyThemeSubviews = true;
+  }
+}
+
+/**
+ * @fn void View::setNeedsLayout(View *self)
+ * @memberof View
+ */
+static void setNeedsLayout(View *self) {
+
+  self->needsLayout = true;
+
+  for (View *view = self->superview; view && !view->needsLayoutSubviews; view = view->superview) {
+    view->needsLayoutSubviews = true;
   }
 }
 
@@ -2110,6 +2137,8 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->select = _select;
   ((ViewInterface *) clazz->interface)->selectFirst = selectFirst;
   ((ViewInterface *) clazz->interface)->setHidden = setHidden;
+  ((ViewInterface *) clazz->interface)->setNeedsApplyTheme = setNeedsApplyTheme;
+  ((ViewInterface *) clazz->interface)->setNeedsLayout = setNeedsLayout;
   ((ViewInterface *) clazz->interface)->size = size;
   ((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
   ((ViewInterface *) clazz->interface)->sizeThatFills = sizeThatFills;

@@ -173,7 +173,7 @@ static void setValue(ProgressBar *self, double value) {
     const double frac = self->value / (self->max - self->min);
 
     self->foreground->view.frame.w = bounds.w * frac;
-    self->view.needsLayout = true;
+    $((View *) self, setNeedsLayout);
 
     $(self, formatLabel);
 

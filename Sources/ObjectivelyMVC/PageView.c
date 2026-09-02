@@ -148,7 +148,7 @@ static void setCurrentPage(PageView *self, View *currentPage) {
       }
     }
 
-    self->view.needsLayout = true;
+    $((View *) self, setNeedsLayout);
   }
 }
 

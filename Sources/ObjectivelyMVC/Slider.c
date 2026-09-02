@@ -309,7 +309,7 @@ static void setValue(Slider *self, double value) {
   const double delta = fabs(self->value - value);
   if (delta > __DBL_EPSILON__) {
     self->value = value;
-    self->control.view.needsLayout = true;
+    $((View *) self, setNeedsLayout);
 
     $(self, formatLabel);
   }

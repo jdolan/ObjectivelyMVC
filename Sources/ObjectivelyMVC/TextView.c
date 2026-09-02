@@ -308,7 +308,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
     }
 
     if (didEdit) {
-      self->view.needsLayout = true;
+      $((View *) self, setNeedsLayout);
       if (this->delegate.didEdit) {
         this->delegate.didEdit(this);
       }
@@ -388,7 +388,7 @@ static void setAttributedText(TextView *self, const char *attributedText) {
 
     self->position = self->attributedText->length;
 
-    self->control.view.needsLayout = true;
+    $((View *) self, setNeedsLayout);
   }
 }
 
@@ -408,7 +408,7 @@ static void setDefaultText(TextView *self, const char *defaultText) {
       self->defaultText = NULL;
     }
 
-    self->control.view.needsLayout = true;
+    $((View *) self, setNeedsLayout);
   }
 }
 
