@@ -504,7 +504,8 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
  */
 static SDL_Size naturalSize(const Text *self) {
 
-  if (self->naturalSizeCache.valid && self->font && self->font->scale == self->naturalSizeCache.scale) {
+  if (self->naturalSizeCache.valid && self->font && self->font->scale == self->naturalSizeCache.scale &&
+      self->colorEscapes == self->naturalSizeCache.colorEscapes) {
     return self->naturalSizeCache.size;
   }
 
@@ -523,6 +524,7 @@ static SDL_Size naturalSize(const Text *self) {
 
     this->naturalSizeCache.size = size;
     this->naturalSizeCache.scale = self->font->scale;
+    this->naturalSizeCache.colorEscapes = self->colorEscapes;
     this->naturalSizeCache.valid = true;
   }
 

@@ -106,13 +106,15 @@ struct Text {
   bool lineWrap;
 
   /**
-   * @brief The cached Text::naturalSize, valid while `valid` is set and `scale` matches the
-   * Font's scale.
+   * @brief The cached Text::naturalSize, valid while `valid` is set and `scale` and
+   * `colorEscapes` match the Font's scale and this Text's `colorEscapes` -- the latter
+   * because it is a public, setter-less field that changes the measurement path.
    * @private
    */
   struct {
     SDL_Size size;
     float scale;
+    bool colorEscapes;
     bool valid;
   } naturalSizeCache;
 
