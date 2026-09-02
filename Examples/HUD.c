@@ -81,7 +81,7 @@ typedef struct {
    * @brief Frame counters and per-pass timing since the last report.
    */
   Uint64 frames, maxFrames, reportDue, reportFrames;
-  PassStats style, layout, draw, endFrame;
+  PassStats acquire, style, layout, draw, endFrame, submit;
   size_t draws, vertices;
 } AppState;
 
@@ -251,17 +251,20 @@ static void report(AppState *app) {
 
   const double n = (double) app->reportFrames;
 
-  printf("HUD %llu frames | style avg %.1fus max %.1fus | layout avg %.1fus max %.1fus | "
-         "draw avg %.1fus max %.1fus | endFrame avg %.1fus max %.1fus | draws %zu verts %zu\n",
+  printf("HUD %llu frames | acquire avg %.1fus max %.1fus | style avg %.1fus max %.1fus | "
+         "layout avg %.1fus max %.1fus | draw avg %.1fus max %.1fus | endFrame avg %.1fus max %.1fus | "
+         "submit avg %.1fus max %.1fus | draws %zu verts %zu\n",
          (unsigned long long) app->reportFrames,
+         app->acquire.sum / n, app->acquire.max,
          app->style.sum / n, app->style.max,
          app->layout.sum / n, app->layout.max,
          app->draw.sum / n, app->draw.max,
          app->endFrame.sum / n, app->endFrame.max,
+         app->submit.sum / n, app->submit.max,
          app->draws, app->vertices);
 
   app->reportFrames = 0;
-  app->style = app->layout = app->draw = app->endFrame = (PassStats) { 0 };
+  app->acquire = app->style = app->layout = app->draw = app->endFrame = app->submit = (PassStats) { 0 };
 }
 
 #pragma mark - SDL application callbacks
@@ -335,6 +338,7 @@ SDL_AppResult SDL_AppIterate(void *appState) {
 
   updateHUD(app, ticks);
 
+  const Uint64 tAcquire = SDL_GetPerformanceCounter();
   CommandBuffer *commands = $(app->renderDevice, beginFrame);
   if (commands) {
 
@@ -365,14 +369,17 @@ SDL_AppResult SDL_AppIterate(void *appState) {
     $(renderer, endFrame);
 
     const Uint64 t4 = SDL_GetPerformanceCounter();
+    $(app->renderDevice, endFrame);
 
+    const Uint64 t5 = SDL_GetPerformanceCounter();
+
+    sample(&app->acquire, tAcquire, t0);
     sample(&app->style, t0, t1);
     sample(&app->layout, t1, t2);
     sample(&app->draw, t2, t3);
     sample(&app->endFrame, t3, t4);
+    sample(&app->submit, t4, t5);
     app->reportFrames++;
-
-    $(app->renderDevice, endFrame);
   }
 
   app->frames++;
