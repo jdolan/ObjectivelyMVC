@@ -71,11 +71,11 @@ static void layoutSubviews(View *self) {
 
       Option *option = $(options, objectAtIndex, i);
       if (option->isSelected) {
-        option->view.hidden = false;
+        $((View *) option, setHidden, false);
       } else if ($(control, isHighlighted)) {
-        option->view.hidden = false;
+        $((View *) option, setHidden, false);
       } else {
-        option->view.hidden = true;
+        $((View *) option, setHidden, true);
       }
     }
 

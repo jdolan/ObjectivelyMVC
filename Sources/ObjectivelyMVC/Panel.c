@@ -108,8 +108,9 @@ static void layoutSubviews(View *self) {
 
   const SDL_Size size = $(this, contentSize);
 
-  $((View *) this->contentView, resize, &size);
-  $((View *) this->contentView, layoutIfNeeded);
+  View *contentView = (View *) this->contentView;
+
+  $(contentView, layoutWithSize, &size);
 
   super(View, self, layoutSubviews);
 
@@ -118,7 +119,7 @@ static void layoutSubviews(View *self) {
   resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
   resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
 
-  resizeHandle->hidden = !this->isResizable;
+  $(resizeHandle, setHidden, !this->isResizable);
 }
 
 #pragma mark - Control

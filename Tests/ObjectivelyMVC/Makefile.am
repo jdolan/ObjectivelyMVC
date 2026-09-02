@@ -8,7 +8,8 @@ DEFAULT_INCLUDES = \
 TESTS = \
 	Selector \
 	Style \
-	Stylesheet
+	Stylesheet \
+	View
 
 CFLAGS += \
 	-I$(top_srcdir)/Sources \

@@ -70,8 +70,6 @@ static View *init(View *self) {
  */
 static void layoutSubviews(View *self) {
 
-  super(View, self, layoutSubviews);
-
   Array *subviews = $(self, visibleSubviews);
   if (subviews->count) {
 
@@ -91,18 +89,22 @@ static void layoutSubviews(View *self) {
 
     availableSize -= this->spacing * (subviews->count - 1);
 
+    const ViewConstraint unspecified = MakeConstraint(ViewConstraintUnspecified, 0);
+
+    SDL_Size sizes[subviews->count];
+
     for (size_t i = 0; i < subviews->count; i++) {
 
       View *subview = $(subviews, objectAtIndex, i);
 
-      const SDL_Size subviewSize = $(subview, size);
+      sizes[i] = $(subview, sizeThatSatisfies, unspecified, unspecified);
 
       switch (this->axis) {
         case StackViewAxisVertical:
-          requestedSize += subviewSize.h;
+          requestedSize += sizes[i].h;
           break;
         case StackViewAxisHorizontal:
-          requestedSize += subviewSize.w;
+          requestedSize += sizes[i].w;
           break;
       }
     }
@@ -124,7 +126,7 @@ static void layoutSubviews(View *self) {
           break;
       }
 
-      SDL_Size subviewSize = $(subview, size);
+      SDL_Size subviewSize = sizes[i];
 
       switch (this->axis) {
         case StackViewAxisVertical:
@@ -139,6 +141,8 @@ static void layoutSubviews(View *self) {
           break;
       }
 
+      // Distribute along primary axis
+      
       switch (this->distribution) {
         case StackViewDistributionDefault:
           break;
@@ -157,23 +161,46 @@ static void layoutSubviews(View *self) {
         case StackViewDistributionFillEqually:
           switch (this->axis) {
             case StackViewAxisVertical:
-              subviewSize.h = availableSize / (float) subviews->count;
+              subviewSize.h = max(availableSize / (float) subviews->count, sizes[i].h);
               break;
             case StackViewAxisHorizontal:
-              subviewSize.w = availableSize / (float) subviews->count;
+              subviewSize.w = max(availableSize / (float) subviews->count, sizes[i].w);
               break;
           }
           break;
       }
 
-      $(subview, resize, &subviewSize);
-      $(subview, layoutIfNeeded);
+      $(subview, layoutWithSize, &subviewSize);
 
+      // Align along secondary axis
+      
       switch (this->axis) {
         case StackViewAxisVertical:
+          switch (subview->alignment & ViewAlignmentMaskHorizontal) {
+            case ViewAlignmentLeft:
+              subview->frame.x = 0;
+              break;
+            case ViewAlignmentCenter:
+              subview->frame.x = (bounds.w - subview->frame.w) * 0.5f;
+              break;
+            case ViewAlignmentRight:
+              subview->frame.x = bounds.w - subview->frame.w;
+              break;
+          }
           pos += subviewSize.h;
           break;
         case StackViewAxisHorizontal:
+          switch (subview->alignment & ViewAlignmentMaskVertical) {
+            case ViewAlignmentMaskTop:
+              subview->frame.y = 0;
+              break;
+            case ViewAlignmentMaskMiddle:
+              subview->frame.y = (bounds.h - subview->frame.h) * 0.5f;
+              break;
+            case ViewAlignmentMaskBottom:
+              subview->frame.y = bounds.h - subview->frame.h;
+              break;
+          }
           pos += subviewSize.w;
           break;
       }
@@ -204,18 +231,14 @@ static SDL_Size sizeThatFits(const View *self) {
   }
 
   Array *subviews = $(self, visibleSubviews);
+
+  const ViewConstraint unspecified = MakeConstraint(ViewConstraintUnspecified, 0);
+
   for (size_t i = 0; i < subviews->count; i++) {
 
-    const View *subview = $(subviews, objectAtIndex, i);
+    View *subview = $(subviews, objectAtIndex, i);
 
-    SDL_Size subviewSize;
-    if (subview->autoresizingMask & ViewAutoresizingContain) {
-      subviewSize = $(subview, sizeThatContains);
-    } else if (subview->autoresizingMask & ViewAutoresizingFit) {
-      subviewSize = $(subview, sizeThatFits);
-    } else {
-      subviewSize = $(subview, size);
-    }
+    const SDL_Size subviewSize = $(subview, sizeThatSatisfies, unspecified, unspecified);
 
     switch (this->axis) {
       case StackViewAxisVertical:

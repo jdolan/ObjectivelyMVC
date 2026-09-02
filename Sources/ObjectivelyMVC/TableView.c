@@ -121,6 +121,10 @@ static void layoutSubviews(View *self) {
  */
 static SDL_Size sizeThatFits(const View *self) {
 
+  if ($(self, isContainer) == false) {
+    return $(self, size);
+  }
+
   const TableView *this = (TableView *) self;
 
   return $(this, naturalSize);

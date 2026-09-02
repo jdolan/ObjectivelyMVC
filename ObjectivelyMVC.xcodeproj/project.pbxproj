@@ -25,6 +25,7 @@
 				CE423A4D1F5346A7002767E7 /* ShellScript */,
 			);
 			dependencies = (
+				CED40A633046145B0090C57A /* PBXTargetDependency */,
 				CE34C8A51FB2A0210025F231 /* PBXTargetDependency */,
 				CE88199A1F91B0DA000D5AB7 /* PBXTargetDependency */,
 				CE34C8A71FB2A0210025F231 /* PBXTargetDependency */,
@@ -35,9 +36,14 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		10B43D5BFBA4557A7326854D /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		124341A5EE68480EEA539233 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		12CB053DBF7CE0752A5AE6E9 /* ScrollBar.c in Sources */ = {isa = PBXBuildFile; fileRef = 7889454C3F84200465B57578 /* ScrollBar.c */; };
+		22FD8C57C4593EFD73A0BA80 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		3081E9324C929F44F2424D7C /* ScrollHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F25B4D3F9924D41ADDBF368 /* ScrollHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		373CCC1EDB79A83F1F913610 /* ScrollHandle.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */; };
+		4FC583A880396777FF1EF843 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
+		872D178C50AF548C35D14652 /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = 58441034DC162E9BE53173F4 /* View.c */; };
 		B1BB0001000000000000000A /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		B1BB000100000000000000A0 /* SDL3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B1BB000100000000000000AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AB /* Foundation.framework */; };
@@ -205,6 +211,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		142E9647D6EC3FAD6E24CA61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = ObjectivelyMVC;
+		};
 		CE12D4631C4C8F5400CD0B13 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
@@ -261,9 +274,25 @@
 			remoteGlobalIDString = CE88198A1F91B0BE000D5AB7;
 			remoteInfo = "ObjectivelyMVC-Style";
 		};
+		CED40A623046145B0090C57A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8A563153D68C9DE444FBF31C;
+			remoteInfo = "ObjectivelyMVC-View";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		A3611941E3F959776989AD53 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B1CC000100000000000000D0 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -320,11 +349,13 @@
 
 /* Begin PBXFileReference section */
 		14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.glsl; sourceTree = "<group>"; };
+		58441034DC162E9BE53173F4 /* View.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; path = View.c; sourceTree = "<group>"; };
 		64D1E41ED038FCC725227A5B /* ScrollBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollBar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollHandle.c; sourceTree = "<group>"; };
 		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
 		7889454C3F84200465B57578 /* ScrollBar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollBar.c; sourceTree = "<group>"; };
 		7F6735C65F7CAB13D8D96588 /* Renderer.frag.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.spv.h; sourceTree = "<group>"; };
+		84BBDF9467CD6F80ACF8AADF /* ObjectivelyMVC-View */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-View"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D42EC0E254AF0B8789148FA /* Renderer.frag.metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.metal.h; sourceTree = "<group>"; };
 		8F25B4D3F9924D41ADDBF368 /* ScrollHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollHandle.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -521,6 +552,17 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		552A2017A38847FC4DB96EB2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				22FD8C57C4593EFD73A0BA80 /* SDL3.xcframework in Frameworks */,
+				10B43D5BFBA4557A7326854D /* Objectively.framework in Frameworks */,
+				124341A5EE68480EEA539233 /* ObjectivelyGPU.framework in Frameworks */,
+				4FC583A880396777FF1EF843 /* ObjectivelyMVC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B1CC000100000000000000B0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -739,6 +781,7 @@
 				CE8819891F91B094000D5AB7 /* Style.c */,
 				CE34C8941FB29F3A0025F231 /* Stylesheet.c */,
 				CE423A2C1F534127002767E7 /* Makefile.am */,
+				58441034DC162E9BE53173F4 /* View.c */,
 			);
 			path = ObjectivelyMVC;
 			sourceTree = "<group>";
@@ -880,6 +923,7 @@
 				CE55C1C91F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE34C8A21FB29F700025F231 /* ObjectivelyMVC-Stylesheet */,
 				B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */,
+				84BBDF9467CD6F80ACF8AADF /* ObjectivelyMVC-View */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -953,6 +997,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		8A563153D68C9DE444FBF31C /* ObjectivelyMVC-View */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 326EB91F357CD75FD3012D86 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-View" */;
+			buildPhases = (
+				09AB70E63430F8B404005FCA /* Sources */,
+				552A2017A38847FC4DB96EB2 /* Frameworks */,
+				A3611941E3F959776989AD53 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A1D73378A0C8B95650970925 /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-View";
+			productName = "ObjectivelyMVC-View";
+			productReference = 84BBDF9467CD6F80ACF8AADF /* ObjectivelyMVC-View */;
+			productType = "com.apple.product-type.tool";
+		};
 		B1DD00010000000000000001 /* ObjectivelyMVC-Hello-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1EE000100000000000000C0 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello-iOS" */;
@@ -1107,6 +1169,7 @@
 				CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
 				CE34C8951FB29F700025F231 /* ObjectivelyMVC-Stylesheet */,
+				8A563153D68C9DE444FBF31C /* ObjectivelyMVC-View */,
 				CE423A451F534657002767E7 /* ObjectivelyMVC-Tests */,
 				CE12D4541C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */,
 				B1DD00010000000000000001 /* ObjectivelyMVC-Hello-iOS */,
@@ -1250,6 +1313,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		09AB70E63430F8B404005FCA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				872D178C50AF548C35D14652 /* View.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B1CC000100000000000000A0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1354,6 +1425,12 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		A1D73378A0C8B95650970925 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjectivelyMVC;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = 142E9647D6EC3FAD6E24CA61 /* PBXContainerItemProxy */;
+		};
 		CE12D4641C4C8F5400CD0B13 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
@@ -1394,9 +1471,29 @@
 			target = CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */;
 			targetProxy = CE8819991F91B0DA000D5AB7 /* PBXContainerItemProxy */;
 		};
+		CED40A633046145B0090C57A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8A563153D68C9DE444FBF31C /* ObjectivelyMVC-View */;
+			targetProxy = CED40A623046145B0090C57A /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		7A49C7A9A3020379E61EC10B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
 		B1EE000100000000000000A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1483,6 +1580,21 @@
 			};
 			name = Release;
 		};
+		B74C1EEAAC88021A8E16E1BA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		CE12D45A1C4C8E8E00CD0B13 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1520,8 +1632,14 @@
 		CE34C8A01FB29F700025F231 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1529,8 +1647,14 @@
 		CE34C8A11FB29F700025F231 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1566,8 +1690,14 @@
 		CE55C1C71F944C6D00D5A326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1575,8 +1705,14 @@
 		CE55C1C81F944C6D00D5A326 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1584,8 +1720,14 @@
 		CE8819951F91B0BE000D5AB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1593,8 +1735,14 @@
 		CE8819961F91B0BE000D5AB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1705,6 +1853,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		326EB91F357CD75FD3012D86 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-View" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A49C7A9A3020379E61EC10B /* Debug */,
+				B74C1EEAAC88021A8E16E1BA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B1EE000100000000000000C0 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Hello-iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -52,7 +52,7 @@ static void addSubview(View *self, View *subview) {
 
   PageView *this = (PageView *) self;
 
-  subview->hidden = true;
+  $(subview, setHidden, true);
 
   if (this->currentPage == NULL) {
     $(this, setCurrentPage, subview);
@@ -77,7 +77,7 @@ static void removeSubview(View *self, View *subview) {
 
   super(View, self, removeSubview, subview);
 
-  subview->hidden = false;
+  $(subview, setHidden, false);
 
   if (subview == this->currentPage) {
     $(this, setCurrentPage, NULL);
@@ -117,9 +117,9 @@ static void setCurrentPage_enumerate(const Array *array, ident obj, ident data) 
   View *subview = obj;
 
   if (subview == ((PageView *) data)->currentPage) {
-    subview->hidden = false;
+    $(subview, setHidden, false);
   } else {
-    subview->hidden = true;
+    $(subview, setHidden, true);
   }
 }
 
