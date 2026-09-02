@@ -1482,8 +1482,14 @@
 		7A49C7A9A3020379E61EC10B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1577,8 +1583,14 @@
 		B74C1EEAAC88021A8E16E1BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1620,8 +1632,14 @@
 		CE34C8A01FB29F700025F231 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1629,8 +1647,14 @@
 		CE34C8A11FB29F700025F231 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1666,8 +1690,14 @@
 		CE55C1C71F944C6D00D5A326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1675,8 +1705,14 @@
 		CE55C1C81F944C6D00D5A326 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1684,8 +1720,14 @@
 		CE8819951F91B0BE000D5AB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1693,8 +1735,14 @@
 		CE8819961F91B0BE000D5AB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
-				OTHER_LDFLAGS = "-lcheck";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(HOMEBREW_PREFIX)/lib",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
