@@ -144,7 +144,9 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
   }
 
   const size_t segCount = count - 1;
-  MVC_Vertex *verts = malloc(segCount * 6 * sizeof(MVC_Vertex));
+
+  MVC_Vertex stack[16 * 6];
+  MVC_Vertex *verts = segCount <= 16 ? stack : malloc(segCount * 6 * sizeof(MVC_Vertex));
   assert(verts);
 
   for (size_t i = 0; i < segCount; i++) {
@@ -171,7 +173,9 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
 
   $(self, pushDrawArrays, verts, segCount * 6, NULL, color);
 
-  free(verts);
+  if (verts != stack) {
+    free(verts);
+  }
 }
 
 /**
@@ -369,13 +373,30 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
     .scissor     = self->scissor,
   };
 
-  for (size_t i = 0; i < count; i++) {
-    MVC_Vertex v = verts[i];
-    v.color = *color;
-    $(self->vertices, add, &v);
+  Vector *vertices = self->vertices;
+
+  if (vertices->count + count > vertices->capacity) {
+    $(vertices, resize, max(vertices->capacity * 2, vertices->count + count));
   }
 
-  $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
+  MVC_Vertex *out = VectorElement(vertices, MVC_Vertex, vertices->count);
+  for (size_t i = 0; i < count; i++) {
+    out[i] = verts[i];
+    out[i].color = *color;
+  }
+
+  vertices->count += count;
+
+  // Vertices are appended contiguously, so a record contiguous with the previous one that
+  // binds the same texture and scissor extends it instead of costing another draw call.
+  MVC_DrawArrays *last = self->drawArrays->count ?
+    VectorElement(self->drawArrays, MVC_DrawArrays, self->drawArrays->count - 1) : NULL;
+
+  if (last && last->texture == draw.texture && SDL_RectsEqual(&last->scissor, &draw.scissor)) {
+    last->vertexCount += draw.vertexCount;
+  } else {
+    $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
+  }
 }
 
 /**
