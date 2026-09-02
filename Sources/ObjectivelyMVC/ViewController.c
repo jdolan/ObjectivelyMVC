@@ -341,7 +341,6 @@ Class *_ViewController(void) {
       .name = "ViewController",
       .superclass = _Object(),
       .instanceSize = sizeof(ViewController),
-      .interfaceOffset = offsetof(ViewController, interface),
       .interfaceSize = sizeof(ViewControllerInterface),
       .initialize = initialize,
     });

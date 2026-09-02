@@ -73,10 +73,10 @@ struct StackView {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  StackViewInterface *interface;
+  StackViewInterface *interface[0];
 
   /**
    * @brief The axis.

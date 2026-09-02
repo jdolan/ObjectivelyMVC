@@ -338,7 +338,6 @@ Class *_HelloViewController(void) {
       .name = "HelloViewController",
       .superclass = _ViewController(),
       .instanceSize = sizeof(HelloViewController),
-      .interfaceOffset = offsetof(HelloViewController, interface),
       .interfaceSize = sizeof(HelloViewControllerInterface),
       .initialize = initialize,
     });

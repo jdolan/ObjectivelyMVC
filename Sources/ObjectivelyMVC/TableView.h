@@ -127,10 +127,10 @@ struct TableView {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TableViewInterface *interface;
+  TableViewInterface *interface[0];
 
   /**
    * @brief The column definitions.

@@ -65,10 +65,10 @@ struct PageView {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  PageViewInterface *interface;
+  PageViewInterface *interface[0];
 
   /**
    * @brief The index of the current page.

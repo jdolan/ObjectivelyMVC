@@ -206,7 +206,6 @@ Class *_SimpleSelector(void) {
       .name = "SimpleSelector",
       .superclass = _Object(),
       .instanceSize = sizeof(SimpleSelector),
-      .interfaceOffset = offsetof(SimpleSelector, interface),
       .interfaceSize = sizeof(SimpleSelectorInterface),
       .initialize = initialize,
     });

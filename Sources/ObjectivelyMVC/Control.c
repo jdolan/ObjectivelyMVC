@@ -397,7 +397,6 @@ Class *_Control(void) {
       .name = "Control",
       .superclass = _View(),
       .instanceSize = sizeof(Control),
-      .interfaceOffset = offsetof(Control, interface),
       .interfaceSize = sizeof(ControlInterface),
       .initialize = initialize,
     });

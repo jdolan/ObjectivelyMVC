@@ -91,10 +91,10 @@ struct ScrollBar {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @private
    */
-  ScrollBarInterface *interface;
+  ScrollBarInterface *interface[0];
 
   /**
    * @brief The ScrollView this bar drives. Weak reference (not retained).

@@ -196,7 +196,6 @@ Class *_SelectorSequence(void) {
       .name = "SelectorSequence",
       .superclass = _Object(),
       .instanceSize = sizeof(SelectorSequence),
-      .interfaceOffset = offsetof(SelectorSequence, interface),
       .interfaceSize = sizeof(SelectorSequenceInterface),
       .initialize = initialize,
     });

@@ -60,10 +60,10 @@ struct SimpleSelector {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  SimpleSelectorInterface *interface;
+  SimpleSelectorInterface *interface[0];
 
   /**
    * @brief The pattern, as provided by the user.

@@ -231,7 +231,6 @@ Class *_ScrollBar(void) {
       .name = "ScrollBar",
       .superclass = _View(),
       .instanceSize = sizeof(ScrollBar),
-      .interfaceOffset = offsetof(ScrollBar, interface),
       .interfaceSize = sizeof(ScrollBarInterface),
       .initialize = initialize,
     });

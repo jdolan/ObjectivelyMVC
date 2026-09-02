@@ -75,10 +75,10 @@ struct Renderer {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  RendererInterface *interface;
+  RendererInterface *interface[0];
 
   /**
    * @brief The current frame command buffer (valid between beginFrame and endFrame).

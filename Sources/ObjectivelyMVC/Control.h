@@ -88,10 +88,10 @@ struct Control {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  ControlInterface *interface;
+  ControlInterface *interface[0];
 
   /**
    * @brief The ControlBevel.

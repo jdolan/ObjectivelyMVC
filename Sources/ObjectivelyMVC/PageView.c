@@ -183,7 +183,6 @@ Class *_PageView(void) {
       .name = "PageView",
       .superclass = _View(),
       .instanceSize = sizeof(PageView),
-      .interfaceOffset = offsetof(PageView, interface),
       .interfaceSize = sizeof(PageViewInterface),
       .initialize = initialize,
     });

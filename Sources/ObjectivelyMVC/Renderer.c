@@ -579,7 +579,6 @@ Class *_Renderer(void) {
       .name            = "Renderer",
       .superclass      = _Object(),
       .instanceSize    = sizeof(Renderer),
-      .interfaceOffset = offsetof(Renderer, interface),
       .interfaceSize   = sizeof(RendererInterface),
       .initialize      = initialize,
     });

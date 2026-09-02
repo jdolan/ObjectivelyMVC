@@ -129,6 +129,7 @@ libObjectivelyMVC_la_CFLAGS = \
 	@SDL3_CFLAGS@
 
 libObjectivelyMVC_la_LDFLAGS = \
+	-release @RELEASE_VERSION@ \
 	@HOST_LDFLAGS@
 
 libObjectivelyMVC_la_LIBADD = \

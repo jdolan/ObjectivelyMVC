@@ -123,10 +123,10 @@ struct CollectionView {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  CollectionViewInterface *interface;
+  CollectionViewInterface *interface[0];
 
   /**
    * @brief The layout axis.

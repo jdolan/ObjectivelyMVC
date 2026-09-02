@@ -137,7 +137,6 @@ Class *_Label(void) {
       .name = "Label",
       .superclass = _View(),
       .instanceSize = sizeof(Label),
-      .interfaceOffset = offsetof(Label, interface),
       .interfaceSize = sizeof(LabelInterface),
       .initialize = initialize,
     });

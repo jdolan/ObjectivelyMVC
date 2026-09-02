@@ -52,10 +52,10 @@ struct Panel {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  PanelInterface *interface;
+  PanelInterface *interface[0];
 
   /**
    * @brief The optional accessories container.

@@ -51,10 +51,10 @@ struct WindowController {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  WindowControllerInterface *interface;
+  WindowControllerInterface *interface[0];
 
   /**
    * @brief The DebugViewController.

@@ -46,10 +46,10 @@ struct DebugViewController {
   ViewController viewController;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  DebugViewControllerInterface *interface;
+  DebugViewControllerInterface *interface[0];
 
   /**
    * @brief The View to debug.

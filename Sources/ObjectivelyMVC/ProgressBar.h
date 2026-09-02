@@ -66,10 +66,10 @@ struct ProgressBar {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  ProgressBarInterface *interface;
+  ProgressBarInterface *interface[0];
 
   /**
    * @brief The background ImageView.

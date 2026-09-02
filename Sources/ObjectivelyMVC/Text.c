@@ -649,7 +649,6 @@ Class *_Text(void) {
       .name = "Text",
       .superclass = _View(),
       .instanceSize = sizeof(Text),
-      .interfaceOffset = offsetof(Text, interface),
       .interfaceSize = sizeof(TextInterface),
       .initialize = initialize,
     });

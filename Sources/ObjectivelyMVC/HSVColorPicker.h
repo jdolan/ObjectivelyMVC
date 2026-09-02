@@ -70,10 +70,10 @@ struct HSVColorPicker {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  HSVColorPickerInterface *interface;
+  HSVColorPickerInterface *interface[0];
 
   /**
    * @brief The color preview.

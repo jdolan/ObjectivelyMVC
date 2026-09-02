@@ -73,10 +73,10 @@ struct Button {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  ButtonInterface *interface;
+  ButtonInterface *interface[0];
 
   /**
    * @brief The ButtonDelegate.

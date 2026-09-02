@@ -218,7 +218,6 @@ Class *_Input(void) {
       .name = "Input",
       .superclass = _StackView(),
       .instanceSize = sizeof(Input),
-      .interfaceOffset = offsetof(Input, interface),
       .interfaceSize = sizeof(InputInterface),
       .initialize = initialize,
     });

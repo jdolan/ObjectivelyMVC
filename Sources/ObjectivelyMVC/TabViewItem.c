@@ -134,7 +134,6 @@ Class *_TabViewItem(void) {
       .name = "TabViewItem",
       .superclass = _Object(),
       .instanceSize = sizeof(TabViewItem),
-      .interfaceOffset = offsetof(TabViewItem, interface),
       .interfaceSize = sizeof(TabViewItemInterface),
       .initialize = initialize,
     });

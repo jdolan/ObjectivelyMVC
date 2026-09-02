@@ -175,7 +175,6 @@ Class *_TabViewController(void) {
       .name = "TabViewController",
       .superclass = _ViewController(),
       .instanceSize = sizeof(TabViewController),
-      .interfaceOffset = offsetof(TabViewController, interface),
       .interfaceSize = sizeof(TabViewControllerInterface),
       .initialize = initialize,
     });

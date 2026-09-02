@@ -49,10 +49,10 @@ struct TableRowView {
   StackView stackView;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TableRowViewInterface *interface;
+  TableRowViewInterface *interface[0];
 
   /**
    * @brief The cells.

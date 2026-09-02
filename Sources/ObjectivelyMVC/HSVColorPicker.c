@@ -267,7 +267,6 @@ Class *_HSVColorPicker(void) {
       .name = "HSVColorPicker",
       .superclass = _Control(),
       .instanceSize = sizeof(HSVColorPicker),
-      .interfaceOffset = offsetof(HSVColorPicker, interface),
       .interfaceSize = sizeof(HSVColorPickerInterface),
       .initialize = initialize,
     });

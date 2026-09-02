@@ -69,10 +69,10 @@ struct Font {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  FontInterface *interface;
+  FontInterface *interface[0];
 
   /**
    * @brief The raw font data.

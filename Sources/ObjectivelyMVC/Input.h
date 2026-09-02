@@ -62,10 +62,10 @@ struct Input {
   StackView stackView;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  InputInterface *interface;
+  InputInterface *interface[0];
 
   /**
    * @brief The Control.

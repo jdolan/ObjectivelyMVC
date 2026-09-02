@@ -46,10 +46,10 @@ struct TableHeaderCellView {
   TableCellView tableCellView;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TableHeaderCellViewInterface *interface;
+  TableHeaderCellViewInterface *interface[0];
 };
 
 /**

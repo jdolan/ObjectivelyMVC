@@ -69,10 +69,10 @@ struct ScrollHandle {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @private
    */
-  ScrollHandleInterface *interface;
+  ScrollHandleInterface *interface[0];
 
   /**
    * @brief The delegate.

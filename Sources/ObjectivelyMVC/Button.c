@@ -213,7 +213,6 @@ Class *_Button(void) {
       .name = "Button",
       .superclass = _Control(),
       .instanceSize = sizeof(Button),
-      .interfaceOffset = offsetof(Button, interface),
       .interfaceSize = sizeof(ButtonInterface),
       .initialize = initialize,
     });

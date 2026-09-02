@@ -56,10 +56,10 @@ struct Theme {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  ThemeInterface *interface;
+  ThemeInterface *interface[0];
 
   /**
    * @brief The Stylesheets, in order of priority.

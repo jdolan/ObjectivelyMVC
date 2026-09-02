@@ -144,7 +144,6 @@ Class *_Box(void) {
       .name = "Box",
       .superclass = _View(),
       .instanceSize = sizeof(Box),
-      .interfaceOffset = offsetof(Box, interface),
       .interfaceSize = sizeof(BoxInterface),
       .initialize = initialize,
     });

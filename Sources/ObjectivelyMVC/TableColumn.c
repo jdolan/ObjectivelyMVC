@@ -97,7 +97,6 @@ Class *_TableColumn(void) {
       .name = "TableColumn",
       .superclass = _Object(),
       .instanceSize = sizeof(TableColumn),
-      .interfaceOffset = offsetof(TableColumn, interface),
       .interfaceSize = sizeof(TableColumnInterface),
       .initialize = initialize,
     });

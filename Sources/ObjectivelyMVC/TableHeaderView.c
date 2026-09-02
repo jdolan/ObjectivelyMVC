@@ -84,7 +84,6 @@ Class *_TableHeaderView(void) {
       .name = "TableHeaderView",
       .superclass = _TableRowView(),
       .instanceSize = sizeof(TableHeaderView),
-      .interfaceOffset = offsetof(TableHeaderView, interface),
       .interfaceSize = sizeof(TableHeaderViewInterface),
       .initialize = initialize,
     });

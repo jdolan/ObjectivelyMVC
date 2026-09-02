@@ -54,10 +54,10 @@ struct Selector {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  SelectorInterface *interface;
+  SelectorInterface *interface[0];
 
   /**
    * @brief The sequences.

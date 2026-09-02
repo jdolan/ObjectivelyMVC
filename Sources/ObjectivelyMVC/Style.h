@@ -48,10 +48,10 @@ struct Style {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  StyleInterface *interface;
+  StyleInterface *interface[0];
 
   /**
    * The attributes.

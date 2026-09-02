@@ -2227,7 +2227,6 @@ Class *_View(void) {
       .name = "View",
       .superclass = _Object(),
       .instanceSize = sizeof(View),
-      .interfaceOffset = offsetof(View, interface),
       .interfaceSize = sizeof(ViewInterface),
       .initialize = initialize,
     });

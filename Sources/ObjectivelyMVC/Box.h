@@ -49,10 +49,10 @@ struct Box {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  BoxInterface *interface;
+  BoxInterface *interface[0];
 
   /**
    * @brief The internal container.

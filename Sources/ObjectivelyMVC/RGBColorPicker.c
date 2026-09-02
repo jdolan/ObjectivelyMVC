@@ -270,7 +270,6 @@ Class *_RGBColorPicker(void) {
       .name = "RGBColorPicker",
       .superclass = _Control(),
       .instanceSize = sizeof(RGBColorPicker),
-      .interfaceOffset = offsetof(RGBColorPicker, interface),
       .interfaceSize = sizeof(RGBColorPickerInterface),
       .initialize = initialize,
     });

@@ -74,10 +74,10 @@ struct Text {
   View view;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  TextInterface *interface;
+  TextInterface *interface[0];
 
   /**
    * @brief The text color.

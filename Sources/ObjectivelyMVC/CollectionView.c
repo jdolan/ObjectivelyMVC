@@ -547,7 +547,6 @@ Class *_CollectionView(void) {
       .name = "CollectionView",
       .superclass = _Control(),
       .instanceSize = sizeof(CollectionView),
-      .interfaceOffset = offsetof(CollectionView, interface),
       .interfaceSize = sizeof(CollectionViewInterface),
       .initialize = initialize,
     });

@@ -216,7 +216,6 @@ Class *_HueColorPicker(void) {
       .name = "HueColorPicker",
       .superclass = _Control(),
       .instanceSize = sizeof(HueColorPicker),
-      .interfaceOffset = offsetof(HueColorPicker, interface),
       .interfaceSize = sizeof(HueColorPickerInterface),
       .initialize = initialize,
     });

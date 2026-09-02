@@ -72,10 +72,10 @@ struct Checkbox {
   Control control;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  CheckboxInterface *interface;
+  CheckboxInterface *interface[0];
 
   /**
    * @brief The CheckboxDelegate.

@@ -177,10 +177,10 @@ struct View {
   Object object;
 
   /**
-   * @brief The interface.
+   * @brief The interface type.
    * @protected
    */
-  ViewInterface *interface;
+  ViewInterface *interface[0];
 
   /**
    * @brief The alignment.

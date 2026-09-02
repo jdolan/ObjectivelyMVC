@@ -168,7 +168,6 @@ Class *_TableRowView(void) {
       .name = "TableRowView",
       .superclass = _StackView(),
       .instanceSize = sizeof(TableRowView),
-      .interfaceOffset = offsetof(TableRowView, interface),
       .interfaceSize = sizeof(TableRowViewInterface),
       .initialize = initialize,
     });

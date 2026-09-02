@@ -313,7 +313,6 @@ Class *_TabView(void) {
       .name = "TabView",
       .superclass = _StackView(),
       .instanceSize = sizeof(TabView),
-      .interfaceOffset = offsetof(TabView, interface),
       .interfaceSize = sizeof(TabViewInterface),
       .initialize = initialize,
     });
