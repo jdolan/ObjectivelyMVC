@@ -143,20 +143,19 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
     return;
   }
 
-  const size_t segCount = count - 1;
+  const size_t segments = count - 1;
 
-  // Emitted in fixed-size batches on the stack; pushDrawArrays merges adjacent records
-  // with equal texture and scissor, so a polyline of any length still costs one draw call.
   MVC_Vertex verts[16 * 6];
   const size_t batchSize = lengthof(verts) / 6;
 
-  for (size_t seg = 0; seg < segCount; ) {
+  for (size_t s = 0; s < segments; ) {
 
-    const size_t batch = min(segCount - seg, batchSize);
+    const size_t batch = min(segments - s, batchSize);
 
-    for (size_t i = 0; i < batch; i++, seg++) {
-      const float ax = (float) points[seg].x,     ay = (float) points[seg].y;
-      const float bx = (float) points[seg+1].x,   by = (float) points[seg+1].y;
+    for (size_t i = 0; i < batch; i++, s++) {
+
+      const float ax = (float) points[s].x,     ay = (float) points[s].y;
+      const float bx = (float) points[s + 1].x, by = (float) points[s + 1].y;
 
       const float dx = bx - ax, dy = by - ay;
       const float len = sqrtf(dx * dx + dy * dy);
