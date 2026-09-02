@@ -78,7 +78,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   $(self, bind, inlets, dictionary);
 
-  self->needsLayout = true;
+  $(self, setNeedsLayout);
 }
 
 /**

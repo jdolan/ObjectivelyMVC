@@ -296,7 +296,7 @@ static void addOption(Select *self, const char *title, ident value) {
 
   release(option);
 
-  self->control.view.needsLayout = true;
+  $((View *) self, setNeedsLayout);
 }
 
 /**
@@ -372,7 +372,7 @@ static void removeOption(Select *self, Option *option) {
       }
     }
 
-    self->control.view.needsLayout = true;
+    $((View *) self, setNeedsLayout);
   }
 }
 
@@ -412,7 +412,7 @@ static void selectOption(Select *self, Option *option) {
     }
   }
 
-  self->control.view.needsLayout = true;
+  $((View *) self, setNeedsLayout);
 }
 
 /**

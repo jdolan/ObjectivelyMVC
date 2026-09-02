@@ -118,7 +118,7 @@ START_TEST(containStackViewWithFillChild) {
 
   const SDL_Rect frame = fillChild->view.frame;
 
-  stackView->view.needsLayout = true;
+  $((View *) stackView, setNeedsLayout);
   $((View *) stackView, layoutIfNeeded);
 
   ck_assert_int_eq(frame.w, fillChild->view.frame.w);
@@ -198,7 +198,7 @@ START_TEST(standaloneRelayoutDoesNotShrinkFillChild) {
 
   // Simulate a style rebind on the row alone (e.g. a `:selected` pseudo-class match), which
   // marks only the row -- not its superview -- needsLayout, per View::_bind's contract.
-  row->view.needsLayout = true;
+  $((View *) row, setNeedsLayout);
   $((View *) row, layoutIfNeeded);
 
   ck_assert_int_eq(200, row->view.frame.w);

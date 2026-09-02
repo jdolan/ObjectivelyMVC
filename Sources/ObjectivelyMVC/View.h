@@ -214,6 +214,16 @@ struct View {
   Set *classNames;
 
   /**
+   * @brief The cached View::clippingFrame, valid while `generation` matches the current render
+   * frame generation.
+   * @private
+   */
+  struct {
+    SDL_Rect frame;
+    unsigned generation;
+  } clippingFrameCache;
+
+  /**
    * @brief If true, subviews will be clipped to this View's frame.
    */
   bool clipsSubviews;
@@ -252,13 +262,34 @@ struct View {
 
   /**
    * @brief If true, this View will apply the Theme before it is drawn.
+   * @remarks Set this via View::setNeedsApplyTheme, which propagates
+   * `needsApplyThemeSubviews` to ancestors; a direct write does not, and the View MAY be
+   * skipped by View::applyThemeIfNeeded.
    */
   bool needsApplyTheme;
 
   /**
+   * @brief If true, a descendant of this View has `needsApplyTheme` set.
+   * @remarks Maintained by View::setNeedsApplyTheme; View::applyThemeIfNeeded only descends
+   * into subtrees with this flag set.
+   * @private
+   */
+  bool needsApplyThemeSubviews;
+
+  /**
    * @brief If true, this View will layout its subviews before it is drawn.
+   * @remarks Set this via View::setNeedsLayout, which propagates `needsLayoutSubviews` to
+   * ancestors; a direct write does not, and the View MAY be skipped by View::layoutIfNeeded.
    */
   bool needsLayout;
+
+  /**
+   * @brief If true, a descendant of this View has `needsLayout` set.
+   * @remarks Maintained by View::setNeedsLayout; View::layoutIfNeeded only descends into
+   * subtrees with this flag set.
+   * @private
+   */
+  bool needsLayoutSubviews;
 
   /**
    * @brief The next responder, or event handler, in the chain.
@@ -271,6 +302,16 @@ struct View {
    * @brief The padding.
    */
   ViewPadding padding;
+
+  /**
+   * @brief The cached View::renderFrame, valid while `generation` matches the current
+   * `renderFrameGeneration`.
+   * @private
+   */
+  struct {
+    SDL_Rect frame;
+    unsigned generation;
+  } renderFrameCache;
 
   /**
    * @brief The element-level Style of this View.
@@ -1056,6 +1097,28 @@ struct ViewInterface {
   void (*setHidden)(View *self, bool hidden);
 
   /**
+   * @fn void View::setNeedsApplyTheme(View *self)
+   * @brief Marks this View as needing Theme application before it is next drawn.
+   * @param self The View.
+   * @remarks Callers MUST use this method rather than assigning `needsApplyTheme` directly:
+   * it propagates `needsApplyThemeSubviews` to ancestors, which View::applyThemeIfNeeded
+   * requires in order to find this View. A View flagged by direct assignment MAY be skipped.
+   * @memberof View
+   */
+  void (*setNeedsApplyTheme)(View *self);
+
+  /**
+   * @fn void View::setNeedsLayout(View *self)
+   * @brief Marks this View as needing layout before it is next drawn.
+   * @param self The View.
+   * @remarks Callers MUST use this method rather than assigning `needsLayout` directly: it
+   * propagates `needsLayoutSubviews` to ancestors, which View::layoutIfNeeded requires in
+   * order to find this View. A View flagged by direct assignment MAY be skipped.
+   * @memberof View
+   */
+  void (*setNeedsLayout)(View *self);
+
+  /**
    * @fn SDL_Size View::size(const View *self)
    * @param self The View.
    * @return The size of this View's frame.
@@ -1263,3 +1326,12 @@ struct ViewInterface {
  * @memberof View
  */
 OBJECTIVELYMVC_EXPORT Class *_View(void);
+
+/**
+ * @brief Invalidates every View's cached View::renderFrame and View::clippingFrame.
+ * @details WindowController::renderTo invokes this after layout, before drawing, so that
+ * drawing and subsequent hit-testing observe post-layout frames; both methods memoize their
+ * result until the next invocation. Callers that mutate View frames outside of a layout pass
+ * MUST invoke this afterwards if hit-testing precision is required before the next render.
+ */
+OBJECTIVELYMVC_EXPORT void MVC_InvalidateRenderFrames(void);

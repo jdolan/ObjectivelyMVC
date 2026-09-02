@@ -111,7 +111,7 @@ static void layoutSubviews(View *self) {
   }
 
   scrollView->frame = frame;
-  scrollView->needsLayout = true;
+  $(scrollView, setNeedsLayout);
 
   $(scrollView, layoutIfNeeded);
 }
@@ -438,7 +438,7 @@ static void reloadData(TableView *self) {
     $((View *) self->contentView, addSubview, (View *) row);
   }
 
-  self->control.view.needsLayout = true;
+  $((View *) self, setNeedsLayout);
 }
 
 /**

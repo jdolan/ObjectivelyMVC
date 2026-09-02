@@ -143,35 +143,40 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
     return;
   }
 
-  const size_t segCount = count - 1;
-  MVC_Vertex *verts = malloc(segCount * 6 * sizeof(MVC_Vertex));
-  assert(verts);
+  const size_t segments = count - 1;
 
-  for (size_t i = 0; i < segCount; i++) {
-    const float ax = (float) points[i].x,     ay = (float) points[i].y;
-    const float bx = (float) points[i+1].x,   by = (float) points[i+1].y;
+  MVC_Vertex verts[16 * 6];
+  const size_t batchSize = lengthof(verts) / 6;
 
-    const float dx = bx - ax, dy = by - ay;
-    const float len = sqrtf(dx * dx + dy * dy);
+  for (size_t s = 0; s < segments; ) {
 
-    float nx = 0.0f, ny = 0.0f;
-    if (len > 0.001f) {
-      nx = (-dy / len) * 0.5f;
-      ny = ( dx / len) * 0.5f;
+    const size_t batch = min(segments - s, batchSize);
+
+    for (size_t i = 0; i < batch; i++, s++) {
+
+      const float ax = (float) points[s].x,     ay = (float) points[s].y;
+      const float bx = (float) points[s + 1].x, by = (float) points[s + 1].y;
+
+      const float dx = bx - ax, dy = by - ay;
+      const float len = sqrtf(dx * dx + dy * dy);
+
+      float nx = 0.0f, ny = 0.0f;
+      if (len > 0.001f) {
+        nx = (-dy / len) * 0.5f;
+        ny = ( dx / len) * 0.5f;
+      }
+
+      MVC_Vertex *v = &verts[i * 6];
+      v[0] = (MVC_Vertex) { { { ax - nx, ay - ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[1] = (MVC_Vertex) { { { ax + nx, ay + ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[2] = (MVC_Vertex) { { { bx - nx, by - ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[3] = (MVC_Vertex) { { { ax + nx, ay + ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[4] = (MVC_Vertex) { { { bx + nx, by + ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[5] = (MVC_Vertex) { { { bx - nx, by - ny } }, { { 0.0f, 0.0f } }, { 0 } };
     }
 
-    MVC_Vertex *v = &verts[i * 6];
-    v[0] = (MVC_Vertex) { { { ax - nx, ay - ny } }, { { 0.0f, 0.0f } }, { 0 } };
-    v[1] = (MVC_Vertex) { { { ax + nx, ay + ny } }, { { 0.0f, 0.0f } }, { 0 } };
-    v[2] = (MVC_Vertex) { { { bx - nx, by - ny } }, { { 0.0f, 0.0f } }, { 0 } };
-    v[3] = (MVC_Vertex) { { { ax + nx, ay + ny } }, { { 0.0f, 0.0f } }, { 0 } };
-    v[4] = (MVC_Vertex) { { { bx + nx, by + ny } }, { { 0.0f, 0.0f } }, { 0 } };
-    v[5] = (MVC_Vertex) { { { bx - nx, by - ny } }, { { 0.0f, 0.0f } }, { 0 } };
+    $(self, pushDrawArrays, verts, batch * 6, NULL, color);
   }
-
-  $(self, pushDrawArrays, verts, segCount * 6, NULL, color);
-
-  free(verts);
 }
 
 /**
@@ -369,13 +374,32 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
     .scissor     = self->scissor,
   };
 
-  for (size_t i = 0; i < count; i++) {
-    MVC_Vertex v = verts[i];
-    v.color = *color;
-    $(self->vertices, add, &v);
+  Vector *vertices = self->vertices;
+
+  if (vertices->count + count > vertices->capacity) {
+    $(vertices, resize, max(vertices->capacity * 2, vertices->count + count));
   }
 
-  $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
+  MVC_Vertex *out = VectorElement(vertices, MVC_Vertex, vertices->count);
+  for (size_t i = 0; i < count; i++) {
+    out[i] = verts[i];
+    out[i].color = *color;
+  }
+
+  vertices->count += count;
+
+  // If this drawArrays is contiguous with the last one, combine them into a single call
+  
+  if (self->drawArrays->count) {
+    MVC_DrawArrays *last = VectorElement(self->drawArrays, MVC_DrawArrays, self->drawArrays->count - 1);
+    if (last->texture == draw.texture && SDL_RectsEqual(&last->scissor, &draw.scissor)) {
+      last->vertexCount += draw.vertexCount;
+    } else {
+      $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
+    }
+  } else {
+    $(self->drawArrays, add, (MVC_DrawArrays *) &draw);
+  }
 }
 
 /**

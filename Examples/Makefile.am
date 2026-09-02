@@ -2,7 +2,8 @@ noinst_HEADERS = \
 	HelloViewController.h
 
 noinst_PROGRAMS = \
-	Hello
+	Hello \
+	HUD
 
 CFLAGS += \
 	-I$(top_srcdir)/Assets \
@@ -24,6 +25,9 @@ LDADD = \
 Hello_SOURCES = \
 	HelloViewController.c \
 	Hello.c
+
+HUD_SOURCES = \
+	HUD.c
 
 # Runtime assets loaded via the Resource API (from the EXAMPLES path), plus the
 # versioned shader sources/blobs. Normal builds never need glslc/shadercross;

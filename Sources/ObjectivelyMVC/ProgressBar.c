@@ -140,7 +140,12 @@ static ProgressBar *initWithFrame(ProgressBar *self, const SDL_Rect *frame) {
  * @memberof ProgressBar
  */
 static double progress(const ProgressBar *self) {
-  return 100.0 * self->value / (self->max - self->min);
+
+  if (self->max <= self->min) {
+    return 0.0;
+  }
+
+  return 100.0 * (self->value - self->min) / (self->max - self->min);
 }
 
 /**
@@ -170,10 +175,10 @@ static void setValue(ProgressBar *self, double value) {
     self->value = value;
 
     const SDL_Rect bounds = $((View *) self, bounds);
-    const double frac = self->value / (self->max - self->min);
+    const double frac = $(self, progress) / 100.0;
 
     self->foreground->view.frame.w = bounds.w * frac;
-    self->view.needsLayout = true;
+    $((View *) self, setNeedsLayout);
 
     $(self, formatLabel);
 

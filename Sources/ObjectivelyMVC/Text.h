@@ -106,6 +106,19 @@ struct Text {
   bool lineWrap;
 
   /**
+   * @brief The cached Text::naturalSize, valid while `isValid` is set and `pixelDensity`
+   * and `colorEscapes` match the Font's pixel density and this Text's `colorEscapes` --
+   * the latter because it is a public, setter-less field that changes the measurement path.
+   * @private
+   */
+  struct {
+    SDL_Size size;
+    float pixelDensity;
+    bool colorEscapes;
+    bool isValid;
+  } naturalSizeCache;
+
+  /**
    * @brief The text.
    * @remarks Do not set this property directly.
    * @see Text::setText(Text *, const char *)

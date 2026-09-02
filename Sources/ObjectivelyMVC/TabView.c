@@ -250,7 +250,7 @@ static void selectTab(TabView *self, TabViewItem *tab) {
       }
     }
 
-    self->stackView.view.needsLayout = true;
+    $((View *) self, setNeedsLayout);
   }
 }
 

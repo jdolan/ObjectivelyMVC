@@ -76,7 +76,7 @@ static void applyStyle(View *self, const Style *style) {
 
   $(self, bind, inlets, (Dictionary *) style->attributes);
 
-  self->needsLayout = true;
+  $(self, setNeedsLayout);
 }
 
 /**
@@ -207,8 +207,8 @@ static void scrollToOffset(ScrollView *self, const SDL_Point *offset) {
     self->contentOffset.x = self->contentOffset.y = 0;
   }
 
-  self->control.view.needsLayout = true;
-  ((View *) self->scrollBar)->needsLayout = true;
+  $((View *) self, setNeedsLayout);
+  $((View *) self->scrollBar, setNeedsLayout);
 }
 
 /**
@@ -244,7 +244,7 @@ static void setContentView(ScrollView *self, View *contentView) {
 static void setScrollBarVisibility(ScrollView *self, ScrollBarVisibility visibility) {
 
   self->scrollBarVisibility = visibility;
-  self->control.view.needsLayout = true;
+  $((View *) self, setNeedsLayout);
 }
 
 #pragma mark - Class lifecycle

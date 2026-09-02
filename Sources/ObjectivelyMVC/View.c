@@ -36,6 +36,19 @@
 Uint32 MVC_NOTIFICATION_EVENT;
 Uint32 MVC_VIEW_EVENT;
 
+/**
+ * @brief The render frame generation; per-View renderFrame and clippingFrame caches are
+ * valid only while their generation matches this. Zero disables caching entirely, for callers
+ * that never invalidate (e.g. unit tests).
+ */
+static unsigned _renderFrameGeneration;
+
+void MVC_InvalidateRenderFrames(void) {
+  if (++_renderFrameGeneration == 0) {
+    _renderFrameGeneration = 1;
+  }
+}
+
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
   MakeEnumAlias(ViewAlignmentNone, none),
   MakeEnumAlias(ViewAlignmentTop, top),
@@ -217,7 +230,7 @@ static void addSubviewRelativeTo(View *self, View *subview, View *other, ViewPos
 
   $(subview, invalidateStyle);
 
-  self->needsLayout = true;
+  $(self, setNeedsLayout);
 }
 
 /**
@@ -326,6 +339,14 @@ static void _applyThemeIfNeeded(View *view, ident data) {
 static void applyThemeIfNeeded(View *self, const Theme *theme) {
 
   assert(theme);
+
+  if (!self->needsApplyTheme && !self->needsApplyThemeSubviews) {
+    return;
+  }
+
+  // Cleared before descending so that any re-invalidation during the traversal
+  // propagates fresh subtree flags and survives to the next frame.
+  self->needsApplyThemeSubviews = false;
 
   $(self, enumerateSubviews, _applyThemeIfNeeded, (ident) theme);
 
@@ -485,8 +506,8 @@ static bool _bind(View *self, const Inlet *inlets, const Dictionary *dictionary)
 
   if (inlets) {
     if (bindInlets(inlets, dictionary)) {
-      self->needsApplyTheme = true;
-      self->needsLayout = true;
+      $(self, setNeedsApplyTheme);
+      $(self, setNeedsLayout);
       return true;
     }
   }
@@ -554,28 +575,37 @@ static void clearWarnings(const View *self, WarningType type) {
  */
 static SDL_Rect clippingFrame(const View *self) {
 
+  View *this = (View *) self;
+
+  if (_renderFrameGeneration && this->clippingFrameCache.generation == _renderFrameGeneration) {
+    return this->clippingFrameCache.frame;
+  }
+
   SDL_Rect frame = $(self, renderFrame);
 
   if (self->borderWidth && self->borderColor.a) {
-    for (int i = 0; i < self->borderWidth; i++) {
-      frame.x -= 1;
-      frame.y -= 1;
-      frame.w += 2;
-      frame.h += 2;
+    frame.x -= self->borderWidth;
+    frame.y -= self->borderWidth;
+    frame.w += self->borderWidth * 2;
+    frame.h += self->borderWidth * 2;
+  }
+
+  // The nearest clipping ancestor's clippingFrame already folds in every outer clip, so a
+  // single intersection with it is equivalent to intersecting each clipping ancestor in turn.
+  const View *superview = self->superview;
+  while (superview && !superview->clipsSubviews) {
+    superview = superview->superview;
+  }
+
+  if (superview) {
+    const SDL_Rect clippingFrame = $(superview, clippingFrame);
+    if (SDL_GetRectIntersection(&clippingFrame, &frame, &frame) == false) {
+      frame.w = frame.h = 0;
     }
   }
 
-  const View *superview = self->superview;
-  while (superview) {
-    if (superview->clipsSubviews) {
-      const SDL_Rect clippingFrame = $(superview, clippingFrame);
-      if (SDL_GetRectIntersection(&clippingFrame, &frame, &frame) == false) {
-        frame.w = frame.h = 0;
-        break;
-      }
-    }
-    superview = superview->superview;
-  }
+  this->clippingFrameCache.frame = frame;
+  this->clippingFrameCache.generation = _renderFrameGeneration;
 
   return frame;
 }
@@ -655,7 +685,7 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
       $(self, sizeToFill);
     }
 
-    self->needsLayout = true;
+    $(self, setNeedsLayout);
   }
 }
 
@@ -1021,7 +1051,7 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
  * @brief ViewEnumerator for invalidateStyle.
  */
 static void invalidateStyle_enumerate(View *view, ident data) {
-  view->needsApplyTheme = true;
+  $(view, setNeedsApplyTheme);
 }
 
 /**
@@ -1112,6 +1142,17 @@ static void layoutIfNeeded_enumerate(View *subview, ident data) {
  */
 static void layoutIfNeeded(View *self) {
 
+  if (!self->needsLayout && !self->needsLayoutSubviews) {
+    return;
+  }
+
+  // Cleared before laying out so that any re-invalidation during layout (e.g. a resize
+  // propagating setNeedsLayout, or a widget marking a sibling) survives to the next frame.
+  self->needsLayoutSubviews = false;
+
+  // Subviews first, so that a dirty descendant whose layout resizes it marks its ancestors
+  // before their own dirty checks below run; the whole tree then converges bottom-up in a
+  // single pass, exactly as invalidations propagate.
   $(self, enumerateSubviews, layoutIfNeeded_enumerate, NULL);
 
   if (self->needsLayout) {
@@ -1398,7 +1439,7 @@ static void removeSubview(View *self, View *subview) {
 
     $(self->subviews, removeObject, subview);
 
-    self->needsLayout = true;
+    $(self, setNeedsLayout);
   }
 }
 
@@ -1471,23 +1512,30 @@ static void renderDeviceWillReset(View *self) {
  */
 static SDL_Rect renderFrame(const View *self) {
 
+  View *this = (View *) self;
+
+  if (_renderFrameGeneration && this->renderFrameCache.generation == _renderFrameGeneration) {
+    return this->renderFrameCache.frame;
+  }
+
   SDL_Rect frame = self->frame;
 
-  const View *view = self;
-  const View *superview = view->superview;
-  while (superview) {
+  const View *superview = self->superview;
+  if (superview) {
 
-    frame.x += superview->frame.x;
-    frame.y += superview->frame.y;
+    const SDL_Rect superFrame = $(superview, renderFrame);
 
-    if (view->alignment != ViewAlignmentInternal) {
+    frame.x += superFrame.x;
+    frame.y += superFrame.y;
+
+    if (self->alignment != ViewAlignmentInternal) {
       frame.x += superview->padding.left;
       frame.y += superview->padding.top;
     }
-
-    view = superview;
-    superview = view->superview;
   }
+
+  this->renderFrameCache.frame = frame;
+  this->renderFrameCache.generation = _renderFrameGeneration;
 
   return frame;
 }
@@ -1551,10 +1599,10 @@ static void resize(View *self, const SDL_Size *size) {
     self->frame.w = w;
     self->frame.h = h;
 
-    self->needsLayout = true;
+    $(self, setNeedsLayout);
 
     if (self->superview && $(self->superview, isContainer)) {
-      self->superview->needsLayout = true;
+      $(self->superview, setNeedsLayout);
     }
   }
 }
@@ -1672,8 +1720,34 @@ static void setHidden(View *self, bool hidden) {
     self->hidden = hidden;
 
     if (self->superview && $(self->superview, isContainer)) {
-      self->superview->needsLayout = true;
+      $(self->superview, setNeedsLayout);
     }
+  }
+}
+
+/**
+ * @fn void View::setNeedsApplyTheme(View *self)
+ * @memberof View
+ */
+static void setNeedsApplyTheme(View *self) {
+
+  self->needsApplyTheme = true;
+
+  for (View *view = self->superview; view && !view->needsApplyThemeSubviews; view = view->superview) {
+    view->needsApplyThemeSubviews = true;
+  }
+}
+
+/**
+ * @fn void View::setNeedsLayout(View *self)
+ * @memberof View
+ */
+static void setNeedsLayout(View *self) {
+
+  self->needsLayout = true;
+
+  for (View *view = self->superview; view && !view->needsLayoutSubviews; view = view->superview) {
+    view->needsLayoutSubviews = true;
   }
 }
 
@@ -2110,6 +2184,8 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->select = _select;
   ((ViewInterface *) clazz->interface)->selectFirst = selectFirst;
   ((ViewInterface *) clazz->interface)->setHidden = setHidden;
+  ((ViewInterface *) clazz->interface)->setNeedsApplyTheme = setNeedsApplyTheme;
+  ((ViewInterface *) clazz->interface)->setNeedsLayout = setNeedsLayout;
   ((ViewInterface *) clazz->interface)->size = size;
   ((ViewInterface *) clazz->interface)->sizeThatContains = sizeThatContains;
   ((ViewInterface *) clazz->interface)->sizeThatFills = sizeThatFills;
