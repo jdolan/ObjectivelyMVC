@@ -88,7 +88,7 @@ struct Font {
    * @brief The backing font.
    */
   TTF_Font *font;
-  
+
   /**
    * @brief The display pixel density scale, greater than 1.0 on high-density displays.
    */
