@@ -267,17 +267,22 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
   Control *this = (Control *) self;
 
+  retain(self);
+
   const ControlState state = (ControlState) this->state;
   if (!(state & ControlStateDisabled)) {
     if ($(this, captureEvent, event)) {
       if (this->state != state) {
         $(this, stateDidChange);
       }
+      release(self);
       return;
     }
   }
 
   super(View, self, respondToEvent, event);
+
+  release(self);
 }
 
 #pragma mark - Control
