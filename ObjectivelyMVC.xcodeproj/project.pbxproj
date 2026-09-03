@@ -14,6 +14,7 @@
 			);
 			dependencies = (
 				CE3CB29E1F40F9A700FAA016 /* PBXTargetDependency */,
+				CED40A7B3049CE140090C57A /* PBXTargetDependency */,
 			);
 			name = "ObjectivelyMVC-Examples";
 			productName = "ObjectivelyMVC-Examples";
@@ -87,11 +88,6 @@
 		CE12D4471C4C38C700CD0B13 /* ViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4261C4C367100CD0B13 /* ViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4611C4C8F2A00CD0B13 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
-		HUDA00000000000000000003 /* HUD.c in Sources */ = {isa = PBXBuildFile; fileRef = HUDA00000000000000000001 /* HUD.c */; };
-		HUDA00000000000000000004 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
-		HUDA00000000000000000005 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
-		HUDA00000000000000000006 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
-		HUDA00000000000000000007 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
 		CE12D4621C4C8F4800CD0B13 /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		CE12D4661C4D587E00CD0B13 /* Log.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4651C4D587E00CD0B13 /* Log.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4691C4D810F00CD0B13 /* Button.c */; };
@@ -213,6 +209,11 @@
 		EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		HS00000000000000000000B0 /* Hello.vert.metal in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello.vert.metal */; };
 		HS00000000000000000000B1 /* Hello.frag.metal in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A5 /* Hello.frag.metal */; };
+		HUDA00000000000000000003 /* HUD.c in Sources */ = {isa = PBXBuildFile; fileRef = HUDA00000000000000000001 /* HUD.c */; };
+		HUDA00000000000000000004 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		HUDA00000000000000000005 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		HUDA00000000000000000006 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		HUDA00000000000000000007 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -224,13 +225,6 @@
 			remoteInfo = ObjectivelyMVC;
 		};
 		CE12D4631C4C8F5400CD0B13 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
-			remoteInfo = "ObjectivelyMVC-Xcode";
-		};
-		HUDA00000000000000000010 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
 			proxyType = 1;
@@ -292,6 +286,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8A563153D68C9DE444FBF31C;
 			remoteInfo = "ObjectivelyMVC-View";
+		};
+		CED40A7A3049CE140090C57A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = HUDA00000000000000000015;
+			remoteInfo = "ObjectivelyMVC-HUD";
+		};
+		HUDA00000000000000000010 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = "ObjectivelyMVC-Xcode";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -414,10 +422,8 @@
 		CE12D4261C4C367100CD0B13 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CE12D4271C4C367100CD0B13 /* ObjectivelyMVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjectivelyMVC.h; sourceTree = "<group>"; };
 		CE12D42B1C4C37E500CD0B13 /* Hello.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Hello.c; sourceTree = "<group>"; };
-		HUDA00000000000000000001 /* HUD.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HUD.c; sourceTree = "<group>"; };
 		CE12D42D1C4C383D00CD0B13 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Hello"; sourceTree = BUILT_PRODUCTS_DIR; };
-		HUDA00000000000000000002 /* ObjectivelyMVC-HUD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-HUD"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE12D4651C4D587E00CD0B13 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
 		CE12D4691C4D810F00CD0B13 /* Button.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Button.c; sourceTree = "<group>"; };
 		CE12D46A1C4D810F00CD0B13 /* Button.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Button.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -561,6 +567,8 @@
 		HS00000000000000000000A3 /* Hello.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.frag.glsl; sourceTree = "<group>"; };
 		HS00000000000000000000A4 /* Hello.frag.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hello.frag.spv; sourceTree = "<group>"; };
 		HS00000000000000000000A5 /* Hello.frag.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Hello.frag.metal; sourceTree = "<group>"; };
+		HUDA00000000000000000001 /* HUD.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = HUD.c; sourceTree = "<group>"; };
+		HUDA00000000000000000002 /* ObjectivelyMVC-HUD */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-HUD"; sourceTree = BUILT_PRODUCTS_DIR; };
 		MV00000000000000000000A2 /* Renderer.vert.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.spv.h; sourceTree = "<group>"; };
 		MV00000000000000000000A3 /* Renderer.vert.metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.vert.metal.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -615,17 +623,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		HUDA00000000000000000009 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				HUDA00000000000000000004 /* SDL3.xcframework in Frameworks */,
-				HUDA00000000000000000005 /* Objectively.framework in Frameworks */,
-				HUDA00000000000000000006 /* ObjectivelyGPU.framework in Frameworks */,
-				HUDA00000000000000000007 /* ObjectivelyMVC.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CE34C89A1FB29F700025F231 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -668,6 +665,17 @@
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
 				CE73E9FE2FEEB28C0048BC24 /* Objectively.framework in Frameworks */,
 				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		HUDA00000000000000000009 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				HUDA00000000000000000004 /* SDL3.xcframework in Frameworks */,
+				HUDA00000000000000000005 /* Objectively.framework in Frameworks */,
+				HUDA00000000000000000006 /* ObjectivelyGPU.framework in Frameworks */,
+				HUDA00000000000000000007 /* ObjectivelyMVC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1079,23 +1087,6 @@
 			productReference = CE12D4551C4C8E8E00CD0B13 /* ObjectivelyMVC-Hello */;
 			productType = "com.apple.product-type.tool";
 		};
-		HUDA00000000000000000015 /* ObjectivelyMVC-HUD */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = HUDA00000000000000000014 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-HUD" */;
-			buildPhases = (
-				HUDA00000000000000000008 /* Sources */,
-				HUDA00000000000000000009 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				HUDA00000000000000000011 /* PBXTargetDependency */,
-			);
-			name = "ObjectivelyMVC-HUD";
-			productName = "ObjectivelyMVC-HUD";
-			productReference = HUDA00000000000000000002 /* ObjectivelyMVC-HUD */;
-			productType = "com.apple.product-type.tool";
-		};
 		CE34C8951FB29F700025F231 /* ObjectivelyMVC-Stylesheet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE34C89F1FB29F700025F231 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Stylesheet" */;
@@ -1169,6 +1160,23 @@
 			productName = "SDL_mvc-Xcode";
 			productReference = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		HUDA00000000000000000015 /* ObjectivelyMVC-HUD */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = HUDA00000000000000000014 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-HUD" */;
+			buildPhases = (
+				HUDA00000000000000000008 /* Sources */,
+				HUDA00000000000000000009 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				HUDA00000000000000000011 /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-HUD";
+			productName = "ObjectivelyMVC-HUD";
+			productReference = HUDA00000000000000000002 /* ObjectivelyMVC-HUD */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -1384,14 +1392,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		HUDA00000000000000000008 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				HUDA00000000000000000003 /* HUD.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		CE34C8981FB29F700025F231 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1475,6 +1475,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		HUDA00000000000000000008 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				HUDA00000000000000000003 /* HUD.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -1488,11 +1496,6 @@
 			isa = PBXTargetDependency;
 			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
 			targetProxy = CE12D4631C4C8F5400CD0B13 /* PBXContainerItemProxy */;
-		};
-		HUDA00000000000000000011 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
-			targetProxy = HUDA00000000000000000010 /* PBXContainerItemProxy */;
 		};
 		CE34C8961FB29F700025F231 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1533,6 +1536,16 @@
 			isa = PBXTargetDependency;
 			target = 8A563153D68C9DE444FBF31C /* ObjectivelyMVC-View */;
 			targetProxy = CED40A623046145B0090C57A /* PBXContainerItemProxy */;
+		};
+		CED40A7B3049CE140090C57A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = HUDA00000000000000000015 /* ObjectivelyMVC-HUD */;
+			targetProxy = CED40A7A3049CE140090C57A /* PBXContainerItemProxy */;
+		};
+		HUDA00000000000000000011 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = HUDA00000000000000000010 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1661,11 +1674,6 @@
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(inherited)",
 				);
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(inherited)",
-				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1674,45 +1682,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(inherited)",
-				);
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(inherited)",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		HUDA00000000000000000012 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(inherited)",
-				);
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(inherited)",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		HUDA00000000000000000013 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(inherited)",
-				);
-				LD_RUNPATH_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(inherited)",
@@ -1866,6 +1835,7 @@
 					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64/SDL3.framework/Headers",
 					"$(HOMEBREW_PREFIX)/include",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
@@ -1898,6 +1868,7 @@
 					"$(SRCROOT)/Frameworks/SDL3.xcframework/macos-arm64_x86_64/SDL3.framework/Headers",
 					"$(HOMEBREW_PREFIX)/include",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
@@ -1908,6 +1879,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEFINES_MODULE = YES;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
@@ -1927,6 +1899,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEFINES_MODULE = YES;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks",
@@ -1939,6 +1912,40 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		HUDA00000000000000000012 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Frameworks",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(inherited)",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(SRCROOT)/Frameworks",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		HUDA00000000000000000013 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/Frameworks",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(inherited)",
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(SRCROOT)/Frameworks",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -1968,15 +1975,6 @@
 			buildConfigurations = (
 				CE12D45A1C4C8E8E00CD0B13 /* Debug */,
 				CE12D45B1C4C8E8E00CD0B13 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		HUDA00000000000000000014 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-HUD" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				HUDA00000000000000000012 /* Debug */,
-				HUDA00000000000000000013 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -2040,6 +2038,15 @@
 			buildConfigurations = (
 				CED157D01C4BF3AC00FBA2DE /* Debug */,
 				CED157D11C4BF3AC00FBA2DE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		HUDA00000000000000000014 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-HUD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				HUDA00000000000000000012 /* Debug */,
+				HUDA00000000000000000013 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
