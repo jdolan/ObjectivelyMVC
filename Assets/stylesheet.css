@@ -163,6 +163,10 @@ Panel .accessoryView {
   spacing: 16;
 }
 
+Panel > .resizeHandle {
+  border-radius: 4;
+}
+
 ProgressBar {
   autoresizing-mask: contain | width;
 }
