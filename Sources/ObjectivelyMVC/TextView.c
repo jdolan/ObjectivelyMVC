@@ -28,6 +28,7 @@
 #include <Objectively/String.h>
 
 #include "Colors.h"
+#include "Text.h"
 #include "TextView.h"
 
 #define _Class _TextView
@@ -149,14 +150,21 @@ static void render(View *self, Renderer *renderer) {
     const char *text = this->text->text ?: "";
 
     int w, h;
-    if (this->position == strlen(text)) {
+    if (this->position == strlen(text) && !this->text->colorEscapes) {
       $(this->text->font, sizeCharacters, text, &w, &h);
     } else {
-      char *chars = calloc(this->position + 1, sizeof(char));
-      strncpy(chars, text, this->position);
+      char *prefix = calloc(this->position + 1, sizeof(char));
+      strncpy(prefix, text, this->position);
 
-      $(this->text->font, sizeCharacters, chars, &w, &h);
-      free(chars);
+      // Text renders with color escapes stripped, so the caret must be measured the same way
+      if (this->text->colorEscapes) {
+        char *stripped = MVC_StripColorEscapes(prefix);
+        free(prefix);
+        prefix = stripped;
+      }
+
+      $(this->text->font, sizeCharacters, prefix, &w, &h);
+      free(prefix);
     }
 
     SDL_Rect frame = $((View *) this->text, renderFrame);
@@ -178,6 +186,51 @@ static void resignKeyResponder(View *self) {
   super(View, self, resignKeyResponder);
 
   SDL_StopTextInput(self->window);
+}
+
+/**
+ * @brief Returns the length in bytes of the cursor unit starting at `position`.
+ * @details A unit is one UTF-8 encoded character or, when `escapes` is set, a color escape
+ * sequence (`^0` through `^9`), so that the cursor never lands inside either.
+ */
+static size_t unitLengthAt(const char *chars, size_t len, size_t position, bool escapes) {
+
+  if (position >= len) {
+    return 0;
+  }
+
+  if (escapes && chars[position] == '^' && position + 1 < len && chars[position + 1] >= '0' && chars[position + 1] <= '9') {
+    return 2;
+  }
+
+  size_t n = 1;
+  while (position + n < len && (chars[position + n] & 0xC0) == 0x80) {
+    n++;
+  }
+
+  return n;
+}
+
+/**
+ * @brief Returns the length in bytes of the cursor unit ending at `position`.
+ * @see unitLengthAt
+ */
+static size_t unitLengthBefore(const char *chars, size_t position, bool escapes) {
+
+  if (position == 0) {
+    return 0;
+  }
+
+  size_t start = position - 1;
+  while (start > 0 && (chars[start] & 0xC0) == 0x80) {
+    start--;
+  }
+
+  if (escapes && start > 0 && chars[start - 1] == '^' && chars[start] >= '0' && chars[start] <= '9') {
+    start--;
+  }
+
+  return position - start;
 }
 
 #pragma mark - Control
@@ -210,6 +263,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
       const char *chars = this->attributedText->chars;
       const size_t len = this->attributedText->length;
+      const bool escapes = this->text->colorEscapes;
 
       switch (event->key.key) {
 
@@ -224,16 +278,17 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         case SDLK_BACKSPACE:
         case SDLK_KP_BACKSPACE:
           if (this->position > 0) {
-            const Range range = { .location = this->position - 1, .length = 1 };
+            const size_t n = unitLengthBefore(chars, this->position, escapes);
+            const Range range = { .location = this->position - n, .length = n };
             $(this->attributedText, deleteCharactersInRange, range);
-            this->position--;
+            this->position -= n;
             didEdit = true;
           }
           break;
 
         case SDLK_DELETE:
           if (this->position < len) {
-            const Range range = { .location = this->position, .length = 1 };
+            const Range range = { .location = this->position, .length = unitLengthAt(chars, len, this->position, escapes) };
             $(this->attributedText, deleteCharactersInRange, range);
             didEdit = true;
           }
@@ -242,29 +297,29 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         case SDLK_LEFT:
           if (SDL_GetModState() & SDL_KMOD_CTRL) {
             while (this->position > 0 && chars[this->position] == ' ') {
-              this->position--;
+              this->position -= unitLengthBefore(chars, this->position, escapes);
             }
             while (this->position > 0 && chars[this->position] != ' ') {
-              this->position--;
+              this->position -= unitLengthBefore(chars, this->position, escapes);
             }
-          } else if (this->position > 0) {
-            this->position--;
+          } else {
+            this->position -= unitLengthBefore(chars, this->position, escapes);
           }
           break;
 
         case SDLK_RIGHT:
           if (SDL_GetModState() & SDL_KMOD_CTRL) {
             while (this->position < len && chars[this->position] == ' ') {
-              this->position++;
+              this->position += unitLengthAt(chars, len, this->position, escapes);
             }
             while (this->position < len && chars[this->position] != ' ') {
-              this->position++;
+              this->position += unitLengthAt(chars, len, this->position, escapes);
             }
             if (this->position < len) {
-              this->position++;
+              this->position += unitLengthAt(chars, len, this->position, escapes);
             }
-          } else if (this->position < len) {
-            this->position++;
+          } else {
+            this->position += unitLengthAt(chars, len, this->position, escapes);
           }
           break;
 

@@ -51,15 +51,12 @@ SDL_Color TextEscapeColors[] = {
   { 0x80, 0x80, 0x80, 0xFF }   // ^9 Grey
 };
 
-/**
- * @brief Strips color escape sequences from text, returning a newly allocated string.
- */
-static char *stripColors(const char *text) {
+char *MVC_StripColorEscapes(const char *text) {
 
   assert(text);
 
   char *stripped = malloc(strlen(text) + 1);
-  int idx = 0;
+  size_t idx = 0;
 
   for (const char *p = text; *p; p++) {
     if (p[0] == '^' && p[1] >= '0' && p[1] <= '9') {
@@ -132,7 +129,7 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
     return NULL;
   }
 
-  char *stripped = stripColors(text);
+  char *stripped = MVC_StripColorEscapes(text);
   if (!stripped || !*stripped) {
     free(stripped);
     *outCount = 0;
@@ -198,7 +195,7 @@ static CharInfo *buildCharInfo(const Font *font, const char *text,
  */
 static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
 
-  char *stripped = stripColors(self->text);
+  char *stripped = MVC_StripColorEscapes(self->text);
   SDL_Surface *surface = $(self->font, renderCharacters, stripped, self->color, wrapWidth);
   free(stripped);
 
@@ -226,7 +223,7 @@ static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
  */
 static void sizeWithColorEscapes(const Text *self, int *w, int *h) {
 
-  char *stripped = stripColors(self->text ?: "");
+  char *stripped = MVC_StripColorEscapes(self->text ?: "");
   $(self->font, sizeCharacters, stripped, w, h);
   free(stripped);
 }

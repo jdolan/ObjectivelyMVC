@@ -59,6 +59,13 @@
  */
 OBJECTIVELYMVC_EXPORT SDL_Color TextEscapeColors[10];
 
+/**
+ * @brief Strips color escape sequences (`^0` through `^9`) from the given text.
+ * @param text The text.
+ * @return A newly allocated copy of `text` without escape sequences. The caller must free it.
+ */
+OBJECTIVELYMVC_EXPORT char *MVC_StripColorEscapes(const char *text);
+
 typedef struct Text Text;
 typedef struct TextInterface TextInterface;
 
