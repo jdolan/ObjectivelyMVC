@@ -113,7 +113,11 @@ static void render(View *self, Renderer *renderer) {
     SDL_FRect frect;
     SDL_RectToFRect(&frame, &frect);
 
-    $(renderer, drawTexture, this->texture, &frect, &this->color);
+    if (self->borderRadius > 0) {
+      $(renderer, drawRoundedTexture, this->texture, &frect, self->borderRadius, &this->color);
+    } else {
+      $(renderer, drawTexture, this->texture, &frect, &this->color);
+    }
   }
 }
 

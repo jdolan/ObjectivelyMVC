@@ -99,6 +99,16 @@ struct Control {
   ControlBevel bevel;
 
   /**
+   * @brief The bevel color for the shadowed edges.
+   */
+  SDL_Color bevelDarkColor;
+
+  /**
+   * @brief The bevel color for the lit edges.
+   */
+  SDL_Color bevelLightColor;
+
+  /**
    * @brief The bit mask of ControlState.
    */
   unsigned int state;

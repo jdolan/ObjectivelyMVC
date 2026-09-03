@@ -43,12 +43,17 @@ typedef struct Renderer Renderer;
 typedef struct RendererInterface RendererInterface;
 
 /**
- * @brief Interleaved position + texcoord + color vertex for GPU upload.
+ * @brief Interleaved position + texcoord + color + rounded rect shape vertex for GPU upload.
+ * @details `rect` holds the rounded rectangle's center (`xy`) and half extent (`zw`), and
+ * `shape` its corner radius (`x`) and stroke width (`y`, `0` for filled), all in logical
+ * coordinates. Leave both zeroed for plain quads; the shader skips the SDF when `rect.z == 0`.
  */
 typedef struct {
   vec2 position;
   vec2 uv;
   SDL_Color color;
+  vec4 rect;
+  vec2 shape;
 } MVC_Vertex;
 
 /**
@@ -190,6 +195,22 @@ struct RendererInterface {
   void (*beginFrameWith)(Renderer *self, CommandBuffer *commands, Framebuffer *framebuffer);
 
   /**
+   * @fn void Renderer::drawBevel(const Renderer *self, const SDL_Rect *rect, int radius, int width, const SDL_Color *topLeft, const SDL_Color *bottomRight)
+   * @brief Records a rounded rectangle outline split diagonally into two colors.
+   * @details The outline is drawn inside `rect`. The half above the bottom-left to top-right
+   * diagonal takes `topLeft`; the other half takes `bottomRight`.
+   * @param self The Renderer.
+   * @param rect The rectangle.
+   * @param radius The corner radius.
+   * @param width The outline width.
+   * @param topLeft The color of the top and left edges.
+   * @param bottomRight The color of the bottom and right edges.
+   * @memberof Renderer
+   */
+  void (*drawBevel)(const Renderer *self, const SDL_Rect *rect, int radius, int width,
+                    const SDL_Color *topLeft, const SDL_Color *bottomRight);
+
+  /**
    * @fn void Renderer::drawLine(const Renderer *self, const SDL_Point *points, const SDL_Color *color)
    * @brief Records a line segment between two points.
    * @param self The Renderer.
@@ -229,6 +250,41 @@ struct RendererInterface {
    * @memberof Renderer
    */
   void (*drawRectFilled)(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::drawRoundedRect(const Renderer *self, const SDL_Rect *rect, int radius, int width, const SDL_Color *color)
+   * @brief Records a rounded rectangle outline of the given width, drawn inside `rect`.
+   * @param self The Renderer.
+   * @param rect The rectangle.
+   * @param radius The corner radius.
+   * @param width The outline width.
+   * @param color The outline color.
+   * @memberof Renderer
+   */
+  void (*drawRoundedRect)(const Renderer *self, const SDL_Rect *rect, int radius, int width, const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::drawRoundedRectFilled(const Renderer *self, const SDL_Rect *rect, int radius, const SDL_Color *color)
+   * @brief Records a filled rounded rectangle.
+   * @param self The Renderer.
+   * @param rect The rectangle.
+   * @param radius The corner radius.
+   * @param color The fill color.
+   * @memberof Renderer
+   */
+  void (*drawRoundedRectFilled)(const Renderer *self, const SDL_Rect *rect, int radius, const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::drawRoundedTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, int radius, const SDL_Color *color)
+   * @brief Records a textured quad clipped to a rounded rectangle.
+   * @param self The Renderer.
+   * @param texture The Texture to sample.
+   * @param dest The destination rectangle in logical screen coordinates.
+   * @param radius The corner radius.
+   * @param color The color multiplier (use `&Colors.White` for no tint).
+   * @memberof Renderer
+   */
+  void (*drawRoundedTexture)(const Renderer *self, Texture *texture, const SDL_FRect *dest, int radius, const SDL_Color *color);
 
   /**
    * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, const SDL_Color *color)

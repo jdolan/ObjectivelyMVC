@@ -94,6 +94,8 @@ static void applyStyle(View *self, const Style *style) {
 
   const Inlet inlets[] = MakeInlets(
     MakeInlet("bevel", InletTypeEnum, &this->bevel, (ident) ControlBevelNames),
+    MakeInlet("bevel-dark-color", InletTypeColor, &this->bevelDarkColor, NULL),
+    MakeInlet("bevel-light-color", InletTypeColor, &this->bevelLightColor, NULL),
     MakeInlet("selection", InletTypeEnum, &this->selection, (ident) ControlSelectionNames)
   );
 
@@ -184,61 +186,76 @@ static void render(View *self, Renderer *renderer) {
 
   const SDL_Rect frame = $(self, renderFrame);
 
-  if (this->bevel == ControlBevelInset) {
+  if (self->borderRadius > 0) {
 
-    SDL_Point points[3];
+    if (this->bevel == ControlBevelInset) {
+      $(renderer, drawBevel, &frame, self->borderRadius, 1, &this->bevelDarkColor, &this->bevelLightColor);
+    } else if (this->bevel == ControlBevelOutset) {
+      $(renderer, drawBevel, &frame, self->borderRadius, 1, &this->bevelLightColor, &this->bevelDarkColor);
+    }
 
-    points[0].x = frame.x;
-    points[0].y = frame.y + frame.h;
+    if (this->state & ControlStateFocused) {
+      $(renderer, drawRoundedRect, &frame, self->borderRadius, 1, &Colors.Charcoal);
+    }
 
-    points[1].x = frame.x + frame.w;
-    points[1].y = frame.y + frame.h;
+  } else {
 
-    points[2].x = frame.x + frame.w;
-    points[2].y = frame.y;
+    if (this->bevel == ControlBevelInset) {
 
-    $(renderer, drawLines, points, lengthof(points), &Colors.Silver);
+      SDL_Point points[3];
 
-    points[0].x = frame.x;
-    points[0].y = frame.y + frame.h;
+      points[0].x = frame.x;
+      points[0].y = frame.y + frame.h;
 
-    points[1].x = frame.x;
-    points[1].y = frame.y;
+      points[1].x = frame.x + frame.w;
+      points[1].y = frame.y + frame.h;
 
-    points[2].x = frame.x + frame.w;
-    points[2].y = frame.y;
+      points[2].x = frame.x + frame.w;
+      points[2].y = frame.y;
 
-    $(renderer, drawLines, points, lengthof(points), &Colors.Black);
+      $(renderer, drawLines, points, lengthof(points), &this->bevelLightColor);
 
-  } else if (this->bevel == ControlBevelOutset) {
+      points[0].x = frame.x;
+      points[0].y = frame.y + frame.h;
 
-    SDL_Point points[3];
+      points[1].x = frame.x;
+      points[1].y = frame.y;
 
-    points[0].x = frame.x;
-    points[0].y = frame.y + frame.h;
+      points[2].x = frame.x + frame.w;
+      points[2].y = frame.y;
 
-    points[1].x = frame.x + frame.w;
-    points[1].y = frame.y + frame.h;
+      $(renderer, drawLines, points, lengthof(points), &this->bevelDarkColor);
 
-    points[2].x = frame.x + frame.w;
-    points[2].y = frame.y;
+    } else if (this->bevel == ControlBevelOutset) {
 
-    $(renderer, drawLines, points, lengthof(points), &Colors.Black);
+      SDL_Point points[3];
 
-    points[0].x = frame.x;
-    points[0].y = frame.y + frame.h;
+      points[0].x = frame.x;
+      points[0].y = frame.y + frame.h;
 
-    points[1].x = frame.x;
-    points[1].y = frame.y;
+      points[1].x = frame.x + frame.w;
+      points[1].y = frame.y + frame.h;
 
-    points[2].x = frame.x + frame.w;
-    points[2].y = frame.y;
+      points[2].x = frame.x + frame.w;
+      points[2].y = frame.y;
 
-    $(renderer, drawLines, points, lengthof(points), &Colors.Silver);
-  }
+      $(renderer, drawLines, points, lengthof(points), &this->bevelDarkColor);
 
-  if (this->state & ControlStateFocused) {
-    $(renderer, drawRect, &frame, &Colors.Charcoal);
+      points[0].x = frame.x;
+      points[0].y = frame.y + frame.h;
+
+      points[1].x = frame.x;
+      points[1].y = frame.y;
+
+      points[2].x = frame.x + frame.w;
+      points[2].y = frame.y;
+
+      $(renderer, drawLines, points, lengthof(points), &this->bevelLightColor);
+    }
+
+    if (this->state & ControlStateFocused) {
+      $(renderer, drawRect, &frame, &Colors.Charcoal);
+    }
   }
 }
 
@@ -303,7 +320,8 @@ static Control *initWithFrame(Control *self, const SDL_Rect *frame) {
 
   self = (Control *) super(View, self, initWithFrame, frame);
   if (self) {
-
+    self->bevelDarkColor = Colors.Black;
+    self->bevelLightColor = Colors.Silver;
   }
 
   return self;

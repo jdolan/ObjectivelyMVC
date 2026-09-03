@@ -203,6 +203,11 @@ struct View {
   SDL_Color borderColor;
 
   /**
+   * @brief The corner radius applied to the background, border and bevel.
+   */
+  int borderRadius;
+
+  /**
    * @brief The border width.
    */
   int borderWidth;

@@ -267,6 +267,7 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("autoresizing-mask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
     MakeInlet("background-color", InletTypeColor, &self->backgroundColor, NULL),
     MakeInlet("border-color", InletTypeColor, &self->borderColor, NULL),
+    MakeInlet("border-radius", InletTypeInteger, &self->borderRadius, NULL),
     MakeInlet("border-width", InletTypeInteger, &self->borderWidth, NULL),
     MakeInlet("clips-subviews", InletTypeBool, &self->clipsSubviews, NULL),
     MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
@@ -1458,20 +1459,38 @@ static void render(View *self, Renderer *renderer) {
   if (self->backgroundColor.a) {
 
     const SDL_Rect frame = $(self, renderFrame);
-    $(renderer, drawRectFilled, &frame, &self->backgroundColor);
+    if (self->borderRadius > 0) {
+      $(renderer, drawRoundedRectFilled, &frame, self->borderRadius, &self->backgroundColor);
+    } else {
+      $(renderer, drawRectFilled, &frame, &self->backgroundColor);
+    }
   }
 
   if (self->borderWidth && self->borderColor.a) {
 
     SDL_Rect frame = $(self, renderFrame);
-    for (int i = 0; i < self->borderWidth; i++) {
 
-      $(renderer, drawRect, &frame, &self->borderColor);
+    if (self->borderRadius > 0) {
 
-      frame.x -= 1;
-      frame.y -= 1;
-      frame.w += 2;
-      frame.h += 2;
+      // The border grows outward, so its inner edge shares the background's radius
+      frame.x -= self->borderWidth;
+      frame.y -= self->borderWidth;
+      frame.w += self->borderWidth * 2;
+      frame.h += self->borderWidth * 2;
+
+      $(renderer, drawRoundedRect, &frame, self->borderRadius + self->borderWidth, self->borderWidth, &self->borderColor);
+
+    } else {
+
+      for (int i = 0; i < self->borderWidth; i++) {
+
+        $(renderer, drawRect, &frame, &self->borderColor);
+
+        frame.x -= 1;
+        frame.y -= 1;
+        frame.w += 2;
+        frame.h += 2;
+      }
     }
   }
 }

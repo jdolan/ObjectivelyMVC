@@ -119,6 +119,9 @@ static void layoutSubviews(View *self) {
   resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
   resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
 
+  // The handle shares the Panel's corner, so the same radius makes it follow the Panel's edge
+  resizeHandle->borderRadius = self->borderRadius;
+
   $(resizeHandle, setHidden, !this->isResizable);
 }
 

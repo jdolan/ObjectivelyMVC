@@ -6,6 +6,7 @@
 Box {
   autoresizing-mask: contain;
   border-color: #dededeaa;
+  border-radius: 4;
   border-width: 1;
   padding: 10 10 10 10;
 }
@@ -92,6 +93,7 @@ CollectionView .contentView {
 }
 
 Control {
+  border-radius: 4;
   min-height: 32;
   selection: single;
 }
@@ -158,6 +160,7 @@ Panel .accessoryView {
   alignment: middle-right;
   autoresizing-mask: contain;
   axis: horizontal;
+  spacing: 16;
 }
 
 ProgressBar {
@@ -222,8 +225,9 @@ Slider > .bar {
 Slider > .bar > .handle {
   alignment: middle;
   background-color: #444444ff;
-  border-width: 1;
   border-color: #aaaaaaff;
+  border-radius: 3;
+  border-width: 1;
   min-width: 8;
   min-height: 16;
 }
@@ -285,6 +289,7 @@ TabView {
 
 TabView > .tabPageView {
   border-color: silver;
+  border-radius: 4;
   border-width: 1;
 }
 
@@ -333,13 +338,15 @@ Text {
 
 .options {
   alignment: internal;
+  background-color: charcoal;
   border-color: #dededeaa;
+  border-radius: 4;
   border-width: 1;
-  padding: 1;
+  padding: 2;
 }
 
 .options > Option {
-  background-color: charcoal;
+  border-radius: 2;
   padding: 0 4 0 4;
 }
 
