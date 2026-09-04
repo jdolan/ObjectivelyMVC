@@ -305,6 +305,11 @@ struct RendererInterface {
   /**
    * @fn void Renderer::drawView(Renderer *self, View *view)
    * @brief Sets the clipping frame and invokes View::render for the given View.
+   * @details A View whose View::clippingFrame is empty is culled. Otherwise the scissor is set
+   * to the View::clippingFrame of the nearest ancestor with `clipsSubviews` set, or to the
+   * full framebuffer when there is none. A View is therefore NOT clipped to its own frame:
+   * one that draws outside its bounds does so visibly, and a container that wants to clip its
+   * contents MUST set `clipsSubviews`.
    * @param self The Renderer.
    * @param view The View to render.
    * @memberof Renderer
@@ -336,6 +341,9 @@ struct RendererInterface {
    * @brief Appends raw vertices and a draw call record to the frame queue.
    * @details Views that need full draw-call control can call this directly
    *   instead of going through the drawLine/drawRect/drawTexture helpers.
+   *   Consecutive calls that share both `texture` and the current scissor are merged into
+   *   one draw call. Only the immediately preceding record is considered, so draw order
+   *   matters: a quad from another texture between two same-texture quads breaks the run.
    * @param self The Renderer.
    * @param verts The vertices to append (in logical screen coordinates).
    * @param count The number of vertices.

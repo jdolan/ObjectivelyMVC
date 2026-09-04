@@ -343,7 +343,22 @@ static void drawView(Renderer *self, View *view) {
 
   const SDL_Rect clippingFrame = $(view, clippingFrame);
   if (clippingFrame.w && clippingFrame.h) {
-    $(self, setClippingFrame, &clippingFrame);
+
+    // The scissor enforces clipsSubviews, so it comes from the nearest clipping ancestor
+    // rather than from this View's own frame: siblings then share a scissor, which is one of
+    // the two conditions under which pushDrawArrays merges their draw calls.
+    const View *superview = view->superview;
+    while (superview && !superview->clipsSubviews) {
+      superview = superview->superview;
+    }
+
+    if (superview) {
+      const SDL_Rect scissor = $(superview, clippingFrame);
+      $(self, setClippingFrame, &scissor);
+    } else {
+      $(self, setClippingFrame, NULL);
+    }
+
     $(view, render, self);
   }
 }
