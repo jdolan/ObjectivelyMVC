@@ -38,6 +38,7 @@ static AtlasImage *initWithImage(AtlasImage *self, ImageAtlas *atlas, Image *ima
   self = (AtlasImage *) super(Image, self, initWithSurface, image->surface);
   if (self) {
     self->atlas = atlas;
+    self->rect = (SDL_Rect) { 0, 0, 0, 0 };
   }
 
   return self;
