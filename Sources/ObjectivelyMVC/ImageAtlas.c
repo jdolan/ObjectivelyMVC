@@ -143,9 +143,6 @@ static bool compile(ImageAtlas *self) {
 
   const size_t count = self->images->count;
   if (count == 0) {
-    release(self->image);
-    self->image = NULL;
-    self->texture = release(self->texture);
     return true;
   }
 
