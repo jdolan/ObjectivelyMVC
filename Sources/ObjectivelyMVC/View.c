@@ -1964,15 +1964,15 @@ static View *subviewWithIdentifier(const View *self, const char *identifier) {
  * @brief ViewEnumerator for updateBindings recursion.
  */
 static void updateBindings_enumerate(View *subview, ident data) {
-  $(subview, updateBindings);
+  $(subview, updateBindings, data);
 }
 
 /**
- * @fn void View::updateBindings(View *self)
+ * @fn void View::updateBindings(View *self, ident data)
  * @memberof View
  */
-static void updateBindings(View *self) {
-  $(self, enumerateSubviews, updateBindings_enumerate, NULL);
+static void updateBindings(View *self, ident data) {
+  $(self, enumerateSubviews, updateBindings_enumerate, data);
 }
 
 /**

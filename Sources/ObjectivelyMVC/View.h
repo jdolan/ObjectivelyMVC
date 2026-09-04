@@ -1221,13 +1221,22 @@ struct ViewInterface {
   View *(*subviewWithIdentifier)(const View *self, const char *identifier);
 
   /**
-   * @fn void View::updateBindings(View *self)
+   * @fn void View::updateBindings(View *self, ident data)
    * @brief Updates data bindings, prompting the appropriate layout changes.
+   * @details The default implementation recurses over this View's subviews, passing `data`
+   * through unchanged. Subclasses SHOULD override this method to refresh any data sources
+   * they rely on, and MUST call `super` to continue the recursion.
    * @param self The View.
-   * @remarks Subclasses should override this method to refresh any data sources they rely on.
+   * @param data Application-defined data, or `NULL`.
+   * @remarks The framework always passes `NULL`: on ViewController::addChildViewController
+   * and on pixel density changes, meaning "refresh from configuration." An application MAY
+   * pass its own data to hand transient state -- a simulation frame, say -- to an entire View
+   * hierarchy at once, without holding a reference to every View that consumes it. Since a
+   * non-`NULL` payload MAY arrive as often as every frame, expensive work SHOULD stay behind
+   * the `NULL` case.
    * @memberof View
    */
-  void (*updateBindings)(View *self);
+  void (*updateBindings)(View *self, ident data);
 
   /**
    * @fn SDL_Rect View::viewport(const View *self)

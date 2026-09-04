@@ -46,7 +46,7 @@ static void didSetComponent(Slider *slider, double value) {
     assert(false);
   }
 
-  $((View *) this, updateBindings);
+  $((View *) this, updateBindings, NULL);
 
   if (this->delegate.didPickColor) {
     this->delegate.didPickColor(this, this->hue, this->saturation, this->value);
@@ -112,11 +112,11 @@ static View *init(View *self) {
 }
 
 /**
- * @see View::updateBindings(View *)
+ * @see View::updateBindings(View *, ident)
  */
-static void updateBindings(View *self) {
+static void updateBindings(View *self, ident data) {
 
-  super(View, self, updateBindings);
+  super(View, self, updateBindings, data);
 
   HSVColorPicker *this = (HSVColorPicker *) self;
 
@@ -221,7 +221,7 @@ static void setColor(HSVColorPicker *self, double hue, double saturation, double
   self->saturation = saturation;
   self->value = value;
 
-  $((View *) self, updateBindings);
+  $((View *) self, updateBindings, NULL);
 }
 
 /**
@@ -232,7 +232,7 @@ static void setRGBColor(HSVColorPicker *self, const SDL_Color *color) {
 
   MVC_RGBToHSV(color, &self->hue, &self->saturation, &self->value);
 
-  $((View *) self, updateBindings);
+  $((View *) self, updateBindings, NULL);
 }
 
 #pragma mark - Class lifecycle
