@@ -29,6 +29,7 @@
     <ClInclude Include="..\Assets\resize.png.h" />
     <ClInclude Include="..\Assets\stylesheet.css.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\AtlasImage.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Box.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Button.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Checkbox.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="..\Sources\ObjectivelyMVC\HSVColorPicker.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\HueColorPicker.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Image.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\ImageAtlas.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\ImageView.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Input.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Label.h" />
@@ -86,6 +88,7 @@
     <ClInclude Include="Sources\WindowlyMVC.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Sources\ObjectivelyMVC\AtlasImage.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Button.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Checkbox.c" />
@@ -98,6 +101,7 @@
     <ClCompile Include="..\Sources\ObjectivelyMVC\HSVColorPicker.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\HueColorPicker.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Image.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\ImageAtlas.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\ImageView.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Input.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Label.c" />

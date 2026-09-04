@@ -23,6 +23,7 @@
 
 #include <assert.h>
 
+#include "ImageAtlas.h"
 #include "ImageView.h"
 
 const EnumName SDLGPUBlendFactorNames[] = MakeEnumNames(
@@ -96,15 +97,31 @@ static void render(View *self, Renderer *renderer) {
 
   ImageView *this = (ImageView *) self;
 
-  if (this->texture == NULL) {
-    if (this->image) {
-      this->texture = $(renderer->device, createTextureFromSurface,
-        this->image->surface, SDL_GPU_TEXTUREUSAGE_SAMPLER, false);
-      assert(this->texture);
+  Texture *texture = NULL;
+  SDL_Rect region, *src = NULL;
+
+  if (this->image) {
+    if ($((Object *) this->image, isKindOfClass, _AtlasImage())) {
+
+      // The atlas owns the Texture, and repacks on compile, so neither is cached here
+      AtlasImage *atlasImage = (AtlasImage *) this->image;
+      if (atlasImage->atlas) {
+        texture = $(atlasImage->atlas, texture, renderer->device);
+        region = atlasImage->rect;
+        src = &region;
+      }
+
+    } else {
+      if (this->texture == NULL) {
+        this->texture = $(renderer->device, createTextureFromSurface,
+          this->image->surface, SDL_GPU_TEXTUREUSAGE_SAMPLER, false);
+        assert(this->texture);
+      }
+      texture = this->texture;
     }
   }
 
-  if (this->texture) {
+  if (texture) {
 
     // TODO: Actually use self->blend
 
@@ -114,9 +131,9 @@ static void render(View *self, Renderer *renderer) {
     SDL_RectToFRect(&frame, &frect);
 
     if (self->borderRadius > 0) {
-      $(renderer, drawRoundedTexture, this->texture, &frect, self->borderRadius, &this->color);
+      $(renderer, drawRoundedTextureRegion, texture, src, &frect, self->borderRadius, &this->color);
     } else {
-      $(renderer, drawTexture, this->texture, &frect, &this->color);
+      $(renderer, drawTextureRegion, texture, src, &frect, &this->color);
     }
   }
 }
@@ -129,6 +146,13 @@ static void renderDeviceWillReset(View *self) {
   ImageView *this = (ImageView *) self;
 
   this->texture = release(this->texture);
+
+  if (this->image && $((Object *) this->image, isKindOfClass, _AtlasImage())) {
+    ImageAtlas *atlas = ((AtlasImage *) this->image)->atlas;
+    if (atlas) {
+      $(atlas, renderDeviceWillReset);
+    }
+  }
 
   super(View, self, renderDeviceWillReset);
 }

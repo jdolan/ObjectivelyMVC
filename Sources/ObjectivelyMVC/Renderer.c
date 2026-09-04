@@ -124,21 +124,38 @@ static void beginFrameWith(Renderer *self, CommandBuffer *commands, Framebuffer 
  * shades them as a rounded rectangle of the given radius and stroke width.
  * @details The first triangle is the half above the bottom-left to top-right diagonal.
  */
-static void roundedRectVertices(MVC_Vertex *verts, const SDL_FRect *rect, int radius, int stroke, bool textured) {
+static void roundedRectVertices(MVC_Vertex *verts, const SDL_FRect *rect, int radius, int stroke, const SDL_FRect *uv) {
 
   const float x1 = rect->x,           y1 = rect->y;
   const float x2 = rect->x + rect->w, y2 = rect->y + rect->h;
-  const float u = textured ? 1.0f : 0.0f;
+
+  const float u1 = uv ? uv->x : 0.0f,         v1 = uv ? uv->y : 0.0f;
+  const float u2 = uv ? uv->x + uv->w : 0.0f, v2 = uv ? uv->y + uv->h : 0.0f;
 
   const vec4 shapeRect = { { (x1 + x2) * 0.5f, (y1 + y2) * 0.5f, rect->w * 0.5f, rect->h * 0.5f } };
   const vec2 shape = { { (float) radius, (float) stroke } };
 
-  verts[0] = (MVC_Vertex) { { { x1, y1 } }, { { 0.0f, 0.0f } }, { 0 }, shapeRect, shape };
-  verts[1] = (MVC_Vertex) { { { x2, y1 } }, { { u,    0.0f } }, { 0 }, shapeRect, shape };
-  verts[2] = (MVC_Vertex) { { { x1, y2 } }, { { 0.0f, u    } }, { 0 }, shapeRect, shape };
-  verts[3] = (MVC_Vertex) { { { x2, y1 } }, { { u,    0.0f } }, { 0 }, shapeRect, shape };
-  verts[4] = (MVC_Vertex) { { { x2, y2 } }, { { u,    u    } }, { 0 }, shapeRect, shape };
-  verts[5] = (MVC_Vertex) { { { x1, y2 } }, { { 0.0f, u    } }, { 0 }, shapeRect, shape };
+  verts[0] = (MVC_Vertex) { { { x1, y1 } }, { { u1, v1 } }, { 0 }, shapeRect, shape };
+  verts[1] = (MVC_Vertex) { { { x2, y1 } }, { { u2, v1 } }, { 0 }, shapeRect, shape };
+  verts[2] = (MVC_Vertex) { { { x1, y2 } }, { { u1, v2 } }, { 0 }, shapeRect, shape };
+  verts[3] = (MVC_Vertex) { { { x2, y1 } }, { { u2, v1 } }, { 0 }, shapeRect, shape };
+  verts[4] = (MVC_Vertex) { { { x2, y2 } }, { { u2, v2 } }, { 0 }, shapeRect, shape };
+  verts[5] = (MVC_Vertex) { { { x1, y2 } }, { { u1, v2 } }, { 0 }, shapeRect, shape };
+}
+
+/**
+ * @brief Resolves the normalized texture coordinates of `src` within `texture`, or of the
+ * whole texture when `src` is `NULL`.
+ */
+static SDL_FRect textureRegion(const Texture *texture, const SDL_Rect *src) {
+
+  if (src == NULL || texture == NULL) {
+    return (SDL_FRect) { 0.0f, 0.0f, 1.0f, 1.0f };
+  }
+
+  const float w = (float) texture->size.w, h = (float) texture->size.h;
+
+  return (SDL_FRect) { src->x / w, src->y / h, src->w / w, src->h / h };
 }
 
 /**
@@ -154,7 +171,7 @@ static void drawBevel(const Renderer *self, const SDL_Rect *rect, int radius, in
   SDL_RectToFRect(rect, &frect);
 
   MVC_Vertex verts[6];
-  roundedRectVertices(verts, &frect, radius, width, false);
+  roundedRectVertices(verts, &frect, radius, width, NULL);
 
   $(self, pushDrawArrays, verts, 3, NULL, topLeft);
   $(self, pushDrawArrays, verts + 3, 3, NULL, bottomRight);
@@ -274,7 +291,7 @@ static void drawRoundedRect(const Renderer *self, const SDL_Rect *rect, int radi
   SDL_RectToFRect(rect, &frect);
 
   MVC_Vertex verts[6];
-  roundedRectVertices(verts, &frect, radius, width, false);
+  roundedRectVertices(verts, &frect, radius, width, NULL);
 
   $(self, pushDrawArrays, verts, 6, NULL, color);
 }
@@ -291,7 +308,7 @@ static void drawRoundedRectFilled(const Renderer *self, const SDL_Rect *rect, in
   SDL_RectToFRect(rect, &frect);
 
   MVC_Vertex verts[6];
-  roundedRectVertices(verts, &frect, radius, 0, false);
+  roundedRectVertices(verts, &frect, radius, 0, NULL);
 
   $(self, pushDrawArrays, verts, 6, NULL, color);
 }
@@ -301,11 +318,21 @@ static void drawRoundedRectFilled(const Renderer *self, const SDL_Rect *rect, in
  * @memberof Renderer
  */
 static void drawRoundedTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, int radius, const SDL_Color *color) {
+  $(self, drawRoundedTextureRegion, texture, NULL, dest, radius, color);
+}
+
+/**
+ * @fn void Renderer::drawRoundedTextureRegion(const Renderer *self, Texture *texture, const SDL_Rect *src, const SDL_FRect *dest, int radius, const SDL_Color *color)
+ * @memberof Renderer
+ */
+static void drawRoundedTextureRegion(const Renderer *self, Texture *texture, const SDL_Rect *src, const SDL_FRect *dest, int radius, const SDL_Color *color) {
 
   assert(dest);
 
+  const SDL_FRect uv = textureRegion(texture, src);
+
   MVC_Vertex verts[6];
-  roundedRectVertices(verts, dest, radius, 0, true);
+  roundedRectVertices(verts, dest, radius, 0, &uv);
 
   $(self, pushDrawArrays, verts, 6, texture, color);
 }
@@ -314,20 +341,33 @@ static void drawRoundedTexture(const Renderer *self, Texture *texture, const SDL
  * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, const SDL_Color *color)
  * @memberof Renderer
  */
-static void drawTexture(const Renderer *self, Texture *texture, const SDL_FRect *rect, const SDL_Color *color) {
+static void drawTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, const SDL_Color *color) {
+  $(self, drawTextureRegion, texture, NULL, dest, color);
+}
 
-  assert(rect);
+/**
+ * @fn void Renderer::drawTextureRegion(const Renderer *self, Texture *texture, const SDL_Rect *src, const SDL_FRect *dest, const SDL_Color *color)
+ * @memberof Renderer
+ */
+static void drawTextureRegion(const Renderer *self, Texture *texture, const SDL_Rect *src, const SDL_FRect *dest, const SDL_Color *color) {
 
-  const float x1 = rect->x,           y1 = rect->y;
-  const float x2 = rect->x + rect->w, y2 = rect->y + rect->h;
+  assert(dest);
+
+  const float x1 = dest->x,            y1 = dest->y;
+  const float x2 = dest->x + dest->w,  y2 = dest->y + dest->h;
+
+  const SDL_FRect uv = textureRegion(texture, src);
+
+  const float u1 = uv.x,         v1 = uv.y;
+  const float u2 = uv.x + uv.w,  v2 = uv.y + uv.h;
 
   const MVC_Vertex verts[6] = {
-    { { { x1, y1 } }, { { 0.0f, 0.0f } }, { 0 } },
-    { { { x2, y1 } }, { { 1.0f, 0.0f } }, { 0 } },
-    { { { x1, y2 } }, { { 0.0f, 1.0f } }, { 0 } },
-    { { { x2, y1 } }, { { 1.0f, 0.0f } }, { 0 } },
-    { { { x2, y2 } }, { { 1.0f, 1.0f } }, { 0 } },
-    { { { x1, y2 } }, { { 0.0f, 1.0f } }, { 0 } },
+    { { { x1, y1 } }, { { u1, v1 } }, { 0 } },
+    { { { x2, y1 } }, { { u2, v1 } }, { 0 } },
+    { { { x1, y2 } }, { { u1, v2 } }, { 0 } },
+    { { { x2, y1 } }, { { u2, v1 } }, { 0 } },
+    { { { x2, y2 } }, { { u2, v2 } }, { 0 } },
+    { { { x1, y2 } }, { { u1, v2 } }, { 0 } },
   };
 
   $(self, pushDrawArrays, verts, 6, texture, color);
@@ -674,7 +714,9 @@ static void initialize(Class *clazz) {
   ((RendererInterface *) clazz->interface)->drawRoundedRect = drawRoundedRect;
   ((RendererInterface *) clazz->interface)->drawRoundedRectFilled = drawRoundedRectFilled;
   ((RendererInterface *) clazz->interface)->drawRoundedTexture = drawRoundedTexture;
+  ((RendererInterface *) clazz->interface)->drawRoundedTextureRegion = drawRoundedTextureRegion;
   ((RendererInterface *) clazz->interface)->drawTexture = drawTexture;
+  ((RendererInterface *) clazz->interface)->drawTextureRegion = drawTextureRegion;
   ((RendererInterface *) clazz->interface)->drawView = drawView;
   ((RendererInterface *) clazz->interface)->endFrame = endFrame;
   ((RendererInterface *) clazz->interface)->initWithDevice = initWithDevice;

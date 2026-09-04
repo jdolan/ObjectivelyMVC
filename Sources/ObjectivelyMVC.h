@@ -28,6 +28,7 @@
  * @brief ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
  */
 
+#include <ObjectivelyMVC/AtlasImage.h>
 #include <ObjectivelyMVC/Box.h>
 #include <ObjectivelyMVC/Button.h>
 #include <ObjectivelyMVC/Checkbox.h>
@@ -40,6 +41,7 @@
 #include <ObjectivelyMVC/HSVColorPicker.h>
 #include <ObjectivelyMVC/HueColorPicker.h>
 #include <ObjectivelyMVC/Image.h>
+#include <ObjectivelyMVC/ImageAtlas.h>
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/Input.h>
 #include <ObjectivelyMVC/Label.h>
