@@ -263,6 +263,7 @@ static void dealloc(Object *self) {
 
   Text *this = (Text *) self;
 
+  release(this->bitmapFont);
   release(this->font);
 
   free(this->text);
@@ -398,6 +399,12 @@ static void render(View *self, Renderer *renderer) {
 
     const SDL_Rect frame = $(self, renderFrame);
 
+    if (this->bitmapFont) {
+      $(this->bitmapFont, renderCharacters, renderer, this->text, this->color, this->colorEscapes,
+        this->lineWrap ? frame.w : 0, &(const SDL_Point) { frame.x, frame.y });
+      return;
+    }
+
     if (this->texture == NULL) {
       SDL_Surface *surface;
 
@@ -480,6 +487,10 @@ static void renderDeviceWillReset(View *self) {
   this->textureSize = MakeSize(0, 0);
   this->naturalSizeCache.isValid = false;
 
+  if (this->bitmapFont) {
+    $(this->bitmapFont->atlas, renderDeviceWillReset);
+  }
+
   super(View, self, renderDeviceWillReset);
 }
 
@@ -520,7 +531,9 @@ static SDL_Size naturalSize(const Text *self) {
 
   SDL_Size size = MakeSize(0, 0);
 
-  if (self->font) {
+  if (self->bitmapFont) {
+    $(self->bitmapFont, sizeCharacters, self->text, self->colorEscapes, 0, &size.w, &size.h);
+  } else if (self->font) {
     const char *text = self->text ?: "";
 
     if (self->colorEscapes) {
@@ -528,7 +541,9 @@ static SDL_Size naturalSize(const Text *self) {
     } else {
       $(self->font, sizeCharacters, text, &size.w, &size.h);
     }
+  }
 
+  if (self->font) {
     Text *this = (Text *) self;
 
     this->naturalSizeCache.size = size;
@@ -538,6 +553,25 @@ static SDL_Size naturalSize(const Text *self) {
   }
 
   return size;
+}
+
+/**
+ * @fn void Text::setBitmapFont(Text *self, BitmapFont *bitmapFont)
+ * @memberof Text
+ */
+static void setBitmapFont(Text *self, BitmapFont *bitmapFont) {
+
+  if (bitmapFont != self->bitmapFont) {
+
+    release(self->bitmapFont);
+    self->bitmapFont = retain(bitmapFont);
+
+    self->texture = release(self->texture);
+    self->textureSize = MakeSize(0, 0);
+    self->naturalSizeCache.isValid = false;
+
+    $((View *) self, sizeToFit);
+  }
 }
 
 /**
@@ -628,6 +662,7 @@ static void initialize(Class *clazz) {
 
   ((TextInterface *) clazz->interface)->initWithText = initWithText;
   ((TextInterface *) clazz->interface)->naturalSize = naturalSize;
+  ((TextInterface *) clazz->interface)->setBitmapFont = setBitmapFont;
   ((TextInterface *) clazz->interface)->setFont = setFont;
   ((TextInterface *) clazz->interface)->setText = setText;
   ((TextInterface *) clazz->interface)->setTextWithFormat = setTextWithFormat;

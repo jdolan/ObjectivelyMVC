@@ -33,6 +33,10 @@
  *  - `MVC_HUD_FRAMES=N` exits successfully after N frames (for benchmarking).
  *  - `MVC_HUD_HIDDEN=1` creates the window hidden (best effort headless).
  *  - `MVC_HUD_SCALE=N` multiplies the scoreboard row count (default 1),
+ *  - `MVC_HUD_FONT=path` names a fixed-width face to bake the readouts' BitmapFont from,
+ *    ahead of the system faces tried by default.
+ *  - `MVC_HUD_BITMAP_FONT=0` leaves the readouts on Font, for comparison.
+ *  - `MVC_HUD_DEBUG=1` prints the draw call list once, on the tenth frame.
  *    scaling the View tree to gauge how frame cost grows with UI complexity.
  */
 
@@ -75,9 +79,15 @@ typedef struct {
   Panel *scoreboard;
 
   /**
-   * @brief The atlas behind the icon row.
+   * @brief The atlas behind the icon row and the readouts' BitmapFont.
    */
   ImageAtlas *atlas;
+
+  /**
+   * @brief The fixed-width BitmapFont behind the readouts, or `NULL` if no fixed-width face
+   * was found on this system.
+   */
+  BitmapFont *bitmapFont;
 
   /**
    * @brief Next update deadline per widget, in SDL ticks.
@@ -144,6 +154,48 @@ static Image *icon(int size, Uint32 left, Uint32 right) {
 }
 
 /**
+ * @brief Bakes a BitmapFont from the first fixed-width face found on this system, so that the
+ * readouts share the icon atlas and cost nothing to change. MVC_HUD_FONT names a face to try
+ * first; MVC_HUD_BITMAP_FONT=0 disables the BitmapFont, leaving the readouts on Font, for
+ * comparison.
+ */
+static BitmapFont *bakeBitmapFont(ImageAtlas *atlas, WindowController *windowController) {
+
+  const char *enabled = SDL_getenv("MVC_HUD_BITMAP_FONT");
+  if (enabled && *enabled == '0') {
+    return NULL;
+  }
+
+  const char *paths[] = {
+    SDL_getenv("MVC_HUD_FONT"),
+    "/System/Library/Fonts/Menlo.ttc",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+    "C:\\Windows\\Fonts\\consola.ttf",
+  };
+
+  for (size_t i = 0; i < SDL_arraysize(paths); i++) {
+    Data *data = paths[i] ? $$(Data, dataWithContentsOfFile, paths[i]) : NULL;
+    if (data) {
+      $$(Font, cacheFont, data, "Mono");
+      release(data);
+      break;
+    }
+  }
+
+  Font *font = $(windowController, cachedFont, "Mono", 18, FontStyleRegular);
+
+  Image *heart = icon(32, 0xff0000ff, 0xff0000ff);
+  Dictionary *named = $$(Dictionary, dictionaryWithObjectsAndKeys, heart, str("heart"), NULL);
+
+  BitmapFont *bitmapFont = $(alloc(BitmapFont), initWithFont, font, ' ', 95, named, atlas);
+
+  release(named);
+  release(heart);
+
+  return bitmapFont;
+}
+
+/**
  * @brief Builds the HUD View hierarchy on the given root View.
  */
 static void buildHUD(AppState *app, View *root) {
@@ -154,6 +206,16 @@ static void buildHUD(AppState *app, View *root) {
 
   app->ammo = label(root, "Ammo 50", ViewAlignmentBottomRight);
   app->timer = label(root, "10:00", ViewAlignmentTopCenter);
+
+  // The readouts change every second or faster: on the BitmapFont, a change costs nothing,
+  // and they draw in the same call as the icons that share the atlas
+  if (app->bitmapFont) {
+    Label *readouts[] = { app->health, app->armor, app->ammo, app->timer };
+    for (size_t i = 0; i < SDL_arraysize(readouts); i++) {
+      readouts[i]->text->colorEscapes = true;
+      $(readouts[i]->text, setBitmapFont, app->bitmapFont);
+    }
+  }
 
   // Ten solid segments sharing the Renderer's white texture: with a shared scissor these
   // collapse into one draw call, so their count is the direct check that merging works.
@@ -168,8 +230,6 @@ static void buildHUD(AppState *app, View *root) {
   }
 
   // Eight icons of varied sizes packed into one atlas: one draw call for the whole row
-  app->atlas = $(alloc(ImageAtlas), init);
-
   StackView *icons = stackView(root, ViewAlignmentTopRight);
   icons->axis = StackViewAxisHorizontal;
 
@@ -240,7 +300,11 @@ static void updateHUD(AppState *app, Uint64 ticks) {
 
   if (ticks >= app->healthDue) {
     app->healthDue = ticks + 2000;
-    $(app->health->text, setTextWithFormat, "Health %d", (int) (25 + ticks / 100 % 75));
+    if (app->bitmapFont) {
+      $(app->health->text, setTextWithFormat, ":heart: ^%d%d", (int) (ticks / 2000 % 10), (int) (25 + ticks / 100 % 75));
+    } else {
+      $(app->health->text, setTextWithFormat, "Health %d", (int) (25 + ticks / 100 % 75));
+    }
   }
 
   if (ticks >= app->armorDue) {
@@ -377,6 +441,9 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
   $(app->windowController->theme, addStylesheet, stylesheet);
   release(stylesheet);
 
+  app->atlas = $(alloc(ImageAtlas), init);
+  app->bitmapFont = bakeBitmapFont(app->atlas, app->windowController);
+
   buildHUD(app, viewController->view);
 
   app->scoreboardDue = SDL_GetTicks() + 5000;
@@ -425,6 +492,12 @@ SDL_AppResult SDL_AppIterate(void *appState) {
 
     const Uint64 t3 = SDL_GetPerformanceCounter();
     app->draws = renderer->drawArrays->count;
+    if (app->frames == 10 && SDL_getenv("MVC_HUD_DEBUG")) {
+      for (size_t i = 0; i < renderer->drawArrays->count; i++) {
+        const MVC_DrawArrays *d = VectorElement(renderer->drawArrays, MVC_DrawArrays, i);
+        printf("draw %zu: texture %p verts %u scissor %d,%d %dx%d\n", i, (void *) d->texture, d->vertexCount, d->scissor.x, d->scissor.y, d->scissor.w, d->scissor.h);
+      }
+    }
     app->vertices = renderer->vertices->count;
     $(renderer, endFrame);
 
@@ -485,6 +558,7 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
   $(app->renderDevice, waitForIdle);
 
   release(app->windowController);
+  release(app->bitmapFont);
   release(app->atlas);
   release(app->framebuffer);
   release(app->renderDevice);

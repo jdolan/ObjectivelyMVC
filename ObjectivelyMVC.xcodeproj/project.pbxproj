@@ -199,6 +199,8 @@
 		CEEAAFFF2FEDC19C00FFEBE6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		CEF1D88E1D4265A70099A857 /* Panel.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D88C1D4265A70099A857 /* Panel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D88F1D426F8C0099A857 /* Panel.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D88B1D4265A70099A857 /* Panel.c */; };
+		DBEA47CCF3A75FEE94BF5BFC /* BitmapFont.c in Sources */ = {isa = PBXBuildFile; fileRef = FC3629014758C73744C5F31C /* BitmapFont.c */; };
+		7CB0D028CC977D464300C457 /* BitmapFont.h in Headers */ = {isa = PBXBuildFile; fileRef = BE98A75607A7BD7B32CF62A3 /* BitmapFont.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8A01D440C7B0099A857 /* Box.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D89E1D440C7B0099A857 /* Box.c */; };
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
@@ -563,6 +565,8 @@
 		CEF1D88C1D4265A70099A857 /* Panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Panel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CEF1D8921D429F7A0099A857 /* resize.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = resize.png; sourceTree = "<group>"; };
 		CEF1D8941D42ABCA0099A857 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		FC3629014758C73744C5F31C /* BitmapFont.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BitmapFont.c; sourceTree = "<group>"; };
+		BE98A75607A7BD7B32CF62A3 /* BitmapFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BitmapFont.h; sourceTree = "<group>"; };
 		CEF1D89E1D440C7B0099A857 /* Box.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Box.c; sourceTree = "<group>"; };
 		CEF1D89F1D440C7B0099A857 /* Box.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Box.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CEF1D8AA1D4630D20099A857 /* WindowController.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = WindowController.c; sourceTree = "<group>"; };
@@ -695,6 +699,8 @@
 			children = (
 				B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */,
 				F3D9A6818BCE4C501D81FAC9 /* AtlasImage.h */,
+				FC3629014758C73744C5F31C /* BitmapFont.c */,
+				BE98A75607A7BD7B32CF62A3 /* BitmapFont.h */,
 				CEF1D89E1D440C7B0099A857 /* Box.c */,
 				CEF1D89F1D440C7B0099A857 /* Box.h */,
 				CE12D4691C4D810F00CD0B13 /* Button.c */,
@@ -984,6 +990,7 @@
 			files = (
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
 				FFF84DB6E613717C07130E4C /* AtlasImage.h in Headers */,
+				7CB0D028CC977D464300C457 /* BitmapFont.h in Headers */,
 				CEF1D8A11D440C7B0099A857 /* Box.h in Headers */,
 				CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */,
 				CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */,
@@ -1435,6 +1442,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F60E97377EEEEE3B3983F2D /* AtlasImage.c in Sources */,
+				DBEA47CCF3A75FEE94BF5BFC /* BitmapFont.c in Sources */,
 				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,

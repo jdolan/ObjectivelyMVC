@@ -8,6 +8,7 @@ pkgincludedir = $(includedir)/$(PACKAGE_NAME)
 
 pkginclude_HEADERS = \
 	AtlasImage.h \
+	BitmapFont.h \
 	Box.h \
 	Button.h \
 	Checkbox.h \
@@ -69,6 +70,7 @@ lib_LTLIBRARIES = \
 
 libObjectivelyMVC_la_SOURCES = \
 	AtlasImage.c \
+	BitmapFont.c \
 	Box.c \
 	Button.c \
 	Checkbox.c \

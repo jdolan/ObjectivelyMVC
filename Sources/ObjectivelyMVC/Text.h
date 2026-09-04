@@ -25,6 +25,7 @@
 
 #include <SDL3/SDL_gpu.h>
 
+#include <ObjectivelyMVC/BitmapFont.h>
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/View.h>
 
@@ -85,6 +86,15 @@ struct Text {
    * @protected
    */
   TextInterface *interface[0];
+
+  /**
+   * @brief The BitmapFont, or `NULL` to render with `font`.
+   * @details When set, text is drawn as one quad per glyph from the BitmapFont's atlas, and
+   * `font` is not consulted; `color` and color escapes apply per vertex, for free.
+   * @remarks Do not set this property directly.
+   * @see Text::setBitmapFont(Text *, BitmapFont *)
+   */
+  BitmapFont *bitmapFont;
 
   /**
    * @brief The text color.
@@ -174,6 +184,18 @@ struct TextInterface {
    * @memberof Text
    */
   SDL_Size (*naturalSize)(const Text *self);
+
+  /**
+   * @fn void Text::setBitmapFont(Text *self, BitmapFont *bitmapFont)
+   * @brief Sets this Text's BitmapFont.
+   * @details A BitmapFont is bound to the pixel density of the Font it was baked from. On a
+   * density change the owner MUST set a new one, since Text cannot re-bake it the way it
+   * re-resolves a Font.
+   * @param self The Text.
+   * @param bitmapFont The BitmapFont, or `NULL` to render with `font`.
+   * @memberof Text
+   */
+  void (*setBitmapFont)(Text *self, BitmapFont *bitmapFont);
 
   /**
    * @fn void Text::setFont(Text *self, Font *font)
