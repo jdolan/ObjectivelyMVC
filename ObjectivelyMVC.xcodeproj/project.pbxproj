@@ -26,6 +26,7 @@
 				CE423A4D1F5346A7002767E7 /* ShellScript */,
 			);
 			dependencies = (
+				CED40A98304B2DFA0090C57A /* PBXTargetDependency */,
 				CED40A633046145B0090C57A /* PBXTargetDependency */,
 				CE34C8A51FB2A0210025F231 /* PBXTargetDependency */,
 				CE88199A1F91B0DA000D5AB7 /* PBXTargetDependency */,
@@ -43,8 +44,10 @@
 		22FD8C57C4593EFD73A0BA80 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		3081E9324C929F44F2424D7C /* ScrollHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F25B4D3F9924D41ADDBF368 /* ScrollHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		373CCC1EDB79A83F1F913610 /* ScrollHandle.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */; };
+		3F60E97377EEEEE3B3983F2D /* AtlasImage.c in Sources */ = {isa = PBXBuildFile; fileRef = B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */; };
 		4FC583A880396777FF1EF843 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
 		872D178C50AF548C35D14652 /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = 58441034DC162E9BE53173F4 /* View.c */; };
+		8A30F602D72CFEF66B648507 /* ImageAtlas.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */; };
 		B1BB0001000000000000000A /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		B1BB000100000000000000A0 /* SDL3.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B1BB000100000000000000AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AB /* Foundation.framework */; };
@@ -99,10 +102,6 @@
 		CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4801C4F3A1600CD0B13 /* Image.c */; };
 		CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4811C4F3A1600CD0B13 /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8A30F602D72CFEF66B648507 /* ImageAtlas.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */; };
-		D0C3FCBBE9C725A32D06B468 /* ImageAtlas.h in Headers */ = {isa = PBXBuildFile; fileRef = AF4C7C1CF7FAEAD6053D340D /* ImageAtlas.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3F60E97377EEEEE3B3983F2D /* AtlasImage.c in Sources */ = {isa = PBXBuildFile; fileRef = B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */; };
-		FFF84DB6E613717C07130E4C /* AtlasImage.h in Headers */ = {isa = PBXBuildFile; fileRef = F3D9A6818BCE4C501D81FAC9 /* AtlasImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4931C547BDD00CD0B13 /* StackView.c */; };
 		CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4941C547BDD00CD0B13 /* StackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D49C1C568A7600CD0B13 /* TextView.c */; };
@@ -193,6 +192,11 @@
 		CEBA3F892FF3F25E00758CA6 /* Hello.frag.metal in CopyFiles */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A5 /* Hello.frag.metal */; };
 		CEBA3F8C2FF3F25E00758CA6 /* Hello.vert.metal in CopyFiles */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello.vert.metal */; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		CED40A8D304B2D700090C57A /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		CED40A8E304B2D700090C57A /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		CED40A8F304B2D700090C57A /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		CED40A90304B2D700090C57A /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
+		CED40A96304B2D7F0090C57A /* ImageAtlas.c in Sources */ = {isa = PBXBuildFile; fileRef = CED40A86304B2D550090C57A /* ImageAtlas.c */; };
 		CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
@@ -203,6 +207,7 @@
 		CEF1D8A11D440C7B0099A857 /* Box.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D89F1D440C7B0099A857 /* Box.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CEF1D8AC1D4630D20099A857 /* WindowController.c in Sources */ = {isa = PBXBuildFile; fileRef = CEF1D8AA1D4630D20099A857 /* WindowController.c */; };
 		CEF1D8AD1D4630D20099A857 /* WindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8AB1D4630D20099A857 /* WindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D0C3FCBBE9C725A32D06B468 /* ImageAtlas.h in Headers */ = {isa = PBXBuildFile; fileRef = AF4C7C1CF7FAEAD6053D340D /* ImageAtlas.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D52A3AB45A575A7A6D498A19 /* ScrollBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 64D1E41ED038FCC725227A5B /* ScrollBar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -211,6 +216,7 @@
 		EF00060000000000000000A6 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		EF00080000000000000000A8 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00090000000000000000A9 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		FFF84DB6E613717C07130E4C /* AtlasImage.h in Headers */ = {isa = PBXBuildFile; fileRef = F3D9A6818BCE4C501D81FAC9 /* AtlasImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		HS00000000000000000000B0 /* Hello.vert.metal in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello.vert.metal */; };
 		HS00000000000000000000B1 /* Hello.frag.metal in Resources */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A5 /* Hello.frag.metal */; };
 		HUDA00000000000000000003 /* HUD.c in Sources */ = {isa = PBXBuildFile; fileRef = HUDA00000000000000000001 /* HUD.c */; };
@@ -298,6 +304,20 @@
 			remoteGlobalIDString = HUDA00000000000000000015;
 			remoteInfo = "ObjectivelyMVC-HUD";
 		};
+		CED40A89304B2D700090C57A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = ObjectivelyMVC;
+		};
+		CED40A97304B2DFA0090C57A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED40A87304B2D700090C57A;
+			remoteInfo = "ObjectivelyMVC-ImageAtlas";
+		};
 		HUDA00000000000000000010 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
@@ -369,11 +389,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CED40A91304B2D700090C57A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.glsl; sourceTree = "<group>"; };
 		58441034DC162E9BE53173F4 /* View.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; path = View.c; sourceTree = "<group>"; };
+		5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageAtlas.c; sourceTree = "<group>"; };
 		64D1E41ED038FCC725227A5B /* ScrollBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollBar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollHandle.c; sourceTree = "<group>"; };
 		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
@@ -383,6 +413,7 @@
 		8D42EC0E254AF0B8789148FA /* Renderer.frag.metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.metal.h; sourceTree = "<group>"; };
 		8F25B4D3F9924D41ADDBF368 /* ScrollHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollHandle.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		965273D7A59E496B86FE11EF /* SlideShowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = SlideShowView.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		AF4C7C1CF7FAEAD6053D340D /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
 		B1AA0001000000000000000A /* SDL3.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = SDL3.xcframework; path = ../ObjectivelyGPU/Frameworks/SDL3.xcframework; sourceTree = "<group>"; };
 		B1AA000100000000000000AB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B1AA000100000000000000AD /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
@@ -403,6 +434,7 @@
 		B1AA000100000000000000EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AA000100000000000000EC /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ObjectivelyMVC-Hello-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AtlasImage.c; sourceTree = "<group>"; };
 		CE0943A61D60F1A300C11408 /* TableColumn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableColumn.c; sourceTree = "<group>"; };
 		CE0943A81D60F23100C11408 /* TableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableColumn.h; sourceTree = "<group>"; };
 		CE0943AA1D60FFEC00C11408 /* TableRowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableRowView.c; sourceTree = "<group>"; };
@@ -439,10 +471,6 @@
 		CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Checkbox.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE12D4801C4F3A1600CD0B13 /* Image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Image.c; sourceTree = "<group>"; };
 		CE12D4811C4F3A1600CD0B13 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Image.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageAtlas.c; sourceTree = "<group>"; };
-		AF4C7C1CF7FAEAD6053D340D /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
-		B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AtlasImage.c; sourceTree = "<group>"; };
-		F3D9A6818BCE4C501D81FAC9 /* AtlasImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasImage.h; sourceTree = "<group>"; };
 		CE12D4851C4F3C5900CD0B13 /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
 		CE12D48F1C505FB400CD0B13 /* index.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = index.md; sourceTree = "<group>"; };
 		CE12D4901C505FB400CD0B13 /* layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = layout.xml; sourceTree = "<group>"; };
@@ -558,6 +586,8 @@
 		CED1579F1C4BF32A00FBA2DE /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		CED157B51C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectivelyMVC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CED40A86304B2D550090C57A /* ImageAtlas.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ImageAtlas.c; sourceTree = "<group>"; };
+		CED40A95304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-ImageAtlas"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectivelyGPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF1D88B1D4265A70099A857 /* Panel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Panel.c; sourceTree = "<group>"; };
 		CEF1D88C1D4265A70099A857 /* Panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Panel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -569,6 +599,7 @@
 		CEF1D8AB1D4630D20099A857 /* WindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowController.h; sourceTree = "<group>"; };
 		CEF1D8BB1D4704950099A857 /* Types.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
 		D31E7AC34C7DE77F2EF97426 /* Renderer.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.vert.glsl; sourceTree = "<group>"; };
+		F3D9A6818BCE4C501D81FAC9 /* AtlasImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasImage.h; sourceTree = "<group>"; };
 		HS00000000000000000000A0 /* Hello.vert.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Hello.vert.glsl; sourceTree = "<group>"; };
 		HS00000000000000000000A1 /* Hello.vert.spv */ = {isa = PBXFileReference; lastKnownFileType = file; path = Hello.vert.spv; sourceTree = "<group>"; };
 		HS00000000000000000000A2 /* Hello.vert.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Hello.vert.metal; sourceTree = "<group>"; };
@@ -673,6 +704,17 @@
 				CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */,
 				CE73E9FE2FEEB28C0048BC24 /* Objectively.framework in Frameworks */,
 				CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CED40A8C304B2D700090C57A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED40A8D304B2D700090C57A /* SDL3.xcframework in Frameworks */,
+				CED40A8E304B2D700090C57A /* Objectively.framework in Frameworks */,
+				CED40A8F304B2D700090C57A /* ObjectivelyGPU.framework in Frameworks */,
+				CED40A90304B2D700090C57A /* ObjectivelyMVC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -822,11 +864,12 @@
 		CE12D4291C4C377B00CD0B13 /* ObjectivelyMVC */ = {
 			isa = PBXGroup;
 			children = (
+				CED40A86304B2D550090C57A /* ImageAtlas.c */,
 				CE55C1BB1F944C1B00D5A326 /* Selector.c */,
 				CE8819891F91B094000D5AB7 /* Style.c */,
 				CE34C8941FB29F3A0025F231 /* Stylesheet.c */,
-				CE423A2C1F534127002767E7 /* Makefile.am */,
 				58441034DC162E9BE53173F4 /* View.c */,
+				CE423A2C1F534127002767E7 /* Makefile.am */,
 			);
 			path = ObjectivelyMVC;
 			sourceTree = "<group>";
@@ -971,6 +1014,7 @@
 				CE34C8A21FB29F700025F231 /* ObjectivelyMVC-Stylesheet */,
 				B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */,
 				84BBDF9467CD6F80ACF8AADF /* ObjectivelyMVC-View */,
+				CED40A95304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1175,6 +1219,24 @@
 			productReference = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		CED40A87304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CED40A92304B2D700090C57A /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-ImageAtlas" */;
+			buildPhases = (
+				CED40A8A304B2D700090C57A /* Sources */,
+				CED40A8C304B2D700090C57A /* Frameworks */,
+				CED40A91304B2D700090C57A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CED40A88304B2D700090C57A /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-ImageAtlas";
+			productName = "ObjectivelyMVC-View";
+			productReference = CED40A95304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */;
+			productType = "com.apple.product-type.tool";
+		};
 		HUDA00000000000000000015 /* ObjectivelyMVC-HUD */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = HUDA00000000000000000014 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-HUD" */;
@@ -1232,6 +1294,7 @@
 			projectRoot = "";
 			targets = (
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
+				CED40A87304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */,
 				CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
 				CE34C8951FB29F700025F231 /* ObjectivelyMVC-Stylesheet */,
@@ -1491,6 +1554,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CED40A8A304B2D700090C57A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CED40A96304B2D7F0090C57A /* ImageAtlas.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		HUDA00000000000000000008 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1558,6 +1629,17 @@
 			target = HUDA00000000000000000015 /* ObjectivelyMVC-HUD */;
 			targetProxy = CED40A7A3049CE140090C57A /* PBXContainerItemProxy */;
 		};
+		CED40A88304B2D700090C57A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjectivelyMVC;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = CED40A89304B2D700090C57A /* PBXContainerItemProxy */;
+		};
+		CED40A98304B2DFA0090C57A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CED40A87304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */;
+			targetProxy = CED40A97304B2DFA0090C57A /* PBXContainerItemProxy */;
+		};
 		HUDA00000000000000000011 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
@@ -1569,10 +1651,6 @@
 		7A49C7A9A3020379E61EC10B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(HOMEBREW_PREFIX)/lib",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lcheck",
@@ -1670,10 +1748,6 @@
 		B74C1EEAAC88021A8E16E1BA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(HOMEBREW_PREFIX)/lib",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lcheck",
@@ -1709,10 +1783,6 @@
 		CE34C8A01FB29F700025F231 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(HOMEBREW_PREFIX)/lib",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lcheck",
@@ -1724,10 +1794,6 @@
 		CE34C8A11FB29F700025F231 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(HOMEBREW_PREFIX)/lib",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lcheck",
@@ -1767,10 +1833,6 @@
 		CE55C1C71F944C6D00D5A326 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(HOMEBREW_PREFIX)/lib",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lcheck",
@@ -1782,10 +1844,6 @@
 		CE55C1C81F944C6D00D5A326 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(HOMEBREW_PREFIX)/lib",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lcheck",
@@ -1797,10 +1855,6 @@
 		CE8819951F91B0BE000D5AB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(HOMEBREW_PREFIX)/lib",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lcheck",
@@ -1812,10 +1866,6 @@
 		CE8819961F91B0BE000D5AB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(HOMEBREW_PREFIX)/lib",
-				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-lcheck",
@@ -1852,6 +1902,7 @@
 					"$(HOMEBREW_PREFIX)/include",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
@@ -1885,6 +1936,7 @@
 					"$(HOMEBREW_PREFIX)/include",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
+				LIBRARY_SEARCH_PATHS = "$(HOMEBREW_PREFIX)/lib";
 				ONLY_ACTIVE_ARCH = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				USE_HEADERMAP = NO;
@@ -1928,6 +1980,28 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		CED40A93304B2D700090C57A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		CED40A94304B2D700090C57A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -2057,6 +2131,15 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
+		};
+		CED40A92304B2D700090C57A /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-ImageAtlas" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CED40A93304B2D700090C57A /* Debug */,
+				CED40A94304B2D700090C57A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		HUDA00000000000000000014 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-HUD" */ = {
 			isa = XCConfigurationList;
