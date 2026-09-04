@@ -155,19 +155,20 @@ static bool compile(ImageAtlas *self) {
   SDL_Rect *rects = calloc(count, sizeof(SDL_Rect));
   assert(rects);
 
-  int area = 0, size = 1;
+  size_t area = 0;
+  int size = 1;
 
   for (size_t i = 0; i < count; i++) {
     images[i] = $(self->images, objectAtIndex, i);
 
     const SDL_Surface *surface = images[i]->image.surface;
-    area += surface->w * surface->h;
+    area += (size_t) surface->w * (size_t) surface->h;
     size = max(size, max(surface->w, surface->h));
   }
 
   qsort(images, count, sizeof(AtlasImage *), compareImages);
 
-  size = max(size, (int) ceilf(sqrtf((float) area)));
+  size = max(size, (int) ceil(sqrt((double) area)));
 
   int sheetSize = 1;
   while (sheetSize < size) {
