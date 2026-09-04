@@ -133,6 +133,18 @@ static void buildHUD(AppState *app, View *root) {
   app->ammo = label(root, "Ammo 50", ViewAlignmentBottomRight);
   app->timer = label(root, "10:00", ViewAlignmentTopCenter);
 
+  // Ten solid segments sharing the Renderer's white texture: with a shared scissor these
+  // collapse into one draw call, so their count is the direct check that merging works.
+  StackView *segments = stackView(root, ViewAlignmentBottomCenter);
+  segments->axis = StackViewAxisHorizontal;
+
+  for (int i = 0; i < 10; i++) {
+    View *segment = $(alloc(View), initWithFrame, &MakeRect(0, 0, 24, 8));
+    $(segment, addClassName, "segment");
+    $((View *) segments, addSubview, segment);
+    release(segment);
+  }
+
   label(root, "+", ViewAlignmentMiddleCenter);
 
   app->chat = stackView(root, ViewAlignmentTopLeft);
@@ -318,6 +330,10 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
   ViewController *viewController = $(alloc(ViewController), init);
   $(app->windowController, setViewController, viewController);
   release(viewController);
+
+  Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters, ".segment { background-color: #40c040; }");
+  $(app->windowController->theme, addStylesheet, stylesheet);
+  release(stylesheet);
 
   buildHUD(app, viewController->view);
 
