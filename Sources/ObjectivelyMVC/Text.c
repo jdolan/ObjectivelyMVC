@@ -244,7 +244,7 @@ static void resolveFont(Text *self, const char *family, int size, int style) {
 
   Font *font;
   if (windowController) {
-    font = retain($(windowController, cachedFont, family, size, style));
+    font = retain($(windowController, font, family, size, style));
   } else {
     font = $$(Font, fontWithAttributes, family, size, style, 1.f);
   }

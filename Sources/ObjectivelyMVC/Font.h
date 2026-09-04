@@ -167,7 +167,7 @@ struct FontInterface {
    * @brief Resolves a new Font with the given attributes from the cached font Data.
    * @details "Cached" refers to the font Data registered via Font::cacheFont; the returned
    * instance itself is newly created. Instance caching is provided per-window by
-   * WindowController::cachedFont, which callers with a window SHOULD prefer, since it
+   * WindowController::font, which callers with a window SHOULD prefer, since it
    * supplies the window's pixel density implicitly. Attributes are normalized to their
    * defaults exactly as Font::nameWithAttributes normalizes them.
    * @param family The family, or `NULL` for the default.
@@ -185,7 +185,7 @@ struct FontInterface {
    * @brief Initializes this Font with the given TTF Data and attributes.
    * @details Fonts are immutable: the backing TTF_Font is opened here at
    * `size * pixelDensity` and never re-opened. A pixel density change MUST be handled by
-   * resolving a new instance (see WindowController::cachedFont).
+   * resolving a new instance (see WindowController::font).
    * @param self The Font.
    * @param data The Data.
    * @param family The family.
