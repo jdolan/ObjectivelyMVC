@@ -25,9 +25,10 @@
 
 #include <SDL3/SDL_gpu.h>
 
-#include <ObjectivelyMVC/BitmapFont.h>
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/View.h>
+
+typedef struct BitmapFont BitmapFont;
 
 /**
  * @file
