@@ -88,7 +88,7 @@ static void bakeGlyph(BitmapFont *self, SDL_Surface *sheet, Uint32 codepoint, Ui
     return;
   }
 
-  int minX;
+  int minX = 0;
   TTF_GetGlyphMetrics(font, codepoint, &minX, NULL, NULL, NULL, NULL);
 
   SDL_Surface *glyph = TTF_RenderGlyph_Blended(font, codepoint, Colors.White);
@@ -147,11 +147,14 @@ static Uint32 cellForCodepoint(BitmapFont *self, Uint32 codepoint) {
     }
   }
 
-  if (!logged) {
+  if (!logged && self->loggedCount < lengthof(self->logged)) {
+    self->logged[self->loggedCount++] = codepoint;
+
     if (self->loggedCount < lengthof(self->logged)) {
-      self->logged[self->loggedCount++] = codepoint;
+      MVC_LogWarn("U+%04X is outside the baked range U+%04X-U+%04X\n", codepoint, self->first, self->first + self->count - 1);
+    } else {
+      MVC_LogWarn("U+%04X and further codepoints outside the baked range U+%04X-U+%04X will not be reported\n", codepoint, self->first, self->first + self->count - 1);
     }
-    MVC_LogWarn("U+%04X is outside the baked range U+%04X-U+%04X\n", codepoint, self->first, self->first + self->count - 1);
   }
 
   return self->count;
@@ -250,7 +253,7 @@ static int wordAdvance(BitmapFont *self, const char *chars, bool colorEscapes) {
       break;
     }
 
-    if (token.type == TokenGlyph && *chars == ' ') {
+    if (token.type == TokenGlyph && token.codepoint == ' ') {
       break;
     }
 
@@ -367,8 +370,10 @@ static BitmapFont *initWithFont(BitmapFont *self, Font *font, Uint32 first, Uint
       const Uint32 codepoint = i < count ? first + i : REPLACEMENT_CHARACTER;
 
       if (TTF_FontHasGlyph(font->font, codepoint)) {
-        int glyphMinX, glyphMaxX, advance;
-        TTF_GetGlyphMetrics(font->font, codepoint, &glyphMinX, &glyphMaxX, NULL, NULL, &advance);
+        int glyphMinX = 0, glyphMaxX = 0, advance = 0;
+        if (!TTF_GetGlyphMetrics(font->font, codepoint, &glyphMinX, &glyphMaxX, NULL, NULL, &advance)) {
+          continue;
+        }
 
         minX = min(minX, glyphMinX);
         maxX = max(maxX, max(glyphMaxX, advance));

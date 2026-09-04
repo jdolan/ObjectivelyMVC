@@ -91,7 +91,8 @@ struct Text {
   /**
    * @brief The BitmapFont, or `NULL` to render with `font`.
    * @details When set, text is drawn as one quad per glyph from the BitmapFont's atlas, and
-   * `font` is not consulted; `color` and color escapes apply per vertex, for free.
+   * `font` is not used for rasterization or measurement; `color` and color escapes apply per
+   * vertex, for free.
    * @remarks Do not set this property directly.
    * @see Text::setBitmapFont(Text *, BitmapFont *)
    */

@@ -525,7 +525,9 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
  */
 static SDL_Size naturalSize(const Text *self) {
 
-  if (self->naturalSizeCache.isValid && self->font && self->font->pixelDensity == self->naturalSizeCache.pixelDensity &&
+  const Font *font = self->bitmapFont ? self->bitmapFont->font : self->font;
+
+  if (self->naturalSizeCache.isValid && font && font->pixelDensity == self->naturalSizeCache.pixelDensity &&
       self->colorEscapes == self->naturalSizeCache.colorEscapes) {
     return self->naturalSizeCache.size;
   }
@@ -544,11 +546,11 @@ static SDL_Size naturalSize(const Text *self) {
     }
   }
 
-  if (self->font) {
+  if (font) {
     Text *this = (Text *) self;
 
     this->naturalSizeCache.size = size;
-    this->naturalSizeCache.pixelDensity = self->font->pixelDensity;
+    this->naturalSizeCache.pixelDensity = font->pixelDensity;
     this->naturalSizeCache.colorEscapes = self->colorEscapes;
     this->naturalSizeCache.isValid = true;
   }
@@ -565,7 +567,7 @@ static void setBitmapFont(Text *self, BitmapFont *bitmapFont) {
   if (bitmapFont != self->bitmapFont) {
 
     release(self->bitmapFont);
-    self->bitmapFont = retain(bitmapFont);
+    self->bitmapFont = bitmapFont ? retain(bitmapFont) : NULL;
 
     self->texture = release(self->texture);
     self->textureSize = MakeSize(0, 0);

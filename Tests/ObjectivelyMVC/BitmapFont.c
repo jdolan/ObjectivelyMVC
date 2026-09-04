@@ -86,6 +86,57 @@ START_TEST(proportionalFaceIsRejected) {
 
 } END_TEST
 
+START_TEST(rangeWithoutGlyphsIsRejected) {
+
+  Font *font = monospaceFont(1.f);
+  if (font == NULL) {
+    return;
+  }
+
+  ImageAtlas *atlas = $(alloc(ImageAtlas), init);
+
+  // Unassigned codepoints: only the replacement glyph would bake, so there is no advance
+  BitmapFont *bitmapFont = $(alloc(BitmapFont), initWithFont, font, 0xE0000, 16, NULL, atlas);
+  ck_assert_ptr_null(bitmapFont);
+
+  release(atlas);
+  release(font);
+
+} END_TEST
+
+START_TEST(textClearsBitmapFont) {
+
+  Font *font = monospaceFont(1.f);
+  if (font == NULL) {
+    return;
+  }
+
+  ImageAtlas *atlas = $(alloc(ImageAtlas), init);
+  BitmapFont *bitmapFont = $(alloc(BitmapFont), initWithFont, font, ' ', 95, NULL, atlas);
+  ck_assert_ptr_nonnull(bitmapFont);
+  ck_assert($(atlas, compile));
+
+  Text *text = $(alloc(Text), initWithText, "Hello", NULL);
+
+  $(text, setBitmapFont, bitmapFont);
+  ck_assert_ptr_eq(bitmapFont, text->bitmapFont);
+
+  const SDL_Size bitmapSize = $(text, naturalSize);
+  ck_assert_int_gt(bitmapSize.w, 0);
+
+  $(text, setBitmapFont, NULL);
+  ck_assert_ptr_null(text->bitmapFont);
+
+  const SDL_Size fontSize = $(text, naturalSize);
+  ck_assert_int_gt(fontSize.w, 0);
+
+  release(text);
+  release(bitmapFont);
+  release(atlas);
+  release(font);
+
+} END_TEST
+
 START_TEST(metricsAreUniformAndLogical) {
 
   Font *font = monospaceFont(2.f);
@@ -151,7 +202,7 @@ START_TEST(namedImagesSpanSquareCells) {
   ck_assert_ptr_nonnull(bitmapFont);
   ck_assert($(atlas, compile));
 
-  ck_assert_int_eq(bitmapFont->cellSize.h / bitmapFont->cellSize.w, bitmapFont->span);
+  ck_assert_int_eq(max(1, bitmapFont->cellSize.h / bitmapFont->cellSize.w), bitmapFont->span);
 
   const Number *cell = $(bitmapFont->named, objectForKeyPath, "heart");
   ck_assert_ptr_nonnull(cell);
@@ -220,6 +271,8 @@ int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("BitmapFont");
   tcase_add_test(tcase, proportionalFaceIsRejected);
+  tcase_add_test(tcase, rangeWithoutGlyphsIsRejected);
+  tcase_add_test(tcase, textClearsBitmapFont);
   tcase_add_test(tcase, metricsAreUniformAndLogical);
   tcase_add_test(tcase, namedImagesSpanSquareCells);
   tcase_add_test(tcase, wordWrapBreaksAtSpaces);

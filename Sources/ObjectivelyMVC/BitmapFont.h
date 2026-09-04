@@ -115,7 +115,8 @@ struct BitmapFont {
   Font *font;
 
   /**
-   * @brief Codepoints outside the baked range already reported, so each is logged once.
+   * @brief Codepoints outside the baked range already reported, so each is logged once; when
+   * full, further ones go unreported.
    * @private
    */
   Uint32 logged[32];
@@ -132,8 +133,8 @@ struct BitmapFont {
   Dictionary *named;
 
   /**
-   * @brief The number of cells an inline image spans, `cellSize.h / cellSize.w`, so that a
-   * square image stays square in non-square cells.
+   * @brief The number of cells an inline image spans, `cellSize.h / cellSize.w` and at least
+   * one, so that a square image stays square in non-square cells.
    */
   int span;
 };

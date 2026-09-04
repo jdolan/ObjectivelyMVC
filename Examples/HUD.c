@@ -33,11 +33,11 @@
  *  - `MVC_HUD_FRAMES=N` exits successfully after N frames (for benchmarking).
  *  - `MVC_HUD_HIDDEN=1` creates the window hidden (best effort headless).
  *  - `MVC_HUD_SCALE=N` multiplies the scoreboard row count (default 1),
+ *    scaling the View tree to gauge how frame cost grows with UI complexity.
  *  - `MVC_HUD_FONT=path` names a fixed-width face to bake the readouts' BitmapFont from,
  *    ahead of the system faces tried by default.
  *  - `MVC_HUD_BITMAP_FONT=0` leaves the readouts on Font, for comparison.
  *  - `MVC_HUD_DEBUG=1` prints the draw call list once, on the tenth frame.
- *    scaling the View tree to gauge how frame cost grows with UI complexity.
  */
 
 #define SDL_MAIN_USE_CALLBACKS
