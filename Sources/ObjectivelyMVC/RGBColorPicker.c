@@ -51,7 +51,7 @@ static void didSetComponent(Slider *slider, double value) {
     assert(false);
   }
 
-  $((View *) this, updateBindings);
+  $((View *) this, updateBindings, NULL);
 
   if (this->delegate.didPickColor) {
     this->delegate.didPickColor(this, &this->color);
@@ -119,11 +119,11 @@ static View *init(View *self) {
 }
 
 /**
- * @see View::updateBindings(View *)
+ * @see View::updateBindings(View *, ident)
  */
-static void updateBindings(View *self) {
+static void updateBindings(View *self, ident data) {
 
-  super(View, self, updateBindings);
+  super(View, self, updateBindings, data);
 
   RGBColorPicker *this = (RGBColorPicker *) self;
 
@@ -237,7 +237,7 @@ static void setColor(RGBColorPicker *self, const SDL_Color *color) {
 
   self->color = *color;
 
-  $((View *) self, updateBindings);
+  $((View *) self, updateBindings, NULL);
 }
 
 #pragma mark - Class lifecycle

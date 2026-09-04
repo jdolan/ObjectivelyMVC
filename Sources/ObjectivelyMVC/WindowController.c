@@ -318,13 +318,13 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
 
       $(self->viewController, renderDeviceWillReset);
       $(self->viewController, renderDeviceDidReset);
-      $(self->viewController->view, updateBindings);
+      $(self->viewController->view, updateBindings, NULL);
 
       if (self->debugViewController) {
         ViewController *debugViewController = (ViewController *) self->debugViewController;
         $(debugViewController, renderDeviceWillReset);
         $(debugViewController, renderDeviceDidReset);
-        $(debugViewController->view, updateBindings);
+        $(debugViewController->view, updateBindings, NULL);
       }
     }
       break;
