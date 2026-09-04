@@ -75,6 +75,11 @@ typedef struct {
   Panel *scoreboard;
 
   /**
+   * @brief The atlas behind the icon row.
+   */
+  ImageAtlas *atlas;
+
+  /**
    * @brief Next update deadline per widget, in SDL ticks.
    */
   Uint64 healthDue, armorDue, ammoDue, timerDue, chatDue, scoreboardDue;
@@ -122,6 +127,23 @@ static StackView *stackView(View *superview, ViewAlignment alignment) {
 }
 
 /**
+ * @brief A two-tone icon: the left half in `left`, the right half in `right`, so that a
+ * texture coordinate error shows as a wrong or missing half.
+ */
+static Image *icon(int size, Uint32 left, Uint32 right) {
+
+  SDL_Surface *surface = SDL_CreateSurface(size, size, SDL_PIXELFORMAT_RGBA32);
+
+  SDL_FillSurfaceRect(surface, &(SDL_Rect) { 0, 0, size / 2, size }, left);
+  SDL_FillSurfaceRect(surface, &(SDL_Rect) { size / 2, 0, size - size / 2, size }, right);
+
+  Image *image = $$(Image, imageWithSurface, surface);
+  SDL_DestroySurface(surface);
+
+  return image;
+}
+
+/**
  * @brief Builds the HUD View hierarchy on the given root View.
  */
 static void buildHUD(AppState *app, View *root) {
@@ -144,6 +166,26 @@ static void buildHUD(AppState *app, View *root) {
     $((View *) segments, addSubview, segment);
     release(segment);
   }
+
+  // Eight icons of varied sizes packed into one atlas: one draw call for the whole row
+  app->atlas = $(alloc(ImageAtlas), init);
+
+  StackView *icons = stackView(root, ViewAlignmentTopRight);
+  icons->axis = StackViewAxisHorizontal;
+
+  const Uint32 colors[] = { 0xff0000ff, 0xff00ff00, 0xffff0000, 0xff00ffff, 0xffff00ff, 0xffffff00, 0xffffffff, 0xff808080 };
+
+  for (int i = 0; i < 8; i++) {
+    Image *image = icon(16 + 4 * i, colors[i], colors[(i + 1) % 8]);
+    AtlasImage *atlasImage = $(app->atlas, addImage, image);
+    release(image);
+
+    ImageView *imageView = $(alloc(ImageView), initWithImage, (Image *) atlasImage);
+    $((View *) icons, addSubview, (View *) imageView);
+    release(imageView);
+  }
+
+  MVC_Assert($(app->atlas, compile), "ImageAtlas::compile");
 
   label(root, "+", ViewAlignmentMiddleCenter);
 
@@ -443,6 +485,7 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
   $(app->renderDevice, waitForIdle);
 
   release(app->windowController);
+  release(app->atlas);
   release(app->framebuffer);
   release(app->renderDevice);
 

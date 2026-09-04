@@ -7,6 +7,7 @@ noinst_HEADERS = \
 pkgincludedir = $(includedir)/$(PACKAGE_NAME)
 
 pkginclude_HEADERS = \
+	AtlasImage.h \
 	Box.h \
 	Button.h \
 	Checkbox.h \
@@ -19,6 +20,7 @@ pkginclude_HEADERS = \
 	HSVColorPicker.h \
 	HueColorPicker.h \
 	Image.h \
+	ImageAtlas.h \
 	ImageView.h \
 	Input.h \
 	Text.h \
@@ -66,6 +68,7 @@ lib_LTLIBRARIES = \
 	libObjectivelyMVC.la
 
 libObjectivelyMVC_la_SOURCES = \
+	AtlasImage.c \
 	Box.c \
 	Button.c \
 	Checkbox.c \
@@ -78,6 +81,7 @@ libObjectivelyMVC_la_SOURCES = \
 	HSVColorPicker.c \
 	HueColorPicker.c \
 	Image.c \
+	ImageAtlas.c \
 	ImageView.c \
 	Input.c \
 	Label.c \

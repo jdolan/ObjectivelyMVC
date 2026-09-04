@@ -1,6 +1,7 @@
 *.log
 *.trs
 Constraint
+ImageAtlas
 Selector
 Style
 Stylesheet

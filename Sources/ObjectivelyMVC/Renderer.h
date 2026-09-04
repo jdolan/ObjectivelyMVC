@@ -287,6 +287,19 @@ struct RendererInterface {
   void (*drawRoundedTexture)(const Renderer *self, Texture *texture, const SDL_FRect *dest, int radius, const SDL_Color *color);
 
   /**
+   * @fn void Renderer::drawRoundedTextureRegion(const Renderer *self, Texture *texture, const SDL_Rect *src, const SDL_FRect *dest, int radius, const SDL_Color *color)
+   * @brief Records a region of a texture as a quad clipped to a rounded rectangle.
+   * @param self The Renderer.
+   * @param texture The Texture to sample.
+   * @param src The region of `texture` to sample, in texels, or `NULL` for all of it.
+   * @param dest The destination rectangle in logical screen coordinates.
+   * @param radius The corner radius.
+   * @param color The color multiplier (use `&Colors.White` for no tint).
+   * @memberof Renderer
+   */
+  void (*drawRoundedTextureRegion)(const Renderer *self, Texture *texture, const SDL_Rect *src, const SDL_FRect *dest, int radius, const SDL_Color *color);
+
+  /**
    * @fn void Renderer::drawTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, const SDL_Color *color)
    * @brief Records a textured quad in the given destination rectangle.
    * @param self The Renderer.
@@ -301,6 +314,19 @@ struct RendererInterface {
    * @memberof Renderer
    */
   void (*drawTexture)(const Renderer *self, Texture *texture, const SDL_FRect *dest, const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::drawTextureRegion(const Renderer *self, Texture *texture, const SDL_Rect *src, const SDL_FRect *dest, const SDL_Color *color)
+   * @brief Records a region of a texture as a quad in the given destination rectangle.
+   * @details This is how an AtlasImage is drawn: `src` is its rect within the atlas sheet.
+   * @param self The Renderer.
+   * @param texture The Texture to sample.
+   * @param src The region of `texture` to sample, in texels, or `NULL` for all of it.
+   * @param dest The destination rectangle in logical screen coordinates.
+   * @param color The color multiplier (use `&Colors.White` for no tint).
+   * @memberof Renderer
+   */
+  void (*drawTextureRegion)(const Renderer *self, Texture *texture, const SDL_Rect *src, const SDL_FRect *dest, const SDL_Color *color);
 
   /**
    * @fn void Renderer::drawView(Renderer *self, View *view)

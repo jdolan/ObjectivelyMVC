@@ -99,6 +99,10 @@
 		CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4801C4F3A1600CD0B13 /* Image.c */; };
 		CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4811C4F3A1600CD0B13 /* Image.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8A30F602D72CFEF66B648507 /* ImageAtlas.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */; };
+		D0C3FCBBE9C725A32D06B468 /* ImageAtlas.h in Headers */ = {isa = PBXBuildFile; fileRef = AF4C7C1CF7FAEAD6053D340D /* ImageAtlas.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3F60E97377EEEEE3B3983F2D /* AtlasImage.c in Sources */ = {isa = PBXBuildFile; fileRef = B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */; };
+		FFF84DB6E613717C07130E4C /* AtlasImage.h in Headers */ = {isa = PBXBuildFile; fileRef = F3D9A6818BCE4C501D81FAC9 /* AtlasImage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D4951C547BDD00CD0B13 /* StackView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4931C547BDD00CD0B13 /* StackView.c */; };
 		CE12D4961C547BDD00CD0B13 /* StackView.h in Headers */ = {isa = PBXBuildFile; fileRef = CE12D4941C547BDD00CD0B13 /* StackView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE12D49E1C568A7600CD0B13 /* TextView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D49C1C568A7600CD0B13 /* TextView.c */; };
@@ -435,6 +439,10 @@
 		CE12D47D1C4F35DF00CD0B13 /* Checkbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Checkbox.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE12D4801C4F3A1600CD0B13 /* Image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Image.c; sourceTree = "<group>"; };
 		CE12D4811C4F3A1600CD0B13 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Image.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageAtlas.c; sourceTree = "<group>"; };
+		AF4C7C1CF7FAEAD6053D340D /* ImageAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAtlas.h; sourceTree = "<group>"; };
+		B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AtlasImage.c; sourceTree = "<group>"; };
+		F3D9A6818BCE4C501D81FAC9 /* AtlasImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AtlasImage.h; sourceTree = "<group>"; };
 		CE12D4851C4F3C5900CD0B13 /* check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = check.png; sourceTree = "<group>"; };
 		CE12D48F1C505FB400CD0B13 /* index.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = index.md; sourceTree = "<group>"; };
 		CE12D4901C505FB400CD0B13 /* layout.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = layout.xml; sourceTree = "<group>"; };
@@ -685,6 +693,8 @@
 		CE12D3DE1C4C367100CD0B13 /* ObjectivelyMVC */ = {
 			isa = PBXGroup;
 			children = (
+				B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */,
+				F3D9A6818BCE4C501D81FAC9 /* AtlasImage.h */,
 				CEF1D89E1D440C7B0099A857 /* Box.c */,
 				CEF1D89F1D440C7B0099A857 /* Box.h */,
 				CE12D4691C4D810F00CD0B13 /* Button.c */,
@@ -711,6 +721,8 @@
 				CE6EE3CB1F7156BC00FBC830 /* HueColorPicker.h */,
 				CE12D4801C4F3A1600CD0B13 /* Image.c */,
 				CE12D4811C4F3A1600CD0B13 /* Image.h */,
+				5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */,
+				AF4C7C1CF7FAEAD6053D340D /* ImageAtlas.h */,
 				CE12D40B1C4C367100CD0B13 /* ImageView.c */,
 				CE12D40C1C4C367100CD0B13 /* ImageView.h */,
 				CE8E7FF41C7FAD9100F4C3D4 /* Input.c */,
@@ -971,6 +983,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE12D4481C4C38C700CD0B13 /* ObjectivelyMVC.h in Headers */,
+				FFF84DB6E613717C07130E4C /* AtlasImage.h in Headers */,
 				CEF1D8A11D440C7B0099A857 /* Box.h in Headers */,
 				CE12D46C1C4D810F00CD0B13 /* Button.h in Headers */,
 				CE12D47F1C4F35DF00CD0B13 /* Checkbox.h in Headers */,
@@ -983,6 +996,7 @@
 				CE6EE37C1F6EA91900FBC830 /* HSVColorPicker.h in Headers */,
 				CE6EE3CD1F7156BC00FBC830 /* HueColorPicker.h in Headers */,
 				CE12D4831C4F3A1600CD0B13 /* Image.h in Headers */,
+				D0C3FCBBE9C725A32D06B468 /* ImageAtlas.h in Headers */,
 				CE12D4441C4C38C700CD0B13 /* ImageView.h in Headers */,
 				CE8E7FF71C7FAD9100F4C3D4 /* Input.h in Headers */,
 				CE6BC1831D837D550070FB2D /* Label.h in Headers */,
@@ -1420,6 +1434,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F60E97377EEEEE3B3983F2D /* AtlasImage.c in Sources */,
 				CEF1D8A01D440C7B0099A857 /* Box.c in Sources */,
 				CE12D46B1C4D810F00CD0B13 /* Button.c in Sources */,
 				CE12D47E1C4F35DF00CD0B13 /* Checkbox.c in Sources */,
@@ -1432,6 +1447,7 @@
 				CE6EE37B1F6EA91900FBC830 /* HSVColorPicker.c in Sources */,
 				CE6EE3CC1F7156BC00FBC830 /* HueColorPicker.c in Sources */,
 				CE12D4821C4F3A1600CD0B13 /* Image.c in Sources */,
+				8A30F602D72CFEF66B648507 /* ImageAtlas.c in Sources */,
 				CE12D43E1C4C38B500CD0B13 /* ImageView.c in Sources */,
 				CE8E7FF61C7FAD9100F4C3D4 /* Input.c in Sources */,
 				CE6BC1821D837D550070FB2D /* Label.c in Sources */,
