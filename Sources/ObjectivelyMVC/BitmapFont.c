@@ -379,7 +379,7 @@ static BitmapFont *initWithFont(BitmapFont *self, Font *font, Uint32 first, Uint
       }
     }
 
-    if (maxX <= minX) {
+    if (maxX <= minX || self->advance == 0) {
       String *name = $(font, name);
       MVC_LogWarn("%s has no glyphs in U+%04X-U+%04X\n", name->chars, first, first + count - 1);
       release(name);
