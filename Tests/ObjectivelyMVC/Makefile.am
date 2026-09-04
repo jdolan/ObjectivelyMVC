@@ -6,6 +6,7 @@ DEFAULT_INCLUDES = \
 	$(top_srcdir)/Sources
 
 TESTS = \
+	BitmapFont \
 	ImageAtlas \
 	Selector \
 	Style \

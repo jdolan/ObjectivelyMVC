@@ -110,17 +110,18 @@ struct WindowControllerInterface {
   ObjectInterface objectInterface;
 
   /**
-   * @fn Font *WindowController::cachedFont(WindowController *self, const char *family, int size, int style)
-   * @brief Resolves the cached Font with the given attributes at this window's pixel density.
+   * @fn Font *WindowController::font(WindowController *self, const char *family, int size, int style)
+   * @brief Resolves the Font with the given attributes at this window's pixel density.
+   * @details Instances are cached per window, so repeated requests return the same Font.
    * @param self The WindowController.
    * @param family The family, or `NULL` for the default.
    * @param size The point size, or `0` for the default.
    * @param style The FontStyle, or `-1` for the default.
-   * @return The cached Font. The returned Font is owned by the cache; callers retaining it
-   * beyond the current frame MUST re-resolve after a pixel density change.
+   * @return The Font, owned by this WindowController. Callers retaining it beyond the current
+   * frame MUST re-resolve after a pixel density change.
    * @memberof WindowController
    */
-  Font *(*cachedFont)(WindowController *self, const char *family, int size, int style);
+  Font *(*font)(WindowController *self, const char *family, int size, int style);
 
   /**
    * @private

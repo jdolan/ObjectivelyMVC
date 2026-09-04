@@ -71,10 +71,10 @@ static void dealloc(Object *self) {
 #pragma mark - WindowController
 
 /**
- * @fn Font *WindowController::cachedFont(WindowController *self, const char *family, int size, int style)
+ * @fn Font *WindowController::font(WindowController *self, const char *family, int size, int style)
  * @memberof WindowController
  */
-static Font *cachedFont(WindowController *self, const char *family, int size, int style) {
+static Font *font(WindowController *self, const char *family, int size, int style) {
 
   String *name = $$(Font, nameWithAttributes, family, size, style);
   assert(name);
@@ -595,7 +595,7 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
-  ((WindowControllerInterface *) clazz->interface)->cachedFont = cachedFont;
+  ((WindowControllerInterface *) clazz->interface)->font = font;
   ((WindowControllerInterface *) clazz->interface)->debug = debug;
   ((WindowControllerInterface *) clazz->interface)->keyResponder = keyResponder;
   ((WindowControllerInterface *) clazz->interface)->keyResponders = keyResponders;

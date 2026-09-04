@@ -214,7 +214,7 @@ static bool compile(ImageAtlas *self) {
     self->texture = release(self->texture);
 
   } else {
-    MVC_LogError("%zu images (%d texels) do not fit within %dx%d\n", count, area, self->maxSize, self->maxSize);
+    MVC_LogError("%zu images (%zu texels) do not fit within %dx%d\n", count, area, self->maxSize, self->maxSize);
   }
 
   free(rects);

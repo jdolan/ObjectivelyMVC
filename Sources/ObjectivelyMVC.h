@@ -29,6 +29,7 @@
  */
 
 #include <ObjectivelyMVC/AtlasImage.h>
+#include <ObjectivelyMVC/BitmapFont.h>
 #include <ObjectivelyMVC/Box.h>
 #include <ObjectivelyMVC/Button.h>
 #include <ObjectivelyMVC/Checkbox.h>
