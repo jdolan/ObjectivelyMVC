@@ -87,19 +87,6 @@ typedef struct {
   int columns;
 
   /**
-   * @brief Codepoints outside the baked range already reported, so each is logged once; when
-   * full, further ones go unreported.
-   * @private
-   */
-  Uint32 logged[32];
-
-  /**
-   * @brief The number of entries in `logged`.
-   * @private
-   */
-  size_t loggedCount;
-
-  /**
    * @brief The glyph sheet: a grid of `columns` cells of `cellSize`, in texels, or `NULL` if
    * the Font is not fixed-width.
    */
@@ -116,7 +103,7 @@ typedef struct {
  * @brief Bakes FONT_BITMAP_COUNT codepoints of `font`, from FONT_BITMAP_FIRST, into a glyph
  * sheet, initializing `bitmap`.
  * @details One extra cell past the range holds the replacement glyph (U+FFFD, or `?` if the
- * face lacks it), drawn for any codepoint outside the range, which is also logged once.
+ * face lacks it), drawn for any codepoint outside the range.
  * @param bitmap The FontBitmap, zero-initialized.
  * @param font The Font, which MUST be fixed-width.
  * @return True if the bitmap was baked, false if `font` is not fixed-width or has no glyphs
@@ -143,4 +130,4 @@ OBJECTIVELYMVC_EXPORT void renderBitmapCharacters(Font *self, const Renderer *re
 /**
  * @brief Implements Font::sizeBitmapCharacters.
  */
-OBJECTIVELYMVC_EXPORT void sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);
+OBJECTIVELYMVC_EXPORT void sizeBitmapCharacters(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);

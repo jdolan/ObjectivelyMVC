@@ -290,7 +290,7 @@ struct FontInterface {
   void (*renderDeviceWillReset)(Font *self);
 
   /**
-   * @fn void Font::sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)
+   * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)
    * @brief Measures the given characters against this Font's bitmap.
    * @param self The Font, which MUST have a bitmap.
    * @param chars The null-terminated UTF-8 encoded C string to size.
@@ -300,7 +300,7 @@ struct FontInterface {
    * @param h The height to return, in logical pixels.
    * @memberof Font
    */
-  void (*sizeBitmapCharacters)(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);
+  void (*sizeBitmapCharacters)(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);
 
   /**
    * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)

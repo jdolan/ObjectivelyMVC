@@ -112,30 +112,12 @@ typedef struct {
 } Token;
 
 /**
- * @brief Resolves `codepoint` to a cell, logging the first sighting of each unbaked one.
+ * @brief Resolves `codepoint` to a cell: the replacement glyph's for one outside the baked range.
  */
-static Uint32 cellForCodepoint(FontBitmap *bitmap, Uint32 codepoint) {
+static Uint32 cellForCodepoint(Uint32 codepoint) {
 
   if (codepoint >= FONT_BITMAP_FIRST && codepoint < FONT_BITMAP_FIRST + FONT_BITMAP_COUNT) {
     return codepoint - FONT_BITMAP_FIRST;
-  }
-
-  bool logged = false;
-  for (size_t i = 0; i < bitmap->loggedCount; i++) {
-    if (bitmap->logged[i] == codepoint) {
-      logged = true;
-      break;
-    }
-  }
-
-  if (!logged && bitmap->loggedCount < lengthof(bitmap->logged)) {
-    bitmap->logged[bitmap->loggedCount++] = codepoint;
-
-    if (bitmap->loggedCount < lengthof(bitmap->logged)) {
-      MVC_LogWarn("U+%04X is outside the baked range U+%04X-U+%04X\n", codepoint, FONT_BITMAP_FIRST, FONT_BITMAP_FIRST + FONT_BITMAP_COUNT - 1);
-    } else {
-      MVC_LogWarn("U+%04X and further codepoints outside the baked range U+%04X-U+%04X will not be reported\n", codepoint, FONT_BITMAP_FIRST, FONT_BITMAP_FIRST + FONT_BITMAP_COUNT - 1);
-    }
   }
 
   return FONT_BITMAP_COUNT;
@@ -144,7 +126,7 @@ static Uint32 cellForCodepoint(FontBitmap *bitmap, Uint32 codepoint) {
 /**
  * @brief Advances `*chars` past the next token, describing it in `token`.
  */
-static void nextToken(FontBitmap *bitmap, const char **chars, bool colorEscapes, Token *token) {
+static void nextToken(const char **chars, bool colorEscapes, Token *token) {
 
   const char *p = *chars;
 
@@ -175,7 +157,7 @@ static void nextToken(FontBitmap *bitmap, const char **chars, bool colorEscapes,
 
   token->type = TokenGlyph;
   token->codepoint = codepoint;
-  token->cell = cellForCodepoint(bitmap, codepoint);
+  token->cell = cellForCodepoint(codepoint);
   *chars = p;
 }
 
@@ -189,7 +171,7 @@ static int tokenAdvance(const FontBitmap *bitmap, const Token *token) {
 /**
  * @brief The advance of the word starting at `chars`, up to the next space, newline or end.
  */
-static int wordAdvance(FontBitmap *bitmap, const char *chars, bool colorEscapes) {
+static int wordAdvance(const FontBitmap *bitmap, const char *chars, bool colorEscapes) {
 
   int advance = 0;
 
@@ -197,7 +179,7 @@ static int wordAdvance(FontBitmap *bitmap, const char *chars, bool colorEscapes)
     const char *next = chars;
 
     Token token;
-    nextToken(bitmap, &next, colorEscapes, &token);
+    nextToken(&next, colorEscapes, &token);
 
     if (token.type == TokenEnd || token.type == TokenNewline) {
       break;
@@ -223,7 +205,7 @@ typedef void (*TokenVisitor)(const FontBitmap *bitmap, const Token *token, int x
  * @brief Walks `chars`, wrapping at word boundaries when `wrapWidth` (in texels) is non-zero,
  * and reports the extent of the text in texels.
  */
-static void walk(FontBitmap *bitmap, const char *chars, bool colorEscapes, int wrapWidth, SDL_Color color,
+static void walk(const FontBitmap *bitmap, const char *chars, bool colorEscapes, int wrapWidth, SDL_Color color,
                  TokenVisitor visitor, ident data, int *w, int *h) {
 
   int x = 0, y = 0, maxX = 0;
@@ -234,7 +216,7 @@ static void walk(FontBitmap *bitmap, const char *chars, bool colorEscapes, int w
   Token token = { .type = TokenEnd, .color = color };
 
   while (true) {
-    nextToken(bitmap, &chars, colorEscapes, &token);
+    nextToken(&chars, colorEscapes, &token);
 
     if (token.type == TokenEnd) {
       break;
@@ -436,14 +418,14 @@ void renderBitmapCharacters(Font *self, const Renderer *renderer, const char *ch
 }
 
 /**
- * @fn void Font::sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)
+ * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)
  * @memberof Font
  */
-void sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h) {
+void sizeBitmapCharacters(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h) {
 
   assert(self);
 
-  FontBitmap *bitmap = &self->bitmap;
+  const FontBitmap *bitmap = &self->bitmap;
   assert(bitmap->surface);
 
   int texelsW = 0, texelsH = 0;
