@@ -40,10 +40,9 @@
 #define FONT_BITMAP_COUNT 1024
 
 /**
- * @brief The last valid codepoint in a Font bitmap.
+ * @brief One past the last baked codepoint in a Font bitmap (exclusive upper bound).
  */
 #define FONT_BITMAP_LAST (FONT_BITMAP_FIRST + FONT_BITMAP_COUNT)
-
 /**
  * @brief The number of cells per row of the glyph sheet: FONT_BITMAP_COUNT cells make a
  * square grid of this many columns and rows.
