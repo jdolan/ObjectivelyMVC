@@ -26,7 +26,6 @@
 #include <Objectively/Array.h>
 #include <Objectively/Dictionary.h>
 
-#include <ObjectivelyMVC/BitmapFont.h>
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/ImageAtlas.h>
 #include <ObjectivelyMVC/Stylesheet.h>
@@ -64,12 +63,6 @@ struct Theme {
    * @protected
    */
   ThemeInterface *interface[0];
-
-  /**
-   * @brief The BitmapFont instance cache, keyed by `Font::name` + pixel density.
-   * @private
-   */
-  Dictionary *bitmapFontCache;
 
   /**
    * @brief The Font instance cache, keyed by `Font::name` + pixel density.
@@ -110,22 +103,6 @@ struct ThemeInterface {
   void (*addStylesheet)(Theme *self, Stylesheet *stylesheet);
 
   /**
-   * @fn BitmapFont *Theme::bitmapFont(Theme *self, const FontAttributes *attributes, float pixelDensity)
-   * @brief Resolves a BitmapFont with the given attributes, baking and caching it if needed.
-   * @details Baked with BITMAP_FONT_DEFAULT_FIRST/BITMAP_FONT_DEFAULT_COUNT into a private
-   * ImageAtlas. Instances are cached by this Theme, keyed by attributes and pixel density, so
-   * every View requesting the same combination shares one BitmapFont (and its atlas/texture).
-   * @param self The Theme.
-   * @param attributes The FontAttributes.
-   * @param pixelDensity The pixel density.
-   * @return The BitmapFont, owned by this Theme, or `NULL` if the resolved Font is not
-   * fixed-width. Callers retaining it beyond the current frame MUST re-resolve after a pixel
-   * density change.
-   * @memberof Theme
-   */
-  BitmapFont *(*bitmapFont)(Theme *self, const FontAttributes *attributes, float pixelDensity);
-
-  /**
    * @fn void Theme::apply(const Theme *self, const View *view)
    * @brief Applies this Theme to the given View.
    * @param self The Theme.
@@ -153,14 +130,15 @@ struct ThemeInterface {
    * @fn ImageAtlas *Theme::icons(Theme *self)
    * @brief Returns this Theme's app-owned ImageAtlas for icons, HUD art, and similar, creating
    * it on first access.
-   * @details Unlike Theme::font/bitmapFont, this atlas is not populated or compiled by Theme --
+   * @details Unlike the ImageAtlas a fixed-width Font bakes its bitmap into, this atlas is not
+   * populated or compiled by Theme --
    * the caller drives everything (ImageAtlas::addImage/addImageWithResourceName, compile,
    * tracking the returned AtlasImages) exactly as with any other ImageAtlas. Theme only owns
    * the instance and forwards render device resets to it, so apps get correct GPU resource
    * lifecycle for free instead of needing their own ViewController::renderDeviceWillReset
-   * override. Deliberately separate from the ImageAtlas(es) BitmapFonts are baked into:
+   * override. Deliberately separate from the ImageAtlas(es) Font bitmaps are baked into:
    * ImageAtlas::compile repacks everything from scratch, so an icon atlas shared with a
-   * BitmapFont bake would silently invalidate that BitmapFont's glyph positions on every icon
+   * Font's bitmap would silently invalidate that bitmap's glyph positions on every icon
    * add/reload.
    * @param self The Theme.
    * @return This Theme's icon ImageAtlas, owned by this Theme.
@@ -196,12 +174,10 @@ struct ThemeInterface {
 
   /**
    * @fn void Theme::renderDeviceWillReset(Theme *self)
-   * @brief Releases the GPU resources of every cached BitmapFont, and of Theme::icons if it has
-   * been created, ahead of a render device reset.
-   * @details Every View drawing from a BitmapFont it holds directly already forwards this call
-   * to that BitmapFont's atlas, but a BitmapFont cached here can outlive every View that
-   * referenced it, so this Theme MUST also forward the call to every BitmapFont it still owns.
-   * The call is idempotent, so the duplication with any given View's own forwarding is harmless.
+   * @brief Releases the GPU resources of every cached Font's bitmap, and of Theme::icons if it
+   * has been created, ahead of a render device reset.
+   * @details Fonts are cached here, not owned by the Views drawing them, so this Theme is the
+   * one place that reliably reaches every bitmap atlas, including one no live View references.
    * @param self The Theme.
    * @memberof Theme
    */

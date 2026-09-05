@@ -28,8 +28,6 @@
 #include <ObjectivelyMVC/Font.h>
 #include <ObjectivelyMVC/View.h>
 
-typedef struct BitmapFont BitmapFont;
-
 /**
  * @file
  * @brief Text rendered with TrueType fonts.
@@ -89,22 +87,14 @@ struct Text {
   TextInterface *interface[0];
 
   /**
-   * @brief The BitmapFont, or `NULL` to render with `font`.
-   * @details When set, text is drawn as one quad per glyph from the BitmapFont's atlas, and
-   * `font` is not used for rasterization or measurement; `color` and color escapes apply per
-   * vertex, for free.
-   * @remarks Do not set this property directly.
-   * @see Text::setBitmapFont(Text *, BitmapFont *)
-   */
-  BitmapFont *bitmapFont;
-
-  /**
    * @brief The text color.
    */
   SDL_Color color;
 
   /**
-   * @brief The Font.
+   * @brief The Font. A fixed-width Font carries a bitmap, and is drawn as one quad per glyph
+   * from its atlas instead of being rasterized per string; `color` and color escapes then
+   * apply per vertex, for free.
    * @remarks Do not set this property directly.
    * @see Text::setFont(Text *, Font *)
    */
@@ -118,13 +108,6 @@ struct Text {
    * @see FontEscapeColors
    */
   bool colorEscapes;
-
-  /**
-   * @brief Whether `bitmap-font: true` was last applied via CSS, so this Text's BitmapFont is
-   * re-resolved on window attach and on a pixel density change.
-   * @private
-   */
-  bool bitmapFontEnabled;
 
   /**
    * @brief If true, wrap text along word boundaries to fit this Text's width.
@@ -193,18 +176,6 @@ struct TextInterface {
    * @memberof Text
    */
   SDL_Size (*naturalSize)(const Text *self);
-
-  /**
-   * @fn void Text::setBitmapFont(Text *self, BitmapFont *bitmapFont)
-   * @brief Sets this Text's BitmapFont.
-   * @details A BitmapFont is bound to the pixel density of the Font it was baked from. On a
-   * density change the owner MUST set a new one, since Text cannot re-bake it the way it
-   * re-resolves a Font.
-   * @param self The Text.
-   * @param bitmapFont The BitmapFont, or `NULL` to render with `font`.
-   * @memberof Text
-   */
-  void (*setBitmapFont)(Text *self, BitmapFont *bitmapFont);
 
   /**
    * @fn void Text::setFont(Text *self, Font *font)

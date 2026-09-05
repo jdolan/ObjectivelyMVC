@@ -26,10 +26,8 @@
  * @brief A representative game HUD, for game developers to take as a starting point.
  * @details Renders health, armor and ammo counters, a crosshair, a countdown timer, a chat
  * log and a toggling scoreboard, each updating on its own interval rather than every frame,
- * as a real HUD would.
- *
- * Environment:
- *  - `MVC_HUD_BITMAP_FONT=0` leaves the readouts on Font, for comparison against BitmapFont.
+ * as a real HUD would. The readouts use a monospaced Font, which ObjectivelyMVC draws from a
+ * baked glyph atlas, so that changing them costs nothing.
  */
 
 #define SDL_MAIN_USE_CALLBACKS
@@ -59,12 +57,6 @@ typedef struct {
   Label *health, *armor, *ammo, *timer;
   StackView *chat;
   Panel *scoreboard;
-
-  /**
-   * @brief The fixed-width BitmapFont behind the readouts, or `NULL` if no fixed-width face
-   * was found on this system.
-   */
-  BitmapFont *bitmapFont;
 
   /**
    * @brief Next update deadline per widget, in SDL ticks.
@@ -124,32 +116,6 @@ static Image *icon(int size, Uint32 left, Uint32 right) {
 }
 
 /**
- * @brief Bakes a BitmapFont from the bundled monospace face, so that the readouts share the
- * icon atlas and cost nothing to change. MVC_HUD_BITMAP_FONT=0 disables the BitmapFont,
- * leaving the readouts on Font, for comparison.
- */
-static BitmapFont *bakeBitmapFont(ImageAtlas *atlas, WindowController *windowController) {
-
-  const char *enabled = SDL_getenv("MVC_HUD_BITMAP_FONT");
-  if (enabled && *enabled == '0') {
-    return NULL;
-  }
-
-  const FontAttributes attributes = { DEFAULT_MONOSPACE_FONT_FAMILY, 18, FontStyleRegular };
-  Font *font = $(windowController->theme, font, &attributes, SDL_GetWindowPixelDensity(windowController->window));
-
-  Image *heart = icon(32, 0xff0000ff, 0xff0000ff);
-  Dictionary *named = $$(Dictionary, dictionaryWithObjectsAndKeys, heart, str("heart"), NULL);
-
-  BitmapFont *bitmapFont = $(alloc(BitmapFont), initWithFont, font, ' ', 95, named, atlas);
-
-  release(named);
-  release(heart);
-
-  return bitmapFont;
-}
-
-/**
  * @brief Builds the HUD View hierarchy on the given root View.
  */
 static void buildHUD(AppState *app, View *root) {
@@ -161,14 +127,11 @@ static void buildHUD(AppState *app, View *root) {
   app->ammo = label(root, "Ammo 50", ViewAlignmentBottomRight);
   app->timer = label(root, "10:00", ViewAlignmentTopCenter);
 
-  // The readouts change every second or faster: on the BitmapFont, a change costs nothing,
-  // and they draw in the same call as the icons that share the atlas
-  if (app->bitmapFont) {
-    Label *readouts[] = { app->health, app->armor, app->ammo, app->timer };
-    for (size_t i = 0; i < SDL_arraysize(readouts); i++) {
-      readouts[i]->text->colorEscapes = true;
-      $(readouts[i]->text, setBitmapFont, app->bitmapFont);
-    }
+  // The readouts change every second or faster: the stylesheet gives them a monospaced Font,
+  // so each change is a handful of quads rather than a rasterization
+  Label *readouts[] = { app->health, app->armor, app->ammo, app->timer };
+  for (size_t i = 0; i < SDL_arraysize(readouts); i++) {
+    $((View *) readouts[i], addClassName, "readout");
   }
 
   // Ten solid segments sharing the Renderer's white texture: with a shared scissor these
@@ -251,11 +214,7 @@ static void updateHUD(AppState *app, Uint64 ticks) {
 
   if (ticks >= app->healthDue) {
     app->healthDue = ticks + 2000;
-    if (app->bitmapFont) {
-      $(app->health->text, setTextWithFormat, ":heart: ^%d%d", (int) (ticks / 2000 % 10), (int) (25 + ticks / 100 % 75));
-    } else {
-      $(app->health->text, setTextWithFormat, "Health %d", (int) (25 + ticks / 100 % 75));
-    }
+    $(app->health->text, setTextWithFormat, "Health %d", (int) (25 + ticks / 100 % 75));
   }
 
   if (ticks >= app->armorDue) {
@@ -334,11 +293,11 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
   $(app->windowController, setViewController, viewController);
   release(viewController);
 
-  Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters, ".segment { background-color: #40c040; }");
+  Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters,
+    ".segment { background-color: #40c040; } "
+    ".readout Text { font-family: " DEFAULT_MONOSPACE_FONT_FAMILY "; font-size: 18; }");
   $(app->windowController->theme, addStylesheet, stylesheet);
   release(stylesheet);
-
-  app->bitmapFont = bakeBitmapFont($(app->windowController->theme, icons), app->windowController);
 
   buildHUD(app, viewController->view);
 
@@ -397,7 +356,6 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
   $(app->renderDevice, waitForIdle);
 
   release(app->windowController);
-  release(app->bitmapFont);
   release(app->framebuffer);
   release(app->renderDevice);
 

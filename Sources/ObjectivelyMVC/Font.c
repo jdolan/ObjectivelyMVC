@@ -32,6 +32,7 @@
 #include <Objectively/String.h>
 
 #include "Font.h"
+#include "ImageAtlas.h"
 #include "Log.h"
 #include "View.h"
 #include "Window.h"
@@ -57,6 +58,8 @@ const EnumName FontStyleNames[] = MakeEnumNames(
 static void dealloc(Object *self) {
 
   Font *this = (Font *) self;
+
+  deallocBitmap(&this->bitmap);
 
   TTF_CloseFont(this->font);
 
@@ -149,21 +152,19 @@ static void clearCache(void) {
 
 static Font *_defaultFont;
 
-// do_once's block argument doesn't parenthesize the commas in a braced initializer, so these
-// are declared here rather than as compound literals inside defaultFont/defaultMonospaceFont.
-static const FontAttributes _defaultFontAttributes = {
-  DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE
-};
-
 /**
  * @fn Font *Font::defaultFont(void)
  * @memberof Font
  */
 static Font *defaultFont(void) {
   static Once once;
+  
+  const FontAttributes attrs = {
+    DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE
+  };
 
   do_once(&once, {
-    _defaultFont = $$(Font, fontWithAttributes, &_defaultFontAttributes, 1.f);
+    _defaultFont = $$(Font, fontWithAttributes, &attrs, 1.f);
     assert(_defaultFont);
   });
 
@@ -172,19 +173,19 @@ static Font *defaultFont(void) {
 
 static Font *_defaultMonospaceFont;
 
-static const FontAttributes _defaultMonospaceFontAttributes = {
-  DEFAULT_MONOSPACE_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE
-};
-
 /**
  * @fn Font *Font::defaultMonospaceFont(void)
  * @memberof Font
  */
 static Font *defaultMonospaceFont(void) {
   static Once once;
+  
+  const FontAttributes attrs = {
+    DEFAULT_MONOSPACE_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE
+  };
 
   do_once(&once, {
-    _defaultMonospaceFont = $$(Font, fontWithAttributes, &_defaultMonospaceFontAttributes, 1.f);
+    _defaultMonospaceFont = $$(Font, fontWithAttributes, &attrs, 1.f);
     assert(_defaultMonospaceFont);
   });
 
@@ -286,6 +287,17 @@ static Font *initWithData(Font *self, Data *data, const FontAttributes *attribut
 
     TTF_SetFontStyle(self->font, self->style);
     TTF_SetFontHinting(self->font, TTF_HINTING_LIGHT_SUBPIXEL);
+
+    if (TTF_FontIsFixedWidth(self->font)) {
+      ImageAtlas *atlas = $(alloc(ImageAtlas), init);
+      assert(atlas);
+
+      if (initBitmap(&self->bitmap, self, FONT_BITMAP_DEFAULT_FIRST, FONT_BITMAP_DEFAULT_COUNT, atlas)) {
+        $(atlas, compile);
+      }
+
+      release(atlas);
+    }
   }
 
   return self;
@@ -418,7 +430,9 @@ static void initialize(Class *clazz) {
   ((FontInterface *) clazz->interface)->initWithData = initWithData;
   ((FontInterface *) clazz->interface)->name = name;
   ((FontInterface *) clazz->interface)->nameWithAttributes = nameWithAttributes;
+  ((FontInterface *) clazz->interface)->renderBitmapCharacters = renderBitmapCharacters;
   ((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
+  ((FontInterface *) clazz->interface)->sizeBitmapCharacters = sizeBitmapCharacters;
   ((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
 
   const bool init = TTF_Init();
@@ -428,8 +442,6 @@ static void initialize(Class *clazz) {
   _cache = $$(Dictionary, dictionary);
   assert(_cache);
 
-  // Called directly, not via $$(Font, cacheFont, ...): dynamic dispatch would re-enter
-  // _Font(), which is still inside its own do_once here, and deadlock.
   Data *coda = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len - 1);
   assert(coda);
   cacheFont(coda, DEFAULT_FONT_FAMILY);

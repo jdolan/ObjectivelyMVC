@@ -1,0 +1,459 @@
+/*
+ * ObjectivelyMVC: Object oriented MVC framework for SDL3 and C.
+ * Copyright (C) 2014 Jay Dolan <jay@jaydolan.com>
+ * This software is provided 'as-is', without any express or implied
+ * warranty. In no event will the authors be held liable for any damages
+ * arising from the use of this software.
+ * Permission is granted to anyone to use this software for any purpose,
+ * including commercial applications, and to alter it and redistribute it
+ * freely, subject to the following restrictions:
+ * 1. The origin of this software must not be misrepresented; you must not
+ * claim that you wrote the original software. If you use this software
+ * in a product, an acknowledgment in the product documentation would be
+ * appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must not be
+ * misrepresented as being the original software.
+ */
+
+#include <assert.h>
+#include <limits.h>
+#include <math.h>
+#include <string.h>
+
+#include <Objectively/String.h>
+
+#include "Colors.h"
+#include "Font.h"
+#include "Log.h"
+#include "Text.h"
+
+#define _Class _Font
+
+#define REPLACEMENT_CHARACTER 0xFFFD
+
+#pragma mark - Baking
+
+/**
+ * @brief The top-left texel of the given cell within the grid surface.
+ */
+static SDL_Point cellOrigin(const FontBitmap *bitmap, Uint32 cell) {
+  return MakePoint((cell % bitmap->columns) * bitmap->cellSize.w, (cell / bitmap->columns) * bitmap->cellSize.h);
+}
+
+/**
+ * @brief Copies `src` into `dest` at `rect`, scaling if necessary, without alpha blending, so
+ * that glyph coverage lands in the sheet exactly as rasterized.
+ */
+static void blit(SDL_Surface *src, SDL_Surface *dest, const SDL_Rect *rect) {
+
+  SDL_BlendMode blendMode;
+  SDL_GetSurfaceBlendMode(src, &blendMode);
+  SDL_SetSurfaceBlendMode(src, SDL_BLENDMODE_NONE);
+
+  if (src->w == rect->w && src->h == rect->h) {
+    SDL_BlitSurface(src, NULL, dest, rect);
+  } else {
+    SDL_BlitSurfaceScaled(src, NULL, dest, rect, SDL_SCALEMODE_LINEAR);
+  }
+
+  SDL_SetSurfaceBlendMode(src, blendMode);
+}
+
+/**
+ * @brief Rasterizes `codepoint` into the given cell, with its bearing baked in.
+ */
+static void bakeGlyph(const FontBitmap *bitmap, TTF_Font *font, SDL_Surface *sheet, Uint32 codepoint, Uint32 cell) {
+
+  if (!TTF_FontHasGlyph(font, codepoint)) {
+    return;
+  }
+
+  int minX = 0;
+  TTF_GetGlyphMetrics(font, codepoint, &minX, NULL, NULL, NULL, NULL);
+
+  SDL_Surface *glyph = TTF_RenderGlyph_Blended(font, codepoint, Colors.White);
+  if (glyph) {
+
+    // The glyph surface's left edge is the pen, with the glyph's own bearing already applied,
+    // except that SDL_ttf shifts a glyph with a negative bearing right so that its ink is not
+    // cut off. The cell's left edge is the pen plus the range's minimum bearing.
+    const SDL_Point origin = cellOrigin(bitmap, cell);
+    const SDL_Rect rect = MakeRect(origin.x - bitmap->bearing + min(minX, 0), origin.y, glyph->w, glyph->h);
+
+    // A glyph surface can exceed its cell, and must not overwrite its neighbours
+    const SDL_Rect clip = MakeRect(origin.x, origin.y, bitmap->cellSize.w, bitmap->cellSize.h);
+    SDL_SetSurfaceClipRect(sheet, &clip);
+
+    blit(glyph, sheet, &rect);
+
+    SDL_SetSurfaceClipRect(sheet, NULL);
+    SDL_DestroySurface(glyph);
+  } else {
+    MVC_LogError("U+%04X: %s\n", codepoint, SDL_GetError());
+  }
+}
+
+#pragma mark - Walking
+
+typedef enum {
+  TokenEnd,
+  TokenNewline,
+  TokenColor,
+  TokenGlyph
+} TokenType;
+
+typedef struct {
+  TokenType type;
+  Uint32 codepoint;
+  Uint32 cell;
+  SDL_Color color;
+} Token;
+
+/**
+ * @brief Resolves `codepoint` to a cell, logging the first sighting of each unbaked one.
+ */
+static Uint32 cellForCodepoint(FontBitmap *bitmap, Uint32 codepoint) {
+
+  if (codepoint >= bitmap->first && codepoint < bitmap->first + bitmap->count) {
+    return codepoint - bitmap->first;
+  }
+
+  bool logged = false;
+  for (size_t i = 0; i < bitmap->loggedCount; i++) {
+    if (bitmap->logged[i] == codepoint) {
+      logged = true;
+      break;
+    }
+  }
+
+  if (!logged && bitmap->loggedCount < lengthof(bitmap->logged)) {
+    bitmap->logged[bitmap->loggedCount++] = codepoint;
+
+    if (bitmap->loggedCount < lengthof(bitmap->logged)) {
+      MVC_LogWarn("U+%04X is outside the baked range U+%04X-U+%04X\n", codepoint, bitmap->first, bitmap->first + bitmap->count - 1);
+    } else {
+      MVC_LogWarn("U+%04X and further codepoints outside the baked range U+%04X-U+%04X will not be reported\n", codepoint, bitmap->first, bitmap->first + bitmap->count - 1);
+    }
+  }
+
+  return bitmap->count;
+}
+
+/**
+ * @brief Advances `*chars` past the next token, describing it in `token`.
+ */
+static void nextToken(FontBitmap *bitmap, const char **chars, bool colorEscapes, Token *token) {
+
+  const char *p = *chars;
+
+  while (*p == '\r') {
+    p++;
+  }
+
+  if (*p == '\0') {
+    token->type = TokenEnd;
+    *chars = p;
+    return;
+  }
+
+  if (*p == '\n') {
+    token->type = TokenNewline;
+    *chars = p + 1;
+    return;
+  }
+
+  if (colorEscapes && p[0] == '^' && p[1] >= '0' && p[1] <= '9') {
+    token->type = TokenColor;
+    token->color = TextEscapeColors[p[1] - '0'];
+    *chars = p + 2;
+    return;
+  }
+
+  const Uint32 codepoint = SDL_StepUTF8(&p, NULL);
+
+  token->type = TokenGlyph;
+  token->codepoint = codepoint;
+  token->cell = cellForCodepoint(bitmap, codepoint);
+  *chars = p;
+}
+
+/**
+ * @brief The pen advance of the given token, in texels.
+ */
+static int tokenAdvance(const FontBitmap *bitmap, const Token *token) {
+  return token->type == TokenGlyph ? bitmap->advance : 0;
+}
+
+/**
+ * @brief The advance of the word starting at `chars`, up to the next space, newline or end.
+ */
+static int wordAdvance(FontBitmap *bitmap, const char *chars, bool colorEscapes) {
+
+  int advance = 0;
+
+  while (true) {
+    const char *next = chars;
+
+    Token token;
+    nextToken(bitmap, &next, colorEscapes, &token);
+
+    if (token.type == TokenEnd || token.type == TokenNewline) {
+      break;
+    }
+
+    if (token.type == TokenGlyph && token.codepoint == ' ') {
+      break;
+    }
+
+    advance += tokenAdvance(bitmap, &token);
+    chars = next;
+  }
+
+  return advance;
+}
+
+/**
+ * @brief Receives each drawable token with the pen position of its cell, in texels.
+ */
+typedef void (*TokenVisitor)(const FontBitmap *bitmap, const Token *token, int x, int y, ident data);
+
+/**
+ * @brief Walks `chars`, wrapping at word boundaries when `wrapWidth` (in texels) is non-zero,
+ * and reports the extent of the text in texels.
+ */
+static void walk(FontBitmap *bitmap, const char *chars, bool colorEscapes, int wrapWidth, SDL_Color color,
+                 TokenVisitor visitor, ident data, int *w, int *h) {
+
+  int x = 0, y = 0, maxX = 0;
+  bool lineHasContent = false;
+
+  const int overhang = max(0, bitmap->bearing + bitmap->cellSize.w - bitmap->advance);
+
+  Token token = { .type = TokenEnd, .color = color };
+
+  while (true) {
+    nextToken(bitmap, &chars, colorEscapes, &token);
+
+    if (token.type == TokenEnd) {
+      break;
+    }
+
+    if (token.type == TokenNewline) {
+      x = 0;
+      y += bitmap->cellSize.h;
+      lineHasContent = false;
+      continue;
+    }
+
+    if (token.type == TokenColor) {
+      color = token.color;
+      continue;
+    }
+
+    if (wrapWidth && token.type == TokenGlyph && token.codepoint == ' ' && x > 0) {
+      if (x + bitmap->advance + wordAdvance(bitmap, chars, colorEscapes) > wrapWidth) {
+        x = 0;
+        y += bitmap->cellSize.h;
+        lineHasContent = false;
+        continue;
+      }
+    }
+
+    const int advance = tokenAdvance(bitmap, &token);
+
+    if (wrapWidth && x > 0 && x + advance > wrapWidth) {
+      x = 0;
+      y += bitmap->cellSize.h;
+      lineHasContent = false;
+    }
+
+    if (visitor) {
+      token.color = color;
+      visitor(bitmap, &token, x, y, data);
+    }
+
+    x += advance;
+    lineHasContent = true;
+    maxX = max(maxX, x + overhang);
+  }
+
+  if (w) {
+    *w = maxX;
+  }
+  if (h) {
+    *h = y + (lineHasContent ? bitmap->cellSize.h : 0);
+  }
+}
+
+#pragma mark - FontBitmap
+
+bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count, ImageAtlas *atlas) {
+
+  assert(bitmap);
+  assert(font);
+  assert(count);
+  assert(atlas);
+
+  if (!TTF_FontIsFixedWidth(font->font)) {
+    String *name = $(font, name);
+    MVC_LogWarn("%s is not fixed-width\n", name->chars);
+    release(name);
+    return false;
+  }
+
+  int minX = INT_MAX, maxX = INT_MIN, advance = 0;
+
+  for (Uint32 i = 0; i <= count; i++) {
+    const Uint32 codepoint = i < count ? first + i : REPLACEMENT_CHARACTER;
+
+    if (TTF_FontHasGlyph(font->font, codepoint)) {
+      int glyphMinX = 0, glyphMaxX = 0, glyphAdvance = 0;
+      if (!TTF_GetGlyphMetrics(font->font, codepoint, &glyphMinX, &glyphMaxX, NULL, NULL, &glyphAdvance)) {
+        continue;
+      }
+
+      minX = min(minX, glyphMinX);
+      maxX = max(maxX, max(glyphMaxX, glyphAdvance));
+
+      if (i < count) {
+        advance = max(advance, glyphAdvance);
+      }
+    }
+  }
+
+  if (maxX <= minX || advance == 0) {
+    String *name = $(font, name);
+    MVC_LogWarn("%s has no glyphs in U+%04X-U+%04X\n", name->chars, first, first + count - 1);
+    release(name);
+    return false;
+  }
+
+  bitmap->atlas = retain(atlas);
+  bitmap->first = first;
+  bitmap->count = count;
+  bitmap->advance = advance;
+  bitmap->bearing = minX;
+  bitmap->cellSize = MakeSize(maxX - minX, TTF_GetFontHeight(font->font));
+
+  // One cell past the range for the replacement glyph
+  const Uint32 cells = count + 1;
+
+  bitmap->columns = (int) ceilf(sqrtf((float) cells));
+
+  const int rows = (int) ((cells + bitmap->columns - 1) / bitmap->columns);
+
+  SDL_Surface *sheet = SDL_CreateSurface(bitmap->columns * bitmap->cellSize.w, rows * bitmap->cellSize.h, SDL_PIXELFORMAT_RGBA32);
+  assert(sheet);
+
+  SDL_FillSurfaceRect(sheet, NULL, 0);
+
+  for (Uint32 i = 0; i < count; i++) {
+    bakeGlyph(bitmap, font->font, sheet, first + i, i);
+  }
+
+  bakeGlyph(bitmap, font->font, sheet, TTF_FontHasGlyph(font->font, REPLACEMENT_CHARACTER) ? REPLACEMENT_CHARACTER : '?', count);
+
+  Image *grid = $$(Image, imageWithSurface, sheet);
+  assert(grid);
+
+  bitmap->cells = retain($(atlas, addImage, grid));
+
+  release(grid);
+  SDL_DestroySurface(sheet);
+
+  return true;
+}
+
+void deallocBitmap(FontBitmap *bitmap) {
+
+  assert(bitmap);
+
+  release(bitmap->cells);
+  release(bitmap->atlas);
+}
+
+typedef struct {
+  const Renderer *renderer;
+  Texture *texture;
+  SDL_FPoint origin;
+  float scale;
+} RenderContext;
+
+/**
+ * @brief TokenVisitor for Font::renderBitmapCharacters.
+ */
+static void renderToken(const FontBitmap *bitmap, const Token *token, int x, int y, ident data) {
+
+  const RenderContext *context = data;
+
+  const SDL_Point origin = cellOrigin(bitmap, token->cell);
+  const SDL_Rect src = MakeRect(bitmap->cells->rect.x + origin.x, bitmap->cells->rect.y + origin.y, bitmap->cellSize.w, bitmap->cellSize.h);
+
+  // Positioned in whole texels so that the sheet is sampled 1:1, then scaled to logical
+  const SDL_FRect dest = {
+    (context->origin.x + x + bitmap->bearing) / context->scale,
+    (context->origin.y + y) / context->scale,
+    src.w / context->scale,
+    src.h / context->scale
+  };
+
+  $(context->renderer, drawTextureRegion, context->texture, &src, &dest, &token->color);
+}
+
+/**
+ * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin)
+ * @memberof Font
+ */
+void renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin) {
+
+  assert(self);
+  assert(renderer);
+  assert(origin);
+
+  FontBitmap *bitmap = &self->bitmap;
+  assert(bitmap->atlas);
+
+  if (chars == NULL || bitmap->cells->atlas == NULL) {
+    return;
+  }
+
+  RenderContext context = {
+    .renderer = renderer,
+    .texture = $(bitmap->atlas, texture, renderer->device),
+    .origin = { roundf(origin->x * self->pixelDensity), roundf(origin->y * self->pixelDensity) },
+    .scale = self->pixelDensity,
+  };
+
+  if (context.texture == NULL) {
+    return;
+  }
+
+  walk(bitmap, chars, colorEscapes, (int) (wrapWidth * context.scale), color, renderToken, &context, NULL, NULL);
+}
+
+/**
+ * @fn void Font::sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)
+ * @memberof Font
+ */
+void sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h) {
+
+  assert(self);
+
+  FontBitmap *bitmap = &self->bitmap;
+  assert(bitmap->atlas);
+
+  int texelsW = 0, texelsH = 0;
+
+  if (chars) {
+    walk(bitmap, chars, colorEscapes, (int) (wrapWidth * self->pixelDensity), Colors.White, NULL, NULL, &texelsW, &texelsH);
+  }
+
+  if (w) {
+    *w = (int) ceilf(texelsW / self->pixelDensity);
+  }
+  if (h) {
+    *h = (int) ceilf(texelsH / self->pixelDensity);
+  }
+}
+
+#undef _Class

@@ -30,6 +30,7 @@
 #include <Objectively/Data.h>
 #include <Objectively/String.h>
 
+#include <ObjectivelyMVC/Font+Bitmap.h>
 #include <ObjectivelyMVC/Types.h>
 
 #define DEFAULT_FONT_FAMILY "Coda"
@@ -97,6 +98,14 @@ struct Font {
    * @protected
    */
   FontInterface *interface[0];
+
+  /**
+   * @brief The glyphs of a fixed-width Font, baked into an ImageAtlas; `bitmap.atlas` is
+   * `NULL` for a proportional Font.
+   * @details Monospaced Fonts are bitmap fonts: Text draws a Font with a bitmap as one quad
+   * per glyph from the atlas, with no opt-in.
+   */
+  FontBitmap bitmap;
 
   /**
    * @brief The raw font data.
@@ -175,8 +184,8 @@ struct FontInterface {
    * @static
    * @fn Font *Font::defaultMonospaceFont(void)
    * @return The default monospaced Font, at a pixel density of `1.0`.
-   * @remarks Bundled for baking BitmapFonts, which require a fixed-width face; this is the
-   * fallback for Views that are not yet attached to a window, mirroring Font::defaultFont.
+   * @remarks Bundled so that a bitmap font is always available; this is the fallback for
+   * Views that are not yet attached to a window, mirroring Font::defaultFont.
    * @memberof Font
    */
   Font *(*defaultMonospaceFont)(void);
@@ -246,6 +255,20 @@ struct FontInterface {
   String *(*nameWithAttributes)(const FontAttributes *attributes);
 
   /**
+   * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin)
+   * @brief Records one quad per glyph of the given characters from this Font's bitmap.
+   * @param self The Font, which MUST have a bitmap.
+   * @param renderer The Renderer.
+   * @param chars The null-terminated UTF-8 encoded C string to render.
+   * @param color The color.
+   * @param colorEscapes If true, `^0` through `^9` select from `TextEscapeColors`.
+   * @param wrapWidth The maximum line width, in logical pixels, or `0` for no wrapping.
+   * @param origin The top-left corner of the first line, in logical pixels.
+   * @memberof Font
+   */
+  void (*renderBitmapCharacters)(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin);
+
+  /**
    * @fn SDL_Surface *Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
    * @brief Renders the given characters in this Font.
    * @param self The Font.
@@ -256,6 +279,19 @@ struct FontInterface {
    * @memberof Font
    */
   SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color, int wrapWidth);
+
+  /**
+   * @fn void Font::sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)
+   * @brief Measures the given characters against this Font's bitmap.
+   * @param self The Font, which MUST have a bitmap.
+   * @param chars The null-terminated UTF-8 encoded C string to size.
+   * @param colorEscapes If true, `^0` through `^9` are escapes rather than characters.
+   * @param wrapWidth The maximum line width, in logical pixels, or `0` for no wrapping.
+   * @param w The width to return, in logical pixels.
+   * @param h The height to return, in logical pixels.
+   * @memberof Font
+   */
+  void (*sizeBitmapCharacters)(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);
 
   /**
    * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)

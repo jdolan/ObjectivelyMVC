@@ -42,7 +42,6 @@ static void dealloc(Object *self) {
 
   Theme *this = (Theme *) self;
 
-  release(this->bitmapFontCache);
   release(this->fontCache);
   release(this->icons);
   release(this->stylesheets);
@@ -109,40 +108,6 @@ static Font *font(Theme *self, const FontAttributes *attributes, float pixelDens
   release(key);
 
   return font;
-}
-
-/**
- * @fn BitmapFont *Theme::bitmapFont(Theme *self, const FontAttributes *attributes, float pixelDensity)
- * @memberof Theme
- */
-static BitmapFont *bitmapFont(Theme *self, const FontAttributes *attributes, float pixelDensity) {
-
-  String *key = cacheKey(attributes, pixelDensity);
-
-  BitmapFont *bitmapFont = $(self->bitmapFontCache, objectForKeyPath, key->chars);
-  if (bitmapFont == NULL) {
-
-    Font *resolvedFont = $(self, font, attributes, pixelDensity);
-
-    ImageAtlas *atlas = $(alloc(ImageAtlas), init);
-    assert(atlas);
-
-    bitmapFont = $(alloc(BitmapFont), initWithFont, resolvedFont,
-                    BITMAP_FONT_DEFAULT_FIRST, BITMAP_FONT_DEFAULT_COUNT, NULL, atlas);
-    if (bitmapFont) {
-      $(atlas, compile);
-      $(self->bitmapFontCache, setObjectForKeyPath, bitmapFont, key->chars);
-      release(bitmapFont);
-    } else {
-      MVC_LogWarn("%s is not fixed-width; cannot bake a BitmapFont\n", resolvedFont->family);
-    }
-
-    release(atlas);
-  }
-
-  release(key);
-
-  return bitmapFont;
 }
 
 /**
@@ -222,9 +187,6 @@ static Theme *init(Theme *self) {
   self = (Theme *) super(Object, self, init);
   if (self) {
 
-    self->bitmapFontCache = $$(Dictionary, dictionary);
-    assert(self->bitmapFontCache);
-
     self->fontCache = $$(Dictionary, dictionary);
     assert(self->fontCache);
 
@@ -249,8 +211,10 @@ static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
  * @brief DictionaryEnumerator for renderDeviceWillReset.
  */
 static void renderDeviceWillReset_enumerate(const Dictionary *dictionary, ident obj, ident key, ident data) {
-  BitmapFont *bitmapFont = obj;
-  $(bitmapFont->atlas, renderDeviceWillReset);
+  Font *font = obj;
+  if (font->bitmap.atlas) {
+    $(font->bitmap.atlas, renderDeviceWillReset);
+  }
 }
 
 /**
@@ -258,7 +222,7 @@ static void renderDeviceWillReset_enumerate(const Dictionary *dictionary, ident 
  * @memberof Theme
  */
 static void renderDeviceWillReset(Theme *self) {
-  $(self->bitmapFontCache, enumerateObjectsAndKeys, renderDeviceWillReset_enumerate, NULL);
+  $(self->fontCache, enumerateObjectsAndKeys, renderDeviceWillReset_enumerate, NULL);
   if (self->icons) {
     $(self->icons, renderDeviceWillReset);
   }
@@ -269,7 +233,7 @@ static void renderDeviceWillReset(Theme *self) {
  * @memberof Theme
  */
 static void renderDeviceDidReset(Theme *self) {
-  // BitmapFont Textures are recreated lazily by ImageAtlas::texture on next use.
+  // Bitmap Textures are recreated lazily by ImageAtlas::texture on next use.
 }
 
 /**
@@ -298,7 +262,6 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((ThemeInterface *) clazz->interface)->addStylesheet = addStylesheet;
-  ((ThemeInterface *) clazz->interface)->bitmapFont = bitmapFont;
   ((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
   ((ThemeInterface *) clazz->interface)->font = font;
   ((ThemeInterface *) clazz->interface)->icons = icons;

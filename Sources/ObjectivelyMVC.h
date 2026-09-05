@@ -29,7 +29,6 @@
  */
 
 #include <ObjectivelyMVC/AtlasImage.h>
-#include <ObjectivelyMVC/BitmapFont.h>
 #include <ObjectivelyMVC/Box.h>
 #include <ObjectivelyMVC/Button.h>
 #include <ObjectivelyMVC/Checkbox.h>
@@ -39,6 +38,7 @@
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/DebugViewController.h>
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/Font+Bitmap.h>
 #include <ObjectivelyMVC/HSVColorPicker.h>
 #include <ObjectivelyMVC/HueColorPicker.h>
 #include <ObjectivelyMVC/Image.h>
