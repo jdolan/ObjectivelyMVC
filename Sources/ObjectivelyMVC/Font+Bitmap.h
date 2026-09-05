@@ -33,20 +33,18 @@
 /**
  * @brief The codepoint count Font bakes into its bitmap.
  * @details Covers Basic Latin, Latin-1 Supplement, Latin Extended-A/B, and Greek and Coptic
- * (U+0020-U+041F) -- generous enough for any Latin- or Greek-script text without configuration.
+ * (`U+0020-U+041F`) -- generous enough for any Latin- or Greek-script text without configuration.
  * Individual codepoints a Font lacks a glyph for are simply skipped, not rejected, so this is
  * safe to bake against any fixed-width face regardless of its actual coverage.
  */
 #define FONT_BITMAP_COUNT 1024
 
 /**
- * @brief One past the last codepoint a Font bakes, so the baked range is
- * `FONT_BITMAP_FIRST <= codepoint < FONT_BITMAP_LAST`.
+ * @brief One past the last baked codepoint in a Font bitmap (exclusive upper bound).
  */
 #define FONT_BITMAP_LAST (FONT_BITMAP_FIRST + FONT_BITMAP_COUNT)
-
 /**
- * @brief The number of cells per row of the glyph sheet: FONT_BITMAP_COUNT cells make a
+ * @brief The number of cells per row of the glyph sheet: `FONT_BITMAP_COUNT` cells make a
  * square grid of this many columns and rows.
  */
 #define FONT_BITMAP_COLUMNS 32
