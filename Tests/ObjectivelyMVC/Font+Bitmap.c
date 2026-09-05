@@ -152,8 +152,8 @@ START_TEST(metricsAreUniformAndLogical) {
   ck_assert_int_eq(TTF_GetFontHeight(font->font), bitmap->cellSize.h);
 
   // The grid is one node in the atlas, sized to hold every cell
-  ck_assert_int_eq(bitmap->columns * bitmap->cellSize.w, bitmap->atlas->rect.w);
-  ck_assert_int_ge(bitmap->atlas->rect.w * bitmap->atlas->rect.h,
+  ck_assert_int_eq(bitmap->columns * bitmap->cellSize.w, bitmap->cells->rect.w);
+  ck_assert_int_ge(bitmap->cells->rect.w * bitmap->cells->rect.h,
                    (int) (bitmap->count + 1) * bitmap->cellSize.w * bitmap->cellSize.h);
 
   // Cells are physical texels at density 2; reported sizes are logical, so half
