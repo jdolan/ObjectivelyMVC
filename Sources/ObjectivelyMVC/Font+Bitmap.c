@@ -62,7 +62,9 @@ static void blit(SDL_Surface *src, SDL_Surface *dest, const SDL_Rect *rect) {
 /**
  * @brief Rasterizes `codepoint` into the given cell, with its bearing baked in.
  */
-static void bakeGlyph(const FontBitmap *bitmap, TTF_Font *font, SDL_Surface *sheet, Uint32 codepoint, Uint32 cell) {
+static void bakeGlyph(const FontBitmap *bitmap, TTF_Font *font, Uint32 codepoint, Uint32 cell) {
+
+  SDL_Surface *sheet = bitmap->surface;
 
   if (!TTF_FontHasGlyph(font, codepoint)) {
     return;
@@ -287,12 +289,11 @@ static void walk(FontBitmap *bitmap, const char *chars, bool colorEscapes, int w
 
 #pragma mark - FontBitmap
 
-bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count, ImageAtlas *atlas) {
+bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count) {
 
   assert(bitmap);
   assert(font);
   assert(count);
-  assert(atlas);
 
   if (!TTF_FontIsFixedWidth(font->font)) {
     String *name = $(font, name);
@@ -328,7 +329,6 @@ bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count, Imag
     return false;
   }
 
-  bitmap->atlas = retain(atlas);
   bitmap->first = first;
   bitmap->count = count;
   bitmap->advance = advance;
@@ -342,24 +342,16 @@ bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count, Imag
 
   const int rows = (int) ((cells + bitmap->columns - 1) / bitmap->columns);
 
-  SDL_Surface *sheet = SDL_CreateSurface(bitmap->columns * bitmap->cellSize.w, rows * bitmap->cellSize.h, SDL_PIXELFORMAT_RGBA32);
-  assert(sheet);
+  bitmap->surface = SDL_CreateSurface(bitmap->columns * bitmap->cellSize.w, rows * bitmap->cellSize.h, SDL_PIXELFORMAT_RGBA32);
+  assert(bitmap->surface);
 
-  SDL_FillSurfaceRect(sheet, NULL, 0);
+  SDL_FillSurfaceRect(bitmap->surface, NULL, 0);
 
   for (Uint32 i = 0; i < count; i++) {
-    bakeGlyph(bitmap, font->font, sheet, first + i, i);
+    bakeGlyph(bitmap, font->font, first + i, i);
   }
 
-  bakeGlyph(bitmap, font->font, sheet, TTF_FontHasGlyph(font->font, REPLACEMENT_CHARACTER) ? REPLACEMENT_CHARACTER : '?', count);
-
-  Image *grid = $$(Image, imageWithSurface, sheet);
-  assert(grid);
-
-  bitmap->cells = retain($(atlas, addImage, grid));
-
-  release(grid);
-  SDL_DestroySurface(sheet);
+  bakeGlyph(bitmap, font->font, TTF_FontHasGlyph(font->font, REPLACEMENT_CHARACTER) ? REPLACEMENT_CHARACTER : '?', count);
 
   return true;
 }
@@ -368,8 +360,22 @@ void deallocBitmap(FontBitmap *bitmap) {
 
   assert(bitmap);
 
-  release(bitmap->cells);
-  release(bitmap->atlas);
+  release(bitmap->texture);
+
+  if (bitmap->surface) {
+    SDL_DestroySurface(bitmap->surface);
+  }
+}
+
+/**
+ * @fn void Font::renderDeviceWillReset(Font *self)
+ * @memberof Font
+ */
+void bitmapRenderDeviceWillReset(Font *self) {
+
+  assert(self);
+
+  self->bitmap.texture = release(self->bitmap.texture);
 }
 
 typedef struct {
@@ -387,7 +393,7 @@ static void renderToken(const FontBitmap *bitmap, const Token *token, int x, int
   const RenderContext *context = data;
 
   const SDL_Point origin = cellOrigin(bitmap, token->cell);
-  const SDL_Rect src = MakeRect(bitmap->cells->rect.x + origin.x, bitmap->cells->rect.y + origin.y, bitmap->cellSize.w, bitmap->cellSize.h);
+  const SDL_Rect src = MakeRect(origin.x, origin.y, bitmap->cellSize.w, bitmap->cellSize.h);
 
   // Positioned in whole texels so that the sheet is sampled 1:1, then scaled to logical
   const SDL_FRect dest = {
@@ -411,22 +417,23 @@ void renderBitmapCharacters(Font *self, const Renderer *renderer, const char *ch
   assert(origin);
 
   FontBitmap *bitmap = &self->bitmap;
-  assert(bitmap->atlas);
+  assert(bitmap->surface);
 
-  if (chars == NULL || bitmap->cells->atlas == NULL) {
+  if (chars == NULL) {
     return;
+  }
+
+  if (bitmap->texture == NULL) {
+    bitmap->texture = $(renderer->device, createTextureFromSurface, bitmap->surface, SDL_GPU_TEXTUREUSAGE_SAMPLER, false);
+    assert(bitmap->texture);
   }
 
   RenderContext context = {
     .renderer = renderer,
-    .texture = $(bitmap->atlas, texture, renderer->device),
+    .texture = bitmap->texture,
     .origin = { roundf(origin->x * self->pixelDensity), roundf(origin->y * self->pixelDensity) },
     .scale = self->pixelDensity,
   };
-
-  if (context.texture == NULL) {
-    return;
-  }
 
   walk(bitmap, chars, colorEscapes, (int) (wrapWidth * context.scale), color, renderToken, &context, NULL, NULL);
 }
@@ -440,7 +447,7 @@ void sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int 
   assert(self);
 
   FontBitmap *bitmap = &self->bitmap;
-  assert(bitmap->atlas);
+  assert(bitmap->surface);
 
   int texelsW = 0, texelsH = 0;
 

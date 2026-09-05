@@ -65,8 +65,7 @@ START_TEST(proportionalFaceHasNoBitmap) {
   Font *coda = $$(Font, defaultFont);
   ck_assert(!TTF_FontIsFixedWidth(coda->font));
 
-  ck_assert_ptr_null(coda->bitmap.atlas);
-  ck_assert_ptr_null(coda->bitmap.cells);
+  ck_assert_ptr_null(coda->bitmap.surface);
 
 } END_TEST
 
@@ -78,13 +77,12 @@ START_TEST(fixedWidthFaceBakesAutomatically) {
   }
 
   ck_assert(TTF_FontIsFixedWidth(font->font));
-  ck_assert_ptr_nonnull(font->bitmap.atlas);
-  ck_assert_ptr_nonnull(font->bitmap.cells);
+  ck_assert_ptr_nonnull(font->bitmap.surface);
   ck_assert_uint_eq(FONT_BITMAP_DEFAULT_FIRST, font->bitmap.first);
   ck_assert_uint_eq(FONT_BITMAP_DEFAULT_COUNT, font->bitmap.count);
 
   // The bundled monospace face bakes too, so a bitmap font is always available
-  ck_assert_ptr_nonnull($$(Font, defaultMonospaceFont)->bitmap.atlas);
+  ck_assert_ptr_nonnull($$(Font, defaultMonospaceFont)->bitmap.surface);
 
   release(font);
 
@@ -97,15 +95,11 @@ START_TEST(rangeWithoutGlyphsIsRejected) {
     return;
   }
 
-  ImageAtlas *atlas = $(alloc(ImageAtlas), init);
-
   // Unassigned codepoints: only the replacement glyph would bake, so there is no advance
   FontBitmap bitmap = { 0 };
-  ck_assert(!initBitmap(&bitmap, font, 0xE0000, 16, atlas));
-  ck_assert_ptr_null(bitmap.atlas);
-  ck_assert_ptr_null(bitmap.cells);
+  ck_assert(!initBitmap(&bitmap, font, 0xE0000, 16));
+  ck_assert_ptr_null(bitmap.surface);
 
-  release(atlas);
   release(font);
 
 } END_TEST
@@ -119,7 +113,7 @@ START_TEST(textDrawsFromBitmapWhenFixedWidth) {
 
   Text *text = $(alloc(Text), initWithText, "Hello", font);
   ck_assert_ptr_eq(font, text->font);
-  ck_assert_ptr_nonnull(text->font->bitmap.atlas);
+  ck_assert_ptr_nonnull(text->font->bitmap.surface);
 
   // Measured against the bitmap: an exact multiple of the cell advance, plus overhang
   const SDL_Size bitmapSize = $(text, naturalSize);
@@ -127,7 +121,7 @@ START_TEST(textDrawsFromBitmapWhenFixedWidth) {
   ck_assert_int_eq(font->bitmap.cellSize.h, bitmapSize.h);
 
   $(text, setFont, $$(Font, defaultFont));
-  ck_assert_ptr_null(text->font->bitmap.atlas);
+  ck_assert_ptr_null(text->font->bitmap.surface);
 
   const SDL_Size fontSize = $(text, naturalSize);
   ck_assert_int_gt(fontSize.w, 0);
@@ -145,15 +139,15 @@ START_TEST(metricsAreUniformAndLogical) {
   }
 
   const FontBitmap *bitmap = &font->bitmap;
-  ck_assert_ptr_nonnull(bitmap->atlas);
+  ck_assert_ptr_nonnull(bitmap->surface);
 
   ck_assert_int_gt(bitmap->advance, 0);
   ck_assert_int_ge(bitmap->cellSize.w, bitmap->advance);
   ck_assert_int_eq(TTF_GetFontHeight(font->font), bitmap->cellSize.h);
 
-  // The grid is one node in the atlas, sized to hold every cell
-  ck_assert_int_eq(bitmap->columns * bitmap->cellSize.w, bitmap->cells->rect.w);
-  ck_assert_int_ge(bitmap->cells->rect.w * bitmap->cells->rect.h,
+  // The sheet is exactly the grid, sized to hold every cell
+  ck_assert_int_eq(bitmap->columns * bitmap->cellSize.w, bitmap->surface->w);
+  ck_assert_int_ge(bitmap->surface->w * bitmap->surface->h,
                    (int) (bitmap->count + 1) * bitmap->cellSize.w * bitmap->cellSize.h);
 
   // Cells are physical texels at density 2; reported sizes are logical, so half
@@ -189,7 +183,7 @@ START_TEST(wordWrapBreaksAtSpaces) {
   }
 
   const FontBitmap *bitmap = &font->bitmap;
-  ck_assert_ptr_nonnull(bitmap->atlas);
+  ck_assert_ptr_nonnull(bitmap->surface);
 
   int empty;
   $(font, sizeBitmapCharacters, "", false, 0, NULL, &empty);

@@ -93,7 +93,7 @@ struct Text {
 
   /**
    * @brief The Font. A fixed-width Font carries a bitmap, and is drawn as one quad per glyph
-   * from its atlas instead of being rasterized per string; `color` and color escapes then
+   * from its glyph sheet instead of being rasterized per string; `color` and color escapes then
    * apply per vertex, for free.
    * @remarks Do not set this property directly.
    * @see Text::setFont(Text *, Font *)

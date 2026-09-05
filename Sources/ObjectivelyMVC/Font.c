@@ -32,7 +32,6 @@
 #include <Objectively/String.h>
 
 #include "Font.h"
-#include "ImageAtlas.h"
 #include "Log.h"
 #include "View.h"
 #include "Window.h"
@@ -289,14 +288,7 @@ static Font *initWithData(Font *self, Data *data, const FontAttributes *attribut
     TTF_SetFontHinting(self->font, TTF_HINTING_LIGHT_SUBPIXEL);
 
     if (TTF_FontIsFixedWidth(self->font)) {
-      ImageAtlas *atlas = $(alloc(ImageAtlas), init);
-      assert(atlas);
-
-      if (initBitmap(&self->bitmap, self, FONT_BITMAP_DEFAULT_FIRST, FONT_BITMAP_DEFAULT_COUNT, atlas)) {
-        $(atlas, compile);
-      }
-
-      release(atlas);
+      initBitmap(&self->bitmap, self, FONT_BITMAP_DEFAULT_FIRST, FONT_BITMAP_DEFAULT_COUNT);
     }
   }
 
@@ -432,6 +424,7 @@ static void initialize(Class *clazz) {
   ((FontInterface *) clazz->interface)->nameWithAttributes = nameWithAttributes;
   ((FontInterface *) clazz->interface)->renderBitmapCharacters = renderBitmapCharacters;
   ((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
+  ((FontInterface *) clazz->interface)->renderDeviceWillReset = bitmapRenderDeviceWillReset;
   ((FontInterface *) clazz->interface)->sizeBitmapCharacters = sizeBitmapCharacters;
   ((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
 

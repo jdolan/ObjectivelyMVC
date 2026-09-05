@@ -130,16 +130,12 @@ struct ThemeInterface {
    * @fn ImageAtlas *Theme::icons(Theme *self)
    * @brief Returns this Theme's app-owned ImageAtlas for icons, HUD art, and similar, creating
    * it on first access.
-   * @details Unlike the ImageAtlas a fixed-width Font bakes its bitmap into, this atlas is not
-   * populated or compiled by Theme --
+   * @details This atlas is not populated or compiled by Theme --
    * the caller drives everything (ImageAtlas::addImage/addImageWithResourceName, compile,
    * tracking the returned AtlasImages) exactly as with any other ImageAtlas. Theme only owns
    * the instance and forwards render device resets to it, so apps get correct GPU resource
    * lifecycle for free instead of needing their own ViewController::renderDeviceWillReset
-   * override. Deliberately separate from the ImageAtlas(es) Font bitmaps are baked into:
-   * ImageAtlas::compile repacks everything from scratch, so an icon atlas shared with a
-   * Font's bitmap would silently invalidate that bitmap's glyph positions on every icon
-   * add/reload.
+   * override.
    * @param self The Theme.
    * @return This Theme's icon ImageAtlas, owned by this Theme.
    * @memberof Theme
@@ -177,7 +173,7 @@ struct ThemeInterface {
    * @brief Releases the GPU resources of every cached Font's bitmap, and of Theme::icons if it
    * has been created, ahead of a render device reset.
    * @details Fonts are cached here, not owned by the Views drawing them, so this Theme is the
-   * one place that reliably reaches every bitmap atlas, including one no live View references.
+   * one place that reliably reaches every bitmap Texture, including one no live View references.
    * @param self The Theme.
    * @memberof Theme
    */

@@ -100,10 +100,10 @@ struct Font {
   FontInterface *interface[0];
 
   /**
-   * @brief The glyphs of a fixed-width Font, baked into an ImageAtlas; `bitmap.atlas` is
-   * `NULL` for a proportional Font.
+   * @brief The glyphs of a fixed-width Font, baked into one sheet; `bitmap.surface` is `NULL`
+   * for a proportional Font.
    * @details Monospaced Fonts are bitmap fonts: Text draws a Font with a bitmap as one quad
-   * per glyph from the atlas, with no opt-in.
+   * per glyph from the sheet, with no opt-in.
    */
   FontBitmap bitmap;
 
@@ -279,6 +279,15 @@ struct FontInterface {
    * @memberof Font
    */
   SDL_Surface *(*renderCharacters)(const Font *self, const char *chars, SDL_Color color, int wrapWidth);
+
+  /**
+   * @fn void Font::renderDeviceWillReset(Font *self)
+   * @brief Releases this Font's bitmap Texture, if any, ahead of a render device reset. It is
+   * recreated on the next draw.
+   * @param self The Font.
+   * @memberof Font
+   */
+  void (*renderDeviceWillReset)(Font *self);
 
   /**
    * @fn void Font::sizeBitmapCharacters(Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)

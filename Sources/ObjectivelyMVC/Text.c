@@ -405,7 +405,7 @@ static void render(View *self, Renderer *renderer) {
 
     const SDL_Rect frame = $(self, renderFrame);
 
-    if (this->font->bitmap.atlas) {
+    if (this->font->bitmap.surface) {
       $(this->font, renderBitmapCharacters, renderer, this->text, this->color, this->colorEscapes,
         this->lineWrap ? frame.w : 0, &(const SDL_Point) { frame.x, frame.y });
       return;
@@ -529,7 +529,7 @@ static SDL_Size naturalSize(const Text *self) {
 
   SDL_Size size = MakeSize(0, 0);
 
-  if (font && font->bitmap.atlas) {
+  if (font && font->bitmap.surface) {
     $(font, sizeBitmapCharacters, self->text, self->colorEscapes, 0, &size.w, &size.h);
   } else if (font) {
     const char *text = self->text ?: "";

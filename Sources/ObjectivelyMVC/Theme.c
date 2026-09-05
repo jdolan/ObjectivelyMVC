@@ -211,10 +211,7 @@ static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
  * @brief DictionaryEnumerator for renderDeviceWillReset.
  */
 static void renderDeviceWillReset_enumerate(const Dictionary *dictionary, ident obj, ident key, ident data) {
-  Font *font = obj;
-  if (font->bitmap.atlas) {
-    $(font->bitmap.atlas, renderDeviceWillReset);
-  }
+  $((Font *) obj, renderDeviceWillReset);
 }
 
 /**

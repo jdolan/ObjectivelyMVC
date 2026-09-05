@@ -17,13 +17,12 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/ImageAtlas.h>
 #include <ObjectivelyMVC/Renderer.h>
 #include <ObjectivelyMVC/Types.h>
 
 /**
  * @file
- * @brief Fixed-width Fonts baked into an ImageAtlas, drawn as one quad per glyph.
+ * @brief Fixed-width Fonts baked into a glyph sheet, drawn as one quad per glyph.
  */
 
 /**
@@ -43,11 +42,13 @@
 typedef struct Font Font;
 
 /**
- * @brief A fixed-width Font's glyphs, baked into an ImageAtlas, drawn as one quad per glyph.
+ * @brief A fixed-width Font's glyphs, baked into one sheet, drawn as one quad per glyph.
  * @details A Font rasterizes each string into its own surface and Texture, which costs
  * hundreds of microseconds every time the string changes. A fixed-width Font therefore
- * rasterizes a range of codepoints once, into a uniform grid of cells that is added to an
- * ImageAtlas as a single AtlasImage, and Text draws it as one quad per glyph from that sheet.
+ * rasterizes a range of codepoints once, into a uniform grid of cells on a single surface, and
+ * Text draws it as one quad per glyph from that sheet. Unlike an ImageAtlas, nothing is packed:
+ * every cell's position follows from its codepoint and the cell size, so the grid is its own
+ * lookup table.
  * Text that changes every frame becomes free.
  *
  * Only fixed-width faces are supported, so there are no per-glyph metrics: a codepoint's cell
@@ -59,7 +60,7 @@ typedef struct Font Font;
  * sizeBitmapCharacters are logical, as Font's are. Like the Font that owns it, a
  * FontBitmap is immutable and bound to that Font's pixel density.
  *
- * This is a value embedded in Font, not an Object: `atlas == NULL` means the Font is not
+ * This is a value embedded in Font, not an Object: `surface == NULL` means the Font is not
  * fixed-width and has no bitmap.
  */
 typedef struct {
@@ -70,20 +71,10 @@ typedef struct {
   int advance;
 
   /**
-   * @brief The ImageAtlas holding the cells, or `NULL` if the Font is not fixed-width.
-   */
-  ImageAtlas *atlas;
-
-  /**
    * @brief The horizontal offset from the pen to a cell's left edge, in texels.
    * @details Negative when glyphs lean left of the pen, as a synthetic italic does.
    */
   int bearing;
-
-  /**
-   * @brief The grid of cells within the atlas.
-   */
-  AtlasImage *cells;
 
   /**
    * @brief The size of one cell, in texels.
@@ -117,29 +108,43 @@ typedef struct {
    * @private
    */
   size_t loggedCount;
+
+  /**
+   * @brief The glyph sheet: a grid of `columns` cells of `cellSize`, in texels, or `NULL` if
+   * the Font is not fixed-width.
+   */
+  SDL_Surface *surface;
+
+  /**
+   * @brief The Texture of `surface`, created on first draw and released on render device reset.
+   * @private
+   */
+  Texture *texture;
 } FontBitmap;
 
 /**
- * @brief Bakes the given codepoints of `font` into `atlas`, initializing `bitmap`.
+ * @brief Bakes the given codepoints of `font` into a glyph sheet, initializing `bitmap`.
  * @details One extra cell past the range holds the replacement glyph (U+FFFD, or `?` if the
  * face lacks it), drawn for any codepoint outside the range, which is also logged once.
- * The grid is added to `atlas` but not compiled: the caller MUST call ImageAtlas::compile
- * after adding everything that will share the sheet, and before drawing.
  * @param bitmap The FontBitmap, zero-initialized.
  * @param font The Font, which MUST be fixed-width.
  * @param first The first codepoint to bake.
  * @param count The number of codepoints to bake.
- * @param atlas The ImageAtlas to bake into.
  * @return True if the bitmap was baked, false if `font` is not fixed-width or has no glyphs
  * in the range, in which case `bitmap` is left zeroed.
  */
-OBJECTIVELYMVC_EXPORT bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count, ImageAtlas *atlas);
+OBJECTIVELYMVC_EXPORT bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count);
 
 /**
  * @brief Releases the resources held by `bitmap`. Safe to call on a zeroed FontBitmap.
  * @param bitmap The FontBitmap.
  */
 OBJECTIVELYMVC_EXPORT void deallocBitmap(FontBitmap *bitmap);
+
+/**
+ * @brief Implements Font::renderDeviceWillReset.
+ */
+OBJECTIVELYMVC_EXPORT void bitmapRenderDeviceWillReset(Font *self);
 
 /**
  * @brief Implements Font::renderBitmapCharacters.
