@@ -34,8 +34,6 @@
  *  - `MVC_HUD_HIDDEN=1` creates the window hidden (best effort headless).
  *  - `MVC_HUD_SCALE=N` multiplies the scoreboard row count (default 1),
  *    scaling the View tree to gauge how frame cost grows with UI complexity.
- *  - `MVC_HUD_FONT=path` names a fixed-width face to bake the readouts' BitmapFont from,
- *    ahead of the system faces tried by default.
  *  - `MVC_HUD_BITMAP_FONT=0` leaves the readouts on Font, for comparison.
  *  - `MVC_HUD_DEBUG=1` prints the draw call list once, on the tenth frame.
  */
@@ -77,11 +75,6 @@ typedef struct {
   Label *health, *armor, *ammo, *timer;
   StackView *chat;
   Panel *scoreboard;
-
-  /**
-   * @brief The atlas behind the icon row and the readouts' BitmapFont.
-   */
-  ImageAtlas *atlas;
 
   /**
    * @brief The fixed-width BitmapFont behind the readouts, or `NULL` if no fixed-width face
@@ -154,10 +147,9 @@ static Image *icon(int size, Uint32 left, Uint32 right) {
 }
 
 /**
- * @brief Bakes a BitmapFont from the first fixed-width face found on this system, so that the
- * readouts share the icon atlas and cost nothing to change. MVC_HUD_FONT names a face to try
- * first; MVC_HUD_BITMAP_FONT=0 disables the BitmapFont, leaving the readouts on Font, for
- * comparison.
+ * @brief Bakes a BitmapFont from the bundled monospace face, so that the readouts share the
+ * icon atlas and cost nothing to change. MVC_HUD_BITMAP_FONT=0 disables the BitmapFont,
+ * leaving the readouts on Font, for comparison.
  */
 static BitmapFont *bakeBitmapFont(ImageAtlas *atlas, WindowController *windowController) {
 
@@ -166,25 +158,8 @@ static BitmapFont *bakeBitmapFont(ImageAtlas *atlas, WindowController *windowCon
     return NULL;
   }
 
-  const char *paths[] = {
-    SDL_getenv("MVC_HUD_FONT"),
-    "/System/Library/Fonts/Menlo.ttc",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
-    "C:\\Windows\\Fonts\\consola.ttf",
-  };
-
-  for (size_t i = 0; i < SDL_arraysize(paths); i++) {
-    Data *data = paths[i] ? $$(Data, dataWithContentsOfFile, paths[i]) : NULL;
-    if (data) {
-      $$(Font, cacheFont, data, "Mono");
-      release(data);
-      break;
-    }
-  }
-
-  const FontAttributes attributes = { "Mono", 18, FontStyleRegular };
-  Font *font = $(windowController->theme, font, &attributes,
-                 SDL_GetWindowPixelDensity(windowController->window));
+  const FontAttributes attributes = { DEFAULT_MONOSPACE_FONT_FAMILY, 18, FontStyleRegular };
+  Font *font = $(windowController->theme, font, &attributes, SDL_GetWindowPixelDensity(windowController->window));
 
   Image *heart = icon(32, 0xff0000ff, 0xff0000ff);
   Dictionary *named = $$(Dictionary, dictionaryWithObjectsAndKeys, heart, str("heart"), NULL);
@@ -235,11 +210,13 @@ static void buildHUD(AppState *app, View *root) {
   StackView *icons = stackView(root, ViewAlignmentTopRight);
   icons->axis = StackViewAxisHorizontal;
 
+  ImageAtlas *iconAtlas = $(app->windowController->theme, icons);
+
   const Uint32 colors[] = { 0xff0000ff, 0xff00ff00, 0xffff0000, 0xff00ffff, 0xffff00ff, 0xffffff00, 0xffffffff, 0xff808080 };
 
   for (int i = 0; i < 8; i++) {
     Image *image = icon(16 + 4 * i, colors[i], colors[(i + 1) % 8]);
-    AtlasImage *atlasImage = $(app->atlas, addImage, image);
+    AtlasImage *atlasImage = $(iconAtlas, addImage, image);
     release(image);
 
     ImageView *imageView = $(alloc(ImageView), initWithImage, (Image *) atlasImage);
@@ -247,7 +224,7 @@ static void buildHUD(AppState *app, View *root) {
     release(imageView);
   }
 
-  MVC_Assert($(app->atlas, compile), "ImageAtlas::compile");
+  MVC_Assert($(iconAtlas, compile), "ImageAtlas::compile");
 
   label(root, "+", ViewAlignmentMiddleCenter);
 
@@ -443,8 +420,7 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
   $(app->windowController->theme, addStylesheet, stylesheet);
   release(stylesheet);
 
-  app->atlas = $(alloc(ImageAtlas), init);
-  app->bitmapFont = bakeBitmapFont(app->atlas, app->windowController);
+  app->bitmapFont = bakeBitmapFont($(app->windowController->theme, icons), app->windowController);
 
   buildHUD(app, viewController->view);
 
@@ -561,7 +537,6 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
 
   release(app->windowController);
   release(app->bitmapFont);
-  release(app->atlas);
   release(app->framebuffer);
   release(app->renderDevice);
 

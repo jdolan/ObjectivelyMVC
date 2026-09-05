@@ -44,6 +44,7 @@ static void dealloc(Object *self) {
 
   release(this->bitmapFontCache);
   release(this->fontCache);
+  release(this->icons);
   release(this->stylesheets);
 
   super(Object, self, dealloc);
@@ -142,6 +143,20 @@ static BitmapFont *bitmapFont(Theme *self, const FontAttributes *attributes, flo
   release(key);
 
   return bitmapFont;
+}
+
+/**
+ * @fn ImageAtlas *Theme::icons(Theme *self)
+ * @memberof Theme
+ */
+static ImageAtlas *icons(Theme *self) {
+
+  if (self->icons == NULL) {
+    self->icons = $(alloc(ImageAtlas), init);
+    assert(self->icons);
+  }
+
+  return self->icons;
 }
 
 /**
@@ -244,6 +259,9 @@ static void renderDeviceWillReset_enumerate(const Dictionary *dictionary, ident 
  */
 static void renderDeviceWillReset(Theme *self) {
   $(self->bitmapFontCache, enumerateObjectsAndKeys, renderDeviceWillReset_enumerate, NULL);
+  if (self->icons) {
+    $(self->icons, renderDeviceWillReset);
+  }
 }
 
 /**
@@ -283,6 +301,7 @@ static void initialize(Class *clazz) {
   ((ThemeInterface *) clazz->interface)->bitmapFont = bitmapFont;
   ((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
   ((ThemeInterface *) clazz->interface)->font = font;
+  ((ThemeInterface *) clazz->interface)->icons = icons;
   ((ThemeInterface *) clazz->interface)->init = init;
   ((ThemeInterface *) clazz->interface)->removeStylesheet = removeStylesheet;
   ((ThemeInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;

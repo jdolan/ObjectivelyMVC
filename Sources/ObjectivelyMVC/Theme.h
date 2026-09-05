@@ -28,6 +28,7 @@
 
 #include <ObjectivelyMVC/BitmapFont.h>
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/ImageAtlas.h>
 #include <ObjectivelyMVC/Stylesheet.h>
 
 /**
@@ -75,6 +76,13 @@ struct Theme {
    * @private
    */
   Dictionary *fontCache;
+
+  /**
+   * @brief An app-owned ImageAtlas for icons, HUD art, and similar, created lazily by
+   * Theme::icons.
+   * @private
+   */
+  ImageAtlas *icons;
 
   /**
    * @brief The Stylesheets, in order of priority.
@@ -142,6 +150,25 @@ struct ThemeInterface {
   Font *(*font)(Theme *self, const FontAttributes *attributes, float pixelDensity);
 
   /**
+   * @fn ImageAtlas *Theme::icons(Theme *self)
+   * @brief Returns this Theme's app-owned ImageAtlas for icons, HUD art, and similar, creating
+   * it on first access.
+   * @details Unlike Theme::font/bitmapFont, this atlas is not populated or compiled by Theme --
+   * the caller drives everything (ImageAtlas::addImage/addImageWithResourceName, compile,
+   * tracking the returned AtlasImages) exactly as with any other ImageAtlas. Theme only owns
+   * the instance and forwards render device resets to it, so apps get correct GPU resource
+   * lifecycle for free instead of needing their own ViewController::renderDeviceWillReset
+   * override. Deliberately separate from the ImageAtlas(es) BitmapFonts are baked into:
+   * ImageAtlas::compile repacks everything from scratch, so an icon atlas shared with a
+   * BitmapFont bake would silently invalidate that BitmapFont's glyph positions on every icon
+   * add/reload.
+   * @param self The Theme.
+   * @return This Theme's icon ImageAtlas, owned by this Theme.
+   * @memberof Theme
+   */
+  ImageAtlas *(*icons)(Theme *self);
+
+  /**
    * @fn Theme *Theme::init(Theme *self)
    * @brief Initializes this Theme.
    * @param self The Theme.
@@ -169,7 +196,8 @@ struct ThemeInterface {
 
   /**
    * @fn void Theme::renderDeviceWillReset(Theme *self)
-   * @brief Releases the GPU resources of every cached BitmapFont ahead of a render device reset.
+   * @brief Releases the GPU resources of every cached BitmapFont, and of Theme::icons if it has
+   * been created, ahead of a render device reset.
    * @details Every View drawing from a BitmapFont it holds directly already forwards this call
    * to that BitmapFont's atlas, but a BitmapFont cached here can outlive every View that
    * referenced it, so this Theme MUST also forward the call to every BitmapFont it still owns.
