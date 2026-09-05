@@ -129,18 +129,6 @@ static void bindFloat(const Inlet *inlet, ident obj) {
 }
 
 /**
- * @brief InletBinding for InletTypeFont.
- */
-static void bindFont(const Inlet *inlet, ident obj) {
-
-  release(*(Font **) inlet->dest);
-
-  // TODO
-
-  //*((Font **) inlet->dest) = $(alloc(Font), initWithName, cast(String, obj)->chars);
-}
-
-/**
  * @brief InletBinding for InletTypeImage.
  */
 static void bindImage(const Inlet *inlet, ident obj) {
@@ -312,7 +300,6 @@ const InletBinding inletBindings[] = {
   bindDouble,
   bindEnum,
   bindFloat,
-  bindFont,
   bindImage,
   bindInteger,
   bindPoint,

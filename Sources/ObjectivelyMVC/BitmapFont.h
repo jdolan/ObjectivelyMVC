@@ -28,6 +28,20 @@
  * @brief Fixed-width fonts baked into an ImageAtlas, drawn as one quad per glyph.
  */
 
+/**
+ * @brief The first codepoint Theme::bitmapFont bakes when it has no caller-specified range.
+ */
+#define BITMAP_FONT_DEFAULT_FIRST ' '
+
+/**
+ * @brief The codepoint count Theme::bitmapFont bakes when it has no caller-specified range.
+ * @details Covers Basic Latin, Latin-1 Supplement, Latin Extended-A/B, and Greek and Coptic
+ * (U+0020-U+041F) -- generous enough for any Latin- or Greek-script text without configuration.
+ * Individual codepoints a face lacks a glyph for are simply skipped, not rejected, so this is
+ * safe to bake against any fixed-width face regardless of its actual coverage.
+ */
+#define BITMAP_FONT_DEFAULT_COUNT 1024
+
 typedef struct BitmapFont BitmapFont;
 typedef struct BitmapFontInterface BitmapFontInterface;
 

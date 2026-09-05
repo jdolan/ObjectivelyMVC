@@ -36,6 +36,8 @@
 #define DEFAULT_FONT_SIZE 16
 #define DEFAULT_FONT_STYLE FontStyleRegular
 
+#define DEFAULT_MONOSPACE_FONT_FAMILY "Share Tech Mono"
+
 /**
  * @file
  * @brief TrueType fonts.
@@ -53,6 +55,28 @@ typedef enum {
 } FontStyle;
 
 OBJECTIVELYMVC_EXPORT const EnumName FontStyleNames[];
+
+/**
+ * @brief The family, size and style attributes that identify a Font, independent of the pixel
+ * density at which it is opened.
+ */
+typedef struct {
+
+  /**
+   * @brief The family, or `NULL` for the default.
+   */
+  const char *family;
+
+  /**
+   * @brief The point size, or `0` for the default.
+   */
+  int size;
+
+  /**
+   * @brief The FontStyle, or `-1` for the default.
+   */
+  int style;
+} FontAttributes;
 
 typedef struct Font Font;
 typedef struct FontInterface FontInterface;
@@ -149,6 +173,16 @@ struct FontInterface {
 
   /**
    * @static
+   * @fn Font *Font::defaultMonospaceFont(void)
+   * @return The default monospaced Font, at a pixel density of `1.0`.
+   * @remarks Bundled for baking BitmapFonts, which require a fixed-width face; this is the
+   * fallback for Views that are not yet attached to a window, mirroring Font::defaultFont.
+   * @memberof Font
+   */
+  Font *(*defaultMonospaceFont)(void);
+
+  /**
+   * @static
    * @fn Font *Font::fontWithName(const char *name, float pixelDensity)
    * @brief Resolves a Font from a name in the format produced by Font::name.
    * @details The name is parsed from the right, so families MAY contain `-`: the final
@@ -163,45 +197,41 @@ struct FontInterface {
 
   /**
    * @static
-   * @fn Font *Font::fontWithAttributes(const char *family, int size, int style, float pixelDensity)
+   * @fn Font *Font::fontWithAttributes(const FontAttributes *attributes, float pixelDensity)
    * @brief Resolves a new Font with the given attributes from the cached font Data.
    * @details "Cached" refers to the font Data registered via Font::cacheFont; the returned
-   * instance itself is newly created. Instance caching is provided per-window by
-   * WindowController::font, which callers with a window SHOULD prefer, since it
-   * supplies the window's pixel density implicitly. Attributes are normalized to their
+   * instance itself is newly created. Instance caching is provided by Theme::font, which
+   * callers with a Theme SHOULD prefer, since it supplies the pixel density implicitly and
+   * avoids re-opening the same Font repeatedly. Attributes are normalized to their
    * defaults exactly as Font::nameWithAttributes normalizes them.
-   * @param family The family, or `NULL` for the default.
-   * @param size The point size, or `0` for the default.
-   * @param style The FontStyle, or `-1` for the default.
+   * @param attributes The FontAttributes.
    * @param pixelDensity The pixel density.
-   * @return The Font, or the default Font if `family` is not registered. The caller owns
-   * the returned Font, and MUST release it.
+   * @return The Font, or the default Font if `attributes->family` is not registered. The
+   * caller owns the returned Font, and MUST release it.
    * @memberof Font
    */
-  Font *(*fontWithAttributes)(const char *family, int size, int style, float pixelDensity);
+  Font *(*fontWithAttributes)(const FontAttributes *attributes, float pixelDensity);
 
   /**
-   * @fn Font *Font::initWithData(Font *self, Data *data, const char *family, int size, int style, float pixelDensity)
+   * @fn Font *Font::initWithData(Font *self, Data *data, const FontAttributes *attributes, float pixelDensity)
    * @brief Initializes this Font with the given TTF Data and attributes.
    * @details Fonts are immutable: the backing TTF_Font is opened here at
    * `size * pixelDensity` and never re-opened. A pixel density change MUST be handled by
-   * resolving a new instance (see WindowController::font).
+   * resolving a new instance (see Theme::font).
    * @param self The Font.
    * @param data The Data.
-   * @param family The family.
-   * @param size The point size.
-   * @param style The style.
+   * @param attributes The FontAttributes.
    * @param pixelDensity The pixel density.
    * @return The initialized Font, or `NULL` on error.
    * @memberof Font
    */
-  Font *(*initWithData)(Font *self, Data *data, const char *family, int size, int style, float pixelDensity);
+  Font *(*initWithData)(Font *self, Data *data, const FontAttributes *attributes, float pixelDensity);
 
   /**
    * @fn String *Font::name(const Font *self)
    * @return This Font's name, in the format `family-size-style`, e.g. `"Coda-16-regular"`.
    * @remarks The format is stable and MAY be parsed by Font::fontWithName; it is also the
-   * key under which WindowController caches Font instances. Pixel density is deliberately
+   * key under which Theme caches Font instances. Pixel density is deliberately
    * absent: it is implied by the window whose cache is consulted.
    * @memberof Font
    */
@@ -209,11 +239,11 @@ struct FontInterface {
 
   /**
    * @static
-   * @fn String *Font::nameWithAttributes(const char *family, int size, int style)
+   * @fn String *Font::nameWithAttributes(const FontAttributes *attributes)
    * @return The Font name for the given attributes, in the format of Font::name.
    * @memberof Font
    */
-  String *(*nameWithAttributes)(const char *family, int size, int style);
+  String *(*nameWithAttributes)(const FontAttributes *attributes);
 
   /**
    * @fn SDL_Surface *Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)

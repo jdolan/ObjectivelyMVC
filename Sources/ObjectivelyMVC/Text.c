@@ -33,7 +33,7 @@
 #include "BitmapFont.h"
 #include "Colors.h"
 #include "Text.h"
-#include "WindowController.h"
+#include "Theme.h"
 
 #define _Class _Text
 
@@ -231,28 +231,53 @@ static void sizeWithColorEscapes(const Text *self, int *w, int *h) {
 
 /**
  * @brief Resolves and applies the Font with the given attributes: through the window's
- * Font cache when attached, which supplies the window's pixel density, or at a density
+ * Theme when attached, which supplies the window's pixel density, or at a density
  * of 1.0 otherwise, to be re-resolved on attachment via View::didMoveToWindow. The
  * cache's reference is retained to mirror the owned reference the fallback returns.
  */
-static void resolveFont(Text *self, const char *family, int size, int style) {
+static void resolveFont(Text *self, const FontAttributes *attributes) {
 
   View *view = (View *) self;
 
-  WindowController *windowController = view->window ?
-    $$(WindowController, windowController, view->window) : NULL;
+  Theme *theme = view->window ? $$(Theme, theme, view->window) : NULL;
 
   Font *font;
-  if (windowController) {
-    font = retain($(windowController, font, family, size, style));
+  if (theme) {
+    const float pixelDensity = SDL_GetWindowPixelDensity(view->window);
+    font = retain($(theme, font, attributes, pixelDensity));
   } else {
-    font = $$(Font, fontWithAttributes, family, size, style, 1.f);
+    font = $$(Font, fontWithAttributes, attributes, 1.f);
   }
 
   assert(font);
 
   $(self, setFont, font);
   release(font);
+}
+
+/**
+ * @brief Resolves and applies this Text's BitmapFont from its already-resolved Font, via the
+ * window's Theme, or clears it when `enabled` is false. Persists `enabled` so a later window
+ * attach or pixel density change (Theme's cache is keyed by density) can re-resolve it.
+ */
+static void resolveBitmapFont(Text *self, bool enabled) {
+
+  self->bitmapFontEnabled = enabled;
+
+  if (!enabled) {
+    $(self, setBitmapFont, NULL);
+    return;
+  }
+
+  View *view = (View *) self;
+  Theme *theme = view->window ? $$(Theme, theme, view->window) : NULL;
+  if (theme) {
+    const float pixelDensity = SDL_GetWindowPixelDensity(view->window);
+    const FontAttributes attributes = { self->font->family, self->font->size, self->font->style };
+    BitmapFont *bitmapFont = $(theme, bitmapFont, &attributes, pixelDensity);
+    $(self, setBitmapFont, bitmapFont);
+  }
+  // else: no Theme yet; didMoveToWindow re-resolves once attached.
 }
 
 #pragma mark - ObjectInterface
@@ -317,20 +342,25 @@ static void applyStyle(View *self, const Style *style) {
 
   char *fontFamily = NULL;
   int fontSize = -1, fontStyle = -1;
+  bool bitmapFont = false;
 
   const Inlet fontInlets[] = MakeInlets(
     MakeInlet("font-family", InletTypeCharacters, &fontFamily, NULL),
     MakeInlet("font-size", InletTypeInteger, &fontSize, NULL),
-    MakeInlet("font-style", InletTypeEnum, &fontStyle, (ident) FontStyleNames)
+    MakeInlet("font-style", InletTypeEnum, &fontStyle, (ident) FontStyleNames),
+    MakeInlet("bitmap-font", InletTypeBool, &bitmapFont, NULL)
   );
 
   if ($(self, bind, fontInlets, style->attributes)) {
 
-    resolveFont(this, fontFamily, fontSize, fontStyle);
+    const FontAttributes attributes = { fontFamily, fontSize, fontStyle };
+    resolveFont(this, &attributes);
 
     if (fontFamily) {
       free(fontFamily);
     }
+
+    resolveBitmapFont(this, bitmapFont);
   }
 }
 
@@ -346,7 +376,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
   const Inlet inlets[] = MakeInlets(
     MakeInlet("color", InletTypeColor, &this->color, NULL),
     MakeInlet("colorEscapes", InletTypeBool, &this->colorEscapes, NULL),
-    MakeInlet("font", InletTypeFont, &this->font, NULL),
     MakeInlet("lineWrap", InletTypeBool, &this->lineWrap, NULL),
     MakeInlet("text", InletTypeCharacters, &this->text, NULL)
   );
@@ -366,10 +395,12 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
   super(View, self, didMoveToWindow, window);
 
   // A Font resolved before attachment (e.g. the default Font) was opened at a pixel
-  // density of 1.0; re-resolve through the window's cache at the window's actual density.
+  // density of 1.0; re-resolve through the window's Theme at the window's actual density.
   Text *this = (Text *) self;
   if (window && this->font) {
-    resolveFont(this, this->font->family, this->font->size, this->font->style);
+    const FontAttributes attributes = { this->font->family, this->font->size, this->font->style };
+    resolveFont(this, &attributes);
+    resolveBitmapFont(this, this->bitmapFontEnabled);
   }
 }
 
@@ -467,9 +498,11 @@ static void renderDeviceDidReset(View *self) {
   Text *this = (Text *) self;
 
   // Fonts are immutable, opened at their window's pixel density; re-resolve through the
-  // window's cache, which the WindowController empties before resetting the device.
+  // window's Theme, keyed by pixel density, so a density change resolves a fresh instance.
   if (self->window && this->font) {
-    resolveFont(this, this->font->family, this->font->size, this->font->style);
+    const FontAttributes attributes = { this->font->family, this->font->size, this->font->style };
+    resolveFont(this, &attributes);
+    resolveBitmapFont(this, this->bitmapFontEnabled);
   }
 
   $(self, sizeToFit);

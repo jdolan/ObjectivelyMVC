@@ -540,6 +540,8 @@
 		CE76279D1D4A5A5800EEEE78 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Renderer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		CE7CBD7E202942B300C5316A /* coda.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = coda.ttf; sourceTree = "<group>"; };
 		CE7CBD7F20294B9B00C5316A /* coda.ttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coda.ttf.h; sourceTree = "<group>"; };
+		8199E092E00B5B9404EED14D /* shareTechMono.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = shareTechMono.ttf; sourceTree = "<group>"; };
+		A3D2DA7790E169A149C24E9B /* shareTechMono.ttf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shareTechMono.ttf.h; sourceTree = "<group>"; };
 		CE7EA4CC1D479A9000BD37A3 /* demo.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = demo.gif; sourceTree = "<group>"; };
 		CE84C6CA1FFC8E9E00F72267 /* debug.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = debug.json; sourceTree = "<group>"; };
 		CE84C6CB1FFC917600F72267 /* DebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
@@ -932,6 +934,8 @@
 				CE92C5161FE029BF00FDB0DF /* check.png.h */,
 				CE7CBD7E202942B300C5316A /* coda.ttf */,
 				CE7CBD7F20294B9B00C5316A /* coda.ttf.h */,
+				8199E092E00B5B9404EED14D /* shareTechMono.ttf */,
+				A3D2DA7790E169A149C24E9B /* shareTechMono.ttf.h */,
 				CE9FECD5201D5F2A00F954ED /* debug.css */,
 				CE84C6CA1FFC8E9E00F72267 /* debug.json */,
 				CE9FECD6201D5F8000F954ED /* debug.css.h */,
@@ -1372,6 +1376,7 @@
 				"$(SRCROOT)/Assets/debug.css",
 				"$(SRCROOT)/Assets/debug.json",
 				"$(SRCROOT)/Assets/resize.png",
+				"$(SRCROOT)/Assets/shareTechMono.ttf",
 				"$(SRCROOT)/Assets/stylesheet.css",
 			);
 			name = "Preprocess Assets";
@@ -1387,11 +1392,12 @@
 				"$(SRCROOT)/Assets/debug.css.h",
 				"$(SRCROOT)/Assets/debug.json.h",
 				"$(SRCROOT)/Assets/resize.png.h",
+				"$(SRCROOT)/Assets/shareTechMono.ttf.h",
 				"$(SRCROOT)/Assets/stylesheet.css.h",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nxxd -i -t check.png           > check.png.h\nxxd -i -t coda.ttf            > coda.ttf.h\nxxd -i -t debug.css           > debug.css.h\nxxd -i -t debug.json          > debug.json.h\nxxd -i -t Renderer.vert.dxil  > Renderer.vert.dxil.h\nxxd -i -t Renderer.vert.metal > Renderer.vert.metal.h\nxxd -i -t Renderer.vert.spv   > Renderer.vert.spv.h\nxxd -i -t Renderer.frag.dxil  > Renderer.frag.dxil.h\nxxd -i -t Renderer.frag.metal > Renderer.frag.metal.h\nxxd -i -t Renderer.frag.spv   > Renderer.frag.spv.h\nxxd -i -t resize.png          > resize.png.h\nxxd -i -t stylesheet.css      > stylesheet.css.h\n";
+			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n\npushd \"$SRCROOT/Assets\"\n\nxxd -i -t check.png           > check.png.h\nxxd -i -t coda.ttf            > coda.ttf.h\nxxd -i -t debug.css           > debug.css.h\nxxd -i -t debug.json          > debug.json.h\nxxd -i -t Renderer.vert.dxil  > Renderer.vert.dxil.h\nxxd -i -t Renderer.vert.metal > Renderer.vert.metal.h\nxxd -i -t Renderer.vert.spv   > Renderer.vert.spv.h\nxxd -i -t Renderer.frag.dxil  > Renderer.frag.dxil.h\nxxd -i -t Renderer.frag.metal > Renderer.frag.metal.h\nxxd -i -t Renderer.frag.spv   > Renderer.frag.spv.h\nxxd -i -t resize.png          > resize.png.h\nxxd -i -t shareTechMono.ttf   > shareTechMono.ttf.h\nxxd -i -t stylesheet.css      > stylesheet.css.h\n";
 		};
 		CEA0010000000000000000BA /* Configure */ = {
 			isa = PBXShellScriptBuildPhase;

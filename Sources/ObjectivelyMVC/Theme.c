@@ -25,6 +25,7 @@
 
 #include <Objectively/JSONContext.h>
 
+#include "ImageAtlas.h"
 #include "Log.h"
 #include "Theme.h"
 #include "View.h"
@@ -41,6 +42,8 @@ static void dealloc(Object *self) {
 
   Theme *this = (Theme *) self;
 
+  release(this->bitmapFontCache);
+  release(this->fontCache);
   release(this->stylesheets);
 
   super(Object, self, dealloc);
@@ -54,6 +57,91 @@ static void dealloc(Object *self) {
  */
 static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
   $((Array *) self->stylesheets, addObject, stylesheet);
+}
+
+/**
+ * @brief Builds the cache key for the given attributes and pixel density.
+ */
+static String *cacheKey(const FontAttributes *attributes, float pixelDensity) {
+
+  String *name = $$(Font, nameWithAttributes, attributes);
+  assert(name);
+
+  String *key = str("%s@%g", name->chars, pixelDensity);
+  assert(key);
+
+  release(name);
+  return key;
+}
+
+/**
+ * @fn Font *Theme::font(Theme *self, const FontAttributes *attributes, float pixelDensity)
+ * @memberof Theme
+ */
+static Font *font(Theme *self, const FontAttributes *attributes, float pixelDensity) {
+
+  String *key = cacheKey(attributes, pixelDensity);
+
+  Font *font = $(self->fontCache, objectForKeyPath, key->chars);
+  if (font == NULL) {
+
+    Font *resolved = $$(Font, fontWithAttributes, attributes, pixelDensity);
+    assert(resolved);
+
+    // Keyed by the resolved Font's own name: when the requested family is not registered,
+    // Font::fontWithAttributes falls back to the default Font, and caching that under the
+    // requested key would pin the wrong Font to it permanently. This way the request
+    // simply misses again, and heals once the family is registered via Font::cacheFont.
+    const FontAttributes resolvedAttributes = { resolved->family, resolved->size, resolved->style };
+    String *resolvedKey = cacheKey(&resolvedAttributes, pixelDensity);
+
+    font = $(self->fontCache, objectForKeyPath, resolvedKey->chars);
+    if (font == NULL) {
+      $(self->fontCache, setObjectForKeyPath, resolved, resolvedKey->chars);
+      font = resolved;
+    }
+
+    release(resolvedKey);
+    release(resolved);
+  }
+
+  release(key);
+
+  return font;
+}
+
+/**
+ * @fn BitmapFont *Theme::bitmapFont(Theme *self, const FontAttributes *attributes, float pixelDensity)
+ * @memberof Theme
+ */
+static BitmapFont *bitmapFont(Theme *self, const FontAttributes *attributes, float pixelDensity) {
+
+  String *key = cacheKey(attributes, pixelDensity);
+
+  BitmapFont *bitmapFont = $(self->bitmapFontCache, objectForKeyPath, key->chars);
+  if (bitmapFont == NULL) {
+
+    Font *resolvedFont = $(self, font, attributes, pixelDensity);
+
+    ImageAtlas *atlas = $(alloc(ImageAtlas), init);
+    assert(atlas);
+
+    bitmapFont = $(alloc(BitmapFont), initWithFont, resolvedFont,
+                    BITMAP_FONT_DEFAULT_FIRST, BITMAP_FONT_DEFAULT_COUNT, NULL, atlas);
+    if (bitmapFont) {
+      $(atlas, compile);
+      $(self->bitmapFontCache, setObjectForKeyPath, bitmapFont, key->chars);
+      release(bitmapFont);
+    } else {
+      MVC_LogWarn("%s is not fixed-width; cannot bake a BitmapFont\n", resolvedFont->family);
+    }
+
+    release(atlas);
+  }
+
+  release(key);
+
+  return bitmapFont;
 }
 
 /**
@@ -119,6 +207,12 @@ static Theme *init(Theme *self) {
   self = (Theme *) super(Object, self, init);
   if (self) {
 
+    self->bitmapFontCache = $$(Dictionary, dictionary);
+    assert(self->bitmapFontCache);
+
+    self->fontCache = $$(Dictionary, dictionary);
+    assert(self->fontCache);
+
     self->stylesheets = $$(Array, arrayWithCapacity, 8);
     assert(self->stylesheets);
 
@@ -134,6 +228,30 @@ static Theme *init(Theme *self) {
  */
 static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
   $((Array *) self->stylesheets, removeObject, stylesheet);
+}
+
+/**
+ * @brief DictionaryEnumerator for renderDeviceWillReset.
+ */
+static void renderDeviceWillReset_enumerate(const Dictionary *dictionary, ident obj, ident key, ident data) {
+  BitmapFont *bitmapFont = obj;
+  $(bitmapFont->atlas, renderDeviceWillReset);
+}
+
+/**
+ * @fn void Theme::renderDeviceWillReset(Theme *self)
+ * @memberof Theme
+ */
+static void renderDeviceWillReset(Theme *self) {
+  $(self->bitmapFontCache, enumerateObjectsAndKeys, renderDeviceWillReset_enumerate, NULL);
+}
+
+/**
+ * @fn void Theme::renderDeviceDidReset(Theme *self)
+ * @memberof Theme
+ */
+static void renderDeviceDidReset(Theme *self) {
+  // BitmapFont Textures are recreated lazily by ImageAtlas::texture on next use.
 }
 
 /**
@@ -162,9 +280,13 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((ThemeInterface *) clazz->interface)->addStylesheet = addStylesheet;
+  ((ThemeInterface *) clazz->interface)->bitmapFont = bitmapFont;
   ((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
+  ((ThemeInterface *) clazz->interface)->font = font;
   ((ThemeInterface *) clazz->interface)->init = init;
   ((ThemeInterface *) clazz->interface)->removeStylesheet = removeStylesheet;
+  ((ThemeInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+  ((ThemeInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((ThemeInterface *) clazz->interface)->theme = theme;
 }
 

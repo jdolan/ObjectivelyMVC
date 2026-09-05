@@ -120,6 +120,13 @@ struct Text {
   bool colorEscapes;
 
   /**
+   * @brief Whether `bitmap-font: true` was last applied via CSS, so this Text's BitmapFont is
+   * re-resolved on window attach and on a pixel density change.
+   * @private
+   */
+  bool bitmapFontEnabled;
+
+  /**
    * @brief If true, wrap text along word boundaries to fit this Text's width.
    */
   bool lineWrap;

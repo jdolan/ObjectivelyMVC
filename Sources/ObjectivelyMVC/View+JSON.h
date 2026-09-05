@@ -80,11 +80,6 @@ typedef enum {
   InletTypeFloat,
 
   /**
-   * @remarks Inlet destination must be of type `Font **`.
-   */
-  InletTypeFont,
-
-  /**
    * @remarks Inlet destination must be of type `Image **`.
    */
   InletTypeImage,

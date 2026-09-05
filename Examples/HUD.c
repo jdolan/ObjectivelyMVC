@@ -182,7 +182,9 @@ static BitmapFont *bakeBitmapFont(ImageAtlas *atlas, WindowController *windowCon
     }
   }
 
-  Font *font = $(windowController, font, "Mono", 18, FontStyleRegular);
+  const FontAttributes attributes = { "Mono", 18, FontStyleRegular };
+  Font *font = $(windowController->theme, font, &attributes,
+                 SDL_GetWindowPixelDensity(windowController->window));
 
   Image *heart = icon(32, 0xff0000ff, 0xff0000ff);
   Dictionary *named = $$(Dictionary, dictionaryWithObjectsAndKeys, heart, str("heart"), NULL);

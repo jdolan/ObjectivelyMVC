@@ -58,7 +58,8 @@ static Font *monospaceFont(float pixelDensity) {
     return NULL;
   }
 
-  return $$(Font, fontWithAttributes, "Mono", 16, FontStyleRegular, pixelDensity);
+  const FontAttributes attributes = { "Mono", 16, FontStyleRegular };
+  return $$(Font, fontWithAttributes, &attributes, pixelDensity);
 }
 
 static Image *filledImage(int w, int h, Uint32 rgba) {
