@@ -29,15 +29,13 @@
 
 #define _Class _Font
 
-#define REPLACEMENT_CHARACTER 0xFFFD
-
 #pragma mark - Baking
 
 /**
  * @brief The top-left texel of the given cell within the grid surface.
  */
 static SDL_Point cellOrigin(const FontBitmap *bitmap, Uint32 cell) {
-  return MakePoint((cell % bitmap->columns) * bitmap->cellSize.w, (cell / bitmap->columns) * bitmap->cellSize.h);
+  return MakePoint((cell % FONT_BITMAP_COLUMNS) * bitmap->cellSize.w, (cell / FONT_BITMAP_COLUMNS) * bitmap->cellSize.h);
 }
 
 /**
@@ -112,15 +110,15 @@ typedef struct {
 } Token;
 
 /**
- * @brief Resolves `codepoint` to a cell: the replacement glyph's for one outside the baked range.
+ * @brief Resolves `codepoint` to a cell: FONT_BITMAP_REPLACEMENT's for one outside the baked range.
  */
 static Uint32 cellForCodepoint(Uint32 codepoint) {
 
-  if (codepoint >= FONT_BITMAP_FIRST && codepoint < FONT_BITMAP_FIRST + FONT_BITMAP_COUNT) {
+  if (codepoint >= FONT_BITMAP_FIRST && codepoint < FONT_BITMAP_LAST) {
     return codepoint - FONT_BITMAP_FIRST;
   }
 
-  return FONT_BITMAP_COUNT;
+  return FONT_BITMAP_REPLACEMENT - FONT_BITMAP_FIRST;
 }
 
 /**
@@ -285,8 +283,7 @@ bool initBitmap(FontBitmap *bitmap, Font *font) {
 
   int minX = INT_MAX, maxX = INT_MIN, advance = 0;
 
-  for (Uint32 i = 0; i <= FONT_BITMAP_COUNT; i++) {
-    const Uint32 codepoint = i < FONT_BITMAP_COUNT ? FONT_BITMAP_FIRST + i : REPLACEMENT_CHARACTER;
+  for (Uint32 codepoint = FONT_BITMAP_FIRST; codepoint < FONT_BITMAP_LAST; codepoint++) {
 
     if (TTF_FontHasGlyph(font->font, codepoint)) {
       int glyphMinX = 0, glyphMaxX = 0, glyphAdvance = 0;
@@ -296,16 +293,13 @@ bool initBitmap(FontBitmap *bitmap, Font *font) {
 
       minX = min(minX, glyphMinX);
       maxX = max(maxX, max(glyphMaxX, glyphAdvance));
-
-      if (i < FONT_BITMAP_COUNT) {
-        advance = max(advance, glyphAdvance);
-      }
+      advance = max(advance, glyphAdvance);
     }
   }
 
   if (maxX <= minX || advance == 0) {
     String *name = $(font, name);
-    MVC_LogWarn("%s has no glyphs in U+%04X-U+%04X\n", name->chars, FONT_BITMAP_FIRST, FONT_BITMAP_FIRST + FONT_BITMAP_COUNT - 1);
+    MVC_LogWarn("%s has no glyphs in U+%04X-U+%04X\n", name->chars, FONT_BITMAP_FIRST, FONT_BITMAP_LAST - 1);
     release(name);
     return false;
   }
@@ -314,14 +308,9 @@ bool initBitmap(FontBitmap *bitmap, Font *font) {
   bitmap->bearing = minX;
   bitmap->cellSize = MakeSize(maxX - minX, TTF_GetFontHeight(font->font));
 
-  // One cell past the range for the replacement glyph
-  const Uint32 cells = FONT_BITMAP_COUNT + 1;
+  const int rows = FONT_BITMAP_COUNT / FONT_BITMAP_COLUMNS;
 
-  bitmap->columns = (int) ceilf(sqrtf((float) cells));
-
-  const int rows = (int) ((cells + bitmap->columns - 1) / bitmap->columns);
-
-  bitmap->surface = SDL_CreateSurface(bitmap->columns * bitmap->cellSize.w, rows * bitmap->cellSize.h, SDL_PIXELFORMAT_RGBA32);
+  bitmap->surface = SDL_CreateSurface(FONT_BITMAP_COLUMNS * bitmap->cellSize.w, rows * bitmap->cellSize.h, SDL_PIXELFORMAT_RGBA32);
   assert(bitmap->surface);
 
   SDL_FillSurfaceRect(bitmap->surface, NULL, 0);
@@ -329,8 +318,6 @@ bool initBitmap(FontBitmap *bitmap, Font *font) {
   for (Uint32 i = 0; i < FONT_BITMAP_COUNT; i++) {
     bakeGlyph(bitmap, font->font, FONT_BITMAP_FIRST + i, i);
   }
-
-  bakeGlyph(bitmap, font->font, TTF_FontHasGlyph(font->font, REPLACEMENT_CHARACTER) ? REPLACEMENT_CHARACTER : '?', FONT_BITMAP_COUNT);
 
   return true;
 }

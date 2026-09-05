@@ -39,15 +39,31 @@
  */
 #define FONT_BITMAP_COUNT 1024
 
+/**
+ * @brief The last valid codepoint in a Font bitmap.
+ */
+#define FONT_BITMAP_LAST (FONT_BITMAP_FIRST + FONT_BITMAP_COUNT)
+
+/**
+ * @brief The number of cells per row of the glyph sheet: FONT_BITMAP_COUNT cells make a
+ * square grid of this many columns and rows.
+ */
+#define FONT_BITMAP_COLUMNS 32
+
+/**
+ * @brief The codepoint drawn in place of one outside the baked range.
+ */
+#define FONT_BITMAP_REPLACEMENT '?'
+
 typedef struct Font Font;
 
 /**
  * @brief A fixed-width Font's glyphs, baked into one sheet, drawn as one quad per glyph.
  * @details A Font rasterizes each string into its own surface and Texture, which costs
  * hundreds of microseconds every time the string changes. A fixed-width Font therefore
- * rasterizes a range of codepoints once, into a uniform grid of cells on a single surface, and
+ * rasterizes a range of codepoints once, into a uniform grid of glyphs on a single surface, and
  * Text draws it as one quad per glyph from that sheet. Unlike an ImageAtlas, nothing is packed:
- * every cell's position follows from its codepoint and the cell size, so the grid is its own
+ * every glyph's position follows from its codepoint and the glyph size, so the grid is its own
  * lookup table.
  * Text that changes every frame becomes free.
  *
@@ -66,7 +82,7 @@ typedef struct Font Font;
 typedef struct {
 
   /**
-   * @brief The pen advance per cell, in texels.
+   * @brief The pen advance per glyph, in texels.
    */
   int advance;
 
@@ -82,13 +98,8 @@ typedef struct {
   SDL_Size cellSize;
 
   /**
-   * @brief The number of cells per grid row.
-   */
-  int columns;
-
-  /**
-   * @brief The glyph sheet: a grid of `columns` cells of `cellSize`, in texels, or `NULL` if
-   * the Font is not fixed-width.
+   * @brief The glyph sheet: a grid of FONT_BITMAP_COLUMNS by FONT_BITMAP_COLUMNS cells of
+   * `cellSize`, in texels, or `NULL` if the Font is not fixed-width.
    */
   SDL_Surface *surface;
 
@@ -102,8 +113,7 @@ typedef struct {
 /**
  * @brief Bakes FONT_BITMAP_COUNT codepoints of `font`, from FONT_BITMAP_FIRST, into a glyph
  * sheet, initializing `bitmap`.
- * @details One extra cell past the range holds the replacement glyph (U+FFFD, or `?` if the
- * face lacks it), drawn for any codepoint outside the range.
+ * @details A codepoint outside the range draws FONT_BITMAP_REPLACEMENT instead.
  * @param bitmap The FontBitmap, zero-initialized.
  * @param font The Font, which MUST be fixed-width.
  * @return True if the bitmap was baked, false if `font` is not fixed-width or has no glyphs

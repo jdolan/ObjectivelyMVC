@@ -127,10 +127,10 @@ START_TEST(metricsAreUniformAndLogical) {
   ck_assert_int_ge(bitmap->cellSize.w, bitmap->advance);
   ck_assert_int_eq(TTF_GetFontHeight(font->font), bitmap->cellSize.h);
 
-  // The sheet is exactly the grid, sized to hold every cell
-  ck_assert_int_eq(bitmap->columns * bitmap->cellSize.w, bitmap->surface->w);
-  ck_assert_int_ge(bitmap->surface->w * bitmap->surface->h,
-                   (FONT_BITMAP_COUNT + 1) * bitmap->cellSize.w * bitmap->cellSize.h);
+  // The sheet is exactly the grid, one cell per baked codepoint
+  ck_assert_int_eq(FONT_BITMAP_COLUMNS * bitmap->cellSize.w, bitmap->surface->w);
+  ck_assert_int_eq(FONT_BITMAP_COUNT * bitmap->cellSize.w * bitmap->cellSize.h,
+                   bitmap->surface->w * bitmap->surface->h);
 
   // Cells are physical texels at density 2; reported sizes are logical, so half
   int w, h;
@@ -144,7 +144,7 @@ START_TEST(metricsAreUniformAndLogical) {
   ck_assert_int_eq((int) ceilf(2 * bitmap->cellSize.h / 2.f), h2);
   ck_assert_int_gt(w2, w);
 
-  // Color escapes are not characters; a codepoint past the range is the replacement glyph
+  // Color escapes are not characters; a codepoint past the range draws as '?'
   int w3, w4, w5;
   $(font, sizeBitmapCharacters, "^1ABCD", true, 0, &w3, NULL);
   ck_assert_int_eq(w, w3);
