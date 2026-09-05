@@ -72,6 +72,12 @@ START_TEST(escapesDoNotAffectProportionalSize) {
   ck_assert_int_eq(plainSize.h, coloredSize.h);
   ck_assert_int_gt(caretSize.w, plainSize.w);
 
+  // Nothing but escapes is nothing to draw
+  Text *empty = $(alloc(Text), initWithText, "^1^7", font);
+  const SDL_Size emptySize = $(empty, naturalSize);
+  ck_assert_int_eq(0, emptySize.w);
+
+  release(empty);
   release(caret);
   release(colored);
   release(plain);

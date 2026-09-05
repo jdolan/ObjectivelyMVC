@@ -211,24 +211,22 @@ static size_t unitLengthAt(const char *chars, size_t len, size_t position) {
 
 /**
  * @brief Returns the length in bytes of the cursor unit ending at `position`.
+ * @details Units are found by parsing forward from the start of the string, as they are
+ * rendered: scanning backward would read the `1` in `^^1` as the escape `^1`.
  * @see unitLengthAt
  */
-static size_t unitLengthBefore(const char *chars, size_t position) {
+static size_t unitLengthBefore(const char *chars, size_t len, size_t position) {
 
-  if (position == 0) {
-    return 0;
+  size_t unit = 0;
+
+  for (size_t p = 0; p < position; p += unit) {
+    unit = unitLengthAt(chars, len, p);
+    if (unit == 0) {
+      break;
+    }
   }
 
-  size_t start = position - 1;
-  while (start > 0 && (chars[start] & 0xC0) == 0x80) {
-    start--;
-  }
-
-  if (start > 0 && chars[start - 1] == '^' && ((chars[start] >= '0' && chars[start] <= '9') || chars[start] == '^')) {
-    start--;
-  }
-
-  return position - start;
+  return unit;
 }
 
 #pragma mark - Control
@@ -275,7 +273,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         case SDLK_BACKSPACE:
         case SDLK_KP_BACKSPACE:
           if (this->position > 0) {
-            const size_t n = unitLengthBefore(chars, this->position);
+            const size_t n = unitLengthBefore(chars, len, this->position);
             const Range range = { .location = this->position - n, .length = n };
             $(this->attributedText, deleteCharactersInRange, range);
             this->position -= n;
@@ -294,13 +292,13 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         case SDLK_LEFT:
           if (SDL_GetModState() & SDL_KMOD_CTRL) {
             while (this->position > 0 && chars[this->position] == ' ') {
-              this->position -= unitLengthBefore(chars, this->position);
+              this->position -= unitLengthBefore(chars, len, this->position);
             }
             while (this->position > 0 && chars[this->position] != ' ') {
-              this->position -= unitLengthBefore(chars, this->position);
+              this->position -= unitLengthBefore(chars, len, this->position);
             }
           } else {
-            this->position -= unitLengthBefore(chars, this->position);
+            this->position -= unitLengthBefore(chars, len, this->position);
           }
           break;
 

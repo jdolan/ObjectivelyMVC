@@ -143,12 +143,6 @@ struct Text {
    */
   Texture *texture;
 
-  /**
-   * @brief The logical draw dimensions of the texture (surface size / pixel density).
-   * @remarks Stored when the texture is created; used for pixel-perfect rendering.
-   * @protected
-   */
-  SDL_Size textureSize;
 };
 
 /**

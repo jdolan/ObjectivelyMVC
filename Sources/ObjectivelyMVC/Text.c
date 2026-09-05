@@ -89,7 +89,6 @@ char *MVC_StripColorEscapes(const char *text) {
 static void invalidate(Text *self) {
 
   self->texture = release(self->texture);
-  self->textureSize = MakeSize(0, 0);
 
   free(self->runs);
   self->runs = NULL;
@@ -107,8 +106,9 @@ static void appendRuns(Text *self, TTF_Text *layout, int offset, int length, SDL
   TTF_SubString **substrings = TTF_GetTextSubStringsForRange(layout, offset, length, &count);
   assert(substrings);
 
-  self->runs = realloc(self->runs, (self->runCount + count) * sizeof(TextRun));
-  assert(self->runs);
+  TextRun *runs = realloc(self->runs, (self->runCount + count) * sizeof(TextRun));
+  assert(runs);
+  self->runs = runs;
 
   for (int i = 0; i < count; i++) {
     SDL_Rect rect = substrings[i]->rect;
@@ -134,6 +134,10 @@ static void appendRuns(Text *self, TTF_Text *layout, int offset, int length, SDL
  * (italics, tight kerning) is clipped to whichever run owns that column.
  */
 static void buildRuns(Text *self, const char *stripped, int wrapWidth, int surfaceWidth) {
+
+  free(self->runs);
+  self->runs = NULL;
+  self->runCount = 0;
 
   TTF_Text *layout = TTF_CreateText(NULL, self->font->font, stripped, 0);
   assert(layout);
@@ -357,6 +361,13 @@ static void render(View *self, Renderer *renderer) {
 
       if (MVC_HasColorEscapes(this->text)) {
         char *stripped = MVC_StripColorEscapes(this->text);
+
+        // Text that is nothing but escapes has nothing to draw
+        if (*stripped == '\0') {
+          free(stripped);
+          return;
+        }
+
         surface = $(this->font, renderCharacters, stripped, Colors.White, wrapWidth);
         assert(surface);
         buildRuns(this, stripped, wrapWidth, surface->w);
@@ -366,12 +377,6 @@ static void render(View *self, Renderer *renderer) {
       }
 
       assert(surface);
-
-      const float textureWidth = roundf(surface->w / scale);
-      const float textureHeight = roundf(surface->h / scale);
-
-      this->textureSize.w = (int) textureWidth;
-      this->textureSize.h = (int) textureHeight;
 
       const SDL_GPUTextureCreateInfo texInfo = {
         .type                 = SDL_GPU_TEXTURETYPE_2D,
@@ -390,8 +395,8 @@ static void render(View *self, Renderer *renderer) {
 
     assert(this->texture);
 
-    // The destination size must be the texture's exact native size divided by scale, not the
-    // rounded-to-integer textureSize: rounding it first, then having the renderer's projection
+    // The destination size must be the texture's exact native size divided by scale, not that
+    // rounded to an integer: rounding it first, then having the renderer's projection
     // multiply back by scale to reach physical pixels, lands on a physical width that differs
     // from the texture's actual resolution -- stretching it by that (sub-)pixel remainder. Since
     // the remainder depends on the string's own pixel width, this stretch changes with every

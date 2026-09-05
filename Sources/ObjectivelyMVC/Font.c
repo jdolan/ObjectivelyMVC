@@ -328,12 +328,10 @@ static String *nameWithAttributes(const FontAttributes *attributes) {
  */
 static SDL_Surface *renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth) {
 
-  SDL_Surface *surface;
-  if (wrapWidth) {
-    surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * self->pixelDensity);
-  } else {
-    surface = TTF_RenderText_Blended(self->font, chars, 0, color);
-  }
+  // Always the wrapping renderer: with a width of 0 it breaks on newlines only, which is what
+  // Font::sizeCharacters and the TTF_Text layout Text builds its color runs from both assume,
+  // whereas TTF_RenderText_Blended draws a newline as a missing glyph on a single line
+  SDL_Surface *surface = TTF_RenderText_Blended_Wrapped(self->font, chars, 0, color, wrapWidth * self->pixelDensity);
 
   SDL_Surface *converted = NULL;
   if (surface) {
