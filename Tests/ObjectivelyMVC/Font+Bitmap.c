@@ -66,7 +66,7 @@ START_TEST(proportionalFaceHasNoBitmap) {
   ck_assert(!TTF_FontIsFixedWidth(coda->font));
 
   ck_assert_ptr_null(coda->bitmap.atlas);
-  ck_assert_ptr_null(coda->bitmap.atlas);
+  ck_assert_ptr_null(coda->bitmap.cells);
 
 } END_TEST
 
@@ -79,7 +79,7 @@ START_TEST(fixedWidthFaceBakesAutomatically) {
 
   ck_assert(TTF_FontIsFixedWidth(font->font));
   ck_assert_ptr_nonnull(font->bitmap.atlas);
-  ck_assert_ptr_nonnull(font->bitmap.atlas);
+  ck_assert_ptr_nonnull(font->bitmap.cells);
   ck_assert_uint_eq(FONT_BITMAP_DEFAULT_FIRST, font->bitmap.first);
   ck_assert_uint_eq(FONT_BITMAP_DEFAULT_COUNT, font->bitmap.count);
 
@@ -103,7 +103,7 @@ START_TEST(rangeWithoutGlyphsIsRejected) {
   FontBitmap bitmap = { 0 };
   ck_assert(!initBitmap(&bitmap, font, 0xE0000, 16, atlas));
   ck_assert_ptr_null(bitmap.atlas);
-  ck_assert_ptr_null(bitmap.atlas);
+  ck_assert_ptr_null(bitmap.cells);
 
   release(atlas);
   release(font);
