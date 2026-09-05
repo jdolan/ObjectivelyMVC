@@ -342,13 +342,11 @@ static void applyStyle(View *self, const Style *style) {
 
   char *fontFamily = NULL;
   int fontSize = -1, fontStyle = -1;
-  bool bitmapFont = false;
 
   const Inlet fontInlets[] = MakeInlets(
     MakeInlet("font-family", InletTypeCharacters, &fontFamily, NULL),
     MakeInlet("font-size", InletTypeInteger, &fontSize, NULL),
-    MakeInlet("font-style", InletTypeEnum, &fontStyle, (ident) FontStyleNames),
-    MakeInlet("bitmap-font", InletTypeBool, &bitmapFont, NULL)
+    MakeInlet("font-style", InletTypeEnum, &fontStyle, (ident) FontStyleNames)
   );
 
   if ($(self, bind, fontInlets, style->attributes)) {
@@ -359,7 +357,19 @@ static void applyStyle(View *self, const Style *style) {
     if (fontFamily) {
       free(fontFamily);
     }
+  }
 
+  // Independent of fontInlets above: a Text with no "bitmap-font" anywhere in its cascade
+  // (e.g. one whose BitmapFont is assigned directly via Text::setBitmapFont, bypassing CSS
+  // entirely) MUST NOT have that assignment clobbered just because some other font attribute
+  // happened to also change.
+  bool bitmapFont = false;
+
+  const Inlet bitmapFontInlets[] = MakeInlets(
+    MakeInlet("bitmap-font", InletTypeBool, &bitmapFont, NULL)
+  );
+
+  if ($(self, bind, bitmapFontInlets, style->attributes)) {
     resolveBitmapFont(this, bitmapFont);
   }
 }
@@ -400,7 +410,12 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
   if (window && this->font) {
     const FontAttributes attributes = { this->font->family, this->font->size, this->font->style };
     resolveFont(this, &attributes);
-    resolveBitmapFont(this, this->bitmapFontEnabled);
+
+    // Only re-resolve a BitmapFont this Text opted into via CSS; one assigned directly via
+    // Text::setBitmapFont (bypassing CSS) MUST be left alone here.
+    if (this->bitmapFontEnabled) {
+      resolveBitmapFont(this, true);
+    }
   }
 }
 
@@ -502,7 +517,12 @@ static void renderDeviceDidReset(View *self) {
   if (self->window && this->font) {
     const FontAttributes attributes = { this->font->family, this->font->size, this->font->style };
     resolveFont(this, &attributes);
-    resolveBitmapFont(this, this->bitmapFontEnabled);
+
+    // Only re-resolve a BitmapFont this Text opted into via CSS; one assigned directly via
+    // Text::setBitmapFont (bypassing CSS) MUST be left alone here.
+    if (this->bitmapFontEnabled) {
+      resolveBitmapFont(this, true);
+    }
   }
 
   $(self, sizeToFit);
