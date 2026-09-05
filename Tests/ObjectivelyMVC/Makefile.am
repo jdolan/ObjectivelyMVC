@@ -11,6 +11,7 @@ TESTS = \
 	Selector \
 	Style \
 	Stylesheet \
+	Text \
 	View
 
 CFLAGS += \

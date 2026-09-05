@@ -213,7 +213,6 @@
                 {
                   "class": "Text",
                   "text": "^1The ^2quick ^3brown ^4fox ^5jumps ^6over ^7the lazy dog",
-                  "colorEscapes": true,
                   "style": {
                     "font-family": "Coda",
                     "font-size": 20,
@@ -259,7 +258,6 @@
                 {
                   "class": "Text",
                   "text": "^1The ^2quick ^3brown ^4fox ^5jumps ^6over ^7the lazy dog",
-                  "colorEscapes": true,
                   "style": {
                     "font-family": "Share Tech Mono",
                     "font-size": 20,

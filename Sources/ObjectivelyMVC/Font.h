@@ -255,18 +255,18 @@ struct FontInterface {
   String *(*nameWithAttributes)(const FontAttributes *attributes);
 
   /**
-   * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin)
+   * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin)
    * @brief Records one quad per glyph of the given characters from this Font's bitmap.
    * @param self The Font, which MUST have a bitmap.
    * @param renderer The Renderer.
    * @param chars The null-terminated UTF-8 encoded C string to render.
-   * @param color The color.
-   * @param colorEscapes If true, `^0` through `^9` select from `TextEscapeColors`.
+   * @param color The color; `^0` through `^9` in `chars` select from `TextEscapeColors`, and
+   * `^^` is a literal `^`.
    * @param wrapWidth The maximum line width, in logical pixels, or `0` for no wrapping.
    * @param origin The top-left corner of the first line, in logical pixels.
    * @memberof Font
    */
-  void (*renderBitmapCharacters)(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin);
+  void (*renderBitmapCharacters)(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin);
 
   /**
    * @fn SDL_Surface *Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
@@ -290,17 +290,16 @@ struct FontInterface {
   void (*renderDeviceWillReset)(Font *self);
 
   /**
-   * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)
+   * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, int wrapWidth, int *w, int *h)
    * @brief Measures the given characters against this Font's bitmap.
    * @param self The Font, which MUST have a bitmap.
    * @param chars The null-terminated UTF-8 encoded C string to size.
-   * @param colorEscapes If true, `^0` through `^9` are escapes rather than characters.
    * @param wrapWidth The maximum line width, in logical pixels, or `0` for no wrapping.
    * @param w The width to return, in logical pixels.
    * @param h The height to return, in logical pixels.
    * @memberof Font
    */
-  void (*sizeBitmapCharacters)(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);
+  void (*sizeBitmapCharacters)(const Font *self, const char *chars, int wrapWidth, int *w, int *h);
 
   /**
    * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)

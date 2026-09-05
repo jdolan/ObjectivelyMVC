@@ -134,9 +134,9 @@ OBJECTIVELYMVC_EXPORT void renderDeviceWillResetBitmap(Font *self);
 /**
  * @brief Implements Font::renderBitmapCharacters.
  */
-OBJECTIVELYMVC_EXPORT void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin);
+OBJECTIVELYMVC_EXPORT void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin);
 
 /**
  * @brief Implements Font::sizeBitmapCharacters.
  */
-OBJECTIVELYMVC_EXPORT void sizeCharactersBitmap(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);
+OBJECTIVELYMVC_EXPORT void sizeCharactersBitmap(const Font *self, const char *chars, int wrapWidth, int *w, int *h);

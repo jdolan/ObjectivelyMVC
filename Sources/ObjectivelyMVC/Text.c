@@ -51,6 +51,17 @@ SDL_Color TextEscapeColors[] = {
   { 0x80, 0x80, 0x80, 0xFF }   // ^9 Grey
 };
 
+bool MVC_HasColorEscapes(const char *text) {
+
+  for (const char *p = text ? strchr(text, '^') : NULL; p; p = strchr(p + 1, '^')) {
+    if ((p[1] >= '0' && p[1] <= '9') || p[1] == '^') {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 char *MVC_StripColorEscapes(const char *text) {
 
   assert(text);
@@ -61,6 +72,8 @@ char *MVC_StripColorEscapes(const char *text) {
   for (const char *p = text; *p; p++) {
     if (p[0] == '^' && p[1] >= '0' && p[1] <= '9') {
       p++;
+    } else if (p[0] == '^' && p[1] == '^') {
+      stripped[idx++] = *p++;
     } else {
       stripped[idx++] = *p;
     }
@@ -71,161 +84,90 @@ char *MVC_StripColorEscapes(const char *text) {
 }
 
 /**
- * @brief Character position and color for one visible character in a color-escaped string.
+ * @brief Releases this Text's rendered texture and color runs, and invalidates its cached size.
  */
-typedef struct {
-  SDL_Rect rect;
-  SDL_Color color;
-} CharInfo;
+static void invalidate(Text *self) {
 
-/**
- * @brief Colorizes a character's rect on a locked SDL_Surface.
- */
-static void colorize(SDL_Surface *surface, const CharInfo *info, float scale) {
+  self->texture = release(self->texture);
+  self->textureSize = MakeSize(0, 0);
 
-  const float fx = floorf(info->rect.x * scale);
-  const float fy = floorf(info->rect.y * scale);
-  const float fw = ceilf(info->rect.w * scale);
-  const float fh = ceilf(info->rect.h * scale);
+  free(self->runs);
+  self->runs = NULL;
+  self->runCount = 0;
 
-  int x = (int) fx - 1;
-  int y = (int) fy - 1;
-  int w = (int) fw + 2;
-  int h = (int) fh + 2;
-
-  if (w <= 0 || h <= 0) {
-    return;
-  }
-
-  if (x < 0) { w += x; x = 0; }
-  if (y < 0) { h += y; y = 0; }
-
-  uint32_t *pixels = (uint32_t *) surface->pixels;
-  const int pitch = surface->pitch / 4;
-  const SDL_Color color = info->color;
-
-  for (int row = y; row < y + h && row < surface->h; row++) {
-    for (int col = x; col < x + w && col < surface->w; col++) {
-      SDL_Color *c = (SDL_Color *) &pixels[row * pitch + col];
-      c->r = (int) (c->r * color.r / 255.0f);
-      c->g = (int) (c->g * color.g / 255.0f);
-      c->b = (int) (c->b * color.b / 255.0f);
-    }
-  }
+  self->naturalSizeCache.isValid = false;
 }
 
 /**
- * @brief Builds a CharInfo table for text containing color escape sequences.
- *
- * For each visible character, calls TTF_GetStringSizeWrapped on the stripped prefix up
- * through that character to detect line breaks via height changes, then measures x from
- * the line-start byte with TTF_GetStringSize. SDL_ttf owns all word-wrap decisions.
+ * @brief Appends one TextRun per line that the given byte range of `layout` touches.
  */
-static CharInfo *buildCharInfo(const Font *font, const char *text,
-                               SDL_Color defaultColor, int wrapWidth, int *outCount) {
+static void appendRuns(Text *self, TTF_Text *layout, int offset, int length, SDL_Color color, int surfaceWidth) {
 
-  if (!text || !*text) {
-    *outCount = 0;
-    return NULL;
-  }
+  int count = 0;
+  TTF_SubString **substrings = TTF_GetTextSubStringsForRange(layout, offset, length, &count);
+  assert(substrings);
 
-  char *stripped = MVC_StripColorEscapes(text);
-  if (!stripped || !*stripped) {
-    free(stripped);
-    *outCount = 0;
-    return NULL;
-  }
+  self->runs = realloc(self->runs, (self->runCount + count) * sizeof(TextRun));
+  assert(self->runs);
 
-  const size_t strippedLen = strlen(stripped);
-  CharInfo *chars = malloc(sizeof(CharInfo) * strippedLen);
+  for (int i = 0; i < count; i++) {
+    SDL_Rect rect = substrings[i]->rect;
 
-  const int scaledWrapWidth = wrapWidth ? (int) (wrapWidth * font->pixelDensity) : 0;
-
-  int lineHeight;
-  $(font, sizeCharacters, "A", NULL, &lineHeight);
-
-  SDL_Color currentColor = defaultColor;
-  int charIdx = 0;
-  int lineStartByte = 0;
-  int prevH = 0;
-
-  for (const char *p = text; *p; p++) {
-    if (p[0] == '^' && p[1] >= '0' && p[1] <= '9') {
-      currentColor = TextEscapeColors[p[1] - '0'];
-      p++;
-      continue;
+    // A cluster's rect is its advance box; the last glyph on a line can ink past it, and the
+    // surface is sized to include that, so let the line's last run reach the surface's edge
+    if (substrings[i]->flags & TTF_SUBSTRING_LINE_END) {
+      rect.w = surfaceWidth - rect.x;
     }
 
-    int currH;
-    if (scaledWrapWidth) {
-      TTF_GetStringSizeWrapped(font->font, stripped, charIdx + 1, scaledWrapWidth, NULL, &currH);
+    self->runs[self->runCount++] = (TextRun) { rect, color };
+  }
+
+  SDL_free(substrings);
+}
+
+/**
+ * @brief Builds this Text's color runs for its rendered texture: the texture is rendered from
+ * `stripped` in white, so each run is a region of it, drawn in the color that was in effect
+ * for those characters. The layout is SDL_ttf's own, so the regions are exact glyph clusters,
+ * including where wrapping broke the lines.
+ * @remarks A cluster's rect is its advance box: ink that overhangs a run boundary within a line
+ * (italics, tight kerning) is clipped to whichever run owns that column.
+ */
+static void buildRuns(Text *self, const char *stripped, int wrapWidth, int surfaceWidth) {
+
+  TTF_Text *layout = TTF_CreateText(NULL, self->font->font, stripped, 0);
+  assert(layout);
+
+  TTF_SetTextWrapWidth(layout, (int) (wrapWidth * self->font->pixelDensity));
+
+  SDL_Color color = self->color;
+  int offset = 0, start = 0;
+
+  for (const char *p = self->text; ; ) {
+
+    const bool end = *p == '\0';
+    const bool escape = !end && p[0] == '^' && p[1] >= '0' && p[1] <= '9';
+
+    if (end || escape) {
+      if (offset > start) {
+        appendRuns(self, layout, start, offset - start, color, surfaceWidth);
+      }
+      if (end) {
+        break;
+      }
+      color = TextEscapeColors[p[1] - '0'];
+      p += 2;
+      start = offset;
+    } else if (p[0] == '^' && p[1] == '^') {
+      p += 2;
+      offset += 1;
     } else {
-      TTF_GetStringSize(font->font, stripped, charIdx + 1, NULL, &currH);
+      p++;
+      offset++;
     }
-
-    if (currH > prevH) {
-      lineStartByte = charIdx;
-      prevH = currH;
-    }
-
-    int lineX = 0;
-    if (charIdx > lineStartByte) {
-      TTF_GetStringSize(font->font, stripped + lineStartByte, charIdx - lineStartByte, &lineX, NULL);
-    }
-
-    int charW;
-    TTF_GetStringSize(font->font, stripped + charIdx, 1, &charW, NULL);
-
-    chars[charIdx].rect.x = (int) (lineX / font->pixelDensity);
-    chars[charIdx].rect.y = (int) (currH / font->pixelDensity) - lineHeight;
-    chars[charIdx].rect.w = (int) (charW / font->pixelDensity);
-    chars[charIdx].rect.h = lineHeight;
-    chars[charIdx].color = currentColor;
-
-    charIdx++;
   }
 
-  free(stripped);
-  *outCount = charIdx;
-  return chars;
-}
-
-/**
- * @brief Renders text with color escape sequences applied to an SDL_Surface.
- */
-static SDL_Surface *renderWithColorEscapes(const Text *self, int wrapWidth) {
-
-  char *stripped = MVC_StripColorEscapes(self->text);
-  SDL_Surface *surface = $(self->font, renderCharacters, stripped, self->color, wrapWidth);
-  free(stripped);
-
-  if (!surface) {
-    return NULL;
-  }
-
-  int charCount = 0;
-  CharInfo *charInfo = buildCharInfo(self->font, self->text, self->color, wrapWidth, &charCount);
-
-  if (charInfo) {
-    SDL_LockSurface(surface);
-    for (int i = 0; i < charCount; i++) {
-      colorize(surface, &charInfo[i], self->font->pixelDensity);
-    }
-    SDL_UnlockSurface(surface);
-    free(charInfo);
-  }
-
-  return surface;
-}
-
-/**
- * @brief Resolves the rendered size of this Text's content, stripping color escapes.
- */
-static void sizeWithColorEscapes(const Text *self, int *w, int *h) {
-
-  char *stripped = MVC_StripColorEscapes(self->text ?: "");
-  $(self->font, sizeCharacters, stripped, w, h);
-  free(stripped);
+  TTF_DestroyText(layout);
 }
 
 /**
@@ -263,11 +205,11 @@ static void dealloc(Object *self) {
 
   Text *this = (Text *) self;
 
+  invalidate(this);
+
   release(this->font);
 
   free(this->text);
-
-  this->texture = release(this->texture);
 
   super(Object, self, dealloc);
 }
@@ -308,9 +250,7 @@ static void applyStyle(View *self, const Style *style) {
   );
 
   if ($(self, bind, colorInlets, style->attributes)) {
-    this->texture = release(this->texture);
-    this->textureSize = MakeSize(0, 0);
-    this->naturalSizeCache.isValid = false;
+    invalidate(this);
   }
 
   char *fontFamily = NULL;
@@ -344,7 +284,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   const Inlet inlets[] = MakeInlets(
     MakeInlet("color", InletTypeColor, &this->color, NULL),
-    MakeInlet("colorEscapes", InletTypeBool, &this->colorEscapes, NULL),
     MakeInlet("lineWrap", InletTypeBool, &this->lineWrap, NULL),
     MakeInlet("text", InletTypeCharacters, &this->text, NULL)
   );
@@ -405,22 +344,25 @@ static void render(View *self, Renderer *renderer) {
 
     const SDL_Rect frame = $(self, renderFrame);
 
+    const int wrapWidth = this->lineWrap ? frame.w : 0;
+
     if (this->font->bitmap.surface) {
-      $(this->font, renderBitmapCharacters, renderer, this->text, this->color, this->colorEscapes,
-        this->lineWrap ? frame.w : 0, &(const SDL_Point) { frame.x, frame.y });
+      $(this->font, renderBitmapCharacters, renderer, this->text, this->color, wrapWidth,
+        &(const SDL_Point) { frame.x, frame.y });
       return;
     }
 
     if (this->texture == NULL) {
       SDL_Surface *surface;
 
-      if (this->colorEscapes) {
-        surface = renderWithColorEscapes(this, this->lineWrap ? frame.w : 0);
+      if (MVC_HasColorEscapes(this->text)) {
+        char *stripped = MVC_StripColorEscapes(this->text);
+        surface = $(this->font, renderCharacters, stripped, Colors.White, wrapWidth);
+        assert(surface);
+        buildRuns(this, stripped, wrapWidth, surface->w);
+        free(stripped);
       } else {
-        surface = $(this->font, renderCharacters,
-                    this->text,
-                    this->color,
-                    this->lineWrap ? frame.w : 0);
+        surface = $(this->font, renderCharacters, this->text, this->color, wrapWidth);
       }
 
       assert(surface);
@@ -454,13 +396,23 @@ static void render(View *self, Renderer *renderer) {
     // from the texture's actual resolution -- stretching it by that (sub-)pixel remainder. Since
     // the remainder depends on the string's own pixel width, this stretch changes with every
     // keystroke, visibly shifting every glyph in the string, not just the one that was typed.
-    
-    const SDL_FRect draw_rect = {
-      (float) frame.x, (float) frame.y,
-      this->texture->size.w / scale, this->texture->size.h / scale
-    };
-    
-    $(renderer, drawTexture, this->texture, &draw_rect, &Colors.White);
+
+    if (this->runs) {
+      for (size_t i = 0; i < this->runCount; i++) {
+        const TextRun *run = &this->runs[i];
+        const SDL_FRect dest = {
+          frame.x + run->src.x / scale, frame.y + run->src.y / scale,
+          run->src.w / scale, run->src.h / scale
+        };
+        $(renderer, drawTextureRegion, this->texture, &run->src, &dest, &run->color);
+      }
+    } else {
+      const SDL_FRect dest = {
+        (float) frame.x, (float) frame.y,
+        this->texture->size.w / scale, this->texture->size.h / scale
+      };
+      $(renderer, drawTexture, this->texture, &dest, &Colors.White);
+    }
   }
 }
 
@@ -481,11 +433,7 @@ static void renderDeviceDidReset(View *self) {
  */
 static void renderDeviceWillReset(View *self) {
 
-  Text *this = (Text *) self;
-
-  this->texture = release(this->texture);
-  this->textureSize = MakeSize(0, 0);
-  this->naturalSizeCache.isValid = false;
+  invalidate((Text *) self);
 
   super(View, self, renderDeviceWillReset);
 }
@@ -522,22 +470,23 @@ static SDL_Size naturalSize(const Text *self) {
 
   Font *font = self->font;
 
-  if (self->naturalSizeCache.isValid && font && font->pixelDensity == self->naturalSizeCache.pixelDensity &&
-      self->colorEscapes == self->naturalSizeCache.colorEscapes) {
+  if (self->naturalSizeCache.isValid && font && font->pixelDensity == self->naturalSizeCache.pixelDensity) {
     return self->naturalSizeCache.size;
   }
 
   SDL_Size size = MakeSize(0, 0);
 
   if (font && font->bitmap.surface) {
-    $(font, sizeBitmapCharacters, self->text, self->colorEscapes, 0, &size.w, &size.h);
+    $(font, sizeBitmapCharacters, self->text, 0, &size.w, &size.h);
   } else if (font) {
     const char *text = self->text ?: "";
 
-    if (self->colorEscapes) {
-      sizeWithColorEscapes(self, &size.w, &size.h);
+    if (MVC_HasColorEscapes(text)) {
+      char *stripped = MVC_StripColorEscapes(text);
+      $(font, sizeCharacters, stripped, &size.w, &size.h);
+      free(stripped);
     } else {
-      $(self->font, sizeCharacters, text, &size.w, &size.h);
+      $(font, sizeCharacters, text, &size.w, &size.h);
     }
   }
 
@@ -546,7 +495,6 @@ static SDL_Size naturalSize(const Text *self) {
 
     this->naturalSizeCache.size = size;
     this->naturalSizeCache.pixelDensity = font->pixelDensity;
-    this->naturalSizeCache.colorEscapes = self->colorEscapes;
     this->naturalSizeCache.isValid = true;
   }
 
@@ -566,9 +514,7 @@ static void setFont(Text *self, Font *font) {
     release(self->font);
     self->font = retain(font);
 
-    self->texture = release(self->texture);
-    self->textureSize = MakeSize(0, 0);
-    self->naturalSizeCache.isValid = false;
+    invalidate(self);
 
     $((View *) self, sizeToFit);
   }
@@ -590,9 +536,7 @@ static void setText(Text *self, const char *text) {
       self->text = NULL;
     }
 
-    self->texture = release(self->texture);
-    self->textureSize = MakeSize(0, 0);
-    self->naturalSizeCache.isValid = false;
+    invalidate(self);
 
     $((View *) self, sizeToFit);
   }
