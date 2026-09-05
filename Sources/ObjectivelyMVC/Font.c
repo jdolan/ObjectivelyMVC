@@ -37,6 +37,7 @@
 #include "Window.h"
 
 #include "../Assets/coda.ttf.h"
+#include "../Assets/shareTechMono.ttf.h"
 
 const EnumName FontStyleNames[] = MakeEnumNames(
   MakeEnumAlias(FontStyleRegular, regular),
@@ -56,6 +57,8 @@ const EnumName FontStyleNames[] = MakeEnumNames(
 static void dealloc(Object *self) {
 
   Font *this = (Font *) self;
+
+  deallocBitmap(&this->bitmap);
 
   TTF_CloseFont(this->font);
 
@@ -123,43 +126,19 @@ static void cacheFont(Data *data, const char *family) {
  * @brief Normalizes Font attributes to their defaults, in one place, so that
  * Font::nameWithAttributes and Font::fontWithAttributes always agree.
  */
-static void normalizeAttributes(const char **family, int *size, int *style) {
+static void normalizeAttributes(FontAttributes *attributes) {
 
-  if (*family == NULL) {
-    *family = DEFAULT_FONT_FAMILY;
+  if (attributes->family == NULL) {
+    attributes->family = DEFAULT_FONT_FAMILY;
   }
 
-  if (*size < 1) {
-    *size = DEFAULT_FONT_SIZE;
+  if (attributes->size < 1) {
+    attributes->size = DEFAULT_FONT_SIZE;
   }
 
-  if (*style < FontStyleRegular || *style > FontStyleStrikeThrough) {
-    *style = DEFAULT_FONT_STYLE;
+  if (attributes->style < FontStyleRegular || attributes->style > FontStyleStrikeThrough) {
+    attributes->style = DEFAULT_FONT_STYLE;
   }
-}
-
-/**
- * @fn Font *Font::fontWithAttributes(const char *family, int size, int style, float pixelDensity)
- * @memberof Font
- */
-static Font *fontWithAttributes(const char *family, int size, int style, float pixelDensity) {
-
-  normalizeAttributes(&family, &size, &style);
-
-  if (pixelDensity < 1.f) {
-    pixelDensity = 1.f;
-  }
-
-  Data *data = $((Dictionary *) _cache, objectForKeyPath, family);
-  if (data) {
-    Font *font = $(alloc(Font), initWithData, data, family, size, style, pixelDensity);
-    assert(font);
-
-    return font;
-  }
-
-  MVC_LogWarn("%s-%d-%d not found\n", family, size, style);
-  return retain($$(Font, defaultFont));
 }
 
 /**
@@ -178,20 +157,63 @@ static Font *_defaultFont;
  */
 static Font *defaultFont(void) {
   static Once once;
+  
+  const FontAttributes attrs = {
+    DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE
+  };
 
   do_once(&once, {
-    Data *data = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len - 1);
-    assert(data);
-
-    $$(Font, cacheFont, data, DEFAULT_FONT_FAMILY);
-
-    release(data);
-
-    _defaultFont = $$(Font, fontWithAttributes, DEFAULT_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE, 1.f);
+    _defaultFont = $$(Font, fontWithAttributes, &attrs, 1.f);
     assert(_defaultFont);
   });
 
   return _defaultFont;
+}
+
+static Font *_defaultMonospaceFont;
+
+/**
+ * @fn Font *Font::defaultMonospaceFont(void)
+ * @memberof Font
+ */
+static Font *defaultMonospaceFont(void) {
+  static Once once;
+  
+  const FontAttributes attrs = {
+    DEFAULT_MONOSPACE_FONT_FAMILY, DEFAULT_FONT_SIZE, DEFAULT_FONT_STYLE
+  };
+
+  do_once(&once, {
+    _defaultMonospaceFont = $$(Font, fontWithAttributes, &attrs, 1.f);
+    assert(_defaultMonospaceFont);
+  });
+
+  return _defaultMonospaceFont;
+}
+
+/**
+ * @fn Font *Font::fontWithAttributes(const FontAttributes *attributes, float pixelDensity)
+ * @memberof Font
+ */
+static Font *fontWithAttributes(const FontAttributes *attributes, float pixelDensity) {
+
+  FontAttributes normalized = *attributes;
+  normalizeAttributes(&normalized);
+
+  if (pixelDensity < 1.f) {
+    pixelDensity = 1.f;
+  }
+
+  Data *data = $((Dictionary *) _cache, objectForKeyPath, normalized.family);
+  if (data) {
+    Font *font = $(alloc(Font), initWithData, data, &normalized, pixelDensity);
+    assert(font);
+
+    return font;
+  }
+
+  MVC_LogWarn("%s-%d-%d not found\n", normalized.family, normalized.size, normalized.style);
+  return retain($$(Font, defaultFont));
 }
 
 /**
@@ -215,10 +237,11 @@ static Font *fontWithName(const char *name, float pixelDensity) {
     if (sizeToken) {
       *sizeToken++ = '\0';
 
-      const int style = valueof(FontStyleNames, styleToken);
-      const int size = (int) strtol(sizeToken, NULL, 10);
+      const FontAttributes attributes = {
+        chars, (int) strtol(sizeToken, NULL, 10), valueof(FontStyleNames, styleToken)
+      };
 
-      font = $$(Font, fontWithAttributes, chars, size, style, pixelDensity);
+      font = $$(Font, fontWithAttributes, &attributes, pixelDensity);
     }
   }
 
@@ -233,10 +256,10 @@ static Font *fontWithName(const char *name, float pixelDensity) {
 }
 
 /**
- * @fn Font *Font::initWithData(Font *self, Data *data, int size, int index)
+ * @fn Font *Font::initWithData(Font *self, Data *data, const FontAttributes *attributes, float pixelDensity)
  * @memberof Font
  */
-static Font *initWithData(Font *self, Data *data, const char *family, int size, int style, float pixelDensity) {
+static Font *initWithData(Font *self, Data *data, const FontAttributes *attributes, float pixelDensity) {
 
   self = (Font *) super(Object, self, init);
   if (self) {
@@ -244,13 +267,13 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
     self->data = retain(data);
     assert(self->data);
 
-    self->family = strdup(family);
+    self->family = strdup(attributes->family);
     assert(self->family);
 
-    self->size = size;
+    self->size = attributes->size;
     assert(self->size);
 
-    self->style = style;
+    self->style = attributes->style;
 
     self->pixelDensity = pixelDensity;
     self->renderSize = self->size * self->pixelDensity;
@@ -263,6 +286,10 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
 
     TTF_SetFontStyle(self->font, self->style);
     TTF_SetFontHinting(self->font, TTF_HINTING_LIGHT_SUBPIXEL);
+
+    if (TTF_FontIsFixedWidth(self->font)) {
+      initBitmap(&self->bitmap, self);
+    }
   }
 
   return self;
@@ -273,24 +300,26 @@ static Font *initWithData(Font *self, Data *data, const char *family, int size, 
  * @memberof Font
  */
 static String *name(const Font *self) {
-  return $$(Font, nameWithAttributes, self->family, self->size, self->style);
+  const FontAttributes attributes = { self->family, self->size, self->style };
+  return $$(Font, nameWithAttributes, &attributes);
 }
 
 /**
- * @fn String *Font::nameWithAttributes(const char *family, int size, int style)
+ * @fn String *Font::nameWithAttributes(const FontAttributes *attributes)
  * @memberof Font
  */
-static String *nameWithAttributes(const char *family, int size, int style) {
+static String *nameWithAttributes(const FontAttributes *attributes) {
 
-  normalizeAttributes(&family, &size, &style);
+  FontAttributes normalized = *attributes;
+  normalizeAttributes(&normalized);
 
   for (const EnumName *en = FontStyleNames; en->name; en++) {
-    if (en->value == style) {
-      return str("%s-%d-%s", family, size, en->alias ?: en->name);
+    if (en->value == normalized.style) {
+      return str("%s-%d-%s", normalized.family, normalized.size, en->alias ?: en->name);
     }
   }
 
-  return str("%s-%d-%d", family, size, style);
+  return str("%s-%d-%d", normalized.family, normalized.size, normalized.style);
 }
 
 /**
@@ -384,15 +413,19 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->hash = hash;
   ((ObjectInterface *) clazz->interface)->isEqual = isEqual;
 
-  ((FontInterface *) clazz->interface)->fontWithAttributes = fontWithAttributes;
   ((FontInterface *) clazz->interface)->cacheFont = cacheFont;
   ((FontInterface *) clazz->interface)->clearCache = clearCache;
   ((FontInterface *) clazz->interface)->defaultFont = defaultFont;
+  ((FontInterface *) clazz->interface)->defaultMonospaceFont = defaultMonospaceFont;
+  ((FontInterface *) clazz->interface)->fontWithAttributes = fontWithAttributes;
   ((FontInterface *) clazz->interface)->fontWithName = fontWithName;
   ((FontInterface *) clazz->interface)->initWithData = initWithData;
   ((FontInterface *) clazz->interface)->name = name;
   ((FontInterface *) clazz->interface)->nameWithAttributes = nameWithAttributes;
+  ((FontInterface *) clazz->interface)->renderBitmapCharacters = renderCharactersBitmap;
   ((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
+  ((FontInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillResetBitmap;
+  ((FontInterface *) clazz->interface)->sizeBitmapCharacters = sizeCharactersBitmap;
   ((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
 
   const bool init = TTF_Init();
@@ -401,6 +434,16 @@ static void initialize(Class *clazz) {
 
   _cache = $$(Dictionary, dictionary);
   assert(_cache);
+
+  Data *coda = $(alloc(Data), initWithConstMemory, coda_ttf, coda_ttf_len - 1);
+  assert(coda);
+  cacheFont(coda, DEFAULT_FONT_FAMILY);
+  release(coda);
+
+  Data *shareTechMono = $(alloc(Data), initWithConstMemory, shareTechMono_ttf, shareTechMono_ttf_len - 1);
+  assert(shareTechMono);
+  cacheFont(shareTechMono, DEFAULT_MONOSPACE_FONT_FAMILY);
+  release(shareTechMono);
 }
 
 /**
@@ -410,6 +453,7 @@ static void destroy(Class *clazz) {
 
   release(_cache);
   release(_defaultFont);
+  release(_defaultMonospaceFont);
 
   TTF_Quit();
 }

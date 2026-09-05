@@ -30,7 +30,7 @@
     <ClInclude Include="..\Assets\stylesheet.css.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\AtlasImage.h" />
-    <ClInclude Include="..\Sources\ObjectivelyMVC\BitmapFont.h" />
+    <ClInclude Include="..\Sources\ObjectivelyMVC\Font+Bitmap.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Box.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Button.h" />
     <ClInclude Include="..\Sources\ObjectivelyMVC\Checkbox.h" />
@@ -90,7 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Sources\ObjectivelyMVC\AtlasImage.c" />
-    <ClCompile Include="..\Sources\ObjectivelyMVC\BitmapFont.c" />
+    <ClCompile Include="..\Sources\ObjectivelyMVC\Font+Bitmap.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Box.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Button.c" />
     <ClCompile Include="..\Sources\ObjectivelyMVC\Checkbox.c" />

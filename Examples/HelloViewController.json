@@ -187,6 +187,114 @@
                 }
               ]
             }
+          },
+          {
+            "identifier": "fonts",
+            "label": {
+              "text": {
+                "text": "Fonts"
+              }
+            },
+            "view": {
+              "class": "StackView",
+              "classNames": [
+                "container"
+              ],
+              "subviews": [
+                {
+                  "class": "Text",
+                  "text": "The quick brown fox jumps over the lazy dog",
+                  "style": {
+                    "font-family": "Coda",
+                    "font-size": 24,
+                    "font-style": "regular"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "^1The ^2quick ^3brown ^4fox ^5jumps ^6over ^7the lazy dog",
+                  "colorEscapes": true,
+                  "style": {
+                    "font-family": "Coda",
+                    "font-size": 20,
+                    "font-style": "regular"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "The quick brown fox jumps over the lazy dog",
+                  "style": {
+                    "font-family": "Coda",
+                    "font-size": 18,
+                    "font-style": "bold"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "The quick brown fox jumps over the lazy dog",
+                  "style": {
+                    "font-family": "Coda",
+                    "font-size": 14,
+                    "font-style": "italic"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "The quick brown fox jumps over the lazy dog",
+                  "style": {
+                    "font-family": "Coda",
+                    "font-size": 10,
+                    "font-style": "regular"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "The quick brown fox jumps over the lazy dog",
+                  "style": {
+                    "font-family": "Share Tech Mono",
+                    "font-size": 24,
+                    "font-style": "regular"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "^1The ^2quick ^3brown ^4fox ^5jumps ^6over ^7the lazy dog",
+                  "colorEscapes": true,
+                  "style": {
+                    "font-family": "Share Tech Mono",
+                    "font-size": 20,
+                    "font-style": "regular"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "The quick brown fox jumps over the lazy dog",
+                  "style": {
+                    "font-family": "Share Tech Mono",
+                    "font-size": 18,
+                    "font-style": "bold"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "The quick brown fox jumps over the lazy dog",
+                  "style": {
+                    "font-family": "Share Tech Mono",
+                    "font-size": 14,
+                    "font-style": "italic"
+                  }
+                },
+                {
+                  "class": "Text",
+                  "text": "The quick brown fox jumps over the lazy dog",
+                  "style": {
+                    "font-family": "Share Tech Mono",
+                    "font-size": 10,
+                    "font-style": "regular"
+                  }
+                }
+              ]
+            }
           }
         ]
       }

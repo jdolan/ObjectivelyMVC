@@ -14,6 +14,7 @@ EXTRA_DIST = \
 	debug.css \
 	debug.json \
 	resize.png \
+	shareTechMono.ttf \
 	stylesheet.css
 
 %.h: %
@@ -31,6 +32,7 @@ BUILT_SOURCES = \
 	debug.css.h \
 	debug.json.h \
 	resize.png.h \
+	shareTechMono.ttf.h \
 	stylesheet.css.h
 
 .PHONY: shaders

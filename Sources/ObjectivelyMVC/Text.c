@@ -30,10 +30,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "BitmapFont.h"
 #include "Colors.h"
 #include "Text.h"
-#include "WindowController.h"
+#include "Theme.h"
 
 #define _Class _Text
 
@@ -231,22 +230,22 @@ static void sizeWithColorEscapes(const Text *self, int *w, int *h) {
 
 /**
  * @brief Resolves and applies the Font with the given attributes: through the window's
- * Font cache when attached, which supplies the window's pixel density, or at a density
+ * Theme when attached, which supplies the window's pixel density, or at a density
  * of 1.0 otherwise, to be re-resolved on attachment via View::didMoveToWindow. The
  * cache's reference is retained to mirror the owned reference the fallback returns.
  */
-static void resolveFont(Text *self, const char *family, int size, int style) {
+static void resolveFont(Text *self, const FontAttributes *attributes) {
 
   View *view = (View *) self;
 
-  WindowController *windowController = view->window ?
-    $$(WindowController, windowController, view->window) : NULL;
+  Theme *theme = view->window ? $$(Theme, theme, view->window) : NULL;
 
   Font *font;
-  if (windowController) {
-    font = retain($(windowController, font, family, size, style));
+  if (theme) {
+    const float pixelDensity = SDL_GetWindowPixelDensity(view->window);
+    font = retain($(theme, font, attributes, pixelDensity));
   } else {
-    font = $$(Font, fontWithAttributes, family, size, style, 1.f);
+    font = $$(Font, fontWithAttributes, attributes, 1.f);
   }
 
   assert(font);
@@ -264,7 +263,6 @@ static void dealloc(Object *self) {
 
   Text *this = (Text *) self;
 
-  release(this->bitmapFont);
   release(this->font);
 
   free(this->text);
@@ -326,7 +324,8 @@ static void applyStyle(View *self, const Style *style) {
 
   if ($(self, bind, fontInlets, style->attributes)) {
 
-    resolveFont(this, fontFamily, fontSize, fontStyle);
+    const FontAttributes attributes = { fontFamily, fontSize, fontStyle };
+    resolveFont(this, &attributes);
 
     if (fontFamily) {
       free(fontFamily);
@@ -346,7 +345,6 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
   const Inlet inlets[] = MakeInlets(
     MakeInlet("color", InletTypeColor, &this->color, NULL),
     MakeInlet("colorEscapes", InletTypeBool, &this->colorEscapes, NULL),
-    MakeInlet("font", InletTypeFont, &this->font, NULL),
     MakeInlet("lineWrap", InletTypeBool, &this->lineWrap, NULL),
     MakeInlet("text", InletTypeCharacters, &this->text, NULL)
   );
@@ -359,18 +357,28 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 }
 
 /**
+ * @brief Re-resolves this Text's Font at the current window's pixel density. Shared by
+ * didMoveToWindow and renderDeviceDidReset, rather than the latter dispatching through the
+ * public didMoveToWindow, which would re-trigger View's own attachment side effects.
+ */
+static void refreshFont(Text *self) {
+
+  const View *view = (View *) self;
+
+  if (view->window && self->font) {
+    const FontAttributes attributes = { self->font->family, self->font->size, self->font->style };
+    resolveFont(self, &attributes);
+  }
+}
+
+/**
  * @see View::didMoveToWindow(View *, SDL_Window *)
  */
 static void didMoveToWindow(View *self, SDL_Window *window) {
 
   super(View, self, didMoveToWindow, window);
 
-  // A Font resolved before attachment (e.g. the default Font) was opened at a pixel
-  // density of 1.0; re-resolve through the window's cache at the window's actual density.
-  Text *this = (Text *) self;
-  if (window && this->font) {
-    resolveFont(this, this->font->family, this->font->size, this->font->style);
-  }
+  refreshFont((Text *) self);
 }
 
 /**
@@ -391,17 +399,14 @@ static void render(View *self, Renderer *renderer) {
 
   assert(this->font);
 
-  // The Font is opened at the window's pixel density: density changes arrive via the
-  // WindowController, which empties its font cache and resets the render device, so by
-  // draw time this Font is always current.
   const float scale = this->font->pixelDensity;
 
   if (this->text) {
 
     const SDL_Rect frame = $(self, renderFrame);
 
-    if (this->bitmapFont) {
-      $(this->bitmapFont, renderCharacters, renderer, this->text, this->color, this->colorEscapes,
+    if (this->font->bitmap.surface) {
+      $(this->font, renderBitmapCharacters, renderer, this->text, this->color, this->colorEscapes,
         this->lineWrap ? frame.w : 0, &(const SDL_Point) { frame.x, frame.y });
       return;
     }
@@ -464,13 +469,7 @@ static void render(View *self, Renderer *renderer) {
  */
 static void renderDeviceDidReset(View *self) {
 
-  Text *this = (Text *) self;
-
-  // Fonts are immutable, opened at their window's pixel density; re-resolve through the
-  // window's cache, which the WindowController empties before resetting the device.
-  if (self->window && this->font) {
-    resolveFont(this, this->font->family, this->font->size, this->font->style);
-  }
+  refreshFont((Text *) self);
 
   $(self, sizeToFit);
 
@@ -487,10 +486,6 @@ static void renderDeviceWillReset(View *self) {
   this->texture = release(this->texture);
   this->textureSize = MakeSize(0, 0);
   this->naturalSizeCache.isValid = false;
-
-  if (this->bitmapFont) {
-    $(this->bitmapFont->atlas, renderDeviceWillReset);
-  }
 
   super(View, self, renderDeviceWillReset);
 }
@@ -525,7 +520,7 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
  */
 static SDL_Size naturalSize(const Text *self) {
 
-  const Font *font = self->bitmapFont ? self->bitmapFont->font : self->font;
+  Font *font = self->font;
 
   if (self->naturalSizeCache.isValid && font && font->pixelDensity == self->naturalSizeCache.pixelDensity &&
       self->colorEscapes == self->naturalSizeCache.colorEscapes) {
@@ -534,9 +529,9 @@ static SDL_Size naturalSize(const Text *self) {
 
   SDL_Size size = MakeSize(0, 0);
 
-  if (self->bitmapFont) {
-    $(self->bitmapFont, sizeCharacters, self->text, self->colorEscapes, 0, &size.w, &size.h);
-  } else if (self->font) {
+  if (font && font->bitmap.surface) {
+    $(font, sizeBitmapCharacters, self->text, self->colorEscapes, 0, &size.w, &size.h);
+  } else if (font) {
     const char *text = self->text ?: "";
 
     if (self->colorEscapes) {
@@ -556,25 +551,6 @@ static SDL_Size naturalSize(const Text *self) {
   }
 
   return size;
-}
-
-/**
- * @fn void Text::setBitmapFont(Text *self, BitmapFont *bitmapFont)
- * @memberof Text
- */
-static void setBitmapFont(Text *self, BitmapFont *bitmapFont) {
-
-  if (bitmapFont != self->bitmapFont) {
-
-    release(self->bitmapFont);
-    self->bitmapFont = bitmapFont ? retain(bitmapFont) : NULL;
-
-    self->texture = release(self->texture);
-    self->textureSize = MakeSize(0, 0);
-    self->naturalSizeCache.isValid = false;
-
-    $((View *) self, sizeToFit);
-  }
 }
 
 /**
@@ -665,7 +641,6 @@ static void initialize(Class *clazz) {
 
   ((TextInterface *) clazz->interface)->initWithText = initWithText;
   ((TextInterface *) clazz->interface)->naturalSize = naturalSize;
-  ((TextInterface *) clazz->interface)->setBitmapFont = setBitmapFont;
   ((TextInterface *) clazz->interface)->setFont = setFont;
   ((TextInterface *) clazz->interface)->setText = setText;
   ((TextInterface *) clazz->interface)->setTextWithFormat = setTextWithFormat;

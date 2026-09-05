@@ -23,26 +23,14 @@
 
 /**
  * @file
- * @brief A representative game HUD, used as a performance benchmark.
- * @details Renders health, armor and ammo counters, a crosshair, a countdown
- * timer, a chat log and a toggling scoreboard, each updating on an interval.
- * The frame passes (style, layout, draw, endFrame) are timed individually and
- * a summary is printed once per second.
- *
- * Environment:
- *  - `MVC_HUD_FRAMES=N` exits successfully after N frames (for benchmarking).
- *  - `MVC_HUD_HIDDEN=1` creates the window hidden (best effort headless).
- *  - `MVC_HUD_SCALE=N` multiplies the scoreboard row count (default 1),
- *    scaling the View tree to gauge how frame cost grows with UI complexity.
- *  - `MVC_HUD_FONT=path` names a fixed-width face to bake the readouts' BitmapFont from,
- *    ahead of the system faces tried by default.
- *  - `MVC_HUD_BITMAP_FONT=0` leaves the readouts on Font, for comparison.
- *  - `MVC_HUD_DEBUG=1` prints the draw call list once, on the tenth frame.
+ * @brief A representative game HUD, for game developers to take as a starting point.
+ * @details Renders health, armor and ammo counters, a crosshair, a countdown timer, a chat
+ * log and a toggling scoreboard, each updating on its own interval rather than every frame,
+ * as a real HUD would. The readouts use a monospaced Font, which ObjectivelyMVC draws from a
+ * baked glyph atlas, so that changing them costs nothing.
  */
 
 #define SDL_MAIN_USE_CALLBACKS
-
-#include <stdio.h>
 
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL.h>
@@ -52,14 +40,6 @@
 
 #define HUD_WINDOW_W 1024
 #define HUD_WINDOW_H 720
-
-/**
- * @brief Accumulated timing for one frame pass.
- */
-typedef struct {
-  double sum;
-  double max;
-} PassStats;
 
 /**
  * @brief SDL application state passed via pointer to callbacks.
@@ -79,27 +59,9 @@ typedef struct {
   Panel *scoreboard;
 
   /**
-   * @brief The atlas behind the icon row and the readouts' BitmapFont.
-   */
-  ImageAtlas *atlas;
-
-  /**
-   * @brief The fixed-width BitmapFont behind the readouts, or `NULL` if no fixed-width face
-   * was found on this system.
-   */
-  BitmapFont *bitmapFont;
-
-  /**
    * @brief Next update deadline per widget, in SDL ticks.
    */
   Uint64 healthDue, armorDue, ammoDue, timerDue, chatDue, scoreboardDue;
-
-  /**
-   * @brief Frame counters and per-pass timing since the last report.
-   */
-  Uint64 frames, maxFrames, reportDue, reportFrames;
-  PassStats acquire, style, layout, draw, endFrame, submit;
-  size_t draws, vertices;
 } AppState;
 
 static AppState application;
@@ -154,48 +116,6 @@ static Image *icon(int size, Uint32 left, Uint32 right) {
 }
 
 /**
- * @brief Bakes a BitmapFont from the first fixed-width face found on this system, so that the
- * readouts share the icon atlas and cost nothing to change. MVC_HUD_FONT names a face to try
- * first; MVC_HUD_BITMAP_FONT=0 disables the BitmapFont, leaving the readouts on Font, for
- * comparison.
- */
-static BitmapFont *bakeBitmapFont(ImageAtlas *atlas, WindowController *windowController) {
-
-  const char *enabled = SDL_getenv("MVC_HUD_BITMAP_FONT");
-  if (enabled && *enabled == '0') {
-    return NULL;
-  }
-
-  const char *paths[] = {
-    SDL_getenv("MVC_HUD_FONT"),
-    "/System/Library/Fonts/Menlo.ttc",
-    "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
-    "C:\\Windows\\Fonts\\consola.ttf",
-  };
-
-  for (size_t i = 0; i < SDL_arraysize(paths); i++) {
-    Data *data = paths[i] ? $$(Data, dataWithContentsOfFile, paths[i]) : NULL;
-    if (data) {
-      $$(Font, cacheFont, data, "Mono");
-      release(data);
-      break;
-    }
-  }
-
-  Font *font = $(windowController, font, "Mono", 18, FontStyleRegular);
-
-  Image *heart = icon(32, 0xff0000ff, 0xff0000ff);
-  Dictionary *named = $$(Dictionary, dictionaryWithObjectsAndKeys, heart, str("heart"), NULL);
-
-  BitmapFont *bitmapFont = $(alloc(BitmapFont), initWithFont, font, ' ', 95, named, atlas);
-
-  release(named);
-  release(heart);
-
-  return bitmapFont;
-}
-
-/**
  * @brief Builds the HUD View hierarchy on the given root View.
  */
 static void buildHUD(AppState *app, View *root) {
@@ -207,14 +127,11 @@ static void buildHUD(AppState *app, View *root) {
   app->ammo = label(root, "Ammo 50", ViewAlignmentBottomRight);
   app->timer = label(root, "10:00", ViewAlignmentTopCenter);
 
-  // The readouts change every second or faster: on the BitmapFont, a change costs nothing,
-  // and they draw in the same call as the icons that share the atlas
-  if (app->bitmapFont) {
-    Label *readouts[] = { app->health, app->armor, app->ammo, app->timer };
-    for (size_t i = 0; i < SDL_arraysize(readouts); i++) {
-      readouts[i]->text->colorEscapes = true;
-      $(readouts[i]->text, setBitmapFont, app->bitmapFont);
-    }
+  // The readouts change every second or faster: the stylesheet gives them a monospaced Font,
+  // so each change is a handful of quads rather than a rasterization
+  Label *readouts[] = { app->health, app->armor, app->ammo, app->timer };
+  for (size_t i = 0; i < SDL_arraysize(readouts); i++) {
+    $((View *) readouts[i], addClassName, "readout");
   }
 
   // Ten solid segments sharing the Renderer's white texture: with a shared scissor these
@@ -233,11 +150,13 @@ static void buildHUD(AppState *app, View *root) {
   StackView *icons = stackView(root, ViewAlignmentTopRight);
   icons->axis = StackViewAxisHorizontal;
 
+  ImageAtlas *iconAtlas = $(app->windowController->theme, icons);
+
   const Uint32 colors[] = { 0xff0000ff, 0xff00ff00, 0xffff0000, 0xff00ffff, 0xffff00ff, 0xffffff00, 0xffffffff, 0xff808080 };
 
   for (int i = 0; i < 8; i++) {
     Image *image = icon(16 + 4 * i, colors[i], colors[(i + 1) % 8]);
-    AtlasImage *atlasImage = $(app->atlas, addImage, image);
+    AtlasImage *atlasImage = $(iconAtlas, addImage, image);
     release(image);
 
     ImageView *imageView = $(alloc(ImageView), initWithImage, (Image *) atlasImage);
@@ -245,7 +164,7 @@ static void buildHUD(AppState *app, View *root) {
     release(imageView);
   }
 
-  MVC_Assert($(app->atlas, compile), "ImageAtlas::compile");
+  MVC_Assert($(iconAtlas, compile), "ImageAtlas::compile");
 
   label(root, "+", ViewAlignmentMiddleCenter);
 
@@ -254,12 +173,7 @@ static void buildHUD(AppState *app, View *root) {
   Panel *scoreboard = $(alloc(Panel), initWithFrame, NULL);
   scoreboard->control.view.alignment = ViewAlignmentMiddleCenter;
 
-  int rows = 8;
-
-  const char *scale = SDL_getenv("MVC_HUD_SCALE");
-  if (scale) {
-    rows *= SDL_max(1, SDL_atoi(scale));
-  }
+  const int rows = 8;
 
   for (int i = 0; i < rows; i++) {
     StackView *row = $(alloc(StackView), initWithFrame, NULL);
@@ -300,11 +214,7 @@ static void updateHUD(AppState *app, Uint64 ticks) {
 
   if (ticks >= app->healthDue) {
     app->healthDue = ticks + 2000;
-    if (app->bitmapFont) {
-      $(app->health->text, setTextWithFormat, ":heart: ^%d%d", (int) (ticks / 2000 % 10), (int) (25 + ticks / 100 % 75));
-    } else {
-      $(app->health->text, setTextWithFormat, "Health %d", (int) (25 + ticks / 100 % 75));
-    }
+    $(app->health->text, setTextWithFormat, "Health %d", (int) (25 + ticks / 100 % 75));
   }
 
   if (ticks >= app->armorDue) {
@@ -344,49 +254,6 @@ static void updateHUD(AppState *app, Uint64 ticks) {
   }
 }
 
-#pragma mark - Timing
-
-/**
- * @return Elapsed microseconds between the given performance counter values.
- */
-static double microseconds(Uint64 start, Uint64 end) {
-  return (end - start) * 1e6 / (double) SDL_GetPerformanceFrequency();
-}
-
-/**
- * @brief Accumulates one sample into the given PassStats.
- */
-static void sample(PassStats *stats, Uint64 start, Uint64 end) {
-
-  const double us = microseconds(start, end);
-
-  stats->sum += us;
-  stats->max = SDL_max(stats->max, us);
-}
-
-/**
- * @brief Prints the per-pass summary and resets the accumulators.
- */
-static void report(AppState *app) {
-
-  const double n = (double) app->reportFrames;
-
-  printf("HUD %llu frames | acquire avg %.1fus max %.1fus | style avg %.1fus max %.1fus | "
-         "layout avg %.1fus max %.1fus | draw avg %.1fus max %.1fus | endFrame avg %.1fus max %.1fus | "
-         "submit avg %.1fus max %.1fus | draws %zu verts %zu\n",
-         (unsigned long long) app->reportFrames,
-         app->acquire.sum / n, app->acquire.max,
-         app->style.sum / n, app->style.max,
-         app->layout.sum / n, app->layout.max,
-         app->draw.sum / n, app->draw.max,
-         app->endFrame.sum / n, app->endFrame.max,
-         app->submit.sum / n, app->submit.max,
-         app->draws, app->vertices);
-
-  app->reportFrames = 0;
-  app->acquire = app->style = app->layout = app->draw = app->endFrame = app->submit = (PassStats) { 0 };
-}
-
 #pragma mark - SDL application callbacks
 
 /**
@@ -400,19 +267,8 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
 
   MVC_Assert(SDL_Init(SDL_INIT_VIDEO), "SDL_Init");
 
-  SDL_WindowFlags flags = SDL_WINDOW_HIGH_PIXEL_DENSITY;
-
-  const char *hidden = SDL_getenv("MVC_HUD_HIDDEN");
-  if (hidden && *hidden == '1') {
-    flags |= SDL_WINDOW_HIDDEN;
-  }
-
-  const char *frames = SDL_getenv("MVC_HUD_FRAMES");
-  if (frames) {
-    app->maxFrames = SDL_strtoull(frames, NULL, 10);
-  }
-
-  app->window = SDL_CreateWindow("ObjectivelyMVC HUD", HUD_WINDOW_W, HUD_WINDOW_H, flags);
+  app->window = SDL_CreateWindow("ObjectivelyMVC HUD", HUD_WINDOW_W, HUD_WINDOW_H,
+                                  SDL_WINDOW_HIGH_PIXEL_DENSITY);
   MVC_Assert(app->window, "SDL_CreateWindow");
 
   app->renderDevice = $(alloc(RenderDevice), initWithWindow, app->window, NULL);
@@ -437,35 +293,28 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
   $(app->windowController, setViewController, viewController);
   release(viewController);
 
-  Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters, ".segment { background-color: #40c040; }");
+  Stylesheet *stylesheet = $$(Stylesheet, stylesheetWithCharacters,
+    ".segment { background-color: #40c040; } "
+    ".readout Text { font-family: " DEFAULT_MONOSPACE_FONT_FAMILY "; font-size: 18; }");
   $(app->windowController->theme, addStylesheet, stylesheet);
   release(stylesheet);
-
-  app->atlas = $(alloc(ImageAtlas), init);
-  app->bitmapFont = bakeBitmapFont(app->atlas, app->windowController);
 
   buildHUD(app, viewController->view);
 
   app->scoreboardDue = SDL_GetTicks() + 5000;
-  app->reportDue = SDL_GetTicks() + 1000;
 
   return SDL_APP_CONTINUE;
 }
 
 /**
  * @brief SDL3 frame iteration callback.
- * @details Hand-rolls WindowController::renderTo in order to time each pass
- * (style, layout, draw, endFrame) individually.
  */
 SDL_AppResult SDL_AppIterate(void *appState) {
 
   AppState *app = appState;
 
-  const Uint64 ticks = SDL_GetTicks();
+  updateHUD(app, SDL_GetTicks());
 
-  updateHUD(app, ticks);
-
-  const Uint64 tAcquire = SDL_GetPerformanceCounter();
   CommandBuffer *commands = $(app->renderDevice, beginFrame);
   if (commands) {
 
@@ -473,60 +322,9 @@ SDL_AppResult SDL_AppIterate(void *appState) {
     RenderPass *clear = $(commands, beginRenderPass, &color, 1, NULL);
     release(clear);
 
-    WindowController *windowController = app->windowController;
-    View *view = windowController->viewController->view;
-    Renderer *renderer = windowController->renderer;
+    $(app->windowController, render);
 
-    $(renderer, beginFrameWith, commands, app->framebuffer);
-
-    const Uint64 t0 = SDL_GetPerformanceCounter();
-    $(view, applyThemeIfNeeded, windowController->theme);
-
-    const Uint64 t1 = SDL_GetPerformanceCounter();
-    $(view, layoutIfNeeded);
-
-    MVC_InvalidateRenderFrames();
-
-    const Uint64 t2 = SDL_GetPerformanceCounter();
-    $(view, draw, renderer);
-
-    const Uint64 t3 = SDL_GetPerformanceCounter();
-    app->draws = renderer->drawArrays->count;
-    if (app->frames == 10 && SDL_getenv("MVC_HUD_DEBUG")) {
-      for (size_t i = 0; i < renderer->drawArrays->count; i++) {
-        const MVC_DrawArrays *d = VectorElement(renderer->drawArrays, MVC_DrawArrays, i);
-        printf("draw %zu: texture %p verts %u scissor %d,%d %dx%d\n", i, (void *) d->texture, d->vertexCount, d->scissor.x, d->scissor.y, d->scissor.w, d->scissor.h);
-      }
-    }
-    app->vertices = renderer->vertices->count;
-    $(renderer, endFrame);
-
-    const Uint64 t4 = SDL_GetPerformanceCounter();
     $(app->renderDevice, endFrame);
-
-    const Uint64 t5 = SDL_GetPerformanceCounter();
-
-    sample(&app->acquire, tAcquire, t0);
-    sample(&app->style, t0, t1);
-    sample(&app->layout, t1, t2);
-    sample(&app->draw, t2, t3);
-    sample(&app->endFrame, t3, t4);
-    sample(&app->submit, t4, t5);
-    app->reportFrames++;
-  }
-
-  app->frames++;
-
-  if (ticks >= app->reportDue && app->reportFrames) {
-    app->reportDue = ticks + 1000;
-    report(app);
-  }
-
-  if (app->maxFrames && app->frames >= app->maxFrames) {
-    if (app->reportFrames) {
-      report(app);
-    }
-    return SDL_APP_SUCCESS;
   }
 
   return SDL_APP_CONTINUE;
@@ -558,8 +356,6 @@ void SDL_AppQuit(void *appState, SDL_AppResult result) {
   $(app->renderDevice, waitForIdle);
 
   release(app->windowController);
-  release(app->bitmapFont);
-  release(app->atlas);
   release(app->framebuffer);
   release(app->renderDevice);
 

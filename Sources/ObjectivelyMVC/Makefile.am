@@ -8,7 +8,6 @@ pkgincludedir = $(includedir)/$(PACKAGE_NAME)
 
 pkginclude_HEADERS = \
 	AtlasImage.h \
-	BitmapFont.h \
 	Box.h \
 	Button.h \
 	Checkbox.h \
@@ -18,6 +17,7 @@ pkginclude_HEADERS = \
 	Control.h \
 	DebugViewController.h \
 	Font.h \
+	Font+Bitmap.h \
 	HSVColorPicker.h \
 	HueColorPicker.h \
 	Image.h \
@@ -70,7 +70,6 @@ lib_LTLIBRARIES = \
 
 libObjectivelyMVC_la_SOURCES = \
 	AtlasImage.c \
-	BitmapFont.c \
 	Box.c \
 	Button.c \
 	Checkbox.c \
@@ -80,6 +79,7 @@ libObjectivelyMVC_la_SOURCES = \
 	Control.c \
 	DebugViewController.c \
 	Font.c \
+	Font+Bitmap.c \
 	HSVColorPicker.c \
 	HueColorPicker.c \
 	Image.c \

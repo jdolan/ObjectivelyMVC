@@ -25,6 +25,7 @@
 
 #include <Objectively/JSONContext.h>
 
+#include "ImageAtlas.h"
 #include "Log.h"
 #include "Theme.h"
 #include "View.h"
@@ -41,6 +42,8 @@ static void dealloc(Object *self) {
 
   Theme *this = (Theme *) self;
 
+  release(this->fontCache);
+  release(this->icons);
   release(this->stylesheets);
 
   super(Object, self, dealloc);
@@ -54,6 +57,71 @@ static void dealloc(Object *self) {
  */
 static void addStylesheet(Theme *self, Stylesheet *stylesheet) {
   $((Array *) self->stylesheets, addObject, stylesheet);
+}
+
+/**
+ * @brief Builds the cache key for the given attributes and pixel density.
+ */
+static String *cacheKey(const FontAttributes *attributes, float pixelDensity) {
+
+  String *name = $$(Font, nameWithAttributes, attributes);
+  assert(name);
+
+  String *key = str("%s@%g", name->chars, pixelDensity);
+  assert(key);
+
+  release(name);
+  return key;
+}
+
+/**
+ * @fn Font *Theme::font(Theme *self, const FontAttributes *attributes, float pixelDensity)
+ * @memberof Theme
+ */
+static Font *font(Theme *self, const FontAttributes *attributes, float pixelDensity) {
+
+  String *key = cacheKey(attributes, pixelDensity);
+
+  Font *font = $(self->fontCache, objectForKeyPath, key->chars);
+  if (font == NULL) {
+
+    Font *resolved = $$(Font, fontWithAttributes, attributes, pixelDensity);
+    assert(resolved);
+
+    // Keyed by the resolved Font's own name: when the requested family is not registered,
+    // Font::fontWithAttributes falls back to the default Font, and caching that under the
+    // requested key would pin the wrong Font to it permanently. This way the request
+    // simply misses again, and heals once the family is registered via Font::cacheFont.
+    const FontAttributes resolvedAttributes = { resolved->family, resolved->size, resolved->style };
+    String *resolvedKey = cacheKey(&resolvedAttributes, pixelDensity);
+
+    font = $(self->fontCache, objectForKeyPath, resolvedKey->chars);
+    if (font == NULL) {
+      $(self->fontCache, setObjectForKeyPath, resolved, resolvedKey->chars);
+      font = resolved;
+    }
+
+    release(resolvedKey);
+    release(resolved);
+  }
+
+  release(key);
+
+  return font;
+}
+
+/**
+ * @fn ImageAtlas *Theme::icons(Theme *self)
+ * @memberof Theme
+ */
+static ImageAtlas *icons(Theme *self) {
+
+  if (self->icons == NULL) {
+    self->icons = $(alloc(ImageAtlas), init);
+    assert(self->icons);
+  }
+
+  return self->icons;
 }
 
 /**
@@ -119,6 +187,9 @@ static Theme *init(Theme *self) {
   self = (Theme *) super(Object, self, init);
   if (self) {
 
+    self->fontCache = $$(Dictionary, dictionary);
+    assert(self->fontCache);
+
     self->stylesheets = $$(Array, arrayWithCapacity, 8);
     assert(self->stylesheets);
 
@@ -134,6 +205,32 @@ static Theme *init(Theme *self) {
  */
 static void removeStylesheet(Theme *self, Stylesheet *stylesheet) {
   $((Array *) self->stylesheets, removeObject, stylesheet);
+}
+
+/**
+ * @brief DictionaryEnumerator for renderDeviceWillReset.
+ */
+static void renderDeviceWillReset_enumerate(const Dictionary *dictionary, ident obj, ident key, ident data) {
+  $((Font *) obj, renderDeviceWillReset);
+}
+
+/**
+ * @fn void Theme::renderDeviceWillReset(Theme *self)
+ * @memberof Theme
+ */
+static void renderDeviceWillReset(Theme *self) {
+  $(self->fontCache, enumerateObjectsAndKeys, renderDeviceWillReset_enumerate, NULL);
+  if (self->icons) {
+    $(self->icons, renderDeviceWillReset);
+  }
+}
+
+/**
+ * @fn void Theme::renderDeviceDidReset(Theme *self)
+ * @memberof Theme
+ */
+static void renderDeviceDidReset(Theme *self) {
+  // Bitmap Textures are recreated lazily by ImageAtlas::texture on next use.
 }
 
 /**
@@ -163,8 +260,12 @@ static void initialize(Class *clazz) {
 
   ((ThemeInterface *) clazz->interface)->addStylesheet = addStylesheet;
   ((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
+  ((ThemeInterface *) clazz->interface)->font = font;
+  ((ThemeInterface *) clazz->interface)->icons = icons;
   ((ThemeInterface *) clazz->interface)->init = init;
   ((ThemeInterface *) clazz->interface)->removeStylesheet = removeStylesheet;
+  ((ThemeInterface *) clazz->interface)->renderDeviceDidReset = renderDeviceDidReset;
+  ((ThemeInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((ThemeInterface *) clazz->interface)->theme = theme;
 }
 

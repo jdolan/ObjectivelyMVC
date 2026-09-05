@@ -24,7 +24,10 @@
 #pragma once
 
 #include <Objectively/Array.h>
+#include <Objectively/Dictionary.h>
 
+#include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/ImageAtlas.h>
 #include <ObjectivelyMVC/Stylesheet.h>
 
 /**
@@ -62,6 +65,19 @@ struct Theme {
   ThemeInterface *interface[0];
 
   /**
+   * @brief The Font instance cache, keyed by `Font::name` + pixel density.
+   * @private
+   */
+  Dictionary *fontCache;
+
+  /**
+   * @brief An app-owned ImageAtlas for icons, HUD art, and similar, created lazily by
+   * Theme::icons.
+   * @private
+   */
+  ImageAtlas *icons;
+
+  /**
    * @brief The Stylesheets, in order of priority.
    */
   Array *stylesheets;
@@ -96,6 +112,37 @@ struct ThemeInterface {
   Style *(*computeStyle)(const Theme *self, const View *view);
 
   /**
+   * @fn Font *Theme::font(Theme *self, const FontAttributes *attributes, float pixelDensity)
+   * @brief Resolves the Font with the given attributes at the given pixel density.
+   * @details Instances are cached by this Theme, keyed by attributes and pixel density, so
+   * repeated requests -- including from multiple windows sharing this Theme -- return the
+   * same Font.
+   * @param self The Theme.
+   * @param attributes The FontAttributes.
+   * @param pixelDensity The pixel density.
+   * @return The Font, owned by this Theme. Callers retaining it beyond the current frame MUST
+   * re-resolve after a pixel density change.
+   * @memberof Theme
+   */
+  Font *(*font)(Theme *self, const FontAttributes *attributes, float pixelDensity);
+
+  /**
+   * @fn ImageAtlas *Theme::icons(Theme *self)
+   * @brief Returns this Theme's app-owned ImageAtlas for icons, HUD art, and similar, creating
+   * it on first access.
+   * @details This atlas is not populated or compiled by Theme --
+   * the caller drives everything (ImageAtlas::addImage/addImageWithResourceName, compile,
+   * tracking the returned AtlasImages) exactly as with any other ImageAtlas. Theme only owns
+   * the instance and forwards render device resets to it, so apps get correct GPU resource
+   * lifecycle for free instead of needing their own ViewController::renderDeviceWillReset
+   * override.
+   * @param self The Theme.
+   * @return This Theme's icon ImageAtlas, owned by this Theme.
+   * @memberof Theme
+   */
+  ImageAtlas *(*icons)(Theme *self);
+
+  /**
    * @fn Theme *Theme::init(Theme *self)
    * @brief Initializes this Theme.
    * @param self The Theme.
@@ -112,6 +159,25 @@ struct ThemeInterface {
    * @memberof Theme
    */
   void (*removeStylesheet)(Theme *self, Stylesheet *stylesheet);
+
+  /**
+   * @fn void Theme::renderDeviceDidReset(Theme *self)
+   * @brief Notifies this Theme that the render device has been reset.
+   * @param self The Theme.
+   * @memberof Theme
+   */
+  void (*renderDeviceDidReset)(Theme *self);
+
+  /**
+   * @fn void Theme::renderDeviceWillReset(Theme *self)
+   * @brief Releases the GPU resources of every cached Font's bitmap, and of Theme::icons if it
+   * has been created, ahead of a render device reset.
+   * @details Fonts are cached here, not owned by the Views drawing them, so this Theme is the
+   * one place that reliably reaches every bitmap Texture, including one no live View references.
+   * @param self The Theme.
+   * @memberof Theme
+   */
+  void (*renderDeviceWillReset)(Theme *self);
 
   /**
    * @static
