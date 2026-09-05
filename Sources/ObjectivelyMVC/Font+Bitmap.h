@@ -40,7 +40,8 @@
 #define FONT_BITMAP_COUNT 1024
 
 /**
- * @brief The last valid codepoint in a Font bitmap.
+ * @brief One past the last codepoint a Font bakes, so the baked range is
+ * `FONT_BITMAP_FIRST <= codepoint < FONT_BITMAP_LAST`.
  */
 #define FONT_BITMAP_LAST (FONT_BITMAP_FIRST + FONT_BITMAP_COUNT)
 
