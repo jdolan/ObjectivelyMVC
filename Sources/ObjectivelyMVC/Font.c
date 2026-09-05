@@ -422,10 +422,10 @@ static void initialize(Class *clazz) {
   ((FontInterface *) clazz->interface)->initWithData = initWithData;
   ((FontInterface *) clazz->interface)->name = name;
   ((FontInterface *) clazz->interface)->nameWithAttributes = nameWithAttributes;
-  ((FontInterface *) clazz->interface)->renderBitmapCharacters = renderBitmapCharacters;
+  ((FontInterface *) clazz->interface)->renderBitmapCharacters = renderCharactersBitmap;
   ((FontInterface *) clazz->interface)->renderCharacters = renderCharacters;
-  ((FontInterface *) clazz->interface)->renderDeviceWillReset = bitmapRenderDeviceWillReset;
-  ((FontInterface *) clazz->interface)->sizeBitmapCharacters = sizeBitmapCharacters;
+  ((FontInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillResetBitmap;
+  ((FontInterface *) clazz->interface)->sizeBitmapCharacters = sizeCharactersBitmap;
   ((FontInterface *) clazz->interface)->sizeCharacters = sizeCharacters;
 
   const bool init = TTF_Init();

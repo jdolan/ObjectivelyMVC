@@ -130,14 +130,14 @@ OBJECTIVELYMVC_EXPORT void deallocBitmap(FontBitmap *bitmap);
 /**
  * @brief Implements Font::renderDeviceWillReset.
  */
-OBJECTIVELYMVC_EXPORT void bitmapRenderDeviceWillReset(Font *self);
+OBJECTIVELYMVC_EXPORT void renderDeviceWillResetBitmap(Font *self);
 
 /**
  * @brief Implements Font::renderBitmapCharacters.
  */
-OBJECTIVELYMVC_EXPORT void renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin);
+OBJECTIVELYMVC_EXPORT void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin);
 
 /**
  * @brief Implements Font::sizeBitmapCharacters.
  */
-OBJECTIVELYMVC_EXPORT void sizeBitmapCharacters(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);
+OBJECTIVELYMVC_EXPORT void sizeCharactersBitmap(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h);

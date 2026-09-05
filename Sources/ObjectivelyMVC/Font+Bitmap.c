@@ -337,7 +337,7 @@ void deallocBitmap(FontBitmap *bitmap) {
  * @fn void Font::renderDeviceWillReset(Font *self)
  * @memberof Font
  */
-void bitmapRenderDeviceWillReset(Font *self) {
+void renderDeviceWillResetBitmap(Font *self) {
 
   assert(self);
 
@@ -376,7 +376,7 @@ static void renderToken(const FontBitmap *bitmap, const Token *token, int x, int
  * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin)
  * @memberof Font
  */
-void renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin) {
+void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, bool colorEscapes, int wrapWidth, const SDL_Point *origin) {
 
   assert(self);
   assert(renderer);
@@ -408,7 +408,7 @@ void renderBitmapCharacters(Font *self, const Renderer *renderer, const char *ch
  * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h)
  * @memberof Font
  */
-void sizeBitmapCharacters(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h) {
+void sizeCharactersBitmap(const Font *self, const char *chars, bool colorEscapes, int wrapWidth, int *w, int *h) {
 
   assert(self);
 
