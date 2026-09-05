@@ -23,24 +23,16 @@
 
 /**
  * @file
- * @brief A representative game HUD, used as a performance benchmark.
- * @details Renders health, armor and ammo counters, a crosshair, a countdown
- * timer, a chat log and a toggling scoreboard, each updating on an interval.
- * The frame passes (style, layout, draw, endFrame) are timed individually and
- * a summary is printed once per second.
+ * @brief A representative game HUD, for game developers to take as a starting point.
+ * @details Renders health, armor and ammo counters, a crosshair, a countdown timer, a chat
+ * log and a toggling scoreboard, each updating on its own interval rather than every frame,
+ * as a real HUD would.
  *
  * Environment:
- *  - `MVC_HUD_FRAMES=N` exits successfully after N frames (for benchmarking).
- *  - `MVC_HUD_HIDDEN=1` creates the window hidden (best effort headless).
- *  - `MVC_HUD_SCALE=N` multiplies the scoreboard row count (default 1),
- *    scaling the View tree to gauge how frame cost grows with UI complexity.
- *  - `MVC_HUD_BITMAP_FONT=0` leaves the readouts on Font, for comparison.
- *  - `MVC_HUD_DEBUG=1` prints the draw call list once, on the tenth frame.
+ *  - `MVC_HUD_BITMAP_FONT=0` leaves the readouts on Font, for comparison against BitmapFont.
  */
 
 #define SDL_MAIN_USE_CALLBACKS
-
-#include <stdio.h>
 
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL.h>
@@ -50,14 +42,6 @@
 
 #define HUD_WINDOW_W 1024
 #define HUD_WINDOW_H 720
-
-/**
- * @brief Accumulated timing for one frame pass.
- */
-typedef struct {
-  double sum;
-  double max;
-} PassStats;
 
 /**
  * @brief SDL application state passed via pointer to callbacks.
@@ -86,13 +70,6 @@ typedef struct {
    * @brief Next update deadline per widget, in SDL ticks.
    */
   Uint64 healthDue, armorDue, ammoDue, timerDue, chatDue, scoreboardDue;
-
-  /**
-   * @brief Frame counters and per-pass timing since the last report.
-   */
-  Uint64 frames, maxFrames, reportDue, reportFrames;
-  PassStats acquire, style, layout, draw, endFrame, submit;
-  size_t draws, vertices;
 } AppState;
 
 static AppState application;
@@ -233,12 +210,7 @@ static void buildHUD(AppState *app, View *root) {
   Panel *scoreboard = $(alloc(Panel), initWithFrame, NULL);
   scoreboard->control.view.alignment = ViewAlignmentMiddleCenter;
 
-  int rows = 8;
-
-  const char *scale = SDL_getenv("MVC_HUD_SCALE");
-  if (scale) {
-    rows *= SDL_max(1, SDL_atoi(scale));
-  }
+  const int rows = 8;
 
   for (int i = 0; i < rows; i++) {
     StackView *row = $(alloc(StackView), initWithFrame, NULL);
@@ -323,49 +295,6 @@ static void updateHUD(AppState *app, Uint64 ticks) {
   }
 }
 
-#pragma mark - Timing
-
-/**
- * @return Elapsed microseconds between the given performance counter values.
- */
-static double microseconds(Uint64 start, Uint64 end) {
-  return (end - start) * 1e6 / (double) SDL_GetPerformanceFrequency();
-}
-
-/**
- * @brief Accumulates one sample into the given PassStats.
- */
-static void sample(PassStats *stats, Uint64 start, Uint64 end) {
-
-  const double us = microseconds(start, end);
-
-  stats->sum += us;
-  stats->max = SDL_max(stats->max, us);
-}
-
-/**
- * @brief Prints the per-pass summary and resets the accumulators.
- */
-static void report(AppState *app) {
-
-  const double n = (double) app->reportFrames;
-
-  printf("HUD %llu frames | acquire avg %.1fus max %.1fus | style avg %.1fus max %.1fus | "
-         "layout avg %.1fus max %.1fus | draw avg %.1fus max %.1fus | endFrame avg %.1fus max %.1fus | "
-         "submit avg %.1fus max %.1fus | draws %zu verts %zu\n",
-         (unsigned long long) app->reportFrames,
-         app->acquire.sum / n, app->acquire.max,
-         app->style.sum / n, app->style.max,
-         app->layout.sum / n, app->layout.max,
-         app->draw.sum / n, app->draw.max,
-         app->endFrame.sum / n, app->endFrame.max,
-         app->submit.sum / n, app->submit.max,
-         app->draws, app->vertices);
-
-  app->reportFrames = 0;
-  app->acquire = app->style = app->layout = app->draw = app->endFrame = app->submit = (PassStats) { 0 };
-}
-
 #pragma mark - SDL application callbacks
 
 /**
@@ -379,19 +308,8 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
 
   MVC_Assert(SDL_Init(SDL_INIT_VIDEO), "SDL_Init");
 
-  SDL_WindowFlags flags = SDL_WINDOW_HIGH_PIXEL_DENSITY;
-
-  const char *hidden = SDL_getenv("MVC_HUD_HIDDEN");
-  if (hidden && *hidden == '1') {
-    flags |= SDL_WINDOW_HIDDEN;
-  }
-
-  const char *frames = SDL_getenv("MVC_HUD_FRAMES");
-  if (frames) {
-    app->maxFrames = SDL_strtoull(frames, NULL, 10);
-  }
-
-  app->window = SDL_CreateWindow("ObjectivelyMVC HUD", HUD_WINDOW_W, HUD_WINDOW_H, flags);
+  app->window = SDL_CreateWindow("ObjectivelyMVC HUD", HUD_WINDOW_W, HUD_WINDOW_H,
+                                  SDL_WINDOW_HIGH_PIXEL_DENSITY);
   MVC_Assert(app->window, "SDL_CreateWindow");
 
   app->renderDevice = $(alloc(RenderDevice), initWithWindow, app->window, NULL);
@@ -425,25 +343,19 @@ SDL_AppResult SDL_AppInit(void **appState, int argc, char *argv[]) {
   buildHUD(app, viewController->view);
 
   app->scoreboardDue = SDL_GetTicks() + 5000;
-  app->reportDue = SDL_GetTicks() + 1000;
 
   return SDL_APP_CONTINUE;
 }
 
 /**
  * @brief SDL3 frame iteration callback.
- * @details Hand-rolls WindowController::renderTo in order to time each pass
- * (style, layout, draw, endFrame) individually.
  */
 SDL_AppResult SDL_AppIterate(void *appState) {
 
   AppState *app = appState;
 
-  const Uint64 ticks = SDL_GetTicks();
+  updateHUD(app, SDL_GetTicks());
 
-  updateHUD(app, ticks);
-
-  const Uint64 tAcquire = SDL_GetPerformanceCounter();
   CommandBuffer *commands = $(app->renderDevice, beginFrame);
   if (commands) {
 
@@ -451,60 +363,9 @@ SDL_AppResult SDL_AppIterate(void *appState) {
     RenderPass *clear = $(commands, beginRenderPass, &color, 1, NULL);
     release(clear);
 
-    WindowController *windowController = app->windowController;
-    View *view = windowController->viewController->view;
-    Renderer *renderer = windowController->renderer;
+    $(app->windowController, render);
 
-    $(renderer, beginFrameWith, commands, app->framebuffer);
-
-    const Uint64 t0 = SDL_GetPerformanceCounter();
-    $(view, applyThemeIfNeeded, windowController->theme);
-
-    const Uint64 t1 = SDL_GetPerformanceCounter();
-    $(view, layoutIfNeeded);
-
-    MVC_InvalidateRenderFrames();
-
-    const Uint64 t2 = SDL_GetPerformanceCounter();
-    $(view, draw, renderer);
-
-    const Uint64 t3 = SDL_GetPerformanceCounter();
-    app->draws = renderer->drawArrays->count;
-    if (app->frames == 10 && SDL_getenv("MVC_HUD_DEBUG")) {
-      for (size_t i = 0; i < renderer->drawArrays->count; i++) {
-        const MVC_DrawArrays *d = VectorElement(renderer->drawArrays, MVC_DrawArrays, i);
-        printf("draw %zu: texture %p verts %u scissor %d,%d %dx%d\n", i, (void *) d->texture, d->vertexCount, d->scissor.x, d->scissor.y, d->scissor.w, d->scissor.h);
-      }
-    }
-    app->vertices = renderer->vertices->count;
-    $(renderer, endFrame);
-
-    const Uint64 t4 = SDL_GetPerformanceCounter();
     $(app->renderDevice, endFrame);
-
-    const Uint64 t5 = SDL_GetPerformanceCounter();
-
-    sample(&app->acquire, tAcquire, t0);
-    sample(&app->style, t0, t1);
-    sample(&app->layout, t1, t2);
-    sample(&app->draw, t2, t3);
-    sample(&app->endFrame, t3, t4);
-    sample(&app->submit, t4, t5);
-    app->reportFrames++;
-  }
-
-  app->frames++;
-
-  if (ticks >= app->reportDue && app->reportFrames) {
-    app->reportDue = ticks + 1000;
-    report(app);
-  }
-
-  if (app->maxFrames && app->frames >= app->maxFrames) {
-    if (app->reportFrames) {
-      report(app);
-    }
-    return SDL_APP_SUCCESS;
   }
 
   return SDL_APP_CONTINUE;
