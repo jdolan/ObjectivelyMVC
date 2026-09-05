@@ -116,8 +116,8 @@ typedef struct {
  */
 static Uint32 cellForCodepoint(FontBitmap *bitmap, Uint32 codepoint) {
 
-  if (codepoint >= bitmap->first && codepoint < bitmap->first + bitmap->count) {
-    return codepoint - bitmap->first;
+  if (codepoint >= FONT_BITMAP_FIRST && codepoint < FONT_BITMAP_FIRST + FONT_BITMAP_COUNT) {
+    return codepoint - FONT_BITMAP_FIRST;
   }
 
   bool logged = false;
@@ -132,13 +132,13 @@ static Uint32 cellForCodepoint(FontBitmap *bitmap, Uint32 codepoint) {
     bitmap->logged[bitmap->loggedCount++] = codepoint;
 
     if (bitmap->loggedCount < lengthof(bitmap->logged)) {
-      MVC_LogWarn("U+%04X is outside the baked range U+%04X-U+%04X\n", codepoint, bitmap->first, bitmap->first + bitmap->count - 1);
+      MVC_LogWarn("U+%04X is outside the baked range U+%04X-U+%04X\n", codepoint, FONT_BITMAP_FIRST, FONT_BITMAP_FIRST + FONT_BITMAP_COUNT - 1);
     } else {
-      MVC_LogWarn("U+%04X and further codepoints outside the baked range U+%04X-U+%04X will not be reported\n", codepoint, bitmap->first, bitmap->first + bitmap->count - 1);
+      MVC_LogWarn("U+%04X and further codepoints outside the baked range U+%04X-U+%04X will not be reported\n", codepoint, FONT_BITMAP_FIRST, FONT_BITMAP_FIRST + FONT_BITMAP_COUNT - 1);
     }
   }
 
-  return bitmap->count;
+  return FONT_BITMAP_COUNT;
 }
 
 /**
@@ -289,11 +289,10 @@ static void walk(FontBitmap *bitmap, const char *chars, bool colorEscapes, int w
 
 #pragma mark - FontBitmap
 
-bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count) {
+bool initBitmap(FontBitmap *bitmap, Font *font) {
 
   assert(bitmap);
   assert(font);
-  assert(count);
 
   if (!TTF_FontIsFixedWidth(font->font)) {
     String *name = $(font, name);
@@ -304,8 +303,8 @@ bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count) {
 
   int minX = INT_MAX, maxX = INT_MIN, advance = 0;
 
-  for (Uint32 i = 0; i <= count; i++) {
-    const Uint32 codepoint = i < count ? first + i : REPLACEMENT_CHARACTER;
+  for (Uint32 i = 0; i <= FONT_BITMAP_COUNT; i++) {
+    const Uint32 codepoint = i < FONT_BITMAP_COUNT ? FONT_BITMAP_FIRST + i : REPLACEMENT_CHARACTER;
 
     if (TTF_FontHasGlyph(font->font, codepoint)) {
       int glyphMinX = 0, glyphMaxX = 0, glyphAdvance = 0;
@@ -316,7 +315,7 @@ bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count) {
       minX = min(minX, glyphMinX);
       maxX = max(maxX, max(glyphMaxX, glyphAdvance));
 
-      if (i < count) {
+      if (i < FONT_BITMAP_COUNT) {
         advance = max(advance, glyphAdvance);
       }
     }
@@ -324,19 +323,17 @@ bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count) {
 
   if (maxX <= minX || advance == 0) {
     String *name = $(font, name);
-    MVC_LogWarn("%s has no glyphs in U+%04X-U+%04X\n", name->chars, first, first + count - 1);
+    MVC_LogWarn("%s has no glyphs in U+%04X-U+%04X\n", name->chars, FONT_BITMAP_FIRST, FONT_BITMAP_FIRST + FONT_BITMAP_COUNT - 1);
     release(name);
     return false;
   }
 
-  bitmap->first = first;
-  bitmap->count = count;
   bitmap->advance = advance;
   bitmap->bearing = minX;
   bitmap->cellSize = MakeSize(maxX - minX, TTF_GetFontHeight(font->font));
 
   // One cell past the range for the replacement glyph
-  const Uint32 cells = count + 1;
+  const Uint32 cells = FONT_BITMAP_COUNT + 1;
 
   bitmap->columns = (int) ceilf(sqrtf((float) cells));
 
@@ -347,11 +344,11 @@ bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count) {
 
   SDL_FillSurfaceRect(bitmap->surface, NULL, 0);
 
-  for (Uint32 i = 0; i < count; i++) {
-    bakeGlyph(bitmap, font->font, first + i, i);
+  for (Uint32 i = 0; i < FONT_BITMAP_COUNT; i++) {
+    bakeGlyph(bitmap, font->font, FONT_BITMAP_FIRST + i, i);
   }
 
-  bakeGlyph(bitmap, font->font, TTF_FontHasGlyph(font->font, REPLACEMENT_CHARACTER) ? REPLACEMENT_CHARACTER : '?', count);
+  bakeGlyph(bitmap, font->font, TTF_FontHasGlyph(font->font, REPLACEMENT_CHARACTER) ? REPLACEMENT_CHARACTER : '?', FONT_BITMAP_COUNT);
 
   return true;
 }

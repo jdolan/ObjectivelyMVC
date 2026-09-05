@@ -78,27 +78,9 @@ START_TEST(fixedWidthFaceBakesAutomatically) {
 
   ck_assert(TTF_FontIsFixedWidth(font->font));
   ck_assert_ptr_nonnull(font->bitmap.surface);
-  ck_assert_uint_eq(FONT_BITMAP_DEFAULT_FIRST, font->bitmap.first);
-  ck_assert_uint_eq(FONT_BITMAP_DEFAULT_COUNT, font->bitmap.count);
 
   // The bundled monospace face bakes too, so a bitmap font is always available
   ck_assert_ptr_nonnull($$(Font, defaultMonospaceFont)->bitmap.surface);
-
-  release(font);
-
-} END_TEST
-
-START_TEST(rangeWithoutGlyphsIsRejected) {
-
-  Font *font = monospaceFont(1.f);
-  if (font == NULL) {
-    return;
-  }
-
-  // Unassigned codepoints: only the replacement glyph would bake, so there is no advance
-  FontBitmap bitmap = { 0 };
-  ck_assert(!initBitmap(&bitmap, font, 0xE0000, 16));
-  ck_assert_ptr_null(bitmap.surface);
 
   release(font);
 
@@ -148,7 +130,7 @@ START_TEST(metricsAreUniformAndLogical) {
   // The sheet is exactly the grid, sized to hold every cell
   ck_assert_int_eq(bitmap->columns * bitmap->cellSize.w, bitmap->surface->w);
   ck_assert_int_ge(bitmap->surface->w * bitmap->surface->h,
-                   (int) (bitmap->count + 1) * bitmap->cellSize.w * bitmap->cellSize.h);
+                   (FONT_BITMAP_COUNT + 1) * bitmap->cellSize.w * bitmap->cellSize.h);
 
   // Cells are physical texels at density 2; reported sizes are logical, so half
   int w, h;
@@ -212,7 +194,6 @@ int main(int argc, char **argv) {
   TCase *tcase = tcase_create("Font+Bitmap");
   tcase_add_test(tcase, proportionalFaceHasNoBitmap);
   tcase_add_test(tcase, fixedWidthFaceBakesAutomatically);
-  tcase_add_test(tcase, rangeWithoutGlyphsIsRejected);
   tcase_add_test(tcase, textDrawsFromBitmapWhenFixedWidth);
   tcase_add_test(tcase, metricsAreUniformAndLogical);
   tcase_add_test(tcase, wordWrapBreaksAtSpaces);

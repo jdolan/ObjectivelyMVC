@@ -28,7 +28,7 @@
 /**
  * @brief The first codepoint Font bakes into its bitmap.
  */
-#define FONT_BITMAP_DEFAULT_FIRST ' '
+#define FONT_BITMAP_FIRST ' '
 
 /**
  * @brief The codepoint count Font bakes into its bitmap.
@@ -37,7 +37,7 @@
  * Individual codepoints a Font lacks a glyph for are simply skipped, not rejected, so this is
  * safe to bake against any fixed-width face regardless of its actual coverage.
  */
-#define FONT_BITMAP_DEFAULT_COUNT 1024
+#define FONT_BITMAP_COUNT 1024
 
 typedef struct Font Font;
 
@@ -52,7 +52,7 @@ typedef struct Font Font;
  * Text that changes every frame becomes free.
  *
  * Only fixed-width faces are supported, so there are no per-glyph metrics: a codepoint's cell
- * is `codepoint - first`, and overhang is baked by sizing every cell to the face's maximum
+ * is `codepoint - FONT_BITMAP_FIRST`, and overhang is baked by sizing every cell to the face's maximum
  * ink bounds. This discards kerning and shaping (ligatures, joining, reordering), which is
  * fine for a HUD or console and wrong for proportional prose; proportional Fonts never bake.
  *
@@ -87,16 +87,6 @@ typedef struct {
   int columns;
 
   /**
-   * @brief The number of codepoints baked, starting at `first`.
-   */
-  Uint32 count;
-
-  /**
-   * @brief The first baked codepoint.
-   */
-  Uint32 first;
-
-  /**
    * @brief Codepoints outside the baked range already reported, so each is logged once; when
    * full, further ones go unreported.
    * @private
@@ -123,17 +113,16 @@ typedef struct {
 } FontBitmap;
 
 /**
- * @brief Bakes the given codepoints of `font` into a glyph sheet, initializing `bitmap`.
+ * @brief Bakes FONT_BITMAP_COUNT codepoints of `font`, from FONT_BITMAP_FIRST, into a glyph
+ * sheet, initializing `bitmap`.
  * @details One extra cell past the range holds the replacement glyph (U+FFFD, or `?` if the
  * face lacks it), drawn for any codepoint outside the range, which is also logged once.
  * @param bitmap The FontBitmap, zero-initialized.
  * @param font The Font, which MUST be fixed-width.
- * @param first The first codepoint to bake.
- * @param count The number of codepoints to bake.
  * @return True if the bitmap was baked, false if `font` is not fixed-width or has no glyphs
  * in the range, in which case `bitmap` is left zeroed.
  */
-OBJECTIVELYMVC_EXPORT bool initBitmap(FontBitmap *bitmap, Font *font, Uint32 first, Uint32 count);
+OBJECTIVELYMVC_EXPORT bool initBitmap(FontBitmap *bitmap, Font *font);
 
 /**
  * @brief Releases the resources held by `bitmap`. Safe to call on a zeroed FontBitmap.

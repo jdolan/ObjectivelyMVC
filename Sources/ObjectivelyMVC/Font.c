@@ -288,7 +288,7 @@ static Font *initWithData(Font *self, Data *data, const FontAttributes *attribut
     TTF_SetFontHinting(self->font, TTF_HINTING_LIGHT_SUBPIXEL);
 
     if (TTF_FontIsFixedWidth(self->font)) {
-      initBitmap(&self->bitmap, self, FONT_BITMAP_DEFAULT_FIRST, FONT_BITMAP_DEFAULT_COUNT);
+      initBitmap(&self->bitmap, self);
     }
   }
 
