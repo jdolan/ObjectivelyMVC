@@ -295,7 +295,17 @@ static void walk(const FontBitmap *bitmap, const char *chars, int wrapWidth, SDL
 
     x += advance;
     lineHasContent = true;
-    maxX = max(maxX, x + (token.type == TokenGlyph ? overhang : 0));
+    // Ink past the pen: a glyph's cell overhang, or the bearing an icon shares with the glyph
+    // column, less what centering in its slot gives back
+    int extent = 0;
+    if (token.type == TokenGlyph) {
+      extent = overhang;
+    } else if (token.type == TokenImage) {
+      const int side = bitmap->cellSize.h;
+      extent = max(0, bitmap->bearing + (advance - side) / 2 + side - advance);
+    }
+
+    maxX = max(maxX, x + extent);
   }
 
   if (w) {
