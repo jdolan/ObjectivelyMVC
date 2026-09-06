@@ -33,6 +33,9 @@ typedef struct ImageInterface ImageInterface;
 
 /**
  * @brief Image loading.
+ * @details Raster formats load at their native size. SVG, recognized by type or by sniffing,
+ * rasterizes at its intrinsic size times a `scale`, so that a vector asset drawn into a frame
+ * of its intrinsic size stays sharp at any pixel density; Image::size reports points.
  * @extends Object
  */
 struct Image {
@@ -47,6 +50,11 @@ struct Image {
    * @protected
    */
   ImageInterface *interface[0];
+
+  /**
+   * @brief Pixels of `surface` per point: `1` for raster images, the requested scale for SVG.
+   */
+  float scale;
 
   /**
    * @brief The backing surface.
@@ -112,6 +120,18 @@ struct ImageInterface {
 
   /**
    * @static
+   * @fn Image *Image::imageWithSVG(const uint8_t *bytes, size_t length, float scale)
+   * @brief Instantiates an Image by rasterizing the specified SVG.
+   * @param bytes The SVG document.
+   * @param length The length of `bytes`.
+   * @param scale Pixels per point, e.g. the window's pixel density.
+   * @return The new Image, or `NULL` on error.
+   * @memberof Image
+   */
+  Image *(*imageWithSVG)(const uint8_t *bytes, size_t length, float scale);
+
+  /**
+   * @static
    * @fn Image *Image::imageWithSurface(SDL_Surface *surface)
    * @brief Instantiates an Image with the specified surface.
    * @param surface The surface.
@@ -160,6 +180,19 @@ struct ImageInterface {
    * @memberof Image
    */
   Image *(*initWithResourceName)(Image *self, const char *name);
+
+  /**
+   * @fn Image *Image::initWithSVG(Image *self, const uint8_t *bytes, size_t length, float scale)
+   * @brief Initializes this Image by rasterizing the specified SVG at its intrinsic size times
+   * `scale`.
+   * @param self The Image.
+   * @param bytes The SVG document.
+   * @param length The length of `bytes`.
+   * @param scale Pixels per point, e.g. the window's pixel density.
+   * @return The initialized Image, or `NULL` on error.
+   * @memberof Image
+   */
+  Image *(*initWithSVG)(Image *self, const uint8_t *bytes, size_t length, float scale);
 
   /**
    * @fn Image *Image::initWithSurface(Image *self, SDL_Surface *surface)
