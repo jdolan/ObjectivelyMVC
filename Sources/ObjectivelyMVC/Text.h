@@ -60,6 +60,20 @@ OBJECTIVELYMVC_EXPORT bool MVC_HasColorEscapes(const char *text);
 OBJECTIVELYMVC_EXPORT char *MVC_StripColorEscapes(const char *text);
 
 /**
+ * @brief Case transforms a Text applies when drawing, leaving Text::text as set.
+ * @details ASCII letters only; multi-byte UTF-8 sequences and color escapes pass through unchanged.
+ * Resolved `:icon:` escapes also pass through unchanged, so icon names keep their case.
+ */
+typedef enum {
+  TextTransformNone,
+  TextTransformUppercase,
+  TextTransformLowercase,
+  TextTransformCapitalize
+} TextTransform;
+
+OBJECTIVELYMVC_EXPORT const EnumName TextTransformNames[];
+
+/**
  * @brief Parses an icon escape at the start of `chars`: `:name:`, where `name` is one or more of
  * `[A-Za-z0-9_-]` and under 64 bytes, and is registered in `icons`. An unregistered name is not
  * an escape, so `12:30:45` stays literal unless someone registers an icon called `30`.
@@ -193,6 +207,21 @@ struct Text {
    */
   Texture *texture;
 
+  /**
+   * @brief The case transform applied when drawing: the `text-transform` style attribute, or
+   * `textTransform` in JSON. A computed style without `text-transform` resets it to none, as
+   * with `color`.
+   * @remarks Do not set this property directly.
+   * @see Text::setTransform(Text *, TextTransform)
+   */
+  TextTransform transform;
+
+  /**
+   * @brief `text` with `transform` applied, or `NULL` when `transform` is `TextTransformNone`.
+   * @private
+   */
+  char *transformed;
+
 };
 
 /**
@@ -261,6 +290,15 @@ struct TextInterface {
    * @memberof Text
    */
   void (*setTextWithFormat)(Text *self, const char *fmt, ...);
+
+  /**
+   * @fn void Text::setTransform(Text *self, TextTransform transform)
+   * @brief Sets the case transform this Text draws with. Text::text is left as set.
+   * @param self The Text.
+   * @param transform The TextTransform.
+   * @memberof Text
+   */
+  void (*setTransform)(Text *self, TextTransform transform);
 };
 
 OBJECTIVELYMVC_EXPORT Class *_Text(void);
