@@ -30,6 +30,7 @@
 #include "Colors.h"
 #include "Text.h"
 #include "TextView.h"
+#include "Theme.h"
 
 #define _Class _TextView
 
@@ -149,20 +150,19 @@ static void render(View *self, Renderer *renderer) {
   if ($((Control *) this, isFocused)) {
     const char *text = this->text->text ?: "";
 
-    int w, h;
-    if (this->position == strlen(text) && !MVC_HasColorEscapes(text)) {
-      $(this->text->font, sizeCharacters, text, &w, &h);
-    } else {
-      char *prefix = calloc(this->position + 1, sizeof(char));
-      strncpy(prefix, text, this->position);
+    // Measured as the Text renders it, escapes and icons included
+    char *prefix = calloc(this->position + 1, sizeof(char));
+    strncpy(prefix, text, this->position);
 
-      // Text renders with color escapes stripped, so the caret must be measured the same way
-      char *stripped = MVC_StripColorEscapes(prefix);
-      free(prefix);
+    SDL_Size size = $(this->text, sizeText, prefix);
+    free(prefix);
 
-      $(this->text->font, sizeCharacters, stripped, &w, &h);
-      free(stripped);
+    // An empty prefix has no height; borrow the line's
+    if (size.h == 0) {
+      size.h = $(this->text, sizeText, " ").h;
     }
+
+    const int w = size.w, h = size.h;
 
     SDL_Rect frame = $((View *) this->text, renderFrame);
 
@@ -187,10 +187,10 @@ static void resignKeyResponder(View *self) {
 
 /**
  * @brief Returns the length in bytes of the cursor unit starting at `position`.
- * @details A unit is one UTF-8 encoded character or a color escape sequence (`^0` through
- * `^9`, or `^^`), so that the cursor never lands inside either.
+ * @details A unit is one UTF-8 encoded character, a color escape sequence (`^0` through `^9`,
+ * or `^^`), or a registered icon escape (`:name:`), so that the cursor never lands inside one.
  */
-static size_t unitLengthAt(const char *chars, size_t len, size_t position) {
+static size_t unitLengthAt(const char *chars, size_t len, size_t position, const ImageAtlas *icons) {
 
   if (position >= len) {
     return 0;
@@ -199,6 +199,13 @@ static size_t unitLengthAt(const char *chars, size_t len, size_t position) {
   if (chars[position] == '^' && position + 1 < len &&
       ((chars[position + 1] >= '0' && chars[position + 1] <= '9') || chars[position + 1] == '^')) {
     return 2;
+  }
+
+  if (chars[position] == ':') {
+    const size_t n = MVC_IconEscapeLength(chars + position, icons, NULL);
+    if (n && position + n <= len) {
+      return n;
+    }
   }
 
   size_t n = 1;
@@ -215,12 +222,12 @@ static size_t unitLengthAt(const char *chars, size_t len, size_t position) {
  * rendered: scanning backward would read the `1` in `^^1` as the escape `^1`.
  * @see unitLengthAt
  */
-static size_t unitLengthBefore(const char *chars, size_t len, size_t position) {
+static size_t unitLengthBefore(const char *chars, size_t len, size_t position, const ImageAtlas *icons) {
 
   size_t unit = 0;
 
   for (size_t p = 0; p < position; p += unit) {
-    unit = unitLengthAt(chars, len, p);
+    unit = unitLengthAt(chars, len, p, icons);
     if (unit == 0) {
       break;
     }
@@ -260,6 +267,9 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
       const char *chars = this->attributedText->chars;
       const size_t len = this->attributedText->length;
 
+      Theme *theme = view->window ? $$(Theme, theme, view->window) : NULL;
+      const ImageAtlas *icons = theme ? $(theme, icons) : NULL;
+
       switch (event->key.key) {
 
         case SDLK_ESCAPE:
@@ -273,7 +283,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         case SDLK_BACKSPACE:
         case SDLK_KP_BACKSPACE:
           if (this->position > 0) {
-            const size_t n = unitLengthBefore(chars, len, this->position);
+            const size_t n = unitLengthBefore(chars, len, this->position, icons);
             const Range range = { .location = this->position - n, .length = n };
             $(this->attributedText, deleteCharactersInRange, range);
             this->position -= n;
@@ -283,7 +293,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
         case SDLK_DELETE:
           if (this->position < len) {
-            const Range range = { .location = this->position, .length = unitLengthAt(chars, len, this->position) };
+            const Range range = { .location = this->position, .length = unitLengthAt(chars, len, this->position, icons) };
             $(this->attributedText, deleteCharactersInRange, range);
             didEdit = true;
           }
@@ -292,29 +302,29 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         case SDLK_LEFT:
           if (SDL_GetModState() & SDL_KMOD_CTRL) {
             while (this->position > 0 && chars[this->position] == ' ') {
-              this->position -= unitLengthBefore(chars, len, this->position);
+              this->position -= unitLengthBefore(chars, len, this->position, icons);
             }
             while (this->position > 0 && chars[this->position] != ' ') {
-              this->position -= unitLengthBefore(chars, len, this->position);
+              this->position -= unitLengthBefore(chars, len, this->position, icons);
             }
           } else {
-            this->position -= unitLengthBefore(chars, len, this->position);
+            this->position -= unitLengthBefore(chars, len, this->position, icons);
           }
           break;
 
         case SDLK_RIGHT:
           if (SDL_GetModState() & SDL_KMOD_CTRL) {
             while (this->position < len && chars[this->position] == ' ') {
-              this->position += unitLengthAt(chars, len, this->position);
+              this->position += unitLengthAt(chars, len, this->position, icons);
             }
             while (this->position < len && chars[this->position] != ' ') {
-              this->position += unitLengthAt(chars, len, this->position);
+              this->position += unitLengthAt(chars, len, this->position, icons);
             }
             if (this->position < len) {
-              this->position += unitLengthAt(chars, len, this->position);
+              this->position += unitLengthAt(chars, len, this->position, icons);
             }
           } else {
-            this->position += unitLengthAt(chars, len, this->position);
+            this->position += unitLengthAt(chars, len, this->position, icons);
           }
           break;
 

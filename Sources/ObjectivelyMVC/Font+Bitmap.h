@@ -55,6 +55,7 @@
 #define FONT_BITMAP_REPLACEMENT '?'
 
 typedef struct Font Font;
+typedef struct ImageAtlas ImageAtlas;
 
 /**
  * @brief A fixed-width Font's glyphs, baked into one sheet, drawn as one quad per glyph.
@@ -134,9 +135,9 @@ OBJECTIVELYMVC_EXPORT void renderDeviceWillResetBitmap(Font *self);
 /**
  * @brief Implements Font::renderBitmapCharacters.
  */
-OBJECTIVELYMVC_EXPORT void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin);
+OBJECTIVELYMVC_EXPORT void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin, const ImageAtlas *icons);
 
 /**
  * @brief Implements Font::sizeBitmapCharacters.
  */
-OBJECTIVELYMVC_EXPORT void sizeCharactersBitmap(const Font *self, const char *chars, int wrapWidth, int *w, int *h);
+OBJECTIVELYMVC_EXPORT void sizeCharactersBitmap(const Font *self, const char *chars, int wrapWidth, const ImageAtlas *icons, int *w, int *h);

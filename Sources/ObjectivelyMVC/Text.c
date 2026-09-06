@@ -83,12 +83,188 @@ char *MVC_StripColorEscapes(const char *text) {
   return stripped;
 }
 
+size_t MVC_IconEscapeLength(const char *chars, const ImageAtlas *icons, AtlasImage **image) {
+
+  if (image) {
+    *image = NULL;
+  }
+
+  if (chars == NULL || icons == NULL || chars[0] != ':') {
+    return 0;
+  }
+
+  const char *q = chars + 1;
+  while (SDL_isalnum((unsigned char) *q) || *q == '_' || *q == '-') {
+    q++;
+  }
+
+  char name[64];
+  const size_t len = q - chars - 1;
+
+  if (*q != ':' || len == 0 || len >= sizeof(name)) {
+    return 0;
+  }
+
+  memcpy(name, chars + 1, len);
+  name[len] = '\0';
+
+  AtlasImage *icon = $(icons, imageWithName, name);
+  if (icon == NULL) {
+    return 0;
+  }
+
+  if (image) {
+    *image = icon;
+  }
+
+  return len + 2;
+}
+
 /**
- * @brief Releases this Text's rendered texture and color runs, and invalidates its cached size.
+ * @brief A growable string for MVC_LayoutText.
+ */
+typedef struct {
+  char *chars;
+  size_t length;
+  size_t capacity;
+} LayoutBuffer;
+
+static void append(LayoutBuffer *buffer, const char *chars, size_t length) {
+
+  if (buffer->length + length + 1 > buffer->capacity) {
+    buffer->capacity = max(buffer->capacity * 2, buffer->length + length + 1);
+    buffer->chars = realloc(buffer->chars, buffer->capacity);
+    assert(buffer->chars);
+  }
+
+  memcpy(buffer->chars + buffer->length, chars, length);
+  buffer->length += length;
+  buffer->chars[buffer->length] = '\0';
+}
+
+/**
+ * @brief The placeholder an icon occupies in `font`'s layout: a codepoint that is not a
+ * line-break opportunity, repeated until it is at least a line height wide. Resolved once per
+ * Font, on first use.
+ * @details Measured with TTF_GetStringSize, the same engine that lays out and renders the text,
+ * rather than glyph metrics: Coda has no U+00A0, and shaping substitutes the space glyph for it
+ * at the space's advance, where the glyph metrics would report `.notdef`'s.
+ */
+static const char *iconPlaceholder(const Font *font) {
+
+  if (font->iconPlaceholder) {
+    return font->iconPlaceholder;
+  }
+
+  static const Uint32 candidates[] = { 0x00A0, 0x2007, '_' };
+
+  Uint32 codepoint = candidates[lengthof(candidates) - 1];
+  for (size_t i = 0; i < lengthof(candidates); i++) {
+    if (TTF_FontHasGlyph(font->font, candidates[i])) {
+      codepoint = candidates[i];
+      break;
+    }
+  }
+
+  char utf8[5] = { 0 };
+  SDL_UCS4ToUTF8(codepoint, utf8);
+
+  const int lineHeight = TTF_GetFontHeight(font->font);
+
+  LayoutBuffer placeholder = { 0 };
+
+  for (int i = 0, width = 0; i < 16 && width < lineHeight; i++) {
+    append(&placeholder, utf8, strlen(utf8));
+    if (!TTF_GetStringSize(font->font, placeholder.chars, 0, &width, NULL)) {
+      break;
+    }
+  }
+
+  // A lazily resolved cache on an otherwise immutable Font, like its bitmap's Texture
+  ((Font *) font)->iconPlaceholder = placeholder.chars;
+
+  return font->iconPlaceholder;
+}
+
+static void appendSpan(TextSpan **spans, size_t *count, TextSpan span) {
+
+  if (spans == NULL) {
+    return;
+  }
+
+  TextSpan *grown = realloc(*spans, (*count + 1) * sizeof(TextSpan));
+  assert(grown);
+
+  *spans = grown;
+  (*spans)[(*count)++] = span;
+}
+
+char *MVC_LayoutText(const Font *font, const char *text, SDL_Color color, const ImageAtlas *icons, TextSpan **spans, size_t *count) {
+
+  assert(font);
+  assert(text);
+
+  LayoutBuffer layout = { 0 };
+  append(&layout, "", 0);
+
+  size_t n = 0;
+  if (spans) {
+    *spans = NULL;
+  }
+
+  size_t start = 0;
+
+  for (const char *p = text; ; ) {
+
+    const bool end = *p == '\0';
+    const bool escape = !end && p[0] == '^' && p[1] >= '0' && p[1] <= '9';
+
+    AtlasImage *icon = NULL;
+    const size_t iconLength = (!end && *p == ':') ? MVC_IconEscapeLength(p, icons, &icon) : 0;
+
+    if (end || escape || iconLength) {
+      if (layout.length > start) {
+        appendSpan(spans, &n, (TextSpan) { (int) start, (int) (layout.length - start), color, NULL });
+      }
+      if (end) {
+        break;
+      }
+      if (escape) {
+        color = TextEscapeColors[p[1] - '0'];
+        p += 2;
+      } else {
+        const char *placeholder = iconPlaceholder(font);
+        appendSpan(spans, &n, (TextSpan) { (int) layout.length, (int) strlen(placeholder), Colors.White, icon });
+        append(&layout, placeholder, strlen(placeholder));
+        p += iconLength;
+      }
+      start = layout.length;
+    } else if (p[0] == '^' && p[1] == '^') {
+      append(&layout, "^", 1);
+      p += 2;
+    } else {
+      append(&layout, p, 1);
+      p++;
+    }
+  }
+
+  if (count) {
+    *count = n;
+  }
+
+  return layout.chars;
+}
+
+/**
+ * @brief Releases this Text's rendered texture and runs, and invalidates its cached size.
  */
 static void invalidate(Text *self) {
 
   self->texture = release(self->texture);
+
+  for (size_t i = 0; i < self->runCount; i++) {
+    release(self->runs[i].icon);
+  }
 
   free(self->runs);
   self->runs = NULL;
@@ -98,17 +274,75 @@ static void invalidate(Text *self) {
 }
 
 /**
- * @brief Appends one TextRun per line that the given byte range of `layout` touches.
+ * @return The icon ImageAtlas of this Text's window's Theme, or `NULL` when detached.
  */
-static void appendRuns(Text *self, TTF_Text *layout, int offset, int length, SDL_Color color, int surfaceWidth) {
+static ImageAtlas *iconsFor(const Text *self) {
+
+  const View *view = (View *) self;
+
+  Theme *theme = view->window ? $$(Theme, theme, view->window) : NULL;
+
+  return theme ? $(theme, icons) : NULL;
+}
+
+/**
+ * @brief Invalidates this Text if the icon atlas it was prepared against has changed: a Theme
+ * swap, attaching to a window, or an icon registered since. Sets `needsLayout` when it does,
+ * since the natural size may have changed.
+ */
+static void checkIcons(Text *self) {
+
+  const ImageAtlas *icons = iconsFor(self);
+  const unsigned generation = icons ? icons->generation : 0;
+
+  if (icons != self->icons.atlas || generation != self->icons.generation) {
+    invalidate(self);
+    self->icons.atlas = icons;
+    self->icons.generation = generation;
+    $((View *) self, setNeedsLayout);
+  }
+}
+
+/**
+ * @return True if `text` contains anything MVC_LayoutText might resolve: a caret or a colon.
+ */
+static bool hasEscapes(const char *text) {
+  return MVC_HasColorEscapes(text) || strchr(text, ':') != NULL;
+}
+
+/**
+ * @brief Appends the runs for one TextSpan of `layout`: one color run per line the span touches,
+ * or a single icon run positioned by the span's first line.
+ */
+static void appendRuns(Text *self, TTF_Text *layout, const TextSpan *span, int surfaceWidth) {
 
   int count = 0;
-  TTF_SubString **substrings = TTF_GetTextSubStringsForRange(layout, offset, length, &count);
+  TTF_SubString **substrings = TTF_GetTextSubStringsForRange(layout, span->offset, span->length, &count);
   assert(substrings);
+
+  if (count == 0) {
+    SDL_free(substrings);
+    return;
+  }
 
   TextRun *runs = realloc(self->runs, (self->runCount + count) * sizeof(TextRun));
   assert(runs);
   self->runs = runs;
+
+  if (span->icon) {
+    // The placeholder is one word, but a narrow wrap width can still break it: draw the icon in
+    // the widest fragment
+    SDL_Rect rect = substrings[0]->rect;
+    for (int i = 1; i < count; i++) {
+      if (substrings[i]->rect.w > rect.w) {
+        rect = substrings[i]->rect;
+      }
+    }
+
+    self->runs[self->runCount++] = (TextRun) { rect, Colors.White, retain(span->icon) };
+    SDL_free(substrings);
+    return;
+  }
 
   for (int i = 0; i < count; i++) {
     SDL_Rect rect = substrings[i]->rect;
@@ -119,56 +353,32 @@ static void appendRuns(Text *self, TTF_Text *layout, int offset, int length, SDL
       rect.w = surfaceWidth - rect.x;
     }
 
-    self->runs[self->runCount++] = (TextRun) { rect, color };
+    self->runs[self->runCount++] = (TextRun) { rect, span->color, NULL };
   }
 
   SDL_free(substrings);
 }
 
 /**
- * @brief Builds this Text's color runs for its rendered texture: the texture is rendered from
- * `stripped` in white, so each run is a region of it, drawn in the color that was in effect
- * for those characters. The layout is SDL_ttf's own, so the regions are exact glyph clusters,
- * including where wrapping broke the lines.
+ * @brief Builds this Text's runs for its rendered texture: the texture is rendered from the
+ * layout string in white, so each color run is a region of it drawn in the color in effect for
+ * those characters, and each icon run is the placeholder region an icon is drawn over. The
+ * layout is SDL_ttf's own, so the regions are exact glyph clusters, including where wrapping
+ * broke the lines.
  * @remarks A cluster's rect is its advance box: ink that overhangs a run boundary within a line
  * (italics, tight kerning) is clipped to whichever run owns that column.
  */
-static void buildRuns(Text *self, const char *stripped, int wrapWidth, int surfaceWidth) {
+static void buildRuns(Text *self, const char *layoutText, const TextSpan *spans, size_t count, int wrapWidth, int surfaceWidth) {
 
-  free(self->runs);
-  self->runs = NULL;
-  self->runCount = 0;
+  assert(self->runs == NULL);
 
-  TTF_Text *layout = TTF_CreateText(NULL, self->font->font, stripped, 0);
+  TTF_Text *layout = TTF_CreateText(NULL, self->font->font, layoutText, 0);
   assert(layout);
 
   TTF_SetTextWrapWidth(layout, (int) (wrapWidth * self->font->pixelDensity));
 
-  SDL_Color color = self->color;
-  int offset = 0, start = 0;
-
-  for (const char *p = self->text; ; ) {
-
-    const bool end = *p == '\0';
-    const bool escape = !end && p[0] == '^' && p[1] >= '0' && p[1] <= '9';
-
-    if (end || escape) {
-      if (offset > start) {
-        appendRuns(self, layout, start, offset - start, color, surfaceWidth);
-      }
-      if (end) {
-        break;
-      }
-      color = TextEscapeColors[p[1] - '0'];
-      p += 2;
-      start = offset;
-    } else if (p[0] == '^' && p[1] == '^') {
-      p += 2;
-      offset += 1;
-    } else {
-      p++;
-      offset++;
-    }
+  for (size_t i = 0; i < count; i++) {
+    appendRuns(self, layout, &spans[i], surfaceWidth);
   }
 
   TTF_DestroyText(layout);
@@ -322,6 +532,9 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
   super(View, self, didMoveToWindow, window);
 
   refreshFont((Text *) self);
+
+  // Icons resolve through the window's Theme; sizing re-prepares against it (see checkIcons)
+  $(self, sizeToFit);
 }
 
 /**
@@ -346,32 +559,49 @@ static void render(View *self, Renderer *renderer) {
 
   if (this->text) {
 
+    checkIcons(this);
+
     const SDL_Rect frame = $(self, renderFrame);
 
     const int wrapWidth = this->lineWrap ? frame.w : 0;
 
     if (this->font->bitmap.surface) {
       $(this->font, renderBitmapCharacters, renderer, this->text, this->color, wrapWidth,
-        &(const SDL_Point) { frame.x, frame.y });
+        &(const SDL_Point) { frame.x, frame.y }, this->icons.atlas);
       return;
     }
 
     if (this->texture == NULL) {
-      SDL_Surface *surface;
+      SDL_Surface *surface = NULL;
 
-      if (MVC_HasColorEscapes(this->text)) {
-        char *stripped = MVC_StripColorEscapes(this->text);
+      if (hasEscapes(this->text)) {
+        TextSpan *spans = NULL;
+        size_t count = 0;
 
-        // Text that is nothing but escapes has nothing to draw
-        if (*stripped == '\0') {
-          free(stripped);
-          return;
+        char *layout = MVC_LayoutText(this->font, this->text, this->color, this->icons.atlas, &spans, &count);
+
+        // A colon or caret that resolved to nothing -- "Health: 100", a URL -- is plain text,
+        // and takes the single-quad path rather than a run per line
+        bool plain = true;
+        for (size_t i = 0; i < count && plain; i++) {
+          plain = spans[i].icon == NULL && SDL_memcmp(&spans[i].color, &this->color, sizeof(SDL_Color)) == 0;
         }
 
-        surface = $(this->font, renderCharacters, stripped, Colors.White, wrapWidth);
-        assert(surface);
-        buildRuns(this, stripped, wrapWidth, surface->w);
-        free(stripped);
+        // Text that is nothing but escapes has nothing to draw
+        if (*layout && plain) {
+          surface = $(this->font, renderCharacters, layout, this->color, wrapWidth);
+        } else if (*layout) {
+          surface = $(this->font, renderCharacters, layout, Colors.White, wrapWidth);
+          assert(surface);
+          buildRuns(this, layout, spans, count, wrapWidth, surface->w);
+        }
+
+        free(spans);
+        free(layout);
+
+        if (surface == NULL) {
+          return;
+        }
       } else {
         surface = $(this->font, renderCharacters, this->text, this->color, wrapWidth);
       }
@@ -403,8 +633,26 @@ static void render(View *self, Renderer *renderer) {
     // keystroke, visibly shifting every glyph in the string, not just the one that was typed.
 
     if (this->runs) {
+      const int lineHeight = TTF_GetFontHeight(this->font->font);
+
       for (size_t i = 0; i < this->runCount; i++) {
         const TextRun *run = &this->runs[i];
+
+        if (run->icon) {
+          // Drawn from the icon atlas, not this Text's texture, so an icon splits the Renderer's
+          // merged draw; centered in its placeholder, which is at least a line height wide
+          if (run->icon->atlas) {
+            const int side = min(lineHeight, run->src.w);
+            const SDL_FRect dest = {
+              frame.x + (run->src.x + (run->src.w - side) / 2) / scale, frame.y + run->src.y / scale,
+              side / scale, side / scale
+            };
+            Texture *texture = $(run->icon->atlas, texture, renderer->device);
+            $(renderer, drawTextureRegion, texture, &run->icon->rect, &dest, &Colors.White);
+          }
+          continue;
+        }
+
         const SDL_FRect dest = {
           frame.x + run->src.x / scale, frame.y + run->src.y / scale,
           run->src.w / scale, run->src.h / scale
@@ -474,33 +722,51 @@ static Text *initWithText(Text *self, const char *text, Font *font) {
 static SDL_Size naturalSize(const Text *self) {
 
   Font *font = self->font;
+  if (font == NULL) {
+    return MakeSize(0, 0);
+  }
 
-  if (self->naturalSizeCache.isValid && font && font->pixelDensity == self->naturalSizeCache.pixelDensity) {
+  // Nominally const, but a changed icon atlas invalidates the texture and runs here. Safe only
+  // because layout precedes drawing within a frame and the Renderer keeps unretained Textures.
+  Text *this = (Text *) self;
+
+  checkIcons(this);
+
+  if (self->naturalSizeCache.isValid && font->pixelDensity == self->naturalSizeCache.pixelDensity) {
     return self->naturalSizeCache.size;
   }
 
+  const SDL_Size size = $(self, sizeText, self->text ?: "");
+
+  this->naturalSizeCache.size = size;
+  this->naturalSizeCache.pixelDensity = font->pixelDensity;
+  this->naturalSizeCache.isValid = true;
+
+  return size;
+}
+
+/**
+ * @fn SDL_Size Text::sizeText(const Text *self, const char *text)
+ * @memberof Text
+ */
+static SDL_Size sizeText(const Text *self, const char *text) {
+
   SDL_Size size = MakeSize(0, 0);
 
-  if (font && font->bitmap.surface) {
-    $(font, sizeBitmapCharacters, self->text, 0, &size.w, &size.h);
-  } else if (font) {
-    const char *text = self->text ?: "";
-
-    if (MVC_HasColorEscapes(text)) {
-      char *stripped = MVC_StripColorEscapes(text);
-      $(font, sizeCharacters, stripped, &size.w, &size.h);
-      free(stripped);
-    } else {
-      $(font, sizeCharacters, text, &size.w, &size.h);
-    }
+  if (self->font == NULL || text == NULL) {
+    return size;
   }
 
-  if (font) {
-    Text *this = (Text *) self;
+  const ImageAtlas *icons = iconsFor(self);
 
-    this->naturalSizeCache.size = size;
-    this->naturalSizeCache.pixelDensity = font->pixelDensity;
-    this->naturalSizeCache.isValid = true;
+  if (self->font->bitmap.surface) {
+    $(self->font, sizeBitmapCharacters, text, 0, icons, &size.w, &size.h);
+  } else if (hasEscapes(text)) {
+    char *layout = MVC_LayoutText(self->font, text, self->color, icons, NULL, NULL);
+    $(self->font, sizeCharacters, layout, &size.w, &size.h);
+    free(layout);
+  } else {
+    $(self->font, sizeCharacters, text, &size.w, &size.h);
   }
 
   return size;
@@ -593,6 +859,7 @@ static void initialize(Class *clazz) {
   ((TextInterface *) clazz->interface)->setFont = setFont;
   ((TextInterface *) clazz->interface)->setText = setText;
   ((TextInterface *) clazz->interface)->setTextWithFormat = setTextWithFormat;
+  ((TextInterface *) clazz->interface)->sizeText = sizeText;
 }
 
 /**

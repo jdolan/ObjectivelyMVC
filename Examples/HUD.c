@@ -32,6 +32,8 @@
 
 #define SDL_MAIN_USE_CALLBACKS
 
+#include <stdio.h>
+
 #include <SDL3/SDL_main.h>
 #include <SDL3/SDL.h>
 
@@ -121,7 +123,7 @@ static Image *icon(int size, Uint32 left, Uint32 right) {
 static void buildHUD(AppState *app, View *root) {
 
   StackView *status = stackView(root, ViewAlignmentBottomLeft);
-  app->health = label((View *) status, "Health 100", ViewAlignmentNone);
+  app->health = label((View *) status, ":heart: 100", ViewAlignmentNone);
   app->armor = label((View *) status, "Armor 100", ViewAlignmentNone);
 
   app->ammo = label(root, "Ammo 50", ViewAlignmentBottomRight);
@@ -150,21 +152,29 @@ static void buildHUD(AppState *app, View *root) {
   StackView *icons = stackView(root, ViewAlignmentTopRight);
   icons->axis = StackViewAxisHorizontal;
 
-  ImageAtlas *iconAtlas = $(app->windowController->theme, icons);
+  Theme *theme = app->windowController->theme;
 
   const Uint32 colors[] = { 0xff0000ff, 0xff00ff00, 0xffff0000, 0xff00ffff, 0xffff00ff, 0xffffff00, 0xffffffff, 0xff808080 };
 
   for (int i = 0; i < 8; i++) {
+    char name[16];
+    snprintf(name, sizeof(name), "icon-%d", i);
+
     Image *image = icon(16 + 4 * i, colors[i], colors[(i + 1) % 8]);
-    AtlasImage *atlasImage = $(iconAtlas, addImage, image);
+    $(theme, addIcon, name, image);
     release(image);
+
+    AtlasImage *atlasImage = $(theme, icon, name);
 
     ImageView *imageView = $(alloc(ImageView), initWithImage, (Image *) atlasImage);
     $((View *) icons, addSubview, (View *) imageView);
     release(imageView);
   }
 
-  MVC_Assert($(iconAtlas, compile), "ImageAtlas::compile");
+  // Registered icons render inline in any Text as `:name:`, on both Font paths
+  Image *heart = icon(32, 0xff0000ff, 0xff0000ff);
+  $(theme, addIcon, "heart", heart);
+  release(heart);
 
   label(root, "+", ViewAlignmentMiddleCenter);
 
@@ -214,7 +224,7 @@ static void updateHUD(AppState *app, Uint64 ticks) {
 
   if (ticks >= app->healthDue) {
     app->healthDue = ticks + 2000;
-    $(app->health->text, setTextWithFormat, "Health %d", (int) (25 + ticks / 100 % 75));
+    $(app->health->text, setTextWithFormat, ":heart: %d", (int) (25 + ticks / 100 % 75));
   }
 
   if (ticks >= app->armorDue) {

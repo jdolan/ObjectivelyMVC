@@ -134,23 +134,23 @@ START_TEST(metricsAreUniformAndLogical) {
 
   // Cells are physical texels at density 2; reported sizes are logical, so half
   int w, h;
-  $(font, sizeBitmapCharacters, "ABCD", 0, &w, &h);
+  $(font, sizeBitmapCharacters, "ABCD", 0, NULL, &w, &h);
   ck_assert_int_eq((int) ceilf(bitmap->cellSize.h / 2.f), h);
   ck_assert_int_ge(w, (int) (4 * bitmap->advance / 2.f));
   ck_assert_int_le(w, (int) ceilf((4 * bitmap->advance + bitmap->cellSize.w) / 2.f));
 
   int w2, h2;
-  $(font, sizeBitmapCharacters, "AB\nCDEFG", 0, &w2, &h2);
+  $(font, sizeBitmapCharacters, "AB\nCDEFG", 0, NULL, &w2, &h2);
   ck_assert_int_eq((int) ceilf(2 * bitmap->cellSize.h / 2.f), h2);
   ck_assert_int_gt(w2, w);
 
   // Color escapes are not characters, ^^ is one, and a codepoint past the range draws as '?'
   int w3, w4, w5;
-  $(font, sizeBitmapCharacters, "^1ABCD", 0, &w3, NULL);
+  $(font, sizeBitmapCharacters, "^1ABCD", 0, NULL, &w3, NULL);
   ck_assert_int_eq(w, w3);
-  $(font, sizeBitmapCharacters, "^^ABCD", 0, &w4, NULL);
+  $(font, sizeBitmapCharacters, "^^ABCD", 0, NULL, &w4, NULL);
   ck_assert_int_eq(w + (int) ceilf(bitmap->advance / 2.f), w4);
-  $(font, sizeBitmapCharacters, "AB\xE4\xB8\x80" "D", 0, &w5, NULL);
+  $(font, sizeBitmapCharacters, "AB\xE4\xB8\x80" "D", 0, NULL, &w5, NULL);
   ck_assert_int_eq(w, w5);
 
   release(font);
@@ -168,21 +168,21 @@ START_TEST(wordWrapBreaksAtSpaces) {
   ck_assert_ptr_nonnull(bitmap->surface);
 
   int empty;
-  $(font, sizeBitmapCharacters, "", 0, NULL, &empty);
+  $(font, sizeBitmapCharacters, "", 0, NULL, NULL, &empty);
   ck_assert_int_eq(0, empty);
 
   int lineHeight;
-  $(font, sizeBitmapCharacters, "x", 0, NULL, &lineHeight);
+  $(font, sizeBitmapCharacters, "x", 0, NULL, NULL, &lineHeight);
 
   // Room for eight advances: "aaaa bbbb" needs nine, so it wraps to two lines at the space
   const int wrapWidth = 8 * bitmap->advance;
 
   int w, h;
-  $(font, sizeBitmapCharacters, "aaaa bbbb", wrapWidth, &w, &h);
+  $(font, sizeBitmapCharacters, "aaaa bbbb", wrapWidth, NULL, &w, &h);
   ck_assert_int_eq(2 * lineHeight, h);
   ck_assert_int_le(w, wrapWidth + bitmap->cellSize.w);
 
-  $(font, sizeBitmapCharacters, "aaaa bbbb", 0, &w, &h);
+  $(font, sizeBitmapCharacters, "aaaa bbbb", 0, NULL, &w, &h);
   ck_assert_int_eq(lineHeight, h);
 
   release(font);

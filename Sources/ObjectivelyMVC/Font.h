@@ -123,6 +123,13 @@ struct Font {
   TTF_Font *font;
 
   /**
+   * @brief The characters an inline icon occupies in this Font's layout, resolved on first use
+   * by MVC_LayoutText, or `NULL`.
+   * @private
+   */
+  char *iconPlaceholder;
+
+  /**
    * @brief The display pixel density scale, greater than 1.0 on high-density displays.
    */
   float pixelDensity;
@@ -255,7 +262,7 @@ struct FontInterface {
   String *(*nameWithAttributes)(const FontAttributes *attributes);
 
   /**
-   * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin)
+   * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin, const ImageAtlas *icons)
    * @brief Records one quad per glyph of the given characters from this Font's bitmap.
    * @param self The Font, which MUST have a bitmap.
    * @param renderer The Renderer.
@@ -264,9 +271,10 @@ struct FontInterface {
    * `^^` is a literal `^`.
    * @param wrapWidth The maximum line width, in logical pixels, or `0` for no wrapping.
    * @param origin The top-left corner of the first line, in logical pixels.
+   * @param icons The ImageAtlas resolving `:icon:` escapes, or `NULL` for none.
    * @memberof Font
    */
-  void (*renderBitmapCharacters)(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin);
+  void (*renderBitmapCharacters)(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin, const ImageAtlas *icons);
 
   /**
    * @fn SDL_Surface *Font::renderCharacters(const Font *self, const char *chars, SDL_Color color, int wrapWidth)
@@ -290,16 +298,17 @@ struct FontInterface {
   void (*renderDeviceWillReset)(Font *self);
 
   /**
-   * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, int wrapWidth, int *w, int *h)
+   * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, int wrapWidth, const ImageAtlas *icons, int *w, int *h)
    * @brief Measures the given characters against this Font's bitmap.
    * @param self The Font, which MUST have a bitmap.
    * @param chars The null-terminated UTF-8 encoded C string to size.
    * @param wrapWidth The maximum line width, in logical pixels, or `0` for no wrapping.
+   * @param icons The ImageAtlas resolving `:icon:` escapes, or `NULL` for none.
    * @param w The width to return, in logical pixels.
    * @param h The height to return, in logical pixels.
    * @memberof Font
    */
-  void (*sizeBitmapCharacters)(const Font *self, const char *chars, int wrapWidth, int *w, int *h);
+  void (*sizeBitmapCharacters)(const Font *self, const char *chars, int wrapWidth, const ImageAtlas *icons, int *w, int *h);
 
   /**
    * @fn void Font::sizeCharacters(const Font *self, const char *chars, int *w, int *h)

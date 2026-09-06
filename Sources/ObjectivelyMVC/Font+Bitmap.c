@@ -24,6 +24,7 @@
 
 #include "Colors.h"
 #include "Font.h"
+#include "ImageAtlas.h"
 #include "Log.h"
 #include "Text.h"
 
@@ -99,7 +100,8 @@ typedef enum {
   TokenEnd,
   TokenNewline,
   TokenColor,
-  TokenGlyph
+  TokenGlyph,
+  TokenImage
 } TokenType;
 
 typedef struct {
@@ -107,6 +109,7 @@ typedef struct {
   Uint32 codepoint;
   Uint32 cell;
   SDL_Color color;
+  AtlasImage *image;
 } Token;
 
 /**
@@ -124,9 +127,13 @@ static Uint32 cellForCodepoint(Uint32 codepoint) {
 /**
  * @brief Advances `*chars` past the next token, describing it in `token`.
  */
-static void nextToken(const char **chars, Token *token) {
+static void nextToken(const char **chars, const ImageAtlas *icons, Token *token) {
 
   const char *p = *chars;
+
+  token->codepoint = 0;
+  token->cell = 0;
+  token->image = NULL;
 
   while (*p == '\r') {
     p++;
@@ -159,6 +166,15 @@ static void nextToken(const char **chars, Token *token) {
     return;
   }
 
+  if (*p == ':') {
+    const size_t length = MVC_IconEscapeLength(p, icons, &token->image);
+    if (length) {
+      token->type = TokenImage;
+      *chars = p + length;
+      return;
+    }
+  }
+
   const Uint32 codepoint = SDL_StepUTF8(&p, NULL);
 
   token->type = TokenGlyph;
@@ -171,13 +187,22 @@ static void nextToken(const char **chars, Token *token) {
  * @brief The pen advance of the given token, in texels.
  */
 static int tokenAdvance(const FontBitmap *bitmap, const Token *token) {
-  return token->type == TokenGlyph ? bitmap->advance : 0;
+
+  switch (token->type) {
+    case TokenGlyph:
+      return bitmap->advance;
+    case TokenImage:
+      // A square of the line height, in whole cells, so that the grid stays aligned
+      return ((bitmap->cellSize.h + bitmap->advance - 1) / bitmap->advance) * bitmap->advance;
+    default:
+      return 0;
+  }
 }
 
 /**
  * @brief The advance of the word starting at `chars`, up to the next space, newline or end.
  */
-static int wordAdvance(const FontBitmap *bitmap, const char *chars) {
+static int wordAdvance(const FontBitmap *bitmap, const char *chars, const ImageAtlas *icons) {
 
   int advance = 0;
 
@@ -185,7 +210,7 @@ static int wordAdvance(const FontBitmap *bitmap, const char *chars) {
     const char *next = chars;
 
     Token token;
-    nextToken(&next, &token);
+    nextToken(&next, icons, &token);
 
     if (token.type == TokenEnd || token.type == TokenNewline) {
       break;
@@ -211,7 +236,7 @@ typedef void (*TokenVisitor)(const FontBitmap *bitmap, const Token *token, int x
  * @brief Walks `chars`, wrapping at word boundaries when `wrapWidth` (in texels) is non-zero,
  * and reports the extent of the text in texels.
  */
-static void walk(const FontBitmap *bitmap, const char *chars, int wrapWidth, SDL_Color color,
+static void walk(const FontBitmap *bitmap, const char *chars, int wrapWidth, SDL_Color color, const ImageAtlas *icons,
                  TokenVisitor visitor, ident data, int *w, int *h) {
 
   int x = 0, y = 0, maxX = 0;
@@ -222,7 +247,7 @@ static void walk(const FontBitmap *bitmap, const char *chars, int wrapWidth, SDL
   Token token = { .type = TokenEnd, .color = color };
 
   while (true) {
-    nextToken(&chars, &token);
+    nextToken(&chars, icons, &token);
 
     if (token.type == TokenEnd) {
       break;
@@ -241,7 +266,7 @@ static void walk(const FontBitmap *bitmap, const char *chars, int wrapWidth, SDL
     }
 
     if (wrapWidth && token.type == TokenGlyph && token.codepoint == ' ' && x > 0) {
-      if (x + bitmap->advance + wordAdvance(bitmap, chars) > wrapWidth) {
+      if (x + bitmap->advance + wordAdvance(bitmap, chars, icons) > wrapWidth) {
         x = 0;
         y += bitmap->cellSize.h;
         lineHasContent = false;
@@ -258,13 +283,13 @@ static void walk(const FontBitmap *bitmap, const char *chars, int wrapWidth, SDL
     }
 
     if (visitor) {
-      token.color = color;
+      token.color = token.type == TokenImage ? Colors.White : color;
       visitor(bitmap, &token, x, y, data);
     }
 
     x += advance;
     lineHasContent = true;
-    maxX = max(maxX, x + overhang);
+    maxX = max(maxX, x + (token.type == TokenGlyph ? overhang : 0));
   }
 
   if (w) {
@@ -354,6 +379,7 @@ void renderDeviceWillResetBitmap(Font *self) {
 
 typedef struct {
   const Renderer *renderer;
+  RenderDevice *device;
   Texture *texture;
   SDL_FPoint origin;
   float scale;
@@ -365,6 +391,28 @@ typedef struct {
 static void renderToken(const FontBitmap *bitmap, const Token *token, int x, int y, ident data) {
 
   const RenderContext *context = data;
+
+  if (token->type == TokenImage) {
+    ImageAtlas *atlas = token->image->atlas;
+    if (atlas == NULL) {
+      return;
+    }
+
+    // A square of the line height, centered in its whole-cell slot, from the icon atlas
+    const int side = bitmap->cellSize.h;
+    const int slot = tokenAdvance(bitmap, token);
+
+    const SDL_FRect dest = {
+      (context->origin.x + x + bitmap->bearing + (slot - side) / 2) / context->scale,
+      (context->origin.y + y) / context->scale,
+      side / context->scale,
+      side / context->scale
+    };
+
+    Texture *texture = $(atlas, texture, context->device);
+    $(context->renderer, drawTextureRegion, texture, &token->image->rect, &dest, &token->color);
+    return;
+  }
 
   const SDL_Point origin = cellOrigin(bitmap, token->cell);
   const SDL_Rect src = MakeRect(origin.x, origin.y, bitmap->cellSize.w, bitmap->cellSize.h);
@@ -381,10 +429,10 @@ static void renderToken(const FontBitmap *bitmap, const Token *token, int x, int
 }
 
 /**
- * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin)
+ * @fn void Font::renderBitmapCharacters(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin, const ImageAtlas *icons)
  * @memberof Font
  */
-void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin) {
+void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *chars, SDL_Color color, int wrapWidth, const SDL_Point *origin, const ImageAtlas *icons) {
 
   assert(self);
   assert(renderer);
@@ -404,19 +452,20 @@ void renderCharactersBitmap(Font *self, const Renderer *renderer, const char *ch
 
   RenderContext context = {
     .renderer = renderer,
+    .device = renderer->device,
     .texture = bitmap->texture,
     .origin = { roundf(origin->x * self->pixelDensity), roundf(origin->y * self->pixelDensity) },
     .scale = self->pixelDensity,
   };
 
-  walk(bitmap, chars, (int) (wrapWidth * context.scale), color, renderToken, &context, NULL, NULL);
+  walk(bitmap, chars, (int) (wrapWidth * context.scale), color, icons, renderToken, &context, NULL, NULL);
 }
 
 /**
- * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, int wrapWidth, int *w, int *h)
+ * @fn void Font::sizeBitmapCharacters(const Font *self, const char *chars, int wrapWidth, const ImageAtlas *icons, int *w, int *h)
  * @memberof Font
  */
-void sizeCharactersBitmap(const Font *self, const char *chars, int wrapWidth, int *w, int *h) {
+void sizeCharactersBitmap(const Font *self, const char *chars, int wrapWidth, const ImageAtlas *icons, int *w, int *h) {
 
   assert(self);
 
@@ -426,7 +475,7 @@ void sizeCharactersBitmap(const Font *self, const char *chars, int wrapWidth, in
   int texelsW = 0, texelsH = 0;
 
   if (chars) {
-    walk(bitmap, chars, (int) (wrapWidth * self->pixelDensity), Colors.White, NULL, NULL, &texelsW, &texelsH);
+    walk(bitmap, chars, (int) (wrapWidth * self->pixelDensity), Colors.White, icons, NULL, NULL, &texelsW, &texelsH);
   }
 
   if (w) {

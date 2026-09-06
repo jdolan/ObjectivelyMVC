@@ -71,7 +71,7 @@ struct Theme {
   Dictionary *fontCache;
 
   /**
-   * @brief An app-owned ImageAtlas for icons, HUD art, and similar, created lazily by
+   * @brief The ImageAtlas holding this Theme's icons and other app art, created lazily by
    * Theme::icons.
    * @private
    */
@@ -103,6 +103,22 @@ struct ThemeInterface {
   void (*addStylesheet)(Theme *self, Stylesheet *stylesheet);
 
   /**
+   * @fn AtlasImage *Theme::addIcon(Theme *self, const char *name, Image *image)
+   * @brief Registers `image` as the icon `name`, so that `:name:` in any Text drawn under this
+   * Theme renders it inline, and Theme::icon resolves it.
+   * @details The icon is added to Theme::icons and the atlas is compiled, which repacks it, so
+   * register icons at startup rather than while drawing. AtlasImages already handed out stay
+   * valid: compiling updates their rects in place. Icons SHOULD be square; Text draws them as a
+   * square of the line height.
+   * @param self The Theme.
+   * @param name The name, of `[A-Za-z0-9_-]`, under 64 bytes.
+   * @param image The Image.
+   * @return The AtlasImage, owned by this Theme's icon atlas.
+   * @memberof Theme
+   */
+  AtlasImage *(*addIcon)(Theme *self, const char *name, Image *image);
+
+  /**
    * @fn void Theme::apply(const Theme *self, const View *view)
    * @brief Applies this Theme to the given View.
    * @param self The Theme.
@@ -127,15 +143,22 @@ struct ThemeInterface {
   Font *(*font)(Theme *self, const FontAttributes *attributes, float pixelDensity);
 
   /**
+   * @fn AtlasImage *Theme::icon(Theme *self, const char *name)
+   * @param self The Theme.
+   * @param name The name.
+   * @return The icon registered under `name` via Theme::addIcon, or `NULL`.
+   * @memberof Theme
+   */
+  AtlasImage *(*icon)(Theme *self, const char *name);
+
+  /**
    * @fn ImageAtlas *Theme::icons(Theme *self)
-   * @brief Returns this Theme's app-owned ImageAtlas for icons, HUD art, and similar, creating
-   * it on first access.
-   * @details This atlas is not populated or compiled by Theme --
-   * the caller drives everything (ImageAtlas::addImage/addImageWithResourceName, compile,
-   * tracking the returned AtlasImages) exactly as with any other ImageAtlas. Theme only owns
-   * the instance and forwards render device resets to it, so apps get correct GPU resource
-   * lifecycle for free instead of needing their own ViewController::renderDeviceWillReset
-   * override.
+   * @brief Returns the ImageAtlas holding this Theme's icons, and any other app art added to it,
+   * creating it on first access.
+   * @details Theme::addIcon is the usual way in. Apps MAY also add unnamed art directly
+   * (ImageAtlas::addImage, then ImageAtlas::compile) exactly as with any other ImageAtlas; Theme
+   * owns the instance and forwards render device resets to it, so such art gets correct GPU
+   * resource lifecycle for free.
    * @param self The Theme.
    * @return This Theme's icon ImageAtlas, owned by this Theme.
    * @memberof Theme

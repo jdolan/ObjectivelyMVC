@@ -125,6 +125,31 @@ static ImageAtlas *icons(Theme *self) {
 }
 
 /**
+ * @fn AtlasImage *Theme::addIcon(Theme *self, const char *name, Image *image)
+ * @memberof Theme
+ */
+static AtlasImage *addIcon(Theme *self, const char *name, Image *image) {
+
+  ImageAtlas *atlas = $(self, icons);
+
+  AtlasImage *icon = $(atlas, addImageWithName, name, image);
+
+  if (!$(atlas, compile)) {
+    MVC_LogError("Failed to compile icons after adding %s\n", name);
+  }
+
+  return icon;
+}
+
+/**
+ * @fn AtlasImage *Theme::icon(Theme *self, const char *name)
+ * @memberof Theme
+ */
+static AtlasImage *icon(Theme *self, const char *name) {
+  return $($(self, icons), imageWithName, name);
+}
+
+/**
  * @brief Reducer for computeStyle.
  */
 static ident computeStyle_reduce(const ident obj, ident accumulator, ident data) {
@@ -258,9 +283,11 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+  ((ThemeInterface *) clazz->interface)->addIcon = addIcon;
   ((ThemeInterface *) clazz->interface)->addStylesheet = addStylesheet;
   ((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
   ((ThemeInterface *) clazz->interface)->font = font;
+  ((ThemeInterface *) clazz->interface)->icon = icon;
   ((ThemeInterface *) clazz->interface)->icons = icons;
   ((ThemeInterface *) clazz->interface)->init = init;
   ((ThemeInterface *) clazz->interface)->removeStylesheet = removeStylesheet;

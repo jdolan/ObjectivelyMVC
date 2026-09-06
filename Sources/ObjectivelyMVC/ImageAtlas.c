@@ -45,6 +45,7 @@ static void dealloc(Object *self) {
   release(this->texture);
   release(this->image);
   release(this->images);
+  release(this->names);
 
   super(Object, self, dealloc);
 }
@@ -86,6 +87,33 @@ static AtlasImage *addImageWithResourceName(ImageAtlas *self, const char *name) 
   }
 
   return atlasImage;
+}
+
+/**
+ * @fn AtlasImage *ImageAtlas::addImageWithName(ImageAtlas *self, const char *name, Image *image)
+ * @memberof ImageAtlas
+ */
+static AtlasImage *addImageWithName(ImageAtlas *self, const char *name, Image *image) {
+
+  assert(name);
+
+  AtlasImage *atlasImage = $(self, addImage, image);
+
+  $(self->names, setObjectForKeyPath, atlasImage, name);
+  self->generation++;
+
+  return atlasImage;
+}
+
+/**
+ * @fn AtlasImage *ImageAtlas::imageWithName(const ImageAtlas *self, const char *name)
+ * @memberof ImageAtlas
+ */
+static AtlasImage *imageWithName(const ImageAtlas *self, const char *name) {
+
+  assert(name);
+
+  return $(self->names, objectForKeyPath, name);
 }
 
 /**
@@ -140,6 +168,8 @@ static bool pack(AtlasImage **images, SDL_Rect *rects, size_t count, int size) {
  * @memberof ImageAtlas
  */
 static bool compile(ImageAtlas *self) {
+
+  self->generation++;
 
   const size_t count = self->images->count;
   if (count == 0) {
@@ -235,6 +265,9 @@ static ImageAtlas *init(ImageAtlas *self) {
     self->images = $$(Array, array);
     assert(self->images);
 
+    self->names = $$(Dictionary, dictionary);
+    assert(self->names);
+
     self->maxSize = IMAGE_ATLAS_MAX_SIZE;
   }
 
@@ -275,8 +308,10 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((ImageAtlasInterface *) clazz->interface)->addImage = addImage;
+  ((ImageAtlasInterface *) clazz->interface)->addImageWithName = addImageWithName;
   ((ImageAtlasInterface *) clazz->interface)->addImageWithResourceName = addImageWithResourceName;
   ((ImageAtlasInterface *) clazz->interface)->compile = compile;
+  ((ImageAtlasInterface *) clazz->interface)->imageWithName = imageWithName;
   ((ImageAtlasInterface *) clazz->interface)->init = init;
   ((ImageAtlasInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;
   ((ImageAtlasInterface *) clazz->interface)->texture = texture;

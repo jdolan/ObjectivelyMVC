@@ -63,6 +63,7 @@ static void dealloc(Object *self) {
   TTF_CloseFont(this->font);
 
   free(this->family);
+  free(this->iconPlaceholder);
 
   release(this->data);  
 

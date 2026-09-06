@@ -202,9 +202,42 @@ START_TEST(failedCompileLeavesRectsUntouched) {
 
 } END_TEST
 
+START_TEST(namedImages) {
+
+  ImageAtlas *atlas = $(alloc(ImageAtlas), init);
+  ck_assert_uint_eq(0, atlas->generation);
+
+  ck_assert_ptr_null($(atlas, imageWithName, "heart"));
+
+  Image *red = filledImage(4, 4, 0xff0000ff);
+  AtlasImage *a = $(atlas, addImageWithName, "heart", red);
+  release(red);
+
+  ck_assert_ptr_nonnull(a);
+  ck_assert_ptr_eq(a, $(atlas, imageWithName, "heart"));
+  ck_assert_ptr_null($(atlas, imageWithName, "hearts"));
+  ck_assert_uint_eq(1, atlas->generation);
+
+  // Compiling changes layout, so it counts as a generation too
+  ck_assert($(atlas, compile));
+  ck_assert_uint_eq(2, atlas->generation);
+
+  // Re-registering a name replaces the mapping; the old image stays in the atlas
+  Image *green = filledImage(4, 4, 0xff00ff00);
+  AtlasImage *b = $(atlas, addImageWithName, "heart", green);
+  release(green);
+
+  ck_assert_ptr_eq(b, $(atlas, imageWithName, "heart"));
+  ck_assert_int_eq(2, (int) atlas->images->count);
+
+  release(atlas);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("ImageAtlas");
+  tcase_add_test(tcase, namedImages);
   tcase_add_test(tcase, compilePacksWithoutOverlap);
   tcase_add_test(tcase, compileCopiesPixels);
   tcase_add_test(tcase, compileGrowsToFit);

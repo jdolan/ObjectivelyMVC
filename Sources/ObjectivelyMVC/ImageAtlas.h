@@ -19,6 +19,7 @@
 #pragma once
 
 #include <Objectively/Array.h>
+#include <Objectively/Dictionary.h>
 
 #include <ObjectivelyGPU/RenderDevice.h>
 
@@ -59,6 +60,12 @@ struct ImageAtlas {
   ImageAtlasInterface *interface[0];
 
   /**
+   * @brief Incremented by every ImageAtlas::addImageWithName and ImageAtlas::compile, so that
+   * anything derived from this atlas' contents or layout can tell when it is stale.
+   */
+  unsigned generation;
+
+  /**
    * @brief The compiled sheet, or `NULL` until ImageAtlas::compile.
    */
   Image *image;
@@ -67,6 +74,12 @@ struct ImageAtlas {
    * @brief The AtlasImages, in the order added.
    */
   Array *images;
+
+  /**
+   * @brief The AtlasImages registered by name via ImageAtlas::addImageWithName.
+   * @private
+   */
+  Dictionary *names;
 
   /**
    * @brief The largest sheet dimension ImageAtlas::compile will attempt.
@@ -115,6 +128,20 @@ struct ImageAtlasInterface {
   AtlasImage *(*addImageWithResourceName)(ImageAtlas *self, const char *name);
 
   /**
+   * @fn AtlasImage *ImageAtlas::addImageWithName(ImageAtlas *self, const char *name, Image *image)
+   * @brief Adds the given Image to this atlas, registered under `name` for ImageAtlas::imageWithName.
+   * @details Names are unique: registering a name again replaces the mapping, while the previously
+   * registered AtlasImage remains in the atlas.
+   * @param self The ImageAtlas.
+   * @param name The name.
+   * @param image The Image. Its surface is shared with the returned AtlasImage.
+   * @return The AtlasImage, owned by this atlas. Its `rect` is not valid until the next
+   * ImageAtlas::compile.
+   * @memberof ImageAtlas
+   */
+  AtlasImage *(*addImageWithName)(ImageAtlas *self, const char *name, Image *image);
+
+  /**
    * @fn bool ImageAtlas::compile(ImageAtlas *self)
    * @brief Packs every added Image into a new sheet.
    * @details Every AtlasImage's `rect` is reassigned, and the previous sheet and Texture are
@@ -126,6 +153,15 @@ struct ImageAtlasInterface {
    * @memberof ImageAtlas
    */
   bool (*compile)(ImageAtlas *self);
+
+  /**
+   * @fn AtlasImage *ImageAtlas::imageWithName(const ImageAtlas *self, const char *name)
+   * @param self The ImageAtlas.
+   * @param name The name.
+   * @return The AtlasImage registered under `name` via ImageAtlas::addImageWithName, or `NULL`.
+   * @memberof ImageAtlas
+   */
+  AtlasImage *(*imageWithName)(const ImageAtlas *self, const char *name);
 
   /**
    * @fn ImageAtlas *ImageAtlas::init(ImageAtlas *self)

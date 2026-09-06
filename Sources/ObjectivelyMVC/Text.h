@@ -26,6 +26,7 @@
 #include <SDL3/SDL_gpu.h>
 
 #include <ObjectivelyMVC/Font.h>
+#include <ObjectivelyMVC/ImageAtlas.h>
 #include <ObjectivelyMVC/View.h>
 
 /**
@@ -59,12 +60,51 @@ OBJECTIVELYMVC_EXPORT bool MVC_HasColorEscapes(const char *text);
 OBJECTIVELYMVC_EXPORT char *MVC_StripColorEscapes(const char *text);
 
 /**
- * @brief One color run of a rendered TrueType Text: a region of its texture, in texels, and the
- * color to draw it with.
+ * @brief Parses an icon escape at the start of `chars`: `:name:`, where `name` is one or more of
+ * `[A-Za-z0-9_-]` and under 64 bytes, and is registered in `icons`. An unregistered name is not
+ * an escape, so `12:30:45` stays literal unless someone registers an icon called `30`.
+ * @param chars The text, positioned at a candidate `:`.
+ * @param icons The icon ImageAtlas, or `NULL` for none.
+ * @param image If not `NULL`, receives the icon, or `NULL`.
+ * @return The byte length of the escape, or `0` if `chars` does not start with one.
+ */
+OBJECTIVELYMVC_EXPORT size_t MVC_IconEscapeLength(const char *chars, const ImageAtlas *icons, AtlasImage **image);
+
+/**
+ * @brief One span of a laid-out string, in bytes of the layout string MVC_LayoutText returns:
+ * either the characters drawn in `color`, or a placeholder standing in for `icon`.
+ */
+typedef struct {
+  int offset;
+  int length;
+  SDL_Color color;
+  AtlasImage *icon;
+} TextSpan;
+
+/**
+ * @brief Resolves the escapes in `text` into the string to lay out and the spans to draw it as.
+ * @details `^N` selects a color for what follows, `^^` becomes `^`, and a registered `:icon:`
+ * becomes a run of placeholder characters at least a line height wide, for the icon to be drawn
+ * over. The placeholder is never a line-break opportunity, so an icon stays with its word. With
+ * no `icons`, and `spans` `NULL`, the result is that of MVC_StripColorEscapes.
+ * @param font The Font the text will be laid out in.
+ * @param text The text.
+ * @param color The color in effect at the start of `text`.
+ * @param icons The icon ImageAtlas, or `NULL` for none.
+ * @param spans If not `NULL`, receives the spans, which the caller MUST free.
+ * @param count If not `NULL`, receives the number of spans; meaningful only with `spans`.
+ * @return The layout string, which the caller MUST free.
+ */
+OBJECTIVELYMVC_EXPORT char *MVC_LayoutText(const Font *font, const char *text, SDL_Color color, const ImageAtlas *icons, TextSpan **spans, size_t *count);
+
+/**
+ * @brief One quad of a rendered TrueType Text: a region of its texture, in texels, drawn in
+ * `color`, or, when `icon` is set, that icon drawn as a square of the line height within it.
  */
 typedef struct {
   SDL_Rect src;
   SDL_Color color;
+  AtlasImage *icon;
 } TextRun;
 
 typedef struct Text Text;
@@ -118,8 +158,18 @@ struct Text {
   } naturalSizeCache;
 
   /**
-   * @brief The color runs of `texture`, one textured quad each, when the text contains color
-   * escapes; otherwise `NULL`, and `texture` is drawn as a single quad in `color`.
+   * @brief The icon ImageAtlas this Text's `runs` and cached size were resolved against, and its
+   * generation then, so that icons registered later, or a Theme swap, re-resolve them.
+   * @private
+   */
+  struct {
+    const ImageAtlas *atlas;
+    unsigned generation;
+  } icons;
+
+  /**
+   * @brief The runs of `texture`, one textured quad each, when the text contains escapes;
+   * otherwise `NULL`, and `texture` is drawn as a single quad in `color`.
    * @protected
    */
   TextRun *runs;
@@ -173,6 +223,17 @@ struct TextInterface {
    * @memberof Text
    */
   SDL_Size (*naturalSize)(const Text *self);
+
+  /**
+   * @fn SDL_Size Text::sizeText(const Text *self, const char *text)
+   * @brief Measures the given text as this Text would render it: in its Font, with color escapes
+   * removed and registered icons from its window's Theme in place.
+   * @param self The Text.
+   * @param text The text.
+   * @return The size, in logical pixels.
+   * @memberof Text
+   */
+  SDL_Size (*sizeText)(const Text *self, const char *text);
 
   /**
    * @fn void Text::setFont(Text *self, Font *font)
