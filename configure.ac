@@ -1,6 +1,6 @@
 AC_PREREQ(2.69)
 
-AC_INIT([ObjectivelyMVC], [2.4.0], [jay@jaydolan.com])
+AC_INIT([ObjectivelyMVC], [2.4.2], [jay@jaydolan.com])
 AC_SUBST([RELEASE_VERSION], [m4_bpatsubst(AC_PACKAGE_VERSION, [\.[0-9]*$], [])])
 
 AC_CONFIG_HEADERS([Sources/ObjectivelyMVC/Config.h])
