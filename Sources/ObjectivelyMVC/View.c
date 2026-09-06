@@ -1620,8 +1620,7 @@ static void resize(View *self, const SDL_Size *size) {
 
     $(self, setNeedsLayout);
 
-    if (self->superview && $(self->superview, isContainer)) {
-      $(self->superview, setNeedsLayout);
+    if (self->superview && ($(self->superview, isContainer) || (self->alignment & (ViewAlignmentMaskHorizontal | ViewAlignmentMaskVertical)) != 0)) {
     }
   }
 }
