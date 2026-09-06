@@ -30,7 +30,7 @@
 
 #define _Class _Font
 
-#pragma mark - Baking
+#pragma mark - Glyph blitting
 
 /**
  * @brief The top-left texel of the given cell within the grid surface.
@@ -61,7 +61,7 @@ static void blit(SDL_Surface *src, SDL_Surface *dest, const SDL_Rect *rect) {
 /**
  * @brief Rasterizes `codepoint` into the given cell, with its bearing baked in.
  */
-static void bakeGlyph(const FontBitmap *bitmap, TTF_Font *font, Uint32 codepoint, Uint32 cell) {
+static void initGlyph(const FontBitmap *bitmap, TTF_Font *font, Uint32 codepoint, Uint32 cell) {
 
   SDL_Surface *sheet = bitmap->surface;
 
@@ -70,11 +70,12 @@ static void bakeGlyph(const FontBitmap *bitmap, TTF_Font *font, Uint32 codepoint
   }
 
   int minX = 0, maxX = 0;
-  const bool gotMetrics = TTF_GetGlyphMetrics(font, codepoint, &minX, &maxX, NULL, NULL, NULL);
+  if (!TTF_GetGlyphMetrics(font, codepoint, &minX, &maxX, NULL, NULL, NULL)) {
+    MVC_LogError("U+%04X: %s\n", codepoint, SDL_GetError());
+    return;
+  }
 
-  // A glyph with no ink, such as U+00AD soft hyphen, has nothing to bake, and SDL_ttf refuses
-  // to render a zero-width surface for it.
-  if (gotMetrics && maxX <= minX) {
+  if (maxX <= minX) {
     return;
   }
 
@@ -119,7 +120,7 @@ typedef struct {
 } Token;
 
 /**
- * @brief Resolves `codepoint` to a cell: FONT_BITMAP_REPLACEMENT's for one outside the baked range.
+ * @brief Resolves `codepoint` to a cell: `FONT_BITMAP_REPLACEMENT`'s for one outside the baked range.
  */
 static Uint32 cellForCodepoint(Uint32 codepoint) {
 
@@ -365,7 +366,7 @@ bool initBitmap(FontBitmap *bitmap, Font *font) {
   SDL_FillSurfaceRect(bitmap->surface, NULL, 0);
 
   for (Uint32 i = 0; i < FONT_BITMAP_COUNT; i++) {
-    bakeGlyph(bitmap, font->font, FONT_BITMAP_FIRST + i, i);
+    initGlyph(bitmap, font->font, FONT_BITMAP_FIRST + i, i);
   }
 
   return true;
