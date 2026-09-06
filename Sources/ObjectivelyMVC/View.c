@@ -1620,7 +1620,9 @@ static void resize(View *self, const SDL_Size *size) {
 
     $(self, setNeedsLayout);
 
-    if (self->superview && $(self->superview, isContainer)) {
+    // A container superview sizes from this View, and an aligned View is positioned from its
+    // own size, so in either case the superview must lay out again
+    if (self->superview && ($(self->superview, isContainer) || self->alignment != ViewAlignmentNone)) {
       $(self->superview, setNeedsLayout);
     }
   }

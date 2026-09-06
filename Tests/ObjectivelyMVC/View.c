@@ -289,6 +289,35 @@ START_TEST(setHiddenMarksSuperviewNeedsLayout) {
 
 } END_TEST
 
+START_TEST(alignedContainChildRecentersOnGrowth) {
+
+  View *root = fixedView(400, 200);
+  root->autoresizingMask = ViewAutoresizingFill;
+
+  StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+  stackView->axis = StackViewAxisHorizontal;
+  stackView->view.alignment = ViewAlignmentBottomCenter;
+  stackView->view.autoresizingMask = ViewAutoresizingContain;
+
+  $(root, addSubview, (View *) stackView);
+  $((View *) stackView, addSubview, fixedView(40, 20));
+  $(root, layoutIfNeeded);
+
+  ck_assert_int_eq(180, stackView->view.frame.x);
+
+  // Growing the aligned child after the parent has laid out must re-center it
+  $((View *) stackView, addSubview, fixedView(40, 20));
+  $(root, layoutIfNeeded);
+
+  ck_assert_int_eq(80, stackView->view.frame.w);
+  ck_assert_int_eq(160, stackView->view.frame.x);
+  ck_assert_int_eq(180, stackView->view.frame.y);
+
+  release(stackView);
+  release(root);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("View");
@@ -301,6 +330,7 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, fillOnlyChildFillsContainBounds);
   tcase_add_test(tcase, styledSizeFloorsContainBoundsWithNoMinSize);
   tcase_add_test(tcase, setHiddenMarksSuperviewNeedsLayout);
+  tcase_add_test(tcase, alignedContainChildRecentersOnGrowth);
 
   Suite *suite = suite_create("View");
   suite_add_tcase(suite, tcase);
