@@ -338,22 +338,25 @@ static void applyTransform(Text *self) {
       }
     }
 
-    switch (self->transform) {
-      case TextTransformUppercase:
-        *c = (char) SDL_toupper(*c);
-        break;
-      case TextTransformLowercase:
-        *c = (char) SDL_tolower(*c);
-        break;
-      case TextTransformCapitalize:
-        *c = (char) (wordStart ? SDL_toupper(*c) : SDL_tolower(*c));
-        break;
-      default:
-        break;
+    const unsigned char uc = (unsigned char) *c;
+
+    if ((uc & 0x80u) == 0) {
+      switch (self->transform) {
+        case TextTransformUppercase:
+          *c = (char) SDL_toupper(uc);
+          break;
+        case TextTransformLowercase:
+          *c = (char) SDL_tolower(uc);
+          break;
+        case TextTransformCapitalize:
+          *c = (char) (wordStart ? SDL_toupper(uc) : SDL_tolower(uc));
+          break;
+        default:
+          break;
+      }
     }
 
-    wordStart = SDL_isspace(*c) != 0;
-  }
+    wordStart = SDL_isspace((unsigned char) *c) != 0;
 }
 
 /**
