@@ -330,16 +330,10 @@ static void appendRuns(Text *self, TTF_Text *layout, const TextSpan *span, int s
   self->runs = runs;
 
   if (span->icon) {
-    // The placeholder is one word, but a narrow wrap width can still break it: draw the icon in
-    // the widest fragment
-    SDL_Rect rect = substrings[0]->rect;
-    for (int i = 1; i < count; i++) {
-      if (substrings[i]->rect.w > rect.w) {
-        rect = substrings[i]->rect;
-      }
-    }
-
-    self->runs[self->runCount++] = (TextRun) { rect, Colors.White, retain(span->icon) };
+    // The placeholder is one word, so it only splits when the wrap width is narrower than a
+    // line height; the icon stays where the escape is, in the first fragment, and is clamped
+    // to it when drawn
+    self->runs[self->runCount++] = (TextRun) { substrings[0]->rect, Colors.White, retain(span->icon) };
     SDL_free(substrings);
     return;
   }
