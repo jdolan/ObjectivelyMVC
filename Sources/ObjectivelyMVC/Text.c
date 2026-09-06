@@ -51,10 +51,21 @@ SDL_Color TextEscapeColors[] = {
   { 0x80, 0x80, 0x80, 0xFF }   // ^9 Grey
 };
 
+/**
+ * @brief Length of the color escape at `chars`, or 0 if there is none: `^N` selects a color,
+ * `^^` is a literal caret.
+ */
+static size_t colorEscapeLength(const char *chars) {
+  if (chars[0] == '^' && ((chars[1] >= '0' && chars[1] <= '9') || chars[1] == '^')) {
+    return 2;
+  }
+  return 0;
+}
+
 bool MVC_HasColorEscapes(const char *text) {
 
   for (const char *p = text ? strchr(text, '^') : NULL; p; p = strchr(p + 1, '^')) {
-    if ((p[1] >= '0' && p[1] <= '9') || p[1] == '^') {
+    if (colorEscapeLength(p)) {
       return true;
     }
   }
@@ -314,7 +325,7 @@ static void applyTransform(Text *self) {
   bool wordStart = true;
   for (char *c = self->transformed; *c; c++) {
 
-    if (*c == '^' && ((c[1] >= '0' && c[1] <= '9') || c[1] == '^')) {
+    if (colorEscapeLength(c)) {
       c++;
       continue;
     }
@@ -323,7 +334,6 @@ static void applyTransform(Text *self) {
       const size_t length = MVC_IconEscapeLength(c, icons, NULL);
       if (length) {
         c += length - 1;
-        wordStart = true;
         continue;
       }
     }
@@ -504,7 +514,7 @@ static String *description(const Object *self) {
   String *description = str("%s@%p \"%s\" %s [%d, %d, %d, %d]",
                 this->identifier ?: classnameof(self),
                 self,
-                ((Text *) self)->text,
+                displayText((Text *) self) ?: "",
                 classNames->chars,
                 bounds.x, bounds.y, bounds.w, bounds.h);
 
@@ -531,15 +541,15 @@ static void applyStyle(View *self, const Style *style) {
     invalidate(this);
   }
 
-  TextTransform transform = this->transform;
+  int transform = -1;
 
   const Inlet transformInlets[] = MakeInlets(
     MakeInlet("text-transform", InletTypeEnum, &transform, (ident) TextTransformNames)
   );
 
-  if ($(self, bind, transformInlets, style->attributes)) {
-    $(this, setTransform, transform);
-  }
+  $(self, bind, transformInlets, style->attributes);
+
+  $(this, setTransform, transform < 0 ? TextTransformNone : (TextTransform) transform);
 
   char *fontFamily = NULL;
   int fontSize = -1, fontStyle = -1;
@@ -570,18 +580,21 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   Text *this = (Text *) self;
 
+  int transform = this->transform;
+
   const Inlet inlets[] = MakeInlets(
     MakeInlet("color", InletTypeColor, &this->color, NULL),
     MakeInlet("lineWrap", InletTypeBool, &this->lineWrap, NULL),
     MakeInlet("text", InletTypeCharacters, &this->text, NULL),
-    MakeInlet("textTransform", InletTypeEnum, &this->transform, (ident) TextTransformNames)
+    MakeInlet("textTransform", InletTypeEnum, &transform, (ident) TextTransformNames)
   );
 
   $(self, bind, inlets, dictionary);
 
-  applyTransform(this);
+  this->transform = (TextTransform) transform;
 
-  this->naturalSizeCache.isValid = false;
+  applyTransform(this);
+  invalidate(this);
 
   $(self, sizeToFit);
 }

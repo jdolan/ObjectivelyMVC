@@ -209,7 +209,8 @@ struct Text {
 
   /**
    * @brief The case transform applied when drawing: the `text-transform` style attribute, or
-   * `textTransform` in JSON.
+   * `textTransform` in JSON. A computed style without `text-transform` resets it to none, as
+   * with `color`.
    * @remarks Do not set this property directly.
    * @see Text::setTransform(Text *, TextTransform)
    */

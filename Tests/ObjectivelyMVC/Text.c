@@ -219,6 +219,10 @@ START_TEST(transformFollowsTextAndEscapes) {
   $(text, setTransform, TextTransformCapitalize);
   ck_assert_str_eq("Hello :heart: World", text->transformed);
 
+  // An icon is a glyph, not a word break, so it does not capitalize what follows
+  $(text, setText, "a:heart:b");
+  ck_assert_str_eq("A:heart:b", text->transformed);
+
   $(text, setText, "^1a b^^c");
   ck_assert_str_eq("^1A B^^c", text->transformed);
 
