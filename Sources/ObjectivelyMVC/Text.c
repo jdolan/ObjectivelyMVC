@@ -62,6 +62,13 @@ bool MVC_HasColorEscapes(const char *text) {
   return false;
 }
 
+const EnumName TextTransformNames[] = MakeEnumNames(
+  MakeEnumAlias(TextTransformNone, none),
+  MakeEnumAlias(TextTransformUppercase, uppercase),
+  MakeEnumAlias(TextTransformLowercase, lowercase),
+  MakeEnumAlias(TextTransformCapitalize, capitalize)
+);
+
 char *MVC_StripColorEscapes(const char *text) {
 
   assert(text);
@@ -286,6 +293,60 @@ static ImageAtlas *iconsFor(const Text *self) {
 }
 
 /**
+ * @brief Rebuilds `transformed` from `text` and `transform`. Color escapes pass through without
+ * counting as letters, and icon escapes that resolve against the window's Theme are copied
+ * verbatim, since icon names are case sensitive.
+ */
+static void applyTransform(Text *self) {
+
+  free(self->transformed);
+  self->transformed = NULL;
+
+  if (self->transform == TextTransformNone || self->text == NULL) {
+    return;
+  }
+
+  self->transformed = strdup(self->text);
+  assert(self->transformed);
+
+  const ImageAtlas *icons = iconsFor(self);
+
+  bool wordStart = true;
+  for (char *c = self->transformed; *c; c++) {
+
+    if (*c == '^' && ((c[1] >= '0' && c[1] <= '9') || c[1] == '^')) {
+      c++;
+      continue;
+    }
+
+    if (*c == ':') {
+      const size_t length = MVC_IconEscapeLength(c, icons, NULL);
+      if (length) {
+        c += length - 1;
+        wordStart = true;
+        continue;
+      }
+    }
+
+    switch (self->transform) {
+      case TextTransformUppercase:
+        *c = (char) SDL_toupper(*c);
+        break;
+      case TextTransformLowercase:
+        *c = (char) SDL_tolower(*c);
+        break;
+      case TextTransformCapitalize:
+        *c = (char) (wordStart ? SDL_toupper(*c) : SDL_tolower(*c));
+        break;
+      default:
+        break;
+    }
+
+    wordStart = SDL_isspace(*c) != 0;
+  }
+}
+
+/**
  * @brief Invalidates this Text if the icon atlas it was prepared against has changed: a Theme
  * swap, attaching to a window, or an icon registered since. Sets `needsLayout` when it does,
  * since the natural size may have changed.
@@ -299,8 +360,16 @@ static void checkIcons(Text *self) {
     invalidate(self);
     self->icons.atlas = icons;
     self->icons.generation = generation;
+    applyTransform(self);
     $((View *) self, setNeedsLayout);
   }
+}
+
+/**
+ * @return The string this Text draws and measures: `transformed` when a transform is set.
+ */
+static const char *displayText(const Text *self) {
+  return self->transformed ?: self->text;
 }
 
 /**
@@ -418,6 +487,7 @@ static void dealloc(Object *self) {
   release(this->font);
 
   free(this->text);
+  free(this->transformed);
 
   super(Object, self, dealloc);
 }
@@ -461,6 +531,16 @@ static void applyStyle(View *self, const Style *style) {
     invalidate(this);
   }
 
+  TextTransform transform = this->transform;
+
+  const Inlet transformInlets[] = MakeInlets(
+    MakeInlet("text-transform", InletTypeEnum, &transform, (ident) TextTransformNames)
+  );
+
+  if ($(self, bind, transformInlets, style->attributes)) {
+    $(this, setTransform, transform);
+  }
+
   char *fontFamily = NULL;
   int fontSize = -1, fontStyle = -1;
 
@@ -493,10 +573,13 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
   const Inlet inlets[] = MakeInlets(
     MakeInlet("color", InletTypeColor, &this->color, NULL),
     MakeInlet("lineWrap", InletTypeBool, &this->lineWrap, NULL),
-    MakeInlet("text", InletTypeCharacters, &this->text, NULL)
+    MakeInlet("text", InletTypeCharacters, &this->text, NULL),
+    MakeInlet("textTransform", InletTypeEnum, &this->transform, (ident) TextTransformNames)
   );
 
   $(self, bind, inlets, dictionary);
+
+  applyTransform(this);
 
   this->naturalSizeCache.isValid = false;
 
@@ -555,12 +638,14 @@ static void render(View *self, Renderer *renderer) {
 
     checkIcons(this);
 
+    const char *text = displayText(this);
+
     const SDL_Rect frame = $(self, renderFrame);
 
     const int wrapWidth = this->lineWrap ? frame.w : 0;
 
     if (this->font->bitmap.surface) {
-      $(this->font, renderBitmapCharacters, renderer, this->text, this->color, wrapWidth,
+      $(this->font, renderBitmapCharacters, renderer, text, this->color, wrapWidth,
         &(const SDL_Point) { frame.x, frame.y }, this->icons.atlas);
       return;
     }
@@ -568,11 +653,11 @@ static void render(View *self, Renderer *renderer) {
     if (this->texture == NULL) {
       SDL_Surface *surface = NULL;
 
-      if (hasEscapes(this->text)) {
+      if (hasEscapes(text)) {
         TextSpan *spans = NULL;
         size_t count = 0;
 
-        char *layout = MVC_LayoutText(this->font, this->text, this->color, this->icons.atlas, &spans, &count);
+        char *layout = MVC_LayoutText(this->font, text, this->color, this->icons.atlas, &spans, &count);
 
         // A colon or caret that resolved to nothing -- "Health: 100", a URL -- is plain text,
         // and takes the single-quad path rather than a run per line
@@ -597,7 +682,7 @@ static void render(View *self, Renderer *renderer) {
           return;
         }
       } else {
-        surface = $(this->font, renderCharacters, this->text, this->color, wrapWidth);
+        surface = $(this->font, renderCharacters, text, this->color, wrapWidth);
       }
 
       assert(surface);
@@ -730,7 +815,7 @@ static SDL_Size naturalSize(const Text *self) {
     return self->naturalSizeCache.size;
   }
 
-  const SDL_Size size = $(self, sizeText, self->text ?: "");
+  const SDL_Size size = $(self, sizeText, displayText(self) ?: "");
 
   this->naturalSizeCache.size = size;
   this->naturalSizeCache.pixelDensity = font->pixelDensity;
@@ -801,6 +886,7 @@ static void setText(Text *self, const char *text) {
       self->text = NULL;
     }
 
+    applyTransform(self);
     invalidate(self);
 
     $((View *) self, sizeToFit);
@@ -829,6 +915,22 @@ static void setTextWithFormat(Text *self, const char *fmt, ...) {
   va_end(args);
 }
 
+/**
+ * @fn void Text::setTransform(Text *self, TextTransform transform)
+ * @memberof Text
+ */
+static void setTransform(Text *self, TextTransform transform) {
+
+  if (transform != self->transform) {
+    self->transform = transform;
+
+    applyTransform(self);
+    invalidate(self);
+
+    $((View *) self, sizeToFit);
+  }
+}
+
 #pragma mark - Class lifecycle
 
 /**
@@ -853,6 +955,7 @@ static void initialize(Class *clazz) {
   ((TextInterface *) clazz->interface)->setFont = setFont;
   ((TextInterface *) clazz->interface)->setText = setText;
   ((TextInterface *) clazz->interface)->setTextWithFormat = setTextWithFormat;
+  ((TextInterface *) clazz->interface)->setTransform = setTransform;
   ((TextInterface *) clazz->interface)->sizeText = sizeText;
 }
 

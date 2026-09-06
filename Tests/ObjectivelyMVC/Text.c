@@ -203,6 +203,43 @@ START_TEST(bitmapIconsAdvanceWholeCells) {
 
 } END_TEST
 
+START_TEST(transformFollowsTextAndEscapes) {
+
+  Font *font = $$(Font, defaultFont);
+
+  Text *text = $(alloc(Text), initWithText, "hello :heart: world", font);
+  ck_assert_int_eq(TextTransformNone, text->transform);
+  ck_assert_ptr_null(text->transformed);
+
+  // Detached from a window, no icon resolves, so the escape is ordinary text
+  $(text, setTransform, TextTransformUppercase);
+  ck_assert_str_eq("hello :heart: world", text->text);
+  ck_assert_str_eq("HELLO :HEART: WORLD", text->transformed);
+
+  $(text, setTransform, TextTransformCapitalize);
+  ck_assert_str_eq("Hello :heart: World", text->transformed);
+
+  $(text, setText, "^1a b^^c");
+  ck_assert_str_eq("^1A B^^c", text->transformed);
+
+  $(text, setTransform, TextTransformLowercase);
+  ck_assert_str_eq("^1a b^^c", text->transformed);
+
+  $(text, setTransform, TextTransformNone);
+  ck_assert_ptr_null(text->transformed);
+
+  // Sizing follows the transform
+  Text *lower = $(alloc(Text), initWithText, "iiii", font);
+  Text *upper = $(alloc(Text), initWithText, "iiii", font);
+  $(upper, setTransform, TextTransformUppercase);
+  ck_assert_int_gt($(upper, naturalSize).w, $(lower, naturalSize).w);
+
+  release(upper);
+  release(lower);
+  release(text);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("Text");
@@ -212,6 +249,7 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, hasColorEscapes);
   tcase_add_test(tcase, stripColorEscapes);
   tcase_add_test(tcase, escapesDoNotAffectProportionalSize);
+  tcase_add_test(tcase, transformFollowsTextAndEscapes);
 
   Suite *suite = suite_create("Text");
   suite_add_tcase(suite, tcase);
