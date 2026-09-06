@@ -55,6 +55,9 @@
 #define ViewAlignmentMaskHorizontal \
   (ViewAlignmentMaskLeft | ViewAlignmentMaskCenter | ViewAlignmentMaskRight)
 
+#define ViewAlignmentMaskAny \
+  (ViewAlignmentMaskHorizontal | ViewAlignmentMaskVertical)
+
 /**
  * @brief Alignment constants, used to align a View within its superview.
  */

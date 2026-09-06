@@ -1619,9 +1619,11 @@ static void resize(View *self, const SDL_Size *size) {
     self->frame.h = h;
 
     $(self, setNeedsLayout);
-
-    if (self->superview && ($(self->superview, isContainer) || (self->alignment & (ViewAlignmentMaskHorizontal | ViewAlignmentMaskVertical)) != 0)) {
-      $(self->superview, setNeedsLayout);
+    
+    if (self->superview) {
+      if ($(self->superview, isContainer) || self->alignment & ViewAlignmentMaskAny) {
+        $(self->superview, setNeedsLayout);
+      }
     }
   }
 }
