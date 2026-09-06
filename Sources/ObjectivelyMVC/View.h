@@ -1045,8 +1045,8 @@ struct ViewInterface {
   /**
    * @fn void View::resize(View *self, const SDL_Size *size)
    * @brief Resizes this View to the specified size.
-   * @details A change marks this View for layout, and also its superview when that is a
-   * container or when this View has an `alignment`, since either derives from this size.
+   * @details If the size changes, this marks this View for layout, and also its superview when that is a
+   * container or when this View has a non-None positioning `alignment`, since either derives from this size.
    * @param self The View.
    * @param size The size to set.
    * @memberof View
