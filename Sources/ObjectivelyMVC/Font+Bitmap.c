@@ -68,8 +68,14 @@ static void bakeGlyph(const FontBitmap *bitmap, TTF_Font *font, Uint32 codepoint
     return;
   }
 
-  int minX = 0;
-  TTF_GetGlyphMetrics(font, codepoint, &minX, NULL, NULL, NULL, NULL);
+  int minX = 0, maxX = 0;
+  TTF_GetGlyphMetrics(font, codepoint, &minX, &maxX, NULL, NULL, NULL);
+
+  // A glyph with no ink, such as U+00AD soft hyphen, has nothing to bake, and SDL_ttf refuses
+  // to render a zero-width surface for it
+  if (maxX <= minX) {
+    return;
+  }
 
   SDL_Surface *glyph = TTF_RenderGlyph_Blended(font, codepoint, Colors.White);
   if (glyph) {
