@@ -61,8 +61,8 @@ OBJECTIVELYMVC_EXPORT char *MVC_StripColorEscapes(const char *text);
 
 /**
  * @brief Case transforms a Text applies when drawing, leaving Text::text as set.
- * @details ASCII letters only; multi-byte UTF-8 sequences, color escapes and `:icon:` escapes
- * pass through unchanged, so icon names keep their case.
+ * @details ASCII letters only; multi-byte UTF-8 sequences and color escapes pass through unchanged.
+ * Resolved `:icon:` escapes also pass through unchanged, so icon names keep their case.
  */
 typedef enum {
   TextTransformNone,
