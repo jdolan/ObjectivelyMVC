@@ -2,6 +2,7 @@
 *.trs
 Constraint
 Font+Bitmap
+Image
 ImageAtlas
 Selector
 Style
