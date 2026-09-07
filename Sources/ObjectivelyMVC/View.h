@@ -312,6 +312,16 @@ struct View {
   ViewPadding padding;
 
   /**
+   * @brief If `false`, this View is never the result of a hit test; its subviews still are.
+   * @remarks Defaults to `true`. Overlays that are drawn but never interacted with, such as a
+   * full-window HUD or console layer stacked above interactive content, SHOULD set this to
+   * `false` so that clicks pass through them to whatever lies beneath. Styled as
+   * `pointer-events: false`.
+   * @see View::hitTest(const View *, const SDL_Point *)
+   */
+  bool pointerEvents;
+
+  /**
    * @brief The cached View::renderFrame, valid while `generation` matches the current
    * `renderFrameGeneration`.
    * @private
@@ -783,7 +793,9 @@ struct ViewInterface {
    * @brief Performs a hit test against this View and its descendants for the given point.
    * @param self The View.
    * @param point The point to test.
-   * @return The furthest descendant View that contains the given point.
+   * @return The furthest descendant View that contains the given point, or `NULL`.
+   * @remarks Hidden Views and Views with `pointerEvents` disabled are never returned, though the
+   * subviews of the latter are still tested.
    * @memberof View
    */
   View *(*hitTest)(const View *self, const SDL_Point *point);

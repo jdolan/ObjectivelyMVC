@@ -318,6 +318,43 @@ START_TEST(alignedContainChildRecentersOnGrowth) {
 
 } END_TEST
 
+START_TEST(pointerEventsPassThroughToSubviewsAndSiblings) {
+
+  View *root = fixedView(400, 200);
+  root->autoresizingMask = ViewAutoresizingFill;
+
+  View *beneath = fixedView(400, 200);
+  $(root, addSubview, beneath);
+
+  View *overlay = fixedView(400, 200);
+  View *button = fixedView(40, 20);
+  $(overlay, addSubview, button);
+  $(root, addSubview, overlay);
+
+  $(root, layoutIfNeeded);
+
+  ck_assert_ptr_eq(button, $(root, hitTest, &MakePoint(10, 10)));
+  ck_assert_ptr_eq(overlay, $(root, hitTest, &MakePoint(300, 100)));
+
+  overlay->pointerEvents = false;
+
+  ck_assert_ptr_eq(button, $(root, hitTest, &MakePoint(10, 10)));
+  ck_assert_ptr_eq(beneath, $(root, hitTest, &MakePoint(300, 100)));
+
+  Style *style = $(alloc(Style), initWithRules, "View");
+  $(style, addBoolAttribute, "pointer-events", true);
+  $(overlay, applyStyle, style);
+  release(style);
+
+  ck_assert_ptr_eq(overlay, $(root, hitTest, &MakePoint(300, 100)));
+
+  release(button);
+  release(overlay);
+  release(beneath);
+  release(root);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("View");
@@ -331,6 +368,7 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, styledSizeFloorsContainBoundsWithNoMinSize);
   tcase_add_test(tcase, setHiddenMarksSuperviewNeedsLayout);
   tcase_add_test(tcase, alignedContainChildRecentersOnGrowth);
+  tcase_add_test(tcase, pointerEventsPassThroughToSubviewsAndSiblings);
 
   Suite *suite = suite_create("View");
   suite_add_tcase(suite, tcase);
