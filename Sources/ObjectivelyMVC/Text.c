@@ -357,6 +357,7 @@ static void applyTransform(Text *self) {
     }
 
     wordStart = SDL_isspace((unsigned char) *c) != 0;
+  }
 }
 
 /**

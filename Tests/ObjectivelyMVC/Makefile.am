@@ -7,6 +7,7 @@ DEFAULT_INCLUDES = \
 
 TESTS = \
 	Font+Bitmap \
+	Image \
 	ImageAtlas \
 	Selector \
 	Style \
