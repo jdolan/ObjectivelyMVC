@@ -82,11 +82,11 @@ static Image *imageWithSurface(SDL_Surface *surface) {
 }
 
 /**
- * @fn Image *Image::imageWithSvg(const uint8_t *bytes, size_t length, float scale)
+ * @fn Image *Image::imageWithSVG(const uint8_t *bytes, size_t length, float scale)
  * @memberof Image
  */
-static Image *imageWithSvg(const uint8_t *bytes, size_t length, float scale) {
-  return $(alloc(Image), initWithSvg, bytes, length, scale);
+static Image *imageWithSVG(const uint8_t *bytes, size_t length, float scale) {
+  return $(alloc(Image), initWithSVG, bytes, length, scale);
 }
 
 /**
@@ -116,7 +116,7 @@ static bool isSVG(const Image *self, const uint8_t *bytes, size_t length) {
 static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
 
   if (isSVG(self, bytes, length)) {
-    return $(self, initWithSvg, bytes, length, 1.f);
+    return $(self, initWithSVG, bytes, length, 1.f);
   }
 
   SDL_IOStream *stream = SDL_IOFromConstMem(bytes, (int) length);
@@ -199,12 +199,12 @@ static SDL_Surface *rasterizeSVG(const uint8_t *bytes, size_t length, SDL_Size s
 }
 
 /**
- * @fn Image *Image::initWithSvg(Image *self, const uint8_t *bytes, size_t length, float scale)
+ * @fn Image *Image::initWithSVG(Image *self, const uint8_t *bytes, size_t length, float scale)
  * @memberof Image
  */
-static Image *initWithSvg(Image *self, const uint8_t *bytes, size_t length, float scale) {
+static Image *initWithSVG(Image *self, const uint8_t *bytes, size_t length, float scale) {
 
-  scale = scale > 0.f ?: 1.f;
+  scale = scale > 0.f ? scale : 1.f;
 
   SDL_Surface *surface = rasterizeSVG(bytes, length, MakeSize(0, 0));
 
@@ -284,13 +284,13 @@ static void initialize(Class *clazz) {
   ((ImageInterface *) clazz->interface)->imageWithResource = imageWithResource;
   ((ImageInterface *) clazz->interface)->imageWithResourceName = imageWithResourceName;
   ((ImageInterface *) clazz->interface)->imageWithSurface = imageWithSurface;
-  ((ImageInterface *) clazz->interface)->imageWithSvg = imageWithSvg;
+  ((ImageInterface *) clazz->interface)->imageWithSVG = imageWithSVG;
   ((ImageInterface *) clazz->interface)->initWithBytes = initWithBytes;
   ((ImageInterface *) clazz->interface)->initWithData = initWithData;
   ((ImageInterface *) clazz->interface)->initWithResource = initWithResource;
   ((ImageInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
   ((ImageInterface *) clazz->interface)->initWithSurface = initWithSurface;
-  ((ImageInterface *) clazz->interface)->initWithSvg = initWithSvg;
+  ((ImageInterface *) clazz->interface)->initWithSVG = initWithSVG;
   ((ImageInterface *) clazz->interface)->size = size;
 }
 

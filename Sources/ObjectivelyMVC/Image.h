@@ -120,7 +120,7 @@ struct ImageInterface {
 
   /**
    * @static
-   * @fn Image *Image::imageWithSvg(const uint8_t *bytes, size_t length, float scale)
+   * @fn Image *Image::imageWithSVG(const uint8_t *bytes, size_t length, float scale)
    * @brief Instantiates an Image by rasterizing the specified SVG.
    * @param bytes The SVG document.
    * @param length The length of `bytes`.
@@ -128,7 +128,7 @@ struct ImageInterface {
    * @return The new Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*imageWithSvg)(const uint8_t *bytes, size_t length, float scale);
+  Image *(*imageWithSVG)(const uint8_t *bytes, size_t length, float scale);
 
   /**
    * @static
@@ -182,7 +182,7 @@ struct ImageInterface {
   Image *(*initWithResourceName)(Image *self, const char *name);
 
   /**
-   * @fn Image *Image::initWithSvg(Image *self, const uint8_t *bytes, size_t length, float scale)
+   * @fn Image *Image::initWithSVG(Image *self, const uint8_t *bytes, size_t length, float scale)
    * @brief Initializes this Image by rasterizing the specified SVG at its intrinsic size times
    * `scale`.
    * @param self The Image.
@@ -192,7 +192,7 @@ struct ImageInterface {
    * @return The initialized Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*initWithSvg)(Image *self, const uint8_t *bytes, size_t length, float scale);
+  Image *(*initWithSVG)(Image *self, const uint8_t *bytes, size_t length, float scale);
 
   /**
    * @fn Image *Image::initWithSurface(Image *self, SDL_Surface *surface)
