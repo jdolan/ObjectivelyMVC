@@ -234,10 +234,33 @@ START_TEST(namedImages) {
 
 } END_TEST
 
+START_TEST(atlasImageKeepsScale) {
+
+  const char *svg =
+    "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 16 16\">"
+    "<rect width=\"16\" height=\"16\" fill=\"#00ff00\"/></svg>";
+
+  ImageAtlas *atlas = $(alloc(ImageAtlas), init);
+  Image *image = $$(Image, imageWithSVG, (const uint8_t *) svg, strlen(svg), 2.f);
+
+  AtlasImage *atlasImage = $(atlas, addImage, image);
+  ck_assert_float_eq(2.f, atlasImage->image.scale);
+
+  // Points, like the source Image, though the surface and rect are pixels
+  const SDL_Size size = $((Image *) atlasImage, size);
+  ck_assert_int_eq(16, size.w);
+  ck_assert_int_eq(32, atlasImage->image.surface->w);
+
+  release(image);
+  release(atlas);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("ImageAtlas");
   tcase_add_test(tcase, namedImages);
+  tcase_add_test(tcase, atlasImageKeepsScale);
   tcase_add_test(tcase, compilePacksWithoutOverlap);
   tcase_add_test(tcase, compileCopiesPixels);
   tcase_add_test(tcase, compileGrowsToFit);
