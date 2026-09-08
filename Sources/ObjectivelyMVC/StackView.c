@@ -51,6 +51,7 @@ static void applyStyle(View *self, const Style *style) {
 
   const Inlet inlets[] = MakeInlets(
     MakeInlet("axis", InletTypeEnum, &this->axis, (ident) StackViewAxisNames),
+    MakeInlet("reversed", InletTypeBool, &this->reversed, NULL),
     MakeInlet("distribution", InletTypeEnum, &this->distribution, (ident) StackViewDistributionNames),
     MakeInlet("spacing", InletTypeInteger, &this->spacing, NULL)
   );
@@ -113,7 +114,9 @@ static void layoutSubviews(View *self) {
 
     const float scale = requestedSize ? availableSize / (float) requestedSize : 1.f;
 
-    for (size_t i = 0; i < subviews->count; i++) {
+    for (size_t j = 0; j < subviews->count; j++) {
+
+      const size_t i = this->reversed ? subviews->count - 1 - j : j;
 
       View *subview = $(subviews, objectAtIndex, i);
 
