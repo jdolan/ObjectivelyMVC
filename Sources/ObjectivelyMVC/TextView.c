@@ -133,6 +133,12 @@ static void layoutSubviews(View *self) {
     }
   }
 
+  // An empty Text has no height, so alignment would place it, and the cursor drawn from its
+  // frame, a line too low; it is never shorter than a line here
+  if (this->text->font) {
+    this->text->view.minSize.h = $(this->text, sizeText, " ").h;
+  }
+
   $((View *) this->text, layoutIfNeeded);
 
   super(View, self, layoutSubviews);

@@ -244,6 +244,29 @@ START_TEST(transformFollowsTextAndEscapes) {
 
 } END_TEST
 
+START_TEST(emptyTextViewKeepsLineHeight) {
+
+  Font *font = $$(Font, defaultFont);
+
+  TextView *textView = $(alloc(TextView), initWithFrame, NULL);
+  $(textView->text, setFont, font);
+
+  $((View *) textView, layoutIfNeeded);
+
+  const int line = $(textView->text, sizeText, " ").h;
+  ck_assert_int_gt(line, 0);
+  ck_assert_int_eq(line, textView->text->view.frame.h);
+
+  // Typed text measures itself, as before
+  $(textView, setAttributedText, "a");
+  $((View *) textView, layoutIfNeeded);
+
+  ck_assert_int_eq($(textView->text, sizeText, "a").h, textView->text->view.frame.h);
+
+  release(textView);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("Text");
@@ -254,6 +277,7 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, stripColorEscapes);
   tcase_add_test(tcase, escapesDoNotAffectProportionalSize);
   tcase_add_test(tcase, transformFollowsTextAndEscapes);
+  tcase_add_test(tcase, emptyTextViewKeepsLineHeight);
 
   Suite *suite = suite_create("Text");
   suite_add_tcase(suite, tcase);
