@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -159,6 +160,87 @@ static SDL_FRect textureRegion(const Texture *texture, const SDL_Rect *src) {
 }
 
 /**
+ * @brief The color at `x, y` for a gradient of `angle` degrees across `bounds`.
+ * @details `angle` is measured clockwise from north, so `0` fills upwards and `90` to the
+ * right. The interpolant is the point's projection onto the gradient axis, normalized by the
+ * extent of `bounds` along that axis, which makes the color an affine function of position:
+ * barycentric interpolation across the triangle then reproduces the gradient exactly, at any
+ * angle, from colors assigned only at the vertices.
+ */
+static SDL_Color gradientColor(float x, float y, const SDL_FRect *bounds, int angle,
+                               const SDL_Color *from, const SDL_Color *to) {
+
+  const float radians = (float) angle * (float) M_PI / 180.f;
+  const float dx = sinf(radians), dy = -cosf(radians);
+
+  const float cx = bounds->x + bounds->w * 0.5f;
+  const float cy = bounds->y + bounds->h * 0.5f;
+
+  // the extent of the bounds along the axis, which is the box's support in that direction
+  const float extent = fabsf(bounds->w * dx) + fabsf(bounds->h * dy);
+
+  float t = 0.5f;
+  if (extent > 0.001f) {
+    t = 0.5f + ((x - cx) * dx + (y - cy) * dy) / extent;
+    t = t < 0.f ? 0.f : (t > 1.f ? 1.f : t);
+  }
+
+  return (SDL_Color) {
+    (Uint8) (from->r + (to->r - from->r) * t + 0.5f),
+    (Uint8) (from->g + (to->g - from->g) * t + 0.5f),
+    (Uint8) (from->b + (to->b - from->b) * t + 0.5f),
+    (Uint8) (from->a + (to->a - from->a) * t + 0.5f),
+  };
+}
+
+/**
+ * @brief Appends the quads stroking `points`, of `width`, optionally closing the loop.
+ * @remarks Each segment is stroked as its own quad, centered on the segment. The joints are
+ * therefore not mitered; at the one and two pixel widths borders actually use, the notch is
+ * smaller than a pixel.
+ */
+static void strokePolyline(const Renderer *self, const SDL_Point *points, size_t count,
+                           bool closed, float width, const SDL_Color *color) {
+
+  const size_t segments = closed ? count : count - 1;
+
+  MVC_Vertex verts[16 * 6];
+  const size_t batchSize = lengthof(verts) / 6;
+
+  for (size_t s = 0; s < segments; ) {
+
+    const size_t batch = min(segments - s, batchSize);
+
+    for (size_t i = 0; i < batch; i++, s++) {
+
+      const SDL_Point *a = &points[s], *b = &points[(s + 1) % count];
+
+      const float ax = (float) a->x, ay = (float) a->y;
+      const float bx = (float) b->x, by = (float) b->y;
+
+      const float dx = bx - ax, dy = by - ay;
+      const float len = sqrtf(dx * dx + dy * dy);
+
+      float nx = 0.0f, ny = 0.0f;
+      if (len > 0.001f) {
+        nx = (-dy / len) * width * 0.5f;
+        ny = ( dx / len) * width * 0.5f;
+      }
+
+      MVC_Vertex *v = &verts[i * 6];
+      v[0] = (MVC_Vertex) { { { ax - nx, ay - ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[1] = (MVC_Vertex) { { { ax + nx, ay + ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[2] = (MVC_Vertex) { { { bx - nx, by - ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[3] = (MVC_Vertex) { { { ax + nx, ay + ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[4] = (MVC_Vertex) { { { bx + nx, by + ny } }, { { 0.0f, 0.0f } }, { 0 } };
+      v[5] = (MVC_Vertex) { { { bx - nx, by - ny } }, { { 0.0f, 0.0f } }, { 0 } };
+    }
+
+    $(self, pushDrawArrays, verts, batch * 6, NULL, color);
+  }
+}
+
+/**
  * @fn void Renderer::drawBevel(const Renderer *self, const SDL_Rect *rect, int radius, int width, const SDL_Color *topLeft, const SDL_Color *bottomRight)
  * @memberof Renderer
  */
@@ -201,39 +283,78 @@ static void drawLines(const Renderer *self, const SDL_Point *points, size_t coun
     return;
   }
 
-  const size_t segments = count - 1;
+  strokePolyline(self, points, count, false, 1.f, color);
+}
 
-  MVC_Vertex verts[16 * 6];
-  const size_t batchSize = lengthof(verts) / 6;
+/**
+ * @fn void Renderer::drawPolygon(const Renderer *self, const SDL_Point *points, size_t count, int width, const SDL_Color *color)
+ * @memberof Renderer
+ */
+static void drawPolygon(const Renderer *self, const SDL_Point *points, size_t count, int width,
+                        const SDL_Color *color) {
 
-  for (size_t s = 0; s < segments; ) {
+  assert(points);
+  assert(color);
 
-    const size_t batch = min(segments - s, batchSize);
+  if (count < 3 || width < 1) {
+    return;
+  }
 
-    for (size_t i = 0; i < batch; i++, s++) {
+  strokePolyline(self, points, count, true, (float) width, color);
+}
 
-      const float ax = (float) points[s].x,     ay = (float) points[s].y;
-      const float bx = (float) points[s + 1].x, by = (float) points[s + 1].y;
+/**
+ * @fn void Renderer::drawPolygonFilled(const Renderer *self, const SDL_Point *points, size_t count, int angle, const SDL_Color *from, const SDL_Color *to)
+ * @memberof Renderer
+ */
+static void drawPolygonFilled(const Renderer *self, const SDL_Point *points, size_t count,
+                              int angle, const SDL_Color *from, const SDL_Color *to) {
 
-      const float dx = bx - ax, dy = by - ay;
-      const float len = sqrtf(dx * dx + dy * dy);
+  assert(points);
+  assert(from);
 
-      float nx = 0.0f, ny = 0.0f;
-      if (len > 0.001f) {
-        nx = (-dy / len) * 0.5f;
-        ny = ( dx / len) * 0.5f;
+  if (count < 3) {
+    return;
+  }
+
+  SDL_FRect bounds = { (float) points[0].x, (float) points[0].y, 0.f, 0.f };
+  float x2 = bounds.x, y2 = bounds.y;
+
+  for (size_t i = 1; i < count; i++) {
+    bounds.x = min(bounds.x, (float) points[i].x);
+    bounds.y = min(bounds.y, (float) points[i].y);
+    x2 = max(x2, (float) points[i].x);
+    y2 = max(y2, (float) points[i].y);
+  }
+
+  bounds.w = x2 - bounds.x;
+  bounds.h = y2 - bounds.y;
+
+  // a convex polygon triangulates as a fan from its first vertex
+  const size_t triangles = count - 2;
+
+  MVC_Vertex verts[16 * 3];
+  const size_t batchSize = lengthof(verts) / 3;
+
+  for (size_t t = 0; t < triangles; ) {
+
+    const size_t batch = min(triangles - t, batchSize);
+
+    for (size_t i = 0; i < batch; i++, t++) {
+
+      const SDL_Point *p[3] = { &points[0], &points[t + 1], &points[t + 2] };
+
+      for (size_t j = 0; j < 3; j++) {
+
+        const float x = (float) p[j]->x, y = (float) p[j]->y;
+
+        verts[i * 3 + j] = (MVC_Vertex) { { { x, y } }, { { 0.f, 0.f } },
+          to ? gradientColor(x, y, &bounds, angle, from, to) : *from
+        };
       }
-
-      MVC_Vertex *v = &verts[i * 6];
-      v[0] = (MVC_Vertex) { { { ax - nx, ay - ny } }, { { 0.0f, 0.0f } }, { 0 } };
-      v[1] = (MVC_Vertex) { { { ax + nx, ay + ny } }, { { 0.0f, 0.0f } }, { 0 } };
-      v[2] = (MVC_Vertex) { { { bx - nx, by - ny } }, { { 0.0f, 0.0f } }, { 0 } };
-      v[3] = (MVC_Vertex) { { { ax + nx, ay + ny } }, { { 0.0f, 0.0f } }, { 0 } };
-      v[4] = (MVC_Vertex) { { { bx + nx, by + ny } }, { { 0.0f, 0.0f } }, { 0 } };
-      v[5] = (MVC_Vertex) { { { bx - nx, by - ny } }, { { 0.0f, 0.0f } }, { 0 } };
     }
 
-    $(self, pushDrawArrays, verts, batch * 6, NULL, color);
+    $(self, pushDrawArrays, verts, batch * 3, NULL, NULL);
   }
 }
 
@@ -311,6 +432,30 @@ static void drawRoundedRectFilled(const Renderer *self, const SDL_Rect *rect, in
   roundedRectVertices(verts, &frect, radius, 0, NULL);
 
   $(self, pushDrawArrays, verts, 6, NULL, color);
+}
+
+/**
+ * @fn void Renderer::drawRoundedRectGradientFilled(const Renderer *self, const SDL_Rect *rect, int radius, int angle, const SDL_Color *from, const SDL_Color *to)
+ * @memberof Renderer
+ */
+static void drawRoundedRectGradientFilled(const Renderer *self, const SDL_Rect *rect, int radius,
+                                          int angle, const SDL_Color *from, const SDL_Color *to) {
+
+  assert(rect);
+  assert(from);
+  assert(to);
+
+  SDL_FRect frect;
+  SDL_RectToFRect(rect, &frect);
+
+  MVC_Vertex verts[6];
+  roundedRectVertices(verts, &frect, radius, 0, NULL);
+
+  for (size_t i = 0; i < lengthof(verts); i++) {
+    verts[i].color = gradientColor(verts[i].position.x, verts[i].position.y, &frect, angle, from, to);
+  }
+
+  $(self, pushDrawArrays, verts, lengthof(verts), NULL, NULL);
 }
 
 /**
@@ -509,7 +654,6 @@ static Renderer *initWithDevice(Renderer *self, RenderDevice *device) {
 static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t count, Texture *texture, const SDL_Color *color) {
 
   assert(verts);
-  assert(color);
 
   const MVC_DrawArrays draw = {
     .firstVertex = (Uint32) self->vertices->count,
@@ -527,7 +671,9 @@ static void pushDrawArrays(const Renderer *self, const MVC_Vertex *verts, size_t
   MVC_Vertex *out = VectorElement(vertices, MVC_Vertex, vertices->count);
   for (size_t i = 0; i < count; i++) {
     out[i] = verts[i];
-    out[i].color = *color;
+    if (color) {
+      out[i].color = *color;
+    }
   }
 
   vertices->count += count;
@@ -709,10 +855,13 @@ static void initialize(Class *clazz) {
   ((RendererInterface *) clazz->interface)->drawBevel = drawBevel;
   ((RendererInterface *) clazz->interface)->drawLine = drawLine;
   ((RendererInterface *) clazz->interface)->drawLines = drawLines;
+  ((RendererInterface *) clazz->interface)->drawPolygon = drawPolygon;
+  ((RendererInterface *) clazz->interface)->drawPolygonFilled = drawPolygonFilled;
   ((RendererInterface *) clazz->interface)->drawRect = drawRect;
   ((RendererInterface *) clazz->interface)->drawRectFilled = drawRectFilled;
   ((RendererInterface *) clazz->interface)->drawRoundedRect = drawRoundedRect;
   ((RendererInterface *) clazz->interface)->drawRoundedRectFilled = drawRoundedRectFilled;
+  ((RendererInterface *) clazz->interface)->drawRoundedRectGradientFilled = drawRoundedRectGradientFilled;
   ((RendererInterface *) clazz->interface)->drawRoundedTexture = drawRoundedTexture;
   ((RendererInterface *) clazz->interface)->drawRoundedTextureRegion = drawRoundedTextureRegion;
   ((RendererInterface *) clazz->interface)->drawTexture = drawTexture;

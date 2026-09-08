@@ -266,10 +266,17 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("alignment", InletTypeEnum, &self->alignment, (ident) ViewAlignmentNames),
     MakeInlet("autoresizing-mask", InletTypeEnum, &self->autoresizingMask, (ident) ViewAutoresizingNames),
     MakeInlet("background-color", InletTypeColor, &self->backgroundColor, NULL),
+    MakeInlet("background-gradient-angle", InletTypeInteger, &self->backgroundGradientAngle, NULL),
+    MakeInlet("background-gradient-color", InletTypeColor, &self->backgroundGradientColor, NULL),
     MakeInlet("border-color", InletTypeColor, &self->borderColor, NULL),
     MakeInlet("border-radius", InletTypeInteger, &self->borderRadius, NULL),
     MakeInlet("border-width", InletTypeInteger, &self->borderWidth, NULL),
     MakeInlet("clips-subviews", InletTypeBool, &self->clipsSubviews, NULL),
+    MakeInlet("corner-cut", InletTypeRectangle, &self->cornerCut, NULL),
+    MakeInlet("corner-cut-top-left", InletTypeInteger, &self->cornerCut.topLeft, NULL),
+    MakeInlet("corner-cut-top-right", InletTypeInteger, &self->cornerCut.topRight, NULL),
+    MakeInlet("corner-cut-bottom-right", InletTypeInteger, &self->cornerCut.bottomRight, NULL),
+    MakeInlet("corner-cut-bottom-left", InletTypeInteger, &self->cornerCut.bottomLeft, NULL),
     MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
     MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
     MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
@@ -1040,6 +1047,7 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
     self->warnings = $$(Array, arrayWithCapacity, 0);
     assert(self->warnings);
 
+    self->backgroundGradientAngle = 180;
     self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
     self->pointerEvents = true;
 
@@ -1447,6 +1455,25 @@ static void removeSubview(View *self, View *subview) {
 }
 
 /**
+ * @brief Writes the four corners of `rect`, inset by `cut`, in clockwise order.
+ * @details Each inset pulls its corner in along the x axis, so an inset on one of a pair of
+ * vertically adjacent corners slants the edge between them. Insets are clamped to the width,
+ * so an over-large cut degenerates to a triangle rather than crossing over.
+ */
+static void cornerCutPoints(SDL_Point *points, const SDL_Rect *rect, const ViewCornerCut *cut) {
+
+  const int x1 = rect->x, y1 = rect->y;
+  const int x2 = rect->x + rect->w, y2 = rect->y + rect->h;
+
+  const int w = rect->w;
+
+  points[0] = MakePoint(x1 + clamp(cut->topLeft, 0, w), y1);
+  points[1] = MakePoint(x2 - clamp(cut->topRight, 0, w), y1);
+  points[2] = MakePoint(x2 - clamp(cut->bottomRight, 0, w), y2);
+  points[3] = MakePoint(x1 + clamp(cut->bottomLeft, 0, w), y2);
+}
+
+/**
  * @fn void View::render(View *self, Renderer *renderer)
  * @memberof View
  */
@@ -1458,10 +1485,24 @@ static void render(View *self, Renderer *renderer) {
     SDL_TriggerBreakpoint();
   }
   
-  if (self->backgroundColor.a) {
+  const bool cut = !CornerCutIsEmpty(self->cornerCut);
+
+  if (self->backgroundColor.a || self->backgroundGradientColor.a) {
 
     const SDL_Rect frame = $(self, renderFrame);
-    if (self->borderRadius > 0) {
+    const SDL_Color *gradient = self->backgroundGradientColor.a ? &self->backgroundGradientColor : NULL;
+
+    if (cut) {
+      SDL_Point points[4];
+      cornerCutPoints(points, &frame, &self->cornerCut);
+
+      $(renderer, drawPolygonFilled, points, lengthof(points), self->backgroundGradientAngle,
+        &self->backgroundColor, gradient);
+
+    } else if (gradient) {
+      $(renderer, drawRoundedRectGradientFilled, &frame, self->borderRadius,
+        self->backgroundGradientAngle, &self->backgroundColor, gradient);
+    } else if (self->borderRadius > 0) {
       $(renderer, drawRoundedRectFilled, &frame, self->borderRadius, &self->backgroundColor);
     } else {
       $(renderer, drawRectFilled, &frame, &self->backgroundColor);
@@ -1472,7 +1513,22 @@ static void render(View *self, Renderer *renderer) {
 
     SDL_Rect frame = $(self, renderFrame);
 
-    if (self->borderRadius > 0) {
+    if (cut) {
+
+      // The stroke is centered on the outline, so grow by half of it to sit outside the fill
+      const int inset = self->borderWidth / 2;
+
+      frame.x -= inset;
+      frame.y -= inset;
+      frame.w += inset * 2;
+      frame.h += inset * 2;
+
+      SDL_Point points[4];
+      cornerCutPoints(points, &frame, &self->cornerCut);
+
+      $(renderer, drawPolygon, points, lengthof(points), self->borderWidth, &self->borderColor);
+
+    } else if (self->borderRadius > 0) {
 
       // The border grows outward, so its inner edge shares the background's radius
       frame.x -= self->borderWidth;

@@ -232,6 +232,39 @@ struct RendererInterface {
   void (*drawLines)(const Renderer *self, const SDL_Point *points, size_t count, const SDL_Color *color);
 
   /**
+   * @fn void Renderer::drawPolygon(const Renderer *self, const SDL_Point *points, size_t count, int width, const SDL_Color *color)
+   * @brief Records a closed polygon outline of the given width.
+   * @details The stroke is centered on each edge. Joints are not mitered, so a width well
+   *   above the one or two pixels a border uses will notch at sharp corners.
+   * @param self The Renderer.
+   * @param points The points, in order; the last is joined back to the first.
+   * @param count The number of points; fewer than three draws nothing.
+   * @param width The stroke width.
+   * @param color The outline color.
+   * @memberof Renderer
+   */
+  void (*drawPolygon)(const Renderer *self, const SDL_Point *points, size_t count, int width,
+                      const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::drawPolygonFilled(const Renderer *self, const SDL_Point *points, size_t count, int angle, const SDL_Color *from, const SDL_Color *to)
+   * @brief Records a filled convex polygon, optionally with a linear gradient.
+   * @details The polygon is triangulated as a fan from its first vertex, so it MUST be
+   *   convex. It is drawn without the rounded rectangle shader, and so without its
+   *   anti-aliasing: diagonal edges are hard.
+   * @param self The Renderer.
+   * @param points The points, in order.
+   * @param count The number of points; fewer than three draws nothing.
+   * @param angle The gradient angle in degrees, clockwise from north. Ignored when `to` is
+   *   `NULL`.
+   * @param from The fill color, and the near color of the gradient.
+   * @param to The far color of the gradient, or `NULL` to fill flat with `from`.
+   * @memberof Renderer
+   */
+  void (*drawPolygonFilled)(const Renderer *self, const SDL_Point *points, size_t count,
+                            int angle, const SDL_Color *from, const SDL_Color *to);
+
+  /**
    * @fn void Renderer::drawRect(const Renderer *self, const SDL_Rect *rect, const SDL_Color *color)
    * @brief Records a rectangle outline.
    * @param self The Renderer.
@@ -273,6 +306,21 @@ struct RendererInterface {
    * @memberof Renderer
    */
   void (*drawRoundedRectFilled)(const Renderer *self, const SDL_Rect *rect, int radius, const SDL_Color *color);
+
+  /**
+   * @fn void Renderer::drawRoundedRectGradientFilled(const Renderer *self, const SDL_Rect *rect, int radius, int angle, const SDL_Color *from, const SDL_Color *to)
+   * @brief Records a rounded rectangle filled with a linear gradient.
+   * @param self The Renderer.
+   * @param rect The rectangle.
+   * @param radius The corner radius.
+   * @param angle The gradient angle in degrees, clockwise from north: `0` fills upwards,
+   *   `90` to the right, `180` downwards.
+   * @param from The near color of the gradient.
+   * @param to The far color of the gradient.
+   * @memberof Renderer
+   */
+  void (*drawRoundedRectGradientFilled)(const Renderer *self, const SDL_Rect *rect, int radius,
+                                        int angle, const SDL_Color *from, const SDL_Color *to);
 
   /**
    * @fn void Renderer::drawRoundedTexture(const Renderer *self, Texture *texture, const SDL_FRect *dest, int radius, const SDL_Color *color)
@@ -374,7 +422,9 @@ struct RendererInterface {
    * @param verts The vertices to append (in logical screen coordinates).
    * @param count The number of vertices.
    * @param texture The texture to bind, or `NULL` to use the 1×1 white fallback.
-   * @param color The color multiplier applied in the fragment shader.
+   * @param color The color to apply to every vertex, or `NULL` to keep the colors the
+   *   vertices already carry. MVC_Vertex::color is interpolated across the triangle, so
+   *   `NULL` is how a caller draws a gradient.
    * @memberof Renderer
    */
   void (*pushDrawArrays)(const Renderer *self, const MVC_Vertex *verts, size_t count,
