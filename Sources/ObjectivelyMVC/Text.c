@@ -625,10 +625,15 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
 
   super(View, self, didMoveToWindow, window);
 
-  refreshFont((Text *) self);
+  // Nothing to resolve or size when detaching, and View::dealloc detaches after Text::dealloc has
+  // already released the Font, so touching it here would be a use-after-free
+  if (window) {
 
-  // Icons resolve through the window's Theme; sizing re-prepares against it (see checkIcons)
-  $(self, sizeToFit);
+    refreshFont((Text *) self);
+
+    // Icons resolve through the window's Theme; sizing re-prepares against it (see checkIcons)
+    $(self, sizeToFit);
+  }
 }
 
 /**
