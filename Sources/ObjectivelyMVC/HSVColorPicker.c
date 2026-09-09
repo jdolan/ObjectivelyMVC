@@ -124,7 +124,9 @@ static void updateBindings(View *self, ident data) {
   $(this->saturationSlider, setValue, this->saturation);
   $(this->valueSlider, setValue, this->value);
 
-  this->colorView->backgroundColor = $(this, rgbColor);
+  const SDL_Color color = $(this, rgbColor);
+  $(this->colorView->style, addColorAttribute, "background-color", &color);
+  $(this->colorView, invalidateStyle);
 }
 
 #pragma mark - HSVColorPicker

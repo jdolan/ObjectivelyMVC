@@ -349,13 +349,15 @@ static void applyTheme(View *self, const Theme *theme) {
   Style *computedStyle = $(theme, computeStyle, self);
   assert(computedStyle);
 
-  if (!$(self->computedStyle, isComputedEqual, computedStyle)) {
+  if (self->needsApplyStyle || !$(self->computedStyle, isComputedEqual, computedStyle)) {
 
     release(self->computedStyle);
     self->computedStyle = retain(computedStyle);
 
     $(self->computedStyle, addAttributes, self->style->attributes);
     $(self, applyStyle, self->computedStyle);
+
+    self->needsApplyStyle = false;
   }
 
   release(computedStyle);
@@ -1091,6 +1093,9 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
  * @brief ViewEnumerator for invalidateStyle.
  */
 static void invalidateStyle_enumerate(View *view, ident data) {
+
+  view->needsApplyStyle = true;
+
   $(view, setNeedsApplyTheme);
 }
 

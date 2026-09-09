@@ -50,7 +50,8 @@ static void loadView(ViewController *self) {
 
   super(ViewController, self, loadView);
 
-  self->view->autoresizingMask = ViewAutoresizingContain;
+  $(self->view->style, addEnumAttribute, "autoresizing-mask", ViewAutoresizingNames,
+    ViewAutoresizingContain);
 
   TabViewController *this = (TabViewController *) self;
 

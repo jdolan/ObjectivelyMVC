@@ -341,6 +341,15 @@ struct View {
   bool needsApplyTheme;
 
   /**
+   * @brief If true, this View's Style must be applied even if the same Selectors still match.
+   * @remarks Set by View::invalidateStyle, which is how a change to View::style asks to be
+   * seen: the Selectors that matched are unchanged, so View::applyTheme's comparison cannot
+   * tell that anything happened.
+   * @private
+   */
+  bool needsApplyStyle;
+
+  /**
    * @brief If true, a descendant of this View has `needsApplyTheme` set.
    * @remarks Maintained by View::setNeedsApplyTheme; View::applyThemeIfNeeded only descends
    * into subtrees with this flag set.

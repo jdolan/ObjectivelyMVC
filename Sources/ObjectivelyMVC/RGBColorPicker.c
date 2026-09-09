@@ -132,7 +132,9 @@ static void updateBindings(View *self, ident data) {
   $(this->blueSlider, setValue, this->color.b);
   $(this->alphaSlider, setValue, this->color.a);
 
-  this->colorView->backgroundColor = this->color;
+  const SDL_Color color = this->color;
+  $(this->colorView->style, addColorAttribute, "background-color", &color);
+  $(this->colorView, invalidateStyle);
 }
 
 #pragma mark - RGBColorPicker
