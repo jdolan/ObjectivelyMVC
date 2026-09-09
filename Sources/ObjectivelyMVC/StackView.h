@@ -89,6 +89,13 @@ struct StackView {
   StackViewDistribution distribution;
 
   /**
+   * @brief If true, subviews are laid out in reverse order along View::axis.
+   * @remarks The order of View::subviews, and so of hit testing and drawing, is unchanged;
+   * only the positions along the axis are mirrored.
+   */
+  bool reversed;
+
+  /**
    * @brief The subview spacing.
    */
   int spacing;

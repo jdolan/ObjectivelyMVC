@@ -155,6 +155,28 @@ typedef struct {
   MakePadding(a.top + b.top, a.right + b.right, a.bottom + b.bottom, a.left + b.left)
 
 /**
+ * @brief The horizontal inset of each of a View's corners.
+ * @details A non-zero value draws that corner pulled in along the x axis, slanting the edge
+ * it shares with the corner below or above it. This is an inset, not a 45 degree chamfer:
+ * the slant runs the full height of the View, however small the inset.
+ */
+typedef struct {
+  int topLeft, topRight, bottomRight, bottomLeft;
+} ViewCornerCut;
+
+/**
+ * @brief Creates a ViewCornerCut with the given insets.
+ */
+#define MakeCornerCut(topLeft, topRight, bottomRight, bottomLeft) \
+  (ViewCornerCut) { (topLeft), (topRight), (bottomRight), (bottomLeft) }
+
+/**
+ * @return True if `cut` insets no corner.
+ */
+#define CornerCutIsEmpty(cut) \
+  ((cut).topLeft == 0 && (cut).topRight == 0 && (cut).bottomRight == 0 && (cut).bottomLeft == 0)
+
+/**
  * @brief Relative positioning of subviews within their superview.
  */
 typedef enum {
@@ -201,6 +223,19 @@ struct View {
   SDL_Color backgroundColor;
 
   /**
+   * @brief The angle of the background gradient, in degrees, clockwise from north: `0` fills
+   * upwards, `90` to the right, `180` (the default) downwards.
+   */
+  int backgroundGradientAngle;
+
+  /**
+   * @brief The far color of the background gradient, which runs from View::backgroundColor.
+   * @remarks The gradient is drawn only when this color has a non-zero alpha; otherwise the
+   * background is a flat View::backgroundColor.
+   */
+  SDL_Color backgroundGradientColor;
+
+  /**
    * @brief The border color.
    */
   SDL_Color borderColor;
@@ -240,6 +275,13 @@ struct View {
    * @brief The computed Style of this View.
    */
   Style *computedStyle;
+
+  /**
+   * @brief The horizontal inset of each corner of the background and border.
+   * @remarks A View with any corner inset is drawn as a polygon rather than through the
+   * rounded rectangle shader, so View::borderRadius does not apply to it.
+   */
+  ViewCornerCut cornerCut;
 
   /**
    * @brief The frame, relative to the superview.
