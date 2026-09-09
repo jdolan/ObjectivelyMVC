@@ -90,8 +90,6 @@ struct StyleInterface {
    * @brief Adds or replaces the attribtues in `attributes` to this Style.
    * @param self The Style.
    * @param attributes The attributes.
-   * @remarks Added one at a time, so that a shorthand arriving from JSON or from another Style
-   * is expanded into its longhands exactly as one from a stylesheet is.
    * @memberof Style
    */
   void (*addAttributes)(Style *self, const Dictionary *attributes);

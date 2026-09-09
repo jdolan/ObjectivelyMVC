@@ -635,6 +635,22 @@ struct ViewInterface {
   bool (*bind)(View *self, const Inlet *inlets, const Dictionary *dictionary);
 
   /**
+   * @fn bool View::bindStyle(View *self, const Inlet *inlets, const Style *style)
+   * @brief Resolves the Inlets of `style`, writing every one of them.
+   * @param self The View.
+   * @param inlets The Inlets to resolve, declared with MakeStyleInlet.
+   * @param style The Style to resolve from.
+   * @return True if any Inlet's value actually changed.
+   * @remarks Subclasses call this from View::applyStyle for the properties a Style owns. An
+   * Inlet the Style does not specify takes its initial value rather than keeping the last one,
+   * so a Selector that stops matching stops applying. The frame is the exception: `left`,
+   * `top`, `width` and `height` are shared with layout and with any owner that positions its
+   * own subviews, so they are bound with View::bind, only when a Style provides them.
+   * @memberof View
+   */
+  bool (*bindStyle)(View *self, const Inlet *inlets, const Style *style);
+
+  /**
    * @fn SDL_Rect View::bounds(const View *self)
    * @param self The View.
    * @return The bounds (frame minus padding) of this View.
@@ -960,14 +976,6 @@ struct ViewInterface {
    * This method is called by View::layoutIfNeeded only after a View::sizeThatSatisfies pass has
    * already resolved `self->frame`; it must not perform any sizing of its own, only positioning
    * and committing of subview frames.
-   * @remarks The default implementation resolves each subview's size via View::layoutWithConstraint,
-   * offering `ViewConstraintEqual` for a `ViewAutoresizingWidth`/`Height` subview (since this
-   * View's bounds are already final) or `ViewConstraintUnspecified` otherwise (so the subview
-   * sizes itself from its own content).
-   * @remarks It positions an axis only where the subview's View::alignment names one. An axis
-   * with no alignment keeps whatever `left` or `top` gave it, or whatever an owner positioning
-   * its own subviews put there, as Select does for its open flyout and CollectionView for its
-   * items.
    * @memberof View
    */
   void (*layoutSubviews)(View *self);
