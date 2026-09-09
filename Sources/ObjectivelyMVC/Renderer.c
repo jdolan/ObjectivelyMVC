@@ -606,18 +606,24 @@ static void endFrame(Renderer *self) {
   $(self->commands, pushVertexUniformData, 0, projection.f, sizeof(projection));
 
   $(renderPass, bindPipeline, self->pipeline);
-  $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer->buffer }, 1);
 
-  for (size_t i = 0; i < self->drawArrays->count; i++) {
-    const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
+  // the vertex buffer is created only once something has been drawn into the frame, so a
+  // frame that drew nothing has none to bind
+  if (vertexCount) {
 
-    $(renderPass, setScissor, &draw->scissor);
+    $(renderPass, bindVertexBuffers, 0, &(SDL_GPUBufferBinding) { .buffer = self->vertexBuffer->buffer }, 1);
 
-    $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
-      .texture = draw->texture->texture, .sampler = self->sampler->sampler,
-    }, 1);
+    for (size_t i = 0; i < self->drawArrays->count; i++) {
+      const MVC_DrawArrays *draw = VectorElement(self->drawArrays, MVC_DrawArrays, i);
 
-    $(renderPass, drawPrimitives, draw->vertexCount, 1, draw->firstVertex, 0);
+      $(renderPass, setScissor, &draw->scissor);
+
+      $(renderPass, bindFragmentSamplers, 0, &(SDL_GPUTextureSamplerBinding) {
+        .texture = draw->texture->texture, .sampler = self->sampler->sampler,
+      }, 1);
+
+      $(renderPass, drawPrimitives, draw->vertexCount, 1, draw->firstVertex, 0);
+    }
   }
 
   release(renderPass);
