@@ -74,6 +74,8 @@ struct ImageView {
 
   /**
    * @brief The GPU texture.
+   * @details This is the cached upload of image, but it MAY also be assigned directly, with
+   * no image set, to present a Texture the caller owns and updates, such as a Framebuffer's.
    */
   Texture *texture;
 };

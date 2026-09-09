@@ -119,6 +119,8 @@ static void render(View *self, Renderer *renderer) {
       }
       texture = this->texture;
     }
+  } else {
+    texture = this->texture;
   }
 
   if (texture) {
