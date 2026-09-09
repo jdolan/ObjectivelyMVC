@@ -208,7 +208,7 @@ static void buildHUD(AppState *app, View *root) {
     release(row);
   }
 
-  $((View *) scoreboard, setHidden, true);
+  $((View *) scoreboard, setVisibility, ViewVisibilityHidden);
   $(root, addSubview, (View *) scoreboard);
   release(scoreboard);
 
@@ -263,7 +263,9 @@ static void updateHUD(AppState *app, Uint64 ticks) {
 
   if (ticks >= app->scoreboardDue) {
     app->scoreboardDue = ticks + 5000;
-    $((View *) app->scoreboard, setHidden, !app->scoreboard->control.view.hidden);
+    $((View *) app->scoreboard, setVisibility,
+      app->scoreboard->control.view.visibility == ViewVisibilityHidden
+        ? ViewVisibilityVisible : ViewVisibilityHidden);
   }
 }
 

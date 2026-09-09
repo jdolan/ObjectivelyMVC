@@ -277,8 +277,8 @@ static SDL_Size sizeThatFits(const View *self) {
 
   release(subviews);
 
-  size.w = ViewClampSize(size.w, self->minSize.w, self->maxSize.w);
-  size.h = ViewClampSize(size.h, self->minSize.h, self->maxSize.h);
+  size.w = ClampSize(size.w, self->minSize.w, self->maxSize.w);
+  size.h = ClampSize(size.h, self->minSize.h, self->maxSize.h);
 
   return size;
 }

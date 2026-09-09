@@ -196,6 +196,7 @@ Panel .accessoryView {
   autoresizing-mask: contain;
   axis: horizontal;
   spacing: 16;
+  visibility: hidden;
 }
 
 Panel > .resizeHandle {

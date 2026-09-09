@@ -106,7 +106,8 @@ static void layoutSubviews(View *self) {
     }
   }
   
-  $((View *) this->scrollBar, setHidden, scrollBarHidden);
+  $((View *) this->scrollBar, setVisibility,
+    scrollBarHidden ? ViewVisibilityHidden : ViewVisibilityVisible);
 
   super(View, self, layoutSubviews);
 
@@ -171,7 +172,7 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
     assert(self->scrollBar);
 
     View *scrollBar = (View *) self->scrollBar;
-    $(scrollBar, setHidden, true);
+    $(scrollBar, setVisibility, ViewVisibilityHidden);
 
     $((View *) self, addSubview, scrollBar);
   }

@@ -266,27 +266,6 @@ static View *ancestorWithIdentifier(const View *self, const char *identifier) {
 }
 
 /**
- * @brief Resolves View::hidden from the styled visibility and the owner's choice.
- * @remarks Styling wins where it says anything, so that a Selector can show or hide a View
- * outright; where it says nothing, whatever the owner passed to View::setHidden stands.
- */
-static void resolveHidden(View *self) {
-
-  const bool hidden = self->visibility == ViewVisibilityUnspecified
-    ? self->hiddenByOwner
-    : self->visibility == ViewVisibilityHidden;
-
-  if (self->hidden != hidden) {
-
-    self->hidden = hidden;
-
-    if (self->superview && $(self->superview, isContainer)) {
-      $(self->superview, setNeedsLayout);
-    }
-  }
-}
-
-/**
  * @fn void View::applyStyle(View *self, const Style *style)
  * @memberof View
  */
@@ -329,8 +308,6 @@ static void applyStyle(View *self, const Style *style) {
   );
 
   $(self, bind, inlets, style->attributes);
-
-  resolveHidden(self);
 
   if ((self->alignment & ViewAlignmentMaskHorizontal) &&
       $(style->attributes, objectForKeyPath, "left")) {
@@ -794,7 +771,7 @@ static void draw(View *self, Renderer *renderer) {
 
   assert(self->window);
 
-  if (self->hidden == false) {
+  if (self->visibility != ViewVisibilityHidden) {
 
     $(renderer, drawView, self);
 
@@ -991,7 +968,7 @@ static void hasOverflow_enumerate(View *view, ident data) {
 
   Overflow *overflow = data;
 
-  if (!view->hidden) {
+  if (view->visibility != ViewVisibilityHidden) {
 
     const SDL_Rect bounds = $(view, bounds);
 
@@ -1026,7 +1003,7 @@ static bool hasOverflow(const View *self) {
  */
 static View *hitTest(const View *self, const SDL_Point *point) {
 
-  if (self->hidden == false) {
+  if (self->visibility != ViewVisibilityHidden) {
 
     if ($(self, containsPoint, point)) {
 
@@ -1167,7 +1144,7 @@ static bool isTouchResponder(const View *self) {
 static bool isVisible(const View *self) {
 
   for (const View *view = self; view; view = view->superview) {
-    if (view->hidden) {
+    if (view->visibility == ViewVisibilityHidden) {
       return false;
     }
   }
@@ -1710,8 +1687,8 @@ static void resignTouchResponder(View *self) {
  */
 static void resize(View *self, const SDL_Size *size) {
 
-  const int w = ViewClampSize(size->w, self->minSize.w, self->maxSize.w);
-  const int h = ViewClampSize(size->h, self->minSize.h, self->maxSize.h);
+  const int w = ClampSize(size->w, self->minSize.w, self->maxSize.w);
+  const int h = ClampSize(size->h, self->minSize.h, self->maxSize.h);
 
   if (self->frame.w != w || self->frame.h != h) {
 
@@ -1831,16 +1808,20 @@ static View *selectFirst(View *self, const char *rule) {
 }
 
 /**
- * @fn void View::setHidden(View *self, bool hidden)
+ * @fn void View::setVisibility(View *self, ViewVisibility visibility)
  * @memberof View
  */
-static void setHidden(View *self, bool hidden) {
+static void setVisibility(View *self, ViewVisibility visibility) {
 
-  if (self->hiddenByOwner != hidden) {
+  if (self->visibility != visibility) {
 
-    self->hiddenByOwner = hidden;
+    self->visibility = visibility;
 
-    resolveHidden(self);
+    $(self->style, addEnumAttribute, "visibility", ViewVisibilityNames, visibility);
+
+    if (self->superview && $(self->superview, isContainer)) {
+      $(self->superview, setNeedsLayout);
+    }
   }
 }
 
@@ -1945,8 +1926,8 @@ static SDL_Size sizeThatFits(const View *self) {
 
   }
 
-  size.w = ViewClampSize(size.w, self->minSize.w, self->maxSize.w);
-  size.h = ViewClampSize(size.h, self->minSize.h, self->maxSize.h);
+  size.w = ClampSize(size.w, self->minSize.w, self->maxSize.w);
+  size.h = ClampSize(size.h, self->minSize.h, self->maxSize.h);
 
   return size;
 }
@@ -1982,8 +1963,8 @@ static SDL_Size sizeThatSatisfies(View *self, ViewConstraint width, ViewConstrai
   size.w = resolveViewConstraint(self->autoresizingMask & ViewAutoresizingWidth, width, size.w);
   size.h = resolveViewConstraint(self->autoresizingMask & ViewAutoresizingHeight, height, size.h);
 
-  size.w = ViewClampSize(size.w, self->minSize.w, self->maxSize.w);
-  size.h = ViewClampSize(size.h, self->minSize.h, self->maxSize.h);
+  size.w = ClampSize(size.w, self->minSize.w, self->maxSize.w);
+  size.h = ClampSize(size.h, self->minSize.h, self->maxSize.h);
 
   return size;
 }
@@ -2167,7 +2148,7 @@ static bool visibleSubviews_filter(ident obj, ident data) {
 
   const View *view = (View *) obj;
 
-  return view->hidden == false && view->alignment != ViewAlignmentInternal;
+  return view->visibility != ViewVisibilityHidden && view->alignment != ViewAlignmentInternal;
 }
 
 /**
@@ -2297,7 +2278,7 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((ViewInterface *) clazz->interface)->select = _select;
   ((ViewInterface *) clazz->interface)->selectFirst = selectFirst;
-  ((ViewInterface *) clazz->interface)->setHidden = setHidden;
+  ((ViewInterface *) clazz->interface)->setVisibility = setVisibility;
   ((ViewInterface *) clazz->interface)->setNeedsApplyTheme = setNeedsApplyTheme;
   ((ViewInterface *) clazz->interface)->setNeedsLayout = setNeedsLayout;
   ((ViewInterface *) clazz->interface)->size = size;

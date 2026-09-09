@@ -100,7 +100,7 @@ OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
 /**
  * @brief Clamps `size` to `min` and `max`, where a `max` of zero is unbounded.
  */
-#define ViewClampSize(size, min, max) \
+#define ClampSize(size, min, max) \
   clamp((size), (min), (max) ? (max) : INT32_MAX)
 
 /**
@@ -114,15 +114,14 @@ typedef enum {
 OBJECTIVELYMVC_EXPORT const EnumName ViewPointerEventsNames[];
 
 /**
- * @brief Visibility constants, used to hide a View from styling.
- * @remarks Separate from View::hidden, which an owner sets directly and which is derived from
- * this: a Style that says nothing about visibility leaves the owner's choice standing.
+ * @brief Visibility constants.
  */
 typedef enum {
   ViewVisibilityUnspecified,
   ViewVisibilityVisible,
   ViewVisibilityHidden
 } ViewVisibility;
+
 
 OBJECTIVELYMVC_EXPORT const EnumName ViewVisibilityNames[];
 
@@ -328,21 +327,6 @@ struct View {
   SDL_Rect frame;
 
   /**
-   * @brief If `true`, this View is not drawn, and does not contribute to its superview's size.
-   * @remarks Derived, and not to be assigned: it resolves View::visibility against
-   * View::hiddenByOwner, so that styling wins where it says anything and the owner wins where
-   * it does not.
-   * @see View::setHidden(View *, bool)
-   */
-  bool hidden;
-
-  /**
-   * @brief Whether this View's owner has hidden it, via View::setHidden.
-   * @private
-   */
-  bool hiddenByOwner;
-
-  /**
    * @brief An optional identifier.
    * @remarks Identifiers are commonly used to resolve Outlets when loading Views via JSON.
    */
@@ -441,13 +425,6 @@ struct View {
   Style *style;
 
   /**
-   * @brief The `visibility` this View was most recently given via styling.
-   * @remarks `unspecified`, the initial value, leaves View::hiddenByOwner deciding.
-   * @styled
-   */
-  ViewVisibility visibility;
-
-  /**
    * @brief An optional Stylesheet.
    * @remarks If set, this Stylesheet is added to or removed from the current Theme when this
    * View is added to or removed from a valid View hierarchy.
@@ -470,6 +447,14 @@ struct View {
    * @remarks This is `NULL` unless the View is the immediate `view` of a ViewController.
    */
   ViewController *viewController;
+
+  /**
+   * @brief Whether this View is drawn, and contributes to its superview's size.
+   * @remarks `unspecified` is visible.
+   * @see View::setVisibility(View *, ViewVisibility)
+   * @styled
+   */
+  ViewVisibility visibility;
 
   /**
    * @brief The Warnings this View generated.
@@ -1201,16 +1186,16 @@ struct ViewInterface {
   View *(*selectFirst)(View *self, const char *rule);
 
   /**
-   * @fn void View::setHidden(View *self, bool hidden)
-   * @brief Sets this View's hidden state.
+   * @fn void View::setVisibility(View *self, ViewVisibility visibility)
+   * @brief Sets this View's visibility.
    * @param self The View.
-   * @param hidden The hidden state.
-   * @remarks Hiding or unhiding a View changes its superview's View::visibleSubviews, so this
-   * marks the superview `needsLayout` if it is a container; writing `self->hidden` directly does
-   * not.
+   * @param visibility The visibility.
+   * @remarks Callers MUST use this method rather than assigning View::visibility directly: it
+   * marks the superview `needsLayout` if it is a container, and writes View::style so that the
+   * choice outlives the next Style applied.
    * @memberof View
    */
-  void (*setHidden)(View *self, bool hidden);
+  void (*setVisibility)(View *self, ViewVisibility visibility);
 
   /**
    * @fn void View::setNeedsApplyTheme(View *self)

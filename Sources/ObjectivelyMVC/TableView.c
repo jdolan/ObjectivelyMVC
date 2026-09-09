@@ -102,7 +102,7 @@ static void layoutSubviews(View *self) {
 
   SDL_Rect frame = $(self, bounds);
 
-  if (headerView->hidden == false) {
+  if (headerView->visibility != ViewVisibilityHidden) {
 
     const SDL_Size size = $(headerView, sizeThatFits);
 
