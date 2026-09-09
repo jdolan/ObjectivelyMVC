@@ -49,6 +49,12 @@ void MVC_InvalidateRenderFrames(void) {
   }
 }
 
+const EnumName ViewVisibilityNames[] = MakeEnumNames(
+  MakeEnumAlias(ViewVisibilityUnspecified, unspecified),
+  MakeEnumAlias(ViewVisibilityVisible, visible),
+  MakeEnumAlias(ViewVisibilityHidden, hidden)
+);
+
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
   MakeEnumAlias(ViewAlignmentNone, none),
   MakeEnumAlias(ViewAlignmentTop, top),
@@ -255,6 +261,27 @@ static View *ancestorWithIdentifier(const View *self, const char *identifier) {
 }
 
 /**
+ * @brief Resolves View::hidden from the styled visibility and the owner's choice.
+ * @remarks Styling wins where it says anything, so that a Selector can show or hide a View
+ * outright; where it says nothing, whatever the owner passed to View::setHidden stands.
+ */
+static void resolveHidden(View *self) {
+
+  const bool hidden = self->visibility == ViewVisibilityUnspecified
+    ? self->hiddenByOwner
+    : self->visibility == ViewVisibilityHidden;
+
+  if (self->hidden != hidden) {
+
+    self->hidden = hidden;
+
+    if (self->superview && $(self->superview, isContainer)) {
+      $(self->superview, setNeedsLayout);
+    }
+  }
+}
+
+/**
  * @fn void View::applyStyle(View *self, const Style *style)
  * @memberof View
  */
@@ -277,7 +304,7 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("corner-cut-top-right", InletTypeInteger, &self->cornerCut.topRight, NULL),
     MakeInlet("corner-cut-bottom-right", InletTypeInteger, &self->cornerCut.bottomRight, NULL),
     MakeInlet("corner-cut-bottom-left", InletTypeInteger, &self->cornerCut.bottomLeft, NULL),
-    MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
+    MakeInlet("visibility", InletTypeEnum, &self->visibility, (ident) ViewVisibilityNames),
     MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
     MakeInlet("left", InletTypeInteger, &self->frame.x, NULL),
     MakeInlet("max-height", InletTypeInteger, &self->maxSize.h, NULL),
@@ -297,6 +324,8 @@ static void applyStyle(View *self, const Style *style) {
   );
 
   $(self, bind, inlets, style->attributes);
+
+  resolveHidden(self);
 
   // Capture the authored width/height, if either was actually present in this Style -- distinct
   // from self->frame.w/h, which layout goes on to freely resize.
@@ -1800,13 +1829,11 @@ static View *selectFirst(View *self, const char *rule) {
  */
 static void setHidden(View *self, bool hidden) {
 
-  if (self->hidden != hidden) {
+  if (self->hiddenByOwner != hidden) {
 
-    self->hidden = hidden;
+    self->hiddenByOwner = hidden;
 
-    if (self->superview && $(self->superview, isContainer)) {
-      $(self->superview, setNeedsLayout);
-    }
+    resolveHidden(self);
   }
 }
 

@@ -49,13 +49,13 @@ Checkbox {
 }
 
 Checkbox ImageView {
-  hidden: true;
+  visibility: hidden;
   width: 12;
   height: 12;
 }
 
 Checkbox:selected ImageView {
-  hidden: false;
+  visibility: visible;
 }
 
 Checkbox > Control {
@@ -74,11 +74,11 @@ CollectionItemView {
 
 CollectionItemView > .selectionOverlay {
   background-color: #ffffff22;
-  hidden: true;
+  visibility: hidden;
 }
 
 CollectionItemView:selected > .selectionOverlay {
-  hidden: false;
+  visibility: visible;
 }
 
 CollectionView {

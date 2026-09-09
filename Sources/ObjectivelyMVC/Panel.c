@@ -246,7 +246,7 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
     $((View *) self->accessoryView, addClassName, "accessoryView");
     $((View *) self->accessoryView, addClassName, "container");
 
-    self->accessoryView->view.hidden = true;
+    $((View *) self->accessoryView, setHidden, true);
 
     $((View *) self->stackView, addSubview, (View *) self->accessoryView);
 

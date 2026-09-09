@@ -98,6 +98,19 @@ typedef enum {
 OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
 
 /**
+ * @brief Visibility constants, used to hide a View from styling.
+ * @remarks Separate from View::hidden, which an owner sets directly and which is derived from
+ * this: a Style that says nothing about visibility leaves the owner's choice standing.
+ */
+typedef enum {
+  ViewVisibilityUnspecified,
+  ViewVisibilityVisible,
+  ViewVisibilityHidden
+} ViewVisibility;
+
+OBJECTIVELYMVC_EXPORT const EnumName ViewVisibilityNames[];
+
+/**
  * @brief A constraint offered by an ancestor View to a descendant during View::sizeThatSatisfies.
  */
 typedef struct {
@@ -289,10 +302,19 @@ struct View {
   SDL_Rect frame;
 
   /**
-   * @brief If `true`, this View is not drawn.
+   * @brief If `true`, this View is not drawn, and does not contribute to its superview's size.
+   * @remarks Derived, and not to be assigned: it resolves View::visibility against
+   * View::hiddenByOwner, so that styling wins where it says anything and the owner wins where
+   * it does not.
    * @see View::setHidden(View *, bool)
    */
   bool hidden;
+
+  /**
+   * @brief Whether this View's owner has hidden it, via View::setHidden.
+   * @private
+   */
+  bool hiddenByOwner;
 
   /**
    * @brief An optional identifier.
@@ -379,6 +401,12 @@ struct View {
    * via Selector. That is, it is always the last Style added to the computed Style.
    */
   Style *style;
+
+  /**
+   * @brief The `visibility` this View was most recently given via styling.
+   * @remarks `unspecified`, the initial value, leaves View::hiddenByOwner deciding.
+   */
+  ViewVisibility visibility;
 
   /**
    * @brief The `width`/`height` this View was most recently given via styling, per axis.
