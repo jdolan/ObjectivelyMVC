@@ -1083,8 +1083,6 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
     self->warnings = $$(Array, arrayWithCapacity, 0);
     assert(self->warnings);
 
-    self->backgroundGradientAngle = 180;
-
     self->needsApplyTheme = true;
     self->needsLayout = true;
   }

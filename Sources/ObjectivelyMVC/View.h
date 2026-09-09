@@ -252,8 +252,8 @@ struct View {
   SDL_Color backgroundColor;
 
   /**
-   * @brief The angle of the background gradient, in degrees, clockwise from north: `0` fills
-   * upwards, `90` to the right, `180` (the default) downwards.
+   * @brief The angle of the background gradient, in degrees, clockwise from south: `0` (the
+   * default) fills downwards, `90` to the right, `180` upwards.
    */
   int backgroundGradientAngle;
 
