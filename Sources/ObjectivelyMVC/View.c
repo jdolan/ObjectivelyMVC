@@ -277,7 +277,6 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("corner-cut-top-right", InletTypeInteger, &self->cornerCut.topRight, NULL),
     MakeInlet("corner-cut-bottom-right", InletTypeInteger, &self->cornerCut.bottomRight, NULL),
     MakeInlet("corner-cut-bottom-left", InletTypeInteger, &self->cornerCut.bottomLeft, NULL),
-    MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
     MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
     MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
     MakeInlet("left", InletTypeInteger, &self->frame.x, NULL),

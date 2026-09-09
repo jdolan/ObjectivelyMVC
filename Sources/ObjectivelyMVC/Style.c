@@ -114,7 +114,6 @@ typedef struct {
 static const StyleShorthand styleShorthands[] = {
   { "corner-cut", { "corner-cut-top-left", "corner-cut-top-right",
                     "corner-cut-bottom-right", "corner-cut-bottom-left" } },
-  { "frame", { "left", "top", "width", "height" } },
   { "max-size", { "max-width", "max-height" } },
   { "min-size", { "min-width", "min-height" } },
   { "padding", { "padding-top", "padding-right", "padding-bottom", "padding-left" } },
