@@ -238,22 +238,26 @@ struct View {
 
   /**
    * @brief The alignment.
+   * @styled
    */
   ViewAlignment alignment;
 
   /**
    * @brief The ViewAutoresizing bitmask.
+   * @styled
    */
   int autoresizingMask;
 
   /**
    * @brief The background color.
+   * @styled
    */
   SDL_Color backgroundColor;
 
   /**
    * @brief The angle of the background gradient, in degrees, clockwise from south: `0` (the
    * default) fills downwards, `90` to the right, `180` upwards.
+   * @styled
    */
   int backgroundGradientAngle;
 
@@ -261,21 +265,25 @@ struct View {
    * @brief The far color of the background gradient, which runs from View::backgroundColor.
    * @remarks The gradient is drawn only when this color has a non-zero alpha; otherwise the
    * background is a flat View::backgroundColor.
+   * @styled
    */
   SDL_Color backgroundGradientColor;
 
   /**
    * @brief The border color.
+   * @styled
    */
   SDL_Color borderColor;
 
   /**
    * @brief The corner radius applied to the background, border and bevel.
+   * @styled
    */
   int borderRadius;
 
   /**
    * @brief The border width.
+   * @styled
    */
   int borderWidth;
 
@@ -297,6 +305,7 @@ struct View {
 
   /**
    * @brief If true, subviews will be clipped to this View's frame.
+   * @styled
    */
   bool clipsSubviews;
 
@@ -309,6 +318,7 @@ struct View {
    * @brief The horizontal inset of each corner of the background and border.
    * @remarks A View with any corner inset is drawn as a polygon rather than through the
    * rounded rectangle shader, so View::borderRadius does not apply to it.
+   * @styled
    */
   ViewCornerCut cornerCut;
 
@@ -340,11 +350,13 @@ struct View {
 
   /**
    * @brief The maximum size this View may be resized to during layout.
+   * @styled
    */
   SDL_Size maxSize;
 
   /**
    * @brief The minimum size this View may be resized to during layout.
+   * @styled
    */
   SDL_Size minSize;
 
@@ -397,6 +409,7 @@ struct View {
 
   /**
    * @brief The padding.
+   * @styled
    */
   ViewPadding padding;
 
@@ -406,6 +419,7 @@ struct View {
    * console layer stacked above interactive content, SHOULD be `none` so that clicks pass
    * through it to whatever lies beneath. Styled as `pointer-events`.
    * @see View::hitTest(const View *, const SDL_Point *)
+   * @styled
    */
   ViewPointerEvents pointerEvents;
 
@@ -429,6 +443,7 @@ struct View {
   /**
    * @brief The `visibility` this View was most recently given via styling.
    * @remarks `unspecified`, the initial value, leaves View::hiddenByOwner deciding.
+   * @styled
    */
   ViewVisibility visibility;
 

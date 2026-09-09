@@ -96,6 +96,7 @@ struct ScrollView {
    * @brief Governs whether the scrollbar is shown. Attribute `scrollbar`.
    * @details `ScrollBarAuto` (the default) shows it only when the content
    * View's height exceeds this ScrollView's own.
+   * @styled
    */
   ScrollBarVisibility scrollBarVisibility;
 };

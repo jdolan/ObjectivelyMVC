@@ -95,16 +95,19 @@ struct Control {
 
   /**
    * @brief The ControlBevel.
+   * @styled
    */
   ControlBevel bevel;
 
   /**
    * @brief The bevel color for the shadowed edges.
+   * @styled
    */
   SDL_Color bevelDarkColor;
 
   /**
    * @brief The bevel color for the lit edges.
+   * @styled
    */
   SDL_Color bevelLightColor;
 
@@ -115,6 +118,7 @@ struct Control {
 
   /**
    * @brief The ControlSelection.
+   * @styled
    */
   ControlSelection selection;
 };

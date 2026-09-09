@@ -70,6 +70,7 @@ struct Panel {
 
   /**
    * @brief If true, this Panel may be repositioned by the user.
+   * @styled
    */
   bool isDraggable;
 
@@ -80,6 +81,7 @@ struct Panel {
 
   /**
    * @brief If true, this Panel may be resized by the user.
+   * @styled
    */
   bool isResizable;
 

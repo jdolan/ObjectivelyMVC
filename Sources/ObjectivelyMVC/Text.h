@@ -143,6 +143,7 @@ struct Text {
 
   /**
    * @brief The text color.
+   * @styled
    */
   SDL_Color color;
 

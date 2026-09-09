@@ -130,6 +130,7 @@ struct CollectionView {
 
   /**
    * @brief The layout axis.
+   * @styled
    */
   CollectionViewAxis axis;
 
@@ -155,11 +156,13 @@ struct CollectionView {
 
   /**
    * @brief The item size.
+   * @styled
    */
   SDL_Size itemSize;
 
   /**
    * @brief The item spacing.
+   * @styled
    */
   SDL_Size itemSpacing;
 

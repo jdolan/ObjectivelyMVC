@@ -106,6 +106,7 @@ struct TextView {
 
   /**
    * @brief True if this TextView supports editing, false otherwise.
+   * @styled
    */
   bool isEditable;
 
