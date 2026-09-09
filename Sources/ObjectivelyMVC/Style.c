@@ -96,6 +96,101 @@ static bool isEqual(const Object *self, const Object *other) {
 #pragma mark - Style
 
 /**
+ * @brief A shorthand attribute, and the longhands it stands for.
+ * @details Attributes are stored as longhands only, because a View binds each of them to a
+ * separate Inlet over the same bytes: `padding` and `padding-left` write the same field, and
+ * the Inlet declared later wins regardless of which Selector the cascade preferred. Expanding
+ * on the way in means the cascade resolves each longhand on its own, as CSS does.
+ */
+typedef struct {
+  const char *shorthand;
+  const char *longhands[4];
+} StyleShorthand;
+
+/**
+ * @remarks The longhands are in the order the shorthand's values are written, which is the
+ * order of the struct each one binds: `padding` is top right bottom left, `frame` is x y w h.
+ */
+static const StyleShorthand styleShorthands[] = {
+  { "corner-cut", { "corner-cut-top-left", "corner-cut-top-right",
+                    "corner-cut-bottom-right", "corner-cut-bottom-left" } },
+  { "frame", { "left", "top", "width", "height" } },
+  { "max-size", { "max-width", "max-height" } },
+  { "min-size", { "min-width", "min-height" } },
+  { "padding", { "padding-top", "padding-right", "padding-bottom", "padding-left" } },
+};
+
+/**
+ * @return The number of longhands `shorthand` stands for.
+ */
+static size_t styleShorthandCount(const StyleShorthand *shorthand) {
+
+  size_t count = 0;
+  while (count < lengthof(shorthand->longhands) && shorthand->longhands[count]) {
+    count++;
+  }
+
+  return count;
+}
+
+/**
+ * @return The StyleShorthand `key` names, or `NULL` if it is already a longhand.
+ */
+static const StyleShorthand *styleShorthandForKey(const char *key) {
+
+  for (size_t i = 0; i < lengthof(styleShorthands); i++) {
+    if (strcmp(styleShorthands[i].shorthand, key) == 0) {
+      return &styleShorthands[i];
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * @brief Stores `value` as the longhands of `shorthand`, if it can be split into them.
+ * @return True if the value was expanded and stored.
+ * @remarks A single Number splats to every longhand, as View+JSON's rectangle binding does,
+ * so `padding: 2` still means all four sides. A value of any other shape is left to the Inlet
+ * binding to reject, rather than being silently dropped here.
+ */
+static bool addShorthandAttribute(Style *self, const StyleShorthand *shorthand, ident value) {
+
+  const size_t count = styleShorthandCount(shorthand);
+
+  if ($((Object *) value, isKindOfClass, _Number())) {
+    for (size_t i = 0; i < count; i++) {
+      $((Dictionary *) self->attributes, setObjectForKeyPath, value, shorthand->longhands[i]);
+    }
+    return true;
+  }
+
+  if ($((Object *) value, isKindOfClass, _Array())) {
+    const Array *array = value;
+    if (array->count == count) {
+      for (size_t i = 0; i < count; i++) {
+        ident number = $(array, objectAtIndex, i);
+        $((Dictionary *) self->attributes, setObjectForKeyPath, number, shorthand->longhands[i]);
+      }
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * @brief Stores `value` under `key`, expanding it into longhands if `key` is a shorthand.
+ */
+static void setAttribute(Style *self, const char *key, ident value) {
+
+  const StyleShorthand *shorthand = styleShorthandForKey(key);
+  if (shorthand == NULL || !addShorthandAttribute(self, shorthand, value)) {
+    $((Dictionary *) self->attributes, setObjectForKeyPath, value, key);
+  }
+}
+
+/**
  * @fn void Style::addAttribute(Style *self, const char *attr, ident value)
  * @memberof Style
  */
@@ -107,9 +202,18 @@ static void addAttribute(Style *self, const char *attr, ident value) {
   char *key = strtrim(attr);
   assert(key);
 
-  $((Dictionary *) self->attributes, setObjectForKeyPath, value, key);
+  setAttribute(self, key, value);
 
   free(key);
+}
+
+/**
+ * @brief DictionaryEnumerator for addAttributes.
+ */
+static void addAttributes_enumerate(const Dictionary *dictionary, ident obj, ident key, ident data) {
+
+  // already a trimmed key, coming from another Style's attributes or from JSON
+  setAttribute((Style *) data, ((String *) key)->chars, obj);
 }
 
 /**
@@ -120,7 +224,9 @@ static void addAttributes(Style *self, const Dictionary *attributes) {
 
   assert(attributes);
 
-  $((Dictionary *) self->attributes, addEntriesFromDictionary, attributes);
+  // per attribute, rather than a bulk merge, so that a shorthand arriving from JSON or from
+  // another Style is expanded exactly as one from the parser is
+  $(attributes, enumerateObjectsAndKeys, addAttributes_enumerate, self);
 }
 
 /**
