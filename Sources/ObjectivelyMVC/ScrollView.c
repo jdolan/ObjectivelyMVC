@@ -166,7 +166,6 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
   self = (ScrollView *) super(Control, self, initWithFrame, frame);
   if (self) {
     self->step = 12.f;
-    self->scrollBarVisibility = ScrollBarAuto;
 
     self->scrollBar = $(alloc(ScrollBar), initWithScrollView, self);
     assert(self->scrollBar);
