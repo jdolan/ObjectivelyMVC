@@ -211,7 +211,6 @@ static void addAttribute(Style *self, const char *attr, ident value) {
  */
 static void addAttributes_enumerate(const Dictionary *dictionary, ident obj, ident key, ident data) {
 
-  // already a trimmed key, coming from another Style's attributes or from JSON
   setAttribute((Style *) data, ((String *) key)->chars, obj);
 }
 
@@ -223,8 +222,6 @@ static void addAttributes(Style *self, const Dictionary *attributes) {
 
   assert(attributes);
 
-  // per attribute, rather than a bulk merge, so that a shorthand arriving from JSON or from
-  // another Style is expanded exactly as one from the parser is
   $(attributes, enumerateObjectsAndKeys, addAttributes_enumerate, self);
 }
 

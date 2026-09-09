@@ -955,6 +955,10 @@ struct ViewInterface {
    * offering `ViewConstraintEqual` for a `ViewAutoresizingWidth`/`Height` subview (since this
    * View's bounds are already final) or `ViewConstraintUnspecified` otherwise (so the subview
    * sizes itself from its own content).
+   * @remarks It positions an axis only where the subview's View::alignment names one. An axis
+   * with no alignment keeps whatever `left` or `top` gave it, or whatever an owner positioning
+   * its own subviews put there, as Select does for its open flyout and CollectionView for its
+   * items.
    * @memberof View
    */
   void (*layoutSubviews)(View *self);

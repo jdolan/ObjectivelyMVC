@@ -327,10 +327,6 @@ static void applyStyle(View *self, const Style *style) {
 
   resolveHidden(self);
 
-  // `left` and `top` place a View on an axis that layout leaves alone, so an axis that is
-  // aligned overwrites them on the next pass. Say so, rather than quietly discarding what was
-  // asked for. Per axis, which exempts an internally aligned View: it has neither axis' bits,
-  // and positioning one with `left` is exactly what Box does with its label.
   if ((self->alignment & ViewAlignmentMaskHorizontal) &&
       $(style->attributes, objectForKeyPath, "left")) {
     $(self, warn, WarningTypeStyle, "`left` is overruled by the horizontal `alignment`");
