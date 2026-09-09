@@ -137,12 +137,8 @@ static Checkbox *initWithFrame(Checkbox *self, const SDL_Rect *frame) {
     self->box = $(alloc(Control), initWithFrame, frame);
     assert(self->box);
 
-    self->box->view.alignment = ViewAlignmentMiddleCenter;
-
     self->check = $(alloc(ImageView), initWithImage, _check);
     assert(self->check);
-
-    self->check->view.autoresizingMask = ViewAutoresizingFill;
 
     $((View *) self->box, addSubview, (View *) self->check);
     $((View *) self, addSubview, (View *) self->box);

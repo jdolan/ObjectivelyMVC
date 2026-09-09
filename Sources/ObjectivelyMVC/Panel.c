@@ -255,8 +255,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
     $((View *) self->resizeHandle, addClassName, "resizeHandle");
 
-    self->resizeHandle->view.alignment = ViewAlignmentInternal;
-
     self->resizeHandle->view.frame.w = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
     self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
 

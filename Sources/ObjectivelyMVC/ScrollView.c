@@ -171,8 +171,6 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
     assert(self->scrollBar);
 
     View *scrollBar = (View *) self->scrollBar;
-    scrollBar->alignment = ViewAlignmentRight;
-    scrollBar->autoresizingMask = ViewAutoresizingHeight;
     $(scrollBar, setHidden, true);
 
     $((View *) self, addSubview, scrollBar);

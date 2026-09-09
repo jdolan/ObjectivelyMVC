@@ -105,10 +105,6 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
     self->label = $(alloc(Label), initWithText, NULL, NULL);
     assert(self->label);
 
-    View *label = (View *) self->label;
-
-    label->alignment = ViewAlignmentInternal;
-
     $((View *) self, addSubview, (View *) self->label);
   }
 

@@ -12,9 +12,10 @@ Box {
 }
 
 Box > Label {
+  alignment: internal;
   background-color: #888888;
-  padding: 0 8 0 8;
   left: 20;
+  padding: 0 8 0 8;
 }
 
 Box > Label > Text {
@@ -49,9 +50,10 @@ Checkbox {
 }
 
 Checkbox ImageView {
+  autoresizing-mask: fill;
+  height: 12;
   visibility: hidden;
   width: 12;
-  height: 12;
 }
 
 Checkbox:selected ImageView {
@@ -59,20 +61,31 @@ Checkbox:selected ImageView {
 }
 
 Checkbox > Control {
+  alignment: middle-center;
   autoresizing-mask: contain;
   background-color: #22222266;
   bevel: inset;
-  min-width: 18;
   min-height: 18;
+  min-width: 18;
   padding: 4 4 4 4;
 }
 
 CollectionItemView {
   background-color: #22222266;
   border-color: #999999aa;
+  clips-subviews: true;
+}
+
+CollectionItemView > ImageView {
+  autoresizing-mask: fill;
+}
+
+CollectionItemView > Text {
+  alignment: middle-center;
 }
 
 CollectionItemView > .selectionOverlay {
+  autoresizing-mask: fill;
   background-color: #ffffff22;
   visibility: hidden;
 }
@@ -164,6 +177,7 @@ Panel .accessoryView {
 }
 
 Panel > .resizeHandle {
+  alignment: internal;
   border-radius: 4;
 }
 
@@ -186,8 +200,9 @@ ProgressBar > Text {
 }
 
 ScrollBar {
-  width: 12;
   background-color: #222222c0;
+  clips-subviews: true;
+  width: 12;
 }
 
 ScrollBar > .handle {
@@ -198,6 +213,11 @@ ScrollBar > .handle {
 ScrollView {
   autoresizing-mask: fill;
   clips-subviews: true;
+}
+
+ScrollView > .scrollBar {
+  alignment: right;
+  autoresizing-mask: height;
 }
 
 ScrollView > .contentView {
@@ -248,6 +268,10 @@ SlideShowView {
 
 SlideShowView > ImageView {
   autoresizing-mask: fill;
+}
+
+StackView {
+  autoresizing-mask: contain;
 }
 
 StackView.container {
@@ -324,8 +348,9 @@ TextView {
   autoresizing-mask: contain;
   background-color: #22222266;
   bevel: inset;
-  padding: 4 4 4 4;
+  clips-subviews: true;
   min-width: 160;
+  padding: 4 4 4 4;
 }
 
 TextView > Text {
