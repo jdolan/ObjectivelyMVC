@@ -98,6 +98,22 @@ typedef enum {
 OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
 
 /**
+ * @brief Clamps `size` to `min` and `max`, where a `max` of zero is unbounded.
+ */
+#define ViewClampSize(size, min, max) \
+  clamp((size), (min), (max) ? (max) : INT32_MAX)
+
+/**
+ * @brief Whether a View is the result of a hit test.
+ */
+typedef enum {
+  ViewPointerEventsAuto,
+  ViewPointerEventsNone
+} ViewPointerEvents;
+
+OBJECTIVELYMVC_EXPORT const EnumName ViewPointerEventsNames[];
+
+/**
  * @brief Visibility constants, used to hide a View from styling.
  * @remarks Separate from View::hidden, which an owner sets directly and which is derived from
  * this: a Style that says nothing about visibility leaves the owner's choice standing.
@@ -385,14 +401,13 @@ struct View {
   ViewPadding padding;
 
   /**
-   * @brief If `false`, this View is never the result of a hit test; its subviews still are.
-   * @remarks Defaults to `true`. Overlays that are drawn but never interacted with, such as a
-   * full-window HUD or console layer stacked above interactive content, SHOULD set this to
-   * `false` so that clicks pass through them to whatever lies beneath. Styled as
-   * `pointer-events: false`.
+   * @brief Whether this View is the result of a hit test; its subviews always are.
+   * @remarks An overlay that is drawn but never interacted with, such as a full-window HUD or
+   * console layer stacked above interactive content, SHOULD be `none` so that clicks pass
+   * through it to whatever lies beneath. Styled as `pointer-events`.
    * @see View::hitTest(const View *, const SDL_Point *)
    */
-  bool pointerEvents;
+  ViewPointerEvents pointerEvents;
 
   /**
    * @brief The cached View::renderFrame, valid while `generation` matches the current

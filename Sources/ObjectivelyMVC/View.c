@@ -49,6 +49,11 @@ void MVC_InvalidateRenderFrames(void) {
   }
 }
 
+const EnumName ViewPointerEventsNames[] = MakeEnumNames(
+  MakeEnumAlias(ViewPointerEventsAuto, auto),
+  MakeEnumAlias(ViewPointerEventsNone, none)
+);
+
 const EnumName ViewVisibilityNames[] = MakeEnumNames(
   MakeEnumAlias(ViewVisibilityUnspecified, unspecified),
   MakeEnumAlias(ViewVisibilityVisible, visible),
@@ -317,7 +322,7 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("padding-right", InletTypeInteger, &self->padding.right, NULL),
     MakeInlet("padding-bottom", InletTypeInteger, &self->padding.bottom, NULL),
     MakeInlet("padding-left", InletTypeInteger, &self->padding.left, NULL),
-    MakeInlet("pointer-events", InletTypeBool, &self->pointerEvents, NULL),
+    MakeInlet("pointer-events", InletTypeEnum, &self->pointerEvents, (ident) ViewPointerEventsNames),
     MakeInlet("top", InletTypeInteger, &self->frame.y, NULL),
     MakeInlet("visibility", InletTypeEnum, &self->visibility, (ident) ViewVisibilityNames),
     MakeInlet("width", InletTypeInteger, &self->frame.w, NULL)
@@ -1035,7 +1040,7 @@ static View *hitTest(const View *self, const SDL_Point *point) {
         }
       }
 
-      return self->pointerEvents ? (View *) self : NULL;
+      return self->pointerEvents == ViewPointerEventsAuto ? (View *) self : NULL;
     }
   }
 
@@ -1079,8 +1084,6 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
     assert(self->warnings);
 
     self->backgroundGradientAngle = 180;
-    self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
-    self->pointerEvents = true;
 
     self->needsApplyTheme = true;
     self->needsLayout = true;
@@ -1709,8 +1712,8 @@ static void resignTouchResponder(View *self) {
  */
 static void resize(View *self, const SDL_Size *size) {
 
-  const int w = clamp(size->w, self->minSize.w, self->maxSize.w);
-  const int h = clamp(size->h, self->minSize.h, self->maxSize.h);
+  const int w = ViewClampSize(size->w, self->minSize.w, self->maxSize.w);
+  const int h = ViewClampSize(size->h, self->minSize.h, self->maxSize.h);
 
   if (self->frame.w != w || self->frame.h != h) {
 
@@ -1944,8 +1947,8 @@ static SDL_Size sizeThatFits(const View *self) {
 
   }
 
-  size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
-  size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
+  size.w = ViewClampSize(size.w, self->minSize.w, self->maxSize.w);
+  size.h = ViewClampSize(size.h, self->minSize.h, self->maxSize.h);
 
   return size;
 }
@@ -1981,8 +1984,8 @@ static SDL_Size sizeThatSatisfies(View *self, ViewConstraint width, ViewConstrai
   size.w = resolveViewConstraint(self->autoresizingMask & ViewAutoresizingWidth, width, size.w);
   size.h = resolveViewConstraint(self->autoresizingMask & ViewAutoresizingHeight, height, size.h);
 
-  size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
-  size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
+  size.w = ViewClampSize(size.w, self->minSize.w, self->maxSize.w);
+  size.h = ViewClampSize(size.h, self->minSize.h, self->maxSize.h);
 
   return size;
 }

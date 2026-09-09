@@ -9,10 +9,10 @@
   border-width: 0;
   clips-subviews: false;
   corner-cut: 0;
-  max-size: 2147483647 2147483647;
+  max-size: 0 0;
   min-size: 0 0;
   padding: 0;
-  pointer-events: true;
+  pointer-events: auto;
   visibility: unspecified;
 }
 
