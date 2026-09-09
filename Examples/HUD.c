@@ -76,7 +76,7 @@ static AppState application;
 static Label *label(View *superview, const char *text, ViewAlignment alignment) {
 
   Label *label = $(alloc(Label), initWithText, text, NULL);
-  label->view.alignment = alignment;
+  $(label->view.style, addEnumAttribute, "alignment", ViewAlignmentNames, alignment);
 
   $(superview, addSubview, (View *) label);
   release(label);
@@ -90,9 +90,10 @@ static Label *label(View *superview, const char *text, ViewAlignment alignment) 
 static StackView *stackView(View *superview, ViewAlignment alignment) {
 
   StackView *stack = $(alloc(StackView), initWithFrame, NULL);
-  stack->view.alignment = alignment;
-  stack->view.autoresizingMask = ViewAutoresizingContain;
-  stack->spacing = 4;
+  $(stack->view.style, addEnumAttribute, "alignment", ViewAlignmentNames, alignment);
+  $(stack->view.style, addEnumAttribute, "autoresizing-mask", ViewAutoresizingNames,
+    ViewAutoresizingContain);
+  $(stack->view.style, addIntegerAttribute, "spacing", 4);
 
   $(superview, addSubview, (View *) stack);
   release(stack);
@@ -139,7 +140,7 @@ static void buildHUD(AppState *app, View *root) {
   // Ten solid segments sharing the Renderer's white texture: with a shared scissor these
   // collapse into one draw call, so their count is the direct check that merging works.
   StackView *segments = stackView(root, ViewAlignmentBottomCenter);
-  segments->axis = StackViewAxisHorizontal;
+  $(segments->view.style, addEnumAttribute, "axis", StackViewAxisNames, StackViewAxisHorizontal);
 
   for (int i = 0; i < 10; i++) {
     View *segment = $(alloc(View), initWithFrame, &MakeRect(0, 0, 24, 8));
@@ -150,7 +151,7 @@ static void buildHUD(AppState *app, View *root) {
 
   // Eight icons of varied sizes packed into one atlas: one draw call for the whole row
   StackView *icons = stackView(root, ViewAlignmentTopRight);
-  icons->axis = StackViewAxisHorizontal;
+  $(icons->view.style, addEnumAttribute, "axis", StackViewAxisNames, StackViewAxisHorizontal);
 
   Theme *theme = app->windowController->theme;
 
@@ -181,15 +182,17 @@ static void buildHUD(AppState *app, View *root) {
   app->chat = stackView(root, ViewAlignmentTopLeft);
 
   Panel *scoreboard = $(alloc(Panel), initWithFrame, NULL);
-  scoreboard->control.view.alignment = ViewAlignmentMiddleCenter;
+  $(scoreboard->control.view.style, addEnumAttribute, "alignment", ViewAlignmentNames,
+    ViewAlignmentMiddleCenter);
 
   const int rows = 8;
 
   for (int i = 0; i < rows; i++) {
     StackView *row = $(alloc(StackView), initWithFrame, NULL);
-    row->axis = StackViewAxisHorizontal;
-    row->spacing = 32;
-    row->view.autoresizingMask = ViewAutoresizingContain;
+    $(row->view.style, addEnumAttribute, "axis", StackViewAxisNames, StackViewAxisHorizontal);
+    $(row->view.style, addIntegerAttribute, "spacing", 32);
+    $(row->view.style, addEnumAttribute, "autoresizing-mask", ViewAutoresizingNames,
+      ViewAutoresizingContain);
 
     Label *name = $(alloc(Label), initWithText, "Player", NULL);
     $(name->text, setTextWithFormat, "Player %d", i + 1);
