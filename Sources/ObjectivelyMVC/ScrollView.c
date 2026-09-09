@@ -241,8 +241,11 @@ static void setContentView(ScrollView *self, View *contentView) {
  */
 static void setScrollBarVisibility(ScrollView *self, ScrollBarVisibility visibility) {
 
-  self->scrollBarVisibility = visibility;
-  $((View *) self, setNeedsLayout);
+  View *this = (View *) self;
+
+  $(this->style, addEnumAttribute, "scrollbar", ScrollBarVisibilityNames, visibility);
+
+  $(this, invalidateStyle);
 }
 
 #pragma mark - Class lifecycle

@@ -1,6 +1,19 @@
 * {
+  alignment: none;
+  autoresizing-mask: none;
   background-color: transparent;
+  background-gradient-angle: 180;
+  background-gradient-color: transparent;
+  border-color: transparent;
+  border-radius: 0;
   border-width: 0;
+  clips-subviews: false;
+  corner-cut: 0;
+  max-size: 2147483647 2147483647;
+  min-size: 0 0;
+  padding: 0;
+  pointer-events: true;
+  visibility: unspecified;
 }
 
 Box {
@@ -95,8 +108,11 @@ CollectionItemView:selected > .selectionOverlay {
 }
 
 CollectionView {
+  axis: vertical;
   background-color: #22222266;
+  item-size: 0 0;
   item-size: 64 64;
+  item-spacing: 0 0;
   item-spacing: 10 10;
 }
 
@@ -106,8 +122,12 @@ CollectionView .contentView {
 }
 
 Control {
+  bevel-dark-color: black;
+  bevel-light-color: silver;
+  bevel: none;
   border-radius: 4;
   min-height: 32;
+  selection: none;
   selection: single;
 }
 
@@ -162,7 +182,9 @@ Panel {
   background-color: #444444dd;
   border-color: #dedede;
   border-width: 1;
+  draggable: true;
   padding: 12 12 12 12;
+  resizable: true;
 }
 
 Panel > StackView {
@@ -213,6 +235,7 @@ ScrollBar > .handle {
 ScrollView {
   autoresizing-mask: fill;
   clips-subviews: true;
+  scrollbar: auto;
 }
 
 ScrollView > .scrollBar {
@@ -229,6 +252,7 @@ Select {
   background-color: #dedede10;
   bevel: outset;
   padding: 4 4 4 4;
+  selection: single;
 }
 
 Select > StackView {
@@ -272,6 +296,10 @@ SlideShowView > ImageView {
 
 StackView {
   autoresizing-mask: contain;
+  axis: vertical;
+  distribution: default;
+  reversed: false;
+  spacing: 0;
 }
 
 StackView.container {
@@ -349,6 +377,7 @@ TextView {
   background-color: #22222266;
   bevel: inset;
   clips-subviews: true;
+  editable: true;
   min-width: 160;
   padding: 4 4 4 4;
 }

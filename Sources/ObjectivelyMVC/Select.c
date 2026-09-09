@@ -308,8 +308,6 @@ static Select *initWithFrame(Select *self, const SDL_Rect *frame) {
   self = (Select *) super(Control, self, initWithFrame, frame);
   if (self) {
 
-    self->control.selection = ControlSelectionSingle;
-
     self->options = $$(Array, arrayWithCapacity, 8);
     assert(self->options);
 

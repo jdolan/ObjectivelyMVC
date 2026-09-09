@@ -148,52 +148,49 @@ static void setOrientation(Input *self, InputOrientation orientation) {
 
   self->orientation = orientation;
 
-  $((View *) self->control, removeFromSuperview);
-  $((View *) self->label, removeFromSuperview);
+  View *this = (View *) self, *label = (View *) self->label, *control = (View *) self->control;
+
+  $(control, removeFromSuperview);
+  $(label, removeFromSuperview);
 
   switch (self->orientation) {
     case InputOrientationLeft:
     case InputOrientationAbove:
-      $((View *) self, addSubview, (View *) self->label);
-      $((View *) self, addSubview, (View *) self->control);
+      $(this, addSubview, label);
+      $(this, addSubview, control);
       break;
 
     case InputOrientationRight:
     case InputOrientationBelow:
-      $((View *) self, addSubview, (View *) self->control);
-      $((View *) self, addSubview, (View *) self->label);
+      $(this, addSubview, control);
+      $(this, addSubview, label);
       break;
   }
 
   switch (self->orientation) {
     case InputOrientationLeft:
-      self->stackView.axis = StackViewAxisHorizontal;
-      $(((View *) self->label)->style, addEnumAttribute, "alignment",
-        ViewAlignmentNames, ViewAlignmentMiddleLeft);
-      $(((View *) self->control)->style, addEnumAttribute, "alignment",
-        ViewAlignmentNames, ViewAlignmentMiddleRight);
+      $(this->style, addEnumAttribute, "axis", StackViewAxisNames, StackViewAxisHorizontal);
+      $(label->style, addEnumAttribute, "alignment", ViewAlignmentNames, ViewAlignmentMiddleLeft);
+      $(control->style, addEnumAttribute, "alignment", ViewAlignmentNames, ViewAlignmentMiddleRight);
       break;
 
     case InputOrientationRight:
-      self->stackView.axis = StackViewAxisHorizontal;
-      $(((View *) self->label)->style, addEnumAttribute, "alignment",
-        ViewAlignmentNames, ViewAlignmentMiddleRight);
-      $(((View *) self->control)->style, addEnumAttribute, "alignment",
-        ViewAlignmentNames, ViewAlignmentMiddleLeft);
+      $(this->style, addEnumAttribute, "axis", StackViewAxisNames, StackViewAxisHorizontal);
+      $(label->style, addEnumAttribute, "alignment", ViewAlignmentNames, ViewAlignmentMiddleRight);
+      $(control->style, addEnumAttribute, "alignment", ViewAlignmentNames, ViewAlignmentMiddleLeft);
       break;
 
     case InputOrientationAbove:
     case InputOrientationBelow:
-      self->stackView.axis = StackViewAxisVertical;
-      $(((View *) self->label)->style, addEnumAttribute, "alignment",
-        ViewAlignmentNames, ViewAlignmentMiddleCenter);
-      $(((View *) self->control)->style, addEnumAttribute, "alignment",
-        ViewAlignmentNames, ViewAlignmentMiddleCenter);
+      $(this->style, addEnumAttribute, "axis", StackViewAxisNames, StackViewAxisVertical);
+      $(label->style, addEnumAttribute, "alignment", ViewAlignmentNames, ViewAlignmentMiddleCenter);
+      $(control->style, addEnumAttribute, "alignment", ViewAlignmentNames, ViewAlignmentMiddleCenter);
       break;
   }
 
-  $((View *) self->label, invalidateStyle);
-  $((View *) self->control, invalidateStyle);
+  $(this, invalidateStyle);
+  $(label, invalidateStyle);
+  $(control, invalidateStyle);
 }
 
 #pragma mark - Class lifecycle
