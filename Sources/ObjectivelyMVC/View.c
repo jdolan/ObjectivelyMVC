@@ -304,7 +304,6 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("corner-cut-top-right", InletTypeInteger, &self->cornerCut.topRight, NULL),
     MakeInlet("corner-cut-bottom-right", InletTypeInteger, &self->cornerCut.bottomRight, NULL),
     MakeInlet("corner-cut-bottom-left", InletTypeInteger, &self->cornerCut.bottomLeft, NULL),
-    MakeInlet("visibility", InletTypeEnum, &self->visibility, (ident) ViewVisibilityNames),
     MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
     MakeInlet("left", InletTypeInteger, &self->frame.x, NULL),
     MakeInlet("max-height", InletTypeInteger, &self->maxSize.h, NULL),
@@ -320,21 +319,13 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("padding-left", InletTypeInteger, &self->padding.left, NULL),
     MakeInlet("pointer-events", InletTypeBool, &self->pointerEvents, NULL),
     MakeInlet("top", InletTypeInteger, &self->frame.y, NULL),
+    MakeInlet("visibility", InletTypeEnum, &self->visibility, (ident) ViewVisibilityNames),
     MakeInlet("width", InletTypeInteger, &self->frame.w, NULL)
   );
 
   $(self, bind, inlets, style->attributes);
 
   resolveHidden(self);
-
-  // Capture the authored width/height, if either was actually present in this Style -- distinct
-  // from self->frame.w/h, which layout goes on to freely resize.
-  if ($(style->attributes, objectForKeyPath, "width")) {
-    self->styledSize.w = self->frame.w;
-  }
-  if ($(style->attributes, objectForKeyPath, "height")) {
-    self->styledSize.h = self->frame.h;
-  }
 }
 
 /**
@@ -1936,11 +1927,6 @@ static SDL_Size sizeThatFits(const View *self) {
 
     release(subviews);
 
-    // A styled width/height is authored intent for this View's own frame; floor the
-    // children-derived sum against it so it survives summing subviews with no size of their
-    // own to contribute (e.g. Slider, whose bar and handle have none independently).
-    size.w = max(size.w, self->styledSize.w);
-    size.h = max(size.h, self->styledSize.h);
   }
 
   size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
