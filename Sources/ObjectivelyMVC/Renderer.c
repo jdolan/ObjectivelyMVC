@@ -170,7 +170,7 @@ static SDL_FRect textureRegion(const Texture *texture, const SDL_Rect *src) {
 static SDL_Color gradientColor(float x, float y, const SDL_FRect *bounds, int angle,
                                const SDL_Color *from, const SDL_Color *to) {
 
-  const float radians = (float) angle * (float) M_PI / 180.f;
+  const float radians = float_radians((float) angle);
   const float dx = sinf(radians), dy = -cosf(radians);
 
   const float cx = bounds->x + bounds->w * 0.5f;

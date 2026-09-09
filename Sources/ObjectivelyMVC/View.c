@@ -1457,8 +1457,9 @@ static void removeSubview(View *self, View *subview) {
 /**
  * @brief Writes the four corners of `rect`, inset by `cut`, in clockwise order.
  * @details Each inset pulls its corner in along the x axis, so an inset on one of a pair of
- * vertically adjacent corners slants the edge between them. Insets are clamped to the width,
- * so an over-large cut degenerates to a triangle rather than crossing over.
+ * vertically adjacent corners slants the edge between them. The two insets on an edge are
+ * clamped against each other as well as the width, so however large a cut is the edge closes
+ * to a point rather than crossing over itself.
  */
 static void cornerCutPoints(SDL_Point *points, const SDL_Rect *rect, const ViewCornerCut *cut) {
 
@@ -1467,10 +1468,16 @@ static void cornerCutPoints(SDL_Point *points, const SDL_Rect *rect, const ViewC
 
   const int w = rect->w;
 
-  points[0] = MakePoint(x1 + clamp(cut->topLeft, 0, w), y1);
-  points[1] = MakePoint(x2 - clamp(cut->topRight, 0, w), y1);
-  points[2] = MakePoint(x2 - clamp(cut->bottomRight, 0, w), y2);
-  points[3] = MakePoint(x1 + clamp(cut->bottomLeft, 0, w), y2);
+  const int topLeft = clamp(cut->topLeft, 0, w);
+  const int topRight = clamp(cut->topRight, 0, w - topLeft);
+
+  const int bottomLeft = clamp(cut->bottomLeft, 0, w);
+  const int bottomRight = clamp(cut->bottomRight, 0, w - bottomLeft);
+
+  points[0] = MakePoint(x1 + topLeft, y1);
+  points[1] = MakePoint(x2 - topRight, y1);
+  points[2] = MakePoint(x2 - bottomRight, y2);
+  points[3] = MakePoint(x1 + bottomLeft, y2);
 }
 
 /**
