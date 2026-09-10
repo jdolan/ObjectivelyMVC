@@ -196,6 +196,14 @@ Panel .accessoryView {
   autoresizing-mask: contain;
   axis: horizontal;
   spacing: 16;
+}
+
+/*
+ * A Panel shows its own accessory view only once something is put in it. The class name is a
+ * layout a consumer may wear anywhere, so this addresses the Panel's own by where it sits.
+ */
+
+Panel > StackView > .accessoryView {
   visibility: hidden;
 }
 
