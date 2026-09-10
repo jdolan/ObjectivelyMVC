@@ -73,13 +73,15 @@ Checkbox:selected ImageView {
   visibility: visible;
 }
 
+/* The box holds a 12 check in 4 of padding, so 20 is the size it takes once one is in it */
+
 Checkbox > Control {
   alignment: middle-center;
   autoresizing-mask: contain;
   background-color: #22222266;
   bevel: inset;
-  min-height: 18;
-  min-width: 18;
+  min-height: 20;
+  min-width: 20;
   padding: 4 4 4 4;
 }
 
