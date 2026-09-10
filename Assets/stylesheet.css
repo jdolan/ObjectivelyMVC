@@ -171,6 +171,16 @@ Option > Text {
   alignment: middle-left;
 }
 
+/*
+ * A ViewController's own root View fills its parent, which is what a controller pushed onto a
+ * window or added to another wants. A rule rather than the element style, so that a controller
+ * whose view is a panel of its own, or a page measured by its content, can say so.
+ */
+
+.viewController {
+  autoresizing-mask: fill;
+}
+
 PageView {
   autoresizing-mask: contain;
   border-color: #888888;
