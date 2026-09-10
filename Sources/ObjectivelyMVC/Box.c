@@ -76,7 +76,7 @@ static void layoutSubviews(View *self) {
   super(View, self, layoutSubviews);
 
   View *label = (View *) ((Box *) self)->label;
-  if (label->hidden == false) {
+  if (label->visibility != ViewVisibilityHidden) {
 
     const SDL_Size size = $(label, sizeThatContains);
     label->frame.y = -size.h * 0.5;
@@ -104,10 +104,6 @@ static Box *initWithFrame(Box *self, const SDL_Rect *frame) {
 
     self->label = $(alloc(Label), initWithText, NULL, NULL);
     assert(self->label);
-
-    View *label = (View *) self->label;
-
-    label->alignment = ViewAlignmentInternal;
 
     $((View *) self, addSubview, (View *) self->label);
   }

@@ -100,7 +100,7 @@ static void loadView(ViewController *self) {
   View *view = $(alloc(View), initWithFrame, NULL);
   assert(view);
 
-  view->autoresizingMask = ViewAutoresizingFill;
+  $(view, addClassName, "viewController");
 
   $(self, setView, view);
   release(view);

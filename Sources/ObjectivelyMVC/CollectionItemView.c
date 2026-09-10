@@ -81,14 +81,10 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
     self->imageView = $(alloc(ImageView), initWithFrame, frame);
     assert(self->imageView);
 
-    self->imageView->view.autoresizingMask = ViewAutoresizingFill;
-
     $((View *) self, addSubview, (View *) self->imageView);
 
     self->text = $(alloc(Text), initWithText, NULL, NULL);
     assert(self->text);
-
-    self->text->view.alignment = ViewAlignmentMiddleCenter;
 
     $((View *) self, addSubview, (View *) self->text);
 
@@ -97,11 +93,8 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
 
     $(self->selectionOverlay, addClassName, "selectionOverlay");
 
-    self->selectionOverlay->autoresizingMask = ViewAutoresizingFill;
-
     $((View *) self, addSubview, self->selectionOverlay);
 
-    self->view.clipsSubviews = true;
   }
 
   return self;

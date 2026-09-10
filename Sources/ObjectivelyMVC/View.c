@@ -49,6 +49,17 @@ void MVC_InvalidateRenderFrames(void) {
   }
 }
 
+const EnumName ViewPointerEventsNames[] = MakeEnumNames(
+  MakeEnumAlias(ViewPointerEventsAuto, auto),
+  MakeEnumAlias(ViewPointerEventsNone, none)
+);
+
+const EnumName ViewVisibilityNames[] = MakeEnumNames(
+  MakeEnumAlias(ViewVisibilityUnspecified, unspecified),
+  MakeEnumAlias(ViewVisibilityVisible, visible),
+  MakeEnumAlias(ViewVisibilityHidden, hidden)
+);
+
 const EnumName ViewAlignmentNames[] = MakeEnumNames(
   MakeEnumAlias(ViewAlignmentNone, none),
   MakeEnumAlias(ViewAlignmentTop, top),
@@ -277,8 +288,6 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("corner-cut-top-right", InletTypeInteger, &self->cornerCut.topRight, NULL),
     MakeInlet("corner-cut-bottom-right", InletTypeInteger, &self->cornerCut.bottomRight, NULL),
     MakeInlet("corner-cut-bottom-left", InletTypeInteger, &self->cornerCut.bottomLeft, NULL),
-    MakeInlet("frame", InletTypeRectangle, &self->frame, NULL),
-    MakeInlet("hidden", InletTypeBool, &self->hidden, NULL),
     MakeInlet("height", InletTypeInteger, &self->frame.h, NULL),
     MakeInlet("left", InletTypeInteger, &self->frame.x, NULL),
     MakeInlet("max-height", InletTypeInteger, &self->maxSize.h, NULL),
@@ -292,20 +301,22 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("padding-right", InletTypeInteger, &self->padding.right, NULL),
     MakeInlet("padding-bottom", InletTypeInteger, &self->padding.bottom, NULL),
     MakeInlet("padding-left", InletTypeInteger, &self->padding.left, NULL),
-    MakeInlet("pointer-events", InletTypeBool, &self->pointerEvents, NULL),
+    MakeInlet("pointer-events", InletTypeEnum, &self->pointerEvents, (ident) ViewPointerEventsNames),
     MakeInlet("top", InletTypeInteger, &self->frame.y, NULL),
+    MakeInlet("visibility", InletTypeEnum, &self->visibility, (ident) ViewVisibilityNames),
     MakeInlet("width", InletTypeInteger, &self->frame.w, NULL)
   );
 
   $(self, bind, inlets, style->attributes);
 
-  // Capture the authored width/height, if either was actually present in this Style -- distinct
-  // from self->frame.w/h, which layout goes on to freely resize.
-  if ($(style->attributes, objectForKeyPath, "width")) {
-    self->styledSize.w = self->frame.w;
+  if ((self->alignment & ViewAlignmentMaskHorizontal) &&
+      $(style->attributes, objectForKeyPath, "left")) {
+    $(self, warn, WarningTypeStyle, "`left` is overruled by the horizontal `alignment`");
   }
-  if ($(style->attributes, objectForKeyPath, "height")) {
-    self->styledSize.h = self->frame.h;
+
+  if ((self->alignment & ViewAlignmentMaskVertical) &&
+      $(style->attributes, objectForKeyPath, "top")) {
+    $(self, warn, WarningTypeStyle, "`top` is overruled by the vertical `alignment`");
   }
 }
 
@@ -320,13 +331,15 @@ static void applyTheme(View *self, const Theme *theme) {
   Style *computedStyle = $(theme, computeStyle, self);
   assert(computedStyle);
 
-  if (!$(self->computedStyle, isComputedEqual, computedStyle)) {
+  if (self->needsApplyStyle || !$(self->computedStyle, isComputedEqual, computedStyle)) {
 
     release(self->computedStyle);
     self->computedStyle = retain(computedStyle);
 
     $(self->computedStyle, addAttributes, self->style->attributes);
     $(self, applyStyle, self->computedStyle);
+
+    self->needsApplyStyle = false;
   }
 
   release(computedStyle);
@@ -758,7 +771,7 @@ static void draw(View *self, Renderer *renderer) {
 
   assert(self->window);
 
-  if (self->hidden == false) {
+  if (self->visibility != ViewVisibilityHidden) {
 
     $(renderer, drawView, self);
 
@@ -955,7 +968,7 @@ static void hasOverflow_enumerate(View *view, ident data) {
 
   Overflow *overflow = data;
 
-  if (!view->hidden) {
+  if (view->visibility != ViewVisibilityHidden) {
 
     const SDL_Rect bounds = $(view, bounds);
 
@@ -990,7 +1003,7 @@ static bool hasOverflow(const View *self) {
  */
 static View *hitTest(const View *self, const SDL_Point *point) {
 
-  if (self->hidden == false) {
+  if (self->visibility != ViewVisibilityHidden) {
 
     if ($(self, containsPoint, point)) {
 
@@ -1004,7 +1017,7 @@ static View *hitTest(const View *self, const SDL_Point *point) {
         }
       }
 
-      return self->pointerEvents ? (View *) self : NULL;
+      return self->pointerEvents == ViewPointerEventsAuto ? (View *) self : NULL;
     }
   }
 
@@ -1047,10 +1060,6 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
     self->warnings = $$(Array, arrayWithCapacity, 0);
     assert(self->warnings);
 
-    self->backgroundGradientAngle = 180;
-    self->maxSize = MakeSize(INT32_MAX, INT32_MAX);
-    self->pointerEvents = true;
-
     self->needsApplyTheme = true;
     self->needsLayout = true;
   }
@@ -1062,6 +1071,9 @@ static View *initWithFrame(View *self, const SDL_Rect *frame) {
  * @brief ViewEnumerator for invalidateStyle.
  */
 static void invalidateStyle_enumerate(View *view, ident data) {
+
+  view->needsApplyStyle = true;
+
   $(view, setNeedsApplyTheme);
 }
 
@@ -1132,7 +1144,7 @@ static bool isTouchResponder(const View *self) {
 static bool isVisible(const View *self) {
 
   for (const View *view = self; view; view = view->superview) {
-    if (view->hidden) {
+    if (view->visibility == ViewVisibilityHidden) {
       return false;
     }
   }
@@ -1675,8 +1687,8 @@ static void resignTouchResponder(View *self) {
  */
 static void resize(View *self, const SDL_Size *size) {
 
-  const int w = clamp(size->w, self->minSize.w, self->maxSize.w);
-  const int h = clamp(size->h, self->minSize.h, self->maxSize.h);
+  const int w = ClampSize(size->w, self->minSize.w, self->maxSize.w);
+  const int h = ClampSize(size->h, self->minSize.h, self->maxSize.h);
 
   if (self->frame.w != w || self->frame.h != h) {
 
@@ -1796,14 +1808,16 @@ static View *selectFirst(View *self, const char *rule) {
 }
 
 /**
- * @fn void View::setHidden(View *self, bool hidden)
+ * @fn void View::setVisibility(View *self, ViewVisibility visibility)
  * @memberof View
  */
-static void setHidden(View *self, bool hidden) {
+static void setVisibility(View *self, ViewVisibility visibility) {
 
-  if (self->hidden != hidden) {
+  if (self->visibility != visibility) {
 
-    self->hidden = hidden;
+    self->visibility = visibility;
+
+    $(self->style, addEnumAttribute, "visibility", ViewVisibilityNames, visibility);
 
     if (self->superview && $(self->superview, isContainer)) {
       $(self->superview, setNeedsLayout);
@@ -1910,15 +1924,10 @@ static SDL_Size sizeThatFits(const View *self) {
 
     release(subviews);
 
-    // A styled width/height is authored intent for this View's own frame; floor the
-    // children-derived sum against it so it survives summing subviews with no size of their
-    // own to contribute (e.g. Slider, whose bar and handle have none independently).
-    size.w = max(size.w, self->styledSize.w);
-    size.h = max(size.h, self->styledSize.h);
   }
 
-  size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
-  size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
+  size.w = ClampSize(size.w, self->minSize.w, self->maxSize.w);
+  size.h = ClampSize(size.h, self->minSize.h, self->maxSize.h);
 
   return size;
 }
@@ -1954,8 +1963,8 @@ static SDL_Size sizeThatSatisfies(View *self, ViewConstraint width, ViewConstrai
   size.w = resolveViewConstraint(self->autoresizingMask & ViewAutoresizingWidth, width, size.w);
   size.h = resolveViewConstraint(self->autoresizingMask & ViewAutoresizingHeight, height, size.h);
 
-  size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
-  size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
+  size.w = ClampSize(size.w, self->minSize.w, self->maxSize.w);
+  size.h = ClampSize(size.h, self->minSize.h, self->maxSize.h);
 
   return size;
 }
@@ -2139,7 +2148,7 @@ static bool visibleSubviews_filter(ident obj, ident data) {
 
   const View *view = (View *) obj;
 
-  return view->hidden == false && view->alignment != ViewAlignmentInternal;
+  return view->visibility != ViewVisibilityHidden && view->alignment != ViewAlignmentInternal;
 }
 
 /**
@@ -2269,7 +2278,7 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
   ((ViewInterface *) clazz->interface)->select = _select;
   ((ViewInterface *) clazz->interface)->selectFirst = selectFirst;
-  ((ViewInterface *) clazz->interface)->setHidden = setHidden;
+  ((ViewInterface *) clazz->interface)->setVisibility = setVisibility;
   ((ViewInterface *) clazz->interface)->setNeedsApplyTheme = setNeedsApplyTheme;
   ((ViewInterface *) clazz->interface)->setNeedsLayout = setNeedsLayout;
   ((ViewInterface *) clazz->interface)->size = size;

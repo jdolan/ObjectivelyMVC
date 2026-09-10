@@ -98,6 +98,34 @@ typedef enum {
 OBJECTIVELYMVC_EXPORT const EnumName ViewAutoresizingNames[];
 
 /**
+ * @brief Clamps `size` to `min` and `max`, where a `max` of zero is unbounded.
+ */
+#define ClampSize(size, min, max) \
+  clamp((size), (min), (max) ? (max) : INT32_MAX)
+
+/**
+ * @brief Whether a View is the result of a hit test.
+ */
+typedef enum {
+  ViewPointerEventsAuto,
+  ViewPointerEventsNone
+} ViewPointerEvents;
+
+OBJECTIVELYMVC_EXPORT const EnumName ViewPointerEventsNames[];
+
+/**
+ * @brief Visibility constants.
+ */
+typedef enum {
+  ViewVisibilityUnspecified,
+  ViewVisibilityVisible,
+  ViewVisibilityHidden
+} ViewVisibility;
+
+
+OBJECTIVELYMVC_EXPORT const EnumName ViewVisibilityNames[];
+
+/**
  * @brief A constraint offered by an ancestor View to a descendant during View::sizeThatSatisfies.
  */
 typedef struct {
@@ -209,22 +237,26 @@ struct View {
 
   /**
    * @brief The alignment.
+   * @styled
    */
   ViewAlignment alignment;
 
   /**
    * @brief The ViewAutoresizing bitmask.
+   * @styled
    */
   int autoresizingMask;
 
   /**
    * @brief The background color.
+   * @styled
    */
   SDL_Color backgroundColor;
 
   /**
-   * @brief The angle of the background gradient, in degrees, clockwise from north: `0` fills
-   * upwards, `90` to the right, `180` (the default) downwards.
+   * @brief The angle of the background gradient, in degrees, clockwise from south: `0` (the
+   * default) fills downwards, `90` to the right, `180` upwards.
+   * @styled
    */
   int backgroundGradientAngle;
 
@@ -232,21 +264,25 @@ struct View {
    * @brief The far color of the background gradient, which runs from View::backgroundColor.
    * @remarks The gradient is drawn only when this color has a non-zero alpha; otherwise the
    * background is a flat View::backgroundColor.
+   * @styled
    */
   SDL_Color backgroundGradientColor;
 
   /**
    * @brief The border color.
+   * @styled
    */
   SDL_Color borderColor;
 
   /**
    * @brief The corner radius applied to the background, border and bevel.
+   * @styled
    */
   int borderRadius;
 
   /**
    * @brief The border width.
+   * @styled
    */
   int borderWidth;
 
@@ -268,6 +304,7 @@ struct View {
 
   /**
    * @brief If true, subviews will be clipped to this View's frame.
+   * @styled
    */
   bool clipsSubviews;
 
@@ -280,6 +317,7 @@ struct View {
    * @brief The horizontal inset of each corner of the background and border.
    * @remarks A View with any corner inset is drawn as a polygon rather than through the
    * rounded rectangle shader, so View::borderRadius does not apply to it.
+   * @styled
    */
   ViewCornerCut cornerCut;
 
@@ -289,12 +327,6 @@ struct View {
   SDL_Rect frame;
 
   /**
-   * @brief If `true`, this View is not drawn.
-   * @see View::setHidden(View *, bool)
-   */
-  bool hidden;
-
-  /**
    * @brief An optional identifier.
    * @remarks Identifiers are commonly used to resolve Outlets when loading Views via JSON.
    */
@@ -302,11 +334,13 @@ struct View {
 
   /**
    * @brief The maximum size this View may be resized to during layout.
+   * @styled
    */
   SDL_Size maxSize;
 
   /**
    * @brief The minimum size this View may be resized to during layout.
+   * @styled
    */
   SDL_Size minSize;
 
@@ -317,6 +351,15 @@ struct View {
    * skipped by View::applyThemeIfNeeded.
    */
   bool needsApplyTheme;
+
+  /**
+   * @brief If true, this View's Style must be applied even if the same Selectors still match.
+   * @remarks Set by View::invalidateStyle, which is how a change to View::style asks to be
+   * seen: the Selectors that matched are unchanged, so View::applyTheme's comparison cannot
+   * tell that anything happened.
+   * @private
+   */
+  bool needsApplyStyle;
 
   /**
    * @brief If true, a descendant of this View has `needsApplyTheme` set.
@@ -350,18 +393,19 @@ struct View {
 
   /**
    * @brief The padding.
+   * @styled
    */
   ViewPadding padding;
 
   /**
-   * @brief If `false`, this View is never the result of a hit test; its subviews still are.
-   * @remarks Defaults to `true`. Overlays that are drawn but never interacted with, such as a
-   * full-window HUD or console layer stacked above interactive content, SHOULD set this to
-   * `false` so that clicks pass through them to whatever lies beneath. Styled as
-   * `pointer-events: false`.
+   * @brief Whether this View is the result of a hit test; its subviews always are.
+   * @remarks An overlay that is drawn but never interacted with, such as a full-window HUD or
+   * console layer stacked above interactive content, SHOULD be `none` so that clicks pass
+   * through it to whatever lies beneath. Styled as `pointer-events`.
    * @see View::hitTest(const View *, const SDL_Point *)
+   * @styled
    */
-  bool pointerEvents;
+  ViewPointerEvents pointerEvents;
 
   /**
    * @brief The cached View::renderFrame, valid while `generation` matches the current
@@ -379,17 +423,6 @@ struct View {
    * via Selector. That is, it is always the last Style added to the computed Style.
    */
   Style *style;
-
-  /**
-   * @brief The `width`/`height` this View was most recently given via styling, per axis.
-   * @remarks Written only when a `width` or `height` Style attribute is actually present -- not
-   * on every View::applyStyle call -- so it reflects the last authored value for an axis, or
-   * `0` if that axis has never been styled. View::sizeThatFits's container branch floors its
-   * children-derived sum against this, so an authored size survives being a Contain view with no
-   * content of its own to size from (e.g. Slider, whose `bar` and `handle` have none
-   * independently).
-   */
-  SDL_Size styledSize;
 
   /**
    * @brief An optional Stylesheet.
@@ -414,6 +447,14 @@ struct View {
    * @remarks This is `NULL` unless the View is the immediate `view` of a ViewController.
    */
   ViewController *viewController;
+
+  /**
+   * @brief Whether this View is drawn, and contributes to its superview's size.
+   * @remarks `unspecified` is visible.
+   * @see View::setVisibility(View *, ViewVisibility)
+   * @styled
+   */
+  ViewVisibility visibility;
 
   /**
    * @brief The Warnings this View generated.
@@ -934,10 +975,6 @@ struct ViewInterface {
    * This method is called by View::layoutIfNeeded only after a View::sizeThatSatisfies pass has
    * already resolved `self->frame`; it must not perform any sizing of its own, only positioning
    * and committing of subview frames.
-   * @remarks The default implementation resolves each subview's size via View::layoutWithConstraint,
-   * offering `ViewConstraintEqual` for a `ViewAutoresizingWidth`/`Height` subview (since this
-   * View's bounds are already final) or `ViewConstraintUnspecified` otherwise (so the subview
-   * sizes itself from its own content).
    * @memberof View
    */
   void (*layoutSubviews)(View *self);
@@ -1149,16 +1186,16 @@ struct ViewInterface {
   View *(*selectFirst)(View *self, const char *rule);
 
   /**
-   * @fn void View::setHidden(View *self, bool hidden)
-   * @brief Sets this View's hidden state.
+   * @fn void View::setVisibility(View *self, ViewVisibility visibility)
+   * @brief Sets this View's visibility.
    * @param self The View.
-   * @param hidden The hidden state.
-   * @remarks Hiding or unhiding a View changes its superview's View::visibleSubviews, so this
-   * marks the superview `needsLayout` if it is a container; writing `self->hidden` directly does
-   * not.
+   * @param visibility The visibility.
+   * @remarks Callers MUST use this method rather than assigning View::visibility directly: it
+   * marks the superview `needsLayout` if it is a container, and writes View::style so that the
+   * choice outlives the next Style applied.
    * @memberof View
    */
-  void (*setHidden)(View *self, bool hidden);
+  void (*setVisibility)(View *self, ViewVisibility visibility);
 
   /**
    * @fn void View::setNeedsApplyTheme(View *self)

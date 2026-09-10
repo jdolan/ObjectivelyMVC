@@ -277,8 +277,8 @@ static SDL_Size sizeThatFits(const View *self) {
 
   release(subviews);
 
-  size.w = clamp(size.w, self->minSize.w, self->maxSize.w);
-  size.h = clamp(size.h, self->minSize.h, self->maxSize.h);
+  size.w = ClampSize(size.w, self->minSize.w, self->maxSize.w);
+  size.h = ClampSize(size.h, self->minSize.h, self->maxSize.h);
 
   return size;
 }
@@ -293,7 +293,6 @@ static StackView *initWithFrame(StackView *self, const SDL_Rect *frame) {
 
   self = (StackView *) super(View, self, initWithFrame, frame);
   if (self) {
-    self->view.autoresizingMask = ViewAutoresizingContain;
   }
 
   return self;

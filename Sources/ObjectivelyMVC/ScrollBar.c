@@ -176,7 +176,6 @@ static ScrollBar *initWithScrollView(ScrollBar *self, ScrollView *scrollView) {
   if (self) {
 
     $((View *) self, addClassName, "scrollBar");
-    ((View *) self)->clipsSubviews = true;
 
     self->handle = $(alloc(ScrollHandle), initWithFrame, NULL);
     assert(self->handle);

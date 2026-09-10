@@ -1,6 +1,19 @@
 * {
+  alignment: none;
+  autoresizing-mask: none;
   background-color: transparent;
+  background-gradient-angle: 0;
+  background-gradient-color: transparent;
+  border-color: transparent;
+  border-radius: 0;
   border-width: 0;
+  clips-subviews: false;
+  corner-cut: 0;
+  max-size: 0 0;
+  min-size: 0 0;
+  padding: 0;
+  pointer-events: auto;
+  visibility: unspecified;
 }
 
 Box {
@@ -12,9 +25,10 @@ Box {
 }
 
 Box > Label {
+  alignment: internal;
   background-color: #888888;
-  padding: 0 8 0 8;
   left: 20;
+  padding: 0 8 0 8;
 }
 
 Box > Label > Text {
@@ -49,41 +63,58 @@ Checkbox {
 }
 
 Checkbox ImageView {
-  hidden: true;
-  width: 12;
+  autoresizing-mask: fill;
   height: 12;
+  visibility: hidden;
+  width: 12;
 }
 
 Checkbox:selected ImageView {
-  hidden: false;
+  visibility: visible;
 }
 
+/* The box holds a 12 check in 4 of padding, so 20 is the size it takes once one is in it */
+
 Checkbox > Control {
+  alignment: middle-center;
   autoresizing-mask: contain;
   background-color: #22222266;
   bevel: inset;
-  min-width: 18;
-  min-height: 18;
+  min-height: 20;
+  min-width: 20;
   padding: 4 4 4 4;
 }
 
 CollectionItemView {
   background-color: #22222266;
   border-color: #999999aa;
+  clips-subviews: true;
+}
+
+CollectionItemView > ImageView {
+  autoresizing-mask: fill;
+}
+
+CollectionItemView > Text {
+  alignment: middle-center;
 }
 
 CollectionItemView > .selectionOverlay {
+  autoresizing-mask: fill;
   background-color: #ffffff22;
-  hidden: true;
+  visibility: hidden;
 }
 
 CollectionItemView:selected > .selectionOverlay {
-  hidden: false;
+  visibility: visible;
 }
 
 CollectionView {
+  axis: vertical;
   background-color: #22222266;
+  item-size: 0 0;
   item-size: 64 64;
+  item-spacing: 0 0;
   item-spacing: 10 10;
 }
 
@@ -93,8 +124,12 @@ CollectionView .contentView {
 }
 
 Control {
+  bevel-dark-color: black;
+  bevel-light-color: silver;
+  bevel: none;
   border-radius: 4;
   min-height: 32;
+  selection: none;
   selection: single;
 }
 
@@ -138,6 +173,16 @@ Option > Text {
   alignment: middle-left;
 }
 
+/*
+ * A ViewController's own root View fills its parent, which is what a controller pushed onto a
+ * window or added to another wants. A rule rather than the element style, so that a controller
+ * whose view is a panel of its own, or a page measured by its content, can say so.
+ */
+
+.viewController {
+  autoresizing-mask: fill;
+}
+
 PageView {
   autoresizing-mask: contain;
   border-color: #888888;
@@ -149,7 +194,9 @@ Panel {
   background-color: #444444dd;
   border-color: #dedede;
   border-width: 1;
+  draggable: true;
   padding: 12 12 12 12;
+  resizable: true;
 }
 
 Panel > StackView {
@@ -163,7 +210,17 @@ Panel .accessoryView {
   spacing: 16;
 }
 
+/*
+ * A Panel shows its own accessory view only once something is put in it. The class name is a
+ * layout a consumer may wear anywhere, so this addresses the Panel's own by where it sits.
+ */
+
+Panel > StackView > .accessoryView {
+  visibility: hidden;
+}
+
 Panel > .resizeHandle {
+  alignment: internal;
   border-radius: 4;
 }
 
@@ -186,8 +243,9 @@ ProgressBar > Text {
 }
 
 ScrollBar {
-  width: 12;
   background-color: #222222c0;
+  clips-subviews: true;
+  width: 12;
 }
 
 ScrollBar > .handle {
@@ -198,6 +256,12 @@ ScrollBar > .handle {
 ScrollView {
   autoresizing-mask: fill;
   clips-subviews: true;
+  scrollbar: auto;
+}
+
+ScrollView > .scrollBar {
+  alignment: right;
+  autoresizing-mask: height;
 }
 
 ScrollView > .contentView {
@@ -209,6 +273,7 @@ Select {
   background-color: #dedede10;
   bevel: outset;
   padding: 4 4 4 4;
+  selection: single;
 }
 
 Select > StackView {
@@ -218,7 +283,7 @@ Select > StackView {
 
 Slider {
   autoresizing-mask: contain;
-  width: 140;
+  min-width: 140;
 }
 
 Slider > .bar {
@@ -248,6 +313,14 @@ SlideShowView {
 
 SlideShowView > ImageView {
   autoresizing-mask: fill;
+}
+
+StackView {
+  autoresizing-mask: contain;
+  axis: vertical;
+  distribution: default;
+  reversed: false;
+  spacing: 0;
 }
 
 StackView.container {
@@ -324,8 +397,10 @@ TextView {
   autoresizing-mask: contain;
   background-color: #22222266;
   bevel: inset;
+  clips-subviews: true;
+  editable: true;
+  min-width: 160;
   padding: 4 4 4 4;
-  width: 160;
 }
 
 TextView > Text {
@@ -351,7 +426,7 @@ Text {
 
 .options > Option {
   border-radius: 2;
-  padding: 0 4 0 4;
+  padding: 2 4 2 4;
 }
 
 .options > Option:hover {

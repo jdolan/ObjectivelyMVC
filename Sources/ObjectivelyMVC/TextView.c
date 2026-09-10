@@ -436,7 +436,6 @@ static TextView *initWithFrame(TextView *self, const SDL_Rect *frame) {
 
     $((View *) self, addSubview, (View *) self->text);
 
-    self->control.view.clipsSubviews = true;
   }
 
   return self;

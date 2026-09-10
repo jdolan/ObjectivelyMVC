@@ -234,18 +234,17 @@ START_TEST(fillOnlyChildFillsContainBounds) {
 
 } END_TEST
 
-START_TEST(styledSizeFloorsContainBoundsWithNoMinSize) {
+START_TEST(minSizeFloorsContainBounds) {
 
-  // Mirrors Slider itself: a styled `width` is the only thing giving a Contain view with no
-  // sized content of its own (a bare `fill` leaf, contributing nothing) a real width -- with no
-  // minSize set at all, unlike fillOnlyChildFillsContainBounds above.
+  // Mirrors Slider itself: a styled `min-width` is the only thing giving a Contain view with no
+  // sized content of its own (a bare `fill` leaf, contributing nothing) a real width.
 
   View *outer = $(alloc(View), initWithFrame, NULL);
   outer->autoresizingMask = ViewAutoresizingContain;
 
   Style *style = $(alloc(Style), initWithAttributes, NULL);
-  $(style, addIntegerAttribute, "width", 140);
-  $(style, addIntegerAttribute, "height", 24);
+  $(style, addIntegerAttribute, "min-width", 140);
+  $(style, addIntegerAttribute, "min-height", 24);
 
   $(outer, applyStyle, style);
   release(style);
@@ -266,9 +265,10 @@ START_TEST(styledSizeFloorsContainBoundsWithNoMinSize) {
 
 } END_TEST
 
-START_TEST(setHiddenMarksSuperviewNeedsLayout) {
+START_TEST(setVisibilityMarksSuperviewNeedsLayout) {
 
   StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+  stackView->view.autoresizingMask = ViewAutoresizingContain;
 
   View *a = fixedView(40, 20);
   View *b = fixedView(60, 30);
@@ -278,7 +278,7 @@ START_TEST(setHiddenMarksSuperviewNeedsLayout) {
 
   $((View *) stackView, layoutIfNeeded);
 
-  $(a, setHidden, true);
+  $(a, setVisibility, ViewVisibilityHidden);
   $((View *) stackView, layoutIfNeeded);
 
   ck_assert_int_eq(60, stackView->view.frame.w);
@@ -336,13 +336,13 @@ START_TEST(pointerEventsPassThroughToSubviewsAndSiblings) {
   ck_assert_ptr_eq(button, $(root, hitTest, &MakePoint(10, 10)));
   ck_assert_ptr_eq(overlay, $(root, hitTest, &MakePoint(300, 100)));
 
-  overlay->pointerEvents = false;
+  overlay->pointerEvents = ViewPointerEventsNone;
 
   ck_assert_ptr_eq(button, $(root, hitTest, &MakePoint(10, 10)));
   ck_assert_ptr_eq(beneath, $(root, hitTest, &MakePoint(300, 100)));
 
   Style *style = $(alloc(Style), initWithRules, "View");
-  $(style, addBoolAttribute, "pointer-events", true);
+  $(style, addEnumAttribute, "pointer-events", ViewPointerEventsNames, ViewPointerEventsAuto);
   $(overlay, applyStyle, style);
   release(style);
 
@@ -365,8 +365,8 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, stackViewMeasuresFreshNotStale);
   tcase_add_test(tcase, standaloneRelayoutDoesNotShrinkFillChild);
   tcase_add_test(tcase, fillOnlyChildFillsContainBounds);
-  tcase_add_test(tcase, styledSizeFloorsContainBoundsWithNoMinSize);
-  tcase_add_test(tcase, setHiddenMarksSuperviewNeedsLayout);
+  tcase_add_test(tcase, minSizeFloorsContainBounds);
+  tcase_add_test(tcase, setVisibilityMarksSuperviewNeedsLayout);
   tcase_add_test(tcase, alignedContainChildRecentersOnGrowth);
   tcase_add_test(tcase, pointerEventsPassThroughToSubviewsAndSiblings);
 

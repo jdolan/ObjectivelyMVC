@@ -255,7 +255,7 @@ struct RendererInterface {
    * @param self The Renderer.
    * @param points The points, in order.
    * @param count The number of points; fewer than three draws nothing.
-   * @param angle The gradient angle in degrees, clockwise from north. Ignored when `to` is
+   * @param angle The gradient angle in degrees, clockwise from south. Ignored when `to` is
    *   `NULL`.
    * @param from The fill color, and the near color of the gradient.
    * @param to The far color of the gradient, or `NULL` to fill flat with `from`.
@@ -313,8 +313,8 @@ struct RendererInterface {
    * @param self The Renderer.
    * @param rect The rectangle.
    * @param radius The corner radius.
-   * @param angle The gradient angle in degrees, clockwise from north: `0` fills upwards,
-   *   `90` to the right, `180` downwards.
+   * @param angle The gradient angle in degrees, clockwise from south: `0` fills downwards,
+   *   `90` to the right, `180` upwards.
    * @param from The near color of the gradient.
    * @param to The far color of the gradient.
    * @memberof Renderer

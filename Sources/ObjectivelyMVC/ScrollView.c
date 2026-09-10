@@ -106,7 +106,8 @@ static void layoutSubviews(View *self) {
     }
   }
   
-  $((View *) this->scrollBar, setHidden, scrollBarHidden);
+  $((View *) this->scrollBar, setVisibility,
+    scrollBarHidden ? ViewVisibilityHidden : ViewVisibilityVisible);
 
   super(View, self, layoutSubviews);
 
@@ -165,15 +166,12 @@ static ScrollView *initWithFrame(ScrollView *self, const SDL_Rect *frame) {
   self = (ScrollView *) super(Control, self, initWithFrame, frame);
   if (self) {
     self->step = 12.f;
-    self->scrollBarVisibility = ScrollBarAuto;
 
     self->scrollBar = $(alloc(ScrollBar), initWithScrollView, self);
     assert(self->scrollBar);
 
     View *scrollBar = (View *) self->scrollBar;
-    scrollBar->alignment = ViewAlignmentRight;
-    scrollBar->autoresizingMask = ViewAutoresizingHeight;
-    scrollBar->hidden = true;
+    $(scrollBar, setVisibility, ViewVisibilityHidden);
 
     $((View *) self, addSubview, scrollBar);
   }
@@ -243,8 +241,11 @@ static void setContentView(ScrollView *self, View *contentView) {
  */
 static void setScrollBarVisibility(ScrollView *self, ScrollBarVisibility visibility) {
 
-  self->scrollBarVisibility = visibility;
-  $((View *) self, setNeedsLayout);
+  View *this = (View *) self;
+
+  $(this->style, addEnumAttribute, "scrollbar", ScrollBarVisibilityNames, visibility);
+
+  $(this, invalidateStyle);
 }
 
 #pragma mark - Class lifecycle

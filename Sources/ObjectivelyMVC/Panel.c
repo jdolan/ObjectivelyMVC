@@ -119,7 +119,8 @@ static void layoutSubviews(View *self) {
   resizeHandle->frame.x = self->frame.w - resizeHandle->frame.w;
   resizeHandle->frame.y = self->frame.h - resizeHandle->frame.h;
 
-  $(resizeHandle, setHidden, !this->isResizable);
+  $(resizeHandle, setVisibility,
+    this->isResizable ? ViewVisibilityVisible : ViewVisibilityHidden);
 }
 
 #pragma mark - Control
@@ -204,7 +205,7 @@ static SDL_Size contentSize(const Panel *self) {
 
   SDL_Size size = $(contentView, sizeThatContains);
 
-  if (accessoryView->hidden == false) {
+  if (accessoryView->visibility != ViewVisibilityHidden) {
     const SDL_Size accessorySize = $(accessoryView, sizeThatContains);
     size.h -= accessorySize.h + self->stackView->spacing;
   }
@@ -246,7 +247,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
     $((View *) self->accessoryView, addClassName, "accessoryView");
     $((View *) self->accessoryView, addClassName, "container");
 
-    self->accessoryView->view.hidden = true;
 
     $((View *) self->stackView, addSubview, (View *) self->accessoryView);
 
@@ -254,8 +254,6 @@ static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
     assert(self->resizeHandle);
 
     $((View *) self->resizeHandle, addClassName, "resizeHandle");
-
-    self->resizeHandle->view.alignment = ViewAlignmentInternal;
 
     self->resizeHandle->view.frame.w = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;
     self->resizeHandle->view.frame.h = DEFAULT_PANEL_RESIZE_HANDLE_SIZE;

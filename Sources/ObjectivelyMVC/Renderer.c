@@ -161,7 +161,7 @@ static SDL_FRect textureRegion(const Texture *texture, const SDL_Rect *src) {
 
 /**
  * @brief The color at `x, y` for a gradient of `angle` degrees across `bounds`.
- * @details `angle` is measured clockwise from north, so `0` fills upwards and `90` to the
+ * @details `angle` is measured clockwise from south, so `0` fills downwards and `90` to the
  * right. The interpolant is the point's projection onto the gradient axis, normalized by the
  * extent of `bounds` along that axis, which makes the color an affine function of position:
  * barycentric interpolation across the triangle then reproduces the gradient exactly, at any
@@ -171,7 +171,7 @@ static SDL_Color gradientColor(float x, float y, const SDL_FRect *bounds, int an
                                const SDL_Color *from, const SDL_Color *to) {
 
   const float radians = float_radians((float) angle);
-  const float dx = sinf(radians), dy = -cosf(radians);
+  const float dx = sinf(radians), dy = cosf(radians);
 
   const float cx = bounds->x + bounds->w * 0.5f;
   const float cy = bounds->y + bounds->h * 0.5f;
