@@ -129,16 +129,6 @@ static void bindFloat(const Inlet *inlet, ident obj) {
 }
 
 /**
- * @brief InletBinding for InletTypeImage.
- */
-static void bindImage(const Inlet *inlet, ident obj) {
-
-  release(*(Image **) inlet->dest);
-
-  *((Image **) inlet->dest) = $(alloc(Image), initWithResourceName, cast(String, obj)->chars);
-}
-
-/**
  * @brief InletBinding for InletTypeInteger.
  */
 static void bindInteger(const Inlet *inlet, ident obj) {
@@ -300,7 +290,6 @@ const InletBinding inletBindings[] = {
   bindDouble,
   bindEnum,
   bindFloat,
-  bindImage,
   bindInteger,
   bindPoint,
   bindRectangle,

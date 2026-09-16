@@ -25,6 +25,7 @@
 
 #define _Class _Image
 
+
 #pragma mark - Object
 
 /**
@@ -45,32 +46,32 @@ static void dealloc(Object *self) {
  * @fn Image *Image::imageWithBytes(const uint8_t *bytes, size_t length)
  * @memberof Image
  */
-static Image *imageWithBytes(const uint8_t *bytes, size_t length) {
-  return $(alloc(Image), initWithBytes, bytes, length);
+static Image *imageWithBytes(const uint8_t *bytes, size_t length, float pixelDensity) {
+  return $(alloc(Image), initWithBytes, bytes, length, pixelDensity);
 }
 
 /**
  * @fn Image *Image::imageWithData(const Data *data)
  * @memberof Image
  */
-static Image *imageWithData(const Data *data) {
-  return $(alloc(Image), initWithData, data);
+static Image *imageWithData(const Data *data, float pixelDensity) {
+  return $(alloc(Image), initWithData, data, pixelDensity);
 }
 
 /**
  * @fn Image *Image::imageWithResource(const Resource *resource)
  * @memberof Image
  */
-static Image *imageWithResource(const Resource *resource) {
-  return $(alloc(Image), initWithResource, resource);
+static Image *imageWithResource(const Resource *resource, float pixelDensity) {
+  return $(alloc(Image), initWithResource, resource, pixelDensity);
 }
 
 /**
  * @fn Image *Image::imageWithResourceName(const char *name)
  * @memberof Image
  */
-static Image *imageWithResourceName(const char *name) {
-  return $(alloc(Image), initWithResourceName, name);
+static Image *imageWithResourceName(const char *name, float pixelDensity) {
+  return $(alloc(Image), initWithResourceName, name, pixelDensity);
 }
 
 /**
@@ -113,10 +114,10 @@ static bool isSVG(const Image *self, const uint8_t *bytes, size_t length) {
  * @fn Image *Image::initWithBytes(Image *self, const uint8_t *bytes, size_t length)
  * @memberof Image
  */
-static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
+static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length, float pixelDensity) {
 
   if (isSVG(self, bytes, length)) {
-    return $(self, initWithSVG, bytes, length, 1.f);
+    return $(self, initWithSVG, bytes, length, pixelDensity);
   }
 
   SDL_IOStream *stream = SDL_IOFromConstMem(bytes, (int) length);
@@ -140,10 +141,10 @@ static Image *initWithBytes(Image *self, const uint8_t *bytes, size_t length) {
  * @fn Image *Image::initWithData(Image *self, const Data *data)
  * @memberof Image
  */
-static Image *initWithData(Image *self, const Data *data) {
+static Image *initWithData(Image *self, const Data *data, float pixelDensity) {
 
   if (data) {
-    self = $(self, initWithBytes, data->bytes, data->length);
+    self = $(self, initWithBytes, data->bytes, data->length, pixelDensity);
   } else {
     self = release(self);
   }
@@ -155,11 +156,11 @@ static Image *initWithData(Image *self, const Data *data) {
  * @fn Image *Image::initWithResource(Image *self, const Resource *resource)
  * @memberof Image
  */
-static Image *initWithResource(Image *self, const Resource *resource) {
+static Image *initWithResource(Image *self, const Resource *resource, float pixelDensity) {
 
   if (resource) {
     self->type = strrchr(resource->name, '.') ? strrchr(resource->name, '.') + 1 : NULL;
-    self = $(self, initWithData, resource->data);
+    self = $(self, initWithData, resource->data, pixelDensity);
   } else {
     self = release(self);
   }
@@ -168,14 +169,134 @@ static Image *initWithResource(Image *self, const Resource *resource) {
 }
 
 /**
+ * @brief Interprets an `@` decoration in `name`.
+ * @details Where the decoration sits says what it is. `name.svg@<width>x<height>` trails the
+ * whole reference and requests a size in points: it is a rasterization request, so it is
+ * stripped, and `name.svg` is what loads. `name@<scale>x.ext` sits inside the name, before the
+ * extension, and declares how many pixels per point a raster carries, following Apple; a file is
+ * named that way on disk, so it is left alone and loaded verbatim.
+ * @param name The resource name, edited in place.
+ * @param points Receives the requested size, or zero.
+ * @param scale Receives the declared pixels per point, or zero.
+ */
+static void parseDecoration(char *name, SDL_Size *points, float *scale) {
+
+  *points = MakeSize(0, 0);
+  *scale = 0.f;
+
+  char *at = strrchr(name, '@');
+  if (at == NULL) {
+    return;
+  }
+
+  char excess;
+  int w, h;
+
+  const char *extension = strrchr(name, '.');
+
+  if (extension && at > extension) {
+
+    if (sscanf(at + 1, "%dx%d%c", &w, &h, &excess) == 2 && w > 0 && h > 0) {
+      *points = MakeSize(w, h);
+      *at = '\0';
+    }
+
+    return;
+  }
+
+  const size_t length = (extension ? (size_t) (extension - at) : strlen(at)) - 1;
+
+  char decoration[32];
+  if (length == 0 || length >= sizeof(decoration)) {
+    return;
+  }
+
+  memcpy(decoration, at + 1, length);
+  decoration[length] = '\0';
+
+  if (sscanf(decoration, "%dx%c", &w, &excess) == 1 && w > 0) {
+    *scale = (float) w;
+  }
+}
+
+/**
+ * @brief Composes the name of the `@<density>x` variant of `name`, e.g. `foo@2x.png`.
+ * @return The variant name, to be freed by the caller, or `NULL` on error.
+ */
+static char *variantName(const char *name, int density) {
+
+  const char *extension = strrchr(name, '.');
+  const int stem = extension ? (int) (extension - name) : (int) strlen(name);
+
+  char *variant = NULL;
+  if (SDL_asprintf(&variant, "%.*s@%dx%s", stem, name, density, extension ?: "") < 0) {
+    return NULL;
+  }
+
+  return variant;
+}
+
+/**
  * @fn Image *Image::initWithResourceName(Image *self, const char *name)
  * @memberof Image
  */
-static Image *initWithResourceName(Image *self, const char *name) {
+static Image *initWithResourceName(Image *self, const char *name, float pixelDensity) {
 
-  Resource *resource = $$(Resource, resourceWithName, name);
+  assert(name);
 
-  self = $(self, initWithResource, resource);
+  char *resourceName = strdup(name);
+  assert(resourceName);
+
+  SDL_Size points;
+  float scale;
+
+  parseDecoration(resourceName, &points, &scale);
+
+  Resource *resource = NULL;
+
+  const char *extension = strrchr(resourceName, '.');
+
+  // an undecorated raster name prefers the variant matching the display, as @2x assets are
+  // chosen; a vector needs no variant, rasterizing to the density in initWithBytes instead
+  if (points.w == 0 && scale == 0.f && !(extension && SDL_strcasecmp(extension, ".svg") == 0)) {
+
+    const int density = (int) SDL_roundf(pixelDensity);
+    if (density > 1) {
+
+      char *variant = variantName(resourceName, density);
+      if (variant) {
+
+        resource = $$(Resource, resourceWithName, variant);
+        if (resource) {
+          scale = (float) density;
+        }
+
+        free(variant);
+      }
+    }
+  }
+
+  if (resource == NULL) {
+    resource = $$(Resource, resourceWithName, resourceName);
+  }
+
+  free(resourceName);
+
+  if (resource == NULL) {
+    return release(self);
+  }
+
+  if (points.w && points.h && resource->data &&
+      isSVG(self, resource->data->bytes, resource->data->length)) {
+    self = $(self, initWithSVGSize, resource->data->bytes, resource->data->length, points,
+                  pixelDensity);
+  } else {
+    self = $(self, initWithResource, resource, pixelDensity);
+
+    if (self && scale > 0.f) {
+      self->scale = scale;
+    }
+  }
 
   release(resource);
 
@@ -225,6 +346,34 @@ static Image *initWithSVG(Image *self, const uint8_t *bytes, size_t length, floa
     if (self) {
       self->type = "svg";
       self->scale = scale;
+    }
+  } else {
+    MVC_LogWarn("%s\n", SDL_GetError());
+    self = release(self);
+  }
+
+  return self;
+}
+
+/**
+ * @fn Image *Image::initWithSVGSize(Image *self, const uint8_t *bytes, size_t length, SDL_Size points)
+ * @memberof Image
+ */
+static Image *initWithSVGSize(Image *self, const uint8_t *bytes, size_t length, SDL_Size points, float pixelDensity) {
+
+  const SDL_Size pixels = MakeSize(
+    (int) SDL_roundf(points.w * pixelDensity),
+    (int) SDL_roundf(points.h * pixelDensity)
+  );
+
+  SDL_Surface *surface = rasterizeSVG(bytes, length, pixels);
+  if (surface) {
+    self = $(self, initWithSurface, surface);
+    SDL_DestroySurface(surface);
+
+    if (self) {
+      self->type = "svg";
+      self->scale = pixelDensity;
     }
   } else {
     MVC_LogWarn("%s\n", SDL_GetError());
@@ -291,6 +440,7 @@ static void initialize(Class *clazz) {
   ((ImageInterface *) clazz->interface)->initWithResourceName = initWithResourceName;
   ((ImageInterface *) clazz->interface)->initWithSurface = initWithSurface;
   ((ImageInterface *) clazz->interface)->initWithSVG = initWithSVG;
+  ((ImageInterface *) clazz->interface)->initWithSVGSize = initWithSVGSize;
   ((ImageInterface *) clazz->interface)->size = size;
 }
 

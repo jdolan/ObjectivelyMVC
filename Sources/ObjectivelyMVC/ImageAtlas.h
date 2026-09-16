@@ -118,14 +118,14 @@ struct ImageAtlasInterface {
   AtlasImage *(*addImage)(ImageAtlas *self, Image *image);
 
   /**
-   * @fn AtlasImage *ImageAtlas::addImageWithResourceName(ImageAtlas *self, const char *name)
+   * @fn AtlasImage *ImageAtlas::addImageWithResourceName(ImageAtlas *self, const char *name, float pixelDensity)
    * @brief Loads the Image Resource by the given name and adds it to this atlas.
    * @param self The ImageAtlas.
    * @param name The Resource name.
    * @return The AtlasImage, owned by this atlas, or `NULL` if the Resource was not found.
    * @memberof ImageAtlas
    */
-  AtlasImage *(*addImageWithResourceName)(ImageAtlas *self, const char *name);
+  AtlasImage *(*addImageWithResourceName)(ImageAtlas *self, const char *name, float pixelDensity);
 
   /**
    * @fn AtlasImage *ImageAtlas::addImageWithName(ImageAtlas *self, const char *name, Image *image)

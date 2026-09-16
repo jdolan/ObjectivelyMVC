@@ -71,14 +71,14 @@ static AtlasImage *addImage(ImageAtlas *self, Image *image) {
 }
 
 /**
- * @fn AtlasImage *ImageAtlas::addImageWithResourceName(ImageAtlas *self, const char *name)
+ * @fn AtlasImage *ImageAtlas::addImageWithResourceName(ImageAtlas *self, const char *name, float pixelDensity)
  * @memberof ImageAtlas
  */
-static AtlasImage *addImageWithResourceName(ImageAtlas *self, const char *name) {
+static AtlasImage *addImageWithResourceName(ImageAtlas *self, const char *name, float pixelDensity) {
 
   AtlasImage *atlasImage = NULL;
 
-  Image *image = $$(Image, imageWithResourceName, name);
+  Image *image = $$(Image, imageWithResourceName, name, pixelDensity);
   if (image) {
     atlasImage = $(self, addImage, image);
     release(image);

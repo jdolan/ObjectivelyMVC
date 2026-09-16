@@ -57,7 +57,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   const Inlet inlets[] = MakeInlets(
     MakeInlet("title", InletTypeView, &this->title, NULL),
-    MakeInlet("image", InletTypeImage, &this->image->image, NULL)
+    MakeInlet("image", InletTypeCharacters, &this->image->imageName, NULL)
   );
 
   $(self, bind, inlets, dictionary);

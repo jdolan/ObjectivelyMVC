@@ -82,7 +82,6 @@ typedef enum {
   /**
    * @remarks Inlet destination must be of type `Image **`.
    */
-  InletTypeImage,
 
   /**
    * @remarks Inlet destination must be of type `int *`.

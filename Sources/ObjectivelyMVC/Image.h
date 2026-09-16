@@ -83,40 +83,44 @@ struct ImageInterface {
    * @brief Instantiates an Image with the specified bytes.
    * @param bytes The encoded image bytes.
    * @param length The length of `bytes`.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
    * @return The new Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*imageWithBytes)(const uint8_t *bytes, size_t length);
+  Image *(*imageWithBytes)(const uint8_t *bytes, size_t length, float pixelDensity);
 
   /**
    * @static
    * @fn Image *Image::imageWithData(const Data *data)
    * @brief Instantiates an Image with the specified Data.
    * @param data The encoded image Data.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
    * @return The new Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*imageWithData)(const Data *data);
+  Image *(*imageWithData)(const Data *data, float pixelDensity);
 
   /**
    * @static
    * @fn Image *Image::imageWithResource(const Resource *resource)
    * @brief Instantiates an Image with the specified Resource.
    * @param resource The Resource containing encoded image data.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
    * @return The new Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*imageWithResource)(const Resource *resource);
+  Image *(*imageWithResource)(const Resource *resource, float pixelDensity);
 
   /**
    * @static
    * @fn Image *Image::imageWithResourceName(const char *name)
    * @brief Instantiates an Image with the specified Resource name.
    * @param name The name of a Resource containing encoded image data.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
    * @return The new Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*imageWithResourceName)(const char *name);
+  Image *(*imageWithResourceName)(const char *name, float pixelDensity);
 
   /**
    * @static
@@ -146,40 +150,51 @@ struct ImageInterface {
    * @param self The Image.
    * @param bytes The encoded image bytes.
    * @param length The length of `bytes`.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
    * @return The initialized Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*initWithBytes)(Image *self, const uint8_t *bytes, size_t length);
+  Image *(*initWithBytes)(Image *self, const uint8_t *bytes, size_t length, float pixelDensity);
 
   /**
    * @fn Image *Image::initWithData(Image *self, const Data *data)
    * @brief Initializes this Image with the specified Data.
    * @param self The Image.
    * @param data The encoded image Data.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
    * @return The initialized Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*initWithData)(Image *self, const Data *data);
+  Image *(*initWithData)(Image *self, const Data *data, float pixelDensity);
 
   /**
    * @fn Image *Image::initWithResource(Image *self, const Resource *resource)
    * @brief Initializes this Image with the specified Resource.
    * @param self The Image.
    * @param resource The Resource containing encoded image data.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
    * @return The initialized Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*initWithResource)(Image *self, const Resource *resource);
+  Image *(*initWithResource)(Image *self, const Resource *resource, float pixelDensity);
 
   /**
    * @fn Image *Image::initWithResourceName(Image *self, const char *name)
    * @brief Initializes this Image, loading the Resource by the given name.
+   * @details An `@` decoration is interpreted, and where it sits says what it is. Trailing the
+   * whole name, `heart.svg@24x24` rasterizes a vector at that size in points; it is a request
+   * rather than part of any file's name, so `heart.svg` is what loads. Inside the name, before
+   * the extension, `heart@2x.png` declares that a raster carries that many pixels per point,
+   * following Apple's convention, and names the file to load. An undecorated raster prefers the
+   * variant matching the pixel density where one exists, so `heart.png` loads `heart@2x.png` on
+   * a 2x display; an undecorated vector simply rasterizes at the pixel density.
    * @param self The Image.
    * @param name The Resource name.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
    * @return The initialized Image, or `NULL` on error.
    * @memberof Image
    */
-  Image *(*initWithResourceName)(Image *self, const char *name);
+  Image *(*initWithResourceName)(Image *self, const char *name, float pixelDensity);
 
   /**
    * @fn Image *Image::initWithSVG(Image *self, const uint8_t *bytes, size_t length, float scale)
@@ -193,6 +208,20 @@ struct ImageInterface {
    * @memberof Image
    */
   Image *(*initWithSVG)(Image *self, const uint8_t *bytes, size_t length, float scale);
+
+  /**
+   * @fn Image *Image::initWithSVGSize(Image *self, const uint8_t *bytes, size_t length, SDL_Size points)
+   * @brief Initializes this Image by rasterizing the specified SVG at `points` times the pixel
+   * density, so that Image::size reports `points`.
+   * @param self The Image.
+   * @param bytes The SVG document.
+   * @param length The length of `bytes`.
+   * @param points The desired size, in points.
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
+   * @return The initialized Image, or `NULL` on error.
+   * @memberof Image
+   */
+  Image *(*initWithSVGSize)(Image *self, const uint8_t *bytes, size_t length, SDL_Size points, float pixelDensity);
 
   /**
    * @fn Image *Image::initWithSurface(Image *self, SDL_Surface *surface)

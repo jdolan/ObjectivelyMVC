@@ -43,6 +43,7 @@ static void dealloc(Object *self) {
   Theme *this = (Theme *) self;
 
   release(this->fontCache);
+  release(this->imageCache);
   release(this->icons);
   release(this->stylesheets);
 
@@ -72,6 +73,32 @@ static String *cacheKey(const FontAttributes *attributes, float pixelDensity) {
 
   release(name);
   return key;
+}
+
+/**
+ * @fn Image *Theme::image(Theme *self, const char *name, float pixelDensity)
+ * @memberof Theme
+ */
+static Image *image(Theme *self, const char *name, float pixelDensity) {
+
+  assert(name);
+
+  String *key = str("%s@%g", name, pixelDensity);
+  assert(key);
+
+  Image *image = $(self->imageCache, objectForKeyPath, key->chars);
+  if (image == NULL) {
+
+    image = $$(Image, imageWithResourceName, name, pixelDensity);
+    if (image) {
+      $(self->imageCache, setObjectForKeyPath, image, key->chars);
+      release(image);
+    }
+  }
+
+  release(key);
+
+  return image;
 }
 
 /**
@@ -215,6 +242,9 @@ static Theme *init(Theme *self) {
     self->fontCache = $$(Dictionary, dictionary);
     assert(self->fontCache);
 
+    self->imageCache = $$(Dictionary, dictionary);
+    assert(self->imageCache);
+
     self->stylesheets = $$(Array, arrayWithCapacity, 8);
     assert(self->stylesheets);
 
@@ -287,6 +317,7 @@ static void initialize(Class *clazz) {
   ((ThemeInterface *) clazz->interface)->addStylesheet = addStylesheet;
   ((ThemeInterface *) clazz->interface)->computeStyle = computeStyle;
   ((ThemeInterface *) clazz->interface)->font = font;
+  ((ThemeInterface *) clazz->interface)->image = image;
   ((ThemeInterface *) clazz->interface)->icon = icon;
   ((ThemeInterface *) clazz->interface)->icons = icons;
   ((ThemeInterface *) clazz->interface)->init = init;

@@ -284,7 +284,7 @@ static void initialize(Class *clazz) {
   ((PanelInterface *) clazz->interface)->contentSize = contentSize;
   ((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
 
-  _resize = $(alloc(Image), initWithBytes, resize_png, resize_png_len - 1);
+  _resize = $(alloc(Image), initWithBytes, resize_png, resize_png_len - 1, 1.f);
 }
 
 /**

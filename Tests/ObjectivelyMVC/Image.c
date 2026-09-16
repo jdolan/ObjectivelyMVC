@@ -38,7 +38,7 @@ static void assertCenterIsRed(const Image *image) {
 
 START_TEST(svgLoadsAtIntrinsicSize) {
 
-  Image *image = $$(Image, imageWithBytes, (const uint8_t *) svg, strlen(svg));
+  Image *image = $$(Image, imageWithBytes, (const uint8_t *) svg, strlen(svg), 1.f);
   ck_assert_ptr_nonnull(image);
 
   ck_assert_str_eq("svg", image->type);
@@ -92,6 +92,111 @@ START_TEST(rasterKeepsUnitScale) {
 
 } END_TEST
 
+static char requestedNames[8][64];
+static int requestedCount;
+
+/**
+ * @brief A ResourceProvider recording every name asked for, and serving `svg` as "test.svg".
+ */
+static Data *testResourceProvider(const char *name) {
+
+  if (requestedCount < 8) {
+    SDL_strlcpy(requestedNames[requestedCount], name, sizeof(requestedNames[0]));
+  }
+  requestedCount++;
+
+  if (strcmp(name, "test.svg") == 0) {
+    return $(alloc(Data), initWithBytes, (const uint8_t *) svg, strlen(svg));
+  }
+
+  return NULL;
+}
+
+START_TEST(svgRasterizesAtPixelDensity) {
+
+  Image *image = $$(Image, imageWithBytes, (const uint8_t *) svg, strlen(svg), 2.f);
+  ck_assert_ptr_nonnull(image);
+
+  ck_assert_float_eq(2.f, image->scale);
+  ck_assert_int_eq(64, image->surface->w);
+  ck_assert_int_eq(32, image->surface->h);
+
+  // still the intrinsic size in points, so layout is unchanged by the density
+  const SDL_Size size = $(image, size);
+  ck_assert_int_eq(32, size.w);
+  ck_assert_int_eq(16, size.h);
+
+  release(image);
+
+
+} END_TEST
+
+START_TEST(svgRasterizesAtRequestedPoints) {
+
+  requestedCount = 0;
+
+  Image *image = $$(Image, imageWithResourceName, "test.svg@16x8", 2.f);
+  ck_assert_ptr_nonnull(image);
+
+  // the size is a request, not part of the name looked up
+  ck_assert_int_eq(1, requestedCount);
+  ck_assert_str_eq("test.svg", requestedNames[0]);
+
+  ck_assert_float_eq(2.f, image->scale);
+  ck_assert_int_eq(32, image->surface->w);
+  ck_assert_int_eq(16, image->surface->h);
+
+  const SDL_Size size = $(image, size);
+  ck_assert_int_eq(16, size.w);
+  ck_assert_int_eq(8, size.h);
+
+  release(image);
+
+
+} END_TEST
+
+START_TEST(rasterPrefersDensityVariant) {
+
+  requestedCount = 0;
+
+  Image *image = $$(Image, imageWithResourceName, "test.png", 2.f);
+  ck_assert_ptr_null(image);
+
+  ck_assert_int_eq(2, requestedCount);
+  ck_assert_str_eq("test@2x.png", requestedNames[0]);
+  ck_assert_str_eq("test.png", requestedNames[1]);
+
+
+} END_TEST
+
+START_TEST(rasterScaleIsNamed) {
+
+  requestedCount = 0;
+
+  Image *image = $$(Image, imageWithResourceName, "test@2x.png", 1.f);
+  ck_assert_ptr_null(image);
+
+  // a declared scale names the file on disk, so it is asked for verbatim
+  ck_assert_int_eq(1, requestedCount);
+  ck_assert_str_eq("test@2x.png", requestedNames[0]);
+
+} END_TEST
+
+START_TEST(vectorSkipsDensityVariant) {
+
+  requestedCount = 0;
+
+  Image *image = $$(Image, imageWithResourceName, "test.svg", 2.f);
+  ck_assert_ptr_nonnull(image);
+
+  ck_assert_int_eq(1, requestedCount);
+  ck_assert_str_eq("test.svg", requestedNames[0]);
+
+  release(image);
+
+
+} END_TEST
+
 START_TEST(garbageFails) {
 
   const char *garbage = "not an image";
@@ -102,10 +207,17 @@ START_TEST(garbageFails) {
 
 int main(int argc, char **argv) {
 
+  $$(Resource, addResourceProvider, testResourceProvider);
+
   TCase *tcase = tcase_create("Image");
   tcase_add_test(tcase, svgLoadsAtIntrinsicSize);
   tcase_add_test(tcase, svgRasterizesAtScale);
   tcase_add_test(tcase, rasterKeepsUnitScale);
+  tcase_add_test(tcase, svgRasterizesAtPixelDensity);
+  tcase_add_test(tcase, svgRasterizesAtRequestedPoints);
+  tcase_add_test(tcase, rasterPrefersDensityVariant);
+  tcase_add_test(tcase, rasterScaleIsNamed);
+  tcase_add_test(tcase, vectorSkipsDensityVariant);
   tcase_add_test(tcase, garbageFails);
 
   Suite *suite = suite_create("Image");

@@ -73,6 +73,15 @@ struct ImageView {
   Image *image;
 
   /**
+   * @brief The Resource name to resolve `image` from, if it was named rather than assigned.
+   * @details A named image is resolved against the window's Theme, at the window's pixel
+   * density, once this View is in a window, and re-resolved should that density change.
+   * Assigning an Image directly clears this, so an explicit image is never overwritten.
+   * @private
+   */
+  char *imageName;
+
+  /**
    * @brief The GPU texture.
    * @details This is the cached upload of image, but it MAY also be assigned directly, with
    * no image set, to present a Texture the caller owns and updates, such as a Framebuffer's.

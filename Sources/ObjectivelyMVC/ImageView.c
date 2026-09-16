@@ -25,6 +25,7 @@
 
 #include "ImageAtlas.h"
 #include "ImageView.h"
+#include "Theme.h"
 
 const EnumName SDLGPUBlendFactorNames[] = MakeEnumNames(
   MakeEnumName(SDL_GPU_BLENDFACTOR_ZERO),
@@ -55,6 +56,8 @@ static void dealloc(Object *self) {
 
   release(this->image);
 
+  free(this->imageName);
+
   this->texture = release(this->texture);
 
   super(Object, self, dealloc);
@@ -75,10 +78,39 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
     MakeInlet("blend.src", InletTypeEnum, &this->blend.src, (ident) SDLGPUBlendFactorNames),
     MakeInlet("blend.dst", InletTypeEnum, &this->blend.dst, (ident) SDLGPUBlendFactorNames),
     MakeInlet("color", InletTypeColor, &this->color, NULL),
-    MakeInlet("image", InletTypeImage, &this->image, NULL)
+    MakeInlet("image", InletTypeCharacters, &this->imageName, NULL)
   );
 
   $(self, bind, inlets, dictionary);
+}
+
+/**
+ * @see View::didMoveToWindow(View *, SDL_Window *)
+ */
+static void didMoveToWindow(View *self, SDL_Window *window) {
+
+  super(View, self, didMoveToWindow, window);
+
+  ImageView *this = (ImageView *) self;
+
+  if (this->imageName == NULL) {
+    return;
+  }
+
+  char *name = this->imageName;
+  this->imageName = NULL;
+
+  Theme *theme = window ? $$(Theme, theme, window) : NULL;
+  if (theme) {
+    Image *image = $(theme, image, name, SDL_GetWindowPixelDensity(window));
+    $(this, setImage, image);
+  } else {
+    Image *image = $$(Image, imageWithResourceName, name, 1.f);
+    $(this, setImage, image);
+    release(image);
+  }
+
+  this->imageName = name;
 }
 
 /**
@@ -198,6 +230,9 @@ static ImageView *initWithImage(ImageView *self, Image *image) {
  */
 static void setImage(ImageView *self, Image *image) {
 
+  free(self->imageName);
+  self->imageName = NULL;
+
   release(self->image);
 
   if (image) {
@@ -222,7 +257,7 @@ static void setImage(ImageView *self, Image *image) {
  */
 static void setImageWithResource(ImageView *self, const Resource *resource) {
 
-  Image *image = $$(Image, imageWithResource, resource);
+  Image *image = $$(Image, imageWithResource, resource, 1.f);
 
   $(self, setImage, image);
 
@@ -270,6 +305,7 @@ static void initialize(Class *clazz) {
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->didMoveToWindow = didMoveToWindow;
   ((ViewInterface *) clazz->interface)->init = init;
   ((ViewInterface *) clazz->interface)->render = render;
   ((ViewInterface *) clazz->interface)->renderDeviceWillReset = renderDeviceWillReset;

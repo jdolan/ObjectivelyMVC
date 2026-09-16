@@ -71,6 +71,12 @@ struct Theme {
   Dictionary *fontCache;
 
   /**
+   * @brief Images resolved for this Theme, keyed by resource name and pixel density.
+   * @private
+   */
+  Dictionary *imageCache;
+
+  /**
    * @brief The ImageAtlas holding this Theme's icons and other app art, created lazily by
    * Theme::icons.
    * @private
@@ -126,6 +132,17 @@ struct ThemeInterface {
    * @memberof Theme
    */
   Style *(*computeStyle)(const Theme *self, const View *view);
+
+  /**
+   * @fn Image *Theme::image(Theme *self, const char *name, float pixelDensity)
+   * @brief Resolves the Image for the given Resource name at the given pixel density.
+   * @param self The Theme.
+   * @param name The Resource name, which may carry an `@` decoration (see Image).
+   * @param pixelDensity Pixels per point, e.g. the window's pixel density.
+   * @return The Image, retained by this Theme, or `NULL` if it could not be loaded.
+   * @memberof Theme
+   */
+  Image *(*image)(Theme *self, const char *name, float pixelDensity);
 
   /**
    * @fn Font *Theme::font(Theme *self, const FontAttributes *attributes, float pixelDensity)
