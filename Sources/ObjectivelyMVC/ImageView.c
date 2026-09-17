@@ -270,11 +270,16 @@ static void setImageWithResource(ImageView *self, const Resource *resource) {
  */
 static void setImageWithResourceName(ImageView *self, const char *name) {
 
-  Resource *resource = $$(Resource, resourceWithName, name);
+  $(self, setImage, NULL);
 
-  $(self, setImageWithResource, resource);
+  if (name) {
+    self->imageName = strdup(name);
 
-  release(resource);
+    View *this = (View *) self;
+    if (this->window) {
+      $(this, didMoveToWindow, this->window);
+    }
+  }
 }
 
 /**

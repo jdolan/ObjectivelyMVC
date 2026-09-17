@@ -138,10 +138,12 @@ struct ImageViewInterface {
   void (*setImageWithResource)(ImageView *self, const Resource *resource);
 
   /**
-   * @fn void ImageView::setImageWithResourceName(ImageView *self, const char *name);
-   * @brief Sets the Image for this ImageView with the Resource by the given name.
+   * @fn void ImageView::setImageWithResourceName(ImageView *self, const char *name)
+   * @brief Names the Image for this ImageView, resolved against the window's Theme at its pixel
+   * density. The Image resolves immediately when this View is already in a window, and otherwise
+   * on ImageView::didMoveToWindow, so a name may be set before the View is installed.
    * @param self The ImageView.
-   * @param name An Image Resource name.
+   * @param name The Resource name, which may carry an `@` decoration (see Image).
    * @memberof ImageView
    */
   void (*setImageWithResourceName)(ImageView *self, const char *name);
