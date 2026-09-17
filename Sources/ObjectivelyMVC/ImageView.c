@@ -93,6 +93,12 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
 
   ImageView *this = (ImageView *) self;
 
+  // leaving a window resolves nothing: there is no density to resolve against, and View::dealloc
+  // moves to a NULL window, where loading an image would be worse than pointless
+  if (window == NULL) {
+    return;
+  }
+
   if (this->imageName == NULL) {
     return;
   }
@@ -100,12 +106,12 @@ static void didMoveToWindow(View *self, SDL_Window *window) {
   char *name = this->imageName;
   this->imageName = NULL;
 
-  Theme *theme = window ? $$(Theme, theme, window) : NULL;
+  Theme *theme = $$(Theme, theme, window);
   if (theme) {
     Image *image = $(theme, image, name, SDL_GetWindowPixelDensity(window));
     $(this, setImage, image);
   } else {
-    Image *image = $$(Image, imageWithResourceName, name, 1.f);
+    Image *image = $$(Image, imageWithResourceName, name, SDL_GetWindowPixelDensity(window));
     $(this, setImage, image);
     release(image);
   }
@@ -272,7 +278,8 @@ static void setImageWithResourceName(ImageView *self, const char *name) {
 
   $(self, setImage, NULL);
 
-  if (name) {
+  // an empty name is no image, not a request to ask the resource system for ""
+  if (name && *name) {
     self->imageName = strdup(name);
 
     View *this = (View *) self;
