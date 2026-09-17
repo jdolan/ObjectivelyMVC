@@ -121,6 +121,22 @@ static void dealloc(Object *self) {
 
   SDL_FilterEvents(filterViewEvents, this);
 
+  // a window holds its key and touch responders as raw pointers, so one that dies while holding
+  // either leaves the window pointing at freed memory, and the next event or Ui_ViewWillDisappear
+  // style sweep calls into it. Cleared directly rather than through resignKeyResponder, which is
+  // a virtual call on an object that is already going away
+  if (this->window) {
+    SDL_PropertiesID props = SDL_GetWindowProperties(this->window);
+
+    if (SDL_GetPointerProperty(props, "keyResponder", NULL) == this) {
+      SDL_SetPointerProperty(props, "keyResponder", NULL);
+    }
+
+    if (SDL_GetPointerProperty(props, "touchResponder", NULL) == this) {
+      SDL_SetPointerProperty(props, "touchResponder", NULL);
+    }
+  }
+
   $(this, moveToWindow, NULL);
 
   $(this, enumerateSubviews, nullifySuperview, NULL);
