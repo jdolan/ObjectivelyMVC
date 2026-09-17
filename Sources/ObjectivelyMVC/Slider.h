@@ -23,6 +23,8 @@
 
 #pragma once
 
+#include <Objectively/Vector.h>
+
 #include <ObjectivelyMVC/Control.h>
 #include <ObjectivelyMVC/Text.h>
 
@@ -117,6 +119,13 @@ struct Slider {
    * @brief The slider value.
    */
   double value;
+
+  /**
+   * @brief An optional table of non-linear values.
+   * @details When set, the handle snaps to these values, and `min`, `max`, `step` and
+   * `snapToStep` are ignored. `value` remains the selected value itself, never an index.
+   */
+  Vector *values;
 };
 
 /**

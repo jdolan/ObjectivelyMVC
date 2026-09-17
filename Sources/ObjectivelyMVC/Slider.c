@@ -22,16 +22,88 @@
  */
 
 #include <assert.h>
+#include <float.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#include <Objectively/Number.h>
 
 #include "Colors.h"
 #include "Log.h"
 #include "Slider.h"
 
 #define _Class _Slider
+
+/**
+ * @return The index in `values` nearest to the given value.
+ */
+static size_t indexOfValue(const Slider *self, double value) {
+
+  size_t index = 0;
+  double nearest = DBL_MAX;
+
+  for (size_t i = 0; i < self->values->count; i++) {
+    const double delta = fabs(VectorValue(self->values, double, i) - value);
+    if (delta < nearest) {
+      nearest = delta;
+      index = i;
+    }
+  }
+
+  return index;
+}
+
+/**
+ * @return The handle position, `0.0` to `1.0`, of this Slider's current value.
+ */
+static double fractionOfValue(const Slider *self) {
+
+  if (self->values) {
+    if (self->values->count < 2) {
+      return 0.0;
+    }
+    return indexOfValue(self, self->value) / (double) (self->values->count - 1);
+  }
+
+  return clamp((self->value - self->min) / (self->max - self->min), 0.0, 1.0);
+}
+
+/**
+ * @return The value at the given handle position, snapped.
+ */
+static double valueAtFraction(const Slider *self, double fraction) {
+
+  fraction = clamp(fraction, 0.0, 1.0);
+
+  if (self->values) {
+    return VectorValue(self->values, double, (size_t) round(fraction * (self->values->count - 1)));
+  }
+
+  const double value = self->min + (self->max - self->min) * fraction;
+
+  if (self->snapToStep && self->step) {
+    return clamp(round(value / self->step) * self->step, self->min, self->max);
+  }
+
+  return value;
+}
+
+/**
+ * @return The value `steps` increments away from this Slider's current value.
+ */
+static double valueAfterSteps(const Slider *self, int steps) {
+
+  if (self->values) {
+    const ssize_t index = clamp((ssize_t) indexOfValue(self, self->value) + steps,
+                                (ssize_t) 0, (ssize_t) self->values->count - 1);
+    return VectorValue(self->values, double, index);
+  }
+
+  const double step = self->step ?: (self->max - self->min) / 20.0;
+  return self->value + step * steps;
+}
 
 #pragma mark - Object
 
@@ -47,6 +119,7 @@ static void dealloc(Object *self) {
   release(this->bar);
   release(this->handle);
   release(this->label);
+  release(this->values);
 
   free(this->labelFormat);
 
@@ -54,6 +127,30 @@ static void dealloc(Object *self) {
 }
 
 #pragma mark - View
+
+/**
+ * @brief InletBinding for a table of non-linear values.
+ */
+static void bindValues(const Inlet *inlet, ident obj) {
+
+  const Array *array = cast(Array, obj);
+  assert(array->count);
+
+  Vector *values = $(alloc(Vector), initWithSize, sizeof(double));
+  assert(values);
+
+  for (size_t i = 0; i < array->count; i++) {
+    double value = cast(Number, $(array, objectAtIndex, i))->value;
+    $(values, add, &value);
+  }
+
+  if (values->count < 2) {
+    MVC_LogWarn("Inlet %s wanted 2 or more values but received %zd\n", inlet->name, values->count);
+  }
+
+  release(*(Vector **) inlet->dest);
+  *(Vector **) inlet->dest = values;
+}
 
 /**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
@@ -75,12 +172,18 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
     MakeInlet("max", InletTypeDouble, &this->max, NULL),
     MakeInlet("snapToStep", InletTypeBool, &this->snapToStep, NULL),
     MakeInlet("step", InletTypeDouble, &this->step, NULL),
-    MakeInlet("value", InletTypeDouble, &value, NULL)
+    MakeInlet("value", InletTypeDouble, &value, NULL),
+    MakeInlet("values", InletTypeApplicationDefined, &this->values, bindValues)
   );
 
   $(self, bind, inlets, dictionary);
 
   $(this, setValue, value);
+
+  // setValue only reformats on a change, and the labelFormat inlet does not format at all,
+  // so a Slider whose bound value matches its initial one would keep the default format
+
+  $(this, formatLabel);
 }
 
 /**
@@ -99,30 +202,47 @@ static void layoutSubviews(View *self) {
 
   Slider *this = (Slider *) self;
 
-  if (this->max > this->min) {
+  if (this->values || this->max > this->min) {
 
     if (((View *) this->label)->visibility != ViewVisibilityHidden) {
-      int minWidth, maxWidth;
+      int labelWidth = 0;
       char text[64];
 
       Text *label = (Text *) this->label;
 
-      snprintf(text, sizeof(text), this->labelFormat, this->min);
-      $(label->font, sizeCharacters, text, &minWidth, NULL);
+      // the widest entry is not necessarily an extremity, e.g. "0.25" over "3"
 
-      snprintf(text, sizeof(text), this->labelFormat, this->max);
-      $(label->font, sizeCharacters, text, &maxWidth, NULL);
+      if (this->values) {
+        for (size_t i = 0; i < this->values->count; i++) {
+          int width;
 
-      this->bar->frame.w -= max(minWidth, maxWidth) + label->view.padding.left;
+          snprintf(text, sizeof(text), this->labelFormat, VectorValue(this->values, double, i));
+          $(label->font, sizeCharacters, text, &width, NULL);
+
+          labelWidth = max(labelWidth, width);
+        }
+      } else {
+        int minWidth, maxWidth;
+
+        snprintf(text, sizeof(text), this->labelFormat, this->min);
+        $(label->font, sizeCharacters, text, &minWidth, NULL);
+
+        snprintf(text, sizeof(text), this->labelFormat, this->max);
+        $(label->font, sizeCharacters, text, &maxWidth, NULL);
+
+        labelWidth = max(minWidth, maxWidth);
+      }
+
+      this->bar->frame.w -= labelWidth + label->view.padding.left;
     }
 
-    const double fraction = clamp((this->value - this->min) / (this->max - this->min), 0.0, 1.0);
+    const double fraction = fractionOfValue(this);
     const SDL_Rect bounds = $(this->bar, bounds);
 
     View *handle = (View *) this->handle;
     handle->frame.x = (bounds.w * fraction) - handle->frame.w * 0.5;
   } else {
-    MVC_LogWarn("max > min");
+    MVC_LogWarn("max must be greater than min");
   }
 }
 
@@ -166,9 +286,8 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
       self->state |= ControlStateHighlighted;
     } else {
       const int x = event->button.x - frame.x;
-      const double step = this->step ?: (this->max - this->min) / 20.0;
 
-      $(this, setValue, this->value + (x > this->handle->frame.x ? step : -step));
+      $(this, setValue, valueAfterSteps(this, x > this->handle->frame.x ? 1 : -1));
 
       if (this->delegate.didSetValue) {
         this->delegate.didSetValue(this, this->value);
@@ -189,11 +308,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
       if (frame.w) {
 
         const double fraction = (double) (event->motion.x - frame.x) / (double) frame.w;
-        double value = this->min + (this->max - this->min) * clamp(fraction, 0.0, 1.0);
-
-        if (this->snapToStep && this->step) {
-          value = clamp(round(value / this->step) * this->step, this->min, this->max);
-        }
+        const double value = valueAtFraction(this, fraction);
 
         const double delta = fabs(this->value - value);
         if (delta > __DBL_EPSILON__) {
@@ -211,18 +326,18 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
   if (event->type == SDL_EVENT_KEY_DOWN) {
 
-    double step = 0.0;
+    int steps = 0;
     switch (event->key.key) {
       case SDLK_LEFT:
-        step = -this->step ?: -(this->max - this->min) / 20.0;
+        steps = -1;
         break;
       case SDLK_RIGHT:
-        step = this->step ?: (this->max - this->min) / 20.0;
+        steps = 1;
         break;
     }
 
-    if (step) {
-      $(this, setValue, this->value + step);
+    if (steps) {
+      $(this, setValue, valueAfterSteps(this, steps));
 
       if (this->delegate.didSetValue) {
         this->delegate.didSetValue(this, this->value);
@@ -304,7 +419,11 @@ static void setLabelFormat(Slider *self, const char *labelFormat) {
  */
 static void setValue(Slider *self, double value) {
 
-  value = clamp(value, self->min, self->max);
+  if (self->values) {
+    value = VectorValue(self->values, double, indexOfValue(self, value));
+  } else {
+    value = clamp(value, self->min, self->max);
+  }
 
   const double delta = fabs(self->value - value);
   if (delta > __DBL_EPSILON__) {
