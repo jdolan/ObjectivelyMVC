@@ -97,7 +97,7 @@ static void initGlyph(const FontBitmap *bitmap, TTF_Font *font, Uint32 codepoint
     SDL_SetSurfaceClipRect(sheet, NULL);
     SDL_DestroySurface(glyph);
   } else {
-    MVC_LogError("U+%04X: %s\n", codepoint, SDL_GetError());
+    MVC_LogDebug("U+%04X: %s\n", codepoint, SDL_GetError());
   }
 }
 

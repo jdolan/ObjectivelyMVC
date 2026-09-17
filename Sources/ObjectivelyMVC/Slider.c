@@ -242,7 +242,9 @@ static void layoutSubviews(View *self) {
     View *handle = (View *) this->handle;
     handle->frame.x = (bounds.w * fraction) - handle->frame.w * 0.5;
   } else {
-    MVC_LogWarn("max must be greater than min");
+    if (this->max < this->min) {
+      MVC_LogWarn("max must be greater than min");
+    }
   }
 }
 
