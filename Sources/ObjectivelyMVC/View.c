@@ -121,22 +121,6 @@ static void dealloc(Object *self) {
 
   SDL_FilterEvents(filterViewEvents, this);
 
-  // a window holds its key and touch responders as raw pointers, so one that dies while holding
-  // either leaves the window pointing at freed memory, and the next event or Ui_ViewWillDisappear
-  // style sweep calls into it. Cleared directly rather than through resignKeyResponder, which is
-  // a virtual call on an object that is already going away
-  if (this->window) {
-    SDL_PropertiesID props = SDL_GetWindowProperties(this->window);
-
-    if (SDL_GetPointerProperty(props, "keyResponder", NULL) == this) {
-      SDL_SetPointerProperty(props, "keyResponder", NULL);
-    }
-
-    if (SDL_GetPointerProperty(props, "touchResponder", NULL) == this) {
-      SDL_SetPointerProperty(props, "touchResponder", NULL);
-    }
-  }
-
   $(this, moveToWindow, NULL);
 
   $(this, enumerateSubviews, nullifySuperview, NULL);
@@ -1359,6 +1343,18 @@ static void moveToWindow_enumerate(View *subview, ident data) {
 static void moveToWindow(View *self, SDL_Window *window) {
 
   $(self, willMoveToWindow, window);
+
+  if (self->window && self->window != window) {
+    SDL_PropertiesID props = SDL_GetWindowProperties(self->window);
+
+    if (SDL_GetPointerProperty(props, "keyResponder", NULL) == self) {
+      SDL_SetPointerProperty(props, "keyResponder", NULL);
+    }
+
+    if (SDL_GetPointerProperty(props, "touchResponder", NULL) == self) {
+      SDL_SetPointerProperty(props, "touchResponder", NULL);
+    }
+  }
 
   self->window = window;
 
