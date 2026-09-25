@@ -464,6 +464,35 @@ START_TEST(stretchContainChildKeepsStretchedSize) {
 
 } END_TEST
 
+START_TEST(styledVisibilityRelaysOutSuperview) {
+
+  StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+
+  View *a = fixedView(40, 20);
+  View *b = fixedView(40, 30);
+  b->visibility = ViewVisibilityHidden;
+
+  $((View *) stackView, addSubview, a);
+  $((View *) stackView, addSubview, b);
+
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(20, stackView->view.frame.h);
+
+  Style *style = $(alloc(Style), initWithAttributes, NULL);
+  $(style, addEnumAttribute, "visibility", ViewVisibilityNames, ViewVisibilityVisible);
+  $(b, applyStyle, style);
+  release(style);
+
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(50, stackView->view.frame.h);
+  ck_assert_int_eq(20, b->frame.y);
+
+  release(stackView);
+
+} END_TEST
+
 START_TEST(scrollViewContentViewFromJSON) {
 
   View *view = $$(View, viewWithCharacters,
@@ -498,6 +527,7 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, stretchChildrenShareRemainingWidth);
   tcase_add_test(tcase, stretchIsIgnoredWithoutRemainingSpace);
   tcase_add_test(tcase, stretchContainChildKeepsStretchedSize);
+  tcase_add_test(tcase, styledVisibilityRelaysOutSuperview);
   tcase_add_test(tcase, scrollViewContentViewFromJSON);
 
   Suite *suite = suite_create("View");

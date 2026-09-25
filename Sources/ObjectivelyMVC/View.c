@@ -308,7 +308,13 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("width", InletTypeInteger, &self->frame.w, NULL)
   );
 
+  const ViewVisibility visibility = self->visibility;
+
   $(self, bind, inlets, style->attributes);
+
+  if (self->visibility != visibility && self->superview) {
+    $(self->superview, setNeedsLayout);
+  }
 
   if ((self->alignment & ViewAlignmentMaskHorizontal) &&
       $(style->attributes, objectForKeyPath, "left")) {
