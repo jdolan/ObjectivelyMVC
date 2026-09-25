@@ -338,18 +338,17 @@ static Option *optionWithValue(const Select *self, const ident value) {
 }
 
 /**
- * @brief ArrayEnumerator for removeAllOptions.
- */
-static void removeAllOptions_enumerate(const Array *array, ident obj, ident data) {
-  $((Select *) data, removeOption, obj);
-}
-
-/**
  * @fn void Select::removeAllOptions(Select *self)
  * @memberof Select
+ * @remarks The options are removed from the last, because removing an option while the array is
+ * enumerated skips the option after it.
  */
 static void removeAllOptions(Select *self) {
-  $((Array *) self->options, enumerate, removeAllOptions_enumerate, self);
+
+  Option *option;
+  while ((option = $((Array *) self->options, lastObject))) {
+    $(self, removeOption, option);
+  }
 }
 
 /**
