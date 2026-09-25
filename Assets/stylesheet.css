@@ -364,6 +364,10 @@ TabView {
   spacing: 4;
 }
 
+.tabViewController {
+  autoresizing-mask: contain;
+}
+
 TabView > .tabPageView {
   border-color: silver;
   border-radius: 4;
