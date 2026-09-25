@@ -110,6 +110,17 @@ static void layoutSubviews(View *self) {
       }
     }
 
+    int numStretch = 0;
+    for (size_t i = 0; i < subviews->count; i++) {
+      const View *subview = $(subviews, objectAtIndex, i);
+      if (subview->stretch) {
+        numStretch++;
+      }
+    }
+
+    int remaining = this->distribution == StackViewDistributionDefault && numStretch ?
+      max(availableSize - requestedSize, 0) : 0;
+
     int pos = 0;
 
     const float scale = requestedSize ? availableSize / (float) requestedSize : 1.f;
@@ -171,6 +182,19 @@ static void layoutSubviews(View *self) {
               break;
           }
           break;
+      }
+
+      if (subview->stretch && remaining) {
+        const int share = --numStretch ? remaining / (numStretch + 1) : remaining;
+        switch (this->axis) {
+          case StackViewAxisVertical:
+            subviewSize.h += share;
+            break;
+          case StackViewAxisHorizontal:
+            subviewSize.w += share;
+            break;
+        }
+        remaining -= share;
       }
 
       $(subview, layoutWithSize, &subviewSize);

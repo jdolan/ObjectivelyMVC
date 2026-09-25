@@ -355,6 +355,131 @@ START_TEST(pointerEventsPassThroughToSubviewsAndSiblings) {
 
 } END_TEST
 
+/**
+ * @brief Creates a View of the given size that a StackView may resize.
+ */
+static View *flexibleView(int w, int h) {
+
+  View *view = $(alloc(View), initWithFrame, &MakeRect(0, 0, w, h));
+
+  view->autoresizingMask = ViewAutoresizingNone;
+
+  return view;
+}
+
+START_TEST(stretchChildTakesRemainingHeight) {
+
+  StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+  stackView->view.minSize = stackView->view.maxSize = MakeSize(100, 200);
+
+  View *tabs = fixedView(100, 20);
+  View *page = flexibleView(100, 30);
+  page->stretch = true;
+
+  $((View *) stackView, addSubview, tabs);
+  $((View *) stackView, addSubview, page);
+
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(200, stackView->view.frame.h);
+  ck_assert_int_eq(20, tabs->frame.h);
+  ck_assert_int_eq(20, page->frame.y);
+  ck_assert_int_eq(180, page->frame.h);
+
+  release(stackView);
+
+} END_TEST
+
+START_TEST(stretchChildrenShareRemainingWidth) {
+
+  StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+  stackView->view.minSize = stackView->view.maxSize = MakeSize(111, 10);
+  stackView->axis = StackViewAxisHorizontal;
+
+  View *a = fixedView(10, 10);
+  View *b = flexibleView(0, 10);
+  View *c = flexibleView(0, 10);
+  b->stretch = c->stretch = true;
+
+  $((View *) stackView, addSubview, a);
+  $((View *) stackView, addSubview, b);
+  $((View *) stackView, addSubview, c);
+
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(10, a->frame.w);
+  ck_assert_int_eq(50, b->frame.w);
+  ck_assert_int_eq(10, b->frame.x);
+  ck_assert_int_eq(51, c->frame.w);
+  ck_assert_int_eq(60, c->frame.x);
+
+  release(stackView);
+
+} END_TEST
+
+START_TEST(stretchIsIgnoredWithoutRemainingSpace) {
+
+  StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+
+  View *a = fixedView(40, 20);
+  View *b = flexibleView(40, 30);
+  b->stretch = true;
+
+  $((View *) stackView, addSubview, a);
+  $((View *) stackView, addSubview, b);
+
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(50, stackView->view.frame.h);
+  ck_assert_int_eq(30, b->frame.h);
+
+  release(stackView);
+
+} END_TEST
+
+START_TEST(stretchContainChildKeepsStretchedSize) {
+
+  StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+  stackView->view.minSize = stackView->view.maxSize = MakeSize(100, 200);
+
+  View *tabs = fixedView(100, 20);
+
+  StackView *page = $(alloc(StackView), initWithFrame, NULL);
+  page->view.stretch = true;
+  $((View *) page, addSubview, fixedView(80, 40));
+
+  $((View *) stackView, addSubview, tabs);
+  $((View *) stackView, addSubview, (View *) page);
+
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(180, page->view.frame.h);
+
+  $((View *) page, setNeedsLayout);
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(180, page->view.frame.h);
+
+  release(stackView);
+
+} END_TEST
+
+START_TEST(scrollViewContentViewFromJSON) {
+
+  View *view = $$(View, viewWithCharacters,
+                  "{ \"class\": \"ScrollView\", \"contentView\": { \"identifier\": \"content\" } }", NULL);
+  ck_assert_ptr_nonnull(view);
+
+  ScrollView *scrollView = (ScrollView *) view;
+  ck_assert_ptr_nonnull(scrollView->contentView);
+  ck_assert_str_eq("content", scrollView->contentView->identifier);
+  ck_assert_ptr_eq(view, scrollView->contentView->superview);
+  ck_assert($(scrollView->contentView, hasClassName, "contentView"));
+
+  release(view);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("View");
@@ -369,6 +494,11 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, setVisibilityMarksSuperviewNeedsLayout);
   tcase_add_test(tcase, alignedContainChildRecentersOnGrowth);
   tcase_add_test(tcase, pointerEventsPassThroughToSubviewsAndSiblings);
+  tcase_add_test(tcase, stretchChildTakesRemainingHeight);
+  tcase_add_test(tcase, stretchChildrenShareRemainingWidth);
+  tcase_add_test(tcase, stretchIsIgnoredWithoutRemainingSpace);
+  tcase_add_test(tcase, stretchContainChildKeepsStretchedSize);
+  tcase_add_test(tcase, scrollViewContentViewFromJSON);
 
   Suite *suite = suite_create("View");
   suite_add_tcase(suite, tcase);
