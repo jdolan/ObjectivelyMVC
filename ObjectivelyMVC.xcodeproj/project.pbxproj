@@ -28,6 +28,9 @@
 			dependencies = (
 				CE0C2218304CC1FD008A6A2A /* PBXTargetDependency */,
 				CED40A98304B2DFA0090C57A /* PBXTargetDependency */,
+				B3DD5991CDBD4582092CC4F6 /* PBXTargetDependency */,
+				00E123F744F252F431ACB5AB /* PBXTargetDependency */,
+				0850FEAA7E79310A5E7C5ED5 /* PBXTargetDependency */,
 				CED40A633046145B0090C57A /* PBXTargetDependency */,
 				CE34C8A51FB2A0210025F231 /* PBXTargetDependency */,
 				CE88199A1F91B0DA000D5AB7 /* PBXTargetDependency */,
@@ -212,10 +215,25 @@
 		CEBA3F8C2FF3F25E00758CA6 /* Hello.vert.metal in CopyFiles */ = {isa = PBXBuildFile; fileRef = HS00000000000000000000A2 /* Hello.vert.metal */; };
 		CEBCB6D521664EB1009E6289 /* Types.h in Headers */ = {isa = PBXBuildFile; fileRef = CEF1D8BB1D4704950099A857 /* Types.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CED40A8D304B2D700090C57A /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		27826E51CD9BF334A46F8B74 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		BB87084D13A301A5A22CBCA2 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
+		98BFE75CAAA4EB3E01C703AE /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		CED40A8E304B2D700090C57A /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		C98EF9B35812D5CEDCD4285E /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		254D1795460F9E287313E070 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
+		9BDEC2F3260285F60247A6D7 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		CED40A8F304B2D700090C57A /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		E85C0A9A11FE4DBF991CB55C /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		A45306E1A2B9F91C43A3D035 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		7C9B4270AF0FF5BBEBC68236 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		CED40A90304B2D700090C57A /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
+		53D16432B2CCCE4F3956685E /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
+		A95FB52C4A3FB476D42F4A5E /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
+		66EA7319EF11A582FD1064E2 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
 		CED40A96304B2D7F0090C57A /* ImageAtlas.c in Sources */ = {isa = PBXBuildFile; fileRef = CED40A86304B2D550090C57A /* ImageAtlas.c */; };
+		5F8A115B0069B76D5DF21618 /* Image.c in Sources */ = {isa = PBXBuildFile; fileRef = FEDCD6FF3EFA7A4388486410 /* Image.c */; };
+		B25F30D62819F943DCBC5293 /* Text.c in Sources */ = {isa = PBXBuildFile; fileRef = A2A76A66C35A8EA25E73AED3 /* Text.c */; };
+		DCB5AE1270D2C8B8C4E44027 /* TextView.c in Sources */ = {isa = PBXBuildFile; fileRef = 02533D62677918BD9C9D8632 /* TextView.c */; };
 		CED56FF62FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		CED56FF92FE3440000756996 /* SDL3.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.xcframework */; };
 		CEEAAFF62FED7E6000FFEBE6 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
@@ -345,12 +363,54 @@
 			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
 			remoteInfo = ObjectivelyMVC;
 		};
+		EDC8B69B4C254E0B20983FBD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = ObjectivelyMVC;
+		};
+		6CE99E2EEC2CA9CACE23F199 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = ObjectivelyMVC;
+		};
+		7EE94EDE9901ED9472A2194D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = ObjectivelyMVC;
+		};
 		CED40A97304B2DFA0090C57A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CED40A87304B2D700090C57A;
 			remoteInfo = "ObjectivelyMVC-ImageAtlas";
+		};
+		53F472CDBD720DEE99451939 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 49B779A4A2BCD3DCD3C3BD06;
+			remoteInfo = "ObjectivelyMVC-Image";
+		};
+		288C55F591D0A32135B0B1D8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 563130823413BCCA09134760;
+			remoteInfo = "ObjectivelyMVC-Text";
+		};
+		86612F2306FFCE232CE1BB04 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A73BC0FDBE1118F914A440F1;
+			remoteInfo = "ObjectivelyMVC-TextView";
 		};
 		HUDA00000000000000000010 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -433,6 +493,33 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CED40A91304B2D700090C57A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9F0912651CABAEDD083DCF56 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F7CF640A30C7C28D712A607A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3B8576F5164522B222E465B0 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
 			dstPath = "";
@@ -635,7 +722,13 @@
 		CED157B51C4BF32A00FBA2DE /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
 		CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjectivelyMVC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED40A86304B2D550090C57A /* ImageAtlas.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ImageAtlas.c; sourceTree = "<group>"; };
+		FEDCD6FF3EFA7A4388486410 /* Image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Image.c; sourceTree = "<group>"; };
+		A2A76A66C35A8EA25E73AED3 /* Text.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Text.c; sourceTree = "<group>"; };
+		02533D62677918BD9C9D8632 /* TextView.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = TextView.c; sourceTree = "<group>"; };
 		CED40A95304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-ImageAtlas"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A4E9B8FCA4EC2C5AF4D4C30 /* ObjectivelyMVC-Image */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Image"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3EB55F6FC6630DE5644B5A7 /* ObjectivelyMVC-Text */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-Text"; sourceTree = BUILT_PRODUCTS_DIR; };
+		26EA4C5E6BBC55A50927A783 /* ObjectivelyMVC-TextView */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-TextView"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectivelyGPU.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEF1D88B1D4265A70099A857 /* Panel.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Panel.c; sourceTree = "<group>"; };
 		CEF1D88C1D4265A70099A857 /* Panel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = Panel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -790,6 +883,45 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		86088652F18876526D6A2EB3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE0C221C304CC285008A6A2A /* SDL3_image.xcframework in Frameworks */,
+				CE0C221D304CC285008A6A2A /* SDL3_ttf.xcframework in Frameworks */,
+				27826E51CD9BF334A46F8B74 /* SDL3.xcframework in Frameworks */,
+				C98EF9B35812D5CEDCD4285E /* Objectively.framework in Frameworks */,
+				E85C0A9A11FE4DBF991CB55C /* ObjectivelyGPU.framework in Frameworks */,
+				53D16432B2CCCE4F3956685E /* ObjectivelyMVC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DB3CFD7C69B22D18B0E48944 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE0C221C304CC285008A6A2A /* SDL3_image.xcframework in Frameworks */,
+				CE0C221D304CC285008A6A2A /* SDL3_ttf.xcframework in Frameworks */,
+				BB87084D13A301A5A22CBCA2 /* SDL3.xcframework in Frameworks */,
+				254D1795460F9E287313E070 /* Objectively.framework in Frameworks */,
+				A45306E1A2B9F91C43A3D035 /* ObjectivelyGPU.framework in Frameworks */,
+				A95FB52C4A3FB476D42F4A5E /* ObjectivelyMVC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E42EC99E530339388B01BE5D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE0C221C304CC285008A6A2A /* SDL3_image.xcframework in Frameworks */,
+				CE0C221D304CC285008A6A2A /* SDL3_ttf.xcframework in Frameworks */,
+				98BFE75CAAA4EB3E01C703AE /* SDL3.xcframework in Frameworks */,
+				9BDEC2F3260285F60247A6D7 /* Objectively.framework in Frameworks */,
+				7C9B4270AF0FF5BBEBC68236 /* ObjectivelyGPU.framework in Frameworks */,
+				66EA7319EF11A582FD1064E2 /* ObjectivelyMVC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		HUDA00000000000000000009 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -939,10 +1071,13 @@
 			isa = PBXGroup;
 			children = (
 				CE0C2206304CBC73008A6A2A /* Font+Bitmap.c */,
+				FEDCD6FF3EFA7A4388486410 /* Image.c */,
 				CED40A86304B2D550090C57A /* ImageAtlas.c */,
 				CE55C1BB1F944C1B00D5A326 /* Selector.c */,
 				CE8819891F91B094000D5AB7 /* Style.c */,
 				CE34C8941FB29F3A0025F231 /* Stylesheet.c */,
+				A2A76A66C35A8EA25E73AED3 /* Text.c */,
+				02533D62677918BD9C9D8632 /* TextView.c */,
 				58441034DC162E9BE53173F4 /* View.c */,
 				CE423A2C1F534127002767E7 /* Makefile.am */,
 			);
@@ -1092,6 +1227,9 @@
 				B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */,
 				84BBDF9467CD6F80ACF8AADF /* ObjectivelyMVC-View */,
 				CED40A95304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */,
+				4A4E9B8FCA4EC2C5AF4D4C30 /* ObjectivelyMVC-Image */,
+				C3EB55F6FC6630DE5644B5A7 /* ObjectivelyMVC-Text */,
+				26EA4C5E6BBC55A50927A783 /* ObjectivelyMVC-TextView */,
 				CE0C2215304CBC82008A6A2A /* ObjectivelyMVC-Font+Bitmap */,
 			);
 			name = Products;
@@ -1334,6 +1472,60 @@
 			productReference = CED40A95304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */;
 			productType = "com.apple.product-type.tool";
 		};
+		49B779A4A2BCD3DCD3C3BD06 /* ObjectivelyMVC-Image */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D44656D0AEE1A511C175339A /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Image" */;
+			buildPhases = (
+				9B8AE887D35458AE7C0EE060 /* Sources */,
+				86088652F18876526D6A2EB3 /* Frameworks */,
+				9F0912651CABAEDD083DCF56 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C2DC6F82A5128ED1D64A0D28 /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-Image";
+			productName = "ObjectivelyMVC-Image";
+			productReference = 4A4E9B8FCA4EC2C5AF4D4C30 /* ObjectivelyMVC-Image */;
+			productType = "com.apple.product-type.tool";
+		};
+		563130823413BCCA09134760 /* ObjectivelyMVC-Text */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 42DA443CE43697A0CE2778F7 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Text" */;
+			buildPhases = (
+				243313ABE31DC93EA936F339 /* Sources */,
+				DB3CFD7C69B22D18B0E48944 /* Frameworks */,
+				F7CF640A30C7C28D712A607A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				BA04F7324C595E256D51814C /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-Text";
+			productName = "ObjectivelyMVC-Text";
+			productReference = C3EB55F6FC6630DE5644B5A7 /* ObjectivelyMVC-Text */;
+			productType = "com.apple.product-type.tool";
+		};
+		A73BC0FDBE1118F914A440F1 /* ObjectivelyMVC-TextView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7935DBBB394E57382160DE99 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-TextView" */;
+			buildPhases = (
+				FE5F77E35CE051DA2EE56CCD /* Sources */,
+				E42EC99E530339388B01BE5D /* Frameworks */,
+				3B8576F5164522B222E465B0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				10B40536A4C6ED7844DECE20 /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-TextView";
+			productName = "ObjectivelyMVC-TextView";
+			productReference = 26EA4C5E6BBC55A50927A783 /* ObjectivelyMVC-TextView */;
+			productType = "com.apple.product-type.tool";
+		};
 		HUDA00000000000000000015 /* ObjectivelyMVC-HUD */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = HUDA00000000000000000014 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-HUD" */;
@@ -1393,6 +1585,9 @@
 				CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */,
 				CE0C2207304CBC82008A6A2A /* ObjectivelyMVC-Font+Bitmap */,
 				CED40A87304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */,
+				49B779A4A2BCD3DCD3C3BD06 /* ObjectivelyMVC-Image */,
+				563130823413BCCA09134760 /* ObjectivelyMVC-Text */,
+				A73BC0FDBE1118F914A440F1 /* ObjectivelyMVC-TextView */,
 				CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
 				CE34C8951FB29F700025F231 /* ObjectivelyMVC-Stylesheet */,
@@ -1433,7 +1628,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd $BUILT_PRODUCTS_DIR &&\n./ObjectivelyMVC-Font+Bitmap &&\n./ObjectivelyMVC-ImageAtlas &&\n./ObjectivelyMVC-Selector &&\n./ObjectivelyMVC-Style &&\n./ObjectivelyMVC-Stylesheet &&\n./ObjectivelyMVC-View\n";
+			shellScript = "cd $BUILT_PRODUCTS_DIR &&\n./ObjectivelyMVC-Font+Bitmap &&\n./ObjectivelyMVC-Image &&\n./ObjectivelyMVC-ImageAtlas &&\n./ObjectivelyMVC-Selector &&\n./ObjectivelyMVC-Style &&\n./ObjectivelyMVC-Stylesheet &&\n./ObjectivelyMVC-Text &&\n./ObjectivelyMVC-TextView &&\n./ObjectivelyMVC-View\n";
 		};
 		CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1671,6 +1866,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9B8AE887D35458AE7C0EE060 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F8A115B0069B76D5DF21618 /* Image.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		243313ABE31DC93EA936F339 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B25F30D62819F943DCBC5293 /* Text.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE5F77E35CE051DA2EE56CCD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCB5AE1270D2C8B8C4E44027 /* TextView.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		HUDA00000000000000000008 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1755,10 +1974,43 @@
 			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
 			targetProxy = CED40A89304B2D700090C57A /* PBXContainerItemProxy */;
 		};
+		C2DC6F82A5128ED1D64A0D28 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjectivelyMVC;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = EDC8B69B4C254E0B20983FBD /* PBXContainerItemProxy */;
+		};
+		BA04F7324C595E256D51814C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjectivelyMVC;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = 6CE99E2EEC2CA9CACE23F199 /* PBXContainerItemProxy */;
+		};
+		10B40536A4C6ED7844DECE20 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjectivelyMVC;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = 7EE94EDE9901ED9472A2194D /* PBXContainerItemProxy */;
+		};
 		CED40A98304B2DFA0090C57A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CED40A87304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */;
 			targetProxy = CED40A97304B2DFA0090C57A /* PBXContainerItemProxy */;
+		};
+		B3DD5991CDBD4582092CC4F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 49B779A4A2BCD3DCD3C3BD06 /* ObjectivelyMVC-Image */;
+			targetProxy = 53F472CDBD720DEE99451939 /* PBXContainerItemProxy */;
+		};
+		00E123F744F252F431ACB5AB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 563130823413BCCA09134760 /* ObjectivelyMVC-Text */;
+			targetProxy = 288C55F591D0A32135B0B1D8 /* PBXContainerItemProxy */;
+		};
+		0850FEAA7E79310A5E7C5ED5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A73BC0FDBE1118F914A440F1 /* ObjectivelyMVC-TextView */;
+			targetProxy = 86612F2306FFCE232CE1BB04 /* PBXContainerItemProxy */;
 		};
 		HUDA00000000000000000011 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2136,7 +2388,73 @@
 			};
 			name = Debug;
 		};
+		F63BAEE767957C57E6DF9242 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A99FE10786B92347B082A9F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9C6C61A5C7F83CC04149A29D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
 		CED40A94304B2D700090C57A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		0C2EC2CD51D9FF5799F74AB7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		7FC537B8903F19812820D170 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		8F015166B33C65189975EF38 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				OTHER_LDFLAGS = (
@@ -2288,6 +2606,33 @@
 			buildConfigurations = (
 				CED40A93304B2D700090C57A /* Debug */,
 				CED40A94304B2D700090C57A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D44656D0AEE1A511C175339A /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Image" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F63BAEE767957C57E6DF9242 /* Debug */,
+				0C2EC2CD51D9FF5799F74AB7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		42DA443CE43697A0CE2778F7 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Text" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A99FE10786B92347B082A9F3 /* Debug */,
+				7FC537B8903F19812820D170 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7935DBBB394E57382160DE99 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-TextView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C6C61A5C7F83CC04149A29D /* Debug */,
+				8F015166B33C65189975EF38 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
