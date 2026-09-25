@@ -26,6 +26,7 @@
 #include <Objectively/String.h>
 
 #include "Log.h"
+#include "TextView.h"
 #include "WindowController.h"
 
 #define _Class _WindowController
@@ -352,14 +353,24 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   if (event->type == SDL_EVENT_KEY_DOWN) {
     if (event->key.key == SDLK_TAB) {
 
-      if (event->key.mod & SDL_KMOD_SHIFT) {
-        keyResponder = $(self, previousKeyResponder, keyResponder);
-      } else {
-        keyResponder = $(self, nextKeyResponder, keyResponder);
-      }
+      View *current = $(self, keyResponder);
 
-      if (keyResponder) {
-        $(keyResponder, becomeKeyResponder);
+      // An editing TextView that is still the key responder kept Tab to auto-complete
+      const bool consumed = current && current == keyResponder &&
+        $((Object *) current, isKindOfClass, _TextView()) &&
+        ((TextView *) current)->isEditable &&
+        !$((Control *) current, isDisabled);
+
+      if (!consumed) {
+        if (event->key.mod & SDL_KMOD_SHIFT) {
+          keyResponder = $(self, previousKeyResponder, keyResponder);
+        } else {
+          keyResponder = $(self, nextKeyResponder, keyResponder);
+        }
+
+        if (keyResponder) {
+          $(keyResponder, becomeKeyResponder);
+        }
       }
     }
 

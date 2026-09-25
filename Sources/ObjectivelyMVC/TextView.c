@@ -51,6 +51,8 @@ static void dealloc(Object *self) {
 
   release(this->attributedText);
 
+  release(this->completions);
+
   super(Object, self, dealloc);
 }
 
@@ -242,6 +244,103 @@ static size_t unitLengthBefore(const char *chars, size_t len, size_t position, c
   return unit;
 }
 
+/**
+ * @brief Replaces the text before the cursor with `chars`, leaving the cursor after them.
+ */
+static void replacePrefix(TextView *self, const char *chars) {
+
+  const Range range = { .location = 0, .length = self->position };
+  $(self->attributedText, replaceCharactersInRange, range, chars);
+
+  self->position = strlen(chars);
+}
+
+/**
+ * @brief Auto-completes the text before the cursor.
+ * @details The first Tab completes to the longest prefix the delegate's completions share, and
+ * then Tab and Shift+Tab cycle through them. A lone completion is not cycled, so that the next
+ * Tab asks again, e.g. for the contents of a completed directory.
+ * @param step 1 to cycle forward, -1 to cycle backward.
+ * @return True if the text was completed, false if Tab should advance the key responder.
+ */
+static bool autocomplete(TextView *self, int step, const ImageAtlas *icons) {
+
+  if (self->completions) {
+    const size_t count = self->completions->count;
+
+    if (step > 0) {
+      self->completion = self->completion == count ? 0 : (self->completion + 1) % count;
+    } else {
+      self->completion = self->completion == 0 || self->completion == count ? count - 1 : self->completion - 1;
+    }
+
+    const String *completion = $(self->completions, objectAtIndex, self->completion);
+    replacePrefix(self, completion->chars ?: "");
+    return true;
+  }
+
+  if (self->delegate.completionsForPrefix == NULL) {
+    return false;
+  }
+
+  String *prefix = $(self->attributedText, substring, (Range) { .length = self->position });
+  Array *completions = self->delegate.completionsForPrefix(self, prefix->chars ?: "");
+
+  bool didComplete = false;
+
+  if (completions && completions->count) {
+    const size_t count = completions->count;
+    const String *first = $(completions, objectAtIndex, 0);
+
+    size_t len = first->length;
+    for (size_t i = 1; i < count; i++) {
+      const String *other = $(completions, objectAtIndex, i);
+      size_t j = 0;
+      while (j < len && j < other->length && first->chars[j] == other->chars[j]) {
+        j++;
+      }
+      len = j;
+    }
+
+    // Never stop inside an escape or a UTF-8 encoded character
+    size_t shared = 0;
+    while (shared < len) {
+      const size_t unit = unitLengthAt(first->chars, first->length, shared, icons);
+      if (shared + unit > len) {
+        break;
+      }
+      shared += unit;
+    }
+
+    if (shared > prefix->length) {
+      String *common = $(first, substring, (Range) { .length = shared });
+      replacePrefix(self, common->chars);
+      release(common);
+
+      self->completion = count;
+      didComplete = true;
+    } else if (count > 1) {
+      self->completion = step > 0 ? 0 : count - 1;
+
+      const String *completion = $(completions, objectAtIndex, self->completion);
+      replacePrefix(self, completion->chars ?: "");
+      didComplete = true;
+    } else if (strcmp(first->chars ?: "", prefix->chars ?: "")) {
+      replacePrefix(self, first->chars ?: "");
+      didComplete = true;
+    }
+
+    if (count > 1) {
+      self->completions = retain(completions);
+    }
+  }
+
+  release(completions);
+  release(prefix);
+
+  return didComplete;
+}
+
 #pragma mark - Control
 
 /**
@@ -249,11 +348,13 @@ static size_t unitLengthBefore(const char *chars, size_t len, size_t position, c
  */
 static bool captureEvent(Control *self, const SDL_Event *event) {
 
-  bool didEdit = false, didCaptureEvent = false;
+  bool didEdit = false, didComplete = false, didCaptureEvent = false;
 
   View *view = (View *) self;
 
   TextView *this = (TextView *) self;
+
+  const size_t position = this->position;
 
   if (this->isEditable) {
     if (event->type == SDL_EVENT_TEXT_INPUT) {
@@ -278,11 +379,18 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
 
       switch (event->key.key) {
 
+        case SDLK_TAB:
+        case SDLK_KP_TAB:
+          if (autocomplete(this, (event->key.mod & SDL_KMOD_SHIFT) ? -1 : 1, icons)) {
+            didEdit = didComplete = true;
+          } else {
+            $(view, resignKeyResponder);
+          }
+          break;
+
         case SDLK_ESCAPE:
         case SDLK_KP_ENTER:
         case SDLK_RETURN:
-        case SDLK_TAB:
-        case SDLK_KP_TAB:
           $(view, resignKeyResponder);
           break;
 
@@ -373,6 +481,10 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
       }
     }
 
+    if (!didComplete && (didEdit || this->position != position)) {
+      this->completions = release(this->completions);
+    }
+
     if (didEdit) {
       $((View *) self, setNeedsLayout);
       if (this->delegate.didEdit) {
@@ -407,6 +519,8 @@ static void stateDidChange(Control *self) {
   } else {
 
     SDL_StopTextInput(self->view.window);
+
+    this->completions = release(this->completions);
 
     if (this->delegate.didEndEditing) {
       this->delegate.didEndEditing(this);
@@ -452,6 +566,8 @@ static void setAttributedText(TextView *self, const char *attributedText) {
     $(self->attributedText, setCharacters, attributedText);
 
     self->position = self->attributedText->length;
+
+    self->completions = release(self->completions);
 
     $((View *) self, setNeedsLayout);
   }
