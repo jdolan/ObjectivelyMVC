@@ -184,7 +184,8 @@ static void layoutSubviews(View *self) {
           break;
       }
 
-      if (subview->stretch && remaining) {
+      const bool stretch = subview->stretch && remaining;
+      if (stretch) {
         const int share = --numStretch ? remaining / (numStretch + 1) : remaining;
         switch (this->axis) {
           case StackViewAxisVertical:
@@ -194,10 +195,22 @@ static void layoutSubviews(View *self) {
             subviewSize.w += share;
             break;
         }
-        remaining -= share;
       }
 
       $(subview, layoutWithSize, &subviewSize);
+
+      if (stretch) {
+        switch (this->axis) {
+          case StackViewAxisVertical:
+            remaining -= max(subview->frame.h - sizes[i].h, 0);
+            subviewSize.h = subview->frame.h;
+            break;
+          case StackViewAxisHorizontal:
+            remaining -= max(subview->frame.w - sizes[i].w, 0);
+            subviewSize.w = subview->frame.w;
+            break;
+        }
+      }
 
       // Align along secondary axis
       

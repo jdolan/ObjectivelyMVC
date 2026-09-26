@@ -309,10 +309,11 @@ static void applyStyle(View *self, const Style *style) {
   );
 
   const ViewVisibility visibility = self->visibility;
+  const bool stretch = self->stretch;
 
   $(self, bind, inlets, style->attributes);
 
-  if (self->visibility != visibility && self->superview) {
+  if ((self->visibility != visibility || self->stretch != stretch) && self->superview) {
     $(self->superview, setNeedsLayout);
   }
 

@@ -417,6 +417,33 @@ START_TEST(stretchChildrenShareRemainingWidth) {
 
 } END_TEST
 
+START_TEST(stretchChildAtMaxSizeLeavesRemainderToNext) {
+
+  StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
+  stackView->view.minSize = stackView->view.maxSize = MakeSize(110, 10);
+  stackView->axis = StackViewAxisHorizontal;
+
+  View *a = fixedView(10, 10);
+  View *b = flexibleView(0, 10);
+  View *c = flexibleView(0, 10);
+  b->stretch = c->stretch = true;
+  b->maxSize.w = 30;
+
+  $((View *) stackView, addSubview, a);
+  $((View *) stackView, addSubview, b);
+  $((View *) stackView, addSubview, c);
+
+  $((View *) stackView, layoutIfNeeded);
+
+  ck_assert_int_eq(30, b->frame.w);
+  ck_assert_int_eq(10, b->frame.x);
+  ck_assert_int_eq(70, c->frame.w);
+  ck_assert_int_eq(40, c->frame.x);
+
+  release(stackView);
+
+} END_TEST
+
 START_TEST(stretchIsIgnoredWithoutRemainingSpace) {
 
   StackView *stackView = $(alloc(StackView), initWithFrame, NULL);
@@ -525,6 +552,7 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, pointerEventsPassThroughToSubviewsAndSiblings);
   tcase_add_test(tcase, stretchChildTakesRemainingHeight);
   tcase_add_test(tcase, stretchChildrenShareRemainingWidth);
+  tcase_add_test(tcase, stretchChildAtMaxSizeLeavesRemainderToNext);
   tcase_add_test(tcase, stretchIsIgnoredWithoutRemainingSpace);
   tcase_add_test(tcase, stretchContainChildKeepsStretchedSize);
   tcase_add_test(tcase, styledVisibilityRelaysOutSuperview);
