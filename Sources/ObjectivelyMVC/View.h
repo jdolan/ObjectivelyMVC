@@ -425,6 +425,17 @@ struct View {
   Style *style;
 
   /**
+   * @brief Whether this View takes a share of the space its StackView leaves along its axis.
+   * @remarks A StackView gives each subview the size of its content along its axis. The subviews
+   * that stretch share whatever remains of the StackView's bounds, so that one child, such as a
+   * page beneath a row of tabs, can fill a StackView that is itself sized by its superview.
+   * Outside of a StackView, this has no effect. Styled as `stretch`.
+   * @see StackView::layoutSubviews(View *)
+   * @styled
+   */
+  bool stretch;
+
+  /**
    * @brief An optional Stylesheet.
    * @remarks If set, this Stylesheet is added to or removed from the current Theme when this
    * View is added to or removed from a valid View hierarchy.

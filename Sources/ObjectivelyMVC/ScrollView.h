@@ -78,6 +78,8 @@ struct ScrollView {
 
   /**
    * @brief The content View.
+   * @remarks A JSON layout MAY declare it as `"contentView": { ... }`, which is the same as
+   * ScrollView::setContentView with the resulting View.
    */
   View *contentView;
 

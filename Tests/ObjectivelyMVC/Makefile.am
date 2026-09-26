@@ -13,6 +13,7 @@ TESTS = \
 	Style \
 	Stylesheet \
 	Text \
+	TextView \
 	View
 
 CFLAGS += \

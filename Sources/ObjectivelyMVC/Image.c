@@ -17,6 +17,7 @@
 
 #include <assert.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <SDL3_image/SDL_image.h>
 

@@ -302,12 +302,20 @@ static void applyStyle(View *self, const Style *style) {
     MakeInlet("padding-bottom", InletTypeInteger, &self->padding.bottom, NULL),
     MakeInlet("padding-left", InletTypeInteger, &self->padding.left, NULL),
     MakeInlet("pointer-events", InletTypeEnum, &self->pointerEvents, (ident) ViewPointerEventsNames),
+    MakeInlet("stretch", InletTypeBool, &self->stretch, NULL),
     MakeInlet("top", InletTypeInteger, &self->frame.y, NULL),
     MakeInlet("visibility", InletTypeEnum, &self->visibility, (ident) ViewVisibilityNames),
     MakeInlet("width", InletTypeInteger, &self->frame.w, NULL)
   );
 
+  const ViewVisibility visibility = self->visibility;
+  const bool stretch = self->stretch;
+
   $(self, bind, inlets, style->attributes);
+
+  if ((self->visibility != visibility || self->stretch != stretch) && self->superview) {
+    $(self->superview, setNeedsLayout);
+  }
 
   if ((self->alignment & ViewAlignmentMaskHorizontal) &&
       $(style->attributes, objectForKeyPath, "left")) {
@@ -1710,7 +1718,7 @@ static void resize(View *self, const SDL_Size *size) {
     $(self, setNeedsLayout);
     
     if (self->superview) {
-      if ($(self->superview, isContainer) || self->alignment & ViewAlignmentMaskAny) {
+      if ($(self->superview, isContainer) || self->alignment & ViewAlignmentMaskAny || self->stretch) {
         $(self->superview, setNeedsLayout);
       }
     }

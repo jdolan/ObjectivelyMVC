@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <Objectively/Array.h>
 #include <Objectively/String.h>
 
 #include <ObjectivelyMVC/Control.h>
@@ -69,6 +70,19 @@ struct TextViewDelegate {
    * @param textView The TextView.
    */
   void (*didEndEditing)(TextView *textView);
+
+  /**
+   * @brief Delegate callback for auto-completing the text before the cursor with Tab.
+   * @param textView The TextView.
+   * @param prefix The text before the cursor.
+   * @return The completions for `prefix`, in the order that Tab cycles through them, or `NULL`.
+   * @remarks Each completion SHOULD begin with `prefix`, as it replaces `prefix`. The TextView
+   * completes to the longest prefix the completions share, and then Tab and Shift+Tab cycle
+   * through them. The TextView releases the returned Array. If this is `NULL`, or returns
+   * `NULL`, an empty Array, or only `prefix` itself, Tab ends editing and advances, as it does
+   * for any other Control.
+   */
+  Array *(*completionsForPrefix)(TextView *textView, const char *prefix);
 };
 
 /**
@@ -119,6 +133,19 @@ struct TextView {
    * @brief The text.
    */
   Text *text;
+
+  /**
+   * @brief The completions that Tab cycles through, or `NULL`.
+   * @private
+   */
+  Array *completions;
+
+  /**
+   * @brief The index of the completion before the cursor, or the count of `completions` when
+   * the text before the cursor is their shared prefix.
+   * @private
+   */
+  size_t completion;
 };
 
 /**

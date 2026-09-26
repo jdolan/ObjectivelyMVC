@@ -53,12 +53,20 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   ScrollView *this = (ScrollView *) self;
 
+  View *contentView = NULL;
+
   const Inlet inlets[] = MakeInlets(
+    MakeInlet("contentView", InletTypeView, &contentView, NULL),
     MakeInlet("scrollbarVisibility", InletTypeEnum, &this->scrollBarVisibility, (ident) ScrollBarVisibilityNames),
     MakeInlet("step", InletTypeFloat, &this->step, NULL)
   );
 
   $(self, bind, inlets, dictionary);
+
+  if (contentView) {
+    $(this, setContentView, contentView);
+    release(contentView);
+  }
 }
 
 /**
@@ -77,6 +85,13 @@ static void applyStyle(View *self, const Style *style) {
   $(self, bind, inlets, (Dictionary *) style->attributes);
 
   $(self, setNeedsLayout);
+}
+
+/**
+ * @see View::init(View *)
+ */
+static View *init(View *self) {
+  return (View *) $((ScrollView *) self, initWithFrame, NULL);
 }
 
 /**
@@ -259,6 +274,7 @@ static void initialize(Class *clazz) {
 
   ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
+  ((ViewInterface *) clazz->interface)->init = init;
   ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
   ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
