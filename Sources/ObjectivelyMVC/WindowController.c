@@ -351,7 +351,7 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
   }
 
   if (event->type == SDL_EVENT_KEY_DOWN) {
-    if (event->key.key == SDLK_TAB) {
+    if (event->key.key == SDLK_TAB || event->key.key == SDLK_KP_TAB) {
 
       View *current = $(self, keyResponder);
 
