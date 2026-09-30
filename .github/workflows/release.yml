@@ -25,13 +25,35 @@ jobs:
     # when built from source (i.e. whenever Config.h isn't already present);
     # the macOS runner image doesn't ship autotools by default. configure.ac
     # hard-requires check (via pkg-config) even though release builds don't
-    # run the test suite. sdl3/sdl3_image/sdl3_ttf provide the pkg-config
-    # files that Objectively/ObjectivelyGPU/ObjectivelyMVC's own configure
-    # scripts check for. macvim provides a modern xxd (supporting -t) on
+    # run the test suite. macvim provides a modern xxd (supporting -t) on
     # PATH ahead of the runner's older /usr/bin/xxd, which the Assets
     # "Preprocess Assets" build phase requires.
     - name: Install autotools
-      run: brew install autoconf automake libtool pkg-config check sdl3 sdl3_image sdl3_ttf macvim
+      run: brew install autoconf automake libtool pkg-config check cmake freetype harfbuzz macvim
+
+    # SDL3, SDL3_image and SDL3_ttf provide the pkg-config files that
+    # Objectively/ObjectivelyGPU/ObjectivelyMVC's own configure scripts check
+    # for. They are built here, as in build.yml, not taken from Homebrew.
+    - name: Build SDL3
+      run: |
+        git clone --depth 1 --branch ObjectivelyGPU https://github.com/jdolan/SDL.git SDL3
+        cmake -S SDL3 -B SDL3/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${HOMEBREW_PREFIX}
+        cmake --build SDL3/build -j$(sysctl -n hw.logicalcpu)
+        cmake --install SDL3/build
+
+    - name: Build SDL3_image
+      run: |
+        git clone --depth 1 --branch release-3.4.4 https://github.com/libsdl-org/SDL_image.git SDL3_image
+        cmake -S SDL3_image -B SDL3_image/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${HOMEBREW_PREFIX}
+        cmake --build SDL3_image/build -j$(sysctl -n hw.logicalcpu)
+        cmake --install SDL3_image/build
+
+    - name: Build SDL3_ttf
+      run: |
+        git clone --depth 1 --branch release-3.2.2 https://github.com/libsdl-org/SDL_ttf.git SDL3_ttf
+        cmake -S SDL3_ttf -B SDL3_ttf/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${HOMEBREW_PREFIX}
+        cmake --build SDL3_ttf/build -j$(sysctl -n hw.logicalcpu)
+        cmake --install SDL3_ttf/build
 
     - name: Checkout Objectively
       uses: actions/checkout@v6
