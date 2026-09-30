@@ -134,7 +134,6 @@ jobs:
 
     - name: Zip xcframeworks
       run: |
-        (cd ObjectivelyGPU/Frameworks && zip -r "$GITHUB_WORKSPACE/SDL3.xcframework.zip" SDL3.xcframework)
         (cd ObjectivelyMVC/Frameworks && \
           zip -r "$GITHUB_WORKSPACE/SDL3_image.xcframework.zip" SDL3_image.xcframework && \
           zip -r "$GITHUB_WORKSPACE/SDL3_ttf.xcframework.zip" SDL3_ttf.xcframework && \
@@ -147,7 +146,6 @@ jobs:
         gh release create ${{ github.ref_name }} \
           --title "ObjectivelyMVC ${{ github.ref_name }}" \
           --generate-notes \
-          "$GITHUB_WORKSPACE/SDL3.xcframework.zip" \
           "$GITHUB_WORKSPACE/SDL3_image.xcframework.zip" \
           "$GITHUB_WORKSPACE/SDL3_ttf.xcframework.zip" \
           "$GITHUB_WORKSPACE/ObjectivelyMVC.xcframework.zip"

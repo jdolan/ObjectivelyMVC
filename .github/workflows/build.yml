@@ -20,8 +20,31 @@ jobs:
     steps:
     - name: Install dependencies
       run: |
-        brew install autoconf automake libtool pkg-config check \
-          sdl3 sdl3_image sdl3_ttf
+        brew install autoconf automake libtool pkg-config check cmake \
+          freetype harfbuzz
+
+    # SDL3_image and SDL3_ttf are built here, not taken from Homebrew: Homebrew's builds link
+    # Homebrew's sdl3, which would load a second SDL3 alongside this one.
+    - name: Build SDL3
+      run: |
+        git clone --depth 1 --branch ObjectivelyGPU https://github.com/jdolan/SDL.git SDL3
+        cmake -S SDL3 -B SDL3/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${HOMEBREW_PREFIX}
+        cmake --build SDL3/build -j$(sysctl -n hw.logicalcpu)
+        cmake --install SDL3/build
+
+    - name: Build SDL3_image
+      run: |
+        git clone --depth 1 --branch release-3.4.4 https://github.com/libsdl-org/SDL_image.git SDL3_image
+        cmake -S SDL3_image -B SDL3_image/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${HOMEBREW_PREFIX}
+        cmake --build SDL3_image/build -j$(sysctl -n hw.logicalcpu)
+        cmake --install SDL3_image/build
+
+    - name: Build SDL3_ttf
+      run: |
+        git clone --depth 1 --branch release-3.2.2 https://github.com/libsdl-org/SDL_ttf.git SDL3_ttf
+        cmake -S SDL3_ttf -B SDL3_ttf/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${HOMEBREW_PREFIX}
+        cmake --build SDL3_ttf/build -j$(sysctl -n hw.logicalcpu)
+        cmake --install SDL3_ttf/build
 
     - name: Checkout Objectively
       uses: actions/checkout@v6
@@ -111,7 +134,7 @@ jobs:
 
     - name: Build SDL3
       run: |
-        git clone --depth 1 --branch release-3.4.12 https://github.com/libsdl-org/SDL.git SDL3
+        git clone --depth 1 --branch ObjectivelyGPU https://github.com/jdolan/SDL.git SDL3
         cmake -S SDL3 -B SDL3/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local
         cmake --build SDL3/build -j$(nproc)
         sudo cmake --install SDL3/build
