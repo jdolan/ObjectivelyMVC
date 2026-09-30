@@ -12,7 +12,7 @@
 #
 set -euo pipefail
 
-SDL3_IMAGE_VERSION="${SDL3_IMAGE_VERSION:-3.4.0}"
+SDL3_IMAGE_VERSION="${SDL3_IMAGE_VERSION:-3.4.4}"
 SDL3_TTF_VERSION="${SDL3_TTF_VERSION:-3.2.2}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
