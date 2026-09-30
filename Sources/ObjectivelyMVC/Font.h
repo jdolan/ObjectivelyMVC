@@ -62,7 +62,6 @@ OBJECTIVELYMVC_EXPORT const EnumName FontStyleNames[];
  * density at which it is opened.
  */
 typedef struct {
-
   /**
    * @brief The family, or `NULL` for the default.
    */

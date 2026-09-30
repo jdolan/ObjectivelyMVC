@@ -41,7 +41,6 @@ typedef struct ScrollHandleInterface ScrollHandleInterface;
  * @brief The ScrollHandle delegate protocol.
  */
 typedef struct {
-
   /**
    * @brief The delegate self pointer (the ScrollBar).
    */

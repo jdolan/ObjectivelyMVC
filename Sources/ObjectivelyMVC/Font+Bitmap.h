@@ -80,7 +80,6 @@ typedef struct ImageAtlas ImageAtlas;
  * fixed-width and has no bitmap.
  */
 typedef struct {
-
   /**
    * @brief The pen advance per glyph, in texels.
    */
