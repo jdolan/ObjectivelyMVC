@@ -110,7 +110,6 @@ jobs:
       working-directory: Objectively
       run: bash ./Frameworks/build-libcurl.sh
 
-
     - name: Fetch SDL3_image / SDL3_ttf xcframeworks
       working-directory: ObjectivelyMVC
       run: ./Frameworks/fetch-sdl3-extensions.sh
