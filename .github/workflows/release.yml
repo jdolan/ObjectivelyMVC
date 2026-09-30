@@ -10,8 +10,9 @@ permissions:
 env:
   # Objectively and ObjectivelyGPU are source dependencies (resolved via
   # ObjectivelyMVC.xcworkspace). Override to pin an MVC release/branch to a
-  # specific ref of either. SDL3 / SDL3_image / SDL3_ttf versions live in
-  # fetch-sdl3.sh / fetch-sdl3-extensions.sh, not here.
+  # specific ref of either. SDL3 is the jdolan/SDL ObjectivelyGPU tag, built by
+  # the workspace from the SDL3 checkout below; SDL3_image / SDL3_ttf versions
+  # live in fetch-sdl3-extensions.sh.
   OBJECTIVELY_REF: "main"
   OBJECTIVELYGPU_REF: "main"
   HOMEBREW_PREFIX: /opt/homebrew
@@ -109,9 +110,6 @@ jobs:
       working-directory: Objectively
       run: bash ./Frameworks/build-libcurl.sh
 
-    - name: Fetch SDL3.xcframework
-      working-directory: ObjectivelyGPU
-      run: ./Frameworks/fetch-sdl3.sh
 
     - name: Fetch SDL3_image / SDL3_ttf xcframeworks
       working-directory: ObjectivelyMVC
