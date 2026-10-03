@@ -16,7 +16,7 @@ Tagged releases are published on the [GitHub releases page](https://github.com/j
 * [SDL3](https://github.com/libsdl-org/SDL) >= 3.2.0 (CI builds against the `ObjectivelyGPU` tag of [jdolan/SDL](https://github.com/jdolan/SDL), which adds the SDL_gpu query API; see [Installing ObjectivelyGPU](https://jdolan.github.io/ObjectivelyGPU/install.html)), [SDL3_image](https://github.com/libsdl-org/SDL_image), [SDL3_ttf](https://github.com/libsdl-org/SDL_ttf)
 
 The Xcode workspace builds `SDL3.framework` from a sibling checkout of that tag, which MUST be named `SDL3`:
-`git clone --branch ObjectivelyGPU https://github.com/jdolan/SDL.git ../SDL3`.
+`git clone --branch ObjectivelyGPU https://github.com/jdolan/SDL.git ../SDL`.
 
 ## Building
 

@@ -11,7 +11,7 @@ env:
   # Objectively and ObjectivelyGPU are source dependencies (resolved via
   # ObjectivelyMVC.xcworkspace). Override to pin an MVC release/branch to a
   # specific ref of either. SDL3 is the jdolan/SDL ObjectivelyGPU tag, built by
-  # the workspace from the SDL3 checkout below; SDL3_image / SDL3_ttf versions
+  # the workspace from the SDL checkout below; SDL3_image / SDL3_ttf versions
   # live in fetch-sdl3-extensions.sh.
   OBJECTIVELY_REF: "main"
   OBJECTIVELYGPU_REF: "main"
@@ -37,10 +37,10 @@ jobs:
     # for. They are built here, as in build.yml, not taken from Homebrew.
     - name: Build SDL3
       run: |
-        git clone --depth 1 --branch ObjectivelyGPU https://github.com/jdolan/SDL.git SDL3
-        cmake -S SDL3 -B SDL3/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${HOMEBREW_PREFIX}
-        cmake --build SDL3/build -j$(sysctl -n hw.logicalcpu)
-        cmake --install SDL3/build
+        git clone --depth 1 --branch ObjectivelyGPU https://github.com/jdolan/SDL.git SDL
+        cmake -S SDL -B SDL/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${HOMEBREW_PREFIX}
+        cmake --build SDL/build -j$(sysctl -n hw.logicalcpu)
+        cmake --install SDL/build
 
     - name: Build SDL3_image
       run: |

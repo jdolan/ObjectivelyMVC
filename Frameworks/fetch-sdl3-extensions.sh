@@ -3,7 +3,7 @@
 # fetch-sdl3-extensions.sh — downloads the official SDL3_image and SDL3_ttf Apple
 # xcframeworks from libsdl.org on demand and caches them under Frameworks/.
 #
-# Core SDL3 itself is built by the workspace from the ../SDL3 sibling checkout;
+# Core SDL3 itself is built by the workspace from the ../SDL sibling checkout;
 # this fetches only the extensions ObjectivelyMVC layers on top. Mirrors
 # ObjectivelyMVC.vs15/sdl3.targets (Windows): downloaded once, on demand,
 # .gitignored. Bump the versions to upgrade; delete the cached

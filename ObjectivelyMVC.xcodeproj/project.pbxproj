@@ -2044,7 +2044,7 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../SDL3/include",
+					"$(SRCROOT)/../SDL/include",
 					"$(SRCROOT)/Frameworks/SDL3_image.xcframework/ios-arm64/SDL3_image.framework/Headers",
 					"$(SRCROOT)/Frameworks/SDL3_ttf.xcframework/ios-arm64/SDL3_ttf.framework/Headers",
 					"$(SRCROOT)/Frameworks/libcurl.xcframework/ios-arm64/Headers",
@@ -2087,7 +2087,7 @@
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../SDL3/include",
+					"$(SRCROOT)/../SDL/include",
 					"$(SRCROOT)/Frameworks/SDL3_image.xcframework/ios-arm64/SDL3_image.framework/Headers",
 					"$(SRCROOT)/Frameworks/SDL3_ttf.xcframework/ios-arm64/SDL3_ttf.framework/Headers",
 					"$(SRCROOT)/Frameworks/libcurl.xcframework/ios-arm64/Headers",
@@ -2292,7 +2292,7 @@
 					"$(SRCROOT)/Sources",
 					"$(WORKSPACE_PREFIX)/Objectively/Sources",
 					"$(WORKSPACE_PREFIX)/ObjectivelyGPU/Sources",
-					"$(SRCROOT)/../SDL3/include",
+					"$(SRCROOT)/../SDL/include",
 					"$(HOMEBREW_PREFIX)/include",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
@@ -2326,7 +2326,7 @@
 					"$(SRCROOT)/Sources",
 					"$(WORKSPACE_PREFIX)/Objectively/Sources",
 					"$(WORKSPACE_PREFIX)/ObjectivelyGPU/Sources",
-					"$(SRCROOT)/../SDL3/include",
+					"$(SRCROOT)/../SDL/include",
 					"$(HOMEBREW_PREFIX)/include",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
