@@ -536,6 +536,78 @@ START_TEST(scrollViewContentViewFromJSON) {
 
 } END_TEST
 
+START_TEST(sliderLabelsFromJSON) {
+
+  Slider *slider = (Slider *) $$(View, viewWithCharacters,
+    "{ \"class\": \"Slider\", \"values\": [0, 0.25, 0.5, 1],"
+    " \"labels\": [\"Off\", \"Low\", \"Medium\", \"High\"] }", NULL);
+  ck_assert_ptr_nonnull(slider);
+  ck_assert_str_eq("Off", slider->label->text);
+
+  $(slider, setValue, 0.9);
+  ck_assert_double_eq(1.0, slider->value);
+  ck_assert_str_eq("High", slider->label->text);
+
+  SDL_Event event = { .key = { .type = SDL_EVENT_KEY_DOWN, .key = SDLK_LEFT } };
+  ck_assert($((Control *) slider, captureEvent, &event));
+  ck_assert_double_eq(0.5, slider->value);
+  ck_assert_str_eq("Medium", slider->label->text);
+
+  $(slider, setValue, -1);
+  ck_assert_double_eq(0.0, slider->value);
+  ck_assert_str_eq("Off", slider->label->text);
+
+  release(slider);
+} END_TEST
+
+START_TEST(sliderNumericLabelsRemainSupported) {
+
+  Slider *slider = (Slider *) $$(View, viewWithCharacters,
+    "{ \"class\": \"Slider\", \"values\": [0, 0.25, 1],"
+    " \"labelFormat\": \"%.2f\", \"value\": 0.25 }", NULL);
+  ck_assert_str_eq("0.25", slider->label->text);
+  $(slider, setValue, 1);
+  ck_assert_str_eq("1.00", slider->label->text);
+  release(slider);
+} END_TEST
+
+START_TEST(sliderRejectsMismatchedLabels) {
+
+  Slider *slider = (Slider *) $$(View, viewWithCharacters,
+    "{ \"class\": \"Slider\", \"values\": [0, 1], \"labels\": [\"Off\"], \"value\": 1 }", NULL);
+  ck_assert_ptr_null(slider->labels);
+  ck_assert_str_eq("1.0", slider->label->text);
+  release(slider);
+} END_TEST
+
+START_TEST(sliderLabelsRebindAndKeepTrackWidth) {
+
+  Slider *slider = (Slider *) $$(View, viewWithCharacters,
+    "{ \"class\": \"Slider\", \"values\": [0, 1], \"labels\": [\"Off\", \"High\"] }", NULL);
+  Array *original = retain(slider->labels);
+  $((View *) slider, awakeWithCharacters,
+    "{ \"values\": [0, 0.25, 1], \"labels\": [\"Off\", \"Medium\", \"High\"], \"value\": 0.25 }");
+
+  const String *oldLabel = cast(String, $(original, objectAtIndex, 1));
+  ck_assert_str_eq("High", oldLabel->chars);
+  release(original);
+
+  ck_assert_str_eq("Medium", slider->label->text);
+  ck_assert_double_eq(0.25, slider->value);
+
+  $((View *) slider, layoutIfNeeded);
+  const int width = slider->bar->frame.w;
+  $(slider, setValue, 1);
+  $((View *) slider, layoutIfNeeded);
+  ck_assert_int_eq(width, slider->bar->frame.w);
+
+  Array *labels = retain(slider->labels);
+  release(slider);
+  const String *label = cast(String, $(labels, objectAtIndex, 1));
+  ck_assert_str_eq("Medium", label->chars);
+  release(labels);
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("View");
@@ -557,6 +629,10 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, stretchContainChildKeepsStretchedSize);
   tcase_add_test(tcase, styledVisibilityRelaysOutSuperview);
   tcase_add_test(tcase, scrollViewContentViewFromJSON);
+  tcase_add_test(tcase, sliderLabelsFromJSON);
+  tcase_add_test(tcase, sliderNumericLabelsRemainSupported);
+  tcase_add_test(tcase, sliderRejectsMismatchedLabels);
+  tcase_add_test(tcase, sliderLabelsRebindAndKeepTrackWidth);
 
   Suite *suite = suite_create("View");
   suite_add_tcase(suite, tcase);

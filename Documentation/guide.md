@@ -39,6 +39,19 @@ Font *verdana = $$(Font, cachedFont, "Verdana", 24, FontStyleRegular); // will r
 
 ObjectivelyMVC provides a robust set of containers, views and controls. Stack and arrange components with `Box`, `Panel` and `StackView`. Add `Buttons`, `Checkboxes`, `Selects`, `Sliders`, editable `TextViews` and more by simply instantiating them. Display tabular data or a thumbnail gallery with `TableView` and `CollectionView`. Split complex interfaces into multiple tabs with `TabView` and `TabViewController`. Use the specialized _delegate_ callbacks to respond to events.
 
+For discrete settings, a Slider's `values` Vector supplies equally spaced, snapping stops while
+`value` remains the selected number, not an index. An optional parallel `labels` Array of `String`
+objects replaces the numeric label; `labels` and `values` must have the same count. The Slider owns
+the labels Array, which retains its Strings. JSON copies both collections, for example:
+
+```json
+{ "class": "Slider", "values": [0, 0.25, 0.5, 1],
+  "labels": ["Off", "Low", "Medium", "High"], "value": 0.5 }
+```
+
+Without `labels`, sliders continue to display their numeric value using `labelFormat`. The label
+reserves space for the widest entry so the track does not resize when the selected stop changes.
+
 ```c
 Select *select = $(alloc(Select), initWithFrame, NULL);
 ...

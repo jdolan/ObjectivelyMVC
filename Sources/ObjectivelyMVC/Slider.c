@@ -29,6 +29,7 @@
 #include <string.h>
 
 #include <Objectively/Number.h>
+#include <Objectively/String.h>
 
 #include "Colors.h"
 #include "Log.h"
@@ -120,6 +121,7 @@ static void dealloc(Object *self) {
   release(this->handle);
   release(this->label);
   release(this->values);
+  release(this->labels);
 
   free(this->labelFormat);
 
@@ -129,7 +131,7 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
- * @brief InletBinding for a table of non-linear values.
+ * @brief @c InletBinding Slider::values.
  */
 static void bindValues(const Inlet *inlet, ident obj) {
 
@@ -153,6 +155,21 @@ static void bindValues(const Inlet *inlet, ident obj) {
 }
 
 /**
+ * @brief @c InletBinding for Slider::labels.
+ */
+static void bindLabels(const Inlet *inlet, ident obj) {
+
+  const Array *array = cast(Array, obj);
+  for (size_t i = 0; i < array->count; i++) {
+    cast(String, $(array, objectAtIndex, i));
+  }
+
+  Array *labels = cast(Array, $((Object *) array, copy));
+  release(*(Array **) inlet->dest);
+  *(Array **) inlet->dest = labels;
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -168,6 +185,7 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
     MakeInlet("handle", InletTypeView, &this->handle, NULL),
     MakeInlet("label", InletTypeView, &this->label, NULL),
     MakeInlet("labelFormat", InletTypeCharacters, &this->labelFormat, NULL),
+    MakeInlet("labels", InletTypeApplicationDefined, &this->labels, bindLabels),
     MakeInlet("min", InletTypeDouble, &this->min, NULL),
     MakeInlet("max", InletTypeDouble, &this->max, NULL),
     MakeInlet("snapToStep", InletTypeBool, &this->snapToStep, NULL),
@@ -178,6 +196,12 @@ static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
 
   $(self, bind, inlets, dictionary);
 
+  if (this->labels && (!this->values || this->labels->count != this->values->count)) {
+    MVC_LogWarn("Slider labels must have the same count as values\n");
+    this->labels = release(this->labels);
+  }
+
+  $(self, setNeedsLayout);
   $(this, setValue, value);
 
   // setValue only reformats on a change, and the labelFormat inlet does not format at all,
@@ -216,8 +240,14 @@ static void layoutSubviews(View *self) {
         for (size_t i = 0; i < this->values->count; i++) {
           int width;
 
-          snprintf(text, sizeof(text), this->labelFormat, VectorValue(this->values, double, i));
-          $(label->font, sizeCharacters, text, &width, NULL);
+          const char *characters;
+          if (this->labels) {
+            characters = cast(String, $(this->labels, objectAtIndex, i))->chars;
+          } else {
+            snprintf(text, sizeof(text), this->labelFormat, VectorValue(this->values, double, i));
+            characters = text;
+          }
+          $(label->font, sizeCharacters, characters, &width, NULL);
 
           labelWidth = max(labelWidth, width);
         }
@@ -358,6 +388,13 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
  * @memberof Slider
  */
 static void formatLabel(Slider *self) {
+
+  if (self->labels) {
+    assert(self->values && self->labels->count == self->values->count);
+    const String *label = cast(String, $(self->labels, objectAtIndex, indexOfValue(self, self->value)));
+    $(self->label, setText, label->chars);
+    return;
+  }
 
   char text[64];
   snprintf(text, sizeof(text), self->labelFormat, self->value);

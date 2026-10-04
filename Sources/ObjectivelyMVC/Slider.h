@@ -23,6 +23,7 @@
 
 #pragma once
 
+#include <Objectively/Array.h>
 #include <Objectively/Vector.h>
 
 #include <ObjectivelyMVC/Control.h>
@@ -101,6 +102,12 @@ struct Slider {
   char *labelFormat;
 
   /**
+   * @brief An optional Array of non-linear labels parallel to `values`.
+   * @details When set, the corresponding label for the selected `values` entry is displayed.
+   */
+  Array *labels;
+
+  /**
    * @brief The slider bounds.
    */
   double min, max;
@@ -121,9 +128,9 @@ struct Slider {
   double value;
 
   /**
-   * @brief An optional table of non-linear values.
+   * @brief An optional Vector of non-linear values.
    * @details When set, the handle snaps to these values, and `min`, `max`, `step` and
-   * `snapToStep` are ignored. `value` remains the selected value itself, never an index.
+   * `snapToStep` are all ignored. `value` remains the selected value, never an index.
    */
   Vector *values;
 };
