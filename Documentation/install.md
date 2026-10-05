@@ -13,10 +13,14 @@ Tagged releases are published on the [GitHub releases page](https://github.com/j
 
 * [Objectively](https://github.com/jdolan/Objectively) >= 2.2.0
 * [ObjectivelyGPU](https://github.com/jdolan/ObjectivelyGPU) >= 2.2.0
-* [SDL3](https://github.com/libsdl-org/SDL) >= 3.2.0 (CI builds against the `ObjectivelyGPU` tag of [jdolan/SDL](https://github.com/jdolan/SDL), which adds the SDL_gpu query API; see [Installing ObjectivelyGPU](https://jdolan.github.io/ObjectivelyGPU/install.html)), [SDL3_image](https://github.com/libsdl-org/SDL_image), [SDL3_ttf](https://github.com/libsdl-org/SDL_ttf)
+* [SDL3](https://github.com/libsdl-org/SDL) >= 3.2.0, [SDL3_image](https://github.com/libsdl-org/SDL_image) and [SDL3_ttf](https://github.com/libsdl-org/SDL_ttf)
 
-The Xcode workspace builds `SDL3.framework` from a sibling checkout of that tag, which MUST be named `SDL3`:
-`git clone --branch ObjectivelyGPU https://github.com/jdolan/SDL.git ../SDL`.
+SDL3_image and SDL3_ttf MUST link the same `libSDL3` as ObjectivelyGPU, or the process loads two copies of SDL3.
+If ObjectivelyGPU uses the jdolan/SDL fork, Homebrew's `sdl3_image` and `sdl3_ttf` do not qualify, because they
+link Homebrew's `sdl3`. See [Installing ObjectivelyGPU](https://jdolan.github.io/ObjectivelyGPU/install.html).
+
+The Xcode workspace builds `SDL3.framework` from the sibling checkout `../SDL`, the same checkout that
+ObjectivelyGPU's workspace uses.
 
 ## Building
 
