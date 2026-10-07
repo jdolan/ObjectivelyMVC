@@ -188,9 +188,13 @@ static void render(View *self, Renderer *renderer) {
  */
 static void resignKeyResponder(View *self) {
 
+  const bool wasKeyResponder = $(self, isKeyResponder);
+
   super(View, self, resignKeyResponder);
 
-  SDL_StopTextInput(self->window);
+  if (wasKeyResponder) {
+    SDL_StopTextInput(self->window);
+  }
 }
 
 /**
