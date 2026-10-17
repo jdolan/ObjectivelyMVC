@@ -86,6 +86,24 @@ static View *init(View *self) {
   return (View *) $((ProgressBar *) self, initWithFrame, NULL);
 }
 
+/**
+ * @see View::layoutSubviews(View *)
+ * @remarks The foreground's width follows the progress at each layout, because `setValue` may run
+ * before this ProgressBar has a size. It is set before the superclass lays out the subviews, so
+ * that a right or center aligned foreground is placed by its final width.
+ */
+static void layoutSubviews(View *self) {
+
+  ProgressBar *this = (ProgressBar *) self;
+
+  const SDL_Rect bounds = $(self, bounds);
+  const double frac = clamp($(this, progress) / 100.0, 0.0, 1.0);
+
+  this->foreground->view.frame.w = bounds.w * frac;
+
+  super(View, self, layoutSubviews);
+}
+
 #pragma mark - ProgressBar
 
 /**
@@ -196,6 +214,8 @@ static void setValue(ProgressBar *self, double value) {
 static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+
+  ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
   ((ViewInterface *) clazz->interface)->init = init;
