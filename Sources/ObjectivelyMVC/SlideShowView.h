@@ -116,7 +116,9 @@ struct SlideShowViewInterface {
    * @brief Appends an Image to the slideshow.
    * @param self The SlideShowView.
    * @param image The Image to add.
-   * @remarks Thread-safe: may be called from a background thread before images arrive.
+   * @remarks This method MUST be called on the main thread: the images are not guarded, and
+   * View::render reads them. A worker SHOULD collect its images in a guarded queue and let the
+   * main thread add them.
    * @memberof SlideShowView
    */
   void (*addImage)(SlideShowView *self, Image *image);
