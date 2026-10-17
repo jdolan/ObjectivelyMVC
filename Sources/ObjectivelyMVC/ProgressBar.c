@@ -89,11 +89,10 @@ static View *init(View *self) {
 /**
  * @see View::layoutSubviews(View *)
  * @remarks The foreground's width follows the progress at each layout, because `setValue` may run
- * before this ProgressBar has a size.
+ * before this ProgressBar has a size. It is set before the superclass lays out the subviews, so
+ * that a right or center aligned foreground is placed by its final width.
  */
 static void layoutSubviews(View *self) {
-
-  super(View, self, layoutSubviews);
 
   ProgressBar *this = (ProgressBar *) self;
 
@@ -101,6 +100,8 @@ static void layoutSubviews(View *self) {
   const double frac = clamp($(this, progress) / 100.0, 0.0, 1.0);
 
   this->foreground->view.frame.w = bounds.w * frac;
+
+  super(View, self, layoutSubviews);
 }
 
 #pragma mark - ProgressBar
