@@ -105,7 +105,11 @@ static CollectionItemView *initWithFrame(CollectionItemView *self, const SDL_Rec
  * @memberof CollectionItemView
  */
 static void setSelected(CollectionItemView *self, bool isSelected) {
-  self->isSelected = isSelected;
+
+  if (isSelected != self->isSelected) {
+    self->isSelected = isSelected;
+    $((View *) self, invalidateStyle);
+  }
 }
 
 #pragma mark - Class lifecycle

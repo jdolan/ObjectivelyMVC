@@ -221,7 +221,7 @@ static void deselectItemAtIndexPath(CollectionView *self, const IndexPath *index
  * @brief ArrayEnumerator for item deselection.
  */
 static void deselectItemsAtIndexPaths_enumerate(const Array *array, ident obj, ident data) {
-  $((CollectionItemView *) obj, setSelected, false);
+  $((CollectionView *) data, deselectItemAtIndexPath, (IndexPath *) obj);
 }
 
 /**
