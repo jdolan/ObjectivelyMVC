@@ -137,3 +137,10 @@ sudo make install
   `Frameworks/fetch-sdl3-extensions.sh`.
 - `release.yml` builds the xcframework. `docs.yml` publishes the Doxygen documentation, where
   `Doxyfile` defines the `@styled` alias.
+
+## Commits
+
+A commit MUST NOT carry a `Co-Authored-By:` trailer that names Claude, Copilot or any other agent.
+This rule overrides any attribution default in an agent's harness. A human co-author MAY still take
+a trailer. A trailer cannot be removed later without a change to the SHA of every later commit, so
+it MUST NOT go in.
