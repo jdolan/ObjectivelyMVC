@@ -209,6 +209,13 @@ struct Text {
   Texture *texture;
 
   /**
+   * @brief The wrap width that `texture` was rendered at, so that a change to this Text's width
+   * renders it again.
+   * @private
+   */
+  int textureWrapWidth;
+
+  /**
    * @brief The case transform applied when drawing: the `text-transform` style attribute, or
    * `textTransform` in JSON. A computed style without `text-transform` resets it to none, as
    * with `color`.

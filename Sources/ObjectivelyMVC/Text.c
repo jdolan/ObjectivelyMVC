@@ -672,6 +672,10 @@ static void render(View *self, Renderer *renderer) {
       return;
     }
 
+    if (this->texture && this->textureWrapWidth != wrapWidth) {
+      invalidate(this);
+    }
+
     if (this->texture == NULL) {
       SDL_Surface *surface = NULL;
 
@@ -720,6 +724,7 @@ static void render(View *self, Renderer *renderer) {
       };
 
       this->texture = $(renderer->device, createTexture, &texInfo, surface->pixels);
+      this->textureWrapWidth = wrapWidth;
 
       SDL_DestroySurface(surface);
     }
