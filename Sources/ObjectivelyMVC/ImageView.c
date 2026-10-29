@@ -66,6 +66,38 @@ static void dealloc(Object *self) {
 #pragma mark - View
 
 /**
+ * @see View::applyStyle(View *, const Style *)
+ */
+static void applyStyle(View *self, const Style *style) {
+
+  super(View, self, applyStyle, style);
+
+  ImageView *this = (ImageView *) self;
+
+  if (this->image) {
+
+    const bool width = $(style->attributes, objectForKeyPath, "width") != NULL;
+    const bool height = $(style->attributes, objectForKeyPath, "height") != NULL;
+
+    SDL_Size size = $(self, size);
+    const SDL_Size imageSize = $(this->image, size);
+
+    // the styled axis is clamped first, so that min and max sizes do not distort the aspect ratio
+    if (width && !height) {
+      size.w = ClampSize(size.w, self->minSize.w, self->maxSize.w);
+      size.h = size.w * imageSize.h / (float) imageSize.w;
+      $(self, resize, &size);
+    } else if (height && !width) {
+      size.h = ClampSize(size.h, self->minSize.h, self->maxSize.h);
+      size.w = size.h * imageSize.w / (float) imageSize.h;
+      $(self, resize, &size);
+    } else if (size.w == 0 && size.h == 0) {
+      $(self, resize, &imageSize);
+    }
+  }
+}
+
+/**
  * @see View::awakeWithDictionary(View *, const Dictionary *)
  */
 static void awakeWithDictionary(View *self, const Dictionary *dictionary) {
@@ -243,18 +275,13 @@ static void setImage(ImageView *self, Image *image) {
 
   if (image) {
     self->image = retain(image);
-
-    const SDL_Size size = $((View *) self, size);
-    const SDL_Size imageSize = $(image, size);
-
-    if (size.w == 0 && size.h == 0) {
-      $((View *) self, resize, &imageSize);
-    }
   } else {
     self->image = NULL;
   }
 
   self->texture = release(self->texture);
+
+  $((View *) self, invalidateStyle);
 }
 
 /**
@@ -316,6 +343,7 @@ static void initialize(Class *clazz) {
 
   ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
 
+  ((ViewInterface *) clazz->interface)->applyStyle = applyStyle;
   ((ViewInterface *) clazz->interface)->awakeWithDictionary = awakeWithDictionary;
   ((ViewInterface *) clazz->interface)->didMoveToWindow = didMoveToWindow;
   ((ViewInterface *) clazz->interface)->init = init;
