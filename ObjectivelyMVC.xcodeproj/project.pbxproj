@@ -30,6 +30,7 @@
 				CED40A98304B2DFA0090C57A /* PBXTargetDependency */,
 				B3DD5991CDBD4582092CC4F6 /* PBXTargetDependency */,
 				00E123F744F252F431ACB5AB /* PBXTargetDependency */,
+				4DF91565F9A5886FE3E2E686 /* PBXTargetDependency */,
 				8595B7D19812F5D7F8877472 /* PBXTargetDependency */,
 				0850FEAA7E79310A5E7C5ED5 /* PBXTargetDependency */,
 				CED40A633046145B0090C57A /* PBXTargetDependency */,
@@ -43,21 +44,28 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		040CBCC1A93367C2A12A4B74 /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; };
 		05DD28B760BFD7663B2C3E37 /* SDL3_image.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA3F7D2FF3E6D200758CA6 /* SDL3_image.xcframework */; };
 		10B43D5BFBA4557A7326854D /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		124341A5EE68480EEA539233 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
+		12719BEA619F1386AE0630EB /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		12CB053DBF7CE0752A5AE6E9 /* ScrollBar.c in Sources */ = {isa = PBXBuildFile; fileRef = 7889454C3F84200465B57578 /* ScrollBar.c */; };
+		20874FFCC8B1F77AFD63EBE8 /* SDL3_ttf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA3F7F2FF3E6D200758CA6 /* SDL3_ttf.xcframework */; };
 		22FD8C57C4593EFD73A0BA80 /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; };
 		3081E9324C929F44F2424D7C /* ScrollHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F25B4D3F9924D41ADDBF368 /* ScrollHandle.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		33EEB737747ED0072F55D3C8 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		373CCC1EDB79A83F1F913610 /* ScrollHandle.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */; };
 		3F60E97377EEEEE3B3983F2D /* AtlasImage.c in Sources */ = {isa = PBXBuildFile; fileRef = B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */; };
 		4FC583A880396777FF1EF843 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
+		54711BB4317DB6AB247E4525 /* NavigationViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = 3ED97A34AE6E13D7A89069A5 /* NavigationViewController.c */; };
 		5A83CA47F1D4A53262F9038A /* TabViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = C66123069263E27EB442F8C7 /* TabViewController.c */; };
 		5B851894DDEE4D2B0EFF1F13 /* SDL3_ttf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA3F7F2FF3E6D200758CA6 /* SDL3_ttf.xcframework */; };
 		7CB0D028CC977D464300C457 /* Font+Bitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = BE98A75607A7BD7B32CF62A3 /* Font+Bitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7F0E0F85A33BA5B55456D92B /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; };
+		83C3598D7CCFA72B839CA254 /* SDL3_image.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA3F7D2FF3E6D200758CA6 /* SDL3_image.xcframework */; };
 		872D178C50AF548C35D14652 /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = 58441034DC162E9BE53173F4 /* View.c */; };
 		8A30F602D72CFEF66B648507 /* ImageAtlas.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */; };
+		978AAF42C6AC47D01BCDB8E9 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
 		A05D13FEB83FFEA66090F33A /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
 		B1BB0001000000000000000A /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; };
 		B1BB000100000000000000A0 /* SDL3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -280,12 +288,26 @@
 			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
 			remoteInfo = ObjectivelyMVC;
 		};
+		44C35966B10E7DC8ACBBF711 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = ObjectivelyMVC;
+		};
 		479F04DC8D5C71E97D8B3588 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
 			remoteInfo = ObjectivelyMVC;
+		};
+		5F4BD2CDFDBFDBB0F1813F7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 013B10DF8368EA744EA866B7;
+			remoteInfo = "ObjectivelyMVC-NavigationViewController";
 		};
 		CE0C2209304CBC82008A6A2A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -444,6 +466,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		0A64FABF775452E0518007B1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		63060CD749E9B6CAD0CFE62C /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -563,10 +594,12 @@
 
 /* Begin PBXFileReference section */
 		14C7C5885104229637E1E9D5 /* Renderer.frag.glsl */ = {isa = PBXFileReference; lastKnownFileType = text; path = Renderer.frag.glsl; sourceTree = "<group>"; };
+		3ED97A34AE6E13D7A89069A5 /* NavigationViewController.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = NavigationViewController.c; sourceTree = "<group>"; };
 		58441034DC162E9BE53173F4 /* View.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; path = View.c; sourceTree = "<group>"; };
 		5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageAtlas.c; sourceTree = "<group>"; };
 		64D1E41ED038FCC725227A5B /* ScrollBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollBar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollHandle.c; sourceTree = "<group>"; };
+		6B5C7CB46744D44CB9CD9D66 /* ObjectivelyMVC-NavigationViewController */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-NavigationViewController"; sourceTree = BUILT_PRODUCTS_DIR; };
 		75C3539D556CF9F0672B98FA /* ObjectivelyMVC-TabViewController */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-TabViewController"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
 		7889454C3F84200465B57578 /* ScrollBar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollBar.c; sourceTree = "<group>"; };
@@ -788,6 +821,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		44E9EE2751A0724EEC13F968 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				83C3598D7CCFA72B839CA254 /* SDL3_image.xcframework in Frameworks */,
+				20874FFCC8B1F77AFD63EBE8 /* SDL3_ttf.xcframework in Frameworks */,
+				040CBCC1A93367C2A12A4B74 /* SDL3.framework in Frameworks */,
+				33EEB737747ED0072F55D3C8 /* Objectively.framework in Frameworks */,
+				12719BEA619F1386AE0630EB /* ObjectivelyGPU.framework in Frameworks */,
+				978AAF42C6AC47D01BCDB8E9 /* ObjectivelyMVC.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		552A2017A38847FC4DB96EB2 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1123,6 +1169,7 @@
 				CE8819891F91B094000D5AB7 /* Style.c */,
 				CE34C8941FB29F3A0025F231 /* Stylesheet.c */,
 				A2A76A66C35A8EA25E73AED3 /* Text.c */,
+				3ED97A34AE6E13D7A89069A5 /* NavigationViewController.c */,
 				C66123069263E27EB442F8C7 /* TabViewController.c */,
 				02533D62677918BD9C9D8632 /* TextView.c */,
 				58441034DC162E9BE53173F4 /* View.c */,
@@ -1276,6 +1323,7 @@
 				CED40A95304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */,
 				4A4E9B8FCA4EC2C5AF4D4C30 /* ObjectivelyMVC-Image */,
 				C3EB55F6FC6630DE5644B5A7 /* ObjectivelyMVC-Text */,
+				6B5C7CB46744D44CB9CD9D66 /* ObjectivelyMVC-NavigationViewController */,
 				75C3539D556CF9F0672B98FA /* ObjectivelyMVC-TabViewController */,
 				26EA4C5E6BBC55A50927A783 /* ObjectivelyMVC-TextView */,
 				CE0C2215304CBC82008A6A2A /* ObjectivelyMVC-Font+Bitmap */,
@@ -1355,6 +1403,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		013B10DF8368EA744EA866B7 /* ObjectivelyMVC-NavigationViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 172FBF658D491AB0C88F3F2A /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-NavigationViewController" */;
+			buildPhases = (
+				163C417FDA749E1FA1950BC7 /* Sources */,
+				44E9EE2751A0724EEC13F968 /* Frameworks */,
+				0A64FABF775452E0518007B1 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4931FCFD4B8C8EE0521F2B9A /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-NavigationViewController";
+			productName = "ObjectivelyMVC-NavigationViewController";
+			productReference = 6B5C7CB46744D44CB9CD9D66 /* ObjectivelyMVC-NavigationViewController */;
+			productType = "com.apple.product-type.tool";
+		};
 		0D15047205EF309988324037 /* ObjectivelyMVC-TabViewController */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C8FB3396DA9D5F8FBCFEA1BA /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-TabViewController" */;
@@ -1653,6 +1719,7 @@
 				CED40A87304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */,
 				49B779A4A2BCD3DCD3C3BD06 /* ObjectivelyMVC-Image */,
 				563130823413BCCA09134760 /* ObjectivelyMVC-Text */,
+				013B10DF8368EA744EA866B7 /* ObjectivelyMVC-NavigationViewController */,
 				0D15047205EF309988324037 /* ObjectivelyMVC-TabViewController */,
 				A73BC0FDBE1118F914A440F1 /* ObjectivelyMVC-TextView */,
 				CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
@@ -1695,7 +1762,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd $BUILT_PRODUCTS_DIR &&\n./ObjectivelyMVC-Font+Bitmap &&\n./ObjectivelyMVC-Image &&\n./ObjectivelyMVC-ImageAtlas &&\n./ObjectivelyMVC-Selector &&\n./ObjectivelyMVC-Style &&\n./ObjectivelyMVC-Stylesheet &&\n./ObjectivelyMVC-TabViewController &&\n./ObjectivelyMVC-Text &&\n./ObjectivelyMVC-TextView &&\n./ObjectivelyMVC-View\n";
+			shellScript = "cd $BUILT_PRODUCTS_DIR &&\n./ObjectivelyMVC-Font+Bitmap &&\n./ObjectivelyMVC-Image &&\n./ObjectivelyMVC-ImageAtlas &&\n./ObjectivelyMVC-NavigationViewController &&\n./ObjectivelyMVC-Selector &&\n./ObjectivelyMVC-Style &&\n./ObjectivelyMVC-Stylesheet &&\n./ObjectivelyMVC-TabViewController &&\n./ObjectivelyMVC-Text &&\n./ObjectivelyMVC-TextView &&\n./ObjectivelyMVC-View\n";
 		};
 		CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1810,6 +1877,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				872D178C50AF548C35D14652 /* View.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		163C417FDA749E1FA1950BC7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				54711BB4317DB6AB247E4525 /* NavigationViewController.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1976,6 +2051,17 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		4DF91565F9A5886FE3E2E686 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 013B10DF8368EA744EA866B7 /* ObjectivelyMVC-NavigationViewController */;
+			targetProxy = 5F4BD2CDFDBFDBB0F1813F7E /* PBXContainerItemProxy */;
+		};
+		4931FCFD4B8C8EE0521F2B9A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjectivelyMVC;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = 44C35966B10E7DC8ACBBF711 /* PBXContainerItemProxy */;
+		};
 		8595B7D19812F5D7F8877472 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0D15047205EF309988324037 /* ObjectivelyMVC-TabViewController */;
@@ -2106,7 +2192,29 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		36CE6A0FEBDDE8D83EA0541C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		7A49C7A9A3020379E61EC10B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9800248A8D1A4A58FBA1D5D0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				OTHER_LDFLAGS = (
@@ -2610,6 +2718,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		172FBF658D491AB0C88F3F2A /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-NavigationViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9800248A8D1A4A58FBA1D5D0 /* Debug */,
+				36CE6A0FEBDDE8D83EA0541C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		326EB91F357CD75FD3012D86 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-View" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

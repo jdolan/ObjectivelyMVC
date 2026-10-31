@@ -68,9 +68,9 @@ static void didSelectTab(TabView *tabView, TabViewItem *tab) {
   if (selected != previous) {
     this->selectedViewController = selected;
 
-    const TabViewControllerState state = this->state;
+    const ViewControllerAppearance appearance = this->appearance;
 
-    if (state == TabViewControllerStateAppearing || state == TabViewControllerStateVisible) {
+    if (appearance == ViewControllerAppearanceAppearing || appearance == ViewControllerAppearanceVisible) {
 
       if (previous) {
         retain(previous);
@@ -88,7 +88,7 @@ static void didSelectTab(TabView *tabView, TabViewItem *tab) {
       if (previous) {
         $(previous, viewDidDisappear);
       }
-      if (selected && state == TabViewControllerStateVisible) {
+      if (selected && appearance == ViewControllerAppearanceVisible) {
         $(selected, viewDidAppear);
       }
 
@@ -176,8 +176,8 @@ static void removeChildViewController(ViewController *self, ViewController *chil
   ViewController *that = retain(childViewController);
 
   const bool selected = childViewController == this->selectedViewController;
-  const bool visible = selected && (this->state == TabViewControllerStateAppearing ||
-                                    this->state == TabViewControllerStateVisible);
+  const bool visible = selected && (this->appearance == ViewControllerAppearanceAppearing ||
+                                    this->appearance == ViewControllerAppearanceVisible);
 
   if (selected) {
     this->selectedViewController = NULL;
@@ -221,7 +221,7 @@ static void viewDidAppear(ViewController *self) {
 
   TabViewController *this = (TabViewController *) self;
 
-  this->state = TabViewControllerStateVisible;
+  this->appearance = ViewControllerAppearanceVisible;
 
   if (this->selectedViewController) {
     $(this->selectedViewController, viewDidAppear);
@@ -235,7 +235,7 @@ static void viewDidDisappear(ViewController *self) {
 
   TabViewController *this = (TabViewController *) self;
 
-  this->state = TabViewControllerStateHidden;
+  this->appearance = ViewControllerAppearanceHidden;
 
   ViewController *disappearing = this->disappearingViewController;
   this->disappearingViewController = NULL;
@@ -253,7 +253,7 @@ static void viewWillAppear(ViewController *self) {
 
   TabViewController *this = (TabViewController *) self;
 
-  this->state = TabViewControllerStateAppearing;
+  this->appearance = ViewControllerAppearanceAppearing;
 
   if (this->selectedViewController) {
     $(this->selectedViewController, viewWillAppear);
@@ -267,7 +267,7 @@ static void viewWillDisappear(ViewController *self) {
 
   TabViewController *this = (TabViewController *) self;
 
-  this->state = TabViewControllerStateDisappearing;
+  this->appearance = ViewControllerAppearanceDisappearing;
 
   release(this->disappearingViewController);
   this->disappearingViewController = NULL;

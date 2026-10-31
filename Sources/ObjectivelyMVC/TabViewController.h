@@ -32,16 +32,6 @@
  * @brief TabViewControllers arrange and manage their child ViewControllers in a tab view interface.
  */
 
-/**
- * @brief The appearance states of a TabViewController.
- */
-typedef enum {
-  TabViewControllerStateHidden,
-  TabViewControllerStateAppearing,
-  TabViewControllerStateVisible,
-  TabViewControllerStateDisappearing
-} TabViewControllerState;
-
 typedef struct TabViewControllerDelegate TabViewControllerDelegate;
 
 typedef struct TabViewController TabViewController;
@@ -110,7 +100,7 @@ struct TabViewController {
    * @brief The appearance state, from the TabViewController's own appearance callbacks.
    * @private
    */
-  TabViewControllerState state;
+  ViewControllerAppearance appearance;
 
   /**
    * @brief The ViewController that received `viewWillDisappear` with the TabViewController, and

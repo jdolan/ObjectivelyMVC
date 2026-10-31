@@ -42,6 +42,17 @@
  * ViewController::moveToParentViewController on the child.
  */
 
+/**
+ * @brief The appearance states of a ViewController, as a container that shows one child at a
+ * time tracks them from its own appearance callbacks.
+ */
+typedef enum {
+  ViewControllerAppearanceHidden,
+  ViewControllerAppearanceAppearing,
+  ViewControllerAppearanceVisible,
+  ViewControllerAppearanceDisappearing
+} ViewControllerAppearance;
+
 typedef struct ViewControllerInterface ViewControllerInterface;
 
 /**

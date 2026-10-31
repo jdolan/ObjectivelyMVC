@@ -4,6 +4,7 @@ Constraint
 Font+Bitmap
 Image
 ImageAtlas
+NavigationViewController
 Selector
 Style
 Stylesheet

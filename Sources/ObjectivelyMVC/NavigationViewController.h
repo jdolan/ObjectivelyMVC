@@ -37,6 +37,10 @@ typedef struct NavigationViewControllerInterface NavigationViewControllerInterfa
 /**
  * @brief Navigation controllers arrange their child controllers as a stack to facilitate
  * navigation between them.
+ * @remarks Only the top ViewController receives events and the appearance callbacks. Pushing
+ * and popping send the appearance callbacks only while the NavigationViewController itself is
+ * appearing or visible, so a ViewController pushed or uncovered while it is hidden appears when
+ * it appears.
  * @extends ViewController
  * @ingroup ViewControllers
  */
@@ -52,6 +56,19 @@ struct NavigationViewController {
    * @protected
    */
   NavigationViewControllerInterface *interface[0];
+
+  /**
+   * @brief The appearance state, from the NavigationViewController's own appearance callbacks.
+   * @private
+   */
+  ViewControllerAppearance appearance;
+
+  /**
+   * @brief The ViewController that received `viewWillDisappear` with the NavigationViewController,
+   * and that receives `viewDidDisappear` with it, whatever is pushed or popped in between.
+   * @private
+   */
+  ViewController *disappearingViewController;
 };
 
 /**

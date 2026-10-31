@@ -29,6 +29,219 @@
 
 #pragma mark - Object
 
+/**
+ * @see Object::dealloc(Object *)
+ */
+static void dealloc(Object *self) {
+
+  NavigationViewController *this = (NavigationViewController *) self;
+
+  release(this->disappearingViewController);
+
+  super(Object, self, dealloc);
+}
+
+#pragma mark - ViewController
+
+/**
+ * @brief True while the NavigationViewController is appearing or visible.
+ */
+static bool isShown(const NavigationViewController *self) {
+  return self->appearance == ViewControllerAppearanceAppearing ||
+         self->appearance == ViewControllerAppearanceVisible;
+}
+
+/**
+ * @brief Shows the view of `viewController`, which is now the top ViewController, with the
+ * appearance callbacks while the NavigationViewController is shown.
+ * @remarks While the NavigationViewController is appearing, `viewController` receives
+ * `viewDidAppear` with it. If its `viewWillAppear` pushes or pops, it is no longer the top, and
+ * its view is not shown.
+ */
+static void showTopViewController(NavigationViewController *self, ViewController *viewController) {
+
+  ViewController *this = (ViewController *) self;
+
+  retain(viewController);
+
+  const bool shown = isShown(self);
+
+  if (shown) {
+    $(viewController, viewWillAppear);
+
+    if (viewController != $(self, topViewController)) {
+      release(viewController);
+      return;
+    }
+  }
+
+  $(this->view, addSubview, viewController->view);
+
+  if (shown && self->appearance == ViewControllerAppearanceVisible) {
+    $(viewController, viewDidAppear);
+  }
+
+  release(viewController);
+}
+
+/**
+ * @brief Hides the view of `viewController`, which is no longer the top ViewController, with the
+ * disappearance callbacks while the NavigationViewController is shown.
+ */
+static void hideTopViewController(NavigationViewController *self, ViewController *viewController) {
+
+  retain(viewController);
+
+  const bool shown = isShown(self);
+
+  if (shown) {
+    $(viewController, viewWillDisappear);
+  }
+
+  $(viewController->view, removeFromSuperview);
+
+  if (shown) {
+    $(viewController, viewDidDisappear);
+  }
+
+  release(viewController);
+}
+
+/**
+ * @see ViewController::addChildViewController(ViewController *, ViewController *)
+ * @remarks This does not call `super`, which would make the child appear whenever the
+ * NavigationViewController is in a window. The child appears only while the
+ * NavigationViewController is shown. To cover the top ViewController, use `pushViewController`.
+ */
+static void addChildViewController(ViewController *self, ViewController *childViewController) {
+
+  assert(childViewController);
+
+  ViewController *that = retain(childViewController);
+
+  $(childViewController, removeFromParentViewController);
+
+  $(self->childViewControllers, addObject, childViewController);
+  childViewController->parentViewController = self;
+
+  $(self, loadViewIfNeeded);
+  $(childViewController, loadViewIfNeeded);
+
+  $(childViewController->view, updateBindings, NULL);
+
+  showTopViewController((NavigationViewController *) self, childViewController);
+
+  release(that);
+}
+
+/**
+ * @see ViewController::removeChildViewController(ViewController *, ViewController *)
+ * @remarks This does not call `super`, which would make the child disappear whether or not it was
+ * shown. Only the top ViewController disappears, and only while the NavigationViewController is
+ * shown. While it is disappearing, the child already received `viewWillDisappear`, and receives
+ * `viewDidDisappear` with the NavigationViewController.
+ */
+static void removeChildViewController(ViewController *self, ViewController *childViewController) {
+
+  assert(childViewController);
+  assert(childViewController->parentViewController == self);
+
+  NavigationViewController *this = (NavigationViewController *) self;
+
+  ViewController *that = retain(childViewController);
+
+  const bool top = childViewController == $(this, topViewController);
+
+  $(self->childViewControllers, removeObject, childViewController);
+  childViewController->parentViewController = NULL;
+
+  if (top) {
+    hideTopViewController(this, childViewController);
+  } else {
+    $(childViewController->view, removeFromSuperview);
+  }
+
+  release(that);
+}
+
+/**
+ * @see ViewController::respondToEvent(ViewController *, const SDL_Event *)
+ */
+static void respondToEvent(ViewController *self, const SDL_Event *event) {
+
+  ViewController *topViewController = $((NavigationViewController *) self, topViewController);
+  if (topViewController) {
+    $(topViewController, respondToEvent, event);
+  }
+}
+
+/**
+ * @see ViewController::viewDidAppear(ViewController *)
+ */
+static void viewDidAppear(ViewController *self) {
+
+  NavigationViewController *this = (NavigationViewController *) self;
+
+  this->appearance = ViewControllerAppearanceVisible;
+
+  ViewController *topViewController = $(this, topViewController);
+  if (topViewController) {
+    $(topViewController, viewDidAppear);
+  }
+}
+
+/**
+ * @see ViewController::viewDidDisappear(ViewController *)
+ */
+static void viewDidDisappear(ViewController *self) {
+
+  NavigationViewController *this = (NavigationViewController *) self;
+
+  this->appearance = ViewControllerAppearanceHidden;
+
+  ViewController *disappearing = this->disappearingViewController;
+  this->disappearingViewController = NULL;
+
+  if (disappearing) {
+    $(disappearing, viewDidDisappear);
+    release(disappearing);
+  }
+}
+
+/**
+ * @see ViewController::viewWillAppear(ViewController *)
+ */
+static void viewWillAppear(ViewController *self) {
+
+  NavigationViewController *this = (NavigationViewController *) self;
+
+  this->appearance = ViewControllerAppearanceAppearing;
+
+  ViewController *topViewController = $(this, topViewController);
+  if (topViewController) {
+    $(topViewController, viewWillAppear);
+  }
+}
+
+/**
+ * @see ViewController::viewWillDisappear(ViewController *)
+ */
+static void viewWillDisappear(ViewController *self) {
+
+  NavigationViewController *this = (NavigationViewController *) self;
+
+  this->appearance = ViewControllerAppearanceDisappearing;
+
+  release(this->disappearingViewController);
+  this->disappearingViewController = NULL;
+
+  ViewController *topViewController = $(this, topViewController);
+  if (topViewController) {
+    this->disappearingViewController = retain(topViewController);
+    $(topViewController, viewWillDisappear);
+  }
+}
+
 #pragma mark - NavigationViewController
 
 /**
@@ -48,17 +261,12 @@ static void pushViewController(NavigationViewController *self, ViewController *v
 
   assert(viewController);
 
-  ViewController *this = (ViewController *) self;
-
   ViewController *topViewController = $(self, topViewController);
   if (topViewController) {
-
-    $(topViewController, viewWillDisappear);
-    $(this->view, removeSubview, topViewController->view);
-    $(topViewController, viewDidDisappear);
+    hideTopViewController(self, topViewController);
   }
 
-  $(this, addChildViewController, viewController);
+  $((ViewController *) self, addChildViewController, viewController);
 }
 
 /**
@@ -76,17 +284,34 @@ static void popToRootViewController(NavigationViewController *self) {
 /**
  * @fn void NavigationViewController::popToViewController(NavigationViewController *self, const ViewController *viewController)
  * @memberof NavigationViewController
+ * @remarks The ViewControllers between the top and `viewController` are covered, so they are
+ * removed without appearing.
  */
 static void popToViewController(NavigationViewController *self, const ViewController *viewController) {
 
-  ViewController *topViewController;
-  while ((topViewController = $(self, topViewController))) {
+  ViewController *this = (ViewController *) self;
 
-    if (topViewController == viewController) {
-      break;
-    }
+  ViewController *topViewController = $(self, topViewController);
+  if (topViewController == NULL || topViewController == viewController) {
+    return;
+  }
 
-    $(self, popViewController);
+  $(this, removeChildViewController, topViewController);
+
+  while ((topViewController = $(self, topViewController)) && topViewController != viewController) {
+
+    ViewController *that = retain(topViewController);
+
+    $(this->childViewControllers, removeObject, topViewController);
+    topViewController->parentViewController = NULL;
+
+    $(topViewController->view, removeFromSuperview);
+
+    release(that);
+  }
+
+  if (topViewController) {
+    showTopViewController(self, topViewController);
   }
 }
 
@@ -101,13 +326,9 @@ static void popViewController(NavigationViewController *self) {
     $((ViewController *) self, removeChildViewController, topViewController);
   }
 
-  ViewController *this = (ViewController *) self;
-  ViewController *that = $(self, topViewController);
-
-  if (that) {
-    $(that, viewWillAppear);
-    $(this->view, addSubview, that->view);
-    $(that, viewDidAppear);
+  topViewController = $(self, topViewController);
+  if (topViewController) {
+    showTopViewController(self, topViewController);
   }
 }
 
@@ -133,6 +354,16 @@ static ViewController *topViewController(const NavigationViewController *self) {
  * @see Class::initialize(Class *)
  */
 static void initialize(Class *clazz) {
+
+  ((ObjectInterface *) clazz->interface)->dealloc = dealloc;
+
+  ((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
+  ((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
+  ((ViewControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
+  ((ViewControllerInterface *) clazz->interface)->viewDidAppear = viewDidAppear;
+  ((ViewControllerInterface *) clazz->interface)->viewDidDisappear = viewDidDisappear;
+  ((ViewControllerInterface *) clazz->interface)->viewWillAppear = viewWillAppear;
+  ((ViewControllerInterface *) clazz->interface)->viewWillDisappear = viewWillDisappear;
 
   ((NavigationViewControllerInterface *) clazz->interface)->init = init;
   ((NavigationViewControllerInterface *) clazz->interface)->pushViewController = pushViewController;
