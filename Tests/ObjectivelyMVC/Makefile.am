@@ -12,6 +12,7 @@ TESTS = \
 	Selector \
 	Style \
 	Stylesheet \
+	TabViewController \
 	Text \
 	TextView \
 	View

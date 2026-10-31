@@ -22,6 +22,7 @@
  */
 
 #include <assert.h>
+#include <string.h>
 
 #include "TabViewController.h"
 
@@ -36,9 +37,73 @@ static void dealloc(Object *self) {
 
   TabViewController *this = (TabViewController *) self;
 
+  if (this->tabView) {
+    memset(&this->tabView->delegate, 0, sizeof(this->tabView->delegate));
+  }
+
+  release(this->disappearingViewController);
   release(this->tabView);
 
   super(Object, self, dealloc);
+}
+
+#pragma mark - TabViewDelegate
+
+/**
+ * @brief TabViewDelegate callback that makes the previous tab disappear and the selected tab
+ * appear, while the TabViewController is appearing or visible.
+ * @remarks While the TabViewController is appearing, the selected tab receives `viewDidAppear`
+ * with it. While it is disappearing, the tab that received `viewWillDisappear` with it receives
+ * `viewDidDisappear` with it, and the selected tab receives nothing.
+ * @remarks Both tabs are retained for the transition, because an appearance callback can remove
+ * either of them.
+ */
+static void didSelectTab(TabView *tabView, TabViewItem *tab) {
+
+  TabViewController *this = tabView->delegate.self;
+
+  ViewController *previous = this->selectedViewController;
+  ViewController *selected = $(this, viewControllerForTab, tab);
+
+  if (selected != previous) {
+    this->selectedViewController = selected;
+
+    const TabViewControllerState state = this->state;
+
+    if (state == TabViewControllerStateAppearing || state == TabViewControllerStateVisible) {
+
+      if (previous) {
+        retain(previous);
+      }
+      if (selected) {
+        retain(selected);
+      }
+
+      if (previous) {
+        $(previous, viewWillDisappear);
+      }
+      if (selected) {
+        $(selected, viewWillAppear);
+      }
+      if (previous) {
+        $(previous, viewDidDisappear);
+      }
+      if (selected && state == TabViewControllerStateVisible) {
+        $(selected, viewDidAppear);
+      }
+
+      if (previous) {
+        release(previous);
+      }
+      if (selected) {
+        release(selected);
+      }
+    }
+  }
+
+  if (this->delegate.didSelectTab) {
+    this->delegate.didSelectTab(this, tab);
+  }
 }
 
 #pragma mark - ViewController
@@ -57,37 +122,160 @@ static void loadView(ViewController *self) {
   this->tabView = $(alloc(TabView), initWithFrame, NULL);
   assert(this->tabView);
 
+  this->tabView->delegate.self = this;
+  this->tabView->delegate.didSelectTab = didSelectTab;
+
   $(self->view, addSubview, (View *) this->tabView);
 }
 
 /**
  * @see ViewController::addChildViewController(ViewController *, ViewController *)
+ * @remarks This does not call `super`, which would make every new child appear. The TabView
+ * selects the first tab that is added, and `didSelectTab` makes that tab appear.
  */
 static void addChildViewController(ViewController *self, ViewController *childViewController) {
 
-  super(ViewController, self, addChildViewController, childViewController);
+  assert(childViewController);
 
   TabViewController *this = (TabViewController *) self;
+
+  ViewController *that = retain(childViewController);
+
+  $(childViewController, removeFromParentViewController);
+
+  $(self->childViewControllers, addObject, childViewController);
+  childViewController->parentViewController = self;
+
+  $(self, loadViewIfNeeded);
+  $(childViewController, loadViewIfNeeded);
+
+  $(childViewController->view, updateBindings, NULL);
 
   TabViewItem *tab = $(alloc(TabViewItem), initWithView, childViewController->view);
 
   $(this->tabView, addTab, tab);
 
   release(tab);
+  release(that);
 }
 
 /**
  * @see ViewController::removeChildViewController(ViewController *, ViewController *)
+ * @remarks This does not call `super`, which would make every removed child disappear. Only the
+ * selected tab disappears, and the TabView then selects another tab. While the TabViewController
+ * is disappearing, the removed tab already received `viewWillDisappear`, and receives
+ * `viewDidDisappear` with the TabViewController.
  */
 static void removeChildViewController(ViewController *self, ViewController *childViewController) {
 
-  super(ViewController, self, removeChildViewController, childViewController);
+  assert(childViewController);
+  assert(childViewController->parentViewController == self);
 
   TabViewController *this = (TabViewController *) self;
 
-  TabViewItem *tab = $(this, tabForViewController, childViewController);
+  ViewController *that = retain(childViewController);
 
-  $(this->tabView, removeTab, tab);
+  const bool selected = childViewController == this->selectedViewController;
+  const bool visible = selected && (this->state == TabViewControllerStateAppearing ||
+                                    this->state == TabViewControllerStateVisible);
+
+  if (selected) {
+    this->selectedViewController = NULL;
+  }
+
+  if (visible) {
+    $(childViewController, viewWillDisappear);
+  }
+
+  TabViewItem *tab = $(this, tabForViewController, childViewController);
+  if (tab) {
+    $(this->tabView, removeTab, tab);
+  }
+
+  $(self->childViewControllers, removeObject, childViewController);
+  childViewController->parentViewController = NULL;
+
+  if (visible) {
+    $(childViewController, viewDidDisappear);
+  }
+
+  release(that);
+}
+
+/**
+ * @see ViewController::respondToEvent(ViewController *, const SDL_Event *)
+ */
+static void respondToEvent(ViewController *self, const SDL_Event *event) {
+
+  const TabViewController *this = (TabViewController *) self;
+
+  if (this->selectedViewController) {
+    $(this->selectedViewController, respondToEvent, event);
+  }
+}
+
+/**
+ * @see ViewController::viewDidAppear(ViewController *)
+ */
+static void viewDidAppear(ViewController *self) {
+
+  TabViewController *this = (TabViewController *) self;
+
+  this->state = TabViewControllerStateVisible;
+
+  if (this->selectedViewController) {
+    $(this->selectedViewController, viewDidAppear);
+  }
+}
+
+/**
+ * @see ViewController::viewDidDisappear(ViewController *)
+ */
+static void viewDidDisappear(ViewController *self) {
+
+  TabViewController *this = (TabViewController *) self;
+
+  this->state = TabViewControllerStateHidden;
+
+  ViewController *disappearing = this->disappearingViewController;
+  this->disappearingViewController = NULL;
+
+  if (disappearing) {
+    $(disappearing, viewDidDisappear);
+    release(disappearing);
+  }
+}
+
+/**
+ * @see ViewController::viewWillAppear(ViewController *)
+ */
+static void viewWillAppear(ViewController *self) {
+
+  TabViewController *this = (TabViewController *) self;
+
+  this->state = TabViewControllerStateAppearing;
+
+  if (this->selectedViewController) {
+    $(this->selectedViewController, viewWillAppear);
+  }
+}
+
+/**
+ * @see ViewController::viewWillDisappear(ViewController *)
+ */
+static void viewWillDisappear(ViewController *self) {
+
+  TabViewController *this = (TabViewController *) self;
+
+  this->state = TabViewControllerStateDisappearing;
+
+  release(this->disappearingViewController);
+  this->disappearingViewController = NULL;
+
+  if (this->selectedViewController) {
+    this->disappearingViewController = retain(this->selectedViewController);
+    $(this->selectedViewController, viewWillDisappear);
+  }
 }
 
 #pragma mark - TabViewController
@@ -156,6 +344,11 @@ static void initialize(Class *clazz) {
   ((ViewControllerInterface *) clazz->interface)->loadView = loadView;
   ((ViewControllerInterface *) clazz->interface)->addChildViewController = addChildViewController;
   ((ViewControllerInterface *) clazz->interface)->removeChildViewController = removeChildViewController;
+  ((ViewControllerInterface *) clazz->interface)->respondToEvent = respondToEvent;
+  ((ViewControllerInterface *) clazz->interface)->viewDidAppear = viewDidAppear;
+  ((ViewControllerInterface *) clazz->interface)->viewDidDisappear = viewDidDisappear;
+  ((ViewControllerInterface *) clazz->interface)->viewWillAppear = viewWillAppear;
+  ((ViewControllerInterface *) clazz->interface)->viewWillDisappear = viewWillDisappear;
 
   ((TabViewControllerInterface *) clazz->interface)->init = init;
   ((TabViewControllerInterface *) clazz->interface)->tabForViewController = tabForViewController;

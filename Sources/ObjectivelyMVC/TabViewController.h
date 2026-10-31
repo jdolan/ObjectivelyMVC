@@ -32,13 +32,49 @@
  * @brief TabViewControllers arrange and manage their child ViewControllers in a tab view interface.
  */
 
+/**
+ * @brief The appearance states of a TabViewController.
+ */
+typedef enum {
+  TabViewControllerStateHidden,
+  TabViewControllerStateAppearing,
+  TabViewControllerStateVisible,
+  TabViewControllerStateDisappearing
+} TabViewControllerState;
+
+typedef struct TabViewControllerDelegate TabViewControllerDelegate;
+
 typedef struct TabViewController TabViewController;
 typedef struct TabViewControllerInterface TabViewControllerInterface;
 
 /**
+ * @brief The TabViewControllerDelegate.
+ */
+struct TabViewControllerDelegate {
+
+  /**
+   * @brief The delegate self-reference.
+   */
+  ident self;
+
+  /**
+   * @brief Called when a tab is selected, after its ViewController appears.
+   * @param tabViewController The TabViewController.
+   * @param tab The selected TabViewItem.
+   */
+  void (*didSelectTab)(TabViewController *tabViewController, TabViewItem *tab);
+};
+
+/**
  * @brief TabViewControllers arrange and manage their child ViewControllers in a tab view interface.
- * @details Tabs are added to the tab view interface by adding child ViewControllers to a 
+ * @details Tabs are added to the tab view interface by adding child ViewControllers to a
  * TabViewController.
+ * @remarks Only the ViewController of the selected tab receives events and the appearance
+ * callbacks. Selecting a tab while the TabViewController is visible makes the previous tab
+ * disappear and the selected tab appear, so a child SHOULD refresh what it shows in
+ * `viewWillAppear`.
+ * @remarks The TabViewController is the delegate of its TabView. Applications MUST use the
+ * TabViewControllerDelegate, and MUST NOT replace the TabView's delegate.
  * @extends ViewController
  * @ingroup ViewControllers
  */
@@ -56,9 +92,32 @@ struct TabViewController {
   TabViewControllerInterface *interface[0];
 
   /**
+   * @brief The TabViewControllerDelegate.
+   */
+  TabViewControllerDelegate delegate;
+
+  /**
    * @brief The TabView.
    */
   TabView *tabView;
+
+  /**
+   * @brief The ViewController of the selected tab, or `NULL`.
+   */
+  ViewController *selectedViewController;
+
+  /**
+   * @brief The appearance state, from the TabViewController's own appearance callbacks.
+   * @private
+   */
+  TabViewControllerState state;
+
+  /**
+   * @brief The ViewController that received `viewWillDisappear` with the TabViewController, and
+   * that receives `viewDidDisappear` with it, whatever is selected in between.
+   * @private
+   */
+  ViewController *disappearingViewController;
 };
 
 /**
