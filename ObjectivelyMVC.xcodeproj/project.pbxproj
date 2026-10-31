@@ -30,6 +30,7 @@
 				CED40A98304B2DFA0090C57A /* PBXTargetDependency */,
 				B3DD5991CDBD4582092CC4F6 /* PBXTargetDependency */,
 				00E123F744F252F431ACB5AB /* PBXTargetDependency */,
+				8595B7D19812F5D7F8877472 /* PBXTargetDependency */,
 				0850FEAA7E79310A5E7C5ED5 /* PBXTargetDependency */,
 				CED40A633046145B0090C57A /* PBXTargetDependency */,
 				CE34C8A51FB2A0210025F231 /* PBXTargetDependency */,
@@ -42,6 +43,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		05DD28B760BFD7663B2C3E37 /* SDL3_image.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA3F7D2FF3E6D200758CA6 /* SDL3_image.xcframework */; };
 		10B43D5BFBA4557A7326854D /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		124341A5EE68480EEA539233 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		12CB053DBF7CE0752A5AE6E9 /* ScrollBar.c in Sources */ = {isa = PBXBuildFile; fileRef = 7889454C3F84200465B57578 /* ScrollBar.c */; };
@@ -50,9 +52,13 @@
 		373CCC1EDB79A83F1F913610 /* ScrollHandle.c in Sources */ = {isa = PBXBuildFile; fileRef = 6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */; };
 		3F60E97377EEEEE3B3983F2D /* AtlasImage.c in Sources */ = {isa = PBXBuildFile; fileRef = B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */; };
 		4FC583A880396777FF1EF843 /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
+		5A83CA47F1D4A53262F9038A /* TabViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = C66123069263E27EB442F8C7 /* TabViewController.c */; };
+		5B851894DDEE4D2B0EFF1F13 /* SDL3_ttf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEBA3F7F2FF3E6D200758CA6 /* SDL3_ttf.xcframework */; };
 		7CB0D028CC977D464300C457 /* Font+Bitmap.h in Headers */ = {isa = PBXBuildFile; fileRef = BE98A75607A7BD7B32CF62A3 /* Font+Bitmap.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7F0E0F85A33BA5B55456D92B /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; };
 		872D178C50AF548C35D14652 /* View.c in Sources */ = {isa = PBXBuildFile; fileRef = 58441034DC162E9BE53173F4 /* View.c */; };
 		8A30F602D72CFEF66B648507 /* ImageAtlas.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */; };
+		A05D13FEB83FFEA66090F33A /* ObjectivelyMVC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CED157CD1C4BF3AC00FBA2DE /* ObjectivelyMVC.framework */; };
 		B1BB0001000000000000000A /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; };
 		B1BB000100000000000000A0 /* SDL3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		B1BB000100000000000000AB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA000100000000000000AB /* Foundation.framework */; };
@@ -74,6 +80,7 @@
 		B1BB000100000000000000EA /* Hello.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D42B1C4C37E500CD0B13 /* Hello.c */; };
 		B1BB000100000000000000EB /* HelloViewController.c in Sources */ = {isa = PBXBuildFile; fileRef = CE12D4751C4EAD3100CD0B13 /* HelloViewController.c */; };
 		B1BB000100000000000000ED /* HelloViewController.json in Resources */ = {isa = PBXBuildFile; fileRef = CE6BC16E1D79B2920070FB2D /* HelloViewController.json */; };
+		CC77999F1DF0FE5336A3E9A5 /* Objectively.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE73E9FA2FEEA5F60048BC24 /* Objectively.framework */; };
 		CE0943A71D60F1A300C11408 /* TableColumn.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943A61D60F1A300C11408 /* TableColumn.c */; };
 		CE0943A91D60F23100C11408 /* TableColumn.h in Headers */ = {isa = PBXBuildFile; fileRef = CE0943A81D60F23100C11408 /* TableColumn.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE0943AC1D60FFEC00C11408 /* TableRowView.c in Sources */ = {isa = PBXBuildFile; fileRef = CE0943AA1D60FFEC00C11408 /* TableRowView.c */; };
@@ -249,6 +256,7 @@
 		DB525ED598D84934843E2949 /* SlideShowView.c in Sources */ = {isa = PBXBuildFile; fileRef = 7819952C297345768B746A46 /* SlideShowView.c */; };
 		DBEA47CCF3A75FEE94BF5BFC /* Font+Bitmap.c in Sources */ = {isa = PBXBuildFile; fileRef = FC3629014758C73744C5F31C /* Font+Bitmap.c */; };
 		E6178FFE9FAD49FD8D4AABB0 /* SlideShowView.h in Headers */ = {isa = PBXBuildFile; fileRef = 965273D7A59E496B86FE11EF /* SlideShowView.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E9D17535D34614577844FAD5 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00020000000000000000A2 /* ObjectivelyGPU.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEEAAFF52FED7E6000FFEBE6 /* ObjectivelyGPU.framework */; };
 		EF00030000000000000000A3 /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; };
 		EF00060000000000000000A6 /* SDL3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AA0001000000000000000A /* SDL3.framework */; };
@@ -266,6 +274,13 @@
 
 /* Begin PBXContainerItemProxy section */
 		142E9647D6EC3FAD6E24CA61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
+			remoteInfo = ObjectivelyMVC;
+		};
+		479F04DC8D5C71E97D8B3588 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
 			proxyType = 1;
@@ -363,6 +378,13 @@
 			remoteGlobalIDString = CED157CC1C4BF3AC00FBA2DE;
 			remoteInfo = ObjectivelyMVC;
 		};
+		E774D650EE56CAA33E834414 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0D15047205EF309988324037;
+			remoteInfo = "ObjectivelyMVC-TabViewController";
+		};
 		EDC8B69B4C254E0B20983FBD /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CED157931C4BEA8900FBA2DE /* Project object */;
@@ -422,6 +444,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		63060CD749E9B6CAD0CFE62C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 7;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A3611941E3F959776989AD53 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 12;
@@ -536,6 +567,7 @@
 		5FA0906AE9DDD6B2A62ED5D5 /* ImageAtlas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ImageAtlas.c; sourceTree = "<group>"; };
 		64D1E41ED038FCC725227A5B /* ScrollBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ScrollBar.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		6B2F1D0FBAAAAB9E9859A08E /* ScrollHandle.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollHandle.c; sourceTree = "<group>"; };
+		75C3539D556CF9F0672B98FA /* ObjectivelyMVC-TabViewController */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "ObjectivelyMVC-TabViewController"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7819952C297345768B746A46 /* SlideShowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SlideShowView.c; sourceTree = "<group>"; };
 		7889454C3F84200465B57578 /* ScrollBar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ScrollBar.c; sourceTree = "<group>"; };
 		7F6735C65F7CAB13D8D96588 /* Renderer.frag.spv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.frag.spv.h; sourceTree = "<group>"; };
@@ -568,6 +600,7 @@
 		B1AA000100000000000000ED /* ObjectivelyMVC-Hello-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ObjectivelyMVC-Hello-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9933E8F6686E8BA36D07DD5 /* AtlasImage.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = AtlasImage.c; sourceTree = "<group>"; };
 		BE98A75607A7BD7B32CF62A3 /* Font+Bitmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Font+Bitmap.h"; sourceTree = "<group>"; };
+		C66123069263E27EB442F8C7 /* TabViewController.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = TabViewController.c; sourceTree = "<group>"; };
 		CE0943A61D60F1A300C11408 /* TableColumn.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableColumn.c; sourceTree = "<group>"; };
 		CE0943A81D60F23100C11408 /* TableColumn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableColumn.h; sourceTree = "<group>"; };
 		CE0943AA1D60FFEC00C11408 /* TableRowView.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = TableRowView.c; sourceTree = "<group>"; };
@@ -792,6 +825,19 @@
 				B1BB000100000000000000CD /* ImageIO.framework in Frameworks */,
 				B1BB000100000000000000CF /* UniformTypeIdentifiers.framework in Frameworks */,
 				B1BB000100000000000000DA /* Network.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0FF8FE1B3718D7E40A9EFDF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				05DD28B760BFD7663B2C3E37 /* SDL3_image.xcframework in Frameworks */,
+				5B851894DDEE4D2B0EFF1F13 /* SDL3_ttf.xcframework in Frameworks */,
+				7F0E0F85A33BA5B55456D92B /* SDL3.framework in Frameworks */,
+				CC77999F1DF0FE5336A3E9A5 /* Objectively.framework in Frameworks */,
+				E9D17535D34614577844FAD5 /* ObjectivelyGPU.framework in Frameworks */,
+				A05D13FEB83FFEA66090F33A /* ObjectivelyMVC.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1077,6 +1123,7 @@
 				CE8819891F91B094000D5AB7 /* Style.c */,
 				CE34C8941FB29F3A0025F231 /* Stylesheet.c */,
 				A2A76A66C35A8EA25E73AED3 /* Text.c */,
+				C66123069263E27EB442F8C7 /* TabViewController.c */,
 				02533D62677918BD9C9D8632 /* TextView.c */,
 				58441034DC162E9BE53173F4 /* View.c */,
 				CE423A2C1F534127002767E7 /* Makefile.am */,
@@ -1229,6 +1276,7 @@
 				CED40A95304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */,
 				4A4E9B8FCA4EC2C5AF4D4C30 /* ObjectivelyMVC-Image */,
 				C3EB55F6FC6630DE5644B5A7 /* ObjectivelyMVC-Text */,
+				75C3539D556CF9F0672B98FA /* ObjectivelyMVC-TabViewController */,
 				26EA4C5E6BBC55A50927A783 /* ObjectivelyMVC-TextView */,
 				CE0C2215304CBC82008A6A2A /* ObjectivelyMVC-Font+Bitmap */,
 			);
@@ -1307,6 +1355,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		0D15047205EF309988324037 /* ObjectivelyMVC-TabViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C8FB3396DA9D5F8FBCFEA1BA /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-TabViewController" */;
+			buildPhases = (
+				DFF886EA38F38F01DF3E5D5D /* Sources */,
+				C0FF8FE1B3718D7E40A9EFDF /* Frameworks */,
+				63060CD749E9B6CAD0CFE62C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				248986ACA731A90B55E5A9B8 /* PBXTargetDependency */,
+			);
+			name = "ObjectivelyMVC-TabViewController";
+			productName = "ObjectivelyMVC-TabViewController";
+			productReference = 75C3539D556CF9F0672B98FA /* ObjectivelyMVC-TabViewController */;
+			productType = "com.apple.product-type.tool";
+		};
 		8A563153D68C9DE444FBF31C /* ObjectivelyMVC-View */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 326EB91F357CD75FD3012D86 /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-View" */;
@@ -1587,6 +1653,7 @@
 				CED40A87304B2D700090C57A /* ObjectivelyMVC-ImageAtlas */,
 				49B779A4A2BCD3DCD3C3BD06 /* ObjectivelyMVC-Image */,
 				563130823413BCCA09134760 /* ObjectivelyMVC-Text */,
+				0D15047205EF309988324037 /* ObjectivelyMVC-TabViewController */,
 				A73BC0FDBE1118F914A440F1 /* ObjectivelyMVC-TextView */,
 				CE55C1BC1F944C6D00D5A326 /* ObjectivelyMVC-Selector */,
 				CE88198A1F91B0BE000D5AB7 /* ObjectivelyMVC-Style */,
@@ -1628,7 +1695,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd $BUILT_PRODUCTS_DIR &&\n./ObjectivelyMVC-Font+Bitmap &&\n./ObjectivelyMVC-Image &&\n./ObjectivelyMVC-ImageAtlas &&\n./ObjectivelyMVC-Selector &&\n./ObjectivelyMVC-Style &&\n./ObjectivelyMVC-Stylesheet &&\n./ObjectivelyMVC-Text &&\n./ObjectivelyMVC-TextView &&\n./ObjectivelyMVC-View\n";
+			shellScript = "cd $BUILT_PRODUCTS_DIR &&\n./ObjectivelyMVC-Font+Bitmap &&\n./ObjectivelyMVC-Image &&\n./ObjectivelyMVC-ImageAtlas &&\n./ObjectivelyMVC-Selector &&\n./ObjectivelyMVC-Style &&\n./ObjectivelyMVC-Stylesheet &&\n./ObjectivelyMVC-TabViewController &&\n./ObjectivelyMVC-Text &&\n./ObjectivelyMVC-TextView &&\n./ObjectivelyMVC-View\n";
 		};
 		CE92C5181FE02B5C00FDB0DF /* Preprocess Assets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1882,6 +1949,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DFF886EA38F38F01DF3E5D5D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A83CA47F1D4A53262F9038A /* TabViewController.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		FE5F77E35CE051DA2EE56CCD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1901,6 +1976,17 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8595B7D19812F5D7F8877472 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0D15047205EF309988324037 /* ObjectivelyMVC-TabViewController */;
+			targetProxy = E774D650EE56CAA33E834414 /* PBXContainerItemProxy */;
+		};
+		248986ACA731A90B55E5A9B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ObjectivelyMVC;
+			target = CED157CC1C4BF3AC00FBA2DE /* ObjectivelyMVC */;
+			targetProxy = 479F04DC8D5C71E97D8B3588 /* PBXContainerItemProxy */;
+		};
 		A1D73378A0C8B95650970925 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ObjectivelyMVC;
@@ -2388,6 +2474,17 @@
 			};
 			name = Debug;
 		};
+		D305E6EA26B06790CE8A4057 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
 		F63BAEE767957C57E6DF9242 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2465,6 +2562,17 @@
 			};
 			name = Release;
 		};
+		FD6B570F8F1E65A1127158DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lcheck",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		HUDA00000000000000000012 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2519,6 +2627,15 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
+		};
+		C8FB3396DA9D5F8FBCFEA1BA /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-TabViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D305E6EA26B06790CE8A4057 /* Debug */,
+				FD6B570F8F1E65A1127158DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CE0C2212304CBC82008A6A2A /* Build configuration list for PBXNativeTarget "ObjectivelyMVC-Font+Bitmap" */ = {
 			isa = XCConfigurationList;
