@@ -41,6 +41,7 @@ static void dealloc(Object *self) {
     memset(&this->tabView->delegate, 0, sizeof(this->tabView->delegate));
   }
 
+  release(this->disappearingViewController);
   release(this->tabView);
 
   super(Object, self, dealloc);
@@ -50,7 +51,12 @@ static void dealloc(Object *self) {
 
 /**
  * @brief TabViewDelegate callback that makes the previous tab disappear and the selected tab
- * appear, while the TabViewController is visible.
+ * appear, while the TabViewController is appearing or visible.
+ * @remarks While the TabViewController is appearing, the selected tab receives `viewDidAppear`
+ * with it. While it is disappearing, the tab that received `viewWillDisappear` with it receives
+ * `viewDidDisappear` with it, and the selected tab receives nothing.
+ * @remarks Both tabs are retained for the transition, because an appearance callback can remove
+ * either of them.
  */
 static void didSelectTab(TabView *tabView, TabViewItem *tab) {
 
@@ -62,7 +68,17 @@ static void didSelectTab(TabView *tabView, TabViewItem *tab) {
   if (selected != previous) {
     this->selectedViewController = selected;
 
-    if (this->visible) {
+    const TabViewControllerState state = this->state;
+
+    if (state == TabViewControllerStateAppearing || state == TabViewControllerStateVisible) {
+
+      if (previous) {
+        retain(previous);
+      }
+      if (selected) {
+        retain(selected);
+      }
+
       if (previous) {
         $(previous, viewWillDisappear);
       }
@@ -72,8 +88,15 @@ static void didSelectTab(TabView *tabView, TabViewItem *tab) {
       if (previous) {
         $(previous, viewDidDisappear);
       }
-      if (selected) {
+      if (selected && state == TabViewControllerStateVisible) {
         $(selected, viewDidAppear);
+      }
+
+      if (previous) {
+        release(previous);
+      }
+      if (selected) {
+        release(selected);
       }
     }
   }
@@ -139,7 +162,9 @@ static void addChildViewController(ViewController *self, ViewController *childVi
 /**
  * @see ViewController::removeChildViewController(ViewController *, ViewController *)
  * @remarks This does not call `super`, which would make every removed child disappear. Only the
- * selected tab disappears, and the TabView then selects another tab.
+ * selected tab disappears, and the TabView then selects another tab. While the TabViewController
+ * is disappearing, the removed tab already received `viewWillDisappear`, and receives
+ * `viewDidDisappear` with the TabViewController.
  */
 static void removeChildViewController(ViewController *self, ViewController *childViewController) {
 
@@ -151,7 +176,8 @@ static void removeChildViewController(ViewController *self, ViewController *chil
   ViewController *that = retain(childViewController);
 
   const bool selected = childViewController == this->selectedViewController;
-  const bool visible = selected && this->visible;
+  const bool visible = selected && (this->state == TabViewControllerStateAppearing ||
+                                    this->state == TabViewControllerStateVisible);
 
   if (selected) {
     this->selectedViewController = NULL;
@@ -193,7 +219,9 @@ static void respondToEvent(ViewController *self, const SDL_Event *event) {
  */
 static void viewDidAppear(ViewController *self) {
 
-  const TabViewController *this = (TabViewController *) self;
+  TabViewController *this = (TabViewController *) self;
+
+  this->state = TabViewControllerStateVisible;
 
   if (this->selectedViewController) {
     $(this->selectedViewController, viewDidAppear);
@@ -205,10 +233,16 @@ static void viewDidAppear(ViewController *self) {
  */
 static void viewDidDisappear(ViewController *self) {
 
-  const TabViewController *this = (TabViewController *) self;
+  TabViewController *this = (TabViewController *) self;
 
-  if (this->selectedViewController) {
-    $(this->selectedViewController, viewDidDisappear);
+  this->state = TabViewControllerStateHidden;
+
+  ViewController *disappearing = this->disappearingViewController;
+  this->disappearingViewController = NULL;
+
+  if (disappearing) {
+    $(disappearing, viewDidDisappear);
+    release(disappearing);
   }
 }
 
@@ -219,7 +253,7 @@ static void viewWillAppear(ViewController *self) {
 
   TabViewController *this = (TabViewController *) self;
 
-  this->visible = true;
+  this->state = TabViewControllerStateAppearing;
 
   if (this->selectedViewController) {
     $(this->selectedViewController, viewWillAppear);
@@ -233,9 +267,13 @@ static void viewWillDisappear(ViewController *self) {
 
   TabViewController *this = (TabViewController *) self;
 
-  this->visible = false;
+  this->state = TabViewControllerStateDisappearing;
+
+  release(this->disappearingViewController);
+  this->disappearingViewController = NULL;
 
   if (this->selectedViewController) {
+    this->disappearingViewController = retain(this->selectedViewController);
     $(this->selectedViewController, viewWillDisappear);
   }
 }

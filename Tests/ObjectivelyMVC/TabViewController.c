@@ -31,14 +31,25 @@
 typedef struct {
   ViewController viewController;
   int willAppear, didAppear, willDisappear, didDisappear, events;
+  ViewController *removeOnAppear;
 } Probe;
+
+static int didDisappearTotal;
 
 static void Probe_respondToEvent(ViewController *self, const SDL_Event *event) {
   ((Probe *) self)->events++;
 }
 
 static void Probe_viewWillAppear(ViewController *self) {
-  ((Probe *) self)->willAppear++;
+
+  Probe *this = (Probe *) self;
+
+  this->willAppear++;
+
+  if (this->removeOnAppear) {
+    $(this->removeOnAppear, removeFromParentViewController);
+    this->removeOnAppear = NULL;
+  }
 }
 
 static void Probe_viewDidAppear(ViewController *self) {
@@ -51,6 +62,7 @@ static void Probe_viewWillDisappear(ViewController *self) {
 
 static void Probe_viewDidDisappear(ViewController *self) {
   ((Probe *) self)->didDisappear++;
+  didDisappearTotal++;
 }
 
 static void Probe_initialize(Class *clazz) {
@@ -311,6 +323,88 @@ START_TEST(removingLastTabClearsSelection) {
 
 } END_TEST
 
+START_TEST(selectingTabWhileAppearingAppearsItOnce) {
+
+  TabViewController *tabViewController = $(alloc(TabViewController), init);
+
+  Probe *a = probe(tabViewController);
+  Probe *b = probe(tabViewController);
+
+  $((ViewController *) tabViewController, viewWillAppear);
+
+  select(tabViewController, b);
+
+  $((ViewController *) tabViewController, viewDidAppear);
+
+  ck_assert_int_eq(1, a->willAppear);
+  ck_assert_int_eq(0, a->didAppear);
+  ck_assert_int_eq(1, a->willDisappear);
+  ck_assert_int_eq(1, a->didDisappear);
+
+  ck_assert_int_eq(1, b->willAppear);
+  ck_assert_int_eq(1, b->didAppear);
+
+  release(a);
+  release(b);
+  release(tabViewController);
+
+} END_TEST
+
+START_TEST(selectingTabWhileDisappearingCompletesThePrevious) {
+
+  TabViewController *tabViewController = $(alloc(TabViewController), init);
+
+  Probe *a = probe(tabViewController);
+  Probe *b = probe(tabViewController);
+
+  appear(tabViewController);
+
+  $((ViewController *) tabViewController, viewWillDisappear);
+
+  select(tabViewController, b);
+
+  $((ViewController *) tabViewController, viewDidDisappear);
+
+  ck_assert_int_eq(1, a->willDisappear);
+  ck_assert_int_eq(1, a->didDisappear);
+
+  ck_assert_int_eq(0, b->willAppear);
+  ck_assert_int_eq(0, b->didAppear);
+  ck_assert_int_eq(0, b->willDisappear);
+  ck_assert_int_eq(0, b->didDisappear);
+
+  release(a);
+  release(b);
+  release(tabViewController);
+
+} END_TEST
+
+START_TEST(appearanceCallbackMayRemoveThePreviousTab) {
+
+  TabViewController *tabViewController = $(alloc(TabViewController), init);
+
+  Probe *a = probe(tabViewController);
+  Probe *b = probe(tabViewController);
+
+  appear(tabViewController);
+
+  b->removeOnAppear = (ViewController *) a;
+  release(a);
+
+  didDisappearTotal = 0;
+
+  select(tabViewController, b);
+
+  ck_assert_ptr_eq(b, tabViewController->selectedViewController);
+  ck_assert_int_eq(1, didDisappearTotal);
+  ck_assert_int_eq(1, b->willAppear);
+  ck_assert_int_eq(1, b->didAppear);
+
+  release(b);
+  release(tabViewController);
+
+} END_TEST
+
 START_TEST(delegateIsCalledOnSelection) {
 
   TabViewController *tabViewController = $(alloc(TabViewController), init);
@@ -345,6 +439,9 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, addingTabWhileVisibleAppearsOnlyTheFirst);
   tcase_add_test(tcase, removingSelectedTabWhileHiddenSendsNoAppearance);
   tcase_add_test(tcase, removingLastTabClearsSelection);
+  tcase_add_test(tcase, selectingTabWhileAppearingAppearsItOnce);
+  tcase_add_test(tcase, selectingTabWhileDisappearingCompletesThePrevious);
+  tcase_add_test(tcase, appearanceCallbackMayRemoveThePreviousTab);
   tcase_add_test(tcase, delegateIsCalledOnSelection);
 
   Suite *suite = suite_create("TabViewController");
