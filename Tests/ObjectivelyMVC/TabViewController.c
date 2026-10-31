@@ -109,7 +109,7 @@ static void disappear(TabViewController *tabViewController) {
   $((ViewController *) tabViewController, viewDidDisappear);
 }
 
-static void select(TabViewController *tabViewController, Probe *probe) {
+static void select_(TabViewController *tabViewController, Probe *probe) {
   TabViewItem *tab = $(tabViewController, tabForViewController, (ViewController *) probe);
   $(tabViewController->tabView, selectTab, tab);
 }
@@ -167,7 +167,7 @@ START_TEST(selectingTabWhileVisibleSwapsAppearance) {
 
   appear(tabViewController);
 
-  select(tabViewController, b);
+  select_(tabViewController, b);
 
   ck_assert_ptr_eq(b, tabViewController->selectedViewController);
 
@@ -194,7 +194,7 @@ START_TEST(selectingTabWhileHiddenSendsNoAppearance) {
   Probe *a = probe(tabViewController);
   Probe *b = probe(tabViewController);
 
-  select(tabViewController, b);
+  select_(tabViewController, b);
 
   ck_assert_ptr_eq(b, tabViewController->selectedViewController);
 
@@ -332,7 +332,7 @@ START_TEST(selectingTabWhileAppearingAppearsItOnce) {
 
   $((ViewController *) tabViewController, viewWillAppear);
 
-  select(tabViewController, b);
+  select_(tabViewController, b);
 
   $((ViewController *) tabViewController, viewDidAppear);
 
@@ -361,7 +361,7 @@ START_TEST(selectingTabWhileDisappearingCompletesThePrevious) {
 
   $((ViewController *) tabViewController, viewWillDisappear);
 
-  select(tabViewController, b);
+  select_(tabViewController, b);
 
   $((ViewController *) tabViewController, viewDidDisappear);
 
@@ -393,7 +393,7 @@ START_TEST(appearanceCallbackMayRemoveThePreviousTab) {
 
   didDisappearTotal = 0;
 
-  select(tabViewController, b);
+  select_(tabViewController, b);
 
   ck_assert_ptr_eq(b, tabViewController->selectedViewController);
   ck_assert_int_eq(1, didDisappearTotal);
@@ -417,8 +417,8 @@ START_TEST(delegateIsCalledOnSelection) {
 
   Probe *b = probe(tabViewController);
 
-  select(tabViewController, b);
-  select(tabViewController, a);
+  select_(tabViewController, b);
+  select_(tabViewController, a);
 
   ck_assert_int_eq(2, selections);
 
