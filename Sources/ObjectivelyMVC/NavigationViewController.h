@@ -69,6 +69,18 @@ struct NavigationViewController {
    * @private
    */
   ViewController *disappearingViewController;
+
+  /**
+   * @brief The ViewController that received `viewWillAppear` with or after the
+   * NavigationViewController, and that receives the disappearance callbacks when it is covered or
+   * popped.
+   * @remarks This is set from `viewWillAppear` until `viewWillDisappear`, so it remains set while
+   * the ViewController is visible, not only during its appearance. A ViewController that never
+   * received `viewWillAppear`, such as the target of `popToViewController` before it is visible,
+   * receives no disappearance callbacks.
+   * @private
+   */
+  ViewController *visibleViewController;
 };
 
 /**

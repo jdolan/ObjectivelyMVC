@@ -31,14 +31,33 @@
 typedef struct {
   ViewController viewController;
   int willAppear, didAppear, willDisappear, didDisappear, events;
+  NavigationViewController *navigationViewController;
+  ViewController *pushOnWillAppear, *pushOnDidDisappear;
+  bool popOnWillAppear;
 } Probe;
+
+static int didDisappearTotal;
 
 static void Probe_respondToEvent(ViewController *self, const SDL_Event *event) {
   ((Probe *) self)->events++;
 }
 
 static void Probe_viewWillAppear(ViewController *self) {
-  ((Probe *) self)->willAppear++;
+
+  Probe *this = (Probe *) self;
+
+  this->willAppear++;
+
+  if (this->pushOnWillAppear) {
+    ViewController *viewController = this->pushOnWillAppear;
+    this->pushOnWillAppear = NULL;
+    $(this->navigationViewController, pushViewController, viewController);
+  }
+
+  if (this->popOnWillAppear) {
+    this->popOnWillAppear = false;
+    $(this->navigationViewController, popViewController);
+  }
 }
 
 static void Probe_viewDidAppear(ViewController *self) {
@@ -50,7 +69,17 @@ static void Probe_viewWillDisappear(ViewController *self) {
 }
 
 static void Probe_viewDidDisappear(ViewController *self) {
-  ((Probe *) self)->didDisappear++;
+
+  Probe *this = (Probe *) self;
+
+  this->didDisappear++;
+  didDisappearTotal++;
+
+  if (this->pushOnDidDisappear) {
+    ViewController *viewController = this->pushOnDidDisappear;
+    this->pushOnDidDisappear = NULL;
+    $(this->navigationViewController, pushViewController, viewController);
+  }
 }
 
 static void Probe_initialize(Class *clazz) {
@@ -78,13 +107,26 @@ static Class *_Probe(void) {
   return clazz;
 }
 
-static Probe *push(NavigationViewController *navigationViewController) {
+static Probe *probe(NavigationViewController *navigationViewController) {
 
   Probe *probe = (Probe *) $((ViewController *) alloc(Probe), init);
 
-  $(navigationViewController, pushViewController, (ViewController *) probe);
+  probe->navigationViewController = navigationViewController;
 
   return probe;
+}
+
+static Probe *push(NavigationViewController *navigationViewController) {
+
+  Probe *p = probe(navigationViewController);
+
+  $(navigationViewController, pushViewController, (ViewController *) p);
+
+  return p;
+}
+
+static bool isAttached(NavigationViewController *navigationViewController, Probe *probe) {
+  return probe->viewController.view->superview == ((ViewController *) navigationViewController)->view;
 }
 
 static void appear(NavigationViewController *navigationViewController) {
@@ -264,7 +306,7 @@ START_TEST(pushWhileDisappearingCompletesThePrevious) {
 
 } END_TEST
 
-START_TEST(onlyTopViewIsShown) {
+START_TEST(onlyTopViewIsVisible) {
 
   NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
 
@@ -311,6 +353,297 @@ START_TEST(popToWhileHiddenSendsNoAppearance) {
 
 } END_TEST
 
+START_TEST(pushFromWillAppearShowsOnlyTheFinalTop) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+
+  appear(navigationViewController);
+
+  Probe *b = probe(navigationViewController);
+  Probe *c = probe(navigationViewController);
+
+  b->pushOnWillAppear = (ViewController *) c;
+
+  $(navigationViewController, pushViewController, (ViewController *) b);
+
+  ck_assert_ptr_eq(c, $(navigationViewController, topViewController));
+
+  ck_assert(isAttached(navigationViewController, c));
+  ck_assert(!isAttached(navigationViewController, b));
+  ck_assert(!isAttached(navigationViewController, a));
+
+  ck_assert_int_eq(1, b->willAppear);
+  ck_assert_int_eq(0, b->didAppear);
+  ck_assert_int_eq(1, b->willDisappear);
+  ck_assert_int_eq(1, b->didDisappear);
+
+  ck_assert_int_eq(1, c->willAppear);
+  ck_assert_int_eq(1, c->didAppear);
+
+  release(a);
+  release(b);
+  release(c);
+  release(navigationViewController);
+
+} END_TEST
+
+START_TEST(popFromWillAppearShowsThePrevious) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+
+  appear(navigationViewController);
+
+  Probe *b = probe(navigationViewController);
+  b->popOnWillAppear = true;
+
+  $(navigationViewController, pushViewController, (ViewController *) b);
+
+  ck_assert_ptr_eq(a, $(navigationViewController, topViewController));
+
+  ck_assert(isAttached(navigationViewController, a));
+  ck_assert(!isAttached(navigationViewController, b));
+
+  ck_assert_int_eq(0, b->didAppear);
+  ck_assert_int_eq(1, b->willDisappear);
+  ck_assert_int_eq(1, b->didDisappear);
+
+  ck_assert_int_eq(2, a->willAppear);
+  ck_assert_int_eq(2, a->didAppear);
+  ck_assert_int_eq(1, a->willDisappear);
+  ck_assert_int_eq(1, a->didDisappear);
+
+  release(a);
+  release(b);
+  release(navigationViewController);
+
+} END_TEST
+
+START_TEST(popWhileDisappearingRetainsTheOutgoingTop) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+  Probe *b = push(navigationViewController);
+
+  appear(navigationViewController);
+
+  release(b);
+
+  didDisappearTotal = 0;
+
+  $((ViewController *) navigationViewController, viewWillDisappear);
+  $(navigationViewController, popViewController);
+
+  ck_assert_int_eq(0, didDisappearTotal);
+
+  $((ViewController *) navigationViewController, viewDidDisappear);
+
+  ck_assert_int_eq(1, didDisappearTotal);
+
+  ck_assert_int_eq(0, a->willAppear);
+  ck_assert_int_eq(0, a->didDisappear);
+
+  release(a);
+  release(navigationViewController);
+
+} END_TEST
+
+START_TEST(popToDisappearsAControllerPushedOnTheWay) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+  Probe *b = push(navigationViewController);
+  Probe *c = probe(navigationViewController);
+
+  appear(navigationViewController);
+
+  b->pushOnDidDisappear = (ViewController *) c;
+
+  $(navigationViewController, popToViewController, (ViewController *) a);
+
+  ck_assert_ptr_eq(a, $(navigationViewController, topViewController));
+
+  ck_assert(isAttached(navigationViewController, a));
+  ck_assert(!isAttached(navigationViewController, c));
+
+  ck_assert_int_eq(1, c->willAppear);
+  ck_assert_int_eq(1, c->didAppear);
+  ck_assert_int_eq(1, c->willDisappear);
+  ck_assert_int_eq(1, c->didDisappear);
+
+  ck_assert_int_eq(1, a->willAppear);
+  ck_assert_int_eq(1, a->didAppear);
+  ck_assert_int_eq(0, a->willDisappear);
+
+  release(a);
+  release(b);
+  release(c);
+  release(navigationViewController);
+
+} END_TEST
+
+START_TEST(pushFromDidDisappearDuringPushIsCovered) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+  Probe *b = probe(navigationViewController);
+  Probe *y = probe(navigationViewController);
+
+  appear(navigationViewController);
+
+  a->pushOnDidDisappear = (ViewController *) y;
+
+  $(navigationViewController, pushViewController, (ViewController *) b);
+
+  ck_assert_ptr_eq(b, $(navigationViewController, topViewController));
+
+  ck_assert(isAttached(navigationViewController, b));
+  ck_assert(!isAttached(navigationViewController, y));
+  ck_assert(!isAttached(navigationViewController, a));
+
+  ck_assert_int_eq(1, y->willAppear);
+  ck_assert_int_eq(1, y->didAppear);
+  ck_assert_int_eq(1, y->willDisappear);
+  ck_assert_int_eq(1, y->didDisappear);
+
+  ck_assert_int_eq(1, b->willAppear);
+  ck_assert_int_eq(1, b->didAppear);
+
+  release(a);
+  release(b);
+  release(y);
+  release(navigationViewController);
+
+} END_TEST
+
+START_TEST(pushFromDidDisappearDuringPopAppearsOnce) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+  Probe *b = push(navigationViewController);
+  Probe *y = probe(navigationViewController);
+
+  appear(navigationViewController);
+
+  b->pushOnDidDisappear = (ViewController *) y;
+
+  $(navigationViewController, popViewController);
+
+  ck_assert_ptr_eq(y, $(navigationViewController, topViewController));
+
+  ck_assert(isAttached(navigationViewController, y));
+  ck_assert(!isAttached(navigationViewController, a));
+
+  ck_assert_int_eq(1, y->willAppear);
+  ck_assert_int_eq(1, y->didAppear);
+
+  ck_assert_int_eq(0, a->willAppear);
+  ck_assert_int_eq(0, a->willDisappear);
+
+  release(a);
+  release(b);
+  release(y);
+  release(navigationViewController);
+
+} END_TEST
+
+START_TEST(popToDisappearsACoveredControllerPushedAgain) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+  Probe *b = push(navigationViewController);
+  Probe *c = push(navigationViewController);
+
+  appear(navigationViewController);
+
+  c->pushOnDidDisappear = (ViewController *) b;
+
+  $(navigationViewController, popToViewController, (ViewController *) a);
+
+  ck_assert_ptr_eq(a, $(navigationViewController, topViewController));
+  ck_assert_ptr_eq(a, navigationViewController->visibleViewController);
+
+  ck_assert(isAttached(navigationViewController, a));
+  ck_assert(!isAttached(navigationViewController, b));
+
+  ck_assert_int_eq(1, b->willAppear);
+  ck_assert_int_eq(1, b->didAppear);
+  ck_assert_int_eq(1, b->willDisappear);
+  ck_assert_int_eq(1, b->didDisappear);
+
+  ck_assert_int_eq(1, a->willAppear);
+  ck_assert_int_eq(1, a->didAppear);
+
+  release(a);
+  release(b);
+  release(c);
+  release(navigationViewController);
+
+} END_TEST
+
+START_TEST(addChildViewControllerCoversTheTop) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+  Probe *b = probe(navigationViewController);
+
+  appear(navigationViewController);
+
+  $((ViewController *) navigationViewController, addChildViewController, (ViewController *) b);
+
+  ck_assert(!isAttached(navigationViewController, a));
+  ck_assert(isAttached(navigationViewController, b));
+
+  ck_assert_int_eq(1, a->willDisappear);
+  ck_assert_int_eq(1, a->didDisappear);
+  ck_assert_int_eq(1, b->willAppear);
+  ck_assert_int_eq(1, b->didAppear);
+
+  release(a);
+  release(b);
+  release(navigationViewController);
+
+} END_TEST
+
+START_TEST(pushAndPopFromWillAppearAppearsOnce) {
+
+  NavigationViewController *navigationViewController = $(alloc(NavigationViewController), init);
+
+  Probe *a = push(navigationViewController);
+  Probe *b = probe(navigationViewController);
+  Probe *c = probe(navigationViewController);
+
+  appear(navigationViewController);
+
+  b->pushOnWillAppear = (ViewController *) c;
+  b->popOnWillAppear = true;
+
+  $(navigationViewController, pushViewController, (ViewController *) b);
+
+  ck_assert_ptr_eq(b, $(navigationViewController, topViewController));
+  ck_assert(isAttached(navigationViewController, b));
+
+  ck_assert_int_eq(2, b->willAppear);
+  ck_assert_int_eq(1, b->didAppear);
+  ck_assert_int_eq(1, b->willDisappear);
+  ck_assert_int_eq(1, b->didDisappear);
+
+  release(a);
+  release(b);
+  release(c);
+  release(navigationViewController);
+
+} END_TEST
+
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("NavigationViewController");
@@ -320,8 +653,17 @@ int main(int argc, char **argv) {
   tcase_add_test(tcase, popToSkipsCoveredViewControllers);
   tcase_add_test(tcase, pushWhileAppearingAppearsItOnce);
   tcase_add_test(tcase, pushWhileDisappearingCompletesThePrevious);
-  tcase_add_test(tcase, onlyTopViewIsShown);
+  tcase_add_test(tcase, onlyTopViewIsVisible);
   tcase_add_test(tcase, popToWhileHiddenSendsNoAppearance);
+  tcase_add_test(tcase, pushFromWillAppearShowsOnlyTheFinalTop);
+  tcase_add_test(tcase, popFromWillAppearShowsThePrevious);
+  tcase_add_test(tcase, popWhileDisappearingRetainsTheOutgoingTop);
+  tcase_add_test(tcase, popToDisappearsAControllerPushedOnTheWay);
+  tcase_add_test(tcase, pushFromDidDisappearDuringPushIsCovered);
+  tcase_add_test(tcase, pushFromDidDisappearDuringPopAppearsOnce);
+  tcase_add_test(tcase, popToDisappearsACoveredControllerPushedAgain);
+  tcase_add_test(tcase, addChildViewControllerCoversTheTop);
+  tcase_add_test(tcase, pushAndPopFromWillAppearAppearsOnce);
 
   Suite *suite = suite_create("NavigationViewController");
   suite_add_tcase(suite, tcase);
