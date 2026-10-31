@@ -9,6 +9,7 @@ TESTS = \
 	Font+Bitmap \
 	Image \
 	ImageAtlas \
+	NavigationViewController \
 	Selector \
 	Style \
 	Stylesheet \
