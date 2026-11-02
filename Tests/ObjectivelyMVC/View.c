@@ -25,6 +25,293 @@
 
 #include "ObjectivelyMVC.h"
 
+typedef struct {
+  Control control;
+  int events, changes;
+  bool consume, releaseOnEvent;
+} EventControl;
+
+static int eventControlDeallocations;
+
+static Class *_EventControl(void);
+#define _Class _EventControl
+
+static bool EventControl_captureEvent(Control *self, const SDL_Event *event) {
+  EventControl *this = (EventControl *) self;
+  this->events++;
+  if (this->consume) {
+    this->control.state ^= ControlStateHighlighted;
+    if (this->releaseOnEvent) {
+      release(self);
+    }
+    return true;
+  }
+  return super(Control, self, captureEvent, event);
+}
+
+static void EventControl_stateDidChange(Control *self) {
+  ((EventControl *) self)->changes++;
+}
+
+static void EventControl_dealloc(Object *self) {
+  eventControlDeallocations++;
+  super(Object, self, dealloc);
+}
+
+static void EventControl_initialize(Class *clazz) {
+  ((ObjectInterface *) clazz->interface)->dealloc = EventControl_dealloc;
+  ((ControlInterface *) clazz->interface)->captureEvent = EventControl_captureEvent;
+  ((ControlInterface *) clazz->interface)->stateDidChange = EventControl_stateDidChange;
+}
+
+static Class *_EventControl(void) {
+  static Class *clazz;
+  static Once once;
+  do_once(&once, {
+    clazz = _initialize(&(const ClassDef) {
+      .name = "EventControl",
+      .superclass = _Control(),
+      .instanceSize = sizeof(EventControl),
+      .interfaceSize = sizeof(ControlInterface),
+      .initialize = EventControl_initialize,
+    });
+  });
+  return clazz;
+}
+
+static EventControl *eventControl(void) {
+  return (EventControl *) $((Control *) alloc(EventControl), initWithFrame, NULL);
+}
+
+#undef _Class
+
+START_TEST(eventConsumptionBubblesAndStops) {
+  const SDL_Event event = { .key = { .type = SDL_EVENT_KEY_DOWN, .key = SDLK_RETURN } };
+  View *leaf = $(alloc(View), initWithFrame, NULL);
+  EventControl *parent = eventControl();
+  EventControl *next = eventControl();
+  parent->consume = next->consume = true;
+  $((View *) parent, addSubview, leaf);
+  leaf->nextResponder = (View *) next;
+
+  ck_assert($(leaf, respondToEvent, &event));
+  ck_assert_int_eq(1, next->events);
+  ck_assert_int_eq(1, next->changes);
+  ck_assert_int_eq(0, parent->events);
+
+  leaf->nextResponder = NULL;
+  ck_assert($(leaf, respondToEvent, &event));
+  ck_assert_int_eq(1, parent->events);
+
+  parent->consume = false;
+  ck_assert(!$(leaf, respondToEvent, &event));
+
+  release(leaf);
+  release(parent);
+  release(next);
+} END_TEST
+
+START_TEST(disabledControlSkipsInteractionAndBubbles) {
+  const SDL_Event event = { .key = { .type = SDL_EVENT_KEY_DOWN, .key = SDLK_RETURN } };
+  EventControl *child = eventControl();
+  EventControl *parent = eventControl();
+  child->consume = parent->consume = true;
+  child->control.state = ControlStateDisabled;
+  $((View *) parent, addSubview, (View *) child);
+
+  ck_assert($((View *) child, respondToEvent, &event));
+  ck_assert_int_eq(0, child->events);
+  ck_assert_int_eq(0, child->changes);
+  ck_assert_int_eq(ControlStateDisabled, child->control.state);
+  ck_assert_int_eq(1, parent->events);
+
+  release(child);
+  release(parent);
+} END_TEST
+
+START_TEST(eventCallbackMayReleaseControl) {
+  const SDL_Event event = { .key = { .type = SDL_EVENT_KEY_DOWN, .key = SDLK_RETURN } };
+  EventControl *control = eventControl();
+  control->consume = control->releaseOnEvent = true;
+  eventControlDeallocations = 0;
+
+  ck_assert($((View *) control, respondToEvent, &event));
+  ck_assert_int_eq(1, eventControlDeallocations);
+} END_TEST
+
+START_TEST(draggedPanelKeepsPositionAcrossStyleChanges) {
+  Panel *panel = (Panel *) $$(View, viewWithCharacters,
+    "{ \"class\": \"Panel\", \"style\": { \"left\": 50, \"top\": 60 } }", NULL);
+  Theme *theme = $(alloc(Theme), init);
+  View *view = (View *) panel;
+  $(view, applyThemeIfNeeded, theme);
+
+  const SDL_Event drag = { .motion = {
+    .type = SDL_EVENT_MOUSE_MOTION, .state = SDL_BUTTON_LMASK, .xrel = 7, .yrel = 9
+  } };
+  ck_assert($(view, respondToEvent, &drag));
+  ck_assert_int_eq(57, view->frame.x);
+  ck_assert_int_eq(69, view->frame.y);
+  $(view, applyThemeIfNeeded, theme);
+  ck_assert_int_eq(57, view->frame.x);
+  ck_assert_int_eq(69, view->frame.y);
+
+  const SDL_Event stop = { .motion = { .type = SDL_EVENT_MOUSE_MOTION } };
+  $(view, respondToEvent, &stop);
+  $(view, invalidateStyle);
+  $(view, applyThemeIfNeeded, theme);
+  ck_assert_int_eq(57, view->frame.x);
+  ck_assert_int_eq(69, view->frame.y);
+
+  release(panel);
+  release(theme);
+} END_TEST
+
+START_TEST(draggedPanelLeavesItsInitialAlignment) {
+  Theme *theme = $(alloc(Theme), init);
+  View *root = $$(View, viewWithCharacters,
+    "{ \"style\": { \"width\": 800, \"height\": 600 }, \"subviews\": ["
+    "{ \"class\": \"Panel\", \"identifier\": \"panel\","
+    "\"style\": { \"alignment\": \"middle-center\" } }] }", NULL);
+  View *panel = $(root, descendantWithIdentifier, "panel");
+  $(root, applyThemeIfNeeded, theme);
+  $(root, layoutIfNeeded);
+  const SDL_Point origin = { panel->frame.x, panel->frame.y };
+
+  const SDL_Event drag = { .motion = {
+    .type = SDL_EVENT_MOUSE_MOTION, .state = SDL_BUTTON_LMASK, .xrel = 7, .yrel = 9
+  } };
+  ck_assert($(panel, respondToEvent, &drag));
+  $(root, applyThemeIfNeeded, theme);
+  $(root, layoutIfNeeded);
+  ck_assert_int_eq(origin.x + 7, panel->frame.x);
+  ck_assert_int_eq(origin.y + 9, panel->frame.y);
+
+  release(root);
+  release(theme);
+} END_TEST
+
+START_TEST(draggingPanelDoesNotRestyleItsContents) {
+  Theme *theme = $(alloc(Theme), init);
+  Panel *panel = (Panel *) $$(View, viewWithCharacters,
+    "{ \"class\": \"Panel\", \"style\": { \"left\": 50, \"top\": 60 } }", NULL);
+  View *view = (View *) panel;
+  $(view, applyThemeIfNeeded, theme);
+
+  const SDL_Event drag = { .motion = {
+    .type = SDL_EVENT_MOUSE_MOTION, .state = SDL_BUTTON_LMASK, .xrel = 7, .yrel = 9
+  } };
+  ck_assert($(view, respondToEvent, &drag));
+  View *contents = (View *) panel->contentView;
+  ck_assert(panel->isDragging);
+  ck_assert(view->needsApplyStyle);
+  ck_assert(view->needsApplyTheme);
+  ck_assert(!contents->needsApplyStyle);
+  ck_assert(!contents->needsApplyTheme);
+  $(view, applyThemeIfNeeded, theme);
+
+  ck_assert($(view, respondToEvent, &drag));
+  ck_assert(view->needsApplyStyle);
+  ck_assert(view->needsApplyTheme);
+  ck_assert(!contents->needsApplyStyle);
+  ck_assert(!contents->needsApplyTheme);
+  $(view, applyThemeIfNeeded, theme);
+  ck_assert_int_eq(64, view->frame.x);
+  ck_assert_int_eq(78, view->frame.y);
+
+  const SDL_Event stop = { .motion = { .type = SDL_EVENT_MOUSE_MOTION } };
+  $(view, respondToEvent, &stop);
+  ck_assert(!panel->isDragging);
+  ck_assert(!view->needsApplyStyle);
+  ck_assert(!view->needsApplyTheme);
+  ck_assert(!contents->needsApplyStyle);
+  ck_assert(!contents->needsApplyTheme);
+
+  $(view, invalidateStyle);
+  ck_assert(contents->needsApplyStyle);
+  ck_assert(contents->needsApplyTheme);
+
+  release(panel);
+  release(theme);
+} END_TEST
+
+START_TEST(panelResizesAndReleasesItsGesture) {
+  Panel *panel = $(alloc(Panel), initWithFrame, &(SDL_Rect) { 0, 0, 100, 80 });
+  View *view = (View *) panel;
+  Theme *theme = $(alloc(Theme), init);
+  $(view, applyThemeIfNeeded, theme);
+  $(view, layoutIfNeeded);
+  const SDL_Rect handle = $((View *) panel->resizeHandle, renderFrame);
+  const SDL_Event down = { .button = {
+    .type = SDL_EVENT_MOUSE_BUTTON_DOWN, .button = SDL_BUTTON_LEFT,
+    .x = handle.x + 1, .y = handle.y + 1
+  } };
+  ck_assert($(view, respondToEvent, &down));
+  ck_assert(panel->isResizing);
+  const SDL_Size before = $(view, size);
+  const SDL_Event drag = { .motion = {
+    .type = SDL_EVENT_MOUSE_MOTION, .state = SDL_BUTTON_LMASK, .xrel = 7, .yrel = 9
+  } };
+  ck_assert($(view, respondToEvent, &drag));
+  ck_assert_int_eq(before.w + 7, view->frame.w);
+  ck_assert_int_eq(before.h + 9, view->frame.h);
+  ck_assert(!panel->isDragging);
+
+  const SDL_Event up = { .button = {
+    .type = SDL_EVENT_MOUSE_BUTTON_UP, .button = SDL_BUTTON_LEFT
+  } };
+  ck_assert($(view, respondToEvent, &up));
+  ck_assert(!panel->isResizing);
+  ck_assert(!panel->isDragging);
+
+  const SDL_Event key = { .key = { .type = SDL_EVENT_KEY_DOWN, .key = SDLK_RETURN } };
+  ck_assert(!$(view, respondToEvent, &key));
+  release(panel);
+  release(theme);
+} END_TEST
+
+START_TEST(selectMenuKeepsAnchorAcrossThemeAndLayout) {
+  Theme *theme = $(alloc(Theme), init);
+  View *root = $$(View, viewWithCharacters,
+    "{ \"style\": { \"width\": 800, \"height\": 600 }, \"subviews\": ["
+    "{ \"class\": \"Panel\", \"identifier\": \"panel\","
+    "\"style\": { \"left\": 50, \"top\": 60 }, \"contentView\": {"
+    "\"subviews\": [{ \"class\": \"Select\", \"identifier\": \"select\" }] } }] }", NULL);
+  Select *select = (Select *) $(root, descendantWithIdentifier, "select");
+  View *panel = $(root, descendantWithIdentifier, "panel");
+  $(select, addOption, "One", NULL);
+  $(select, addOption, "Two", NULL);
+  $(root, applyThemeIfNeeded, theme);
+  $(root, layoutIfNeeded);
+  const SDL_Event drag = { .motion = {
+    .type = SDL_EVENT_MOUSE_MOTION, .state = SDL_BUTTON_LMASK, .xrel = 7, .yrel = 9
+  } };
+  ck_assert($(panel, respondToEvent, &drag));
+  const SDL_Event stop = { .motion = { .type = SDL_EVENT_MOUSE_MOTION } };
+  $(panel, respondToEvent, &stop);
+  $(root, applyThemeIfNeeded, theme);
+  $(root, layoutIfNeeded);
+  const SDL_Rect frame = $((View *) select, renderFrame);
+  const int x = frame.x + select->control.view.padding.left;
+  const int y = frame.y + select->control.view.padding.top;
+
+  const SDL_Event up = { .button = {
+    .type = SDL_EVENT_MOUSE_BUTTON_UP, .button = SDL_BUTTON_LEFT, .x = x + 1, .y = y + 1
+  } };
+  ck_assert($((View *) select, respondToEvent, &up));
+  $(root, applyThemeIfNeeded, theme);
+  $(root, layoutIfNeeded);
+  View *menu = (View *) select->stackView;
+  ck_assert_ptr_eq(root, menu->superview);
+  ck_assert_int_eq(x, menu->frame.x);
+  ck_assert_int_eq(y, menu->frame.y);
+  ck_assert_int_eq(57, panel->frame.x);
+  ck_assert_int_eq(69, panel->frame.y);
+
+  release(root);
+  release(theme);
+} END_TEST
+
 /**
  * @brief Allocates a leaf View with a fixed, locked size (minSize == maxSize == size).
  */
@@ -549,7 +836,7 @@ START_TEST(sliderLabelsFromJSON) {
   ck_assert_str_eq("High", slider->label->text);
 
   SDL_Event event = { .key = { .type = SDL_EVENT_KEY_DOWN, .key = SDLK_LEFT } };
-  ck_assert($((Control *) slider, captureEvent, &event));
+  ck_assert($((View *) slider, respondToEvent, &event));
   ck_assert_double_eq(0.5, slider->value);
   ck_assert_str_eq("Medium", slider->label->text);
 
@@ -611,6 +898,14 @@ START_TEST(sliderLabelsRebindAndKeepTrackWidth) {
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("View");
+  tcase_add_test(tcase, eventConsumptionBubblesAndStops);
+  tcase_add_test(tcase, disabledControlSkipsInteractionAndBubbles);
+  tcase_add_test(tcase, eventCallbackMayReleaseControl);
+  tcase_add_test(tcase, draggedPanelKeepsPositionAcrossStyleChanges);
+  tcase_add_test(tcase, draggedPanelLeavesItsInitialAlignment);
+  tcase_add_test(tcase, draggingPanelDoesNotRestyleItsContents);
+  tcase_add_test(tcase, panelResizesAndReleasesItsGesture);
+  tcase_add_test(tcase, selectMenuKeepsAnchorAcrossThemeAndLayout);
   tcase_add_test(tcase, fixedSizeLeavesInStackView);
   tcase_add_test(tcase, nestedContainStackViews);
   tcase_add_test(tcase, containStackViewWithFillChild);

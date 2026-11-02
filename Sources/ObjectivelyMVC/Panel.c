@@ -123,20 +123,21 @@ static void layoutSubviews(View *self) {
     this->isResizable ? ViewVisibilityVisible : ViewVisibilityHidden);
 }
 
-#pragma mark - Control
-
 /**
- * @see Control::captureEvent(Control *, const SDL_Event *)
+ * @see View::respondToEvent(View *, const SDL_Event *)
  */
-static bool captureEvent(Control *self, const SDL_Event *event) {
+static bool respondToEvent(View *self, const SDL_Event *event) {
 
   Panel *this = (Panel *) self;
+
+  retain(self);
 
   if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     if ($((View *) this->resizeHandle, didReceiveEvent, event)) {
       if (this->isResizable && !this->isDragging) {
         this->isResizing = true;
       }
+      release(self);
       return true;
     }
   }
@@ -144,8 +145,6 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
   if (event->type == SDL_EVENT_MOUSE_MOTION) {
 
     if (event->motion.state & SDL_BUTTON_LEFT) {
-      self->state |= ControlStateHighlighted;
-
       if (this->isResizing || this->isDraggable) {
 
         // Motion is reported in points, which are fractional on high-density
@@ -172,24 +171,39 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
         } else {
           this->isDragging = true;
 
-          self->view.frame.x += dx;
-          self->view.frame.y += dy;
+          self->frame.x += dx;
+          self->frame.y += dy;
+
+          $(self->style, addIntegerAttribute, "left", self->frame.x);
+          $(self->style, addIntegerAttribute, "top", self->frame.y);
+          $(self->style, addEnumAttribute, "alignment", ViewAlignmentNames, ViewAlignmentNone);
+          self->needsApplyStyle = true;
+          $(self, setNeedsApplyTheme);
 
           // Direct frame mutation outside of layout: refresh the render frame caches so
           // hit-testing for the remainder of this event batch sees the moved Panel.
           MVC_InvalidateRenderFrames();
         }
 
+        release(self);
         return true;
       }
     } else {
-      self->state &= ~ControlStateHighlighted;
       this->isResizing = this->isDragging = false;
       this->gestureResidual.x = this->gestureResidual.y = 0.f;
     }
   }
 
-  return super(Control, self, captureEvent, event);
+  bool consumed = false;
+  if (event->type == SDL_EVENT_MOUSE_BUTTON_UP && event->button.button == SDL_BUTTON_LEFT) {
+    consumed = this->isDragging || this->isResizing;
+    this->isResizing = this->isDragging = false;
+    this->gestureResidual.x = this->gestureResidual.y = 0.f;
+  }
+
+  const bool bubbled = super(View, self, respondToEvent, event);
+  release(self);
+  return consumed || bubbled;
 }
 
 #pragma mark - Panel
@@ -219,7 +233,7 @@ static SDL_Size contentSize(const Panel *self) {
  */
 static Panel *initWithFrame(Panel *self, const SDL_Rect *frame) {
 
-  self = (Panel *) super(Control, self, initWithFrame, frame);
+  self = (Panel *) super(View, self, initWithFrame, frame);
   if (self) {
     View *this = (View *) self;
 
@@ -279,7 +293,7 @@ static void initialize(Class *clazz) {
   ((ViewInterface *) clazz->interface)->init = init;
   ((ViewInterface *) clazz->interface)->layoutSubviews = layoutSubviews;
 
-  ((ControlInterface *) clazz->interface)->captureEvent = captureEvent;
+  ((ViewInterface *) clazz->interface)->respondToEvent = respondToEvent;
 
   ((PanelInterface *) clazz->interface)->contentSize = contentSize;
   ((PanelInterface *) clazz->interface)->initWithFrame = initWithFrame;
@@ -305,7 +319,7 @@ Class *_Panel(void) {
   do_once(&once, {
     clazz = _initialize(&(const ClassDef) {
       .name = "Panel",
-      .superclass = _Control(),
+      .superclass = _View(),
       .instanceSize = sizeof(Panel),
       .interfaceSize = sizeof(PanelInterface),
       .initialize = initialize,
@@ -317,4 +331,3 @@ Class *_Panel(void) {
 }
 
 #undef _Class
-

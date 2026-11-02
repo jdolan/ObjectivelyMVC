@@ -205,13 +205,15 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 /**
  * @see ViewController::respondToEvent(ViewController *, const SDL_Event *)
  */
-static void respondToEvent(ViewController *self, const SDL_Event *event) {
+static bool respondToEvent(ViewController *self, const SDL_Event *event) {
 
   const TabViewController *this = (TabViewController *) self;
 
   if (this->selectedViewController) {
-    $(this->selectedViewController, respondToEvent, event);
+    return $(this->selectedViewController, respondToEvent, event);
   }
+
+  return false;
 }
 
 /**

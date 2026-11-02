@@ -124,7 +124,7 @@ static void layoutSubviews(View *self) {
 /**
  * @see View::respondToEvent(View *, const SDL_Event *)
  */
-static void respondToEvent(View *self, const SDL_Event *event) {
+static bool respondToEvent(View *self, const SDL_Event *event) {
 
   ScrollBar *this = (ScrollBar *) self;
 
@@ -148,20 +148,20 @@ static void respondToEvent(View *self, const SDL_Event *event) {
         $(this->scrollView, scrollToOffset, &offset);
         $(self, setNeedsLayout);
       }
-      return;
+      return true;
 
     case SDL_EVENT_MOUSE_BUTTON_UP:
       $(self, resignTouchResponder);
-      return;
+      return true;
 
     case SDL_EVENT_MOUSE_MOTION:
-      return;
+      return true;
 
     default:
       break;
   }
 
-  super(View, self, respondToEvent, event);
+  return super(View, self, respondToEvent, event);
 }
 
 #pragma mark - ScrollBar

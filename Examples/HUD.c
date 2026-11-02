@@ -182,7 +182,7 @@ static void buildHUD(AppState *app, View *root) {
   app->chat = stackView(root, ViewAlignmentTopLeft);
 
   Panel *scoreboard = $(alloc(Panel), initWithFrame, NULL);
-  $(scoreboard->control.view.style, addEnumAttribute, "alignment", ViewAlignmentNames,
+  $(scoreboard->view.style, addEnumAttribute, "alignment", ViewAlignmentNames,
     ViewAlignmentMiddleCenter);
 
   const int rows = 8;
@@ -264,7 +264,7 @@ static void updateHUD(AppState *app, Uint64 ticks) {
   if (ticks >= app->scoreboardDue) {
     app->scoreboardDue = ticks + 5000;
     $((View *) app->scoreboard, setVisibility,
-      app->scoreboard->control.view.visibility == ViewVisibilityHidden
+      app->scoreboard->view.visibility == ViewVisibilityHidden
         ? ViewVisibilityVisible : ViewVisibilityHidden);
   }
 }

@@ -160,13 +160,16 @@ struct ViewControllerInterface {
   void (*removeFromParentViewController)(ViewController *self);
 
   /**
-   * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
+   * @fn bool ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
    * @brief Responds to the given event.
    * @param self The ViewController.
    * @param event The event.
+   * @return True if a child controller consumed the event.
+   * @remarks Keyboard and mouse input stops at the first consuming child. Other events are
+   * delivered to every child, regardless of consumption.
    * @memberof ViewController
    */
-  void (*respondToEvent)(ViewController *self, const SDL_Event *event);
+  bool (*respondToEvent)(ViewController *self, const SDL_Event *event);
 
   /**
    * @fn void ViewController::renderDeviceDidReset(ViewController *self)
@@ -239,4 +242,3 @@ struct ViewControllerInterface {
  * @memberof ViewController
  */
 OBJECTIVELYMVC_EXPORT Class *_ViewController(void);
-

@@ -104,7 +104,7 @@ static View *init(View *self) {
 /**
  * @see View::respondToEvent(View *, const SDL_Event *)
  */
-static void respondToEvent(View *self, const SDL_Event *event) {
+static bool respondToEvent(View *self, const SDL_Event *event) {
 
   if (event->type == SDL_EVENT_MOUSE_BUTTON_UP) {
 
@@ -121,11 +121,17 @@ static void respondToEvent(View *self, const SDL_Event *event) {
 
       if ($((View *) tab->label, didReceiveEvent, event)) {
         $(this, selectTab, tab);
+        $(self, resignTouchResponder);
+        $(self, emitViewEvent, ViewEventMouseButtonUp, NULL);
+        if (event->button.clicks) {
+          $(self, emitViewEvent, ViewEventClick, NULL);
+        }
+        return true;
       }
     }
   }
 
-  super(View, self, respondToEvent, event);
+  return super(View, self, respondToEvent, event);
 }
 
 #pragma mark - TabView

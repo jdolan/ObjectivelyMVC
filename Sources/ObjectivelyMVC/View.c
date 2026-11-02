@@ -1746,10 +1746,10 @@ static void resolve(View *self, Outlet *outlets) {
 }
 
 /**
- * @fn void View::respondToEvent(View *self, const SDL_Event *event)
+ * @fn bool View::respondToEvent(View *self, const SDL_Event *event)
  * @memberof View
  */
-static void respondToEvent(View *self, const SDL_Event *event) {
+static bool respondToEvent(View *self, const SDL_Event *event) {
 
   assert(event);
 
@@ -1786,15 +1786,17 @@ static void respondToEvent(View *self, const SDL_Event *event) {
   if (event->type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     if ($(self, acceptsKeyResponder)) {
       $(self, becomeKeyResponder);
-      return;
+      return true;
     }
   }
 
   if (self->nextResponder) {
-    $(self->nextResponder, respondToEvent, event);
+    return $(self->nextResponder, respondToEvent, event);
   } else if (self->superview) {
-    $(self->superview, respondToEvent, event);
+    return $(self->superview, respondToEvent, event);
   }
+
+  return false;
 }
 
 /**

@@ -498,4 +498,3 @@ Class *_Select(void) {
 }
 
 #undef _Class
-

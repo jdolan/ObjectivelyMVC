@@ -170,18 +170,25 @@ static void removeFromParentViewController(ViewController *self) {
 }
 
 /**
- * @brief ArrayEnumerator for respondToEvent recursion.
- */
-static void respondToEvent_enumerate(const Array *array, ident obj, ident data) {
-  $((ViewController *) obj, respondToEvent, (const SDL_Event *) data);
-}
-
-/**
- * @fn void ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
+ * @fn bool ViewController::respondToEvent(ViewController *self, const SDL_Event *event)
  * @memberof ViewController
  */
-static void respondToEvent(ViewController *self, const SDL_Event *event) {
-  $((Array *) self->childViewControllers, enumerate, respondToEvent_enumerate, (ident) event);
+static bool respondToEvent(ViewController *self, const SDL_Event *event) {
+  const Array *children = (Array *) self->childViewControllers;
+  const bool input = event->type >= SDL_EVENT_KEY_DOWN && event->type <= SDL_EVENT_MOUSE_WHEEL;
+  bool consumed = false;
+
+  for (size_t i = 0; i < children->count; i++) {
+    ViewController *child = $(children, objectAtIndex, i);
+    if ($(child, respondToEvent, event)) {
+      consumed = true;
+      if (input) {
+        break;
+      }
+    }
+  }
+
+  return consumed;
 }
 
 /**

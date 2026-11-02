@@ -199,12 +199,14 @@ static void removeChildViewController(ViewController *self, ViewController *chil
 /**
  * @see ViewController::respondToEvent(ViewController *, const SDL_Event *)
  */
-static void respondToEvent(ViewController *self, const SDL_Event *event) {
+static bool respondToEvent(ViewController *self, const SDL_Event *event) {
 
   ViewController *topViewController = $((NavigationViewController *) self, topViewController);
   if (topViewController) {
-    $(topViewController, respondToEvent, event);
+    return $(topViewController, respondToEvent, event);
   }
+
+  return false;
 }
 
 /**
@@ -431,4 +433,3 @@ Class *_NavigationViewController(void) {
 }
 
 #undef _Class
-

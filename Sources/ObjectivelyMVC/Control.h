@@ -138,8 +138,9 @@ struct ControlInterface {
    * @brief Captures a given event, potentially altering the state of this Control.
    * @param self The Control.
    * @param event The event.
-   * @return True if the Event was captured, false otherwise.
-   * @remarks Subclasses should override this method to capture events.
+   * @return True if the event was consumed, false to continue propagation.
+   * @remarks Subclasses override this hook for interaction. Control::respondToEvent handles
+   * disabled state, callback lifetime and state-change notifications.
    * @memberof Control
    */
   bool (*captureEvent)(Control *self, const SDL_Event *event);

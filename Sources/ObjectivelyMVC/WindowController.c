@@ -26,7 +26,6 @@
 #include <Objectively/String.h>
 
 #include "Log.h"
-#include "TextView.h"
 #include "WindowController.h"
 
 #define _Class _WindowController
@@ -236,7 +235,7 @@ static View *previousKeyResponder(const WindowController *self, View *keyRespond
 }
 
 /**
- * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
+ * @fn bool WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
  * @memberof WindowController
  * @remarks Exposure MUST NOT reset render device resources. It fires on every frame on some
  * platforms, where resetting leaks a generation of GPU resources per frame. Only the view
@@ -245,15 +244,17 @@ static View *previousKeyResponder(const WindowController *self, View *keyRespond
  * @remarks Window events for another window MUST be ignored, or a window being torn down
  * releases the resources of the controller that replaced it.
  */
-static void respondToEvent(WindowController *self, const SDL_Event *event) {
+static bool respondToEvent(WindowController *self, const SDL_Event *event) {
 
   if (event->type >= SDL_EVENT_WINDOW_FIRST && event->type <= SDL_EVENT_WINDOW_LAST) {
     if (event->window.windowID != SDL_GetWindowID(self->window)) {
-      return;
+      return false;
     }
   }
 
   SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", (ident) event);
+
+  bool consumed = false;
 
   switch (event->type) {
     case SDL_EVENT_WINDOW_MOVED:
@@ -305,20 +306,20 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
     case SDL_EVENT_KEY_DOWN:
     case SDL_EVENT_TEXT_INPUT:
       if (keyResponder) {
-        $(keyResponder, respondToEvent, event);
+        consumed = $(keyResponder, respondToEvent, event);
       } else {
-        $(self->viewController, respondToEvent, event);
+        consumed = $(self->viewController, respondToEvent, event);
       }
       break;
     case SDL_EVENT_MOUSE_BUTTON_DOWN:
       if (touchTarget) {
         $(touchTarget, becomeTouchResponder);
-        $(touchTarget, respondToEvent, event);
+        consumed = $(touchTarget, respondToEvent, event);
       } else if (touchResponder) {
-        $(touchResponder, respondToEvent, event);
+        consumed = $(touchResponder, respondToEvent, event);
         $(touchResponder, resignTouchResponder);
       } else {
-        $(self->viewController, respondToEvent, event);
+        consumed = $(self->viewController, respondToEvent, event);
       }
       
       touchResponder = $(self, touchResponder);
@@ -328,60 +329,53 @@ static void respondToEvent(WindowController *self, const SDL_Event *event) {
       break;
     case SDL_EVENT_MOUSE_BUTTON_UP:
       if (touchResponder) {
-        $(touchResponder, respondToEvent, event);
+        consumed = $(touchResponder, respondToEvent, event);
       } else if (touchTarget) {
-        $(touchTarget, respondToEvent, event);
+        consumed = $(touchTarget, respondToEvent, event);
       } else {
-        $(self->viewController, respondToEvent, event);
+        consumed = $(self->viewController, respondToEvent, event);
       }
       break;
     case SDL_EVENT_MOUSE_MOTION:
     case SDL_EVENT_MOUSE_WHEEL:
       if (touchResponder) {
-        $(touchResponder, respondToEvent, event);
+        consumed = $(touchResponder, respondToEvent, event);
       } else if (touchTarget) {
-        $(touchTarget, respondToEvent, event);
+        consumed = $(touchTarget, respondToEvent, event);
       } else {
-        $(self->viewController, respondToEvent, event);
+        consumed = $(self->viewController, respondToEvent, event);
       }
       break;
     default:
-      $(self->viewController, respondToEvent, event);
+      consumed = $(self->viewController, respondToEvent, event);
       break;
   }
 
-  if (event->type == SDL_EVENT_KEY_DOWN) {
+  if (event->type == SDL_EVENT_KEY_DOWN && !consumed) {
     if (event->key.key == SDLK_TAB || event->key.key == SDLK_KP_TAB) {
 
-      View *current = $(self, keyResponder);
+      if (event->key.mod & SDL_KMOD_SHIFT) {
+        keyResponder = $(self, previousKeyResponder, keyResponder);
+      } else {
+        keyResponder = $(self, nextKeyResponder, keyResponder);
+      }
 
-      // An editing TextView that is still the key responder kept Tab to auto-complete
-      const bool consumed = current && current == keyResponder &&
-        $((Object *) current, isKindOfClass, _TextView()) &&
-        ((TextView *) current)->isEditable &&
-        !$((Control *) current, isDisabled);
-
-      if (!consumed) {
-        if (event->key.mod & SDL_KMOD_SHIFT) {
-          keyResponder = $(self, previousKeyResponder, keyResponder);
-        } else {
-          keyResponder = $(self, nextKeyResponder, keyResponder);
-        }
-
-        if (keyResponder) {
-          $(keyResponder, becomeKeyResponder);
-        }
+      if (keyResponder) {
+        $(keyResponder, becomeKeyResponder);
+        consumed = true;
       }
     }
 
     if (event->key.key == SDLK_D) {
       if (event->key.mod & SDL_KMOD_CTRL) {
         $(self, toggleDebugger);
+        consumed = true;
       }
     }
   }
 
   SDL_SetPointerProperty(SDL_GetWindowProperties(self->window), "event", NULL);
+  return consumed;
 }
 
 /**

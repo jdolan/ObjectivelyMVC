@@ -36,8 +36,9 @@ typedef struct {
 
 static int didDisappearTotal;
 
-static void Probe_respondToEvent(ViewController *self, const SDL_Event *event) {
+static bool Probe_respondToEvent(ViewController *self, const SDL_Event *event) {
   ((Probe *) self)->events++;
+  return true;
 }
 
 static void Probe_viewWillAppear(ViewController *self) {
@@ -116,7 +117,8 @@ static void select_(TabViewController *tabViewController, Probe *probe) {
 
 static void sendEvent(TabViewController *tabViewController) {
   const SDL_Event event = { .type = SDL_EVENT_USER };
-  $((ViewController *) tabViewController, respondToEvent, &event);
+  ck_assert_int_eq(tabViewController->selectedViewController != NULL,
+    $((ViewController *) tabViewController, respondToEvent, &event));
 }
 
 static int selections;

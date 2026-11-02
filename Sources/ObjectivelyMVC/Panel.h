@@ -23,7 +23,7 @@
 
 #pragma once
 
-#include <ObjectivelyMVC/Control.h>
+#include <ObjectivelyMVC/View.h>
 #include <ObjectivelyMVC/ImageView.h>
 #include <ObjectivelyMVC/StackView.h>
 
@@ -39,8 +39,8 @@ typedef struct PanelInterface PanelInterface;
 
 /**
  * @brief Draggable and resizable container Views.
- * @extends Control
- * @ingroup Containers Controls
+ * @extends View
+ * @ingroup Containers
  * @remarks Panels are draggable containers, analagous to windows or dialogs in traditional
  * desktop environments. Panels can optionally be positioned and resized by the user.
  */
@@ -49,7 +49,7 @@ struct Panel {
   /**
    * @brief The superclass.
    */
-  Control control;
+  View view;
 
   /**
    * @brief The interface type.
@@ -120,7 +120,7 @@ struct PanelInterface {
   /**
    * @brief The superclass interface.
    */
-  ControlInterface controlInterface;
+  ViewInterface viewInterface;
 
   /**
    * @fn SDL_Size Panel::contentSize(const Panel *self)
@@ -148,4 +148,3 @@ struct PanelInterface {
  * @memberof Panel
  */
 OBJECTIVELYMVC_EXPORT Class *_Panel(void);
-

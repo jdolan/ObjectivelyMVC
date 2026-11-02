@@ -171,10 +171,13 @@ struct WindowControllerInterface {
   void (*renderTo)(WindowController *self, CommandBuffer *commands, Framebuffer *framebuffer);
 
   /**
-   * @fn void WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
+   * @fn bool WindowController::respondToEvent(WindowController *self, const SDL_Event *event)
    * @brief Responds to the given event.
    * @param self The WindowController.
    * @param event The event.
+   * @return True if a responder or a window keyboard shortcut consumed the event.
+   * @remarks Applications should stop propagating consumed input, but continue broadcasting
+   * window and lifecycle notifications to other interested subsystems.
    * @remarks Your application should call this method for each event that the View hierarchy is
    * expected to respond to. The event will be dispatched to WindowController::keyResponder,
    * which is the first of:
@@ -188,7 +191,7 @@ struct WindowControllerInterface {
    * captured.
    * @memberof WindowController
    */
-  void (*respondToEvent)(WindowController * self, const SDL_Event *event);
+  bool (*respondToEvent)(WindowController * self, const SDL_Event *event);
 
   /**
    * @fn void WindowController::setTheme(WindowController *self, Theme *theme)

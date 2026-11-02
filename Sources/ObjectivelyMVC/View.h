@@ -1168,13 +1168,16 @@ struct ViewInterface {
   void (*resolve)(View *self, Outlet *outlets);
 
   /**
-   * @fn void View::respondToEvent(View *self, const SDL_Event *event)
+   * @fn bool View::respondToEvent(View *self, const SDL_Event *event)
    * @brief Responds to the specified event.
    * @param self The View.
    * @param event The event.
+   * @return True if this View or a subsequent responder consumed the event.
+   * @remarks Subclasses return true for consumed events and otherwise return the superclass
+   * result. Controls implement local interaction through Control::captureEvent.
    * @memberof View
    */
-  void (*respondToEvent)(View *self, const SDL_Event *event);
+  bool (*respondToEvent)(View *self, const SDL_Event *event);
 
   /**
    * @fn Set *View::select(View *self, const char *rule)

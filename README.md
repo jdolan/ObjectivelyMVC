@@ -49,6 +49,20 @@ $(windowController, respondToEvent, &event);
 $(windowController, render);
 ```
 
+`respondToEvent` returns `true` when a responder consumes the event. Stop forwarding consumed
+keyboard and mouse input to game bindings; continue broadcasting window and lifecycle events to
+other interested subsystems. Events remain `const`.
+
+Interactive Views override `bool respondToEvent(View *, const SDL_Event *)`: return `true` when
+handled, or return `super(View, self, respondToEvent, event)` to continue propagation.
+Controls override `bool captureEvent(Control *, const SDL_Event *)` for local interaction.
+`Control::respondToEvent` wraps that hook with disabled-state handling, callback lifetime
+protection and state-change notifications, returning `true` when captured and otherwise
+continuing propagation.
+
+`Panel` derives from `View`, not `Control`. It consumes drag and resize events directly without
+Control highlight state or state-triggered restyling of its contents.
+
 ## Layout and styling are CSS-driven
 
 **Read this before writing any View code.** Layout is driven by the Selector / Style / Stylesheet

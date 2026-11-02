@@ -65,12 +65,44 @@ static void keyDown(TextView *textView, SDL_Keycode key, SDL_Keymod mod) {
   event.key.key = key;
   event.key.mod = mod;
 
-  $((Control *) textView, captureEvent, &event);
+  $((View *) textView, respondToEvent, &event);
 }
 
 static const char *text(const TextView *textView) {
   return textView->attributedText->chars ?: "";
 }
+
+static int endedEditing;
+
+static void didEndEditing(TextView *textView) {
+  endedEditing++;
+}
+
+START_TEST(returnConsumesEventAfterEndingEditing) {
+  const SDL_Keycode keys[] = { SDLK_RETURN, SDLK_KP_ENTER };
+  for (size_t i = 0; i < lengthof(keys); i++) {
+    TextView *textView = $(alloc(TextView), initWithFrame, NULL);
+    $(textView, setAttributedText, "hello");
+    textView->control.state = ControlStateFocused;
+    textView->delegate.didEndEditing = didEndEditing;
+    endedEditing = 0;
+
+    const SDL_Event event = { .key = { .type = SDL_EVENT_KEY_DOWN, .key = keys[i] } };
+    ck_assert($((View *) textView, respondToEvent, &event));
+    ck_assert(!$((Control *) textView, isFocused));
+    ck_assert(endedEditing > 0);
+    ck_assert_str_eq("hello", text(textView));
+    ck_assert_int_eq(SDL_EVENT_KEY_DOWN, event.type);
+    release(textView);
+  }
+} END_TEST
+
+START_TEST(tabWithoutCompletionRemainsAvailableForFocusTraversal) {
+  TextView *textView = $(alloc(TextView), initWithFrame, NULL);
+  const SDL_Event event = { .key = { .type = SDL_EVENT_KEY_DOWN, .key = SDLK_TAB } };
+  ck_assert(!$((View *) textView, respondToEvent, &event));
+  release(textView);
+} END_TEST
 
 START_TEST(tabCyclesWhenSharedPrefixDoesNotExtend) {
 
@@ -272,6 +304,8 @@ START_TEST(cyclingToEmptyCompletionClearsText) {
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("TextView");
+  tcase_add_test(tcase, returnConsumesEventAfterEndingEditing);
+  tcase_add_test(tcase, tabWithoutCompletionRemainsAvailableForFocusTraversal);
   tcase_add_test(tcase, tabCyclesWhenSharedPrefixDoesNotExtend);
   tcase_add_test(tcase, tabCompletesSharedPrefixThenCycles);
   tcase_add_test(tcase, tabCompletesBeforeCursor);

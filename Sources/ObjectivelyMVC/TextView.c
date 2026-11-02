@@ -389,6 +389,7 @@ static bool captureEvent(Control *self, const SDL_Event *event) {
             didEdit = didComplete = true;
           } else {
             $(view, resignKeyResponder);
+            didCaptureEvent = false;
           }
           break;
 

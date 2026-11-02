@@ -34,12 +34,14 @@ typedef struct {
   NavigationViewController *navigationViewController;
   ViewController *pushOnWillAppear, *pushOnDidDisappear;
   bool popOnWillAppear;
+  bool consume;
 } Probe;
 
 static int didDisappearTotal;
 
-static void Probe_respondToEvent(ViewController *self, const SDL_Event *event) {
+static bool Probe_respondToEvent(ViewController *self, const SDL_Event *event) {
   ((Probe *) self)->events++;
+  return ((Probe *) self)->consume;
 }
 
 static void Probe_viewWillAppear(ViewController *self) {
@@ -112,6 +114,7 @@ static Probe *probe(NavigationViewController *navigationViewController) {
   Probe *probe = (Probe *) $((ViewController *) alloc(Probe), init);
 
   probe->navigationViewController = navigationViewController;
+  probe->consume = true;
 
   return probe;
 }
@@ -141,8 +144,39 @@ static void disappear(NavigationViewController *navigationViewController) {
 
 static void sendEvent(NavigationViewController *navigationViewController) {
   const SDL_Event event = { .type = SDL_EVENT_USER };
-  $((ViewController *) navigationViewController, respondToEvent, &event);
+  ck_assert($((ViewController *) navigationViewController, respondToEvent, &event));
 }
+
+START_TEST(controllerStopsConsumedInputButBroadcastsNotifications) {
+  ViewController *root = $(alloc(ViewController), init);
+  Probe *a = probe(NULL);
+  Probe *b = probe(NULL);
+  $(root, addChildViewController, (ViewController *) a);
+  $(root, addChildViewController, (ViewController *) b);
+
+  const SDL_Event input = { .type = SDL_EVENT_KEY_DOWN };
+  ck_assert($(root, respondToEvent, &input));
+  ck_assert_int_eq(1, a->events);
+  ck_assert_int_eq(0, b->events);
+
+  a->consume = false;
+  ck_assert($(root, respondToEvent, &input));
+  ck_assert_int_eq(2, a->events);
+  ck_assert_int_eq(1, b->events);
+
+  const SDL_Event notification = { .type = SDL_EVENT_WINDOW_EXPOSED };
+  a->consume = true;
+  ck_assert($(root, respondToEvent, &notification));
+  ck_assert_int_eq(3, a->events);
+  ck_assert_int_eq(2, b->events);
+
+  a->consume = b->consume = false;
+  ck_assert(!$(root, respondToEvent, &input));
+
+  release(root);
+  release(a);
+  release(b);
+} END_TEST
 
 START_TEST(onlyTopAppearsAndReceivesEvents) {
 
@@ -647,6 +681,7 @@ START_TEST(pushAndPopFromWillAppearAppearsOnce) {
 int main(int argc, char **argv) {
 
   TCase *tcase = tcase_create("NavigationViewController");
+  tcase_add_test(tcase, controllerStopsConsumedInputButBroadcastsNotifications);
   tcase_add_test(tcase, onlyTopAppearsAndReceivesEvents);
   tcase_add_test(tcase, pushWhileVisibleCoversTheTop);
   tcase_add_test(tcase, pushAndPopWhileHiddenSendNoAppearance);

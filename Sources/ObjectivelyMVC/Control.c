@@ -278,28 +278,29 @@ static void resignKeyResponder(View *self) {
 }
 
 /**
- * @see View::respondToEvent(View *, SDL_Event *)
+ * @see View::respondToEvent(View *, const SDL_Event *)
  */
-static void respondToEvent(View *self, const SDL_Event *event) {
+static bool respondToEvent(View *self, const SDL_Event *event) {
 
   Control *this = (Control *) self;
 
   retain(self);
 
+  bool consumed = false;
   const ControlState state = (ControlState) this->state;
   if (!(state & ControlStateDisabled)) {
-    if ($(this, captureEvent, event)) {
-      if (this->state != state) {
-        $(this, stateDidChange);
-      }
-      release(self);
-      return;
+    consumed = $(this, captureEvent, event);
+    if (consumed && this->state != state) {
+      $(this, stateDidChange);
     }
   }
 
-  super(View, self, respondToEvent, event);
+  if (!consumed) {
+    consumed = super(View, self, respondToEvent, event);
+  }
 
   release(self);
+  return consumed;
 }
 
 #pragma mark - Control
