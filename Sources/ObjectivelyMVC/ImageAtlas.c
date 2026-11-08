@@ -195,7 +195,8 @@ static bool compile(ImageAtlas *self) {
 
   qsort(images, count, sizeof(AtlasImage *), compareImages);
 
-  size = max(size, (int) ceil(sqrt((double) area)));
+  const double side = ceil(sqrt((double) area));
+  size = max(size, (int) side);
 
   int sheetSize = 1;
   while (sheetSize < size) {
